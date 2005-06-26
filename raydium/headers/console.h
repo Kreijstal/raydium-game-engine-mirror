@@ -1,0 +1,106 @@
+#ifndef _CONSOLE_H
+#define _CONSOLE_H
+/*=
+In-game console
+3000
+**/
+
+// Introduction
+/**
+This chapter introduce Raydium console, allowing applications to take 
+user keyboard input (game commands, chat, ...) and to send informations 
+to this console.
+The end user can call the console using "the key below esc". 
+
+By default, if PHP support is enabled, all user commands will be redirected
+to PHP engine. Each command will get his own context, don't expect to create
+anything else than "single line PHP scripts" with the console. See PHP chapter
+for more informations.
+The console allows the user to prefix command with the following characters:
+
+- ##/##: Non PHP command. The command will be sent to application (see
+##raydium_console_gets_callback##, below.
+
+- ##>##: Will launch argument as a PHP script (identical to ##include("...")##)
+
+- ##!##: Will launch argument as a sequence script
+
+Command history is saved to ##raydium_history## file when application exits.
+
+You can use a ##void prompt(char *)## callback to get user commands. Your
+callback must be registered thru ##raydium_console_gets_callback##:
+%%(c) raydium_console_gets_callback=prompt; %%
+
+This console provides auto-completion of register functions and variables.
+See the suitable chapter for more information.
+**/
+
+extern void raydium_console_init (void);
+/**
+Internal use.
+**/
+
+extern void raydium_console_history_save (void);
+/**
+Internal use (will flush console history to disk).
+You can call it by yourself if needed.
+**/
+
+extern int raydium_console_gets (char *where);
+/**
+**DISABLED**.
+Use ##raydium_console_gets_callback## function pointer instead.
+**/
+
+extern void raydium_console_history_previous (void);
+/**
+Internal use.
+**/
+
+extern void raydium_console_history_next (void);
+/**
+Internal use.
+**/
+
+extern void raydium_console_history_add (char *str);
+/**
+Internal use.
+**/
+
+extern void raydium_console_exec_script (char *file);
+/**
+Internal use.
+**/
+
+extern void raydium_console_exec_last_command (void);
+/**
+Internal use.
+**/
+
+extern void raydium_console_line_add (char *format, ...);
+/**
+Mostly reserved for internal use, but unless ##raydium_log##, this function will
+add the provided data only to ingame console, and not to "native" console.
+**/
+
+extern void raydium_console_event (void);
+/**
+Internal use. Will switch console up and down.
+**/
+
+extern void raydium_console_draw (void);
+/**
+Internal use.
+**/
+
+extern int raydium_console_internal_isalphanumuscore (char c);
+/**
+Internal use.
+**/
+
+extern void raydium_console_complete (char *str);
+/**
+Internal use.
+**/
+
+#endif

@@ -1,0 +1,653 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.cqfd-corp.org
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+#ifndef DONT_INCLUDE_HEADERS
+#include "index.h"
+#else
+#include "headers/sound.h"
+#endif
+
+// IMPORTANT ! USE A  R E C E N T  RELEASE OF OPENAL (0.0.6)
+
+//VERIFIES THAT THE LAST OPERATION DID NOT MAKE ANY ERROR
+//IF AN ERROR IS DETECTED IT PRINTS THE caller NAME
+void raydium_sound_verify(char *caller)
+{
+ int error;
+ if ((error = alGetError()) != AL_NO_ERROR)
+ {
+  raydium_log("sound: ERROR : %s :%d",caller,error);
+//  raydium_log("sound: Deleting buffers");
+//   alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
+//  raydium_log("sound: Releasing OpenAL");
+//   alutExit();
+//   exit(1);
+ }
+}
+
+int raydium_sound_Array3IsValid(ALfloat *a)
+{
+if( !raydium_trigo_isfloat(a[0]) ||
+    !raydium_trigo_isfloat(a[1]) ||
+    !raydium_trigo_isfloat(a[2]) )
+	{
+	raydium_log("sound : ERROR: invalid 3xALfloat array provided");
+	return 0;
+	}
+return 1;
+}
+
+//INITS A SOURCE WITH DEFAULT VALUES
+//TAKES A SOURCE NUMBER
+void raydium_sound_InitSource(int src)
+{
+ ALfloat srcPos[]={ 0.0, 0.0, 0.0};
+ ALfloat srcVel[]={ 0.0, 0.0, 0.0};
+
+ alSourcef(raydium_sound_source[src],AL_PITCH,1.0f);                //SETS SOURCE PITCH
+   raydium_sound_verify("setting source pitch");
+ alSourcef(raydium_sound_source[src],AL_GAIN,1.0f);                 //SETS SOURCE GAIN
+   raydium_sound_verify("setting source gain");
+ alSourcef(raydium_sound_source[src],AL_REFERENCE_DISTANCE,raydium_sound_DefaultReferenceDistance);
+   raydium_sound_verify("setting source reference distance");
+ alSourcefv(raydium_sound_source[src],AL_POSITION,srcPos);          //SETS SOURCE POSITION
+   raydium_sound_verify("setting source position");
+ alSourcefv(raydium_sound_source[src],AL_VELOCITY,srcVel);          //SETS SOURCE VELOCITY
+   raydium_sound_verify("setting source velocity");
+ alSourcei(raydium_sound_source[src],AL_BUFFER,raydium_sound_buffer[src]);               //ATTACHS A SOURCE TO A BUFFER
+   raydium_sound_verify("attaching source to buffer");
+ alSourcei(raydium_sound_source[src],AL_LOOPING,AL_TRUE);           //SETS SOURCE LOOPING TO TRUE
+   raydium_sound_verify("setting source loop state");
+}
+
+
+//LOADS A WAV FILE
+//RETURNS THE SOURCE NUMBER OR -1 IF IT FAILS
+int raydium_sound_LoadWav(const char *fname)
+{
+ int snum;
+ ALsizei size,freq;
+ ALenum format;
+ ALvoid *data;
+ FILE *fp;
+//#ifdef WIN32
+ ALboolean bool;
+//#endif
+
+ if(raydium_sound_top_buffer==RAYDIUM_SOUND_NUM_BUFFERS)
+ {
+  raydium_log("sound: ERROR loading %s no more buffers available",fname);
+//  exit(1);
+  return -1;
+ }
+ else
+ {
+  snum=raydium_sound_top_buffer;
+ }
+
+ fp=raydium_file_fopen((char *)fname,"r");
+ if(fp==NULL)
+ {
+  raydium_log("sound: ERROR opening file %s",fname);
+  return -1;
+  //exit(1);
+ }
+ fclose(fp);
+
+  alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&bool);
+     raydium_sound_verify("alutLoadWAVFile");
+
+ alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
+     raydium_sound_verify("alBufferData");
+
+ alutUnloadWAV(format,data,size,freq);
+     raydium_sound_verify("alutUnloadWAV");
+
+ raydium_sound_top_buffer++;
+ raydium_sound_InitSource(snum);
+  return(snum);
+}
+
+
+//VERIFIES THAT THE SOURCE IS IN THE SOURCE ARRAY
+//RETURNS 0 IF OK, -1 IF THERE'S AN ERROR
+int raydium_sound_SourceVerify(int src)
+{
+ if(src<0 || src>=raydium_sound_top_buffer)
+ {
+  raydium_log("sound: source %d doesn't exist !",src);
+  return(-1);
+ }
+ return(0);
+}
+
+//SETS THE LOOP ATTRIBUTE OF A SOURCE
+int raydium_sound_SetSourceLoop(int src, char loop)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alSourcei(raydium_sound_source[src],AL_LOOPING,(loop?AL_TRUE:AL_FALSE));
+  raydium_sound_verify("setting source loop");
+ }
+ return(result);
+}
+
+//GETS SOURCE PITCH
+//TAKES A SOURCE NUMBER
+//GIVES AN ALfloat
+int raydium_sound_GetSourcePitch(int src, ALfloat *p)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcef(raydium_sound_source[src],AL_PITCH,p);
+  raydium_sound_verify("getting source pitch");
+ }
+ return(result);
+}
+
+
+//SETS SOURCE PITCH
+//TAKES A SOURCE NUMBER AND AN ALfloat
+int raydium_sound_SetSourcePitch(int src, ALfloat p)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  if(p>2.0)
+  {
+   p=2.0;//CLIPPING
+   raydium_log("sound: Pitch Overflow , clipped to 2");
+  }
+  if(p<=0.0)
+  {
+   p=0.1; // Seems ok :)
+   raydium_log("sound: Tried to set negative or 0 Pitch , clipped to 0.1");
+  }
+  alSourcef(raydium_sound_source[src],AL_PITCH,p);
+  raydium_sound_verify("setting source pitch");
+ }
+ return(result);
+}
+
+
+//GETS SOURCE GAIN
+//TAKES A SOURCE NUMBER
+//GIVES AN ALfloat
+int raydium_sound_GetSourceGain(int src, ALfloat *g)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcef(raydium_sound_source[src],AL_GAIN,g);
+  raydium_sound_verify("getting source gain");
+ }
+ return(result);
+}
+
+
+//SETS SOURCE GAIN
+//TAKES A SOURCE NUMBER AND AN ALfloat
+int raydium_sound_SetSourceGain(int src, ALfloat g)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  if(g<0.0)
+  {
+   g=0.0;
+   raydium_log("sound: Tried to set negative Gain , clipped to 0");
+  }
+  alSourcef(raydium_sound_source[src],AL_GAIN,g);
+  raydium_sound_verify("setting source gain");
+ }
+ return(result);
+}
+
+//SETS SOURCE POSITION
+//TAKES A SOURCE NUMBER AND AN ALfloat ARRAY {x,y,z}
+int raydium_sound_SetSourcePos(int src, ALfloat Pos[])
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0 && raydium_sound_Array3IsValid(Pos))
+ {
+  alSourcefv(raydium_sound_source[src],AL_POSITION,Pos);
+  raydium_sound_verify("setting source position");
+ }
+ return(result);
+}
+
+
+int raydium_sound_SetSourcePosCamera(int src)
+{
+ALfloat p[3];
+p[0]=raydium_camera_x;
+p[1]=raydium_camera_y;
+p[2]=raydium_camera_z;
+return raydium_sound_SetSourcePos(src,p);
+}
+
+//GETS SOURCE POSITION
+//TAKES A SOURCE NUMBER
+//GIVES AN ALfloat ARRAY {x,y,z}
+int raydium_sound_GetSourcePos(int src, ALfloat *Pos[] )
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcefv(raydium_sound_source[src],AL_POSITION,(ALfloat *)&(*Pos));
+  raydium_sound_verify("getting source position");
+ }
+ return(result);
+}
+
+
+//SETS SOURCE DIRECTION
+//TAKES A SOURCE NUMBER AND AN ALfloat ARRAY {x,y,z}
+int raydium_sound_SetSourceDir(int src, ALfloat Dir[])
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0 && raydium_sound_Array3IsValid(Dir))
+ {
+  alSourcefv(raydium_sound_source[src],AL_DIRECTION,Dir);
+  raydium_sound_verify("setting source direction");
+ }
+ return(result);
+}
+
+//GETS SOURCE DIRECTION
+//TAKES A SOURCE NUMBER
+//GIVES AN ALfloat ARRAY {x,y,z}
+int raydium_sound_GetSourceDir(int src, ALfloat *Dir[] )
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcefv(raydium_sound_source[src],AL_DIRECTION,(ALfloat *)&(*Dir));
+  raydium_sound_verify("getting source direction");
+ }
+ return(result);
+}
+
+
+//SETS SOURCE VELOCITY
+//TAKES A SOURCE NUMBER AND AN ALfloat ARRAY {x,y,z}
+int raydium_sound_SetSourceVel(int src, ALfloat Vel[])
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0 && raydium_sound_Array3IsValid(Vel))
+ {
+  alSourcefv(raydium_sound_source[src],AL_VELOCITY,Vel);
+  raydium_sound_verify("setting source velocity");
+ }
+ return(result);
+}
+
+//GETS SOURCE VELOCITY
+//TAKES A SOURCE NUMBER
+//GIVES AN ALfloat ARRAY {x,y,z}
+int raydium_sound_GetSourceVel(int src, ALfloat *Vel[] )
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcefv(raydium_sound_source[src],AL_VELOCITY,(ALfloat *)&(*Vel));
+  raydium_sound_verify("getting source velocity");
+ }
+ return(result);
+}
+
+
+
+//SETS LISTENER POSITION
+//TAKES AN ALfloat ARRAY {x,y,z}
+void raydium_sound_SetListenerPos(ALfloat Pos[])
+{
+ if(!raydium_sound_Array3IsValid(Pos)) return;
+ 
+ alListenerfv(AL_POSITION,Pos);
+   raydium_sound_verify("setting listener position");
+}
+
+//GETS LISTENER POSITION
+//GIVES AN ALfloat ARRAY {x,y,z}
+void raydium_sound_GetListenerPos(ALfloat *Pos[] )
+{
+ alGetListenerfv(AL_POSITION,(ALfloat *)&(*Pos));
+   raydium_sound_verify("getting listener position");
+}
+
+//SETS LISTENER ORIENTATION
+//TAKES AN ALfloat ARRAY {x,y,z,x2,y2,z2}
+//                        ATvector UPvector
+void raydium_sound_SetListenerOr(ALfloat Or[])
+{
+ if(!raydium_sound_Array3IsValid(Or)) return;
+ if(!raydium_sound_Array3IsValid(Or+3)) return;
+ 
+ alListenerfv(AL_ORIENTATION,Or);
+   raydium_sound_verify("setting listener orientation");
+}
+
+//GETS LISTENER ORIENTATION
+//GIVES AN ALfloat ARRAY {x,y,z,x2,y2,z2}
+//                        ATvector UPvector
+void raydium_sound_GetListenerOr(ALfloat *Or[] )
+{
+ 
+ alGetListenerfv(AL_ORIENTATION,(ALfloat *)&(*Or));
+   raydium_sound_verify("getting listener orientation");
+}
+
+//SETS LISTENER VELOCITY
+//TAKES AN ALfloat ARRAY {x,y,z}
+void raydium_sound_SetListenerVel(ALfloat Vel[])
+{
+if(!raydium_sound_Array3IsValid(Vel)) return;
+
+ alListenerfv(AL_VELOCITY,Vel);
+   raydium_sound_verify("setting listener velocity");
+}
+
+//GETS LISTENER VELOCITY
+//GIVES AN ALfloat ARRAY {x,y,z}
+void raydium_sound_GetListenerVel(ALfloat *Vel[] )
+{
+ alGetListenerfv(AL_VELOCITY,(ALfloat *)&(*Vel));
+   raydium_sound_verify("getting listener velocity");
+}
+
+
+//INITIALISATION
+void raydium_sound_init(void)
+{
+ ALfloat listenerPos[]={-10.0,0.0,0.0};
+ ALfloat listenerVel[]={0.0,0.0,0.0};
+// ALfloat back[] ={ 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
+ ALfloat front[]={ 1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f };
+
+#ifdef NO_SOUND_DEBUG
+return;
+#endif
+
+ alutInit(&raydium_init_argc, raydium_init_argv);
+//alutInit(0, NULL) ;
+ alGetError();
+
+ alListenerfv(AL_POSITION,listenerPos);
+ alListenerfv(AL_VELOCITY,listenerVel);
+ alListenerfv(AL_ORIENTATION,front);
+ alDistanceModel(AL_INVERSE_DISTANCE);
+//#ifdef __linux
+ alGetError(); /* clear error */
+ alGenBuffers(RAYDIUM_SOUND_NUM_BUFFERS, raydium_sound_buffer);
+ raydium_sound_verify("alGenBuffers");
+//#else
+//alGenBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
+// if (!raydium_sound_buffer)
+// {
+//  raydium_log("sound: Error creating buffers !!");
+//  exit(1);
+// }
+//#endif
+
+ raydium_log("sound: Buffer creation successfull");
+
+//#ifdef __linux
+ alGetError(); /* clear error */
+ alGenSources(RAYDIUM_SOUND_NUM_SOURCES, raydium_sound_source);
+ raydium_sound_verify("alGenSources");
+//#else
+// raydium_sound_verify("alGenSources");
+//#endif
+ raydium_sound_top_buffer=2; //first available buffer (2 first are used by music)
+ raydium_sound=1;
+ raydium_sound_music_file=NULL;
+ raydium_sound_DefaultReferenceDistance=50.f; // default distance where the source sound is half volume
+ raydium_sound_music_eof_callback=NULL;
+ raydium_log("sound: OK");
+ 
+}
+
+//PLAYS A SOURCE
+int raydium_sound_SourcePlay(int src)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alSourcePlay(raydium_sound_source[src]);
+ }
+ return(result);
+}
+
+//STOPS A SOURCE
+int raydium_sound_SourceStop(int src)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alSourceStop(raydium_sound_source[src]);
+ }
+ return(result);
+}
+
+//PAUSE A SOURCE
+int raydium_sound_SourcePause(int src)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alSourcePause(raydium_sound_source[src]);
+ }
+ return(result);
+}
+
+//UNPAUSE A SOURCE
+int raydium_sound_SourceUnpause(int src)
+{
+ int result;
+ int state;
+ result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  alGetSourcei(raydium_sound_source[src], AL_SOURCE_STATE, &state);
+  if(state==AL_PAUSED)
+    alSourcePlay(raydium_sound_source[src]);
+ }
+ return(result);
+}
+
+
+//THINGS TO DO WHEN EXITING
+void raydium_sound_close(void)
+{
+int i;
+ if(raydium_sound==1) // WE DO THESE THINGS ONLY IF OPEN AL INIT WAS OK
+ {
+  for(i=0;i<raydium_sound_top_buffer;i++)
+    raydium_sound_SourceStop(i);
+  raydium_log("sound: Deleting sources");
+   alDeleteSources(RAYDIUM_SOUND_NUM_SOURCES,raydium_sound_source);
+  raydium_log("sound: Deleting buffers");
+   alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
+  raydium_log("sound: Releasing OpenAL");
+   alutExit();
+ }
+}
+
+
+int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo) 
+{
+  unsigned int count=0;
+  int stream;
+  int amt;
+  ALint format;
+
+  while(count<SOUNDDATASIZE)
+  {
+    amt=ov_read(file,&(raydium_sound_music_buf[count]),
+          SOUNDDATASIZE-count,
+          0,2,1,&stream);
+    if(amt<=0)
+    {
+//      if(amt<0)fprintf(stderr,"ov_read error: ");
+      raydium_log("sound: ov_read error");
+      break;
+    }
+    count+=amt;
+  }
+
+  if(!count)
+    return 0;
+
+  if(ogginfo->channels==1)
+    format=AL_FORMAT_MONO16;
+  else
+    format=AL_FORMAT_STEREO16;
+
+  alBufferData(buffer,format,raydium_sound_music_buf,count,ogginfo->rate);
+  return 1;
+}
+
+void raydium_sound_internal_cleanstreambuffs(void)
+{
+  ALint format;
+  vorbis_info *ogginfo;
+  
+  ogginfo=raydium_sound_ogginfo;
+  memset(raydium_sound_music_buf,0,SOUNDDATASIZE);
+
+  if(ogginfo->channels==1)
+    format=AL_FORMAT_MONO16;
+  else
+    format=AL_FORMAT_STEREO16;
+
+  alBufferData(raydium_sound_buffer[0],format,raydium_sound_music_buf,SOUNDDATASIZE,ogginfo->rate);
+  alBufferData(raydium_sound_buffer[1],format,raydium_sound_music_buf,SOUNDDATASIZE,ogginfo->rate);
+}
+
+
+int StartMusic(ALuint musicsource,ALuint *buffers,OggVorbis_File *file,
+      vorbis_info *ogginfo)
+{
+  int ok;
+  alSourceStop(musicsource);
+  memset(raydium_sound_music_buf,0,SOUNDDATASIZE);
+  ok=BufferData(raydium_sound_buffer[0],file,ogginfo) 
+     && BufferData(raydium_sound_buffer[1],file,ogginfo);
+  alSourceQueueBuffers(musicsource,2,raydium_sound_buffer);
+  alSourcePlay(musicsource);
+  return ok;
+} 
+
+
+
+//try to open music
+int raydium_sound_load_music(char *fname)
+{
+#ifdef NO_SOUND_DEBUG
+return -1;
+#endif
+
+ if(raydium_sound_music_file) fclose(raydium_sound_music_file);
+ raydium_sound_music_file=NULL;
+ 
+ if(fname==NULL || strlen(fname)==0)
+    return 0;
+ 
+ raydium_sound_music_file = raydium_file_fopen( fname, "rb" );
+ if(raydium_sound_music_file == NULL)
+ {
+  raydium_log("sound: Could not open %s", fname);
+  perror("raydium_sound_load_music");
+  return(-1);
+ }
+
+ alSourcei( raydium_sound_source[0], AL_SOURCE_RELATIVE, AL_TRUE );
+ alSourcei( raydium_sound_source[0], AL_LOOPING, AL_FALSE );
+
+ if(ov_open(raydium_sound_music_file, &raydium_sound_vf, NULL, 0) < 0)
+ {
+  raydium_log("ERROR: Failed to open %s as vorbis",fname);
+  return(-1);
+ }
+ raydium_sound_ogginfo=ov_info(&raydium_sound_vf,-1);
+ 
+// size = bits/8 * ov_info(&raydium_sound_vf, 0)->channels; 
+StartMusic(raydium_sound_source[0],raydium_sound_buffer,
+           &raydium_sound_vf,raydium_sound_ogginfo);
+ 
+return(0);
+}
+
+
+void raydium_sound_music_callback(void)
+{
+ALuint nprocessed;
+ALuint buffer;
+ALint sourcestate;
+char newfile[RAYDIUM_MAX_NAME_LEN];
+
+ if(raydium_sound_music_file==NULL) return;
+
+ if(feof(raydium_sound_music_file))
+    {
+    fseek(raydium_sound_music_file,0,SEEK_SET);//rewind in the file if we hit the end
+    raydium_log("sound: end of file reached");
+    if(raydium_sound_music_eof_callback && raydium_sound_music_eof_callback(newfile)>0)
+	{
+	if(strlen(newfile)) 
+	    raydium_sound_load_music(newfile);
+	else
+	    {
+	    // may cause glitches on next music.. ?
+	    //fclose(raydium_sound_music_file);
+	    //raydium_sound_music_file=NULL;
+	    raydium_sound_load_music(NULL);
+	    }
+	return ;
+	}
+    }
+
+ alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
+ if(nprocessed) // or while...
+ {
+  static int last;
+  alSourceUnqueueBuffers(raydium_sound_source[0],1,&buffer);
+  if(buffer==last)
+    {
+    raydium_log("sound: OpenAL internal buffer mistake: cleaning buffers");
+    alSourceStop(raydium_sound_source[0]);
+    raydium_sound_internal_cleanstreambuffs();
+    alSourcePlay(raydium_sound_source[0]);
+    }
+    else  
+    {
+    last=buffer;
+    BufferData(buffer,&raydium_sound_vf,raydium_sound_ogginfo);
+    alSourceQueueBuffers(raydium_sound_source[0],1,&buffer);
+    nprocessed--;
+    }
+ } 
+
+ //restart playing if needed
+ alGetSourcei(raydium_sound_source[0],AL_SOURCE_STATE,&sourcestate);
+ if(sourcestate!=AL_PLAYING)
+ {
+  raydium_log("sound: music source stopped, back to play");
+  StartMusic(raydium_sound_source[0],raydium_sound_buffer,
+             &raydium_sound_vf,raydium_sound_ogginfo);
+ } 
+
+}
+
+//THINGS TO DO
+void raydium_sound_callback(void)
+{
+raydium_sound_music_callback();
+}
+

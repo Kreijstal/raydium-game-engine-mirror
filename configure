@@ -1,0 +1,299 @@
+#!/bin/sh
+
+# This script will configure Raydium and download, configure and build
+# dependencies if needed. See --help argument.
+
+# build file
+# $1 is file content
+# $2 is gcc's options
+test_build()
+{
+echo "$1" > configure.c
+gcc -g configure.c -Wall -o configure.bin $2 2> configure.log
+
+if [ "$?" != "0" ]; then
+    echo " build: failed"
+    return 1
+fi
+
+./configure.bin > configure.log
+ret=$?
+
+if [ "$ret" = "0" ]; then
+    echo " ok"
+fi
+
+if [ "$ret" != "0" ]; then
+    echo " run: failed"
+fi
+
+return $ret
+}
+
+
+# $1 is last returned code
+# $2 is error message
+exit_if_error()
+{
+if [ "$1" != "0" ]; then
+    echo "$2"
+    exit 1
+fi
+return 0
+}
+
+usage_print()
+{
+echo "Quick configure script for Raydium 3D Game Engine"
+echo "  --help               this text"
+echo "  --install-ode        ODE local auto-install"
+echo "  --install-php        PHP 4 local auto-install"
+exit 0
+}
+
+ode_install()
+{
+echo "ODE Auto local installation ..."
+if [ -d "ode" ]; then
+    echo "ODE (partial ?) install detected, abort (ode/)"
+    exit 1
+fi
+
+# download
+echo "Downloading from CVS ..."
+cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
+exit_if_error "$?" "No cvs client installed ?"
+cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P ode
+exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
+
+# configure (step 1)
+echo '
+# Raydium ODE autoconfig
+PLATFORM=unix-gcc
+PRECISION=SINGLE
+BUILD=release
+WINDOWS16=0
+OPCODE_DIRECTORY=OPCODE
+' > ode/config/user-settings
+
+# configure (step 2)
+echo "Configuring ... (ignore warnings)"
+cd ode
+make configure > ../configure.log
+ret=$?
+cd -
+exit_if_error "$?" "ODE configuration failed (see configure.log)"
+
+echo '
+#ifndef dEpsilon
+#define dEpsilon FLT_EPSILON
+#endif
+' >> ode/include/ode/config.h
+
+# build
+echo "Building ... (ignore warnings)"
+cd ode
+make > ../configure.log
+ret=$?
+cd -
+exit_if_error "$?" "ODE Build failed (see configure.log)"
+echo "- ODE seems ready -"
+}
+
+php_install()
+{
+echo "PHP4 Auto local installation ..."
+if [ -d "php" ]; then
+    echo "PHP (partial ?) install detected, abort (php/)"
+    exit 1
+fi
+
+# download
+echo "Downloading latest PHP4 ..."
+wget -O php4-last.tar.gz http://snaps.php.net/php4-STABLE-latest.tar.gz
+exit_if_error "$?" "wget not found, or network error"
+
+# uncompress
+echo "Uncompressing ..."
+tar xzf php4-last.tar.gz
+exit_if_error "$?" "tar not found, or corrupted archive"
+
+# rename
+php=`ls -dt php4-STABLE-*/`
+echo "Renaming $php to php/ ..."
+mv "$php" "php"
+exit_if_error "$?" "Is this script up to date ?"
+
+# configure
+echo "Configuring ..."
+cd php
+./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib > ../configure.log
+ret=$?
+cd -
+exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"
+
+# compile
+echo "Building ... (ignore warnings)"
+cd php
+make > ../configure.log
+ret=$?
+cd -
+exit_if_error "$ret" "PHP building failed, see configure.log"
+
+# deleting
+echo "Deleting tar.gz ..."
+rm -f php4-last.tar.gz
+
+echo "- PHP4 seems ready -"
+}
+
+
+####### Main
+
+for i in "$@"; do
+    if [ $i = "--help" ]; then
+    usage_print
+    fi
+done
+
+for i in "$@"; do
+    if [ $i = "--install-ode" ]; then
+    ode_install
+    fi
+done
+
+for i in "$@"; do
+    if [ $i = "--install-php" ]; then
+    php_install
+    fi
+done
+
+# Test compiler
+echo -n "* GCC :"
+file='int main(void) { return 0; }'
+test_build "$file" ""
+exit_if_error "$?" "GNU C Compiler (GCC) is missing"
+
+# Test OpenGL
+echo -n "* OpenGL lib :"
+
+file='#include <GL/gl.h>
+int main(void) { if(0) glVertex3f(0,0,0); return 0; }'
+test_build "$file" "-L/usr/X11R6/lib/ -lGL"
+exit_if_error "$?" "You must install opengl-devel package"
+
+# Test GLU
+echo -n "* GLU lib :"
+
+file='#include <GL/gl.h>
+#include <GL/glu.h>
+int main(void) { return 0; }'
+test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
+exit_if_error "$?" "You must install glu-devel package"
+
+# Test GLUT
+echo -n "* GLUT lib :"
+
+file='#include <GL/glut.h>
+int main(void) { gluGetString(GLU_VERSION); return 0; }'
+test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lglut"
+exit_if_error "$?" "You must install glut-devel package"
+
+# Full GL/GLU/Glut test, looking for hardware accel
+echo -n "* GL/GLU/GLUT and hardware support :"
+
+file='
+#include <stdio.h>
+#include <string.h>
+#include <GL/glut.h>
+int main(int argc, char **argv) { 
+char *r;
+glutInit(&argc,argv);
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+glutInitWindowSize(320,240);
+glutCreateWindow("Test window");
+r=glGetString(GL_RENDERER);
+if(!strcmp(r,"Mesa GLX Indirect"))
+    {
+    fprintf(stderr,"WARNING ! Mesa Software renderer detected !");
+    fprintf(stdout,"WARNING ! Mesa Software renderer detected !");
+    }
+return 0; }
+'
+test_build "$file" "-L/usr/X11R6/lib/ -lGL -lglut -lGLU"
+exit_if_error "$?" "Full GL test faild, see configure.log"
+
+# OpenAL
+echo -n "* OpenAL :"
+file="
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+int main(int argc, char **argv) {
+ALCdevice *dev;
+const ALubyte *initstr=(const ALubyte *) \"'( ( devices '( native null ) ) )\";
+dev=alcOpenDevice(initstr);
+sleep(1);
+alcCloseDevice(dev);
+return 0; }"
+test_build "$file" "-lopenal"
+exit_if_error "$?" "openal-devel is required. Official CVS may be a good idea"
+
+# OGG/Vorbis
+echo -n "* OGG/Vorbis :"
+file='
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <vorbis/codec.h>
+#include <vorbis/vorbisfile.h>
+int main(void){
+FILE *fp;
+OggVorbis_File vf;
+fp=fopen(".","r");
+if(ov_open(fp, &vf, NULL, 0) < 0) { exit(0); }
+// should never hit this !
+ov_clear(&vf);    
+return(0);
+}'
+# -logg seems useless ...
+test_build "$file" "-lvorbis -lvorbisfile -logg"
+exit_if_error "$?" "ogg and vorbis devels are required (libogg,libvorbis and libvorbisfile)"
+
+
+# ODE
+echo -n "* ODE (local) :"
+if [ -f "ode/lib/libode.a" ]; then
+    # found (0 = ok)
+    echo " ok"
+    ret=0
+else
+    echo " not found"
+    ret=1
+fi
+exit_if_error "$ret" "ODE is not installed (ODE must be local). Try --install-ode !"
+
+
+# PHP
+echo -n "* PHP 4 (local) :"
+if [ -f "php/libs/libphp4.a" ]; then
+    # found (0 = ok)
+    echo " ok"
+    ret=0
+else
+    echo " not found"
+    ret=1
+fi
+exit_if_error "$ret" "PHP 4 is not installed (PHP must be local). Try --install-php !"
+
+##### End of tests
+
+echo "- Build system seems ready -"
+echo "- Use \"make\" to build Raydium, and try: \"./odympcomp.sh test6.c\""
+echo "- You can also use \"./ocomp.sh test6.c\" for a quick direct test"

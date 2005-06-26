@@ -1,0 +1,292 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.cqfd-corp.org
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+#ifndef DONT_INCLUDE_HEADERS
+#include "index.h"
+#else
+#include "headers/file.h"
+#endif 
+
+// WARNING: most functions of this file are not part of Raydium yet !
+// So, be carefull with functions without "raydium_file" prefix.
+
+
+#define DONT_SAVE_DUMMY_TEXTURE
+
+
+// far better than glibc's 'dirname' (and portable)
+void raydium_file_dirname(char *dest,char *from)
+{
+char *c;
+int n;
+
+c=strrchr(from,'/');
+if(!c)
+    {
+    strcpy(dest,"./");
+    return;
+    }
+n=c-from;
+memcpy(dest,from,n+1);
+dest[n+1]=0;
+}
+
+
+void raydium_file_log_fopen_display(void)
+{
+int i;
+
+raydium_log("List of all opended files:");
+
+for(i=0;i<raydium_file_log_fopen_index;i++)
+    raydium_log("%s",raydium_file_log_fopen[i]);
+
+}
+
+#ifdef PHP_SUPPORT
+FILE *raydium_file_fopen(char *file, char *mode)
+{
+FILE *fp;
+int i;
+char found=0;
+
+if(!file || !strlen(file))
+    return NULL;
+
+for(i=0;i<raydium_file_log_fopen_index;i++)
+    if(!strcmp(raydium_file_log_fopen[i],file))
+	{
+	found=1;
+	break;
+	}
+
+if(!found) strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index++],file);
+
+if(strchr(mode,'w') || raydium_init_cli_option("repository-disable",NULL))
+    {
+    return fopen(file,mode);
+    }
+
+if( !raydium_init_cli_option("repository-refresh",NULL) && 
+    !raydium_init_cli_option("repository-force",NULL) )
+{
+ fp=fopen(file,mode);
+ if(fp) return fp;
+}
+raydium_rayphp_repository_file_get(file);
+fp=fopen(file,mode);
+
+return fp;
+}
+#endif
+
+void dump_vertex_to(char *filename)
+{
+FILE *fp;
+//GLuint tex;
+GLuint i;
+char text[256];
+char bl;
+
+fp=fopen(filename,"wt");
+if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
+fprintf(fp,"1\n");
+/*
+for(tex=0;tex<raydium_texture_index;tex++)
+{
+// fprintf(fp,"%s\n",raydium_texture_name[tex]);
+// fprintf(fp,"%i\n",j);
+ for(i=0;i<raydium_vertex_index;i++)
+  if(raydium_vertex_texture[i]==tex)
+  fprintf(fp,"%f %f %f %f %f %s\n",
+  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
+  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[tex]);
+}
+*/
+for(bl=0;bl<2;bl++)
+{
+ for(i=0;i<raydium_vertex_index;i++)
+ if( (raydium_texture_blended[raydium_vertex_texture[i]]?1:0) == bl)
+ {
+  if(raydium_vertex_texture_multi[i])
+  {
+   sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[i]],
+			      raydium_vertex_texture_multi_u[i],
+			      raydium_vertex_texture_multi_v[i],
+			      raydium_texture_name[raydium_vertex_texture_multi[i]]);
+  }
+  else
+  strcpy(text,raydium_texture_name[raydium_vertex_texture[i]]);
+
+#ifdef DONT_SAVE_DUMMY_TEXTURE 
+  if(raydium_vertex_texture[i]) 
+#endif
+  fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
+  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
+  raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
+  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
+  text);
+ }
+}
+
+fclose(fp);
+printf("saved.\n");
+}
+
+// sorts alpha textures
+void dump_vertex_to_alpha(char *filename)
+{
+FILE *fp;
+GLuint tex;
+GLuint i;
+char text[256];
+int bl;
+
+
+raydium_log("WARNING: 'dump_vertex_to_alpha' function is deprecated, since regular 'dump_vertex_to' function now sorts alpha textures");
+
+
+fp=fopen(filename,"wt");
+if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
+fprintf(fp,"1\n");
+
+for(bl=0;bl<2;bl++)
+{
+for(tex=0;tex<raydium_texture_index;tex++)
+if( (raydium_texture_blended[tex]?1:0) == bl)
+{
+  printf("%s\n",raydium_texture_name[tex]);
+  strcpy(text,raydium_texture_name[tex]);
+// fprintf(fp,"%i\n",j);
+ for(i=0;i<raydium_vertex_index;i++)
+  if(raydium_vertex_texture[i]==tex )
+  fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
+  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
+  raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
+  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
+  text);
+}
+printf("----\n");
+}
+
+
+fclose(fp);
+printf("saved.\n");
+}
+
+
+#define MULTI_SEP ';'
+#define MULTI_UVSEP '|'
+int raydium_file_set_textures(char *name)
+{
+char *sep;
+char *sep2=NULL;
+char texname[RAYDIUM_MAX_NAME_LEN];
+
+sep  = strchr(name,MULTI_SEP);
+if(sep) sep2 = strchr(sep+1,MULTI_UVSEP);
+
+
+// 2 textures + 1 uv
+if(sep && sep2)
+{
+  sscanf(sep+1,"%f|%f|%s\n", &raydium_texture_current_multi_u,
+			    &raydium_texture_current_multi_v,
+			    texname);
+  raydium_texture_current_multi=raydium_texture_find_by_name(texname);
+  *sep=0;
+  raydium_texture_current_set_name(name);
+  *sep=MULTI_SEP;
+  return 2;
+} 
+ 
+
+// 2 textures, but 0 uv
+if(sep && !sep2)
+{
+  raydium_texture_current_multi=raydium_texture_find_by_name(sep+1);
+  *sep=0;
+  raydium_texture_current_set_name(name);
+  *sep=MULTI_SEP;
+  raydium_texture_current_multi_u=-99999;
+  raydium_texture_current_multi_v=-99999;
+  return 1;
+} 
+  
+// 1 texture and 0 uv
+if(!sep && !sep2)
+{ 
+  raydium_texture_current_multi=0;
+  raydium_texture_current_set_name(name);
+  return 0;
+}
+
+return -1; // should never reach this
+}
+
+
+
+void read_vertex_from(char *filename)
+{
+GLfloat x,y,z,nx,ny,nz,u,v;
+int i;
+GLuint save;
+GLint visu;
+FILE *fp;
+char name[RAYDIUM_MAX_NAME_LEN];
+
+fp=raydium_file_fopen(filename,"rt");
+if(!fp) { printf("cannot read from file \"%s\", fopen() failed\n",filename); return; }
+fscanf(fp,"%i\n",&visu);
+
+
+raydium_log("Object: loading \"%s\", version %i",filename,visu);
+
+save=raydium_texture_current;
+i=0;
+
+if(visu>0)
+{
+ while( fscanf(fp,"%f %f %f %f %f %f %f %f %s\n",&x,&y,&z,&nx,&ny,&nz,&u,&v,name)!=EOF )
+ {
+  raydium_file_set_textures(name);
+  raydium_vertex_uv_normals_add(x,y,z,nx,ny,nz,u,v);
+  i++;
+ }
+}
+else if(visu==0)
+{
+ while( fscanf(fp,"%f %f %f %f %f %s\n",&x,&y,&z,&u,&v,name)!=EOF )
+ {
+  raydium_file_set_textures(name);
+  raydium_vertex_uv_add(x,y,z,u,v);
+  i++;
+ }
+}
+else if(visu<0)
+{
+ while( fscanf(fp,"%f %f %f %s\n",&x,&y,&z,name)!=EOF )
+ {
+  raydium_file_set_textures(name);
+  raydium_vertex_add(x,y,z);
+  i++;
+ }
+
+}
+
+if(i%3) 
+    {
+    printf("ERROR with object %s ... must be *3 !",filename);
+    // and generate dummy vertices ?
+    }
+
+fclose(fp);
+
+raydium_texture_current_multi=0;
+raydium_texture_current_set(save);
+//printf("loaded.\n");
+}
+
