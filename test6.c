@@ -4,7 +4,7 @@
     CQFD Corp.
 */
 
-char *version="version 0.6.12";
+char *version="version 0.6.13";
 
 //#define ODE_MANUAL_CALLBACK
 
