@@ -204,7 +204,8 @@ void create_car(void)
 int a;
 int respawn;
  
-#define BREAK_FORCE     130
+//#define BREAK_FORCE     130
+#define BREAK_FORCE     0
 #define ROTFRICTION     0.0005
 #define ERP_CFM         0.1,1.0
  
