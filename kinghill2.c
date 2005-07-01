@@ -420,6 +420,7 @@ raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
 int main(int argc, char **argv)
 {
 int i;
+char world[256];
 
 raydium_init_args(argc,argv);
 raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"King of the Hill 2");
@@ -445,7 +446,10 @@ raydium_ode_AfterElementDrawCallback=draw_element_after;
 
 raydium_register_function(C2PHP(set_world),"set_world");
 
-set_world("kinghill2");
+if(raydium_init_cli_option("world",world))
+    set_world(world);    
+else
+    set_world("kinghill2");
 //set_world("jeep_hangarl");
 
 
