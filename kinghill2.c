@@ -16,6 +16,7 @@ GLfloat respawns[MAX_RESPAWNS][6];
 int respawn_index=0;
 GLfloat ground_z=0;
 GLfloat static_camera[3];
+GLfloat partytime=0;
 short scores[RAYDIUM_NETWORK_MAX_CLIENTS];
 char camera_file[128];
 
@@ -27,6 +28,7 @@ char camera_file[128];
 #define TYPE_BALANCIER          6
 #define TYPE_CORPS          	7
 
+#define NET_REMAINING	(RAYDIUM_NETWORK_PACKET_BASE)
 
 
 void read_world(char *filename)
@@ -189,7 +191,7 @@ raydium_gui_edit_create("edtPlayerName",handle,47,75,raydium_network_name_local)
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblServer",handle,32.5,55,"Server :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_edit_create("edtServer",handle,47,45,"192.168.1.5");
+raydium_gui_edit_create("edtServer",handle,47,45,"172.17.237.20");
 
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnTraining",handle,5,15,"Training",btnTrainingClick);
@@ -281,6 +283,41 @@ raydium_ode_object_rotate(a,respawns[respawn]+3);
 }
 
 
+void hms(GLfloat t,int *h, int *m, int *s, int *ms)
+{
+*h=*m=0;
+*ms=(t-(int)t)*1000;
+*s=t;
+while(*s>=60)
+    {
+    (*m)++;
+    (*s)-=60;
+    }
+
+while(*m>=60)
+    {
+    (*h)++;
+    (*m)-=60;
+    }
+}
+
+void draw_timer(void)
+{
+int h2,m2,s2,ms2;
+
+
+partytime-=raydium_frame_time;
+if(partytime<0)
+    partytime=0;
+
+if(partytime==0)
+    game_state_change(GAME_END);
+
+hms(partytime,&h2,&m2,&s2,&ms2);
+raydium_osd_printf(74,97,18,0.5,"font2.tga","^fParty %i:%02i:%02i:%03i",h2,m2,s2,ms2);
+}
+
+
 void display_all(void)
 {
 raydium_ode_draw_all(0);
@@ -295,7 +332,7 @@ char tag=0;
 dReal *pos;
 dReal cam[3];
 static float secs=0;
-int i;
+int i,z;
 
 
 if(raydium_key_last==1027) exit(0);
@@ -410,8 +447,25 @@ switch(game_state)
 	raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
 	display_all();
     break;
-    }
 
+    case GAME_END:
+	secs+=raydium_frame_time;
+	raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
+	display_all();
+	raydium_osd_printf(47,93,15,0.5,"font2.tga","^f[ ^cSCORES^f ]");	
+	z=85;
+	
+	for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
+	{
+	    if(raydium_network_name[i][0])
+	    {
+	    raydium_osd_printf(40,z,25,0.5,"font2.tga","^f%s %i",raydium_network_name[i],scores[i]);
+	    z-=10;
+	    }
+	}
+    break;	
+
+    }
 
 
 if(game_state==GAME_GAME || game_state==GAME_OUT)
@@ -421,7 +475,9 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
 	dReal *pos;
 	dReal posc[3];
 	dReal t;
-        pos=raydium_ode_element_pos_get_name("corps");
+        
+	
+	pos=raydium_ode_element_pos_get_name("corps");
 	torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body);
 	t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
 	if(t>max)
@@ -442,12 +498,26 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
 //    	    pos=raydium_ode_element_pos_get_name("corps");
 //	    raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
 	    }
+	
+	if(raydium_network_uid>=0)
+	    draw_timer();
 	}
 
 raydium_rendering_finish();
 
 raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
 }
+
+
+void netcall_remaining_time(int type, char *buff)
+{
+float f;
+memcpy(&f,buff+RAYDIUM_NETWORK_PACKET_OFFSET,sizeof(float));
+
+partytime=f;
+//raydium_log("time synced");
+}
+
  
 int main(int argc, char **argv)
 {
@@ -493,8 +563,10 @@ create_menu();
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
     scores[i]=0;
-    raydium_network_propag_add(RAYDIUM_NETWORK_PACKET_BASE+i,scores+i,sizeof(short));
+    raydium_network_propag_add(RAYDIUM_NETWORK_PACKET_BASE+i+1,scores+i,sizeof(short));
     }
+raydium_network_netcall_add(netcall_remaining_time,NET_REMAINING,1);
+
 
 game_state_change(GAME_MENU);
 
