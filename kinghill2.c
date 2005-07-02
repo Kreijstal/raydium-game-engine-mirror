@@ -98,7 +98,7 @@ switch(state)
 	i=raydium_network_uid;
 	if(i<0) i=0;
 	scores[i]++;
-	raydium_network_propag_refresh(RAYDIUM_NETWORK_PACKET_BASE+i);
+	raydium_network_propag_refresh(RAYDIUM_NETWORK_PACKET_BASE+i+1);
 	break;
     }
 }
