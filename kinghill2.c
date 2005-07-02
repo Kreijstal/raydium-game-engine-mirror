@@ -346,6 +346,7 @@ switch(game_state)
 	    }
 #endif	
 
+
         // get position of camera in world coords
         raydium_ode_element_RelPointPos_name("corps",-1,0,0,cam);
 
@@ -411,6 +412,37 @@ switch(game_state)
     break;
     }
 
+
+
+if(game_state==GAME_GAME || game_state==GAME_OUT)
+	{
+	static dReal max=0;
+	dReal *torque;
+	dReal *pos;
+	dReal posc[3];
+	dReal t;
+        pos=raydium_ode_element_pos_get_name("corps");
+	torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body);
+	t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
+	if(t>max)
+	    max=t;
+	//raydium_log("%f",max);
+	// problem !
+	if(t>300)
+	    {
+	    raydium_log("LIMITS !!!! %f %f %f",pos[0],pos[1],pos[2]);
+//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body,0,0,0);	
+//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ag")].body,0,0,0);
+//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ad")].body,0,0,0);
+//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rg")].body,0,0,0);
+//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rd")].body,0,0,0);
+	    memcpy(posc,pos,sizeof(GLfloat)*3);
+	    create_car();
+	    raydium_ode_object_move_name("WATURE",posc);
+//    	    pos=raydium_ode_element_pos_get_name("corps");
+//	    raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
+	    }
+	}
 
 raydium_rendering_finish();
 
