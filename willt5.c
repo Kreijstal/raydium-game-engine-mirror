@@ -74,6 +74,7 @@ void display(void)
 int main(int argc, char **argv)
 {
     char server[128];
+    char ground[128];
     raydium_init_args(argc,argv);
     
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Test 5 network viewer");
@@ -97,7 +98,11 @@ if(raydium_init_cli_option("server",server))
      if(!raydium_network_client_connect_to(server)) 
         exit(1);
 
+if(raydium_init_cli_option("ground",ground))
+    raydium_ode_ground_set_name(ground);
+else
     raydium_ode_ground_set_name("a.tri");
+
     raydium_ode_object_box_add("boite",0,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"crate.tri");
     raydium_ode_element_move_name_3f("boite",10,10,10);
 
