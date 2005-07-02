@@ -88,6 +88,7 @@ switch(state)
     case GAME_GAME:
 	raydium_gui_hide();
 	create_car();
+	partytime=60;
 	break;
     case GAME_END:
 	raydium_ode_object_delete_name("WATURE");
