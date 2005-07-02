@@ -189,6 +189,8 @@ dWorldSetQuickStepNumIterations (raydium_ode_world,10);
 //dWorldSetContactMaxCorrectingVel (raydium_ode_world,0.1);
 //dWorldSetContactSurfaceLayer (raydium_ode_world,0.001);
 #endif
+// must adjust this value /!\
+dWorldSetContactMaxCorrectingVel(raydium_ode_world,10);
 
 // wow ! This is my first init dependance ;)
 raydium_ode_object_create("GLOBAL");
