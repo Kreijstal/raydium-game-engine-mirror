@@ -4,6 +4,7 @@
 
 #include <linux/types.h>
 #include <linux/videodev.h>
+#include <sys/mman.h>
 
 #define READ_VIDEO_PIXEL(buf, format, depth, r, g, b)			\
 {									\
@@ -67,11 +68,17 @@
   struct video_capability cap;
   struct video_window win;
   struct video_picture vpic;
+  // for mmap captures
+  struct video_mbuf gb_buffers;
+  struct video_mmap gb_buf;
 
   unsigned char *buffer, *buffer2, *src;
   int bpp = 24, r, g, b;
   unsigned int i, src_depth;
+  char capture_style;
 
+#define CAPTURE_READ	0
+#define CAPTURE_MMAP	1
 
 /*
 int get_brightness_adj(unsigned char *image, long size, int *brightness) {
@@ -82,6 +89,11 @@ int get_brightness_adj(unsigned char *image, long size, int *brightness) {
   return !((tot/(size*3)) >= 126 && (tot/(size*3)) <= 130);
 }
 */
+
+void free_mmap(void)
+{
+munmap(buffer, gb_buffers.size);
+}
 
 
 // YUV420P to RGB code from:
@@ -166,35 +178,74 @@ return 0;
 
 void read_v4l(void)
 {
+fd_set fds;
+struct timeval tv;
+int r;
 
-  read(fd, buffer, win.width * win.height * bpp);
+src = buffer;
 
+if(capture_style==CAPTURE_READ)
+ {
+ // polling
+ FD_ZERO (&fds);
+ FD_SET (fd, &fds);
+ tv.tv_sec=0;
+ tv.tv_usec=0;
+ r = select(fd + 1, &fds, NULL, NULL, &tv);
+ // nothing to read, we'll try later (next frame)
+ if(r<=0)
+    return;
+
+ read(fd, buffer, win.width * win.height * bpp);
+}
+else
+{
+static int frame;
+
+frame=gb_buf.frame;
+gb_buf.height = win.height;
+gb_buf.width = win.width;
+gb_buf.format = vpic.palette;
+
+gb_buf.frame=!frame,
+raydium_profile_start();
+ioctl(fd, VIDIOCMCAPTURE, &gb_buf);
+if(ioctl(fd, VIDIOCSYNC, &frame < 0))
+    {
+    printf("%i\n",frame);
+    raydium_profile_end("mmap (nothing to read)");
+    perror("mmap");
+    return;
+    }
+raydium_profile_end("mmap");
+src+=gb_buffers.offsets[frame];
+}
+
+
+if(vpic.palette==VIDEO_PALETTE_YUV420P)
+{
 // YUV420P style
-  v4l_yuv420p2rgb (buffer2,buffer,win.width,win.height,bpp);
-
+  v4l_yuv420p2rgb (buffer2,src,win.width,win.height,bpp);
+}
+else
+{
 // RGB style
-/*
 int i,j;
-  src = buffer;
   for (i = j = 0; i < win.width * win.height; i++) 
   {
     READ_VIDEO_PIXEL(src, vpic.palette, src_depth, r, g, b);
-    buffer2[j++]=r>>8;
-    buffer2[j++]=g>>8;
     buffer2[j++]=b>>8;
+    buffer2[j++]=g>>8;
+    buffer2[j++]=r>>8;
   }
-*/
-//  for (i = j = 0; i < win.width * win.height; i++) 
-//  {
-//  printf("%i,%i,%i ",buffer2[i*3],buffer2[i*3+1],buffer2[i*3+2]);
-//  }
-//printf("%i",raydium_texture_find_by_name("betoncontainers.tga"));
+}
+
 glEnable(GL_TEXTURE_2D);
 glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("webcam.tga"));
-//glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,512,512,0,GL_RGBA8,GL_UNSIGNED_BYTE,buffer2);
 glTexSubImage2D(GL_TEXTURE_2D,0,0,0,win.width,win.height,GL_RGB,GL_UNSIGNED_BYTE,buffer2);
               
-              
+// prepare next capture
+raydium_profile_start();
 
 }
 
@@ -213,13 +264,13 @@ void display(void)
 static float rx,ry,rz;
 raydium_joy_key_emul();
 
-camx+=raydium_joy_x;
-camy+=raydium_joy_y;
+camx+=raydium_joy_x*0.1;
+camy+=raydium_joy_y*0.1;
  
 // camx+=0.01;
 
-if(raydium_key[GLUT_KEY_PAGE_DOWN]) camz--;
-if(raydium_key[GLUT_KEY_PAGE_UP]  ) camz++;
+if(raydium_key[GLUT_KEY_PAGE_DOWN]) camz-=0.1;
+if(raydium_key[GLUT_KEY_PAGE_UP]  ) camz+=0.1;
 
 if(raydium_key_last==1027) exit(0);
 
@@ -246,8 +297,7 @@ raydium_rendering_finish();
 int main(int argc, char **argv)
 {
 
-
-  fd = open(FILE, O_RDONLY);
+  fd = open(FILE, O_RDWR);
 
   if (fd < 0) {
     perror(FILE);
@@ -276,6 +326,29 @@ int main(int argc, char **argv)
   printf("%s (%ix%i -> %ix%i)\n",cap.name,cap.minwidth,cap.minheight,cap.maxwidth,cap.maxheight);
   printf("default : %ix%i\n",win.width,win.height);
 
+  win.x=0;
+  win.y=0;
+  win.width=384;
+  win.height=288;
+  win.flags=0;
+  win.clips=NULL;
+  win.clipcount=0;
+  win.chromakey=0;
+  if (ioctl(fd, VIDIOCSWIN, &win) < 0) {
+    printf("Cannot set %ix%i mode\n",win.width,win.height);
+    perror("VIDIOCSWIN");
+    close(fd);
+    exit(1);
+  }
+  // read back
+  if (ioctl(fd, VIDIOCGWIN, &win) < 0) {
+    perror("VIDIOCGWIN");
+    close(fd);
+    exit(1);
+  }
+
+
+
   if (cap.type & VID_TYPE_MONOCHROME) {
     printf("mono\n");
     vpic.depth=8;
@@ -293,60 +366,104 @@ int main(int argc, char **argv)
     }
   } else {
     printf("rgb\n");
-    vpic.depth=24;
-    vpic.palette=VIDEO_PALETTE_RGB24;
-    
-    if(ioctl(fd, VIDIOCSPICT, &vpic) < 0) {
-      vpic.palette=VIDEO_PALETTE_RGB565;
-      vpic.depth=16;
+
+      vpic.depth=24;
+      vpic.palette=VIDEO_PALETTE_RGB24;
+
+     if(ioctl(fd, VIDIOCSPICT, &vpic) < 0) {
+       printf("rgb24 failed");
+       vpic.palette=VIDEO_PALETTE_RGB565;
+       vpic.depth=16;
       
       if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
+        printf("rgb565 failed");
 	vpic.palette=VIDEO_PALETTE_RGB555;
 	vpic.depth=15;
 	
 	if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
+    	    printf("rgb555 failed");
 	    vpic.palette=VIDEO_PALETTE_YUV420P;
 	    vpic.depth=24;
 
 	    if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
-
-
+    		printf("yuv420p failed");
 		fprintf(stderr, "Unable to find a supported capture format.\n");
 		return -1;
 	    }
+	  }
 	}
-      }
     }
   }
-  
-  buffer  = malloc(win.width * win.height * bpp);
-  buffer2 = malloc(512 * 512 * 3); // RGB only
-  if (!buffer) {
+
+
+buffer2  = malloc(win.width * win.height * bpp);
+if (!buffer2) 
+    {
     fprintf(stderr, "Out of memory.\n");
     exit(1);
-  }
-  
-/*
-  do {
-    int newbright;
-    read(fd, buffer, win.width * win.height * bpp);
-    f = get_brightness_adj(buffer, win.width * win.height, &newbright);
-    printf("%i\n",f);
-    if (f) {
-      vpic.brightness += (newbright << 8);
-      if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
-	perror("VIDIOSPICT");
-	break;
-      }
     }
-  } while (f && 0);
-*/
-
-  fprintf(stdout, "P6\n%d %d 255\n", win.width, win.height);
-
-  src = buffer;
 
 
+if(cap.type & VID_TYPE_CAPTURE)
+    {
+    capture_style=CAPTURE_MMAP;
+    printf("mmap() capture\n");
+    //gb_buffers.size=win.width * win.height * bpp;
+    //gb_buffers.frames=2;
+    if(ioctl(fd,VIDIOCGMBUF,&gb_buffers)==-1)
+	{
+	perror("VIDIOCGMBUF");
+	printf("hardware refuse our mmap capture style ... :/\n");
+	exit(1);
+	}
+    printf("mbuf frames: %i (size : %i)\n",gb_buffers.frames,gb_buffers.size);
+
+    buffer = mmap(0,gb_buffers.size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    if(buffer==(void *) -1)
+	{
+	perror("mmap");
+	printf("mmap failed\n");
+	exit(1);	
+	}
+
+    atexit(free_mmap);
+
+    gb_buf.frame=0;
+    gb_buf.height = win.height;
+    gb_buf.width = win.width;
+    gb_buf.format = vpic.palette;
+    if(ioctl(fd, VIDIOCMCAPTURE, &gb_buf)==-1)
+	{
+	perror("VIDIOCMCAPTURE");
+	printf("capture failed !\n");
+	exit(1);
+	}
+
+    if(ioctl(fd, VIDIOCSYNC, &gb_buf.frame < 0))
+	{
+	perror("vidiosync");
+	exit(1);
+	}
+	
+
+    }
+else
+    {
+    capture_style=CAPTURE_READ;
+    printf("read() capture\n");
+  
+    buffer  = malloc(win.width * win.height * bpp);
+    if (!buffer) 
+	{
+	fprintf(stderr, "Out of memory.\n");
+	exit(1);
+	}
+    }
+  
+
+  fprintf(stdout, "%d %d %d\n", win.width, win.height,bpp);
+
+//sleep(2);
 
 raydium_init_args(argc,argv);
 raydium_window_create(512,384,RAYDIUM_RENDERING_WINDOW,"Particles test");
