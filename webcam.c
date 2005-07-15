@@ -191,13 +191,15 @@ tv.tv_usec=0;
 r = select(fd + 1, &fds, NULL, NULL, &tv);
 // nothing to read, we'll try later (next frame)
 if(r<=0)
+    {
+    //perror("");
     return;
+    }
 
 src = buffer;
 
 if(capture_style==CAPTURE_READ)
  {
-
  read(fd, buffer, win.width * win.height * bpp);
 }
 else
@@ -284,7 +286,10 @@ read_v4l();
 
 raydium_clear_frame();
 raydium_camera_look_at(camx,camy,camz,0,0,0);
-raydium_object_draw_name("cocorobix.tri");
+
+raydium_osd_mask_texture_clip("webcam.tga",1,75,56,0,0);
+
+//raydium_object_draw_name("cocorobix.tri");
 
 raydium_camera_replace();
 glRotatef(rz,0,0,1);
