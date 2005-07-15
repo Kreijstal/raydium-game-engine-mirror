@@ -72,7 +72,7 @@
   struct video_mbuf gb_buffers;
   struct video_mmap gb_buf;
 
-  unsigned char *buffer, *buffer2, *src;
+  unsigned char *buffer = NULL, *buffer2, *src;
   int bpp = 24, r, g, b;
   unsigned int i, src_depth;
   char capture_style;
@@ -112,8 +112,8 @@ const int buScale = 116129;
 const int yScale = 65536;
 int r, g, b;
 g = guScale * u + gvScale * v;
-r = rvScale * v;
-b = buScale * u;
+b = rvScale * v;
+r = buScale * u;
 yTL *= yScale; yTR *= yScale;
 yBL *= yScale; yBR *= yScale;
 if (bits == 24)
@@ -208,16 +208,17 @@ gb_buf.width = win.width;
 gb_buf.format = vpic.palette;
 
 gb_buf.frame=!frame,
-raydium_profile_start();
+//raydium_profile_start();
 ioctl(fd, VIDIOCMCAPTURE, &gb_buf);
-if(ioctl(fd, VIDIOCSYNC, &frame < 0))
+// SET FD TO NONBLOCK !
+if(ioctl(fd, VIDIOCSYNC, &frame)==-1)
     {
     printf("%i\n",frame);
     raydium_profile_end("mmap (nothing to read)");
     perror("mmap");
     return;
     }
-raydium_profile_end("mmap");
+//raydium_profile_end("mmap");
 src+=gb_buffers.offsets[frame];
 }
 
@@ -311,6 +312,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+
   if (ioctl(fd, VIDIOCGWIN, &win) < 0) {
     perror("VIDIOCGWIN");
     close(fd);
@@ -350,9 +352,9 @@ int main(int argc, char **argv)
 
 
   if (cap.type & VID_TYPE_MONOCHROME) {
-    printf("mono\n");
+    printf("mono ...\n");
     vpic.depth=8;
-    vpic.palette=VIDEO_PALETTE_GREY;	/* 8bit grey */
+    vpic.palette=VIDEO_PALETTE_GREY;	// 8bit grey
     if(ioctl(fd, VIDIOCSPICT, &vpic) < 0) {
       vpic.depth=6;
       if(ioctl(fd, VIDIOCSPICT, &vpic) < 0) {
@@ -365,28 +367,28 @@ int main(int argc, char **argv)
       }
     }
   } else {
-    printf("rgb\n");
+    printf("color ...\n");
 
       vpic.depth=24;
       vpic.palette=VIDEO_PALETTE_RGB24;
 
      if(ioctl(fd, VIDIOCSPICT, &vpic) < 0) {
-       printf("rgb24 failed");
+       printf("rgb24 failed\n");
        vpic.palette=VIDEO_PALETTE_RGB565;
        vpic.depth=16;
       
       if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
-        printf("rgb565 failed");
+        printf("rgb565 failed\n");
 	vpic.palette=VIDEO_PALETTE_RGB555;
 	vpic.depth=15;
 	
 	if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
-    	    printf("rgb555 failed");
+    	    printf("rgb555 failed\n");
 	    vpic.palette=VIDEO_PALETTE_YUV420P;
 	    vpic.depth=24;
 
 	    if(ioctl(fd, VIDIOCSPICT, &vpic)==-1) {
-    		printf("yuv420p failed");
+    		printf("yuv420p failed\n");
 		fprintf(stderr, "Unable to find a supported capture format.\n");
 		return -1;
 	    }
@@ -406,6 +408,8 @@ if (!buffer2)
 
 if(cap.type & VID_TYPE_CAPTURE)
     {
+    int block=0;
+    
     capture_style=CAPTURE_MMAP;
     printf("mmap() capture\n");
     //gb_buffers.size=win.width * win.height * bpp;
@@ -427,24 +431,26 @@ if(cap.type & VID_TYPE_CAPTURE)
 	}
 
     atexit(free_mmap);
+    if(ioctl(fd, FIONBIO,&block))
+	{
+	perror("mmap");
+	printf("Cannot set video device to non blocking mode\n");
+	printf("May slow down video rendering ...\n");
+	//exit(1);	
+	}
+
 
     gb_buf.frame=0;
     gb_buf.height = win.height;
     gb_buf.width = win.width;
     gb_buf.format = vpic.palette;
+
     if(ioctl(fd, VIDIOCMCAPTURE, &gb_buf)==-1)
 	{
 	perror("VIDIOCMCAPTURE");
 	printf("capture failed !\n");
 	exit(1);
 	}
-
-    if(ioctl(fd, VIDIOCSYNC, &gb_buf.frame < 0))
-	{
-	perror("vidiosync");
-	exit(1);
-	}
-	
 
     }
 else
