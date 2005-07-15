@@ -459,6 +459,49 @@ raydium_rendering_internal_restore_render_state();
 raydium_osd_stop();
 }
 
+
+void raydium_osd_mask_texture_clip(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+{
+x1/=100;
+y1/=100;
+x2/=100;
+y2/=100;
+
+raydium_osd_start();
+
+// invalidate cache
+//raydium_texture_internal_loaded=0;
+raydium_rendering_internal_prepare_texture_render(raydium_texture_find_by_name(texture));
+glEnable(GL_TEXTURE_2D);
+glEnable(GL_BLEND);
+glDepthMask(GL_FALSE);
+glColor4f(1,1,1,alpha);
+
+glBegin(GL_QUADS);
+glTexCoord2f(x1,y1);
+glVertex3f(0,0,0);
+
+glTexCoord2f(x2,y1);
+glVertex3f(100,0,0);
+
+glTexCoord2f(x2,y2);
+glVertex3f(100,100,0);
+
+glTexCoord2f(x1,y2);
+glVertex3f(0,100,0);
+glEnd();
+raydium_rendering_internal_restore_render_state();
+
+raydium_osd_stop();
+}
+
+
+void raydium_osd_mask_texture(char *texture,GLfloat alpha)
+{
+raydium_osd_mask_texture_clip(texture,alpha,0,0,100,100);
+}
+
+
 void raydium_osd_fade_callback(void)
 {
 int i;

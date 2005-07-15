@@ -162,6 +162,17 @@ extern void raydium_osd_mask (GLfloat * color4);
 Will draw a uniform mask using ##color4## (RGBA color) for this frame.
 **/
 
+extern void raydium_osd_mask_texture(char *texture,GLfloat alpha);
+/**
+Will draw a textured mask, with ##alpha## opacity (1 is full opacity).
+**/
+
+extern void raydium_osd_mask_texture_clip(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+/**
+Same as above, but (x1,y1),(x2,y2) will be used as texture coords,
+in a [0,100] range.
+**/
+
 extern void raydium_osd_fade_callback (void);
 /**
 Internal use.
