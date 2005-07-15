@@ -175,6 +175,165 @@ return 0;
 }
 
 
+void set_pixel(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char *img)
+{
+int off;
+
+off=(y*512+x)*4;
+img[off+0]=r;
+img[off+1]=g;
+img[off+2]=b;
+img[off+3]=255;
+}
+
+int sinal(int res)
+{
+  if (res<0)
+    return -1;
+  else if(res==0)
+      return 0;
+    else
+      return 1;
+}
+
+void bresenham(int x1, int y1, int x2, int y2, unsigned char r, unsigned char g, unsigned char b, unsigned char *img)
+{
+  int x,y;
+  int s1,s2;
+  int dx,dy;
+  int e,i;
+  int temp, troca;
+  
+  x=x1;
+  y=y1;
+  dx=abs(x2-x1);
+  dy=abs(y2-y1);
+  
+  s1=sinal(x2-x1);
+  s2=sinal(y2-y1);
+
+  if (dy>dx) 
+  {
+	temp=dx;
+	dx=dy;
+	dy=temp;
+	troca=1;
+  }
+  else
+  {
+	troca=0;
+  }
+
+  e=2*dy-dx;
+
+  for (i=1; i<=dx; i++)
+  {  
+	set_pixel(x,y,r,g,b,img);
+  
+    while (e>=0) 
+    {
+	if (troca==1)
+	  x=x+s1;
+	else
+	  y=y+s2;
+  
+      e=e-2*dx;
+    }
+    
+    if (troca==1)
+        y=y+s2;
+    else
+	x=x+s1;
+
+  e=e+2*dy;
+
+  }
+}
+
+
+
+void update_drawing(GLfloat x, GLfloat y)
+{
+static unsigned char *drawing;
+static int first=1;
+int ix,iy;
+static int lx=0,ly=0;
+
+y=1-y;
+x=1-x;
+
+if(first)
+    {
+    printf("malloc for drawing.tga backbuffer\n");
+    drawing=malloc(512*512*4);
+    memset(drawing,0,512*512*4);
+    first=0;
+    }
+
+
+if(raydium_key_last==1032)
+    memset(drawing,0,512*512*4);
+
+
+
+ix=x*512;
+iy=y*512;
+/*
+off=(iy*512+ix)*4;
+printf("%i\n",off);
+drawing[off+0]=0;
+drawing[off+1]=255;
+drawing[off+2]=0;
+drawing[off+3]=255;
+*/
+bresenham(lx,ly,ix,iy,0,255,0,drawing);
+lx=ix;
+ly=iy;
+
+glEnable(GL_TEXTURE_2D);
+glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("drawing.tga"));
+glTexSubImage2D(GL_TEXTURE_2D,0,0,0,512,512,GL_RGBA,GL_UNSIGNED_BYTE,drawing);
+}
+
+
+
+void data_callback(unsigned char *data, int tx, int ty) // bpp is alway 3, RGB
+{
+int x,y;
+int i,j;
+int max;
+int where;
+GLfloat wherex,wherey;
+
+max=-99;
+where=-1;
+
+for(y=0;y<ty;y++)
+  for(x=0;x<tx;x++)
+    {
+    i=y*tx+x;
+    j=(data[i*3]*3)-data[i*3+1]-data[i*3+2];
+    if(j>max)
+	{
+	max=j;
+	where=i;
+	wherex=x/(float)tx;
+	wherey=y/(float)ty;
+	}
+    }
+
+if(where>=0 && max>350)
+    {
+    printf("max = %i\n",max);
+    data[where*3]=0;
+    data[where*3+1]=255;
+    data[where*3+2]=0;
+    update_drawing(wherex,wherey);
+    }
+
+}
+
+
 
 void read_v4l(void)
 {
@@ -212,7 +371,6 @@ gb_buf.width = win.width;
 gb_buf.format = vpic.palette;
 
 gb_buf.frame=!frame,
-//raydium_profile_start();
 ioctl(fd, VIDIOCMCAPTURE, &gb_buf);
 if(ioctl(fd, VIDIOCSYNC, &frame)==-1)
     {
@@ -221,7 +379,6 @@ if(ioctl(fd, VIDIOCSYNC, &frame)==-1)
     perror("mmap");
     return;
     }
-//raydium_profile_end("mmap");
 src+=gb_buffers.offsets[frame];
 }
 
@@ -244,12 +401,13 @@ int i,j;
   }
 }
 
+
+data_callback(buffer2,win.width,win.height);
+
 glEnable(GL_TEXTURE_2D);
 glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("webcam.tga"));
 glTexSubImage2D(GL_TEXTURE_2D,0,0,0,win.width,win.height,GL_RGB,GL_UNSIGNED_BYTE,buffer2);
               
-// prepare next capture
-raydium_profile_start();
 
 }
 
@@ -288,6 +446,7 @@ raydium_clear_frame();
 raydium_camera_look_at(camx,camy,camz,0,0,0);
 
 raydium_osd_mask_texture_clip("webcam.tga",1,75,56,0,0);
+raydium_osd_mask_texture_clip("drawing.tga",1,0,0,100,100);
 
 //raydium_object_draw_name("cocorobix.tri");
 
