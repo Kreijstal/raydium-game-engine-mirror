@@ -182,19 +182,21 @@ fd_set fds;
 struct timeval tv;
 int r;
 
+
+// polling
+FD_ZERO (&fds);
+FD_SET (fd, &fds);
+tv.tv_sec=0;
+tv.tv_usec=0;
+r = select(fd + 1, &fds, NULL, NULL, &tv);
+// nothing to read, we'll try later (next frame)
+if(r<=0)
+    return;
+
 src = buffer;
 
 if(capture_style==CAPTURE_READ)
  {
- // polling
- FD_ZERO (&fds);
- FD_SET (fd, &fds);
- tv.tv_sec=0;
- tv.tv_usec=0;
- r = select(fd + 1, &fds, NULL, NULL, &tv);
- // nothing to read, we'll try later (next frame)
- if(r<=0)
-    return;
 
  read(fd, buffer, win.width * win.height * bpp);
 }
@@ -210,7 +212,6 @@ gb_buf.format = vpic.palette;
 gb_buf.frame=!frame,
 //raydium_profile_start();
 ioctl(fd, VIDIOCMCAPTURE, &gb_buf);
-// SET FD TO NONBLOCK !
 if(ioctl(fd, VIDIOCSYNC, &frame)==-1)
     {
     printf("%i\n",frame);
@@ -408,8 +409,6 @@ if (!buffer2)
 
 if(cap.type & VID_TYPE_CAPTURE)
     {
-    int block=0;
-    
     capture_style=CAPTURE_MMAP;
     printf("mmap() capture\n");
     //gb_buffers.size=win.width * win.height * bpp;
@@ -431,14 +430,6 @@ if(cap.type & VID_TYPE_CAPTURE)
 	}
 
     atexit(free_mmap);
-    if(ioctl(fd, FIONBIO,&block))
-	{
-	perror("mmap");
-	printf("Cannot set video device to non blocking mode\n");
-	printf("May slow down video rendering ...\n");
-	//exit(1);	
-	}
-
 
     gb_buf.frame=0;
     gb_buf.height = win.height;
