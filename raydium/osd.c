@@ -460,7 +460,7 @@ raydium_osd_stop();
 }
 
 
-void raydium_osd_mask_texture_clip(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+void raydium_osd_mask_texture_clip(int texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
 x1/=100;
 y1/=100;
@@ -471,7 +471,7 @@ raydium_osd_start();
 
 // invalidate cache
 //raydium_texture_internal_loaded=0;
-raydium_rendering_internal_prepare_texture_render(raydium_texture_find_by_name(texture));
+raydium_rendering_internal_prepare_texture_render(texture);
 glEnable(GL_TEXTURE_2D);
 glEnable(GL_BLEND);
 glDepthMask(GL_FALSE);
@@ -495,10 +495,19 @@ raydium_rendering_internal_restore_render_state();
 raydium_osd_stop();
 }
 
+void raydium_osd_mask_texture_clip_name(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+{
+raydium_osd_mask_texture_clip(raydium_texture_find_by_name(texture),alpha,x1,y1,x2,y2);
+}
 
-void raydium_osd_mask_texture(char *texture,GLfloat alpha)
+void raydium_osd_mask_texture(int texture,GLfloat alpha)
 {
 raydium_osd_mask_texture_clip(texture,alpha,0,0,100,100);
+}
+
+void raydium_osd_mask_texture_name(char *texture,GLfloat alpha)
+{
+raydium_osd_mask_texture(raydium_texture_find_by_name(texture),alpha);
 }
 
 

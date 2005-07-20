@@ -445,8 +445,8 @@ read_v4l();
 raydium_clear_frame();
 raydium_camera_look_at(camx,camy,camz,0,0,0);
 
-raydium_osd_mask_texture_clip("webcam.tga",1,75,56,0,0);
-raydium_osd_mask_texture_clip("drawing.tga",1,0,0,100,100);
+raydium_osd_mask_texture_clip_name("webcam.tga",1,75,56,0,0);
+raydium_osd_mask_texture_clip_name("drawing.tga",1,0,0,100,100);
 
 //raydium_object_draw_name("cocorobix.tri");
 
