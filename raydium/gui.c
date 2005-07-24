@@ -74,6 +74,8 @@ for(i=0;i<RAYDIUM_GUI_MAX_WINDOWS;i++)
 // ... and then, get back to a regular init :
 for(i=0;i<RAYDIUM_GUI_MAX_WINDOWS;i++)
     raydium_gui_window_init(i);
+
+raydium_log("gui: OK");
 }
 
 

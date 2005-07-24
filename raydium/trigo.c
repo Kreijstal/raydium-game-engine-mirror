@@ -89,3 +89,24 @@ if(isnan(res[2])) res[2]=0;
 
 }
 */
+
+int raydium_trigo_pow2_next(int value)
+{
+int pows[]={0,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536};
+int pows_count=17; // 16 + first (0)
+int i;
+
+if(value>65536 || value<0)
+    {
+    raydium_log("trigo: value is outside of limits of this ugly function :/");
+    }
+
+for(i=0;i<pows_count;i++)
+    if(pows[i]>=value)
+	return pows[i];
+
+
+// should never hit this point
+raydium_log("trigo: raydium_trigo_pow2_next: ?!!");
+return -1;
+}

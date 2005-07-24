@@ -10,6 +10,8 @@
 #include "headers/texture.h"
 #endif
 
+#include "live.h"
+
 // proto
 int raydium_init_cli_option(char *option, char *value);
 FILE *raydium_file_fopen(char *path, char *mode);
@@ -29,7 +31,7 @@ for(i=2;i<=raydium_texture_size_max;i*=2)
 return 0;
 }
 
-GLuint raydium_texture_load_internal(char *filename, char *as)
+GLuint raydium_texture_load_internal(char *filename, char *as, char faked, int live_id_fake)
 {
 FILE *file;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
@@ -47,7 +49,7 @@ strcpy(temp,filename);
 temp[4]=0;
 if(!strcmp("rgb(",temp)) rgb=1; else rgb=0;
 
-if(!rgb)
+if(!rgb && !faked)
 {
  file=raydium_file_fopen(filename,"rb");
  if(!file)
@@ -110,8 +112,8 @@ if(!rgb)
  }
 
  fclose(file);
- glPixelStorei(GL_UNPACK_ALIGNMENT,1); //TEMPO
-} //end !rgb
+ glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+} //end !rgb && !faked
 
 
 
@@ -128,6 +130,25 @@ if(raydium_texture_index>RAYDIUM_MAX_TEXTURES)
     }
 
 strcpy(raydium_texture_name[id],as);
+
+if(faked)
+    {
+    raydium_live_Texture *tex;
+    tex=&raydium_live_texture[live_id_fake];
+    tx=tex->hardware_tx;
+    ty=tex->hardware_ty;
+    bpp=tex->bpp/8;
+    texsize = tx * ty * bpp;
+    data=malloc(texsize);
+    memset(data,0,texsize);
+    if(!data) 
+	{ 
+	fclose(file); 
+    	raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
+	return 0; 
+	}
+    }
+
 
 if(!rgb)
 {
@@ -163,7 +184,7 @@ if(!rgb)
 
 
  raydium_texture_used_memory+=texsize;
- if(raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR)
+ if(raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && !faked)
     raydium_texture_used_memory+=(texsize/3); // mipmaps
 
  glBindTexture(GL_TEXTURE_2D,id);
@@ -176,8 +197,8 @@ if(!rgb)
  temp[3]=0;								// TEMP !!
  if(!strcmp("BOX",temp))						// TEMP !!
  {									// TEMP !!
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);		// TEMP !!
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);		// TEMP !!
+ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
+ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!
  }									// TEMP !!
  else
  {
@@ -186,9 +207,13 @@ if(!rgb)
  }
 
  filter=raydium_texture_filter;
- if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
- filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
 
+ if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
+    filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
+
+ if(faked)
+    filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
+ 
   if(filter==RAYDIUM_TEXTURE_FILTER_NONE)
   {
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -210,8 +235,10 @@ if(!rgb)
   gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
- raydium_log("Texture num %i (%s) loaded: %ix%i, %i bpp (b%i lm%i)",
-	     id,raydium_texture_name[id],tx,ty,bpp,
+ raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i)",
+	     id,raydium_texture_name[id],
+	     (faked?"FAKED":"loaded"),
+	     tx,ty,bpp,
 	     blended,raydium_texture_islightmap[id]);
  free(data);
 } else /* is rgb color */
@@ -231,11 +258,11 @@ return id;
 GLuint raydium_texture_load(char *filename)
 {
 GLuint res;
-res=raydium_texture_load_internal(filename,filename);
+res=raydium_texture_load_internal(filename,filename,0,0);
 if(res<=0)
     {
     raydium_log("texture: faking '%s' with pink color");
-    res=raydium_texture_load_internal("rgb(1,0,1)",filename);
+    res=raydium_texture_load_internal("rgb(1,0,1)",filename,0,0);
     }
 return res;
 }

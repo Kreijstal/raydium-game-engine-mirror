@@ -16,8 +16,8 @@ Texture sizes must be a power of two, 8 (alpha mask), 24 (RGB) or 32 (RGBA) bits
 Raydium now supports materials with a simple "rgb(r,g,b)" string 
 as texture name, where r, g and b are 0 <= x <= 1 (floats).
 Texture clamping and multitexturing are supported by Raydium, but not
-documented here for now. If you're interested, have a look to source code, or
-take a look to the Wiki.
+documented here for now. If you're interested, have a look at source code, or
+take a look at the Wiki.
 
 Tips: "BOX_", ";", "|".
 **/
@@ -29,7 +29,7 @@ Returns true if ##size## is a correct texture size, depending of
 hardware capacities and "power of 2" constraint.
 **/
 
-extern GLuint raydium_texture_load_internal (char *filename, char *as);
+extern GLuint raydium_texture_load_internal(char *filename, char *as, char faked, int live_id_fake);
 /**
 Internal use.
 **/
@@ -73,7 +73,7 @@ extern void raydium_texture_filter_change (GLuint filter);
 /**
 
 This function will change all filters at anytime.
-Please note that this function will reload all textures and can be very slow.
+Please note that this function will reload every texture and can be very slow.
 
 %%(c)
 // will switch all textures to bilinear filter.

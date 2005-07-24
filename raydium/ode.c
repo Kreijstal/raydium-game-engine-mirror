@@ -3425,7 +3425,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
 	if(raydium_ode_explosion[i].radius>raydium_ode_explosion[i].config_radius)
 	    raydium_ode_explosion_delete(i);
 	else
-	 {	
+	 {
 	 // 2 - increment radius
 	 raydium_ode_explosion[i].radius+=raydium_ode_explosion[i].config_propag;
 	 

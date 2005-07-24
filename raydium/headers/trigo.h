@@ -9,7 +9,7 @@ Maths
 // Little introduction to trigo.c
 /**
 This section is mostly designed for internal uses, but provides some
-usefull maths functions.
+usefull maths functions, mostly for trigonometrical uses.
 **/
 
 extern GLfloat raydium_trigo_cos (GLfloat i);
@@ -66,6 +66,11 @@ Generates a ODE style matrix (16 Glfloat) from pos (GLfloat * 3)
 extern void raydium_trigo_pos_get_modelview (GLfloat * res);
 /**
 Stores the current OpenGL MODELVIEW matrix in res (16 GLfloat)
+**/
+
+extern int raydium_trigo_pow2_next(int value);
+/**
+Returns next power of two of ##value##. Ugly.
 **/
 
 #endif

@@ -71,6 +71,7 @@
 #ifdef ODE_SUPPORT
 #include "ode.c"
 #endif
+#include "live.c"
 #include "reg_api.c"
 
 #else

@@ -65,6 +65,7 @@
 #ifdef ODE_SUPPORT
 #include "headers/ode.h"
 #endif
+#include "headers/live.h"
 #include "headers/reg_api.h"
 
 #else
