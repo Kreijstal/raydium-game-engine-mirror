@@ -2,6 +2,7 @@
 #include "raydium/index.c"
 
 char *version="0.345 Beta";
+char *title="Raydium Modler";
 
 #define round(x) (int)((x)>0?(x)+0.5:(x)-0.5)
 #define MAX_CONTOUR 512
@@ -730,8 +731,8 @@ raydium_light_disable();
 
 int main(int argc, char **argv)
 {
-char window[256]="CQFD Corp. Raydium Modler";
-sprintf(window,"%s - %s",window,version);
+char window[256];
+sprintf(window,"%s - %s",title,version);
 
 cam_file[0]=0;
 
