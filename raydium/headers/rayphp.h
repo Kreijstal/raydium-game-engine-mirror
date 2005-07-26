@@ -26,4 +26,10 @@ Will contact R3S servers for uploading ##path## file. Set ##depends## to
 true (1) if you also want to upload dependencies, false (0) otherwise.
 **/
 
+extern int raydium_rayphp_repository_file_list(char *filter);
+/**
+Will contact R3S servers to get file list, using ##filter## (shell-like
+syntax). Default ##filter## is ##*##.
+**/
+
 #endif
