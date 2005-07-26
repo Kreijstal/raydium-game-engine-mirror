@@ -34,7 +34,7 @@ echo "<h2>R3S Raydium data repository</h2>\n";
 echo "<h3>Available files:</h3>\n";
 echo "<table border=0 cellpadding=2>";
 
- if ($dh = opendir($data_dir)) 
+ if ($dh = @opendir($data_dir)) 
  {
     while (($file = readdir($dh)) !== false) 
     {
@@ -68,10 +68,26 @@ if($type=="")
     return;
     }
 
-if($file=="") return;
+
+
 $file=rawurldecode($file);
 $file=str_replace("/","",$file);
 $file=$data_dir.$file;
+
+if($type=="listRepos")
+    {
+    if($file==$data_dir)
+	$file="$data_dir/*";
+    foreach((array)glob($file) as $file)
+	{
+	if($file[0]!='.')
+	    echo trim(str_replace("/","",substr($file,strlen($data_dir))))."\n";
+	}
+    return;
+    }
+
+// For all next operations, consider $file as mandatory ...
+if($file=="") return;
 
 if($type=="putGzip")
 {
@@ -133,5 +149,5 @@ echo filemtime($file);
 }
 } // end main()
 
-main($file,$type,$username,$password,$data);
+main($_GET["file"],$_GET["type"],$_GET["username"],$_GET["password"],$_GET["data"]);
 ?>

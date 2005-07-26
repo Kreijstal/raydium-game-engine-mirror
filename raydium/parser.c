@@ -56,7 +56,7 @@ strcpy(part1,str);
 part1[i]=0;
 raydium_parser_trim(part1);
 raydium_parser_trim(part2);
-return 1;
+return i+1;
 }
 
 void raydium_parser_replace(char *str,char what, char with)

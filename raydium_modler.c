@@ -407,6 +407,7 @@ printf("saveup (file.tri): saves to .tri file and upload to repository\n");
 printf("saveupall (file.tri): saves to .tri file and uploads to repository with dependencies\n");
 printf("upload (file): uploads file to repository\n");
 printf("uploadall (file): uploads file to repository with dependencies\n");
+printf("list [filter]: list files from repository\n");
 printf("savea (file.tri): saves to .tri file, sorting alpha textures at the end of file\n");
 printf("move: move object by cursor position\n");
 printf("move x y z: move object by x, y and z\n");
@@ -567,6 +568,8 @@ if(!strcmp(arg[0],"saveup")&& argc==2) { dump_vertex_to(arg[1]); raydium_rayphp_
 if(!strcmp(arg[0],"saveupall")&& argc==2) { dump_vertex_to(arg[1]); raydium_rayphp_repository_file_put(arg[1],1); }
 if(!strcmp(arg[0],"upload")&& argc==2) raydium_rayphp_repository_file_put(arg[1],0);
 if(!strcmp(arg[0],"uploadall")&& argc==2) raydium_rayphp_repository_file_put(arg[1],1);
+if(!strcmp(arg[0],"list") && argc==1) raydium_rayphp_repository_file_list("");
+if(!strcmp(arg[0],"list") && argc==2) raydium_rayphp_repository_file_list(arg[1]);
 if(!strcmp(arg[0],"savea") && argc==2) dump_vertex_to_alpha(arg[1]);
 if(!strcmp(arg[0],"load")  && argc==2) read_vertex_from(arg[1]);
 if(!strcmp(arg[0],"bind")  && argc==2) raydium_texture_load(arg[1]); 

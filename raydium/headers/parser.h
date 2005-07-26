@@ -49,7 +49,7 @@ extern char raydium_parser_cut (char *str, char *part1, char *part2, char separa
 This function will cut ##str## in two parts (##part1## and ##part2##) on
 ##separator##. No memory allocation will be done by this functions.
 First occurence of ##separator## is used (left cut).
-Return true (1) if ##str## was cut.
+Return true (##i##+1) if ##str## was cut, where ##i## is the separator position.
 **/
 
 extern void raydium_parser_replace (char *str, char what, char with);
