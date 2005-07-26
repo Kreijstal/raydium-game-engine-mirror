@@ -20,8 +20,8 @@ Want to make an explosion ? Same thing: call the right function.
 Note that you can call OpenGL functions anyway, if necessary.
 
 About portability, I can say a few things: [[Raydium]] was initially 
-planned for linux only, but with an "clean" (nearly [[ANSI]]) code,
-and, in facts, we have been able to compile Raydium under VC6 (Windows)
+planned for linux only, but with a "clean" (nearly [[ANSI]]) code,
+and, in facts, we have been able to compile Raydium under Visual Studio (Windows)
 and mingw with a very few modifications.
 So you can expect a correct result on any system providing 
 OpenGL (at least 1.2), [[GLU]], [[GLUT]] and a C compiler.
@@ -32,12 +32,19 @@ I starts to write [[Raydium]].
 
 Raydium is perfect for outdoors spaces, integrating a landscape engine,
 with suitable physic, supports dynamic lighting, fog, blending, water and
-waves, terraforming, and more.
+waves, terraforming, and more, but also provides everything for indoor,
+with radiosity lightmaps for example.
 
-This features list will probably grow up during Raydium developpement.
+Some other advanced features are available : physics, scripting,
+live video, transparent networking, GUI, ...
+
+This features list will probably grow up during Raydium developpement, see
+Raydium website: http://raydium.cqfd-corp.org/
 
 You'll find, in this document, a list of many functions and possibilities 
-of [[Raydium]].
+of [[Raydium]], but if it's your first view of Raydium, you should
+start with tutorials ( http://raydium.yoopla.org/wiki/RaydiumTutorials ) and
+packaged demo programs.
 
 After this short introduction, let's talk about the [[API]] itself, 
 starting with the main file (from the programmer's point of vue) 
