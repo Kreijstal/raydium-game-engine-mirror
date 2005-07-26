@@ -125,6 +125,8 @@ global $index;
 $p=strpos($f,"raydium_");
 if($p!==false)
     $f=substr($f,$p);
+else
+    $f="unsupported - $f";
 
 $index[$i]=$f."|$i";
 return $i++;
