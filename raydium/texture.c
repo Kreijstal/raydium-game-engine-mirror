@@ -131,6 +131,7 @@ if(raydium_texture_index>RAYDIUM_MAX_TEXTURES)
 
 strcpy(raydium_texture_name[id],as);
 
+#ifndef WIN32
 if(faked)
     {
     raydium_live_Texture *tex;
@@ -148,7 +149,7 @@ if(faked)
 	return 0; 
 	}
     }
-
+#endif
 
 if(!rgb)
 {

@@ -14,7 +14,9 @@
 // proto
 void raydium_ode_init(void);
 void raydium_register_api(void);
+#ifndef WIN32
 void raydium_live_init(void);
+#endif
 void raydium_internal_live_close(void);
 
 int raydium_init_cli_option(char *option, char *value)
@@ -110,7 +112,9 @@ raydium_camera_path_init_all();
 raydium_osd_fade_init();
 raydium_console_init();
 raydium_gui_init();
+#ifndef WIN32
 raydium_live_init();
+#endif
 
 // Must find a way to delete textures from video card's memory, too...
 
@@ -239,7 +243,9 @@ atexit(raydium_joy_close);
 atexit(raydium_network_close);
 atexit(raydium_internal_dump);
 atexit(raydium_console_history_save);
+#ifndef WIN32
 atexit(raydium_internal_live_close);
+#endif
 raydium_log("atexit functions: OK");
 raydium_init_reset();
 #ifdef ODE_SUPPORT

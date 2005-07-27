@@ -1,3 +1,4 @@
+#ifndef WIN32
 #ifndef _LIVE_H
 #define _LIVE_H
 #include "../live.h"
@@ -189,4 +190,5 @@ Same as above, but using ##texture## name.
 **/
 
 
+#endif
 #endif

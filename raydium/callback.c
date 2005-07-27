@@ -36,7 +36,9 @@ raydium_sound_callback();
 // 0hz ODE callback workaround
 raydium_ode_network_read();
 #endif
+#ifndef WIN32
 raydium_internal_live_video_callback();
+#endif
 }
 
 
