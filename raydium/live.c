@@ -688,7 +688,8 @@ tex=&raydium_live_texture[livetex];
 u=tex->tx/(float)tex->hardware_tx;
 v=tex->ty/(float)tex->hardware_ty;
 
-raydium_osd_mask_texture_clip(tex->texture,alpha,u*100,v*100,0,0);
+//raydium_osd_mask_texture_clip(tex->texture,alpha,u*100,v*100,0,0);
+raydium_osd_mask_texture_clip(tex->texture,alpha,0,v*100,u*100,0);
 }
 
 

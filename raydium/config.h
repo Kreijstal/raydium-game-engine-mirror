@@ -48,7 +48,7 @@
 //#define DEBUG_ODENET
 
 // movie linear framerate (1/x sec) (starts recording, too)
-//#define DEBUG_MOVIE 2
+//#define DEBUG_MOVIE 25
 
 // allow vertex lighting for lightmaps textures
 //#define RENDER_ALLOW_LIGHTING_FOR_LIGHTMAPS

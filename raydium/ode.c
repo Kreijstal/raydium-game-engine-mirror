@@ -3642,7 +3642,7 @@ raydium_camera_smooth_element_to_path_offset(raydium_ode_element_find(element),0
 
 
 // This function is provided "for fun" only. Not all effects are dumped :
-// Missing : particles, shadows, forced colors, before/after callbacks, 
+// Missing : shadows, forced colors, before/after callbacks, 
 // fixed elements, ...
 // Some code is pasted from file.c (and this is BAD ! :)
 
