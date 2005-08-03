@@ -249,8 +249,16 @@ if(!rgb)
  raydium_texture_rgb[id][1]=g;
  raydium_texture_rgb[id][2]=b;
  raydium_texture_rgb[id][3]=1.f;
- raydium_texture_blended[id]=0;
- raydium_log("Texture num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
+ if(r<0 && g<0 && b<0)
+    {
+    raydium_texture_blended[id]=RAYDIUM_TEXTURE_PHANTOM;
+    raydium_log("Texture num %i is Phantom (depth buffer only)",id);    
+    }
+ else
+ {
+    raydium_texture_blended[id]=0;
+    raydium_log("Texture num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
+ }
 }
  
 return id;

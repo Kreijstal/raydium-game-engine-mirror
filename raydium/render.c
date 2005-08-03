@@ -93,32 +93,46 @@ else // "standard" textunit
 
   glColor4f(1.f,1.f,1.f,1.f);
 
-  if(raydium_texture_blended[tex]==1)
+  if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_BLENDED)
   {
   glEnable(GL_BLEND);
   glDepthMask(GL_FALSE);
   glDisable(GL_ALPHA_TEST);
 //  glDisable(GL_FOG);
+  glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   }
 
-  if(raydium_texture_blended[tex]==2)
+  if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_CUTOUT)
   {
   glEnable(GL_BLEND);
   glDepthMask(GL_TRUE);
   glAlphaFunc(GL_GREATER,0);
   glEnable (GL_ALPHA_TEST);
 //  glDisable(GL_FOG);
+  glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   }
 
-  if(raydium_texture_blended[tex]==0)
+  if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_NONE)
   {
   glDisable(GL_BLEND);
   glDepthMask(GL_TRUE);
   glDisable(GL_ALPHA_TEST);
 //  glEnable(GL_FOG);
+  glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   }
 
-  if(raydium_texture_rgb[tex][0]>=0)
+
+  if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_PHANTOM)
+  {
+  glDisable(GL_BLEND);
+  glDepthMask(GL_TRUE);
+  glDisable(GL_ALPHA_TEST);
+  glDisable(GL_TEXTURE_2D);
+  glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+  }
+
+
+  if(raydium_texture_rgb[tex][0]>=0 && raydium_texture_blended[tex]!=RAYDIUM_TEXTURE_PHANTOM)
   {
   if(raydium_render_rgb_force_tag)
     rgb=raydium_render_rgb_force;
