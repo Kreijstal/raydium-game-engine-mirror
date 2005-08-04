@@ -75,6 +75,7 @@ typedef struct raydium_particle_Particle
 raydium_particle_Generator raydium_particle_generators[RAYDIUM_MAX_GENERATORS];
 raydium_particle_Particle *raydium_particle_particles[RAYDIUM_MAX_PARTICLES];
 GLfloat raydium_particle_time_factor;
+GLfloat raydium_particle_scale_factor;
 
 // proto
 void raydium_camera_replace(void);

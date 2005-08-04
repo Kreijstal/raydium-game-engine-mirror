@@ -180,4 +180,10 @@ extern void raydium_particle_generator_particles_OnDelete_name (char *gen, void 
 Same as above, but using generator's name.
 **/
 
+extern void raydium_particle_scale_all(GLfloat scale);
+/**
+Will scale all particles with ##scale## factor. Use with caution.
+**/
+
+
 #endif

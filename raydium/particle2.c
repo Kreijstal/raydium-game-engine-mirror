@@ -33,6 +33,7 @@ void raydium_particle_init(void)
 int i;
 
 raydium_particle_time_factor=1;
+raydium_particle_scale_factor=1;
 
 for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
     {
@@ -913,6 +914,12 @@ rz*=TSIZE/2;
   glEnd();
 }
 
+
+void raydium_particle_scale_all(GLfloat scale)
+{
+raydium_particle_scale_factor=scale;
+}
+
 void raydium_particle_draw_all(void)
 {
 GLuint i;
@@ -935,12 +942,12 @@ if (raydium_camera_pushed) raydium_camera_replace(); // is it really our job to 
 //raydium_rendering_internal_restore_render_state();
 
 glGetFloatv(GL_MODELVIEW_MATRIX,modmat);
-ux=modmat[0];
-uy=modmat[4];
-uz=modmat[8];
-rx=modmat[1];
-ry=modmat[5];
-rz=modmat[9];
+ux=modmat[0]*raydium_particle_scale_factor;
+uy=modmat[4]*raydium_particle_scale_factor;
+uz=modmat[8]*raydium_particle_scale_factor;
+rx=modmat[1]*raydium_particle_scale_factor;
+ry=modmat[5]*raydium_particle_scale_factor;
+rz=modmat[9]*raydium_particle_scale_factor;
 
 glDepthMask(GL_FALSE);
 
