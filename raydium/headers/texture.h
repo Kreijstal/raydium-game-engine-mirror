@@ -15,6 +15,8 @@ Texture sizes must be a power of two, 8 (alpha mask), 24 (RGB) or 32 (RGBA) bits
 
 Raydium now supports materials with a simple "rgb(r,g,b)" string 
 as texture name, where r, g and b are 0 <= x <= 1 (floats).
+With 3 negative values, you will generate a "phantom texture". Phantom textures
+are only drawn into the z-buffer (and not color buffer).
 Texture clamping and multitexturing are supported by Raydium, but not
 documented here for now. If you're interested, have a look at source code, or
 take a look at the Wiki.

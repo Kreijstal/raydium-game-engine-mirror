@@ -2932,7 +2932,7 @@ if(names==1)
      raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[j].geom), (dReal *)dGeomGetRotation(raydium_ode_element[j].geom));
      glDisable(GL_LIGHTING);
      raydium_texture_current_set_name("rgb(1,0,0)");
-     raydium_rendering_internal_prepare_texture_render(raydium_texture_current);     
+     raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
      glLineWidth(1.f);
      glBegin(GL_LINES);
      glVertex3f(raydium_ode_motor[i].rocket_position[0],raydium_ode_motor[i].rocket_position[1],raydium_ode_motor[i].rocket_position[2]);

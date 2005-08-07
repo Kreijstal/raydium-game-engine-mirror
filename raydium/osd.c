@@ -49,6 +49,7 @@ raydium_osd_color_change(raydium_osd_ega[i],raydium_osd_ega[i+1],raydium_osd_ega
 void raydium_osd_start(void)
 {
 glMatrixMode(GL_PROJECTION);
+glPushMatrix();
 glLoadIdentity();
 
 //glViewport(0, 0, raydium_window_tx, raydium_window_ty);
@@ -57,6 +58,7 @@ glOrtho(0,100, 0,100, -100,100);
 //glPushMatrix();
 raydium_rendering_internal_prepare_texture_render(0);
 glMatrixMode(GL_MODELVIEW);
+glPushMatrix();
 glLoadIdentity();
 glDisable(GL_DEPTH_TEST);
 glDepthMask(GL_FALSE);
@@ -72,6 +74,12 @@ glEnable(GL_DEPTH_TEST);
 glDepthMask(GL_TRUE);
 if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
 if(raydium_fog_enabled_tag)   glEnable(GL_FOG);
+
+glMatrixMode(GL_PROJECTION);
+glPopMatrix();
+
+glMatrixMode(GL_MODELVIEW);
+glPopMatrix();
 }
 
 

@@ -1,6 +1,92 @@
 #ifndef _ODE_H
 #define _ODE_H
 #include "../ode.h"
+
+/*=
+Integrated Physics (ODE)
+3900
+**/
+
+// Introduction
+/**
+Raydium allows you to build applications with full physics, using ODE (Open
+Dynamics Engine). ODE is "an open source, high performance library for 
+simulating rigid body dynamics", and is fully integrated into Raydium, with
+the usual abstraction. You can build cars, ragdolls, rockets, ... with
+only few lines of code. Physics are linked to sound API, particles engine,
+network layer, ... so you've almost nothing else to do but setting up objects.
+
+Raydium's website provides tutorials for building physics ready applications.
+**/
+
+// Vocabulary
+/**
+Raydium physics use a simple vocabulary, with a few entities :
+- **Objects:**
+Objects are containers, with no direct visual appearance. An object contains
+elements and joints (see below). By default, all elements in an object
+doesn't collide each others. "Car", "Player", "Crane" are good object examples.
+
+- **Elements:**
+Elements are the main thing you will play with. An element is rendered using
+an associated 3D mesh, is configured with a density, a size, collides with
+others elements, ...
+An element **must** be owned by an object.
+For now, there is 3 element types (standard, satic, fixing). Static elements
+are unmovable, they just collide with other elements, usefull for very
+big elements, or externally controlled elements (motion capture, network, 
+haptic interface, ...), for example.
+
+
+- **Joints:**
+Joints are dedicated to elements linking. A joint **must** be linked with two
+elements or unwanted behaviors may happen.
+For now, Raydium supports 4 joint types (hinge, hinge2, universal, fixed), and 
+you will find more informations with suitable functions documentation, below.
+On a joint, you could setup limits (min and max for all axes) and a maximum
+force before joint breaks, if needed.
+
+
+- **Motors:**
+A motor is linked to joints, and may powering an unlimited amount of joints.
+For now, 3 motor types are available: engine, angular and rocket.
+
+**Engine** type works the same way as a car's engine: it will try to 
+make "something" turning, at the desired **speed**. You can link a 
+gearbox to this type (and only this one).
+
+**Angular** type will try to rotate "something" to the desired **angle**,
+usefull for car's front wheels, for example.
+
+**Rocket type** is very simple: give a force and an orientation. Usefull for
+creating copters, rockets, and for elements "pushing", for example. 
+Special rocket is avaiblable for FPS style player controls.
+Warning, a rocket is linked to an element ! (not a joint)
+
+
+- **Explosions:**
+Explosions are not directly related to rigid body physics, but consider it
+as a high level primitive. 
+With Raydium, you have two different ways to create an explosion.
+
+First, you can create a "blowing explosion", generating a spherical blow. Any
+element in this growing sphere will be ejected. 
+Use this for very consequent explosions only !
+
+Next, you can create an instantaneous explosion, with a degressive blowing
+effect. A force is applied to every body found inside the blowing radius,
+proportional to distance from the explosion's center. Usefull for smaller
+explosions.
+
+- **Launchers:**
+Launchers are not real entities, but "only" tools. Obviously, they are
+allowing you to launch an element (you must provice force and orientation)
+from another element (relatively). More informations about launchers below.
+
+Raydium provides some other functions for advanced uses, and you can
+access directly to ODE API for very experienced users.
+**/
+
 extern void raydium_ode_name_auto (char *prefix, char *dest);
 extern void raydium_ode_init_object (int i);
 extern void raydium_ode_init_element (int i);
