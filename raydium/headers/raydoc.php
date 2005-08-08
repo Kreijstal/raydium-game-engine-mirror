@@ -12,9 +12,9 @@ $intro="
 =====CQFD Corp.=====
 
 This document is the most up-to-date version. **This is a work in progress**:
-only the core of Raydium is described here, and there's again some 
-errors and wrong informations. Try, wait, or contribute ;)
+there's again some errors and wrong informations. Try, wait, or contribute ;)
 
+\"\"<a href=$page#chapters>Index of chapters</a>\"\"
 \"\"<a href=$page#index>Index of all Raydium functions</a>\"\"
 
 ----
@@ -94,8 +94,17 @@ return $res;
 }
 
 
-function h1($str)
+$chapters=array();
+function h1($str,$addchap=true)
 {
+global $chapters;
+static $i=1;
+if($addchap)
+    {
+    echo '""'."<a name=chap$i></a>".'""';
+    $chapters[$i]=$str;
+    $i++;
+    }
 echo "\n=====$str:=====\n";
 }
 
@@ -247,6 +256,13 @@ for($i=0;$i<count($sorted);$i++)
 	}
     }
 
+
+h1('""<a name=chapters></a>""Chapters',false);
+foreach($chapters as $key => $val)
+    {
+    echo('====""'."<a href=$page#chap$key>$val</a>".'""====')."\n";
+    }
+
 sort($index);
 h1('""<a name=index></a>""Index');
 for($i=0;$i<count($index);$i++)
@@ -256,3 +272,4 @@ for($i=0;$i<count($index);$i++)
     $l=$j[1];
     echo '""'."<a href=$page#$l><tt>$k</tt></a>".'""'."\n";
     }
+

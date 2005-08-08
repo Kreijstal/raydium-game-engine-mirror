@@ -12,7 +12,7 @@
 
 // TODO:
 // load object from file
-// delete callbaks (elements, motors, ... ?) (done for joints)
+// delete callbaks (objects, motors, ... ?) (done for joints, elements)
 // parametric frictions
 // other joints
 // allow full RayODE reset (almost done now)

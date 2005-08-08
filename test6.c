@@ -617,6 +617,7 @@ if(mouse_grab==1)
   cam_angle_v += (delta_y*0.458f); // degs
  raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
  raydium_ode_element_player_angle_name("player",cam_angle_h);
+ printf("%f\n",cam_angle_h);
  if(cam_angle_v<1) cam_angle_v=1;
  if(cam_angle_v>179) cam_angle_v=179;
 }
