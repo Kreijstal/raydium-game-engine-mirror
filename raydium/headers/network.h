@@ -132,7 +132,7 @@ As explained above, Raydium is using UDP network packets, and as
 you may know, UDP is not a reliable protocol, aiming speed before all.
 This system is interesting for sending non-sensible data, as player positions,
 for example.
-But Raydium's can handle more important data, using some of methods of TCP
+But Raydium can handle more important data, using some of methods of TCP
 protocol, as Timeouts, ACK, resending, ...
 This TCP style packets are available thru "Netcalls".
 **/

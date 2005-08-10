@@ -85,25 +85,79 @@ from another element (relatively). More informations about launchers below.
 
 // Callbacks
 /**
-Here: things.
+For **advanced** uses, you may want to enter into some "internal" parts of 
+RayODE. Many callbacks are available for such needs.
+To cancel any callback, set its value to ##NULL## (default value).
+Here is a quick list:
 
-%%(c)
-...
-char raydium_ode_network_next_local_only; // must build accessor ... ?
-...
-void * raydium_ode_CollideCallback; // char f(int,int,dContact*)
-void * raydium_ode_StepCallback; // void f(void)
-void * raydium_ode_ObjectNearCollide; // char f(int,int)
-void * raydium_ode_ExplosionCallback; // void f(char,dReal,dReal,dReal*)
-void * raydium_ode_BeforeElementDrawCallback;
-void * raydium_ode_AfterElementDrawCallback;
-...
-%%
+- ##raydium_ode_StepCallback##
+This callback is fired before every ODE callback. Since physcis callback
+frequency may change (see ##raydium_ode_time_change##) during slow motion
+scenes, for example, this callback is quiet useful.
+Callback prototype: ##void f(void);##
+
+
+- ##raydium_ode_ObjectNearCollide##
+When two objects are too near, before lauching "expensive" collision tests,
+Raydium is firing this event.
+
+Callback prototype: ##char f(int obj1, int obj2);##
+##obj1## and ##obj2## are the two objets, and you must return true (1) if
+you want to "validate" collision, or false (0) if you don't want that two
+objects to collide.
+
+
+- ##raydium_ode_CollideCallback## 
+When two objects collides, Raydium will search all collisions between
+every elements. For each contact, this callback is fired. For complex
+objects, with a lot of elements, this callback may be fired a **very** large
+number of times during **one** ODE step ! Do only simple things here.
+
+Callback prototype: ##char f(int e1, int e2, dContact *c);##
+##e1## and ##e2## are the two colliding elements, and you must return true (1) 
+if you want to "validate" this contact, or false (0) to cancel this contact 
+(and only this one !)
+
+See ODE documentation, chapter 7.3.7, for more informations about ##dContact##
+structure.
+
+
+- ##raydium_ode_ExplosionCallback## 
+At every explosion, of any type, this event is fired. This is the best
+place to play suitable sound, create particles and such things.
+
+Callback prototype: ##void f(char type, dReal radius, dReal force_or_propag, dReal *pos);##
+You can find in callback params:
+explosion ##type## (see above), ##radius##, force or propag (depending on
+explosion type) and ##pos##, an array of 3 dReal values for explosion position.
+
+
+- ##raydium_ode_BeforeElementDrawCallback##
+When ##raydium_ode_draw_all(0)## is called, for every element to draw, this
+callback is **before** element drawing.
+
+Callback prototype: ##char f(int elem);##
+##elem## is the element'id. Return true (1) if you want to draw this element,
+or false (0) otherwise. This is also the best place to drawn team colors on 
+cars, for example (see ##raydium_rendering_rgb_force## for this use).
+
+
+- ##raydium_ode_AfterElementDrawCallback##
+Same as the previous callback, but **after** element drawing.
+
+Callback prototype: ##void f(int elem);##
+With the previous example (team colors), this is the place to restore
+default rendering state (see ##raydium_rendering_rgb_normal##).
 **/
 
 
 // Miscallenous
 /**
+By default, ODE is called 400 times per second, allowing **very** accurate
+physics. You may change this in ##ode.h## with ##RAYDIUM_ODE_PHYSICS_FREQ## and
+##RAYDIUM_ODE_TIMESTEP##, but most ERP and CFM values must be changed in your
+applications. ODE use a lot of cache mechanisms, so 400 Hz is a reasonable value.
+
 Please note RayODE interface is using ##dReal## ODE type for variables. 
 For now, ##dReal## is an alias to ##float## type. But please use ##sizeof()##.
 
@@ -377,6 +431,7 @@ dReal *p;
 p=raydium_ode_element_linearvelocity_get(elem);
 raydium_log("%f %f %f",p[0],p[1],p[2]);
 %%
+Returned data is available only for the current frame.
 **/
 
 extern dReal *raydium_ode_element_linearvelocity_get_name (char *e);
@@ -612,7 +667,7 @@ Same as above, but using element's name.
 extern void raydium_ode_element_rotate (int elem, dReal * rot);
 /**
 This function will rotate element ##elem## using ##rot##.
-##rot## is a dReal array of 3 values (rx,ry,rz).
+##rot## is a dReal array of 3 values (rx,ry,rz), in radians.
 Warning: arbitrary rotations may lead to unwanted behaviours.
 **/
 
@@ -647,7 +702,7 @@ extern void raydium_ode_object_rotate(int obj, dReal *rot);
 /**
 This function will try to rotate object ##obj##.
 For now, rotation is done around the last element of the object.
-##rot## is a dReal array of 3 values (rx,ry,rz).
+##rot## is a dReal array of 3 values (rx,ry,rz), in radians.
 Warning: arbitrary rotations may lead to unwanted behaviours.
 **/
 
@@ -840,274 +895,428 @@ Same as above, but using elements's names.
 
 extern void raydium_ode_joint_hinge_limits (int j, dReal lo, dReal hi);
 /**
+Sets low (##lo##) and high (##hi##) limits for hinge joint ##j##.
 **/
 
 extern void raydium_ode_joint_hinge_limits_name (char *j, dReal lo, dReal hi);
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_joint_universal_limits (int j, dReal lo1, dReal hi1, dReal lo2, dReal hi2);
 /**
+Sets low and hight limits for axe 1 (##lo1##, ##hi1##) and axe 2 (##lo2##, 
+##hi2##) for universal joint ##j##. See ##raydium_ode_joint_attach_universal##
+for more informations about universal joint axes.
 **/
 
 extern void raydium_ode_joint_universal_limits_name (char *j, dReal lo1, dReal hi1, dReal lo2, dReal hi2);
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_joint_hinge2_block (int j, char block);
 /**
+Sometime, you may need to block rotation for first axe of hinge2 joints, for
+example with rear wheels of a car. If so, set ##block## to 1 (true).
+Setting ##block## back to 0 (false) will restore standard rotation behaviour.
 **/
 
 extern void raydium_ode_joint_hinge2_block_name (char *name, char block);
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_joint_delete_callback (int j, void (*f) (int));
 /**
+Since joints may break (see ##raydium_ode_joint_break_force##), it may be
+useful to get a callback on joint deletion.
+This callback must this prototype:
+##void joint_delete(int jid)##
+##jid## is the deleted joint id. You can't cancel joint deletion (yet).
 **/
 
 extern void raydium_ode_joint_delete_callback_name (char *name, void (*f) (int));
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_joint_break_force (int j, dReal maxforce);
 /**
+Setting a non-zero ##maxforce## on a joint will transform this joint into
+a "breakable joint". There's no unit for ##maxforce##, you'll probably have
+to find the suitable value empirically.
 **/
 
 extern void raydium_ode_joint_break_force_name (char *name, dReal maxforce);
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_joint_elements_get (int j, int *e1, int *e2);
 /**
+Will return elements (##e1## and ##e2##) linked to joint ##j##.
 **/
 
 extern void raydium_ode_joint_elements_get_name (char *j, int *e1, int *e2);
 /**
+Same as above, but using joint's name.
 **/
 
 extern void raydium_ode_motor_update_joints_data_internal (int j);
 /**
+Internal function.
 **/
 
 extern void raydium_ode_motor_speed (int j, dReal force);
 /**
+Sets motor ##j## speed parameter. This is only suitable for "engine"
+and "rocket" type motors. There's no special unit for ##force##.
 **/
 
 extern void raydium_ode_motor_speed_name (char *name, dReal force);
 /**
+Same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_power_max (int j, dReal power);
 /**
+Sets motor ##j## max power parameter. This is only suitable for "engine"
+and "angular" motors. There's no special unit for ##power##.
 **/
 
 extern void raydium_ode_motor_power_max_name (char *name, dReal power);
 /**
+Same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_angle (int j, dReal angle);
 /**
+Sets motor ##j## angle parameter. This is only suitable for "angular" motors.
+##angle## has the units of radians.
 **/
 
 extern void raydium_ode_motor_angle_name (char *motor, dReal angle);
 /**
+Same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_gears_set (int m, dReal * gears, int n_gears);
 /**
+Sets a gearbox for motor ##m## (only suitable for "engine" motors).
+##gears## is an array of dReal values, with all gears factors).
+##n_gears## is the array length (total number of gears for this gearbox).
+example:
+%%(c)
+// rear,1,2,3,4,5
+dReal gears[]={-0.4,0.4,0.6,0.8,0.9,1.0};
+...
+raydium_ode_motor_gears_set(main_engine,gears,6);
+%%
+If you want to cancel a gearbox, set a gearbox with only one gear with 1.0
+factor value.
+
+Raydium gearboxes implementation is very naive, with 100% output.
+For example, a 0.5 gear factor will divide maximum speed by two, but will 
+provide twice the normal torque.
 **/
 
 extern void raydium_ode_motor_gears_set_name (char *m, dReal * gears, int n_gears);
 /**
+Same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_gear_change (int m, int gear);
 /**
+Switch motor ##m## to ##gear##.
 **/
 
 extern void raydium_ode_motor_gear_change_name (char *m, int gear);
 /**
+Same as above, but using motor's name.
 **/
 
 extern dReal *raydium_ode_element_pos_get (int j);
 /**
+This function will return element ##j##'s current position, as an array of
+3 dReal values.
+example:
+%%(c)
+dReal *pos;
+dReal pos_copy;
+...
+pos=raydium_ode_element_pos_get(my_element);
+raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
+memcpy(pos_copy,pos,sizeof(dReal)*3);
+...
+%%
+Returned data is available only for the current frame.
 **/
 
 extern dReal *raydium_ode_element_pos_get_name (char *name);
 /**
+Same as above, but using element's name.
 **/
 
 extern char raydium_ode_element_rotq_get (int j, dQuaternion res);
 /**
+This function will return element ##j##'s current rotation, as an array of
+4 dReal values (quaternion), thru ##res##.
+No memory allocation will be done.
 **/
 
 extern char raydium_ode_element_rotq_get_name (char *name, dQuaternion res);
 /**
+Same as above, but using element's name.
 **/
 
 extern char raydium_ode_element_rot_get (int e, dReal * rx, dReal * ry, dReal * rz);
 /**
+This code is experimental. It should returns element ##e##'s current rotation
+using 3 dReal angles, in radians. Do not apply back values to the
+element since there're not "ODE formated".
 **/
 
 extern char raydium_ode_element_rot_get_name (char *e, dReal * rx, dReal * ry, dReal * rz);
 /**
+Same as above, but using element's name.
 **/
 
 extern void raydium_ode_element_sound_update (int e, int source);
 /**
+This function is a small bridge between RayODE and sound API, updating sound
+##source## using element ##e##'s position.
 **/
 
 extern void raydium_ode_element_sound_update_name (char *e, int source);
 /**
+Same as above, but using element's name.
 **/
 
 extern void raydium_ode_element_RelPointPos (int e, dReal px, dReal py, dReal pz, dReal * res);
 /**
+Give a point (##px##, ##py## and ##pz##) on element ##e## to this function,
+and il will return this point in global coordinates (##res##).
+Returned data is available only for the current frame.
 **/
 
 extern void raydium_ode_element_RelPointPos_name (char *e, dReal px, dReal py, dReal pz, dReal * res);
 /**
+Same as above, but using element's name.
 **/
 
 extern int raydium_ode_motor_create (char *name, int obj, char type);
 /**
+This function will create a new motor, using ##name## (single), for
+object ##obj##, with ##type##. As said before, available types are
+##RAYDIUM_ODE_MOTOR_ENGINE##, ##RAYDIUM_ODE_MOTOR_ANGULAR## and
+##RAYDIUM_ODE_MOTOR_ROCKET##. See the first part of this chapter for more
+informations about motor types.
 **/
 
 extern void raydium_ode_motor_attach (int motor, int joint, int joint_axe);
 /**
+This function will link ##motor## to ##joint##, on axe ##joint_axe## (first axe
+is axe ##0## and so on ...). This is only suitable for engine and angular motors.
 **/
 
 extern void raydium_ode_motor_attach_name (char *motor, char *joint, int joint_axe);
 /**
+Same as above, but using motor's name and joint's name.
 **/
 
 extern dReal raydium_ode_motor_speed_get (int m, int gears);
 /**
+Will return current motor speed.
+For engine style motors, if ##gears## is sets to 1 (true), returned speed
+will be relative to current motor's gear. Useless for other types.
 **/
 
 extern dReal raydium_ode_motor_speed_get_name (char *name, int gears);
 /**
+same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_rocket_set (int m, int element, dReal x, dReal y, dReal z);
 /**
+This function will configure rocket motor ##m## on ##element## at position
+(##x##,##y##,##z##). Rocket motors are unusable until this function is called.
 **/
 
 extern void raydium_ode_motor_rocket_set_name (char *motor, char *element, dReal x, dReal y, dReal z);
 /**
+same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_rocket_orientation (int m, dReal rx, dReal ry, dReal rz);
 /**
+This function will rotate rocket ##m## using ##rx##,##ry## and ##rz## angles
+in degrees. Base orientation is z up.
 **/
 
 extern void raydium_ode_motor_rocket_orientation_name (char *name, dReal rx, dReal ry, dReal rz);
 /**
+same as above, but using motor's name.
 **/
 
 extern void raydium_ode_motor_rocket_playermovement (int m, char isplayermovement);
 /**
+Will configure rocket ##m## for player movements. This type of rocket will be
+automatically disabled when linked element is not touched by 
+anything (ground in most cases).
 **/
 
 extern void raydium_ode_motor_rocket_playermovement_name (char *m, char isplayermovement);
 /**
+same as above, but using motor's name.
 **/
 
 extern char raydium_ode_motor_delete (int e);
 /**
+Will obviously delete motor ##e##.
 **/
 
 extern char raydium_ode_motor_delete_name (char *name);
 /**
+same as above, but using motor's name.
 **/
 
 extern char raydium_ode_joint_delete (int joint);
 /**
+Will obviously delete ##joint##.
 **/
 
 extern char raydium_ode_joint_delete_name (char *name);
 /**
+same as above, but using joint's name.
 **/
 
 extern char raydium_ode_element_delete (int e, char deletejoints);
 /**
+Will obviously delete element ##e##. Deletion may me queued for some reason,
+for a very short time (current collide loop). For now, you **must** set
+##deletejoints## to 1 (true), since joints without 2 linked elements
+are invalid.
+Linked rocket engines will be deleted, too.
 **/
 
 extern char raydium_ode_element_delete_name (char *name, char deletejoints);
 /**
+Same as above, but using element's name.
 **/
 
 extern char raydium_ode_object_delete (int obj);
 /**
+Will obviously delete object ##obj##. All elements, joints and motors will
+be deleted with object.
 **/
 
 extern char raydium_ode_object_delete_name (char *name);
 /**
+Same as above, but using object's name.
 **/
 
 extern char raydium_ode_explosion_delete (int e);
 /**
+Will delete ##RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL## type explosion ##e##.
 **/
 
 extern char raydium_ode_element_moveto (int element, int object, char deletejoints);
 /**
+This function will move ##element## from his owner object to another ##object##.
+This "migration" will not be completed until ##element## is not touching
+anymore his previous owner.
+For now, you **must** set ##deletejoints## to 1 (true), deleting linked joints.
 **/
 
 extern char raydium_ode_element_moveto_name (char *element, char *object, char deletejoints);
 /**
+Same as above, but using element's name and object's name.
 **/
 
 extern void raydium_ode_joint_break (int j);
 /**
+Internal joint testing function.
 **/
 
 extern char raydium_ode_launcher (int element, int from_element, dReal * rot, dReal force);
 /**
+This function will launch an ##element## from ##from_element##.
+You must provide ##rot##, an array of 3 dReal angles in degreees, relative
+to ##from_element## current orientation.
+You must also provide a ##force##, with no particular unit.
 **/
 
 extern char raydium_ode_launcher_name (char *element, char *from_element, dReal * rot, dReal force);
 /**
+Same as above, using ##element## and ##from_element## names.
 **/
 
 extern char raydium_ode_launcher_name_3f (char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force);
 /**
+Same as above, but using 3 dReal values for rotation.
 **/
 
 extern char raydium_ode_launcher_simple (int element, int from_element, dReal * lrot, dReal force);
 /**
+This function will act the same as previous ones, adding a few things:
+- ##element## will be aligned with ##from_element## (position and rotation).
+- ##element## will be "migrated" to GLOBAL object during launch.
 **/
 
 extern char raydium_ode_launcher_simple_name (char *element, char *from_element, dReal * rot, dReal force);
 /**
+Same as above, using ##element## and ##from_element## names.
 **/
 
 extern char raydium_ode_launcher_simple_name_3f (char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force);
 /**
+Same as above, but using 3 dReal values for rotation.
 **/
 
 extern void raydium_ode_explosion_blow (dReal radius, dReal max_force, dReal * pos);
 /**
+This function will create an instantaneous explosion, generating a degressive
+blowing effect.
+You must provide a ##radius## (normal world units), a maximum force 
+(##max_force##), and a position (##pos##, 3 x dReal array).
 **/
 
 extern void raydium_ode_explosion_blow_3f (dReal radius, dReal max_force, dReal px, dReal py, dReal pz);
 /**
+Same as above, but using 3 dReal values for position.
 **/
 
 extern int raydium_ode_explosion_create (char *name, dReal final_radius, dReal propag, dReal * pos);
 /**
+This function will create an spherical growing explosion. Any element in the
+explosion will be ejected.
+As said before: "Use this for very consequent explosions only !".
+You must provide ##final_radius##, ##propag## (growing size) and a 
+position (##pos##, 3 x dReal array).
+When an explosion reach its final radius, it will be deleted.
 **/
 
 extern void raydium_ode_element_camera_inboard (int e, dReal px, dReal py, dReal pz, dReal lookx, dReal looky, dReal lookz);
 /**
+RayODE to camera API bridge.
+Sets the camera on element ##e## at relative position (##px##,##py##,##pz##),
+and looking at (##lookx##,##looky##,##lookz##) relative point.
 **/
 
 extern void raydium_ode_element_camera_inboard_name (char *name, dReal px, dReal py, dReal pz, dReal lookx, dReal looky, dReal lookz);
 /**
+Same as above, but using element's name.
 **/
 
 extern void raydium_ode_draw_all (char names);
 /**
+This function will draw all RayODE scene. You must call this function
+by yourself.
+Sets ##names## to false (0) for normal rendering.
+Other ##names## values will:
+- draw elements, joints and motors names and elements bounding boxes with ##1##.
+- draw objets AABB (Axis-Aligned Bounding Box).
 **/
 
 extern void raydium_ode_near_callback (void *data, dGeomID o1, dGeomID o2);
@@ -1122,62 +1331,109 @@ Internal frame callback.
 
 extern void raydium_ode_time_change (GLfloat perc);
 /**
+This function will change RayODE timecall frequency, allowing slow motion
+effects, for example. This function will automatically adjust particle
+engine time base.
+##perc## is the percentage of the normal time base.
+Since this function obviously do not change physics accuracy, be careful 
+with ##perc## > 100, wich will generate a big load for the CPU.
 **/
 
 extern void raydium_ode_element_particle (int elem, char *filename);
 /**
+This function will "fix" a particle generator on element ##elem##. You must
+provide particle generator's ##filename##.
 **/
 
 extern void raydium_ode_element_particle_name (char *elem, char *filename);
 /**
+Same as above, using element's name.
 **/
 
 extern void raydium_ode_element_particle_offset (int elem, char *filename, dReal * offset);
 /**
+Same as ##raydium_ode_element_particle##, but with an ##offset##, relative
+to element. ##offset## is an array of 3 dReal values.
 **/
 
 extern void raydium_ode_element_particle_offset_name (char *elem, char *filename, dReal * offset);
 /**
+Same as above, using element's name.
 **/
 
 extern void raydium_ode_element_particle_offset_name_3f (char *elem, char *filename, dReal ox, dReal oy, dReal oz);
 /**
+Same as above, but using 3 dReal values for offset.
 **/
 
 extern void raydium_ode_element_particle_point (int elem, char *filename);
 /**
+Same as ##raydium_ode_element_particle##, but generator will not be linked
+with element, only positioned at current element's position.
 **/
 
 extern void raydium_ode_element_particle_point_name (char *elem, char *filename);
 /**
+Same as above, using element's name.
 **/
 
 extern void raydium_camera_smooth_path_to_element (char *path, int element, GLfloat path_step, GLfloat smooth_step);
 /**
+This function is a clone of ##raydium_camera_smooth_path_to_pos## dedicated to
+RayODE, looking at ##element## from path.
+You may look at suitable chapter for more informations about ##path##,
+##path_step## and ##smooth_step##.
 **/
 
 extern void raydium_camera_smooth_path_to_element_name (char *path, char *element, GLfloat path_step, GLfloat smooth_step);
 /**
-**/
-
-extern void raydium_camera_smooth_element_to_path_offset (int element, GLfloat offset_x, GLfloat offset_y, GLfloat offset_z, char *path, GLfloat path_step, GLfloat smooth_step);
-/**
-**/
-
-extern void raydium_camera_smooth_element_to_path_offset_name (char *element, GLfloat offset_x, GLfloat offset_y, GLfloat offset_z, char *path, GLfloat path_step, GLfloat smooth_step);
-/**
+Same as above, using element's name.
 **/
 
 extern void raydium_camera_smooth_element_to_path_name (char *element, char *path, GLfloat path_step, GLfloat smooth_step);
 /**
+This function is a clone of ##raydium_camera_smooth_pos_to_path## dedicated to
+RayODE, looking at path, from ##element##.
+Here, you must provide element's name.
+You may look at suitable chapter for more informations about ##path##,
+##path_step## and ##smooth_step##.
 **/
+
+extern void raydium_camera_smooth_element_to_path_offset (int element, GLfloat offset_x, GLfloat offset_y, GLfloat offset_z, char *path, GLfloat path_step, GLfloat smooth_step);
+/**
+This function is a clone of ##raydium_camera_smooth_pos_to_path## dedicated to
+RayODE and providing an offset (for ##element##), looking at path, from
+##element##.
+You may look at suitable chapter for more informations about ##path##,
+##path_step## and ##smooth_step##.
+**/
+
+extern void raydium_camera_smooth_element_to_path_offset_name (char *element, GLfloat offset_x, GLfloat offset_y, GLfloat offset_z, char *path, GLfloat path_step, GLfloat smooth_step);
+/**
+Same as above, using element's name.
+**/
+
 
 extern int raydium_ode_capture_3d(char *filename);
 /**
+This function is provided "for fun" only. The main idea is to dump all scene
+to a .tri file (##filename##). A .sprt file will also be created, wich is a
+special file format with all particles found during the dump. You can reload
+.sprt files with ##raydium_particle_state_restore##.
+Note from source code:
+%%(c)
+// This function is provided "for fun" only. Not all effects are dumped:
+// Missing : shadows, forced colors, before/after callbacks, 
+// fixed elements, ...
+// Some code is pasted from file.c (and this is BAD ! :)
+%%
 **/
 
 extern int raydium_ode_orphans_check(void);
 /**
+Search orphans in all objects. An orphan is a geometry that exists into ODE
+but is not managed by RayODE.
+This function will print object with orphans and return total orphan count.
 **/
 
 #include "ode_net.h"

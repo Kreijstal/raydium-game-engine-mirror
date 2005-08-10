@@ -2526,6 +2526,13 @@ for(i=0;i<RAYDIUM_ODE_ELEMENT_MAX_FIXING;i++)
 	raydium_ode_element[e].fixed_elements[i]=NULL;
 	}
 
+// linked rockets
+for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
+    if(raydium_ode_motor[i].state==RAYDIUM_ODE_MOTOR_ROCKET &&
+       raydium_ode_motor[i].rocket_element==e)
+        raydium_ode_motor_delete(i);
+
+
 if(raydium_ode_element[e].particle>=0)
     raydium_particle_generator_delete(raydium_ode_element[e].particle);
 
@@ -2557,7 +2564,8 @@ if(obj == raydium_ode_object_find("GLOBAL"))
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
-    if(raydium_ode_motor[i].object==obj)
+    if(raydium_ode_motor[i].state &&
+       raydium_ode_motor[i].object==obj)
 	raydium_ode_motor_delete(i);	
     
 // Wow... group indices are unstable while deleting group's bodies !
@@ -3641,7 +3649,7 @@ raydium_camera_smooth_element_to_path_offset(raydium_ode_element_find(element),0
 }
 
 
-// This function is provided "for fun" only. Not all effects are dumped :
+// This function is provided "for fun" only. Not all effects are dumped:
 // Missing : shadows, forced colors, before/after callbacks, 
 // fixed elements, ...
 // Some code is pasted from file.c (and this is BAD ! :)
@@ -3740,7 +3748,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
 	g=dSpaceGetGeom(raydium_ode_object[i].group,j);
 	for(k=0;k<RAYDIUM_ODE_MAX_ELEMENTS;k++)
 	    if(raydium_ode_element[k].state)
-		if(raydium_ode_element[k].geom)
+		if(raydium_ode_element[k].geom==g)
 		    break;
 	
 	if(k==RAYDIUM_ODE_MAX_ELEMENTS)

@@ -594,3 +594,9 @@ for(i=0;i<3;i++)
 raydium_ode_element_move(elem,pos);
 #endif
 }
+
+void raydium_ode_network_elment_next_local(void)
+{
+raydium_ode_network_next_local_only=1;
+}
+
