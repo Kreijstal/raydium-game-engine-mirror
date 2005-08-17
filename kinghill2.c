@@ -552,7 +552,7 @@ raydium_register_function(C2PHP(set_world),"set_world");
 if(raydium_init_cli_option("world",world))
     set_world(world);    
 else
-    set_world("kinghill2");
+    set_world("jeep_hangarl");
 //set_world("jeep_hangarl");
 
 

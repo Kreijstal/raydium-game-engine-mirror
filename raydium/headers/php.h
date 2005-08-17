@@ -1,3 +1,4 @@
+//!NOBINDINGS
 #ifndef _PHP_H
 #define _PHP_H
 

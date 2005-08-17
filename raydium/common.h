@@ -1,3 +1,5 @@
+#ifndef _CORE_COMMON_H
+#define _CORE_COMMON_H
 /*
 * Raydium - CQFD Corp.
 * http://raydium.cqfd-corp.org
@@ -474,4 +476,5 @@ __global FILE *raydium_log_file;
 __global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global int raydium_file_log_fopen_index;
 
+#endif
 // EOF

@@ -78,9 +78,9 @@ raydium_background_color_change(light_color[0],light_color[1],light_color[2],lig
     
 raydium_clear_frame();
 
-raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
+//raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
 //raydium_ode_element_camera_inboard_name("train_train",0,1,0,-3,0,-0.5);
-//raydium_ode_element_camera_inboard_name("train_train",0,0.3,-0.3,-3,0,-0.5);
+raydium_ode_element_camera_inboard_name("train_train",0,0.3,-0.3,-3,0,-0.5);
 raydium_camera_replace();
 raydium_object_draw_name("rail_world_background.tri");
     
