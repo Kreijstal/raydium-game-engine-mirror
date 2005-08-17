@@ -8,8 +8,10 @@
 // For other options, see common.h
 
 // Enable PHP support
+#ifndef NO_PHP_SUPPORT
 #define PHP_SUPPORT
 #define PHP_INI_PATH "./"
+#endif
 
 
 #ifndef NO_ODE_SUPPORT
