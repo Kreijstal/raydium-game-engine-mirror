@@ -216,6 +216,7 @@ raydium_log("register function: ERROR: need PHP support");
 
 void raydium_register_dump(void)
 {
+#ifdef PHP_SUPPORT
 int i;
 char type[6][16]={"","int ","float ","char *","cont int ","const float "};
 raydium_log("Registered data:");
@@ -226,4 +227,5 @@ for(i=0;i<raydium_register_variable_index;i++)
 
 for(i=0;i<raydium_register_function_index;i++)
     raydium_log("func: %s();",raydium_register_function_list[i].fname);
+#endif
 }
