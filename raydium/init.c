@@ -254,8 +254,10 @@ raydium_ode_init();
 raydium_register_api();
 raydium_log("Engine is now ready.\n\t -----------------------------------------------------------");
 
+#ifdef PHP_SUPPORT
 if(raydium_init_cli_option("autoexec",autoexec))
     raydium_php_exec(autoexec);
+#endif
 }
 
 
