@@ -46,18 +46,26 @@ glutInitDisplayString("rgb>=8 double depth>=16");
 
 sprintf(mode,"%ix%i:32",tx,ty);
 raydium_log("Requesting %s mode",mode);
- if(rendering==RAYDIUM_RENDERING_FULLSCREEN) 
- {
-  glutGameModeString(mode);
-  if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) raydium_log("cannot fullscreen to %s mode",mode);
-   glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
- }
+
+switch(rendering)
+    {
+    case RAYDIUM_RENDERING_FULLSCREEN:
+    
+	glutGameModeString(mode);
+	if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) raydium_log("cannot fullscreen to %s mode",mode);
+	    glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
+	break;    
  
- if(rendering==RAYDIUM_RENDERING_WINDOW)
- {
-  glutInitWindowSize(tx,ty);
-  glutCreateWindow(name);
- }
+    case RAYDIUM_RENDERING_WINDOW:
+	glutInitWindowSize(tx,ty);
+	glutCreateWindow(name);
+	break;
+
+    default:
+	raydium_log("Invalid rendering mode (windowed or fullscreen only)");
+	exit(46);
+	break;
+    }
 
 raydium_log("Got %ix%i:%i mode",glutGet(GLUT_WINDOW_WIDTH),
 glutGet(GLUT_WINDOW_HEIGHT),
