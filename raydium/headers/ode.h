@@ -688,7 +688,7 @@ This function will rotate element ##elem## using ##rot## quaternion.
 Warning: arbitrary rotations may lead to unwanted behaviours.
 **/
 
-extern void raydium_ode_element_rotateq_name (char *name, dQuaternion rot);
+extern void raydium_ode_element_rotateq_name (char *name, dReal * rot);
 /**
 Same as ##raydium_ode_element_rotateq##, but using element's name.
 **/
@@ -1058,14 +1058,14 @@ extern dReal *raydium_ode_element_pos_get_name (char *name);
 Same as above, but using element's name.
 **/
 
-extern char raydium_ode_element_rotq_get (int j, dQuaternion res);
+extern char raydium_ode_element_rotq_get (int j, dReal * res);
 /**
 This function will return element ##j##'s current rotation, as an array of
 4 dReal values (quaternion), thru ##res##.
 No memory allocation will be done.
 **/
 
-extern char raydium_ode_element_rotq_get_name (char *name, dQuaternion res);
+extern char raydium_ode_element_rotq_get_name (char *name, dReal * res);
 /**
 Same as above, but using element's name.
 **/

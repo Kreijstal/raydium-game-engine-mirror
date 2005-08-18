@@ -1261,7 +1261,7 @@ if(!raydium_ode_element_isvalid(elem))
 dGeomSetQuaternion(raydium_ode_element[elem].geom,rot);
 }
 
-void raydium_ode_element_rotateq_name(char *name, dQuaternion rot)
+void raydium_ode_element_rotateq_name(char *name, dReal * rot)
 {
 raydium_ode_element_rotateq(raydium_ode_element_find(name),rot);
 }
@@ -2072,7 +2072,7 @@ return raydium_ode_element_pos_get(raydium_ode_element_find(name));
 }
 
 
-char raydium_ode_element_rotq_get(int j, dQuaternion res)
+char raydium_ode_element_rotq_get(int j, dReal * res)
 {
 if(raydium_ode_element_isvalid(j))
     {
@@ -2083,7 +2083,7 @@ raydium_log("ODE: Error: cannot get element rotation (quaternion): invalid index
 return 0;
 }
 
-char raydium_ode_element_rotq_get_name(char *name, dQuaternion res)
+char raydium_ode_element_rotq_get_name(char *name, dReal * res)
 {
 return raydium_ode_element_rotq_get(raydium_ode_element_find(name),res);
 }
