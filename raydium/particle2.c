@@ -47,7 +47,7 @@ for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
 raydium_log("particle: OK");
 }
 
-char raydium_particle_generator_isvalid(int g)
+signed char raydium_particle_generator_isvalid(int g)
 {
 if(g>=0 && g<RAYDIUM_MAX_GENERATORS && raydium_particle_generators[g].state)
     return 1;
@@ -90,7 +90,7 @@ void raydium_particle_generator_delete_name(char *gen)
 raydium_particle_generator_delete(raydium_particle_generator_find(gen));
 }
 
-void raydium_particle_generator_enable(int gen, char enabled)
+void raydium_particle_generator_enable(int gen, signed char enabled)
 {
 if(!raydium_particle_generator_isvalid(gen))
     {
@@ -100,7 +100,7 @@ if(!raydium_particle_generator_isvalid(gen))
 raydium_particle_generators[gen].enabled=enabled;
 }
 
-void raydium_particle_generator_enable_name(char *gen, char enable)
+void raydium_particle_generator_enable_name(char *gen, signed char enable)
 {
 raydium_particle_generator_enable(raydium_particle_generator_find(gen),enable);
 }

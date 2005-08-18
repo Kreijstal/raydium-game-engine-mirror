@@ -62,7 +62,7 @@ extern void raydium_particle_init (void);
 Internal use.
 **/
 
-extern char raydium_particle_generator_isvalid (int g);
+extern signed char raydium_particle_generator_isvalid (int g);
 /**
 Internal use, but you can call this function if you want to verify if a
 generator's id is valid (in bounds, and loaded).
@@ -88,12 +88,12 @@ extern void raydium_particle_generator_delete_name (char *gen);
 Same as above, but using generator's name.
 **/
 
-extern void raydium_particle_generator_enable (int gen, char enabled);
+extern void raydium_particle_generator_enable (int gen, signed char enabled);
 /**
 Activate a disabled generator (see below).
 **/
 
-extern void raydium_particle_generator_enable_name (char *gen, char enable);
+extern void raydium_particle_generator_enable_name (char *gen, signed char enable);
 /**
 Disable a generator (TTL is still decremented).
 **/

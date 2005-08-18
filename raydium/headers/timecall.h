@@ -83,7 +83,7 @@ extern unsigned long raydium_timecall_clock (void);
 Returns current "time".
 **/
 
-extern char raydium_timecall_devrtc_rate_change (unsigned long new);
+extern signed char raydium_timecall_devrtc_rate_change (unsigned long new);
 /**
 Internal, Linux only: Modifies RTC clock rate.
 **/

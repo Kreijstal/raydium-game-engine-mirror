@@ -17,7 +17,7 @@ int raydium_init_cli_option(char *option, char *value);
 FILE *raydium_file_fopen(char *path, char *mode);
 
 
-char raydium_texture_size_is_correct(GLuint size)
+signed char raydium_texture_size_is_correct(GLuint size)
 {
 int i;
 
@@ -31,7 +31,7 @@ for(i=2;i<=raydium_texture_size_max;i*=2)
 return 0;
 }
 
-GLuint raydium_texture_load_internal(char *filename, char *as, char faked, int live_id_fake)
+GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int live_id_fake)
 {
 FILE *file;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
@@ -285,7 +285,7 @@ return raydium_texture_load(filename);
 }
 
 
-char raydium_texture_current_set(GLuint current)
+signed char raydium_texture_current_set(GLuint current)
 {
 if(current<RAYDIUM_MAX_TEXTURES)
 { raydium_texture_current=current; return current; }
@@ -306,7 +306,7 @@ return ret;
 }
 
 
-char raydium_texture_current_set_name(char *name)
+signed char raydium_texture_current_set_name(char *name)
 {
 /*
 GLuint i;

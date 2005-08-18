@@ -366,7 +366,7 @@ raydium_camera_path_draw(p);
 }
 
 
-char raydium_camera_smooth_path(char *path, GLfloat step, GLfloat *x, GLfloat *y, GLfloat *z, GLfloat *zoom, GLfloat *roll)
+signed char raydium_camera_smooth_path(char *path, GLfloat step, GLfloat *x, GLfloat *y, GLfloat *z, GLfloat *zoom, GLfloat *roll)
 {
 int p;
 int step1,step2;

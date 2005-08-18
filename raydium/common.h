@@ -215,13 +215,13 @@ __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
 
 __global int     raydium_key_last;
-__global char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
-__global char    raydium_mouse_click;
-__global char    raydium_mouse_button[3];
+__global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
+__global signed char    raydium_mouse_click;
+__global signed char    raydium_mouse_button[3];
 __global GLuint  raydium_mouse_x;
 __global GLuint  raydium_mouse_y;
-__global char    raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
-__global char	 raydium_joy_click;
+__global signed char    raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
+__global signed char	 raydium_joy_click;
 __global GLfloat raydium_joy_x;
 __global GLfloat raydium_joy_y;
 __global GLfloat raydium_joy_z;
@@ -232,14 +232,14 @@ __global GLuint   raydium_texture_current;
 __global GLuint   raydium_texture_current_multi;
 __global GLfloat  raydium_texture_current_multi_u;
 __global GLfloat  raydium_texture_current_multi_v;
-__global char     raydium_texture_filter;
+__global signed char     raydium_texture_filter;
 __global GLuint	  raydium_texture_size_max;
 __global GLuint	  raydium_texture_units;
 __global GLuint   raydium_internal_size_vector_float_4;
 __global GLuint   raydium_texture_to_replace;
 __global GLfloat  raydium_texture_used_memory;
 
-__global char    raydium_projection;
+__global signed char    raydium_projection;
 __global GLfloat raydium_projection_fov;  	// perspective only
 __global GLfloat raydium_projection_near; 	// perspective & ortho
 __global GLfloat raydium_projection_far; 	// perspective & ortho
@@ -248,15 +248,15 @@ __global GLfloat raydium_projection_right; 	// ortho only
 __global GLfloat raydium_projection_bottom; 	// ortho only
 __global GLfloat raydium_projection_top; 	// ortho only
 __global GLfloat raydium_background_color[4];
-__global char	 raydium_sky_force;
+__global signed char	 raydium_sky_force;
 
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
-__global char	 raydium_window_mode;
+__global signed char	 raydium_window_mode;
 
 __global GLuint  raydium_vertex_index;
 __global GLuint  raydium_vertex_counter;
-__global char    raydium_vertex_offset_triangle;
+__global signed char    raydium_vertex_offset_triangle;
 
 __global GLfloat *raydium_vertex_x;
 __global GLfloat *raydium_vertex_y;
@@ -273,10 +273,10 @@ __global GLuint  *raydium_vertex_texture;
 __global GLuint  *raydium_vertex_texture_multi;
 __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
-__global char	 *raydium_vertex_tag;
-__global char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
-__global char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
-__global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
+__global signed char	 *raydium_vertex_tag;
+__global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
+__global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
+__global signed char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 
 __global GLuint	raydium_object_index;
@@ -286,13 +286,13 @@ __global char	raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
-__global char	 raydium_render_rgb_force_tag;
+__global signed char	 raydium_render_rgb_force_tag;
 __global char	 raydium_render_displaylists_tag;
 
-__global char	 raydium_fog_enabled_tag;
+__global signed char	 raydium_fog_enabled_tag;
 
-__global char	 raydium_light_enabled_tag;
-__global char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];
+__global signed char	 raydium_light_enabled_tag;
+__global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];
 __global GLfloat raydium_light_position[RAYDIUM_MAX_LIGHTS][4];
 __global GLfloat raydium_light_color[RAYDIUM_MAX_LIGHTS][4];
 __global GLfloat raydium_light_intensity[RAYDIUM_MAX_LIGHTS];
@@ -301,19 +301,19 @@ __global GLfloat raydium_light_blink_high[RAYDIUM_MAX_LIGHTS];
 __global GLfloat raydium_light_blink_increment[RAYDIUM_MAX_LIGHTS];
 // TODO: light_spot
 
-__global char    raydium_internal_vertex_next_extras;
+__global signed char    raydium_internal_vertex_next_extras;
 __global GLfloat raydium_internal_vertex_next_u;
 __global GLfloat raydium_internal_vertex_next_v;
 __global GLfloat raydium_internal_vertex_next_nx;
 __global GLfloat raydium_internal_vertex_next_ny;
 __global GLfloat raydium_internal_vertex_next_nz;
 
-__global char	 raydium_frame_first_camera_pass;
+__global signed char	 raydium_frame_first_camera_pass;
 __global float	 raydium_frame_time;
 __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
-__global char	 raydium_camera_pushed;
+__global signed char	 raydium_camera_pushed;
 __global GLfloat raydium_camera_cursor_place[3];
 __global GLfloat raydium_camera_look_at_roll;
 __global GLfloat raydium_camera_rumble_amplitude;
@@ -331,12 +331,12 @@ typedef struct raydium_camera_Path
     int steps;
     } raydium_camera_Path;
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
-__global char raydium_camera_path_reset_flag;
+__global signed char raydium_camera_path_reset_flag;
 
 __global int 	raydium_network_socket;
 __global int 	raydium_network_uid;
-__global char	raydium_network_mode;
-__global char	raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
+__global signed char	raydium_network_mode;
+__global signed char	raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_start;
 __global struct sockaddr
 	raydium_network_client_addr[RAYDIUM_NETWORK_MAX_CLIENTS];
@@ -345,7 +345,7 @@ __global char   raydium_network_name_local[RAYDIUM_MAX_NAME_LEN];
 __global char   raydium_network_name[RAYDIUM_NETWORK_MAX_CLIENTS][RAYDIUM_MAX_NAME_LEN];
 __global int    raydium_network_netcall_type[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global void * raydium_network_netcall_func[RAYDIUM_NETWORK_MAX_NETCALLS];
-__global char   raydium_network_netcall_tcp[RAYDIUM_NETWORK_MAX_NETCALLS];
+__global signed char   raydium_network_netcall_tcp[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global void * raydium_network_on_connect;
 __global void * raydium_network_on_disconnect;
 __global int    raydium_network_stat_rx;
@@ -357,7 +357,7 @@ __global int    raydium_network_stat_bogus_ack;
 
 typedef struct raydium_network_Tcp
     {
-    char state;
+    signed char state;
     unsigned short tcpid;
     char packet[RAYDIUM_NETWORK_PACKET_SIZE];
     unsigned long time;
@@ -375,11 +375,11 @@ __global int		raydium_network_tcpid_index;
 
 __global unsigned long raydium_netwok_queue_ack_delay_client;
 __global unsigned long raydium_netwok_queue_ack_delay_server[RAYDIUM_NETWORK_MAX_CLIENTS];
-__global char	       raydium_network_write_notcp;
+__global signed char	       raydium_network_write_notcp;
 
 typedef struct raydium_network_Propag
     {
-    char state;
+    signed char state;
     int type;
     unsigned short size;
     unsigned int version;
@@ -449,7 +449,7 @@ __global int	 raydium_console_history_index_current; // user
 __global char    raydium_console_history_filename[RAYDIUM_MAX_NAME_LEN];
 
 __global int		raydium_timecall_index;
-__global char          	raydium_timecall_method;
+__global signed char          	raydium_timecall_method;
 __global unsigned long 	raydium_timecall_max_frequency;
 __global unsigned long 	raydium_timecall_clocks_per_sec;
 __global int           	raydium_timecall_devrtc_handle;

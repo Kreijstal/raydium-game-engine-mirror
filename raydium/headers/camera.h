@@ -137,7 +137,7 @@ extern void raydium_camera_path_draw_name (char *path);
 Same as above, but using camera path's name.
 **/
 
-extern char raydium_camera_smooth_path (char *path, GLfloat step, GLfloat * x, GLfloat * y, GLfloat * z, GLfloat * zoom, GLfloat * roll);
+extern signed char raydium_camera_smooth_path (char *path, GLfloat step, GLfloat * x, GLfloat * y, GLfloat * z, GLfloat * zoom, GLfloat * roll);
 /**
 Returns the (##x,y,z##) point of the camera path for step ##step##, using
 provided ##zoom## (FOV) and ##roll## angle.

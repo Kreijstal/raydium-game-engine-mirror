@@ -63,7 +63,7 @@ extern int raydium_sound_SourceVerify (int src);
 Internal id checks.
 **/
 
-extern int raydium_sound_SetSourceLoop (int src, char loop);
+extern int raydium_sound_SetSourceLoop (int src, signed char loop);
 /**
 Modifies the ##loop## property of the ##src## source (loops if loop is non-zero, 
 default value for a source is "true").

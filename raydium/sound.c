@@ -125,7 +125,7 @@ int raydium_sound_SourceVerify(int src)
 }
 
 //SETS THE LOOP ATTRIBUTE OF A SOURCE
-int raydium_sound_SetSourceLoop(int src, char loop)
+int raydium_sound_SetSourceLoop(int src, signed char loop)
 {
  int result=raydium_sound_SourceVerify(src);
  if(result==0)

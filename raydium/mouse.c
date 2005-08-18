@@ -16,7 +16,7 @@
 #define raydium_mouse_move(x,y) glutWarpPointer(x,y)
 */
 
-char raydium_mouse_isvisible(void)
+signed char raydium_mouse_isvisible(void)
 {
 int ret;
 ret=glutGet(GLUT_WINDOW_CURSOR);

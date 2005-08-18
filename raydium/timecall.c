@@ -117,7 +117,7 @@ if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
  return raydium_timecall_devrtc_clock();
 }
 
-char raydium_timecall_devrtc_rate_change(unsigned long new)
+signed char raydium_timecall_devrtc_rate_change(unsigned long new)
 {
 #ifndef WIN32
         if(ioctl(raydium_timecall_devrtc_handle, RTC_IRQP_SET, new)==-1)

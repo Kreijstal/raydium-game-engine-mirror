@@ -25,13 +25,13 @@ Tips: "BOX_", ";", "|".
 **/
 
 
-extern char raydium_texture_size_is_correct (GLuint size);
+extern signed char raydium_texture_size_is_correct (GLuint size);
 /**
 Returns true if ##size## is a correct texture size, depending of
 hardware capacities and "power of 2" constraint.
 **/
 
-extern GLuint raydium_texture_load_internal(char *filename, char *as, char faked, int live_id_fake);
+extern GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int live_id_fake);
 /**
 Internal use.
 **/
@@ -51,7 +51,7 @@ extern GLuint raydium_texture_load_erase (char *filename, GLuint to_replace);
 Same as above, but ##to_replace## texture (index) is erased with ##filename##.
 **/
 
-extern char raydium_texture_current_set (GLuint current);
+extern signed char raydium_texture_current_set (GLuint current);
 /**
 Switch active texture to "current" index. Mostly used for runtime object 
 creation:
@@ -60,7 +60,7 @@ add vertices, ... and save all to an objet"
 (see below for vertices management).
 **/
 
-extern char raydium_texture_current_set_name (char *name);
+extern signed char raydium_texture_current_set_name (char *name);
 /**
 Same as above, but using texture name. This function will load ##name## 
 if not alread done.

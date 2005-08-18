@@ -29,7 +29,7 @@ Example if you want to move cursor at window's center:
 %%(c)raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);%%
 **/
 
-char raydium_mouse_isvisible(void);
+signed char raydium_mouse_isvisible(void);
 /**
 Returns true or false (0 or 1), if the mouse is visible or not.
 See ##raydium_mouse_show()## and ##raydium_mouse_hide()## above.
