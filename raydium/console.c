@@ -327,6 +327,7 @@ return 0;
 
 void raydium_console_complete(char *str)
 {
+#ifdef PHP_SUPPORT
 char candidates[RAYDIUM_CONSOLE_MAX_COMPLETION][RAYDIUM_MAX_NAME_LEN];
 char candidates_type[RAYDIUM_CONSOLE_MAX_COMPLETION];
 int n_candidates=0;
@@ -437,4 +438,5 @@ for(i=strlen(word);i<=candidate_min_len;i++) // '\0' must be tested, too
 	return;
 	}
     }
+#endif
 }
