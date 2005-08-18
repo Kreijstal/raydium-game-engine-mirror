@@ -1,3 +1,4 @@
+//!NOBINDINGS
 #ifndef _RAYPHP_H
 #define _RAYPHP_H
 
