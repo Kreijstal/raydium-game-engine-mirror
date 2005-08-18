@@ -81,6 +81,8 @@ fp=fopen(file,mode);
 
 return fp;
 }
+#else
+#define raydium_file_fopen fopen
 #endif
 
 void dump_vertex_to(char *filename)
