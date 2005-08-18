@@ -46,9 +46,9 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 
 }
 
-#ifdef PHP_SUPPORT
 FILE *raydium_file_fopen(char *file, char *mode)
 {
+#ifdef PHP_SUPPORT
 FILE *fp;
 int i;
 char found=0;
@@ -80,10 +80,10 @@ raydium_rayphp_repository_file_get(file);
 fp=fopen(file,mode);
 
 return fp;
-}
 #else
-#define raydium_file_fopen fopen
+return fopen(file,mode);
 #endif
+}
 
 void dump_vertex_to(char *filename)
 {
