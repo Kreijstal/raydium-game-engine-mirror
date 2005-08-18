@@ -14,7 +14,9 @@ void raydium_osd_cursor_draw(void);
 void raydium_console_draw(void);
 void raydium_gui_draw(void);
 void raydium_osd_fade_callback(void);
+#ifdef PHP_SUPPORT
 int  raydium_php_exec(char *);
+#endif
 #ifdef ODE_SUPPORT
 void raydium_ode_network_read(void);
 #endif
@@ -60,8 +62,10 @@ void raydium_callback(void (*loop) )
 {
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 
+#ifdef PHP_SUPPORT
 if(raydium_init_cli_option("autoexec2",autoexec))
     raydium_php_exec(autoexec);
+#endif
 glutDisplayFunc(loop);
 glutIdleFunc(loop);
 glutMainLoop();
