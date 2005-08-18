@@ -74,7 +74,7 @@ int raydium_sound_LoadWav(const char *fname)
  ALvoid *data;
  FILE *fp;
 //#ifdef WIN32
- ALboolean bool;
+ ALboolean boolean;
 //#endif
 
  if(raydium_sound_top_buffer==RAYDIUM_SOUND_NUM_BUFFERS)
@@ -97,7 +97,7 @@ int raydium_sound_LoadWav(const char *fname)
  }
  fclose(fp);
 
-  alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&bool);
+  alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
      raydium_sound_verify("alutLoadWAVFile");
 
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
