@@ -60,9 +60,9 @@ glutMouseFunc((void *)raydium_mouse_click_callback);
 
 void raydium_callback(void (*loop) )
 {
+#ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 
-#ifdef PHP_SUPPORT
 if(raydium_init_cli_option("autoexec2",autoexec))
     raydium_php_exec(autoexec);
 #endif

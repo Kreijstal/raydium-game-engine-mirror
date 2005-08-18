@@ -195,7 +195,9 @@ raydium_log("Raydium engine reseted to original state");
 
 void raydium_init_engine(void)
 {
+#ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
+#endif
 
 raydium_signal_install_trap();
 #ifdef WIN32
