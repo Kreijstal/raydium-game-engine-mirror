@@ -42,7 +42,7 @@ extern int raydium_random_i (int min, int max);
 min <= res <= max (integer)
 **/
 
-extern char raydium_random_proba (GLfloat proba);
+extern signed char raydium_random_proba (GLfloat proba);
 /**
 Returns true or false (0 or 1) depending of "proba" factor.
 ##proba## must be: 0 <= proba <=1

@@ -19,9 +19,8 @@ void raydium_window_close(void)
 //glutDestroyWindow(...);
 }
 
-// TODO: need to exit form game mode is enabled !
-
-void raydium_window_create(GLuint tx, GLuint ty,char rendering,char *name)
+// TODO: need to exit form game mode if enabled !
+void raydium_window_create(GLuint tx, GLuint ty, signed char rendering, char *name)
 {
 char mode[RAYDIUM_MAX_NAME_LEN];
 

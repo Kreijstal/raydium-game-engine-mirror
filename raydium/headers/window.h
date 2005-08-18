@@ -15,7 +15,7 @@ extern void raydium_window_close (void);
 This function is called by Raydium, do not use.
 **/
 
-extern void raydium_window_create (GLuint tx, GLuint ty, char rendering, char *name);
+extern void raydium_window_create (GLuint tx, GLuint ty, signed char rendering, char *name);
 /**
 You must call this function once in your program, with following arguments:
 

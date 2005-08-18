@@ -42,7 +42,7 @@ return (rand()%(max-min+1))+min;
 }
 
 
-char raydium_random_proba(GLfloat proba)
+signed char raydium_random_proba(GLfloat proba)
 {
 GLfloat min;
 GLfloat max;
