@@ -29,7 +29,7 @@ for(i=strlen(org);i>=0;i--)
 org[i+1]=0; // tailing chars: ok
 }
 
-char raydium_parser_isdata(char *str)
+signed char raydium_parser_isdata(char *str)
 {
 if(strlen(str)==0) return 0;
 if(str[0]=='/' && str[1]=='/') return 0;
@@ -37,7 +37,7 @@ return 1;
 }
 
 
-char raydium_parser_cut(char *str,char *part1, char *part2, char separator)
+signed char raydium_parser_cut(char *str,char *part1, char *part2, char separator)
 {
 // strstr, strok and strsep aren't that good ;)
 int i;

@@ -15,7 +15,7 @@ documentation about this subject.
 
 Interesting variables:
 %%(c)
-char raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
+signed char raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
 GLfloat raydium_joy_x;
 GLfloat raydium_joy_y;
 GLfloat raydium_joy_z;

@@ -23,7 +23,7 @@ for(i=0;i<raydium_register_variable_index;i++)
 return -1;
 }
 
-char raydium_register_name_isvalid(char *name)
+signed char raydium_register_name_isvalid(char *name)
 {
 int i;
 for(i=0;i<strlen(name);i++)

@@ -15,8 +15,8 @@
 typedef struct raydium_particle_Generator
 {
  int      id;
- char	  state;
- char	  enabled;
+ signed char	  state;
+ signed char	  enabled;
  char     name[RAYDIUM_MAX_NAME_LEN];
  GLfloat  position[3];
  GLfloat  position_random[3];

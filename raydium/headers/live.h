@@ -56,7 +56,7 @@ tool.
 By default, Live API supports up to 4 simultaneous devices.
 **/
 
-char raydium_live_video_isvalid(int i);
+signed char raydium_live_video_isvalid(int i);
 /**
 Internal use, but you can call this function if you want to verify if a
 live video device id is valid (in bounds, open, and ready to capture).
@@ -114,7 +114,7 @@ void raydium_live_init(void);
 Internal init function.
 **/
 
-char raydium_live_texture_isvalid(int i);
+signed char raydium_live_texture_isvalid(int i);
 /**
 Internal use, but you can call this function if you want to verify if a
 live texture id is valid (in bounds, open, and ready to capture).

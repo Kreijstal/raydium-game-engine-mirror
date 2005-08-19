@@ -27,26 +27,23 @@ No particular order:
 - self-running demo
 - (idea from RyLe) 'rayphp/' scripts integration into the binary (and why 
 not, a "PACK style" support).
-- more network stack optimisations ?
-- more and more and even more ODE features
-- doc for new features (physics, network, scripting, ...)
-- (idea from FlexH) ./configure.sh type script for dependencies check 
-and auto-configuration
+- more network stack optimisations (UDP reads, mainly)
 - better organisation of comp.sh and ocomp.sh files (separate options 
 and build process)
 
-Please, if you start working on a feature, remove it from the list (and 
-restore it if you failed)
+See also my todo: http://raydium.yoopla.org/wiki/XfenneC
+
+Please, if you start working on a feature, say it on the Wiki.
 **/
 
 // Links
 /**
 http://raydium.cqfd-corp.org (Raydium home)
-http://wvs.cqfd-corp.org (Web Version System: public mini CVS like for Raydium)
+svn://cqfd-corp.org/raydium/trunk (SVN trunk)
+http://raydium.cqfd-corp.org/svn.php (SVN "live" changelog)
 http://memak.cqfd-corp.org (MeMak forum: "a game using Raydium", french)
 http://www.cqfd-corp.org (CQFD homesite)
-mailto:cqfd@cqfd-corp.org
-mailto:xfennec@cqfd-corp.org
+mailto:xfennec -AT- cqfd-corp.org
 **/
 
 // Greets

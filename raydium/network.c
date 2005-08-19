@@ -19,10 +19,10 @@
 // end of 2004: done too (more test needed)
 
 // need proto
-char raydium_server_accept_new(struct sockaddr *from, char *name);
-void raydium_network_broadcast(char type,char *buff);
-void raydium_network_write(struct sockaddr *to, int from, char type,char *buff);
-char raydium_network_netcall_add(void *ptr, int type, char tcp);
+//char raydium_server_accept_new(struct sockaddr *from, char *name);
+//void raydium_network_broadcast(char type,char *buff);
+//void raydium_network_write(struct sockaddr *to, int from, char type,char *buff);
+//char raydium_network_netcall_add(void *ptr, int type, char tcp);
 
 
 int raydium_network_propag_find(int type)
@@ -172,7 +172,7 @@ void raydium_network_queue_tcpid_known_add(int tcpid, int player)
 	    raydium_network_tcpid_index=0;
 }
 
-char raydium_network_queue_tcpid_known(unsigned short tcpid, unsigned short player)
+signed char raydium_network_queue_tcpid_known(unsigned short tcpid, unsigned short player)
 {
 int i;
 
@@ -186,7 +186,7 @@ for(i=0;i<RAYDIUM_NETWORK_TX_QUEUE_SIZE;i++)
 return 0;
 }
 
-char raydium_network_queue_is_tcpid(int type)
+signed char raydium_network_queue_is_tcpid(int type)
 {
 int i=0;
 for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
@@ -389,7 +389,7 @@ if(!strlen(str))
     gethostname(str,RAYDIUM_MAX_NAME_LEN-1);
 }
 
-char raydium_network_set_socket_block(int block)
+signed char raydium_network_set_socket_block(int block)
 {
 int ret=-1;
 //int flags = fcntl(sock, F_GETFL); // bof... :)
@@ -417,7 +417,7 @@ return(1);
 //}
 
 
-char raydium_network_netcall_add(void *ptr, int type, char tcp)
+signed char raydium_network_netcall_add(void *ptr, int type, signed char tcp)
 {
 int i;
 
@@ -455,7 +455,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
  }
 }
 
-char raydium_network_timeout_check(void)
+signed char raydium_network_timeout_check(void)
 {
 char str[RAYDIUM_NETWORK_PACKET_SIZE];
 int i,n;
@@ -487,7 +487,7 @@ time(&now);
 return 0;
 }
 
-char raydium_network_init(void)
+signed char raydium_network_init(void)
 {
 int i;
 
@@ -569,7 +569,7 @@ return(1);
 }
 
 // if from < 0, "from" field is not modified (used for broadcasts, mainly)
-void raydium_network_write(struct sockaddr *to, int from, char type,char *buff)
+void raydium_network_write(struct sockaddr *to, int from, signed char type,char *buff)
 {
 int ret=-1;
 unsigned short tcpid=0;
@@ -611,7 +611,7 @@ if(tcpid)
     }    
 }
 
-void raydium_network_broadcast(char type,char *buff)
+void raydium_network_broadcast(signed char type,char *buff)
 {
 int i;
 
@@ -621,7 +621,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 }
 
 // buff could be modified, even if return is RAYDIUM_NETWORK_DATA_NONE
-char raydium_network_read(int *id, char *type, char *buff)
+signed char raydium_network_read(int *id, signed char *type, char *buff)
 {
 int i;
 struct sockaddr from;
@@ -706,7 +706,7 @@ else {
 }
 
 
-char raydium_network_read_flushed(int *id, char *type, char *buff)
+signed char raydium_network_read_flushed(int *id, signed char *type, char *buff)
 {
 char ret,data=0;
 char save_buff[RAYDIUM_NETWORK_PACKET_SIZE];
@@ -741,7 +741,7 @@ else return ret;
 }
 
 
-char raydium_network_server_create(void)
+signed char raydium_network_server_create(void)
 {
 struct sockaddr_in sock;
 int ret;
@@ -775,7 +775,7 @@ return(1);
 
 
 // will resolv "server" name
-char raydium_network_client_connect_to(char *server)
+signed char raydium_network_client_connect_to(char *server)
 {
 struct sockaddr_in sock;
 int ret,empty;
@@ -853,7 +853,7 @@ return(0);
 
 }
 
-char raydium_server_accept_new(struct sockaddr *from, char *name)
+signed char raydium_server_accept_new(struct sockaddr *from, char *name)
 {
 int socklen,i,n;
 char str[RAYDIUM_NETWORK_PACKET_SIZE];

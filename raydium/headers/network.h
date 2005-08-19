@@ -86,10 +86,10 @@ read only: ##int raydium_network_uid;##
 Special value "-1" means that you're not connected (see below).
 
 Current network mode (none, client, server),
-read only: ##char raydium_network_mode;##
+read only: ##signed char raydium_network_mode;##
 
 Boolean used to determine client state (connected or not), read only:
-##char raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];##
+##signed char raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];##
 
 example: 
 %%(c)
@@ -200,12 +200,12 @@ extern void raydium_network_queue_tcpid_known_add (int tcpid, int player);
 Internal use. (TCP style packets)
 **/
 
-extern char raydium_network_queue_tcpid_known (unsigned short tcpid, unsigned short player);
+extern signed char raydium_network_queue_tcpid_known (unsigned short tcpid, unsigned short player);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern char raydium_network_queue_is_tcpid (int type);
+extern signed char raydium_network_queue_is_tcpid (int type);
 /**
 Internal use. (TCP style packets)
 **/
@@ -242,7 +242,7 @@ Raydium will ask the OS for "current logged user", but player name may
 be provided thru ##--name## command line argument.
 **/
 
-extern char raydium_network_set_socket_block (int block);
+extern signed char raydium_network_set_socket_block (int block);
 /**
 This function will sets ##block## (true or false) status to the network stack.
 A blocking socket will wait indefinitely an incoming packet. A non blocking one
@@ -250,7 +250,7 @@ will return "no data" instead.
 You've almost no reason to call this function by yourself.
 **/
 
-extern char raydium_network_netcall_add (void *ptr, int type, char tcp);
+extern signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
 /**
 This function will register a new Network Callback ("netcall").
 With Raydium, you can read the main data stream with 
@@ -272,12 +272,12 @@ extern void raydium_network_netcall_exec (int type, char *buff);
 Internal callback for "netcall" receiving.
 **/
 
-extern char raydium_network_timeout_check (void);
+extern signed char raydium_network_timeout_check (void);
 /**
 Internal use.
 **/
 
-extern char raydium_network_init (void);
+extern signed char raydium_network_init (void);
 /**
 Nothing interesting unless you're creating a console server (using the
 ##RAYDIUM_NETWORK_ONLY## directive), since in this case you must do all
@@ -300,7 +300,7 @@ raydium_network_server_create();
 %%
 **/
 
-extern void raydium_network_write (struct sockaddr *to, int from, char type, char *buff);
+extern void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);
 /**
 Obviously, this function will send data.
 If you're a client, you don't need to determine to field, as the only 
@@ -320,7 +320,7 @@ must be ##RAYDIUM_NETWORK_PACKET_SIZE## long, and can be cleared
 or re-used after this call.
 **/
 
-extern void raydium_network_broadcast (char type, char *buff);
+extern void raydium_network_broadcast (signed char type, char *buff);
 /**
 Sends data over network.
 Obviously, from network point of vue, only a server can broadcast 
@@ -334,7 +334,7 @@ This function uses the same arguments as previous one, except ##to## and
 ##from##, not needed here.
 **/
 
-extern char raydium_network_read (int *id, char *type, char *buff);
+extern signed char raydium_network_read (int *id, signed char *type, char *buff);
 /**
 Reads next packet from network (FIFO) stack.
 This function uses the same arguments as previous ones, and returns 
@@ -342,7 +342,7 @@ data availability: ##RAYDIUM_NETWORK_DATA_OK##, ##RAYDIUM_NETWORK_DATA_NONE##
 or ##RAYDIUM_NETWORK_DATA_ERROR##.
 **/
 
-extern char raydium_network_read_flushed (int *id, char *type, char *buff);
+extern signed char raydium_network_read_flushed (int *id, signed char *type, char *buff);
 /**
 Reads last packet from network stack.
 All previous packets will be ignored, only the newest packet will
@@ -353,7 +353,7 @@ As you may miss some important informations, you can use netcalls
 type, even with flushed reading.
 **/
 
-extern char raydium_network_server_create (void);
+extern signed char raydium_network_server_create (void);
 /**
 Will transform you application into a server, accepting new clients 
 instantaneously.
@@ -361,7 +361,7 @@ See also the ##RAYDIUM_NETWORK_ONLY## directive if you want to create console
 servers.
 **/
 
-extern char raydium_network_client_connect_to (char *server);
+extern signed char raydium_network_client_connect_to (char *server);
 /**
 This function will try to connect your application to ##server## (hostname or 
 ip address).
@@ -373,7 +373,7 @@ You player number can be found with ##raydium_network_uid## variable,
 as said before.
 **/
 
-extern char raydium_server_accept_new (struct sockaddr *from, char *name);
+extern signed char raydium_server_accept_new (struct sockaddr *from, char *name);
 /**
 Internal server callback for new clients.
 **/

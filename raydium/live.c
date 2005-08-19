@@ -116,7 +116,7 @@ v4l_yuv420p2rgb (unsigned char *rgb_out, unsigned char *yuv_in, int width, int
 /////// video (devices) part
 
 
-char raydium_live_video_isvalid(int i)
+signed char raydium_live_video_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_MAX_VIDEO_DEVICES &&
     raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
@@ -518,7 +518,7 @@ raydium_log("video (live): OK");
 
 
 
-char raydium_live_texture_isvalid(int i)
+signed char raydium_live_texture_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_MAX_LIVE_TEXTURES && raydium_live_texture[i].state)
 	return 1;

@@ -65,7 +65,7 @@ a theme by yourself, since Raydium will never do it for you.
 This function must be called before GUI building.
 **/
 
-char raydium_gui_window_isvalid(int i);
+signed char raydium_gui_window_isvalid(int i);
 /**
 Mostly internal. Will check if ##i## window is valid.
 **/
@@ -75,7 +75,7 @@ int raydium_gui_window_find(char *name);
 Will search ##name## window's numeric id.
 **/
 
-char raydium_gui_widget_isvalid(int i, int window);
+signed char raydium_gui_widget_isvalid(int i, int window);
 /**
 Mostly internal. Will check if ##i## widget of ##window## is valid.
 **/
@@ -175,7 +175,7 @@ void raydium_gui_hide(void);
 Will hide current built GUI. This is the default state.
 **/
 
-char raydium_gui_isvisible(void);
+signed char raydium_gui_isvisible(void);
 /**
 Will return current visibility of GUI.
 **/
@@ -206,7 +206,7 @@ for sizes, obviously.
 Unit: percents (screen)
 **/
 
-int raydium_gui_internal_object_create(char *name, int window, char type, GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey, GLfloat font_size);
+int raydium_gui_internal_object_create(char *name, int window, signed char type, GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey, GLfloat font_size);
 /**
 Internal use.
 **/
@@ -261,7 +261,7 @@ See ##raydium/gui.h## for more informations.
 Unit for position (##px## and ##py##): percents (**window**)
 **/
 
-int raydium_gui_check_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, char checked);
+int raydium_gui_check_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, signed char checked);
 /**
 This function will create a new check box, with ##name## and with ##window## 
 for parent. 

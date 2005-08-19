@@ -89,12 +89,13 @@ clean:
 	rm -ri $(COMPILE_DIR)	|| true
 	rm -i libraydium.so*	|| true
 	rm -i libraydium.a*	|| true
+	rm -i compile.log	|| true
 
 clean_f:
 	rm -r $(COMPILE_DIR)	|| true
 	rm libraydium.so*	|| true
 	rm libraydium.a*	|| true
-
+	rm compile.log		|| true
 
 ################################################################################
 # All files

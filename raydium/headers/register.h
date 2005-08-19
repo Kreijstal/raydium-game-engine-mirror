@@ -22,7 +22,7 @@ registered functions.
 Mostly used internally.
 **/
 
-extern char raydium_register_name_isvalid (char *name);
+extern signed char raydium_register_name_isvalid (char *name);
 /**
 Tests ##name##, and returns his viability as a boolean.
 Accepted intervals for variables and functions: [a-z], [A-Z] and '_'

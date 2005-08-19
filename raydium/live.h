@@ -45,7 +45,7 @@ typedef struct raydium_live_Device
   unsigned char *src;     // intermediate buffer
   unsigned char *buffer2; // final buffer
 
-  char capture_style;
+  signed char capture_style;
   int frame;
   char name[RAYDIUM_MAX_NAME_LEN];
 } raydium_live_Device;
@@ -53,7 +53,7 @@ typedef struct raydium_live_Device
 
 typedef struct raydium_live_Texture
 {
-  char state;
+  signed char state;
   raydium_live_Device *device;
   int texture;
   void *OnRefresh;

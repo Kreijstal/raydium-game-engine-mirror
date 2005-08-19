@@ -69,7 +69,7 @@ typedef struct raydium_gui_Edit
 typedef struct raydium_gui_Check
 {
     char     caption[RAYDIUM_MAX_NAME_LEN];
-    char     checked;
+    signed char     checked;
     GLfloat  uv_normal[4];
     GLfloat  uv_checked[4];
     GLfloat  font_color_normal[3];
@@ -81,7 +81,7 @@ typedef struct raydium_gui_Combo
     char     items[RAYDIUM_GUI_DATASIZE];
     int      current;
     char     current_str[RAYDIUM_GUI_DATASIZE]; // provided as a "bonus"
-    char     expanded;
+    signed char     expanded;
     int      offset;
     GLfloat  uv_body_normal[4];
     GLfloat  uv_body_focus[4];
@@ -99,8 +99,8 @@ typedef struct raydium_gui_Object
 {
     int      id;
     char     name[RAYDIUM_MAX_NAME_LEN];
-    char     state;
-    char     type;
+    signed char     state;
+    signed char     type;
     int      window;
     GLfloat  pos[2];
     GLfloat  size[2];
@@ -113,7 +113,7 @@ typedef struct raydium_gui_Window
 {
     int      id;
     char     name[RAYDIUM_MAX_NAME_LEN];
-    char     state;
+    signed char     state;
     GLfloat  pos[2];
     GLfloat  size[2];
     raydium_gui_Object widgets[RAYDIUM_GUI_MAX_OBJECTS];
@@ -124,7 +124,7 @@ typedef struct raydium_gui_Window
 
 typedef struct raydium_gui_Theme
 {
-    char     loaded;
+    signed char     loaded;
     char     filename[RAYDIUM_MAX_NAME_LEN];
     int      texture;
     int      texture_size[2];
@@ -133,9 +133,9 @@ typedef struct raydium_gui_Theme
 
 raydium_gui_Theme  raydium_gui_theme_current;
 raydium_gui_Window raydium_gui_windows[RAYDIUM_GUI_MAX_WINDOWS];
-char               raydium_gui_visible;
+signed char        raydium_gui_visible;
 int                raydium_gui_window_focused;
-char		   raydium_gui_oldstate;
+signed char	   raydium_gui_oldstate;
 GLfloat		   raydium_gui_widget_sizes_default[3];
 int		   raydium_gui_button_clicked_id;
 

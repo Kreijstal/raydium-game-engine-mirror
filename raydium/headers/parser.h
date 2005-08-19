@@ -38,13 +38,13 @@ Strip whitespace (or other characters) from the beginning and end of a string.
 So far, ' ', '\n' and ';' are deleted.
 **/
 
-extern char raydium_parser_isdata (char *str);
+extern signed char raydium_parser_isdata (char *str);
 /**
 Returns true (1) if ##str## contains data, false (0) otherwise (comments and
 blank lines).
 **/
 
-extern char raydium_parser_cut (char *str, char *part1, char *part2, char separator);
+extern signed char raydium_parser_cut (char *str, char *part1, char *part2, char separator);
 /**
 This function will cut ##str## in two parts (##part1## and ##part2##) on
 ##separator##. No memory allocation will be done by this functions.

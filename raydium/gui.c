@@ -167,7 +167,7 @@ return 1;
 }
 
 
-char raydium_gui_window_isvalid(int i)
+signed char raydium_gui_window_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_GUI_MAX_WINDOWS &&
    raydium_gui_windows[i].state)
@@ -186,7 +186,7 @@ return -1;
 }
 
 
-char raydium_gui_widget_isvalid(int i, int window)
+signed char raydium_gui_widget_isvalid(int i, int window)
 {
 if(!raydium_gui_window_isvalid(window))
     return 0;
@@ -1298,7 +1298,7 @@ if(!raydium_osd_cursor_texture && !raydium_gui_oldstate)
     }
 }
 
-char raydium_gui_isvisible(void)
+signed char raydium_gui_isvisible(void)
 {
 return raydium_gui_visible;
 }
@@ -1357,7 +1357,7 @@ raydium_log("GUI: Error: No more window slots ! aborting \"%s\" creation",name);
 return -1;
 }
 
-int raydium_gui_internal_object_create(char *name, int window, char type, GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey, GLfloat font_size)
+int raydium_gui_internal_object_create(char *name, int window, signed char type, GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey, GLfloat font_size)
 {
 int i;
 
@@ -1692,7 +1692,7 @@ raydium_gui_windows[window].widgets[wid].widget=e;
 return wid;
 }
 
-int raydium_gui_check_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, char checked)
+int raydium_gui_check_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, signed char checked)
 {
 int wid;
 raydium_gui_Check *c;
