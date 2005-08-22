@@ -60,23 +60,23 @@ dSpaceID 	raydium_ode_space;
 dJointGroupID 	raydium_ode_contactgroup;
 int		raydium_ode_ground_mesh;
 GLint		raydium_ode_timecall; // read only (timecall index for ode callback)
-void *		raydium_ode_CollideCallback; // char f(int,int,dContact*)
+void *		raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
 void *		raydium_ode_StepCallback; // void f(void)
-void *		raydium_ode_ObjectNearCollide; // char f(int,int)
-char		raydium_ode_network_distant_create;
-char		raydium_ode_network_next_local_only;
-char		raydium_ode_network_explosion_create;
+void *		raydium_ode_ObjectNearCollide; // signed char f(int,int)
+signed char	raydium_ode_network_distant_create;
+signed char	raydium_ode_network_next_local_only;
+signed char	raydium_ode_network_explosion_create;
 int		raydium_ode_network_maxfreq;
-void *		raydium_ode_ExplosionCallback; // void f(char,dReal,dReal,dReal *)
+void *		raydium_ode_ExplosionCallback; // void f(signed char,dReal,dReal,dReal *)
 void *		raydium_ode_BeforeElementDrawCallback;
 void *		raydium_ode_AfterElementDrawCallback;
-char	  	raydium_ode_element_delete_LOCK;
+signed char	raydium_ode_element_delete_LOCK;
 
 typedef struct raydium_ode_Explosion // used for "blowing" explosions
 {
     int   id;
     char  name[RAYDIUM_MAX_NAME_LEN];
-    char  state;
+    signed char  state;
     dReal config_radius; // desired radius
     dReal config_propag; // propagation speed (increment to config_radius)
     dReal radius; // current radius
@@ -88,13 +88,13 @@ typedef struct raydium_ode_Joint
 {
     int      id;
     char     name[RAYDIUM_MAX_NAME_LEN];
-    char     state;
+    signed char     state;
     int      mesh; // not used for joints, yet
-    char     hinge2correct; // this hinge2 needs to be re-aligned each timestep
-    char     motored; // powered by a motor ?
+    signed char     hinge2correct; // this hinge2 needs to be re-aligned each timestep
+    signed char     motored; // powered by a motor ?
     dReal    motorforce;
     dReal    breakableforce; // is breakable ? (max force without braking)
-    char     breaking; // is currently breaking (used as a tag for OnDelete)
+    signed char     breaking; // is currently breaking (used as a tag for OnDelete)
     dJointID joint;
     void *   OnDelete; // pointer to OnDelete user callback
 } raydium_ode_Joint;
@@ -103,7 +103,7 @@ typedef struct raydium_ode_Motor
 {
     int   id;
     char  name[RAYDIUM_MAX_NAME_LEN];
-    char  state;
+    signed char  state;
     int   object; // owner
     int   joints[RAYDIUM_ODE_MOTOR_MAX_JOINTS];      // attached to ... (joints)
     int	  joints_axe[RAYDIUM_ODE_MOTOR_MAX_JOINTS];  // wich axe ? (joint relative)
@@ -111,7 +111,7 @@ typedef struct raydium_ode_Motor
     dReal rocket_direction[3]; // rocket only (relative to element)
     dReal rocket_orientation[3]; // rocket only (relative to element)
     dReal rocket_position[3]; // rocket only (relative to element)
-    char  rocket_playermovement; // this rocket is used for a FPS player
+    signed char  rocket_playermovement; // this rocket is used for a FPS player
     dReal speed; // "engine style" motor: desired speed
     dReal angle; // "angular style" motor: desired angle
     dReal force; // all styles (engine, angular and rocket)
@@ -144,13 +144,13 @@ typedef struct raydium_ode_Element
 {
     int     id;
     char    name[RAYDIUM_MAX_NAME_LEN];
-    char    state;
+    signed char    state;
     int     object;
     int     mesh;
-    char    _touched;	// touched during very last timestep
-    char    _movesfrom;	// is leaving this object to "object" member
-    char    _avoidedcol;	// is any collision was avoided because of this move ?
-    char    isplayer;	// is this element an FPS player ? ("standing elem")
+    signed char    _touched;	// touched during very last timestep
+    signed char    _movesfrom;	// is leaving this object to "object" member
+    signed char    _avoidedcol;	// is any collision was avoided because of this move ?
+    signed char    isplayer;	// is this element an FPS player ? ("standing elem")
     dReal   playerangle; // FPS player angle
     dReal   slip;	// slipping factor
     dReal   rotfriction; // rotation friction factor (avoid infinite rolling spheres)
@@ -162,7 +162,7 @@ typedef struct raydium_ode_Element
     int	    user_tag; // tag reseverd to user (this tag is networked)
     raydium_ode_ElementInternalSave *fixed_elements[RAYDIUM_ODE_ELEMENT_MAX_FIXING];
     int	    nid; //  network ID
-    char    distant; // owned by a distant machine
+    signed char    distant; // owned by a distant machine
     int     distant_owner;
     time_t  lastnetupdate;
     void *  OnBlow; // when touched by a blowing explosion void (*f)(int,dReal,dReal)
@@ -176,7 +176,7 @@ typedef struct raydium_ode_Element
     dReal         netvel[3]; // test
     unsigned long net_last_interval;
     int		  ground_texture;
-    char	  marked_as_deleted;
+    signed char	  marked_as_deleted;
 } raydium_ode_Element;
 
 
@@ -184,8 +184,8 @@ typedef struct raydium_ode_Object
 {
     int      id;
     char     name[RAYDIUM_MAX_NAME_LEN];
-    char     state;
-    char     colliding; // elements of this objet can collide each other
+    signed char     state;
+    signed char     colliding; // elements of this objet can collide each other
     dSpaceID group;
 //    dGeomID group;
 } raydium_ode_Object;
@@ -201,7 +201,7 @@ typedef struct raydium_ode_network_Event
 
 typedef struct raydium_ode_network_Explosion
 {
-    char type; // RAYDIUM_ODE_NETWORK_EXPLOSION_* (EXPL or BLOW)
+    signed char type; // RAYDIUM_ODE_NETWORK_EXPLOSION_* (EXPL or BLOW)
     dReal pos[3];
     dReal radius;
     dReal force; // BLOW only
@@ -215,6 +215,7 @@ raydium_ode_Joint     raydium_ode_joint[RAYDIUM_ODE_MAX_JOINTS];
 raydium_ode_Motor     raydium_ode_motor[RAYDIUM_ODE_MAX_MOTORS];
 raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS];
 
+/*
 void raydium_ode_callback(void);
 int  raydium_ode_object_create(char *);
 void raydium_ode_motor_rocket_orientation(int m, dReal rx, dReal ry, dReal rz);
@@ -225,6 +226,7 @@ char raydium_ode_object_colliding(int o, char colliding);
 char raydium_ode_element_delete(int e, char deletejoints);
 void raydium_ode_element_move(int elem, dReal *pos);
 dReal *raydium_ode_element_pos_get(int j);
+*/
 
 void raydium_ode_network_init(void);
 void raydium_ode_network_element_delete(int e);

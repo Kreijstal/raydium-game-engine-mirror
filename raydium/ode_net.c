@@ -153,7 +153,7 @@ raydium_ode_object_colliding_name("DISTANT",0);
 }
 
 
-char raydium_ode_network_TimeToSend(void)
+signed char raydium_ode_network_TimeToSend(void)
 {
 static float time;
 
@@ -521,7 +521,7 @@ raydium_network_write(NULL,raydium_network_uid,RAYDIUM_NETWORK_PACKET_ODE_EXPLOS
 }
 
 
-char raydium_ode_network_element_isdistant(int elem)
+signed char raydium_ode_network_element_isdistant(int elem)
 {
 if(!raydium_ode_element_isvalid(elem))
     {
@@ -532,12 +532,12 @@ if(!raydium_ode_element_isvalid(elem))
 return raydium_ode_element[elem].distant;
 }
 
-char raydium_ode_network_element_isdistant_name(char *elem)
+signed char raydium_ode_network_element_isdistant_name(char *elem)
 {
 return raydium_ode_network_element_isdistant(raydium_ode_element_find(elem));
 }
 
-char raydium_ode_network_element_distantowner(int elem)
+signed char raydium_ode_network_element_distantowner(int elem)
 {
 if(!raydium_ode_element_isvalid(elem))
     {
@@ -547,7 +547,7 @@ if(!raydium_ode_element_isvalid(elem))
 return raydium_ode_element[elem].distant_owner;
 }
 
-char raydium_ode_network_element_distantowner_name(char *elem)
+signed char raydium_ode_network_element_distantowner_name(char *elem)
 {
 return raydium_ode_network_element_distantowner(raydium_ode_element_find(elem));
 }

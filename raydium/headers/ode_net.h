@@ -80,7 +80,7 @@ extern void raydium_ode_network_init (void);
 Internal. Will initialize all RayODE Net layer and register netcalls.
 **/
 
-extern char raydium_ode_network_TimeToSend (void);
+extern signed char raydium_ode_network_TimeToSend (void);
 /**
 Almost internal. Will return 1 (true) if it's time to send a new packet, using
 ##raydium_ode_network_maxfreq## value.
@@ -146,24 +146,24 @@ extern void raydium_ode_network_explosion_send (raydium_ode_network_Explosion * 
 Internal. Send a new explosion event.
 **/
 
-extern char raydium_ode_network_element_isdistant (int elem);
+extern signed char raydium_ode_network_element_isdistant (int elem);
 /**
 Will return true (1) if element ##elem## is "distant", or false (0) if it's
 one of "our" elements.
 **/
 
-extern char raydium_ode_network_element_isdistant_name (char *elem);
+extern signed char raydium_ode_network_element_isdistant_name (char *elem);
 /**
 Same as above, but using element's name.
 **/
 
-extern char raydium_ode_network_element_distantowner(int elem);
+extern signed char raydium_ode_network_element_distantowner(int elem);
 /**
 Returns UID (peer "user" ID) for the distant element owner. See ##network.c##
 documentation for more informations about UID.
 **/
 
-extern char raydium_ode_network_element_distantowner_name(char *elem);
+extern signed char raydium_ode_network_element_distantowner_name(char *elem);
 /**
 Same as above, but using element's name.
 **/

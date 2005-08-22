@@ -201,7 +201,7 @@ raydium_log("physics: OK");
 }
 
 
-char raydium_ode_object_isvalid(int i)
+signed char raydium_ode_object_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_ODE_MAX_OBJECTS &&
    raydium_ode_object[i].state)
@@ -209,7 +209,7 @@ if(i>=0 && i<RAYDIUM_ODE_MAX_OBJECTS &&
 return 0;
 }
 
-char raydium_ode_element_isvalid(int i)
+signed char raydium_ode_element_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_ODE_MAX_ELEMENTS &&
    raydium_ode_element[i].state)
@@ -217,7 +217,7 @@ if(i>=0 && i<RAYDIUM_ODE_MAX_ELEMENTS &&
 return 0;
 }
 
-char raydium_ode_joint_isvalid(int i)
+signed char raydium_ode_joint_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_ODE_MAX_JOINTS &&
    raydium_ode_joint[i].state)
@@ -225,7 +225,7 @@ if(i>=0 && i<RAYDIUM_ODE_MAX_JOINTS &&
 return 0;
 }
 
-char raydium_ode_motor_isvalid(int i)
+signed char raydium_ode_motor_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_ODE_MAX_MOTORS &&
    raydium_ode_motor[i].state)
@@ -233,7 +233,7 @@ if(i>=0 && i<RAYDIUM_ODE_MAX_MOTORS &&
 return 0;
 }
 
-char raydium_ode_explosion_isvalid(int i)
+signed char raydium_ode_explosion_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_ODE_MAX_EXPLOSIONS &&
    raydium_ode_explosion[i].state)
@@ -473,7 +473,7 @@ return -1;
 }
 
 
-char raydium_ode_object_rename(int o, char *newname)
+signed char raydium_ode_object_rename(int o, char *newname)
 {
 int elem;
 
@@ -494,13 +494,13 @@ strcpy(raydium_ode_object[o].name,newname);
 return 1;
 }
 
-char raydium_ode_object_rename_name(char *o, char *newname)
+signed char raydium_ode_object_rename_name(char *o, char *newname)
 {
 return raydium_ode_object_rename(raydium_ode_object_find(o),newname);
 }
 
 
-char raydium_ode_object_colliding(int o, char colliding)
+signed char raydium_ode_object_colliding(int o, signed char colliding)
 {
 if(!raydium_ode_object_isvalid(o))
     {
@@ -512,7 +512,7 @@ return 1;
 }
 
 
-char raydium_ode_object_colliding_name(char *o, char colliding)
+signed char raydium_ode_object_colliding_name(char *o, signed char colliding)
 {
 return raydium_ode_object_colliding(raydium_ode_object_find(o),colliding);
 }
@@ -637,7 +637,7 @@ raydium_ode_element_addtorque_name(e,vect);
 }
 
 
-char raydium_ode_element_material(int e, dReal erp, dReal cfm)
+signed char raydium_ode_element_material(int e, dReal erp, dReal cfm)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -649,13 +649,13 @@ raydium_ode_element[e].cfm=cfm;
 return 1;
 }
 
-char raydium_ode_element_material_name(char *name, dReal erp, dReal cfm)
+signed char raydium_ode_element_material_name(char *name, dReal erp, dReal cfm)
 {
 return raydium_ode_element_material(raydium_ode_element_find(name),erp,cfm);
 }
 
 
-char raydium_ode_element_slip(int e, dReal slip)
+signed char raydium_ode_element_slip(int e, dReal slip)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -666,12 +666,12 @@ raydium_ode_element[e].slip=slip;
 return 1;
 }
 
-char raydium_ode_element_slip_name(char *e, dReal slip)
+signed char raydium_ode_element_slip_name(char *e, dReal slip)
 {
 return raydium_ode_element_slip(raydium_ode_element_find(e),slip);
 }
 
-char raydium_ode_element_rotfriction(int e, dReal rotfriction)
+signed char raydium_ode_element_rotfriction(int e, dReal rotfriction)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -682,7 +682,7 @@ raydium_ode_element[e].rotfriction=rotfriction;
 return 1;
 }
 
-char raydium_ode_element_rotfriction_name(char *e, dReal rotfriction)
+signed char raydium_ode_element_rotfriction_name(char *e, dReal rotfriction)
 {
 return raydium_ode_element_rotfriction(raydium_ode_element_find(e),rotfriction);
 }
@@ -737,7 +737,7 @@ void raydium_ode_element_OnDelete_name(char *e, void *OnDelete)
 raydium_ode_element_OnDelete(raydium_ode_element_find(e),OnDelete);
 }
 
-void raydium_ode_element_gravity(int e, char enable)
+void raydium_ode_element_gravity(int e, signed char enable)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -754,7 +754,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
 dBodySetGravityMode(raydium_ode_element[e].body,enable);
 }
 
-void raydium_ode_element_gravity_name(char *e, char enable)
+void raydium_ode_element_gravity_name(char *e, signed char enable)
 {
 raydium_ode_element_gravity(raydium_ode_element_find(e),enable);
 }
@@ -776,7 +776,7 @@ raydium_ode_element_ttl_set(raydium_ode_element_find(e),ttl);
 
 
 // aabb is dReal[6]
-char raydium_ode_element_aabb_get(int element, dReal *aabb)
+signed char raydium_ode_element_aabb_get(int element, dReal *aabb)
 {
 if(!raydium_ode_element_isvalid(element))
     {
@@ -787,7 +787,7 @@ dGeomGetAABB(raydium_ode_element[element].geom,aabb);
 return 1;
 }
 
-char raydium_ode_element_aabb_get_name(char *element, dReal *aabb)
+signed char raydium_ode_element_aabb_get_name(char *element, dReal *aabb)
 {
 return raydium_ode_element_aabb_get(raydium_ode_element_find(element),aabb);
 }
@@ -807,7 +807,7 @@ int raydium_ode_element_touched_get_name(char *e)
 return raydium_ode_element_touched_get(raydium_ode_element_find(e));
 }
 
-char raydium_ode_element_player_set(int e, char isplayer)
+signed char raydium_ode_element_player_set(int e, signed char isplayer)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -823,12 +823,12 @@ else
 return 1;
 }
 
-char raydium_ode_element_player_set_name(char *name, char isplayer)
+signed char raydium_ode_element_player_set_name(char *name, signed char isplayer)
 {
 return raydium_ode_element_player_set(raydium_ode_element_find(name),isplayer);
 }
 
-char raydium_ode_element_player_get(int e)
+signed char raydium_ode_element_player_get(int e)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -838,12 +838,12 @@ if(!raydium_ode_element_isvalid(e))
 return raydium_ode_element[e].isplayer;
 }
 
-char raydium_ode_element_player_get_name(char *name)
+signed char raydium_ode_element_player_get_name(char *name)
 {
 return raydium_ode_element_player_get(raydium_ode_element_find(name));
 }
 
-char raydium_ode_element_player_angle(int e, dReal angle)
+signed char raydium_ode_element_player_angle(int e, dReal angle)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -854,7 +854,7 @@ raydium_ode_element[e].playerangle=angle;
 return 1;
 }
 
-char raydium_ode_element_player_angle_name(char *e, dReal angle)
+signed char raydium_ode_element_player_angle_name(char *e, dReal angle)
 {
 return raydium_ode_element_player_angle(raydium_ode_element_find(e),angle);
 }
@@ -890,7 +890,7 @@ int raydium_ode_element_object_get_name(char *e)
 return raydium_ode_element_object_get(raydium_ode_element_find(e));
 }
 
-int raydium_ode_object_sphere_add(char *name, int group, dReal mass, dReal radius, char type, int tag, char *mesh)
+int raydium_ode_object_sphere_add(char *name, int group, dReal mass, dReal radius, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
@@ -957,7 +957,7 @@ return -1;
 
 }
 
-int raydium_ode_object_box_add(char *name, int group, dReal mass, dReal tx, dReal ty, dReal tz, char type, int tag, char *mesh)
+int raydium_ode_object_box_add(char *name, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
@@ -1030,7 +1030,7 @@ return -1;
 
 }
 
-int raydium_ode_element_fix(char *name, int *elem, int nelems, char keepgeoms)
+int raydium_ode_element_fix(char *name, int *elem, int nelems, signed char keepgeoms)
 {
 dReal aabb[6];
 dReal aabbR[6];
@@ -1271,7 +1271,7 @@ void raydium_ode_element_rotate_name_3f(char *name, dReal rx, dReal ry, dReal rz
 raydium_ode_element_rotate_3f(raydium_ode_element_find(name),rx,ry,rz);
 }
 
-void raydium_ode_element_rotate_direction(int elem, char Force0OrVel1)
+void raydium_ode_element_rotate_direction(int elem, signed char Force0OrVel1)
 {
 dReal *vel;
 dMatrix3 R;
@@ -1298,7 +1298,7 @@ dRFrom2Axes(R,vel[0],vel[1],vel[2], vel[0],vel[1],vel[2]*0); // 1 0 0
 dBodySetRotation(raydium_ode_element[elem].body,R);
 }
 
-void raydium_ode_element_rotate_direction_name(char *e, char Force0OrVel1)
+void raydium_ode_element_rotate_direction_name(char *e, signed char Force0OrVel1)
 {
 raydium_ode_element_rotate_direction(raydium_ode_element_find(e),Force0OrVel1);
 }
@@ -1765,7 +1765,7 @@ return raydium_ode_joint_universal_limits(raydium_ode_joint_find(j),lo1,hi1,lo2,
 }
 
 
-void raydium_ode_joint_hinge2_block(int j, char block)
+void raydium_ode_joint_hinge2_block(int j, signed char block)
 {
 // TODO: test if joint is hinge2 type
 if(raydium_ode_joint_isvalid(j))
@@ -1790,7 +1790,7 @@ raydium_log("ODE: Error: cannot block: invalid index or name");
 
 
 
-void raydium_ode_joint_hinge2_block_name(char *name, char block)
+void raydium_ode_joint_hinge2_block_name(char *name, signed char block)
 {
 raydium_ode_joint_hinge2_block(raydium_ode_joint_find(name),block);
 }
@@ -2072,7 +2072,7 @@ return raydium_ode_element_pos_get(raydium_ode_element_find(name));
 }
 
 
-char raydium_ode_element_rotq_get(int j, dReal * res)
+signed char raydium_ode_element_rotq_get(int j, dReal * res)
 {
 if(raydium_ode_element_isvalid(j))
     {
@@ -2083,12 +2083,13 @@ raydium_log("ODE: Error: cannot get element rotation (quaternion): invalid index
 return 0;
 }
 
-char raydium_ode_element_rotq_get_name(char *name, dReal * res)
+signed char raydium_ode_element_rotq_get_name(char *name, dReal * res)
 {
 return raydium_ode_element_rotq_get(raydium_ode_element_find(name),res);
 }
+
 /*
-char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
+signed char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
 {
 // From Andrzej Szombierski <qq@kuku.eu.org> (ODE ML)
 // patched by Daniel Monteiro Basso <dmbasso@inf.ufrgs.br> (ODE ML)
@@ -2125,7 +2126,7 @@ return 0;
 }
 */
 
-char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
+signed char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
 {
 // From Andrzej Szombierski <qq@kuku.eu.org> (ODE ML)
 // Original code version: "absolute" angles
@@ -2163,7 +2164,7 @@ return 0;
 }
 
 
-char raydium_ode_element_rot_get_name(char *e, dReal *rx, dReal *ry, dReal *rz)
+signed char raydium_ode_element_rot_get_name(char *e, dReal *rx, dReal *ry, dReal *rz)
 {
 return raydium_ode_element_rot_get(raydium_ode_element_find(e),rx,ry,rz);
 }
@@ -2209,7 +2210,7 @@ void raydium_ode_element_RelPointPos_name(char *e, dReal px, dReal py, dReal pz,
 raydium_ode_element_RelPointPos(raydium_ode_element_find(e),px,py,pz,res);
 }
 
-int raydium_ode_motor_create(char *name, int obj, char type)
+int raydium_ode_motor_create(char *name, int obj, signed char type)
 {
 int i;
 
@@ -2376,7 +2377,7 @@ raydium_ode_motor_rocket_orientation(raydium_ode_motor_find(name),rx,ry,rz);
 }
 
 
-void raydium_ode_motor_rocket_playermovement(int m, char isplayermovement)
+void raydium_ode_motor_rocket_playermovement(int m, signed char isplayermovement)
 {
 if(!raydium_ode_motor_isvalid(m))
     {
@@ -2391,12 +2392,12 @@ if(raydium_ode_motor[m].state!=RAYDIUM_ODE_MOTOR_ROCKET)
 raydium_ode_motor[m].rocket_playermovement=isplayermovement;
 }
 
-void raydium_ode_motor_rocket_playermovement_name(char *m, char isplayermovement)
+void raydium_ode_motor_rocket_playermovement_name(char *m, signed char isplayermovement)
 {
 return raydium_ode_motor_rocket_playermovement(raydium_ode_motor_find(m),isplayermovement);
 }
 
-char raydium_ode_motor_delete(int e)
+signed char raydium_ode_motor_delete(int e)
 {
 if(!raydium_ode_motor_isvalid(e))
     {
@@ -2407,13 +2408,13 @@ raydium_ode_init_motor(e);
 return 1;
 }
 
-char raydium_ode_motor_delete_name(char *name)
+signed char raydium_ode_motor_delete_name(char *name)
 {
 return raydium_ode_motor_delete(raydium_ode_motor_find(name));
 }
 
 
-char raydium_ode_joint_delete(int joint)
+signed char raydium_ode_joint_delete(int joint)
 {
 int i,j;
 void (*f)(int);
@@ -2440,13 +2441,13 @@ raydium_ode_init_joint(joint);
 return 1;
 }
 
-char raydium_ode_joint_delete_name(char *name)
+signed char raydium_ode_joint_delete_name(char *name)
 {
 return raydium_ode_joint_delete(raydium_ode_joint_find(name));
 }
 
 
-char raydium_ode_element_delete(int e, char deletejoints)
+signed char raydium_ode_element_delete(int e, signed char deletejoints)
 {
 int i;
 int (*f)(int);
@@ -2540,13 +2541,13 @@ raydium_ode_init_element(e);
 return 1;
 }
 
-char raydium_ode_element_delete_name(char *name, char deletejoints)
+signed char raydium_ode_element_delete_name(char *name, signed char deletejoints)
 {
 return raydium_ode_element_delete(raydium_ode_element_find(name),deletejoints);
 }
 
 
-char raydium_ode_object_delete(int obj)
+signed char raydium_ode_object_delete(int obj)
 {
 int i;
 //raydium_ode_Element *e;
@@ -2584,12 +2585,12 @@ raydium_ode_init_object(obj);
 return 1;
 }
 
-char raydium_ode_object_delete_name(char *name)
+signed char raydium_ode_object_delete_name(char *name)
 {
 return raydium_ode_object_delete(raydium_ode_object_find(name));
 }
 
-char raydium_ode_explosion_delete(int e)
+signed char raydium_ode_explosion_delete(int e)
 {
 if(!raydium_ode_explosion_isvalid(e))
     {
@@ -2603,7 +2604,7 @@ return 1;
 }
 
 
-char raydium_ode_element_moveto(int element, int object, char deletejoints)
+signed char raydium_ode_element_moveto(int element, int object, signed char deletejoints)
 {
 int i;
 raydium_ode_Joint *j;
@@ -2643,7 +2644,7 @@ return 1;
 }
 
 
-char raydium_ode_element_moveto_name(char *element, char *object, char deletejoints)
+signed char raydium_ode_element_moveto_name(char *element, char *object, char signed deletejoints)
 {
 return raydium_ode_element_moveto(raydium_ode_element_find(element),raydium_ode_object_find(object),deletejoints);
 }
@@ -2676,7 +2677,7 @@ if(force>raydium_ode_joint[j].breakableforce)
     }
 }
 
-char raydium_ode_launcher(int element, int from_element, dReal *rot, dReal force)
+signed char raydium_ode_launcher(int element, int from_element, dReal *rot, dReal force)
 {
 dReal res[3];
 dReal *initial;
@@ -2710,12 +2711,12 @@ dBodyAddForce(raydium_ode_element[element].body,final[0],final[1],final[2]);
 return 1;
 }
 
-char raydium_ode_launcher_name(char *element, char *from_element, dReal *rot, dReal force)
+signed char raydium_ode_launcher_name(char *element, char *from_element, dReal *rot, dReal force)
 {
 return raydium_ode_launcher(raydium_ode_element_find(element),raydium_ode_element_find(from_element),rot,force);
 }
 
-char raydium_ode_launcher_name_3f(char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force)
+signed char raydium_ode_launcher_name_3f(char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force)
 {
 dReal tmp[3];
 tmp[0]=rx;
@@ -2725,7 +2726,7 @@ return raydium_ode_launcher_name(element,from_element,tmp,force);
 }
 
 
-char raydium_ode_launcher_simple(int element, int from_element, dReal *lrot, dReal force)
+signed char raydium_ode_launcher_simple(int element, int from_element, dReal *lrot, dReal force)
 {
 dReal *pos;
 dQuaternion rot;
@@ -2753,12 +2754,12 @@ raydium_ode_element_moveto(element,raydium_ode_object_find("GLOBAL"),0);
 return 1;
 }
 
-char raydium_ode_launcher_simple_name(char *element, char *from_element, dReal *rot, dReal force)
+signed char raydium_ode_launcher_simple_name(char *element, char *from_element, dReal *rot, dReal force)
 {
 return raydium_ode_launcher_simple(raydium_ode_element_find(element),raydium_ode_element_find(from_element),rot,force);
 }
 
-char raydium_ode_launcher_simple_name_3f(char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force)
+signed char raydium_ode_launcher_simple_name_3f(char *element, char *from_element, dReal rx, dReal ry, dReal rz, dReal force)
 {
 dReal tmp[3];
 tmp[0]=rx;
@@ -2771,7 +2772,7 @@ return raydium_ode_launcher_simple_name(element,from_element,tmp,force);
 void raydium_ode_explosion_blow(dReal radius, dReal max_force, dReal *pos)
 {
 int i;
-void (*f)(char, dReal, dReal, dReal *);
+void (*f)(signed char, dReal, dReal, dReal *);
 void (*g)(int, dReal, dReal);
 
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT && !raydium_ode_network_explosion_create)
@@ -2841,7 +2842,7 @@ raydium_ode_explosion_blow(radius,max_force,pos);
 int raydium_ode_explosion_create(char *name, dReal final_radius, dReal propag, dReal *pos)
 {
 int i;
-void (*f)(char, dReal, dReal, dReal *);
+void (*f)(signed char, dReal, dReal, dReal *);
 
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT && !raydium_ode_network_explosion_create)
 {
@@ -2922,10 +2923,10 @@ raydium_ode_element_camera_inboard(raydium_ode_element_find(name),px,py,pz,lookx
 }
 
 
-void raydium_ode_draw_all(char names)
+void raydium_ode_draw_all(signed char names)
 {
 int i,j;
-char (*bef)(int);
+signed char (*bef)(int);
 void (*aft)(int);
 
 bef=raydium_ode_BeforeElementDrawCallback;
@@ -3252,7 +3253,7 @@ dReal erp=0;
 dReal cfm=0;
 dReal slip=0;
 int count=0;
-char (*f)(int,int, dContact *);
+signed char (*f)(int,int, dContact *);
 f=raydium_ode_CollideCallback;
 
 ground_elem_id=raydium_ode_element_find("ground");
@@ -3261,7 +3262,7 @@ distan_obj_id=raydium_ode_object_find("DISTANT");
 if(dGeomIsSpace (o1) || dGeomIsSpace (o2)) 
     {
     raydium_ode_Object *oo1, *oo2;
-    char (*g)(int,int);
+    signed char (*g)(int,int);
     oo1=dGeomGetData(o1);
     oo2=dGeomGetData(o2);
     g=raydium_ode_ObjectNearCollide;
