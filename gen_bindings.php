@@ -4,8 +4,10 @@
 // You may generate bindings for many languages, such as
 // Perl, Python, Tcl/Tk, Java, (Lua is on the road ...)
 
-// Use PHP command line interface (CLI), it's provided by
+// To run this script, ise PHP command line interface (CLI), it's provided by
 // Raydium building scripts.
+
+// See output in raydium/swig directory (building instructions are displayed)
 
 $nobindings="//!NOBINDINGS";
 
@@ -35,6 +37,7 @@ fwrite($fpi,"%typedef int GLint;\n");
 fwrite($fpi,"%typedef int ALint;\n");
 fwrite($fpi,"%typedef float GLfloat;\n");
 fwrite($fpi,"%typedef float ALfloat;\n");
+fwrite($fpi,"%typedef float dReal;\n");
 
 
 $h=opendir(".");
@@ -52,12 +55,9 @@ while(false !== ($file = readdir($h)))
 
     $if=substr($file,0,-2).".i";
     $hd="../headers/$file";
-//    $fp=fopen("../swig/$if","wt");
-//    if($fp===false)
-//	die("cannot create interface file (for $file)\n");
     fwrite($fpi,"%module raydium\n%{\n#include \"$hd\"\n%}\n\n%include \"$hd\"\n");
-//    fclose($fp);
     }
+
 closedir($h);
 fclose($fpi);
 chdir("../..");
@@ -92,6 +92,24 @@ $argvmap=<<<EOHC
 
 %include exception.i
 
+// Type mapping for grabbing a FILE * from Python
+%typemap(python,in) FILE * {
+  if (!PyFile_Check(\$input)) {
+        PyErr_SetString(PyExc_TypeError, "Need a file!");
+	return NULL;
+	}
+    \$1 = PyFile_AsFile(\$input);
+}
+
+// Grab a Python function object as a Python object.
+%typemap(python,in) PyObject *pyfunc {
+  if (!PyCallable_Check(\$input)) {
+        PyErr_SetString(PyExc_TypeError, "Need a callable object!");
+	return NULL;
+	}
+    \$1 = \$input;
+}
+
 %typemap(in) (int argc, char **argv) {
   int i;
   if (!PyList_Check(\$input)) {
@@ -114,7 +132,6 @@ $argvmap=<<<EOHC
 }
 EOHC;
 
-
 if(chdir("raydium/swig")===false)
     die("not in Raydium's root dir, cannot find swig dir\n");
 
@@ -128,6 +145,53 @@ fclose($fp);
 
 $fp=fopen("raydium.i","wt");
 fwrite($fp,$argvmap."\n".$contents);
+fclose($fp);
+
+$contents=<<<EOHD
+%{
+PyObject *MainLoopPython;
+
+static void MainLoopPythonCallback(void)
+{
+PyObject *result;
+PyObject *arglist;
+
+arglist = Py_BuildValue("()");
+
+result=PyEval_CallObject(MainLoopPython,arglist);
+Py_DECREF(arglist);
+if (result == Py_None) 
+    {
+    return;
+    }
+
+if (result) 
+    {
+    Py_DECREF(result);
+    }
+return;
+}
+
+%}
+
+
+%module raydium
+%{
+void SetMainLoopPython(PyObject *pyfunc)
+{
+MainLoopPython = pyfunc;
+Py_INCREF(MainLoopPython);
+raydium_callback(MainLoopPythonCallback);
+}
+
+%}
+
+void SetMainLoopPython(PyObject *pyfunc);
+
+EOHD;
+
+$fp=fopen("raydium.i","at");
+fwrite($fp,$contents);
 fclose($fp);
 
 passthru("swig -python raydium.i",&$ret);
