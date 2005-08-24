@@ -273,9 +273,9 @@ if(raydium_console_pos>raydium_console_config_max)
 if(!raydium_console_pos) return;
 
 raydium_osd_start();
-texsave=raydium_texture_current;
+texsave=raydium_texture_current_main;
 raydium_texture_current_set_name(raydium_console_config_texture);
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);

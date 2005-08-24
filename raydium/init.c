@@ -134,7 +134,7 @@ raydium_vertex_offset_triangle=0;
 strcpy(raydium_texture_name[0],"dummy.null");
 
 raydium_texture_index=1; // no more texture loaded (0 is not a texture)
-raydium_texture_current=0; // sets an "invalid" current texture
+raydium_texture_current_main=0; // sets an "invalid" current texture
 raydium_texture_current_multi=0; // sets an "invalid" current texture
 raydium_texture_current_multi_u=0;
 raydium_texture_current_multi_v=0;

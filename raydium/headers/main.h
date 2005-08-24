@@ -192,7 +192,7 @@ one, and 2 for middle button.
     
 ===Textures===
     
-##raydium_texture_index## and ##raydium_texture_current## (GLuint) are used
+##raydium_texture_index## and ##raydium_texture_current_main## (GLuint) are used
 internaly to determine repectively how many textures are loaded,
 wich is the current one.
     

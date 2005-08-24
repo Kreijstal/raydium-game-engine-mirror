@@ -40,7 +40,7 @@ glDisable(GL_FOG);
 //glColor4fv(one);
 
 raydium_texture_current_set_name("BOXfront.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXfront.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
@@ -53,7 +53,7 @@ glEnd();
 
 				
 raydium_texture_current_set_name("BOXback.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXback.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
@@ -66,7 +66,7 @@ glEnd();
 
 
 raydium_texture_current_set_name("BOXright.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXright.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
@@ -78,7 +78,7 @@ glBegin(GL_QUADS);
 glEnd();
 
 raydium_texture_current_set_name("BOXleft.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXleft.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
@@ -90,7 +90,7 @@ glBegin(GL_QUADS);
 glEnd();
 
 raydium_texture_current_set_name("BOXtop.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXtop.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
@@ -103,7 +103,7 @@ glEnd();
 
 
 raydium_texture_current_set_name("BOXbottom.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXbottom.tga"));
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);

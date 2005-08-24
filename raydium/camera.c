@@ -334,7 +334,7 @@ if(p>=0 && p<RAYDIUM_MAX_CAMERA_PATHS)
     {
     glDisable(GL_LIGHTING);
     raydium_texture_current_set_name("rgb(1,0,0)");
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
     glLineWidth(1.f);
     glBegin(GL_LINE_LOOP);
 

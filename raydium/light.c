@@ -91,7 +91,26 @@ memcpy(raydium_light_position[l],vect,raydium_internal_size_vector_float_4);
 //raydium_light_update_position(l);
 }
 
+void raydium_light_move_3f(GLuint l,GLfloat px, GLfloat py, GLfloat pz)
+{
+GLfloat pos[4];
+pos[0]=px;
+pos[1]=py;
+pos[2]=pz;
+pos[3]=0;
+raydium_light_move(l,pos);
+}
 
+void raydium_light_conf_7f(GLuint l,GLfloat px, GLfloat py, GLfloat pz, GLfloat intensity, GLfloat r, GLfloat g, GLfloat b)
+{
+raydium_light_intensity[l]=intensity;
+raydium_light_color[l][0]=r;
+raydium_light_color[l][1]=g;
+raydium_light_color[l][2]=b;
+raydium_light_color[l][3]=1.0;
+raydium_light_move_3f(l,px,py,pz);
+raydium_light_update_all(l);
+}
 
 void raydium_light_reset(GLuint l)
 {

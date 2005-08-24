@@ -935,7 +935,7 @@ GLfloat rz;
 
 //raydium_profile_start();
 
-texsave=raydium_texture_current;
+texsave=raydium_texture_current_main;
 light=raydium_light_enabled_tag;
 raydium_light_disable();
 if (raydium_camera_pushed) raydium_camera_replace(); // is it really our job to do it here ?

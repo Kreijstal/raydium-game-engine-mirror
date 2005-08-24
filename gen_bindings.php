@@ -4,10 +4,14 @@
 // You may generate bindings for many languages, such as
 // Perl, Python, Tcl/Tk, Java, (Lua is on the road ...)
 
-// To run this script, ise PHP command line interface (CLI), it's provided by
-// Raydium building scripts.
+// To run this script, use PHP command line interface (CLI), it's provided by
+// Raydium building scripts (ex: php/sapi/cli/php gen_bindings.php)
 
-// See output in raydium/swig directory (building instructions are displayed)
+// Warning, this is an experimental and mostly unsupported feature, only
+// usable with Python, for now.
+// Feedback's welcome.
+// See output in raydium/swig directory and use compile wrapper using provided
+// instruction, with a previously "./configured" Raydium engine.
 
 $nobindings="//!NOBINDINGS";
 
@@ -28,7 +32,8 @@ if(!file_exists("../swig") && mkdir("../swig")===false)
 $fpi=fopen("../swig/raydium.i","wt");
 if($fpi===false)
     die("cannot create interface file");
-fwrite($fpi,"%module raydium\n%{\n#define NO_PHP_SUPPORT\n#include \"../index.c\"\n%}\n");
+fwrite($fpi,"%module raydium\n%{\n#include \"../index.c\"\n%}\n");
+//fwrite($fpi,"%module raydium\n%{\n#define NO_PHP_SUPPORT\n#include \"../index.c\"\n%}\n");
 // type mappings (may not do it like this, but eh ...)
 fwrite($fpi,"%typedef unsigned int GLuint;\n");
 fwrite($fpi,"%typedef unsigned int ALuint;\n");
@@ -38,6 +43,7 @@ fwrite($fpi,"%typedef int ALint;\n");
 fwrite($fpi,"%typedef float GLfloat;\n");
 fwrite($fpi,"%typedef float ALfloat;\n");
 fwrite($fpi,"%typedef float dReal;\n");
+fwrite($fpi,"%module raydium\n%{\n#include \"../common.h\"\n%}\n\n%include \"../common.h\"\n");
 
 
 $h=opendir(".");
@@ -53,14 +59,36 @@ while(false !== ($file = readdir($h)))
 	continue;
 	}
 
-    $if=substr($file,0,-2).".i";
     $hd="../headers/$file";
     fwrite($fpi,"%module raydium\n%{\n#include \"$hd\"\n%}\n\n%include \"$hd\"\n");
     }
 
 closedir($h);
+
+
+chdir("..");
+$h=opendir(".");
+while(false !== ($file = readdir($h)))
+    if(substr($file,-2,2)==".h" && $file!="common.h")
+    {
+    $fp=fopen($file,"rt");
+    $l=fgets($fp);
+    fclose($fp);
+    if(substr($l,0,strlen($nobindings))==$nobindings)
+	{
+	echo "ignoring $file (asked by header)\n";
+	continue;
+	}
+
+    $hd="../$file";
+    fwrite($fpi,"%module raydium\n%{\n#include \"$hd\"\n%}\n\n%include \"$hd\"\n");
+    }
+
+closedir($h);
+
+
 fclose($fpi);
-chdir("../..");
+chdir("..");
 echo "\n";
 }
 
@@ -188,6 +216,8 @@ raydium_callback(MainLoopPythonCallback);
 
 void SetMainLoopPython(PyObject *pyfunc);
 
+void exit (int status);
+
 EOHD;
 
 $fp=fopen("raydium.i","at");
@@ -202,7 +232,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I /usr/include/python2.3/";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.3/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz";
 echo "\n";
 }
 

@@ -79,7 +79,7 @@ GLfloat zdiff=z2-z1;
 
 
 for(i=0;i<raydium_vertex_index;i++)
-if(raydium_vertex_texture[i]==raydium_texture_current)
+if(raydium_vertex_texture[i]==raydium_texture_current_main)
      if(raydium_vertex_normal_z[i]<-0.5 ||
      raydium_vertex_normal_z[i]>0.5 )
      {
@@ -425,7 +425,7 @@ void draw_texture(void)
 {
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_current);
 //glColor4f(1.f,1.f,1.f,1.f);
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 glBegin(GL_QUADS);
 glTexCoord2f(0,1);
 glVertex3f(-modl_zoom,modl_zoom,0);
@@ -574,7 +574,7 @@ if(!strcmp(arg[0],"list") && argc==2) raydium_rayphp_repository_file_list(arg[1]
 if(!strcmp(arg[0],"savea") && argc==2) dump_vertex_to_alpha(arg[1]);
 if(!strcmp(arg[0],"load")  && argc==2) read_vertex_from(arg[1]);
 if(!strcmp(arg[0],"bind")  && argc==2) raydium_texture_load(arg[1]); 
-if(!strcmp(arg[0],"bind")  && argc==3 && !strcmp(arg[1],"erase")) raydium_texture_load_erase(arg[2],raydium_texture_current); 
+if(!strcmp(arg[0],"bind")  && argc==3 && !strcmp(arg[1],"erase")) raydium_texture_load_erase(arg[2],raydium_texture_current_main); 
 if(!strcmp(arg[0],"cam") && argc==2) strcpy(cam_file,arg[1]);
 }
 
@@ -595,8 +595,8 @@ if(raydium_key_last==106) modl_view=VIEW_ZY;
 if(raydium_key_last==1127) modl_view=VIEW_XZ;
 if(raydium_key_last==104) pz++;
 if(raydium_key_last==105) pz--;
-if(raydium_key_last==5 && raydium_texture_current>1) raydium_texture_current--;
-if(raydium_key_last==6 && raydium_texture_current<raydium_texture_index-1) raydium_texture_current++;
+if(raydium_key_last==5 && raydium_texture_current_main>1) raydium_texture_current_main--;
+if(raydium_key_last==6 && raydium_texture_current_main<raydium_texture_index-1) raydium_texture_current_main++;
 if(raydium_key_last==1008 && raydium_vertex_index>=3) raydium_vertex_index-=3;
 if(raydium_key_last==8) raydium_normal_smooth_all();
 if(raydium_key_last==9) raydium_normal_regenerate_all();

@@ -288,7 +288,7 @@ return raydium_texture_load(filename);
 signed char raydium_texture_current_set(GLuint current)
 {
 if(current<RAYDIUM_MAX_TEXTURES)
-{ raydium_texture_current=current; return current; }
+{ raydium_texture_current_main=current; return current; }
 return 0;
 }
 

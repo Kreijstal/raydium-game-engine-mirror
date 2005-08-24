@@ -128,9 +128,9 @@ vsprintf(str,format,argptr);
 va_end(argptr);
 
 raydium_osd_start();
-texsave=raydium_texture_current;
+texsave=raydium_texture_current_main;
 raydium_texture_current_set_name(texture);
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
 glTranslatef(x,y,0);
 
@@ -206,7 +206,7 @@ glTranslatef(85,10,0);
 glRotatef(raydium_osd_logo_angle+=(raydium_frame_time*60),0,1,0); //must be callbacked !
 if(raydium_osd_logo_angle>90) raydium_osd_logo_angle=-90;
 
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(-10,5,0);
@@ -241,7 +241,7 @@ glTranslatef(((GLfloat)raydium_mouse_x/raydium_window_tx)*100.f,
 ((GLfloat)(raydium_window_ty-raydium_mouse_y)/raydium_window_ty)*100.f,0);
 
 raydium_texture_current_set(raydium_osd_cursor_texture);
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(0,0,0);

@@ -210,6 +210,9 @@
 #define __global
 #endif
 
+#ifdef SWIG
+#define __global
+#endif
 
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -228,7 +231,7 @@ __global GLfloat raydium_joy_z;
 __global int     raydium_joy;
 
 __global GLuint   raydium_texture_index;
-__global GLuint   raydium_texture_current;
+__global GLuint   raydium_texture_current_main;
 __global GLuint   raydium_texture_current_multi;
 __global GLfloat  raydium_texture_current_multi_u;
 __global GLfloat  raydium_texture_current_multi_v;
@@ -425,7 +428,7 @@ __global GLfloat raydium_osd_ega[]=
          1.0f, 1.0f, 1.0f  // F: light white
 	 };
 #else
-__global GLfloat raydium_osd_ega[];
+__global GLfloat raydium_osd_ega[48];
 #endif
 __global GLfloat raydium_osd_fade_color_timeleft;
 __global GLfloat raydium_osd_fade_color_increment[4];

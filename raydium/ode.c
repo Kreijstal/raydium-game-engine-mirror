@@ -2941,7 +2941,7 @@ if(names==1)
      raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[j].geom), (dReal *)dGeomGetRotation(raydium_ode_element[j].geom));
      glDisable(GL_LIGHTING);
      raydium_texture_current_set_name("rgb(1,0,0)");
-     raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+     raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
      glLineWidth(1.f);
      glBegin(GL_LINES);
      glVertex3f(raydium_ode_motor[i].rocket_position[0],raydium_ode_motor[i].rocket_position[1],raydium_ode_motor[i].rocket_position[2]);
@@ -3007,7 +3007,7 @@ if(names==1)
       f1(raydium_ode_joint[i].joint,res1);
       f2(raydium_ode_joint[i].joint,res2);
       raydium_texture_current_set_name("rgb(1,0,0)");
-      raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+      raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
       raydium_camera_replace_go(res1,r);
       glutWireSphere(0.05,5,5);
       raydium_camera_replace_go(res2,r);
@@ -3111,7 +3111,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    raydium_rendering_internal_prepare_texture_render(0); // !!!
     	    raydium_texture_current_set_name("rgb(1,0,0)");
 	    raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
-	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current);     
+	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
 	    if(dGeomGetClass(raydium_ode_element[i].geom)==dBoxClass)
 		{
@@ -3192,7 +3192,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    raydium_camera_replace();
 	    raydium_rendering_internal_prepare_texture_render(0); // !!
 	    raydium_texture_current_set_name("rgb(0,0,1)");
-	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
+	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 	    dGeomGetAABB(raydium_ode_element[i].geom,aabb);
 	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	    // sides

@@ -247,7 +247,7 @@ fscanf(fp,"%i\n",&visu);
 
 raydium_log("Object: loading \"%s\", version %i",filename,visu);
 
-save=raydium_texture_current;
+save=raydium_texture_current_main;
 i=0;
 
 if(visu>0)

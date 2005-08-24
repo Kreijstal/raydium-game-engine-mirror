@@ -82,6 +82,17 @@ Just move your lights before camera placement, or your changes
 will be applied to the next frame only.
 **/
 
+extern void raydium_light_move_3f(GLuint l,GLfloat px, GLfloat py, GLfloat pz);
+/*
+Same as above, but using 3 GLfloat values
+*/
+
+extern void raydium_light_conf_7f(GLuint l,GLfloat px, GLfloat py, GLfloat pz, GLfloat intensity, GLfloat r, GLfloat g, GLfloat b);
+/*
+Full settings for light ##l##: position, intensity and color, using GLfloat
+values.
+*/
+
 extern void raydium_light_reset (GLuint l);
 /**
 This function will restore all defaults for ##l## light.
