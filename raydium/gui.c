@@ -866,6 +866,11 @@ for(i=0,cpt=0,start=0;c->items[i];i++)
     if(cpt==c->current)
 	{
 	start=i+1;
+
+	// first value without previous empty workaround
+	if(cpt==0)
+	    start=0;
+
 	break;
 	}
     }

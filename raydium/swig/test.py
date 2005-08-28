@@ -1,6 +1,5 @@
 #!/usr/bin/python
-
-# This a Python version of the Raydium's tutorial:
+# This a Python version of a Raydium's tutorial:
 # http://raydium.yoopla.org/wiki/TutorielUtiliserLaPhysique (fr)
 # http://raydium.yoopla.org/wiki/TutorialUsePhysics (bad en)
 

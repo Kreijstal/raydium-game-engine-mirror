@@ -16,6 +16,12 @@ int status;
 int force=0;
 char file[RAYDIUM_MAX_NAME_LEN];
 
+if(strlen(path)==0)
+    {
+    raydium_log("RayPHP: error: empty filename");
+    return 0;
+    }
+
 strcpy(file,path);
 
 if(raydium_init_cli_option("repository-force",NULL)) force=1;

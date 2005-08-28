@@ -55,7 +55,7 @@ int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)
 {
  if(str_length>=RAYDIUM_MAX_NAME_LEN-15)
     {
-    raydium_log("PHP output is to long ! : redirected to stdout");
+    raydium_log("PHP output is too long, redirected to stdout");
     printf("%s",str);
     }
  else
