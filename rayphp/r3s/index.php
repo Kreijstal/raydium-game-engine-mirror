@@ -3,6 +3,19 @@
 // name this file "index.php", and place data in $data_dir directory.
 require("config.inc.php");
 
+function GorP($var)
+{
+global $_GET,$_POST;
+
+if(isset($_POST[$var]))
+    return $_POST[$var];
+
+if(isset($_GET[$var]))
+    return $_GET[$var];
+
+return "";
+}
+
 
 function decompress_file($gz,$final)
 {
@@ -149,5 +162,5 @@ echo filemtime($file);
 }
 } // end main()
 
-main($_GET["file"],$_GET["type"],$_GET["username"],$_GET["password"],$_GET["data"]);
+main(GorP("file"),GorP("type"),GorP("username"),GorP("password"),GorP("data"));
 ?>

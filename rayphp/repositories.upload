@@ -7,6 +7,6 @@
 # do not supports redirections !
 
 http://anonymous:nopass@repository.cqfd-corp.org/raydium/
-ftp://raydium:none@ftp.cqfd-corp.org:29/
+ftp://anonymous:nopass@ftp.cqfd-corp.org:29/
 #http://anonymous:nopass@localhost/raydium/repository/
 #http://anonymous:nopass@localhost/
