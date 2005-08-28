@@ -631,7 +631,7 @@ raydium_live_texture_refresh(raydium_live_texture_find(raydium_texture_find_by_n
 
 int raydium_live_texture_create(char *as, unsigned char *data_source, int tx, int ty, int bpp)
 {
-int id;
+int id,i;
 raydium_live_Texture *tex;
 
 id=raydium_live_texture_find_free();
@@ -646,6 +646,17 @@ if(bpp!=24 && bpp!=32)
     {
     raydium_log("live: ERROR: live textures are limited to 24 or 32 bpp color depth only, for now");
     return -1;    
+    }
+
+
+// duplicated ?
+for(i=0;i<raydium_texture_index;i++)
+    if(!strcmp(raydium_texture_name[i],as)) 
+    {
+    raydium_log("live: WARNING ! %s is duplicated",as);
+    // this is the right answer only if duplicated texture
+    // is already a "live" one ! (to fix ?)
+    return raydium_live_texture_find(i);
     }
 
 

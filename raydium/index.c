@@ -72,6 +72,7 @@
 #include "ode.c"
 #endif
 #include "live.c"
+#include "video.c"
 #include "reg_api.c"
 
 #else

@@ -17,6 +17,7 @@ void raydium_register_api(void);
 #ifndef WIN32
 void raydium_live_init(void);
 #endif
+void raydium_video_init(void);
 void raydium_internal_live_close(void);
 
 int raydium_init_cli_option(char *option, char *value)
@@ -115,6 +116,7 @@ raydium_gui_init();
 #ifndef WIN32
 raydium_live_init();
 #endif
+raydium_video_init();
 
 // Must find a way to delete textures from video card's memory, too...
 

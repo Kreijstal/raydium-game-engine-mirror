@@ -44,6 +44,14 @@ char rgb;
 GLfloat r,g,b;
 
 
+// "as" is duplicated ?
+for(i=0;i<raydium_texture_index;i++)
+    if(!strcmp(raydium_texture_name[i],as)) 
+    {
+    raydium_log("texture: (internal) %s is duplicated",as);
+    return i;
+    }
+
 /* is RGB color ? (or texture) */
 strcpy(temp,filename);
 temp[4]=0;

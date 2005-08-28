@@ -232,7 +232,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.3/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -ljpeg -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.3/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz";
 echo "\n";
 }
 

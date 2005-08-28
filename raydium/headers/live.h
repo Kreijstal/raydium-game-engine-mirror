@@ -135,7 +135,7 @@ live texture id, if any.
 int raydium_live_texture_create(char *as, unsigned char *data_source, int tx, int ty, int bpp);
 /**
 Create a new Live Texture with ##as## name. You must provide a ##data_source##
-with RGB or RGBA format, with ##tx## x ##ty## size.
+with RGB or RGBA format, with ##tx## and ##ty## size.
 Possible bpp values are 24 (RGB) and 32 (RGBA).
 Returns the live texture id, or -1 when it fails.
 **/
