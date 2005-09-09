@@ -111,7 +111,7 @@ row_stride = image_width * 3;	/* JSAMPLEs per row in image_buffer */
 
 while (cinfo.next_scanline < cinfo.image_height) 
     {
-    row_pointer[0] = & image_buffer[cinfo.next_scanline * row_stride];
+    row_pointer[0] = & image_buffer[(cinfo.image_height-cinfo.next_scanline-1) * row_stride];
     (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
     }
 

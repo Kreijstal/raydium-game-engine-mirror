@@ -323,7 +323,7 @@ if(raydium_key[GLUT_KEY_F11])
 char name[128];
 static int frame;
 sprintf(name,"movie/frame%04d.jpg",frame);
-raydium_capture_frame_jpg(name);
+raydium_capture_frame_jpeg(name);
 frame++;
 }
 #endif

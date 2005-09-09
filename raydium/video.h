@@ -1,8 +1,6 @@
 #ifndef RAY_VIDEO_H
 #define RAY_VIDEO_H
 
-#include <jpeglib.h>
-
 
 typedef struct raydium_video_Video
     {

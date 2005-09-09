@@ -94,6 +94,8 @@
 #include "ext/standard/php_standard.h"
 #endif
 
+#include <jpeglib.h>
+
 #define PI 					(3.1415926535f)
 
 #define RAYDIUM_MAX_VERTICES  			2000000
