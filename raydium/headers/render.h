@@ -14,6 +14,19 @@ It' obvious for me that many parts of this code have to be
 rewritten (tips: slow, buggy, old, ... :) 
 **/
 
+extern void raydium_render_lightmap_color(GLfloat *color);
+/**
+You may force a new lightmap rendering color "filter" anytime with this
+function, allowing advanced lighting effects.
+HUGE WARNING: You must turn off display lists if you change this value after
+first object's render.
+See ##raydium_rendering_displaylists_disable()## if needed.
+**/
+
+extern void raydium_render_lightmap_color_4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+/**
+Same as above, using 4 values.
+**/
 
 extern int  raydium_rendering_prepare_texture_unit (GLenum tu, GLuint tex);
 /**

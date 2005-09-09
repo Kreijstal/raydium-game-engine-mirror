@@ -292,6 +292,33 @@ else
 fi
 exit_if_error "$ret" "PHP 4 is not installed (PHP must be local). Try --install-php !"
 
+
+# libjpeg
+echo -n "* libjpeg :"
+file='
+#include <stdio.h>
+#include <jpeglib.h>
+
+int main(void)
+{
+struct jpeg_decompress_struct cinfo;
+struct jpeg_error_mgr jerr;
+JSAMPARRAY buffer;
+int row_stride;
+long count;
+
+cinfo.err=jpeg_std_error(&jerr);
+jpeg_create_decompress(&cinfo);
+jpeg_destroy_decompress(&cinfo);
+
+return 0;
+}
+'
+test_build "$file" "-ljpeg"
+exit_if_error "$?" "libjpeg-devel not available."
+
+
+
 ##### End of tests
 
 echo "- Build system seems ready -"

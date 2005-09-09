@@ -290,6 +290,7 @@ __global char	raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
+__global GLfloat raydium_render_lightmap_color_value[4];
 __global signed char	 raydium_render_rgb_force_tag;
 __global char	 raydium_render_displaylists_tag;
 

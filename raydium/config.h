@@ -50,7 +50,10 @@
 //#define DEBUG_ODENET
 
 // movie linear framerate (1/x sec) (starts recording, too)
-// #define DEBUG_MOVIE 25
+//#define DEBUG_MOVIE 25
 
 // allow vertex lighting for lightmaps textures
 //#define RENDER_ALLOW_LIGHTING_FOR_LIGHTMAPS
+
+// raydium_capture_frame_jpeg() JPEG quality percentage
+#define DEBUG_JPEG_QUALITY	75

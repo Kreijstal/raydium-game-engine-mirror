@@ -66,6 +66,64 @@ fwrite(&cGarbage, sizeof(unsigned char), 1, file);
     raydium_log("screenshot saved as %s",filename);
 }
 
+
+void raydium_capture_frame_jpeg(char *filename)
+{
+JSAMPLE * image_buffer;	/* Points to large array of R,G,B-order data */
+int image_height;	/* Number of rows in image */
+int image_width;		/* Number of columns in image */
+int quality;
+
+struct jpeg_compress_struct cinfo;
+struct jpeg_error_mgr jerr;
+FILE * outfile;		/* target file */
+JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
+int row_stride;		/* physical row width in image buffer */
+int size;
+
+cinfo.err = jpeg_std_error(&jerr);
+jpeg_create_compress(&cinfo);
+
+outfile = fopen(filename, "wb");
+if (outfile == NULL) { raydium_log("Error: capture: cannot open %s for writing",filename); return; }
+
+size=raydium_window_tx * raydium_window_ty * 3;
+image_buffer=malloc(size+1);
+
+glReadPixels(0, 0,raydium_window_tx,raydium_window_ty,GL_RGB,GL_UNSIGNED_BYTE,image_buffer);
+image_width=raydium_window_tx;
+image_height=raydium_window_ty;
+quality=DEBUG_JPEG_QUALITY;
+
+jpeg_stdio_dest(&cinfo, outfile);
+
+cinfo.image_width = image_width; 	/* image width and height, in pixels */
+cinfo.image_height = image_height;
+cinfo.input_components = 3;		/* # of color components per pixel */
+cinfo.in_color_space = JCS_RGB; 	/* colorspace of input image */
+
+jpeg_set_defaults(&cinfo);
+jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
+
+jpeg_start_compress(&cinfo, TRUE);
+
+row_stride = image_width * 3;	/* JSAMPLEs per row in image_buffer */
+
+while (cinfo.next_scanline < cinfo.image_height) 
+    {
+    row_pointer[0] = & image_buffer[cinfo.next_scanline * row_stride];
+    (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
+    }
+
+
+jpeg_finish_compress(&cinfo);
+fclose(outfile);
+
+jpeg_destroy_compress(&cinfo);
+free(image_buffer);
+}
+
+
 void raydium_capture_frame_auto(void)
 {
 static int cpt=0;

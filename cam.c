@@ -69,8 +69,11 @@ raydium_object_draw_name(model);
 
 if(raydium_key_last==1032)
     {
+    GLfloat from[]={1,1,1,1};
+    GLfloat to[]={1,1,1,0};
     fprintf(out,"%f %f %f %f %f\n",cam_pos_z,cam_pos_x,-cam_pos_y,raydium_projection_fov,roll);
-    raydium_osd_printf(50,50,20,0.5,"font2.tga","^cADDED");
+//    raydium_osd_printf(50,50,20,0.5,"font2.tga","^cADDED");
+    raydium_osd_fade_from(from,to,0.2,NULL);
 //    raydium_log("Added a new pos to camera path file");
     }
 

@@ -146,6 +146,11 @@ raydium_texture_used_memory=0;
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_NONE);
 raydium_rendering_rgb_normal();
 raydium_rendering_displaylists_enable();
+raydium_render_rgb_force_tag=0;
+raydium_render_lightmap_color_value[0]=1;
+raydium_render_lightmap_color_value[1]=1;
+raydium_render_lightmap_color_value[2]=1;
+raydium_render_lightmap_color_value[3]=1;
 raydium_vertex_counter=0;
 raydium_projection=RAYDIUM_PROJECTION_PERSPECTIVE;
 raydium_projection_fov=60;
@@ -206,7 +211,7 @@ raydium_signal_install_trap();
 // init Win32 OpenGL ARB ext.
 raydium_arb_win32_init();
 #endif
-raydium_internal_size_vector_float_4 = sizeof(GLfloat) * 4;
+raydium_internal_size_vector_float_4=sizeof(GLfloat)*4;
 raydium_log("Platform \"4xfloat\" vector size is: %i byte(s) long",raydium_internal_size_vector_float_4);
 glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);
 raydium_log("OpenGL implementation maximum texture size: %ix%i",raydium_texture_size_max,raydium_texture_size_max); 

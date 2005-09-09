@@ -14,6 +14,29 @@ void raydium_callback_image(void);
 void raydium_timecall_callback(void);
 
 
+// color is a GLfloat[4] (RGBA)
+void raydium_render_lightmap_color(GLfloat *color)
+{
+memcpy(raydium_render_lightmap_color_value,color,raydium_internal_size_vector_float_4);
+
+// Err ... no :/ There's no current color for other texture units than 0 ...
+/*
+glActiveTextureARB(GL_TEXTURE1_ARB);
+glColor4fv(raydium_render_lightmap_color_value);
+glActiveTextureARB(GL_TEXTURE0_ARB);
+*/
+}
+
+void raydium_render_lightmap_color_4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+GLfloat col[4];
+col[0]=r;
+col[1]=g;
+col[2]=b;
+col[3]=a;
+raydium_render_lightmap_color(col);
+}
+
 // let's keep this define here, until full tests
 #define RAYDIUM_RENDER_MAX_TEXUNITS 2
 int raydium_rendering_prepare_texture_unit(GLenum tu,GLuint tex)
@@ -28,10 +51,12 @@ if(first)
     int i;
     for(i=0;i<RAYDIUM_RENDER_MAX_TEXUNITS;i++)
 	texunit_state[i]=0;    
+
+    first=0;
     }
-first=0;
 
 tui=tu-GL_TEXTURE0_ARB;
+
 
 if(tui>=RAYDIUM_RENDER_MAX_TEXUNITS)
     {
@@ -70,6 +95,7 @@ if(tui>0)
   if(raydium_texture_islightmap[tex])
   {
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glColor4fv(raydium_render_lightmap_color_value);
   }
   else
   {
@@ -86,7 +112,7 @@ if(tui>0)
 }
 else // "standard" textunit
 {
-  //#define ONE 0.8 // default (according GL specs) DIFFUSE value.
+  // default (according GL specs) DIFFUSE value.
   GLfloat one[]={0.8f, 0.8f, 0.8f, 1.f};
   GLfloat zero[]={0.0,0.0,0.0,0.0};
   GLfloat *rgb;
@@ -200,6 +226,8 @@ for(tex=1;tex<raydium_texture_index;tex++)
 {
   // prepare first texture unit
   raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,tex);
+  // ... and reset next one
+  raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
 
   glBegin(GL_TRIANGLES);
   
@@ -246,7 +274,7 @@ for(tex=1;tex<raydium_texture_index;tex++)
     }
     else
     {
-	// cancel previous multitexturing activation    
+	// cancel previous multitexturing settings
 	if(multi_prepared)
 	    {
 	    raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
@@ -290,22 +318,21 @@ raydium_rendering_internal_restore_render_state();
 //glutPostRedisplay();
 
 #ifdef DEBUG_MOVIE
+if(raydium_key[GLUT_KEY_F11])
 {
 char name[128];
 static int frame;
-sprintf(name,"movie/frame%04d.tga",frame);
-raydium_capture_frame(name);
+sprintf(name,"movie/frame%04d.jpg",frame);
+raydium_capture_frame_jpg(name);
 frame++;
 }
 #endif
 
 glutSwapBuffers();
-//raydium_timecall_callback();
 raydium_key_last=0;
 raydium_mouse_click=0;
 raydium_camera_pushed=0; 
 glPopMatrix();
-//raydium_texture_internal_loaded=0;
 if(clock() > last + CLOCKS_PER_SEC)
     {
     last=clock();
