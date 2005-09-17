@@ -235,7 +235,15 @@ extern void raydium_sound_callback (void);
 Internal use.
 **/
 
-// Example
+extern void raydium_sound_source_fade(int src, ALfloat len);
+/**
+This function will fade down source ##src## over ##len## seconds.
+Since gain is not linear, you may have to play with ##len## to
+find the correct value.
+Use source 0 for music source.
+**/
+
+// Sound API Example
 /**
 %%(c)
 int sound;

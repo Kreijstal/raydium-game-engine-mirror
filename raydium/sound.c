@@ -61,6 +61,8 @@ void raydium_sound_InitSource(int src)
    raydium_sound_verify("attaching source to buffer");
  alSourcei(raydium_sound_source[src],AL_LOOPING,AL_TRUE);           //SETS SOURCE LOOPING TO TRUE
    raydium_sound_verify("setting source loop state");
+
+ raydium_sound_source_fade_factor[src]=0;
 }
 
 
@@ -365,6 +367,7 @@ void raydium_sound_GetListenerVel(ALfloat *Vel[] )
 //INITIALISATION
 void raydium_sound_init(void)
 {
+ int i;
  ALfloat listenerPos[]={-10.0,0.0,0.0};
  ALfloat listenerVel[]={0.0,0.0,0.0};
 // ALfloat back[] ={ 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
@@ -409,6 +412,10 @@ return;
  raydium_sound_music_file=NULL;
  raydium_sound_DefaultReferenceDistance=50.f; // default distance where the source sound is half volume
  raydium_sound_music_eof_callback=NULL;
+
+ for(i=0;i<RAYDIUM_SOUND_NUM_BUFFERS;i++)
+    raydium_sound_source_fade_factor[i]=0;
+
  raydium_log("sound: OK");
  
 }
@@ -557,7 +564,11 @@ return -1;
  raydium_sound_music_file=NULL;
  
  if(fname==NULL || strlen(fname)==0)
+    {
+    // seems to fail ... :/
+    raydium_sound_internal_cleanstreambuffs();
     return 0;
+    }
  
  raydium_sound_music_file = raydium_file_fopen( fname, "rb" );
  if(raydium_sound_music_file == NULL)
@@ -569,6 +580,8 @@ return -1;
 
  alSourcei( raydium_sound_source[0], AL_SOURCE_RELATIVE, AL_TRUE );
  alSourcei( raydium_sound_source[0], AL_LOOPING, AL_FALSE );
+ raydium_sound_SetSourceGain(0,1);
+
 
  if(ov_open(raydium_sound_music_file, &raydium_sound_vf, NULL, 0) < 0)
  {
@@ -645,9 +658,37 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
 
 }
 
-//THINGS TO DO
 void raydium_sound_callback(void)
 {
+int i;
+ALfloat g;
 raydium_sound_music_callback();
+
+// source fading ?
+for(i=0;i<raydium_sound_top_buffer;i++)
+    if(raydium_sound_source_fade_factor[i]!=0)
+	{
+	raydium_sound_GetSourceGain(i,&g);
+	g+=(raydium_sound_source_fade_factor[i]*raydium_frame_time);
+	raydium_sound_SetSourceGain(i,g);
+	if(g<=0)
+	    {
+	    raydium_sound_source_fade_factor[i]=0;
+	    
+	    if(i==0)
+		    raydium_sound_load_music(NULL);
+	    else
+		    raydium_sound_SourceStop(i);
+
+	    raydium_log("debug mark ------");
+	    }
+	}
 }
 
+void raydium_sound_source_fade(int src, ALfloat len)
+{
+ALfloat g;
+// get current gain
+raydium_sound_GetSourceGain(src,&g);
+raydium_sound_source_fade_factor[src]=-(g/len);
+}

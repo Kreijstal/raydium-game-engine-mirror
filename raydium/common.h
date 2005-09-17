@@ -397,6 +397,7 @@ __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPA
 
 __global ALuint  raydium_sound_buffer[RAYDIUM_SOUND_NUM_BUFFERS];
 __global ALuint  raydium_sound_source[RAYDIUM_SOUND_NUM_SOURCES];
+__global ALfloat raydium_sound_source_fade_factor[RAYDIUM_SOUND_NUM_SOURCES];
 __global ALfloat raydium_sound_DefaultReferenceDistance;
 __global int 	 raydium_sound;
 __global int 	 raydium_sound_top_buffer;
