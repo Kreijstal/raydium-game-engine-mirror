@@ -10,8 +10,6 @@
 #include "headers/live.h"
 #endif
 
-#ifndef WIN32
-
 #include "live.h"
 
 
@@ -138,6 +136,7 @@ return -1;
 
 int raydium_live_video_open(char *device, int sizex, int sizey)
 {
+#ifndef WIN32
 char *default_device=RAYDIUM_LIVE_DEVICE_DEFAULT;
 int id;
 int capture_style = RAYDIUM_LIVE_FREE;
@@ -388,6 +387,10 @@ dev->capture_style=capture_style;
 strcpy(dev->name,device);
 raydium_log("live: video init for this device is ok");
 return id;
+#else
+raydium_log("live: Live API is not supported under win32 yet");
+return -1;
+#endif
 }
 
 
@@ -399,6 +402,7 @@ return raydium_live_video_open(RAYDIUM_LIVE_DEVICE_AUTO,RAYDIUM_LIVE_SIZE_AUTO,R
 
 int raydium_live_video_read(raydium_live_Device *dev)
 {
+#ifndef WIN32
 fd_set fds;
 struct timeval tv;
 int r;
@@ -466,6 +470,7 @@ else
 
 
 return 1;
+#endif
 }
 
 
@@ -489,8 +494,10 @@ int i;
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
  if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
  {
+#ifndef WIN32
     munmap(raydium_live_device[i].buffer, raydium_live_device[i].gb_buffers.size);
     close(raydium_live_device[i].fd);
+#endif
  }    
 }
 
@@ -549,6 +556,7 @@ return -1;
 
 int raydium_live_texture_video(int device_id, char *as)
 {
+#ifndef WIN32
 int id;
 raydium_live_Device *dev;
 raydium_live_Texture *tex;
@@ -589,6 +597,10 @@ tex->data_source=dev->buffer2;
 tex->state=1;
 raydium_log("live: %s linked to %s (live)",dev->name,as);
 return id;
+#else
+raydium_log("live: Live API is not supported under win32 yet");
+return -1;
+#endif
 }
 
 
@@ -730,5 +742,3 @@ raydium_live_texture_refresh_callback_set(raydium_live_texture_find(raydium_text
 }
 
 
-// endif WIN32
-#endif

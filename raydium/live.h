@@ -16,6 +16,7 @@
 #include <linux/types.h>
 #include <linux/videodev.h>
 #include <sys/mman.h>
+#endif
 
 #define RAYDIUM_LIVE_DEVICE_DEFAULT	"/dev/video0"
 #define RAYDIUM_LIVE_SIZEX_DEFAULT	352
@@ -32,6 +33,7 @@
 
 typedef struct raydium_live_Device 
 {
+#ifndef WIN32
   int fd;
   struct video_capability cap;
   struct video_window win;
@@ -40,6 +42,7 @@ typedef struct raydium_live_Device
   // for mmap captures
   struct video_mbuf gb_buffers;
   struct video_mmap gb_buf;
+#endif
 
   unsigned char *buffer;  // capture buffer
   unsigned char *src;     // intermediate buffer
@@ -125,9 +128,6 @@ raydium_live_Texture raydium_live_texture[RAYDIUM_MAX_LIVE_TEXTURES];
 	}								\
 }						
 
-
-// endif WIN32
-#endif
 
 // endif LIVE_H
 #endif
