@@ -1001,6 +1001,13 @@ raydium_network_set_socket_block_internal(sockfd,0);
 // i'm tired of win32's sockets bad behaviours ... let's trust connect() ...
 connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
 
+// dont ask me why ... (Dev-CPP's mingw needs it)
+#ifdef WIN32
+#ifndef FD_SETSIZE
+#define FD_SETSIZE	64
+#endif
+#endif
+
 FD_ZERO(&writable);
 FD_SET(sockfd, &writable);
 timeout.tv_sec=3;
