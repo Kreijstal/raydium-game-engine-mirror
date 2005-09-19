@@ -158,6 +158,7 @@ int raydium_php_exec(char *name)
     zend_llist_init(&global_vars, sizeof(char *), NULL, 0);
     zend_alter_ini_entry("html_errors", 12, "0", 1, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
     zend_alter_ini_entry("max_execution_time", 19, "0", 1, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
+    zend_alter_ini_entry("default_socket_timeout",23,"10",2, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
 /*
     file_handle.type = ZEND_HANDLE_FILENAME;
     file_handle.filename = SG(request_info).path_translated;

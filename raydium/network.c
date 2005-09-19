@@ -389,16 +389,16 @@ if(!strlen(str))
     gethostname(str,RAYDIUM_MAX_NAME_LEN-1);
 }
 
-signed char raydium_network_set_socket_block(int block)
+signed char raydium_network_set_socket_block_internal(int socket, int block)
 {
 int ret=-1;
 //int flags = fcntl(sock, F_GETFL); // bof... :)
 #ifndef WIN32
 if(!block) block=O_NONBLOCK; else block=0;
-ret=fcntl(raydium_network_socket, F_SETFL, block);
+ret=fcntl(socket, F_SETFL, block);
 #else
 if(!block) block=1; else block=0;
-ret = ioctlsocket(raydium_network_socket, FIONBIO, (unsigned long *)&block);
+ret = ioctlsocket(socket, FIONBIO, (unsigned long *)&block);
 if(ret) ret=-1;
 #endif
 
@@ -409,6 +409,11 @@ if(ret==-1)
     return(0);
     }
 return(1);
+}
+
+signed char raydium_network_set_socket_block(int block)
+{
+return raydium_network_set_socket_block_internal(raydium_network_socket,block);
 }
 
 //int raydium_network_get_socket_block(void)
@@ -936,4 +941,78 @@ raydium_log("Rx: %i byte(s) / Tx: %i bytes(s) / %.2f min",raydium_network_stat_r
 raydium_log("Transfert rates: Rx: %.2f KB/s / Tx: %.2f KB/s",raydium_network_stat_rx/(float)diff/1024.f,raydium_network_stat_tx/(float)diff/1024.f);
 raydium_log("Packets (err): Tx: %i re-emitted, Rx: %i doubles",raydium_network_stat_reemitted,raydium_network_stat_double);
 raydium_log("Packets (err): Tx: %i erased or lost, bogus ACK: %i",raydium_network_stat_lost,raydium_network_stat_bogus_ack);
+}
+
+
+// Test internet connection using a root dns server ... shame ? :)
+#define RAYDIUM_NETWORK_INTERNET_TEST_HOST	"198.41.0.4"
+#define RAYDIUM_NETWORK_INTERNET_TEST_PORT	53
+
+signed char raydium_network_internet_test(void)
+{
+int sockfd;
+struct sockaddr_in serv_addr;
+struct hostent *server;
+struct timeval sv;
+int svlen;
+struct timeval timeout;
+fd_set writable;
+
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+server = gethostbyname(RAYDIUM_NETWORK_INTERNET_TEST_HOST);
+//server = gethostbyname("192.168.2.1");
+
+memset(&serv_addr, 0, sizeof(serv_addr));
+serv_addr.sin_family = AF_INET;
+
+memcpy(&(serv_addr.sin_addr.s_addr),server->h_addr,server->h_length);
+serv_addr.sin_port = htons(RAYDIUM_NETWORK_INTERNET_TEST_PORT);
+
+/*
+svlen=sizeof(sv);
+timeout.tv_sec=1;
+timeout.tv_usec=0;
+if (getsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&sv, &svlen) < 0)
+    {
+    raydium_log("network: SO_RCVTIMEO not supported by sytem, cannot detect internet connection");
+    return 1; // default to true
+    }
+
+printf("%i %i\n",sv.tv_sec,sv.tv_usec);
+
+if (setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0)
+    {
+    raydium_log("network: SO_RCVTIMEO not supported by sytem, cannot detect internet connection");
+    return 1; // default to true    
+    }
+*/
+
+/*
+    {
+    perror("connect");
+    raydium_log("network: cannot detect internet connection, strange behavior with connect() ...");
+    close(sockfd);
+    return 0;
+    }
+*/
+
+raydium_network_set_socket_block_internal(sockfd,0);
+
+// i'm tired of win32's sockets bad behaviours ... let's trust connect() ...
+connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
+
+FD_ZERO(&writable);
+FD_SET(sockfd, &writable);
+timeout.tv_sec=3;
+timeout.tv_usec=0;
+
+if (select(sockfd + 1, NULL, &writable, NULL, &timeout) == 0)
+    {
+    raydium_log("network: cannot contact remote server, no internet connection detected");
+    close(sockfd);
+    return 0; // not writable
+    }
+    
+close(sockfd);
+return 1; // writable
 }

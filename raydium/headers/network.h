@@ -242,6 +242,9 @@ Raydium will ask the OS for "current logged user", but player name may
 be provided thru ##--name## command line argument.
 **/
 
+// internal hack, no doc provided
+extern signed char raydium_network_set_socket_block_internal(int socket, int block);
+
 extern signed char raydium_network_set_socket_block (int block);
 /**
 This function will sets ##block## (true or false) status to the network stack.
@@ -391,6 +394,12 @@ Dumps "TCP Style" timeouts for all clients to console.
 extern void raydium_network_internal_dump (void);
 /**
 Dumps various stats about network stack to console.
+**/
+
+extern signed char raydium_network_internet_test(void);
+/**
+This function will test if direct internet connection is available,
+using a DNS root server. Use with caution.
 **/
 
 #endif

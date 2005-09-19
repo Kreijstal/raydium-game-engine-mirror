@@ -679,8 +679,6 @@ for(i=0;i<raydium_sound_top_buffer;i++)
 		    raydium_sound_load_music(NULL);
 	    else
 		    raydium_sound_SourceStop(i);
-
-	    raydium_log("debug mark ------");
 	    }
 	}
 }
