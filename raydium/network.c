@@ -947,6 +947,7 @@ raydium_log("Packets (err): Tx: %i erased or lost, bogus ACK: %i",raydium_networ
 // Test internet connection using a root dns server ... shame ? :)
 #define RAYDIUM_NETWORK_INTERNET_TEST_HOST	"198.41.0.4"
 #define RAYDIUM_NETWORK_INTERNET_TEST_PORT	53
+#define RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT	8
 
 signed char raydium_network_internet_test(void)
 {
@@ -1010,7 +1011,7 @@ connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
 
 FD_ZERO(&writable);
 FD_SET(sockfd, &writable);
-timeout.tv_sec=3;
+timeout.tv_sec=RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT;
 timeout.tv_usec=0;
 
 if (select(sockfd + 1, NULL, &writable, NULL, &timeout) == 0)

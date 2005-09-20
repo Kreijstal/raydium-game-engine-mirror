@@ -57,6 +57,8 @@ PHP_v_v(raydium_clear_frame);
 PHP_v_v(raydium_camera_replace);
 // object.c
 PHP_v_s(raydium_object_draw_name);
+// network.c
+PHP_i_v(raydium_network_internet_test);
 // particle2.c
 PHP_i_ss(raydium_particle_generator_load);
 PHP_v_s(raydium_particle_generator_delete_name);
@@ -218,6 +220,9 @@ raydium_register_function(C2PHP(raydium_camera_replace),"raydium_camera_replace"
 
 // object.c
 raydium_register_function(C2PHP(raydium_object_draw_name),"raydium_object_draw_name");
+
+// network.c
+raydium_register_function(C2PHP(raydium_network_internet_test),"raydium_network_internet_test");
 
 // particle2.c
 raydium_register_function(C2PHP(raydium_particle_state_dump),"raydium_particle_state_dump");

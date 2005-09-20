@@ -2,15 +2,6 @@
 
 # This script will build a release archive of Raydium
 
-APPS="test6.c raydium_modler.c willou.c willt5.c train.c
-train.php skydiver.c score.php playlist.php cam.c tests.c
-Makefile configure
-comp.sh ocomp.sh ostatcomp.sh odyncomp.sh
-"
-
-DIRS="raydium rayphp"
-
-
 if [ ! -d "build" ]; then
     echo "creating build directory"
     mkdir build
@@ -34,38 +25,8 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
-# cleaning Raydium
-cd ..
-make clean_f
-cd -
-
-# copy app files
-for i in $APPS; do
-    echo "file $i"
-    cp "../$i" "$directory"
-done
-
-# copy dirs
-for i in $DIRS; do
-    echo "directory $i"
-    cp -Rp "../$i" "$directory"
-done
-
-# regenerate "dist"
-echo "creating a new dist directory ..."
-mkdir "$directory/dist"
-
-if [ "$?" != "0" ]; then
-    echo "error creating $directory/dist"
-    exit 1
-fi
-
-for i in `ls`; do
-    if [ -f "$i" ]; then
-	echo "dist file $i"
-	cp "$i" "$directory/dist"
-    fi
-done
+echo "downloading lastest SVN version ..."
+svn checkout svn://cqfd-corp.org/raydium/trunk $directory
 
 # build archive
 cd build
