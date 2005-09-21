@@ -17,7 +17,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-char *raydium_version="0.644";
+char *raydium_version="0.680";
 
 #define MAIN_C
 #include "common.h"
