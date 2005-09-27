@@ -17,6 +17,12 @@ Lookups an object by his ##name##. This function will return -1 if the
 object's not found, and will not try to load the .tri file.
 **/
 
+extern signed char raydium_object_isvalid(int obj);
+/**
+Internal use, but you can call this function if you want to verify if an
+object id is valid (in bounds).
+**/
+
 extern GLint raydium_object_find_load (char *name);
 /**
 Same as above (##raydium_object_load##), but will try to load object
@@ -65,5 +71,14 @@ extern void raydium_object_find_axes_max (GLuint obj, GLfloat * tx, GLfloat * ty
 This function returns the (maximum) size of the bounding box 
 of ##obj## (relative to (0,0,0)).
 **/
+
+
+extern GLint raydium_object_anim_find(int object, char *name);
+extern void raydium_object_anim_generate_internal(int object);
+extern void raydium_object_anim_frame(int object, GLfloat frame);
+extern void raydium_object_anim_frame_name(char *object, GLfloat frame);
+extern void raydium_object_anim(int object, int anim);
+extern void raydium_object_anim_name(char *object, char *anim);
+
 
 #endif

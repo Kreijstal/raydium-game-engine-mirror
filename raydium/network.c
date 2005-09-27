@@ -954,8 +954,8 @@ signed char raydium_network_internet_test(void)
 int sockfd;
 struct sockaddr_in serv_addr;
 struct hostent *server;
-struct timeval sv;
-int svlen;
+//struct timeval sv;
+//int svlen;
 struct timeval timeout;
 fd_set writable;
 

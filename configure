@@ -277,7 +277,7 @@ else
     echo " not found"
     ret=1
 fi
-exit_if_error "$ret" "ODE is not installed (ODE must be local). Try --install-ode !"
+exit_if_error "$ret" "ODE is not installed (ODE must be local). Try $0 --install-ode !"
 
 
 # PHP
@@ -290,7 +290,7 @@ else
     echo " not found"
     ret=1
 fi
-exit_if_error "$ret" "PHP 4 is not installed (PHP must be local). Try --install-php !"
+exit_if_error "$ret" "PHP 4 is not installed (PHP must be local). Try $0 --install-php !"
 
 
 # libjpeg

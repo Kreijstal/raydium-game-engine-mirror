@@ -95,7 +95,9 @@ char bl;
 
 fp=fopen(filename,"wt");
 if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
+
 fprintf(fp,"1\n");
+
 /*
 for(tex=0;tex<raydium_texture_index;tex++)
 {
@@ -246,6 +248,41 @@ fscanf(fp,"%i\n",&visu);
 
 
 raydium_log("Object: loading \"%s\", version %i",filename,visu);
+
+// test here version 2 (anims)
+if(visu==2)
+    {
+    int j,k;
+    fscanf(fp,"%i %i\n",&j,&k);
+    
+    if(j>RAYDIUM_MAX_OBJECT_ANIMS)
+	{
+	raydium_log("object: too much anims for this fime ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
+	j=RAYDIUM_MAX_OBJECT_ANIMS; // will no work ;) (fixme)
+	}
+    
+    raydium_object_anims[raydium_object_index]=j;
+    raydium_object_anim_len[raydium_object_index]=k;
+    raydium_object_anim_current[raydium_object_index]=0;
+    raydium_object_anim_frame_current[raydium_object_index]=0;
+
+
+    for(i=0;i<raydium_object_anims[raydium_object_index];i++)
+	{
+	fscanf(fp,"%i %i %s\n",&j,&k,name);
+	raydium_object_anim_start[raydium_object_index][i]=j;
+	raydium_object_anim_end[raydium_object_index][i]=k;
+	strcpy(raydium_object_anim_names[raydium_object_index][i],name);
+	}
+
+    // build "current transformed model" space
+    for(i=0;i<raydium_object_anim_len[raydium_object_index];i++)
+	raydium_vertex_add(0,0,0);
+
+    fscanf(fp,"%i\n",&visu);
+    raydium_log("object: anim: %i frame(s) with %i vertice per frame (ver %i)",raydium_object_anims[raydium_object_index],raydium_object_anim_len[raydium_object_index],visu);
+    }
+// ...
 
 save=raydium_texture_current_main;
 i=0;
