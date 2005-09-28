@@ -77,8 +77,11 @@ if(!raydium_object_isvalid(o))
 
 
 // if animated : draw "only" first (generated) frame
-raydium_rendering_from_to(raydium_object_start[o],raydium_object_start[o]+raydium_object_anim_len[o]);
-return;
+if(raydium_object_anims[o]>0)
+    {
+    raydium_rendering_from_to(raydium_object_start[o],raydium_object_start[o]+raydium_object_anim_len[o]);
+    return;
+    }
 // ...
 
 
@@ -237,6 +240,7 @@ return -1;
 }
 
 #define _pondavg(a,b,f) ( (a)+(((b)-(a))*(f)) )
+//#define _pondavg(a,b,f) ( (a) )
 
 void raydium_object_anim_generate_internal(int object)
 {
@@ -277,7 +281,10 @@ frame_a=raydium_object_start[object]+
 
 // must verify this test !!!
 if( ((int)raydium_object_anim_frame_current[object]) >= anim_frames)
+    {
     frame_b=raydium_object_anim_len[object]; // loop to first frame
+    printf("loop\n");
+    }
 else    
     frame_b=frame_a+raydium_object_anim_len[object];
 
