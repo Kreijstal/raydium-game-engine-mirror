@@ -27,7 +27,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#define GL_GLEXT_PROTOTYPES
 #include <GL/glut.h>
+#include <GL/glext.h>
 #include <math.h>
 #include <time.h>
 #include <memory.h>
