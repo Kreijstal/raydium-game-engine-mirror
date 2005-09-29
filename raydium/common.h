@@ -297,8 +297,11 @@ __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each ani
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
+// states (create instances ?)
 __global GLuint raydium_object_anim_current[RAYDIUM_MAX_OBJECTS];
 __global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS];
+// __global anim_previous
+// __global anim_frame_previous
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];

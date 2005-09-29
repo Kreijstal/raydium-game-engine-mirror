@@ -264,12 +264,14 @@ anim_frames=
 
 
 // slow ... :( (any good idea to make a modulo on a float ?)
-while(raydium_object_anim_frame_current[object]>=anim_frames)
-    raydium_object_anim_frame_current[object]-=anim_frames;
 
-printf("frame (int): %i\n",(int)raydium_object_anim_frame_current[object]);
+while(raydium_object_anim_frame_current[object]>(anim_frames+1))
+    raydium_object_anim_frame_current[object]-=(anim_frames+1);
 
+
+//printf("frame (int): %i\n",(int)raydium_object_anim_frame_current[object]);
 //printf("%f %i\n",raydium_object_anim_frame_current[object],anim_frames);
+
 factor=raydium_object_anim_frame_current[object]-(int)raydium_object_anim_frame_current[object];
 
 frame_a=raydium_object_start[object]+
@@ -282,13 +284,16 @@ frame_a=raydium_object_start[object]+
 // must verify this test !!!
 if( ((int)raydium_object_anim_frame_current[object]) >= anim_frames)
     {
-    frame_b=raydium_object_anim_len[object]; // loop to first frame
-    printf("loop\n");
+    frame_b=raydium_object_start[object] +
+           (raydium_object_anim_start[object][raydium_object_anim_current[object]] *
+            raydium_object_anim_len[object]) +
+    	    raydium_object_anim_len[object];
     }
 else    
     frame_b=frame_a+raydium_object_anim_len[object];
 
 //printf("refresh from %i (a) and %i (b), factor = %.2f (%i af)\n",frame_a,frame_b,factor,anim_frames);
+
 for(i=0;i<raydium_object_anim_len[object];i++)
     {
     raydium_vertex_x[raydium_object_start[object]+i]=_pondavg(raydium_vertex_x[frame_a+i],raydium_vertex_x[frame_b+i],factor);
