@@ -17,6 +17,9 @@ GLint lacet = 0;
 GLfloat light_color[] = {1.0, 0.9, 0.8, 1.0};
 GLfloat  *back_color=light_color;
 
+//number of ragdolls, default 0
+int ragdolls = 0
+
 void create_ragdoll(void)
 {
 #define BONE_BREAK 0
@@ -105,6 +108,7 @@ int a;
     pos[1]=0;
     pos[2]=-0.4;
     raydium_ode_object_move_name("RAGDOLL",pos);
+    ragdolls=1;
 
 }
 
@@ -133,7 +137,8 @@ void display(void)
     if(raydium_key_last==1032)
 	create_ragdoll();
 
-
+if(ragdolls>0)
+{
 
 #define MUSCLE_FORCE 0.6
 //#define MUSCLE_FORCE 2
@@ -157,7 +162,7 @@ void display(void)
         raydium_ode_motor_power_max_name("torso",0);
 	}
 
-
+}
     
     delta_x = raydium_mouse_x - (raydium_window_tx/2);
     cam_angle_x += (delta_x*sensibilite*0.1f); 
