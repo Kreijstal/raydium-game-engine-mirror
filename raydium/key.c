@@ -24,7 +24,10 @@ void raydium_key_normal_callback(GLuint key, int x, int y)
 {
 int i;
 key%=65536;
-if(key==178) raydium_console_event();
+
+// key below esc :
+// 178 (ex: fr), 176 (ex: us), 186 (ex: spa)
+if(key==178 || key==176 || key==186) raydium_console_event();
 if(key==126) raydium_capture_frame_auto(); // glut@w32 won't return this key...
 
 if(raydium_console_pos && ( (key>=32 && key<127) 
