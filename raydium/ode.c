@@ -2821,6 +2821,15 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	vect[2]*=force;
 //	raydium_log("resulting impulse vector: [%f %f %f]",vect[0],vect[1],vect[2]);
 	dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+//ugly way of get a random float array
+	float rmx[3];
+	float minrandtorq=-0.12;
+	float maxrandtorq= 0.12;
+	rmx[0]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+	rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+	rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+//added random torque to the pieces
+	dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
 	g=raydium_ode_element[i].OnBlow;
 	if(g) g(i,force,max_force);
 	}
