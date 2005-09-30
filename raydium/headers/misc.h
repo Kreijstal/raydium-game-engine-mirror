@@ -17,7 +17,7 @@ http://www.gnu.org/licenses/gpl.txt
 /**
 Alphabetical order:
 batcox, Blue Prawn, Cocorobix, FlexH, Jimbo, manproc, Mildred, neub, RyLe,
-whisky, willou, Xfennec, Yoltie
+vicente, whisky, willou, Xfennec, Yoltie.
 **/
 
 // Todo

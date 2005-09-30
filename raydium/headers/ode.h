@@ -1287,6 +1287,17 @@ extern void raydium_ode_explosion_blow_3f (dReal radius, dReal max_force, dReal 
 Same as above, but using 3 dReal values for position.
 **/
 
+void raydium_ode_explosion_blow_rand(dReal radius, dReal max_force, dReal rand_factor, dReal *pos);
+/**
+Same as ##raydium_ode_explosion_blow_rand()##, but introducing a random factor
+on resulting torque for blowed objects, for a more realistic effect.
+**/
+
+void raydium_ode_explosion_blow_rand_3f(dReal radius, dReal max_force, dReal rand_factor, dReal px, dReal py, dReal pz);
+/**
+Same as above, but using 3 dReal values for position.
+**/
+
 extern int raydium_ode_explosion_create (char *name, dReal final_radius, dReal propag, dReal * pos);
 /**
 This function will create an spherical growing explosion. Any element in the

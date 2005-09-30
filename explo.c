@@ -118,7 +118,7 @@ raydium_ode_object_delete_name("WATURE");
 raydium_ode_object_rename_name("WATURE2","WATURE");
 
 pos=raydium_ode_element_pos_get_name("body");
-raydium_ode_explosion_blow_3f(5,200,pos[0]+0.01,pos[1]+0.01,pos[2]); // bonne explosion
+raydium_ode_explosion_blow_rand_3f(5,200,0.12,pos[0]+0.01,pos[1]+0.01,pos[2]); // bonne explosion
 raydium_ode_element_particle_point_name("body","explosion.prt");
 raydium_ode_element_particle_point_name("body","explosmoke.prt");
 raydium_ode_element_particle_point_name("body","exploparts.prt");

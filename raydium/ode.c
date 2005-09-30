@@ -2769,11 +2769,13 @@ return raydium_ode_launcher_simple_name(element,from_element,tmp,force);
 }
 
 
-void raydium_ode_explosion_blow(dReal radius, dReal max_force, dReal *pos)
+void raydium_ode_explosion_blow_rand(dReal radius, dReal max_force, dReal rand_factor, dReal *pos)
 {
 int i;
 void (*f)(signed char, dReal, dReal, dReal *);
 void (*g)(int, dReal, dReal);
+float rmx[3];
+float minrandtorq, maxrandtorq;
 
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT && !raydium_ode_network_explosion_create)
 {
@@ -2821,23 +2823,32 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	vect[2]*=force;
 //	raydium_log("resulting impulse vector: [%f %f %f]",vect[0],vect[1],vect[2]);
 	dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
-//ugly way of get a random float array
-	float rmx[3];
-	float minrandtorq=-0.12;
-	float maxrandtorq= 0.12;
-	rmx[0]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-	rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-	rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-//added random torque to the pieces
-	dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
+
+	if(rand_factor)
+	{
+	    //ugly way of get a random float array
+    	    minrandtorq=-rand_factor;
+	    maxrandtorq= rand_factor;
+	    rmx[0]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+	    rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+	    rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+    	    //added random torque to the pieces
+	    dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
+	}
+
 	g=raydium_ode_element[i].OnBlow;
 	if(g) g(i,force,max_force);
 	}
 f=raydium_ode_ExplosionCallback;
 if(f)
     f(RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW,radius,max_force,pos);
+
 }
 
+void raydium_ode_explosion_blow(dReal radius, dReal max_force, dReal *pos)
+{
+raydium_ode_explosion_blow_rand(radius,max_force,0,pos);
+}
 
 void raydium_ode_explosion_blow_3f(dReal radius, dReal max_force, dReal px, dReal py, dReal pz)
 {
@@ -2846,6 +2857,15 @@ pos[0]=px;
 pos[1]=py;
 pos[2]=pz;
 raydium_ode_explosion_blow(radius,max_force,pos);
+}
+
+void raydium_ode_explosion_blow_rand_3f(dReal radius, dReal max_force, dReal rand_factor, dReal px, dReal py, dReal pz)
+{
+dReal pos[3];
+pos[0]=px;
+pos[1]=py;
+pos[2]=pz;
+raydium_ode_explosion_blow_rand(radius,max_force,rand_factor,pos);
 }
 
 int raydium_ode_explosion_create(char *name, dReal final_radius, dReal propag, dReal *pos)
