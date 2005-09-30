@@ -17,9 +17,6 @@ GLint lacet = 0;
 GLfloat light_color[] = {1.0, 0.9, 0.8, 1.0};
 GLfloat  *back_color=light_color;
 
-//number of ragdolls, default 0
-int ragdolls = 0
-
 void create_ragdoll(void)
 {
 #define BONE_BREAK 0
@@ -108,7 +105,6 @@ int a;
     pos[1]=0;
     pos[2]=-0.4;
     raydium_ode_object_move_name("RAGDOLL",pos);
-    ragdolls=1;
 
 }
 
@@ -129,15 +125,16 @@ void display(void)
 	exit(0);
 
 
-    if(raydium_key_last==1)
+// won't work until you disable display lists
+    if(raydium_key_last==3)
 	raydium_light_disable();
-    if(raydium_key_last==2)
+    if(raydium_key_last==4)
 	raydium_light_enable();
 
     if(raydium_key_last==1032)
 	create_ragdoll();
 
-if(ragdolls>0)
+if(raydium_ode_object_find("RAGDOLL")>=0)
 {
 
 #define MUSCLE_FORCE 0.6
