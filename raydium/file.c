@@ -236,7 +236,7 @@ return -1; // should never reach this
 void read_vertex_from(char *filename)
 {
 GLfloat x,y,z,nx,ny,nz,u,v;
-int i;
+int i,ii;
 GLuint save;
 GLint visu;
 FILE *fp;
@@ -263,8 +263,16 @@ if(visu==2)
     
     raydium_object_anims[raydium_object_index]=j;
     raydium_object_anim_len[raydium_object_index]=k;
-    raydium_object_anim_current[raydium_object_index]=0;
-    raydium_object_anim_frame_current[raydium_object_index]=0;
+    raydium_object_anim_instance_current[raydium_object_index]=0;
+
+    for(ii=0;ii<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;ii++)
+	{
+	raydium_object_anim_current[raydium_object_index][ii]=0;
+	raydium_object_anim_frame_current[raydium_object_index][ii]=0;
+	raydium_object_anim_previous[raydium_object_index][ii]=-1;
+	raydium_object_anim_frame_previous[raydium_object_index][ii]=0;
+	raydium_object_anim_frame_previous_timeout[raydium_object_index][ii]=0;
+	}
 
 
     for(i=0;i<raydium_object_anims[raydium_object_index];i++)
@@ -277,7 +285,10 @@ if(visu==2)
 
     // build "current transformed model" space
     for(i=0;i<raydium_object_anim_len[raydium_object_index];i++)
+	{
 	raydium_vertex_add(0,0,0);
+	raydium_vertex_texture[raydium_vertex_index-1]=0;
+	}
 
     fscanf(fp,"%i\n",&visu);
     raydium_log("object: anim: %i frame(s) with %i vertice per frame (ver %i)",raydium_object_anims[raydium_object_index],raydium_object_anim_len[raydium_object_index],visu);

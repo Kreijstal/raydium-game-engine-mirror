@@ -74,11 +74,14 @@ of ##obj## (relative to (0,0,0)).
 
 
 extern GLint raydium_object_anim_find(int object, char *name);
-extern void raydium_object_anim_generate_internal(int object);
-extern void raydium_object_anim_frame(int object, GLfloat frame);
-extern void raydium_object_anim_frame_name(char *object, GLfloat frame);
-extern void raydium_object_anim(int object, int anim);
-extern void raydium_object_anim_name(char *object, char *anim);
+extern void raydium_object_anim_generate_internal(int object, int instance);
+extern void raydium_object_anim_frame(int object, int instance, GLfloat frame);
+extern void raydium_object_anim_frame_name(char *object, int instance, GLfloat frame);
+extern void raydium_object_anim(int object, int instance, int anim);
+extern void raydium_object_anim_name(char *object, int instance, char *anim);
+
+extern void raydium_object_anim_instance(int object, int instance);
+extern void raydium_object_anim_instance_name(char *object, int instance);
 
 
 #endif

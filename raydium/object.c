@@ -79,6 +79,7 @@ if(!raydium_object_isvalid(o))
 // if animated : draw "only" first (generated) frame
 if(raydium_object_anims[o]>0)
     {
+    raydium_object_anim_generate_internal(o,raydium_object_anim_instance_current[o]);
     raydium_rendering_from_to(raydium_object_start[o],raydium_object_start[o]+raydium_object_anim_len[o]);
     return;
     }
@@ -242,12 +243,15 @@ return -1;
 #define _pondavg(a,b,f) ( (a)+(((b)-(a))*(f)) )
 //#define _pondavg(a,b,f) ( (a) )
 
-void raydium_object_anim_generate_internal(int object)
+void raydium_object_anim_generate_internal(int object, int instance)
 {
 int i;
 GLfloat factor;
 int anim_frames;
 int frame_a,frame_b;
+
+int anim_current;
+GLfloat anim_frame_current;
 
 if(!raydium_object_isvalid(object))
     {
@@ -256,43 +260,88 @@ if(!raydium_object_isvalid(object))
     }
 
 // here starts the big job ! :)
+anim_current=raydium_object_anim_current[object][instance];
+anim_frame_current=raydium_object_anim_frame_current[object][instance];
+
+
 
 // How many frames for the current anim ?
 anim_frames=
-    raydium_object_anim_end[object][raydium_object_anim_current[object]] - 
-    raydium_object_anim_start[object][raydium_object_anim_current[object]];
+    raydium_object_anim_end[object][anim_current] - 
+    raydium_object_anim_start[object][anim_current];
 
 
 // slow ... :( (any good idea to make a modulo on a float ?)
+while(anim_frame_current>(anim_frames+1))
+    anim_frame_current-=(anim_frames+1);
 
-while(raydium_object_anim_frame_current[object]>(anim_frames+1))
-    raydium_object_anim_frame_current[object]-=(anim_frames+1);
 
-
-//printf("frame (int): %i\n",(int)raydium_object_anim_frame_current[object]);
+//printf("frame (int): %i\n",(int)raydium_object_anim_frame_current[object][instance]);
 //printf("%f %i\n",raydium_object_anim_frame_current[object],anim_frames);
 
-factor=raydium_object_anim_frame_current[object]-(int)raydium_object_anim_frame_current[object];
+factor=anim_frame_current-(int)anim_frame_current;
 
 frame_a=raydium_object_start[object]+
-       (raydium_object_anim_start[object][raydium_object_anim_current[object]] *
+       (raydium_object_anim_start[object][anim_current] *
         raydium_object_anim_len[object]) +
-       (((int)raydium_object_anim_frame_current[object]) *
+       (((int)anim_frame_current) *
         raydium_object_anim_len[object]) +
        raydium_object_anim_len[object];
 
-// must verify this test !!!
-if( ((int)raydium_object_anim_frame_current[object]) >= anim_frames)
+
+if( ((int)anim_frame_current) >= anim_frames)
     {
     frame_b=raydium_object_start[object] +
-           (raydium_object_anim_start[object][raydium_object_anim_current[object]] *
+           (raydium_object_anim_start[object][anim_current] *
             raydium_object_anim_len[object]) +
     	    raydium_object_anim_len[object];
     }
 else    
     frame_b=frame_a+raydium_object_anim_len[object];
 
-//printf("refresh from %i (a) and %i (b), factor = %.2f (%i af)\n",frame_a,frame_b,factor,anim_frames);
+
+// if we come from another anim, let's erase frame_a
+if(raydium_object_anim_previous[object][instance]>=0)
+    {
+
+    // is it the first pass right after anim change ?
+    if(raydium_object_anim_frame_previous_timeout[object][instance]==-1)
+	{
+	// save current frame
+	raydium_object_anim_frame_previous_timeout[object][instance]=raydium_object_anim_frame_current[object][instance];
+	//printf("*************\n");
+	}
+
+    // We're now in current anim, cancel previous one
+    if(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]>=1)
+	raydium_object_anim_previous[object][instance]=-1;
+    else
+	{
+	// ... erase frame_a
+	//printf("%f| erasing %i (%f)",anim_frame_current,anim_current,anim_frame_current);
+	anim_current=raydium_object_anim_previous[object][instance];
+	anim_frame_current=raydium_object_anim_frame_previous[object][instance];
+
+	// slow ... :( (any good idea to make a modulo on a float ?)
+	while(anim_frame_current>(anim_frames+1))
+	    anim_frame_current-=(anim_frames+1);
+
+	//printf(" with %i (%f)\n",anim_current,anim_frame_current);
+	factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
+
+
+	frame_a=raydium_object_start[object]+
+    	    (raydium_object_anim_start[object][anim_current] *
+    	    raydium_object_anim_len[object]) +
+    	    (((int)anim_frame_current) *
+    	    raydium_object_anim_len[object]) +
+    	    raydium_object_anim_len[object];
+	}
+    
+    //printf("refresh from %i (a) and %i (b), factor = %.2f (%i af)\n",frame_a,frame_b,factor,anim_frames);
+    }
+
+
 
 for(i=0;i<raydium_object_anim_len[object];i++)
     {
@@ -311,7 +360,7 @@ for(i=0;i<raydium_object_anim_len[object];i++)
     }
 }
 
-void raydium_object_anim_frame(int object, GLfloat frame)
+void raydium_object_anim_frame(int object, int instance, GLfloat frame)
 {
 if(!raydium_object_isvalid(object))
     {
@@ -319,17 +368,16 @@ if(!raydium_object_isvalid(object))
     return;
     }
 
-raydium_object_anim_frame_current[object]=frame;
-raydium_object_anim_generate_internal(object);
+raydium_object_anim_frame_current[object][instance]=frame;
 }
 
-void raydium_object_anim_frame_name(char *object, GLfloat frame)
+void raydium_object_anim_frame_name(char *object, int instance, GLfloat frame)
 {
-raydium_object_anim_frame(raydium_object_find(object),frame);
+raydium_object_anim_frame(raydium_object_find(object),instance,frame);
 }
 
 
-void raydium_object_anim(int object, int anim)
+void raydium_object_anim(int object, int instance, int anim)
 {
 if(!raydium_object_isvalid(object))
     {
@@ -343,13 +391,37 @@ if(anim<0 || anim>=raydium_object_anims[object])
     return;    
     }
 
-raydium_object_anim_current[object]=anim;
+if(raydium_object_anim_current[object][instance]==anim)
+    return;
+
+//printf("%i asked %i\n",raydium_object_anim_current[object][instance],anim);
+// warning, change anim BEFORE anim's frame
+raydium_object_anim_previous[object][instance]=raydium_object_anim_current[object][instance];
+raydium_object_anim_frame_previous[object][instance]=raydium_object_anim_frame_current[object][instance];
+raydium_object_anim_frame_previous_timeout[object][instance]=-1;
+
+raydium_object_anim_current[object][instance]=anim;
 }
 
-void raydium_object_anim_name(char *object, char *anim)
+void raydium_object_anim_name(char *object, int instance, char *anim)
 {
 int o;
 o=raydium_object_find(object);
-raydium_object_anim(o,raydium_object_anim_find(o,anim));
+raydium_object_anim(o,instance,raydium_object_anim_find(o,anim));
 }
 
+
+void raydium_object_anim_instance(int object, int instance)
+{
+if(!raydium_object_isvalid(object))
+    {
+    raydium_log("object: anim_instance: ERROR: id or name is invalid");
+    return;
+    }
+raydium_object_anim_instance_current[object]=instance;
+}
+
+void raydium_object_anim_instance_name(char *object, int instance)
+{
+raydium_object_anim_instance(raydium_object_find(object),instance);
+}

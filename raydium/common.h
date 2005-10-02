@@ -106,6 +106,7 @@
 #define RAYDIUM_MAX_NAME_LEN     	   	255
 #define RAYDIUM_MAX_OBJECTS		  	1024
 #define RAYDIUM_MAX_OBJECT_ANIMS		20
+#define RAYDIUM_MAX_OBJECT_ANIM_INSTANCES	64
 #define RAYDIUM_MAX_TIMECALLS 			16
 #define RAYDIUM_MAX_REG_VARIABLES  		256
 #define RAYDIUM_MAX_REG_FUNCTION		256
@@ -297,11 +298,13 @@ __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each ani
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
+__global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS];
 // states (create instances ?)
-__global GLuint raydium_object_anim_current[RAYDIUM_MAX_OBJECTS];
-__global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS];
-// __global anim_previous
-// __global anim_frame_previous
+__global GLint raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global GLint raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global GLfloat raydium_object_anim_frame_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global GLfloat raydium_object_anim_frame_previous_timeout[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
