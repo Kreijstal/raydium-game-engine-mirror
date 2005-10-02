@@ -241,8 +241,10 @@ return -1;
 }
 
 #define _pondavg(a,b,f) ( (a)+(((b)-(a))*(f)) )
-//#define _pondavg(a,b,f) ( (a) )
 
+// There's always a bug here, causing jitters when switching animation:
+// frame_b jumps from "destination frame" to "destination frame"+1, as
+// during normal operation
 void raydium_object_anim_generate_internal(int object, int instance)
 {
 int i;
@@ -269,7 +271,6 @@ anim_frame_current=raydium_object_anim_frame_current[object][instance];
 anim_frames=
     raydium_object_anim_end[object][anim_current] - 
     raydium_object_anim_start[object][anim_current];
-
 
 // slow ... :( (any good idea to make a modulo on a float ?)
 while(anim_frame_current>(anim_frames+1))
@@ -309,12 +310,15 @@ if(raydium_object_anim_previous[object][instance]>=0)
 	{
 	// save current frame
 	raydium_object_anim_frame_previous_timeout[object][instance]=raydium_object_anim_frame_current[object][instance];
-	//printf("*************\n");
+	//printf("*** start\n");
 	}
 
     // We're now in current anim, cancel previous one
     if(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]>=1)
+	{
 	raydium_object_anim_previous[object][instance]=-1;
+	//printf("*** end\n");
+	}
     else
 	{
 	// ... erase frame_a
@@ -322,13 +326,18 @@ if(raydium_object_anim_previous[object][instance]>=0)
 	anim_current=raydium_object_anim_previous[object][instance];
 	anim_frame_current=raydium_object_anim_frame_previous[object][instance];
 
+
+	anim_frames=
+	    raydium_object_anim_end[object][anim_current] - 
+	    raydium_object_anim_start[object][anim_current];
+
 	// slow ... :( (any good idea to make a modulo on a float ?)
 	while(anim_frame_current>(anim_frames+1))
 	    anim_frame_current-=(anim_frames+1);
 
 	//printf(" with %i (%f)\n",anim_current,anim_frame_current);
-	factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
 
+	factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
 
 	frame_a=raydium_object_start[object]+
     	    (raydium_object_anim_start[object][anim_current] *
@@ -338,7 +347,7 @@ if(raydium_object_anim_previous[object][instance]>=0)
     	    raydium_object_anim_len[object];
 	}
     
-    //printf("refresh from %i (a) and %i (b), factor = %.2f (%i af)\n",frame_a,frame_b,factor,anim_frames);
+    //printf("refresh from %i/%i (a) and %i/%i (b), factor = %.2f (%i af)\n",frame_a,frame_a/raydium_object_anim_len[object],frame_b,frame_b/raydium_object_anim_len[object],factor,anim_frames);
     }
 
 
