@@ -14,11 +14,12 @@ available (see ##object.c##).
 
 // Introduction
 /**
-##file.c## use .tri mesh files (text), available in 3 versions:
+##file.c## use .tri mesh files (text), available in 4 versions:
 
 1. version 1: providing normals and uv texture mapping informations.
 2. version 0: providing normals.
 3. version -1: only providing vertices. 
+4. version 2: mesh animation support
 	 
 Version 1 example file:
 %%
@@ -32,6 +33,27 @@ Version 1 example file:
 You can find the file version on first line, and then data.
 Next lines: vertex position (x,y,z), normal (x,y,z), texture mapping (u,v)
 and texture (string). 
+
+Version 2 files are a bit different, as showed below:
+%%
+2
+3 1743
+0 39 stand
+40 45 run
+46 53 attack
+1
+5.1 15.75 -3.82 0.0000 0.0000 -1.0000 0.5158 0.5489 rgb(0.5,0.5,0.5)
+6.3 11.75 -3.82 0.0000 0.0000 -1.0000 0.5196 0.5365 rgb(0.5,0.5,0.5)
+5.0 11.75 -3.82 0.0000 0.0000 -1.0000 0.5158 0.5365 rgb(0.5,0.5,0.5)
+...
+%%
+
+You may have seen that headers are longer for v2 files. You'll find (just
+after the version number) how many "anims" are hosted by this file, and how
+many vertices are required for one frame. Then you'll find one line per
+"anim", with starting frame, ending frame and anim's name.
+Then starts a regular tri file ("sub-file", with its own version number)
+with ALL concatened frames.
 **/
 
 

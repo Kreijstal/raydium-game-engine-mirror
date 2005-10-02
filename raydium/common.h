@@ -298,13 +298,13 @@ __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each ani
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
-__global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS];
-// states (create instances ?)
-__global GLint raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
-__global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
-__global GLint raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
-__global GLfloat raydium_object_anim_frame_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
-__global GLfloat raydium_object_anim_frame_previous_timeout[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // current "rendering" instance
+// states
+__global GLint   raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current anim
+__global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current frame
+__global GLint   raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last anim)
+__global GLfloat raydium_object_anim_frame_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last frame)
+__global GLfloat raydium_object_anim_frame_previous_timeout[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // "timer" for anim switch blending
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
@@ -314,7 +314,7 @@ __global char	 raydium_render_displaylists_tag;
 
 __global signed char	 raydium_fog_enabled_tag;
 
-__global signed char	 raydium_light_enabled_tag;
+__global signed char	raydium_light_enabled_tag;
 __global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];
 __global GLfloat raydium_light_position[RAYDIUM_MAX_LIGHTS][4];
 __global GLfloat raydium_light_color[RAYDIUM_MAX_LIGHTS][4];
