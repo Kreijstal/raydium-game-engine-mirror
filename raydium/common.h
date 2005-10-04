@@ -29,7 +29,9 @@
 #include <fcntl.h>
 #define GL_GLEXT_PROTOTYPES
 #include <GL/glut.h>
+#ifndef WIN32
 #include <GL/glext.h>
+#endif
 #include <math.h>
 #include <time.h>
 #include <memory.h>
