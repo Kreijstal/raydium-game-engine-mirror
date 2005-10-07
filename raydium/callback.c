@@ -22,6 +22,8 @@ void raydium_ode_network_read(void);
 #endif
 void raydium_video_callback(void);
 void raydium_internal_live_video_callback(void);
+void raydium_object_callback(void);
+
 
 void raydium_callback_image(void)
 {

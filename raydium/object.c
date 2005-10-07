@@ -366,7 +366,6 @@ if(raydium_object_anim_previous[object][instance]>=0)
 	anim_current=raydium_object_anim_previous[object][instance];
 	anim_frame_current=raydium_object_anim_frame_previous[object][instance];
 
-
 	anim_frames=
 	    raydium_object_anim_end[object][anim_current] - 
 	    raydium_object_anim_start[object][anim_current];
@@ -374,7 +373,7 @@ if(raydium_object_anim_previous[object][instance]>=0)
 	// slow ... :( (any good idea to make a modulo on a float ?)
 	while(anim_frame_current>(anim_frames+1))
 	    anim_frame_current-=(anim_frames+1);
-
+	
 	//printf(" with %i (%f)\n",anim_current,anim_frame_current);
 
 	factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
@@ -390,6 +389,7 @@ if(raydium_object_anim_previous[object][instance]>=0)
     //printf("refresh from %i/%i (a) and %i/%i (b), factor = %.2f (%i af)\n",frame_a,frame_a/raydium_object_anim_len[object],frame_b,frame_b/raydium_object_anim_len[object],factor,anim_frames);
     }
 
+//printf("refresh from %i/%i (a) and %i/%i (b), factor = %.2f (%i af)\n",frame_a,frame_a/raydium_object_anim_len[object],frame_b,frame_b/raydium_object_anim_len[object],factor,anim_frames);
 
 
 for(i=0;i<raydium_object_anim_len[object];i++)
