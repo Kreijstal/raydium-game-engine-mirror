@@ -300,13 +300,17 @@ __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each ani
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
+__global GLuint raydium_object_anim_default_anim[RAYDIUM_MAX_OBJECTS];
 __global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // current "rendering" instance
+__global GLfloat raydium_object_anim_automatic_factor[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS]; // frame automatic factor
+__global GLfloat raydium_object_anim_time_factor;
 // states
 __global GLint   raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current anim
 __global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current frame
 __global GLint   raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last anim)
 __global GLfloat raydium_object_anim_frame_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last frame)
 __global GLfloat raydium_object_anim_frame_previous_timeout[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // "timer" for anim switch blending
+__global int 	 raydium_object_anim_punctually_flag[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
 
 __global int	 raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];

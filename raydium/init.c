@@ -78,6 +78,8 @@ void raydium_init_objects(void)
 {
 GLuint i;
 
+raydium_object_anim_time_factor=1.f;
+
 for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
 raydium_object_reset(i);
 raydium_log("objects: OK");

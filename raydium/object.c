@@ -181,6 +181,7 @@ GLfloat raydium_object_find_dist_max(GLuint obj)
 {
 GLfloat max=0,val;
 int i;
+int start,end;
 
 if(!raydium_object_isvalid(obj))
     {
@@ -188,7 +189,19 @@ if(!raydium_object_isvalid(obj))
     return -1;
     }
 
-for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
+if(raydium_object_anims[obj]>0)
+    {
+    raydium_object_anim_generate_internal(obj,raydium_object_anim_instance_current[obj]);
+    start=raydium_object_start[obj];
+    end=raydium_object_start[obj]+raydium_object_anim_len[obj];
+    }
+else
+    {
+    start=raydium_object_start[obj];
+    end=raydium_object_end[obj];
+    }
+
+for(i=start;i<end;i++)
     {
     val=sqrt((raydium_vertex_x[i]*raydium_vertex_x[i])+
 	     (raydium_vertex_y[i]*raydium_vertex_y[i])+
@@ -201,6 +214,7 @@ return max;
 void raydium_object_find_axes_max(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
 {
 int i;
+int start,end;
 
 if(!raydium_object_isvalid(obj))
     {
@@ -208,9 +222,22 @@ if(!raydium_object_isvalid(obj))
     return;
     }
 
+if(raydium_object_anims[obj]>0)
+    {
+    raydium_object_anim_generate_internal(obj,raydium_object_anim_instance_current[obj]);
+    start=raydium_object_start[obj];
+    end=raydium_object_start[obj]+raydium_object_anim_len[obj];
+    }
+else
+    {
+    start=raydium_object_start[obj];
+    end=raydium_object_end[obj];
+    }
+
+
 *tx=*ty=*tz=0;
 
-for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
+for(i=start;i<end;i++)
     {
     if(raydium_trigo_abs(raydium_vertex_x[i])>*tx) *tx=raydium_trigo_abs(raydium_vertex_x[i]);
     if(raydium_trigo_abs(raydium_vertex_y[i])>*ty) *ty=raydium_trigo_abs(raydium_vertex_y[i]);
@@ -251,9 +278,9 @@ int i;
 GLfloat factor;
 int anim_frames;
 int frame_a,frame_b;
-
 int anim_current;
 GLfloat anim_frame_current;
+char flag;
 
 if(!raydium_object_isvalid(object))
     {
@@ -266,16 +293,29 @@ anim_current=raydium_object_anim_current[object][instance];
 anim_frame_current=raydium_object_anim_frame_current[object][instance];
 
 
-
 // How many frames for the current anim ?
 anim_frames=
     raydium_object_anim_end[object][anim_current] - 
     raydium_object_anim_start[object][anim_current];
 
+flag=0;
 // slow ... :( (any good idea to make a modulo on a float ?)
 while(anim_frame_current>(anim_frames+1))
+    {
     anim_frame_current-=(anim_frames+1);
+    flag=1;
+    }
 
+// end of ponctually anim ?
+if(flag && raydium_object_anim_punctually_flag[object][instance]>=0)
+    {
+    raydium_object_anim_punctually_flag[object][instance]=-1;
+    raydium_object_anim(object,instance,raydium_object_anim_default_anim[object]);
+    raydium_object_anim_frame(object,instance,0);
+    // recursive call with regular situation
+    raydium_object_anim_generate_internal(object,instance);
+    return;
+    }
 
 //printf("frame (int): %i\n",(int)raydium_object_anim_frame_current[object][instance]);
 //printf("%f %i\n",raydium_object_anim_frame_current[object],anim_frames);
@@ -382,7 +422,7 @@ raydium_object_anim_frame_current[object][instance]=frame;
 
 void raydium_object_anim_frame_name(char *object, int instance, GLfloat frame)
 {
-raydium_object_anim_frame(raydium_object_find(object),instance,frame);
+raydium_object_anim_frame(raydium_object_find_load(object),instance,frame);
 }
 
 
@@ -415,7 +455,7 @@ raydium_object_anim_current[object][instance]=anim;
 void raydium_object_anim_name(char *object, int instance, char *anim)
 {
 int o;
-o=raydium_object_find(object);
+o=raydium_object_find_load(object);
 raydium_object_anim(o,instance,raydium_object_anim_find(o,anim));
 }
 
@@ -432,5 +472,114 @@ raydium_object_anim_instance_current[object]=instance;
 
 void raydium_object_anim_instance_name(char *object, int instance)
 {
-raydium_object_anim_instance(raydium_object_find(object),instance);
+raydium_object_anim_instance(raydium_object_find_load(object),instance);
 }
+
+void raydium_object_anim_automatic(int object, int anim, GLfloat factor)
+{
+if(!raydium_object_isvalid(object))
+    {
+    raydium_log("object: anim_automatic: ERROR: id or name is invalid");
+    return;
+    }
+
+if(anim<0 || anim>=raydium_object_anims[object])
+    {
+    raydium_log("object: anim_automatic: ERROR: id or name is invalid for animation");
+    return;    
+    }
+
+//printf("%i %i %f\n",object,anim,factor);
+raydium_object_anim_automatic_factor[object][anim]=factor;
+}
+
+
+void raydium_object_anim_automatic_name(char *object, char *anim, GLfloat factor)
+{
+int o;
+
+o=raydium_object_find_load(object);
+
+raydium_object_anim_automatic(o,raydium_object_anim_find(o,anim),factor);
+}
+
+void raydium_object_callback(void)
+{
+GLfloat f;
+int o,i;
+
+for(o=0;o<raydium_object_index;o++)
+    if(raydium_object_anims[o]>0)
+	for(i=0;i<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;i++)    
+	    {
+	    f=raydium_frame_time * raydium_object_anim_time_factor *
+	      raydium_object_anim_automatic_factor[o][raydium_object_anim_current[o][i]];
+	    raydium_object_anim_frame_current[o][i]+=f;    
+	    }
+}
+
+
+void raydium_object_anim_default(int object, int anim)
+{
+if(!raydium_object_isvalid(object))
+    {
+    raydium_log("object: anim_default: ERROR: id or name is invalid");
+    return;
+    }
+
+if(anim<0 || anim>=raydium_object_anims[object])
+    {
+    raydium_log("object: anim_default: ERROR: id or name is invalid for animation");
+    return;    
+    }
+
+raydium_object_anim_default_anim[object]=anim;
+}
+
+
+signed char raydium_object_anim_ispunctually(int object, int instance)
+{
+if(!raydium_object_isvalid(object))
+    {
+    raydium_log("object: anim_isdefault: ERROR: id or name is invalid");
+    return 0;
+    }
+
+return (raydium_object_anim_punctually_flag[object][instance]>=0?1:0);
+}
+
+signed char raydium_object_anim_ispunctually_name(char *object, int instance)
+{
+return raydium_object_anim_ispunctually(raydium_object_find_load(object),instance);
+}
+
+// punctually (change current and set flag. set frame to 0 [in,out])
+void raydium_object_anim_punctually(int object, int anim, int instance)
+{
+if(!raydium_object_isvalid(object))
+    {
+    raydium_log("object: anim_punctually: ERROR: id or name is invalid");
+    return;
+    }
+
+if(anim<0 || anim>=raydium_object_anims[object])
+    {
+    raydium_log("object: anim_punctually: ERROR: id or name is invalid for animation");
+    return;    
+    }
+
+raydium_object_anim(object,instance,anim);
+raydium_object_anim_frame(object,instance,0);
+raydium_object_anim_punctually_flag[object][instance]=anim;
+}
+
+
+void raydium_object_anim_punctually_name(char *object, char *anim, int instance)
+{
+int o;
+
+o=raydium_object_find_load(object);
+raydium_object_anim_punctually(o,raydium_object_anim_find(o,anim),instance);
+}
+
+// no loops for some animation (death)

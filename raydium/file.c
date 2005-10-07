@@ -264,6 +264,7 @@ if(visu==2)
     raydium_object_anims[raydium_object_index]=j;
     raydium_object_anim_len[raydium_object_index]=k;
     raydium_object_anim_instance_current[raydium_object_index]=0;
+    raydium_object_anim_default_anim[raydium_object_index]=0;
 
     for(ii=0;ii<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;ii++)
 	{
@@ -272,6 +273,7 @@ if(visu==2)
 	raydium_object_anim_previous[raydium_object_index][ii]=-1;
 	raydium_object_anim_frame_previous[raydium_object_index][ii]=0;
 	raydium_object_anim_frame_previous_timeout[raydium_object_index][ii]=0;
+	raydium_object_anim_punctually_flag[raydium_object_index][ii]=-1;
 	}
 
 
@@ -280,6 +282,7 @@ if(visu==2)
 	fscanf(fp,"%i %i %s\n",&j,&k,name);
 	raydium_object_anim_start[raydium_object_index][i]=j;
 	raydium_object_anim_end[raydium_object_index][i]=k;
+	raydium_object_anim_automatic_factor[raydium_object_index][i]=0;
 	strcpy(raydium_object_anim_names[raydium_object_index][i],name);
 	}
 

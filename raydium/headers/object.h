@@ -105,7 +105,8 @@ Internal. Transformed mesh generation.
 extern void raydium_object_anim_frame(int object, int instance, GLfloat frame);
 /**
 Sets current ##frame## for one ##instance## of ##object##. ##frame## is
-automatically bounded.
+automatically bounded and loops.
+Warning, change anim **before** anim's frame.
 **/
 
 extern void raydium_object_anim_frame_name(char *object, int instance, GLfloat frame);
@@ -116,6 +117,7 @@ Same as above, but using ##object##'s name.
 extern void raydium_object_anim(int object, int instance, int anim);
 /**
 Sets current ##anim## for one ##instance## of ##object##.
+Again, change anim **before** anim's frame.
 **/
 
 extern void raydium_object_anim_name(char *object, int instance, char *anim);
@@ -135,5 +137,29 @@ extern void raydium_object_anim_instance_name(char *object, int instance);
 /**
 Same as above, but using ##object##'s name.
 **/
+
+extern void raydium_object_anim_automatic(int object, int anim, GLfloat factor);
+/**
+With this function, you can set an automatic frame increment for a specific 
+##anim## of an ##object##. This increment is based on frame time and ##factor##.
+**/
+
+extern void raydium_object_anim_automatic_name(char *object, char *anim, GLfloat factor);
+/**
+Same as above, but using ##object##'s name and ##anim##'s name.
+**/
+
+extern void raydium_object_callback(void);
+/**
+Internal (frame callback).
+**/
+
+void raydium_object_anim_default(int object, int anim);
+signed char raydium_object_anim_ispunctually(int object, int instance);
+void raydium_object_anim_punctually(int object, int anim, int instance);
+void raydium_object_anim_punctually_name(char *object, char *anim, int instance);
+signed char raydium_object_anim_ispunctually(int object, int instance);
+signed char raydium_object_anim_ispunctually_name(char *object, int instance);
+
 
 #endif

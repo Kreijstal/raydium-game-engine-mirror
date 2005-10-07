@@ -3562,6 +3562,7 @@ void raydium_ode_time_change(GLfloat perc)
 {
 raydium_timecall_freq_change(raydium_ode_timecall,(RAYDIUM_ODE_PHYSICS_FREQ*perc)/100.f);
 raydium_particle_time_factor=perc/100.f;
+raydium_object_anim_time_factor=perc/100.f;
 }
 
 void raydium_ode_element_particle(int elem, char *filename)

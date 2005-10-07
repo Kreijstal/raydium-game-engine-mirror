@@ -396,13 +396,14 @@ if(raydium_object_anims[0]>0)
     int i,j,cpt,len;
 
     raydium_log("This is an animated object, I'll center frame by frame");
+    raydium_log("Use \"*\" char to allow an anim to be centered. example: *jump");
     len=raydium_object_anim_len[0];
     cpt=raydium_object_anim_len[0];    
     for(i=0;i<raydium_object_anims[0];i++)
       for(j=0;j<raydium_object_anim_end[0][i]-raydium_object_anim_start[0][i];j++)
 	{
-	printf(".\n");
-	center_(cpt,cpt+len);
+	if(raydium_object_anim_names[0][i][0]=="*")
+	    center_(cpt,cpt+len);
 	cpt+=len;
 	}
     }
@@ -472,7 +473,7 @@ printf("line [n]: change/reset line size\n");
 printf("mirror: mirror object\n");
 printf("size: return object sizes\n");
 printf("cam (cam.cam) draw cam path file\n");
-printf("center: center object (each frame if it's an anim)");
+printf("center: center object (each frame if it's an anim)\n");
 }
 
 

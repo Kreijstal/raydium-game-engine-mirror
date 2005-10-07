@@ -43,6 +43,7 @@ raydium_ode_network_read();
 raydium_internal_live_video_callback();
 #endif
 raydium_video_callback();
+raydium_object_callback();
 }
 
 
