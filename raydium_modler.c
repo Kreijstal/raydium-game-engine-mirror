@@ -1,7 +1,8 @@
+// Hmm .. this tool is old, ugly ("interface" and code) but very useful.
 #define NO_ODE_SUPPORT
 #include "raydium/index.c"
 
-char *version="0.345 Beta";
+char *version="0.351 Beta";
 char *title="Raydium Modler";
 
 #define round(x) (int)((x)>0?(x)+0.5:(x)-0.5)
@@ -287,7 +288,7 @@ raydium_vertex_z[i]=y*raydium_trigo_sin(angle) + z*raydium_trigo_cos(angle);
 }
 
 
-void size_n(int n, GLfloat *min, GLfloat *max)
+void size_n_(int n, GLfloat *min, GLfloat *max, int start, int end)
 {
 int i;
 GLfloat *tbl;
@@ -306,9 +307,9 @@ switch(n)
 	tbl=raydium_vertex_z;
 	break;
 }
-(*max)=(*min)=tbl[0];
+(*max)=(*min)=tbl[start];
 
-for(i=1;i<raydium_vertex_index;i++)
+for(i=start+1;i<end;i++)
 {
 if(tbl[i]>(*max)) (*max)=tbl[i];
 if(tbl[i]<(*min)) (*min)=tbl[i];
@@ -316,17 +317,23 @@ if(tbl[i]<(*min)) (*min)=tbl[i];
 
 }
 
+void size_n(int n, GLfloat *min, GLfloat *max)
+{
+size_n_(n,min,max,0,raydium_vertex_index);
+}
+
+
 void size(void)
 {
 int i;
 GLfloat min,max;
 
 size_n(0,&min,&max);
-printf("%f < x < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < x < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
 size_n(1,&min,&max);
-printf("%f < y < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < y < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
 size_n(2,&min,&max);
-printf("%f < z < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < z < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
 }
 
 
@@ -345,10 +352,10 @@ raydium_vertex_z[i]+=round(mz);
 }
 }
 
-void move_by(GLfloat x, GLfloat y, GLfloat z)
+void move_by_(GLfloat x, GLfloat y, GLfloat z,int start, int end)
 {
 int i;
-for(i=0;i<raydium_vertex_index;i++)
+for(i=start;i<end;i++)
 {
 raydium_vertex_x[i]+=x;
 raydium_vertex_y[i]+=y;
@@ -356,6 +363,53 @@ raydium_vertex_z[i]+=z;
 }
 
 }
+
+void move_by(GLfloat x, GLfloat y, GLfloat z)
+{
+move_by_(x,y,z,0,raydium_vertex_index);
+}
+
+
+void center_(int start, int end)
+{
+GLfloat offx, offy, offz;
+GLfloat min,max;
+
+size_n_(0,&min,&max,start,end);
+offx=-(max-((max-min)/2));
+
+size_n_(1,&min,&max,start,end);
+offy=-(max-((max-min)/2));
+
+size_n_(2,&min,&max,start,end);
+offz=-(max-((max-min)/2));
+
+move_by_(offx,offy,offz,start,end);
+}
+
+
+void center(void)
+{
+// look if first object is animated
+if(raydium_object_anims[0]>0)
+    {
+    int i,j,cpt,len;
+
+    raydium_log("This is an animated object, I'll center frame by frame");
+    len=raydium_object_anim_len[0];
+    cpt=raydium_object_anim_len[0];    
+    for(i=0;i<raydium_object_anims[0];i++)
+      for(j=0;j<raydium_object_anim_end[0][i]-raydium_object_anim_start[0][i];j++)
+	{
+	printf(".\n");
+	center_(cpt,cpt+len);
+	cpt+=len;
+	}
+    }
+else
+    center_(0,raydium_vertex_index);
+}
+
 /*
 void generate_contour_to_point(void)
 {
@@ -418,6 +472,7 @@ printf("line [n]: change/reset line size\n");
 printf("mirror: mirror object\n");
 printf("size: return object sizes\n");
 printf("cam (cam.cam) draw cam path file\n");
+printf("center: center object (each frame if it's an anim)");
 }
 
 
@@ -576,6 +631,7 @@ if(!strcmp(arg[0],"load")  && argc==2) read_vertex_from(arg[1]);
 if(!strcmp(arg[0],"bind")  && argc==2) raydium_texture_load(arg[1]); 
 if(!strcmp(arg[0],"bind")  && argc==3 && !strcmp(arg[1],"erase")) raydium_texture_load_erase(arg[2],raydium_texture_current_main); 
 if(!strcmp(arg[0],"cam") && argc==2) strcpy(cam_file,arg[1]);
+if(!strcmp(arg[0],"center")) center();
 }
 
 
