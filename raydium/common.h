@@ -265,6 +265,7 @@ __global GLfloat raydium_projection_top; 	// ortho only
 __global GLfloat raydium_background_color[4];
 __global signed char	 raydium_sky_force;
 
+
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
 __global signed char	 raydium_window_mode;

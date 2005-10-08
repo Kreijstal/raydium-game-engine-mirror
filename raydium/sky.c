@@ -221,7 +221,7 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	glPopMatrix();
 }
 
-void raydium_atmosphere_enable(void)
+void raydium_sky_atmosphere_enable(void)
 {
 	raydium_atmosphere_enable_tag	=	1;
 	//this will force to recalculate the sphere once
@@ -229,12 +229,12 @@ void raydium_atmosphere_enable(void)
 	raydium_log("atmosphere created");
 }
 
-void raydium_atmosphere_disable(void)
+void raydium_sky_atmosphere_disable(void)
 {
 	raydium_atmosphere_enable_tag=0;
 }
 
-void raydium_atmosphere_render( GLfloat x, GLfloat y, GLfloat z,int detail)
+void raydium_sky_atmosphere_render( GLfloat x, GLfloat y, GLfloat z,int detail)
 {
 	if(raydium_atmosphere_enable_tag)
 	{	
@@ -242,7 +242,7 @@ void raydium_atmosphere_render( GLfloat x, GLfloat y, GLfloat z,int detail)
 	}
 }
 
-char raydium_atmosphere_check()
+char raydium_sky_atmosphere_check(void)
 {
 	return raydium_atmosphere_enable_tag;
 }

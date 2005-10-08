@@ -96,10 +96,10 @@ void raydium_camera_internal(GLfloat x, GLfloat y, GLfloat z)
 			raydium_sound_SetListenerPos(pos);
 			raydium_sound_SetListenerOr(or);
 		}
-		if(raydium_atmosphere_check())
+		if(raydium_sky_atmosphere_check())
 		{
 			raydium_sky_box_render(x,y,z);
-			raydium_atmosphere_render(x,y,z,RAYDIUM_SPHERE_DEFAULT_DETAIL);
+			raydium_sky_atmosphere_render(x,y,z,RAYDIUM_SPHERE_DEFAULT_DETAIL);
 		}
 		else
 		{
