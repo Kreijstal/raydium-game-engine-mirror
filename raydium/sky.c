@@ -10,12 +10,11 @@
 #include "headers/sky.h"
 #endif
 
-#define SPHERE_MAX_DETAIL 30
-#define SPHERE_DEFAULT_DETAIL 25
+
 //when the function goes to stable, i'll put the next 3 in common.h
 static char raydium_atmosphere_enable_tag;
-static GLfloat angle1;
-static GLfloat angle2;
+static GLfloat angle_orbit_u;
+static GLfloat angle_orbit_v;
 static char sphere_generated;
 
 void raydium_sky_box_cache(void)
@@ -134,13 +133,14 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	int i, j;
 	GLfloat currentradious,z1,z2,ang1;
 	//static cause this will be used to store the vertices of the sphere
-	static GLfloat p[SPHERE_MAX_DETAIL][SPHERE_MAX_DETAIL][3];	
+	static GLfloat p[RAYDIUM_SPHERE_MAX_DETAIL][RAYDIUM_SPHERE_MAX_DETAIL][3];	
 
 	//keeping safe the current matrix
 	glPushMatrix();	
+	glPushAttrib(GL_COLOR_BUFFER_BIT);
 	//increasing angles to simulate orbit
-	angle1	+=	0.2;
-	angle2	+=	0.02;
+	angle_orbit_u	+=	0.2;
+	angle_orbit_v	+=	0.02;
 	//turning off "specials" for render
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
@@ -176,8 +176,8 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	//locating the modelview in the pos of the camera
 	glTranslatef(x,y,z);
 	//rotating according the orbit angles(ugly)
-	glRotatef(angle2,0,0,1);
-	glRotatef(angle1,1,0,0);
+	glRotatef(angle_orbit_v,0,0,1);
+	glRotatef(angle_orbit_u,1,0,0);
 	//now drawing with the obtained values
 	for(i=0;i<detail;i++)
 	{
@@ -217,6 +217,7 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	if(raydium_fog_enabled_tag) glEnable(GL_FOG);
 	if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
 	glDepthMask(GL_TRUE);
+	glPopAttrib();
 	glPopMatrix();
 }
 

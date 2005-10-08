@@ -112,8 +112,6 @@ return -1;
 }
 
 
-int tot = 0;
-
 /** function which returns the determinant of a given matrix */
 double raydium_matrix_determinant(matrix4x4 matrix)
 {
@@ -146,9 +144,10 @@ matrix4x4 raydium_matrix_inverse(matrix4x4 matrix)
 /** Function which returns the determinant of a given matrix */
 double determinant(matrix4x4 matrix, int dimension)
 {
-
+	static int tot;
   int    i, orig_mat_row, orig_mat_col, temp_mat_row, temp_mat_col;
   double det;
+
   matrix4x4 temp_matrix;
 
   if(dimension == 2)

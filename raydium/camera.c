@@ -99,7 +99,7 @@ void raydium_camera_internal(GLfloat x, GLfloat y, GLfloat z)
 		if(raydium_atmosphere_check())
 		{
 			raydium_sky_box_render(x,y,z);
-			raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
+			raydium_atmosphere_render(x,y,z,RAYDIUM_SPHERE_DEFAULT_DETAIL);
 		}
 		else
 		{

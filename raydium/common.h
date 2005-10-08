@@ -211,6 +211,9 @@
 
 #define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	50
 
+#define RAYDIUM_SPHERE_MAX_DETAIL 		30
+#define RAYDIUM_SPHERE_DEFAULT_DETAIL 		25
+
 #ifdef MAIN_H
 #define __global extern
 #endif
