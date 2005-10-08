@@ -56,63 +56,72 @@ res3[3]=-(res1[2]-res2[2]); // z
 
 void raydium_camera_internal_prepare(void)
 {
-GLfloat x,y,z;
+	GLfloat x,y,z;
 
-glLoadIdentity();
+	glLoadIdentity();
 
-if(raydium_camera_rumble_remaining>0)
+	if(raydium_camera_rumble_remaining>0)
     {
-    x=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
-    y=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
-    z=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
-
-    glRotatef(z,0,0,1);
-    glRotatef(x,1,0,0);
-    glRotatef(y,0,1,0);
-
-    raydium_camera_rumble_remaining-=raydium_frame_time;
-    raydium_camera_rumble_amplitude+=(raydium_camera_rumble_evolution*raydium_frame_time);
-    if(raydium_camera_rumble_amplitude<=0)
-	{
-	raydium_camera_rumble_amplitude=0;
-	raydium_camera_rumble_remaining=0;
-	}
+    	x=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
+    	y=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
+    	z=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
+	
+	    glRotatef(z,0,0,1);
+	    glRotatef(x,1,0,0);
+	    glRotatef(y,0,1,0);
+	
+	    raydium_camera_rumble_remaining-=raydium_frame_time;
+	    raydium_camera_rumble_amplitude+=(raydium_camera_rumble_evolution*raydium_frame_time);
+	    if(raydium_camera_rumble_amplitude<=0)
+		{
+			raydium_camera_rumble_amplitude=0;
+			raydium_camera_rumble_remaining=0;
+		}
     }
     else raydium_camera_rumble_remaining=0;
 }
 
 void raydium_camera_internal(GLfloat x, GLfloat y, GLfloat z)
 {
- if(raydium_frame_first_camera_pass)
- {
- float pos[3];
- float or[6];
- pos[0]=x;
- pos[1]=y;
- pos[2]=z;
- if(raydium_sound) 
-    {
-    raydium_camera_vectors(or); // get vectors
-    raydium_sound_SetListenerPos(pos);
-    raydium_sound_SetListenerOr(or);
-    }
- raydium_sky_box_render(x,y,z);
- raydium_frame_first_camera_pass=0;
- raydium_light_update_position_all();
- }
+	if(raydium_frame_first_camera_pass)
+	{
+ 		float pos[3];
+		float or[6];
+		pos[0]=x;
+		pos[1]=y;
+		pos[2]=z;
+		if(raydium_sound) 
+		{
+			raydium_camera_vectors(or); // get vectors
+			raydium_sound_SetListenerPos(pos);
+			raydium_sound_SetListenerOr(or);
+		}
+		if(raydium_atmosphere_check())
+		{
+			raydium_sky_box_render(x,y,z);
+			raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
+		}
+		else
+		{
+			raydium_sky_box_render(x,y,z);
+		}
+		//raydium_sky_box_render(x,y,z);
+		//raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
+		raydium_frame_first_camera_pass=0;
+		raydium_light_update_position_all();
+	}
 
- if(!raydium_camera_pushed)
- {
- raydium_camera_pushed=1;
- raydium_camera_x=x; 
- raydium_camera_y=y;
- raydium_camera_z=z;
+	if(!raydium_camera_pushed)
+	{
+		raydium_camera_pushed=1;
+		raydium_camera_x=x; 
+		raydium_camera_y=y;
+		raydium_camera_z=z;
 
- glPushMatrix();
- memset(raydium_camera_cursor_place,0,3*sizeof(GLfloat));
- }
- else raydium_log("Warning: too many calls to camera_* ! (matrix already pushed)");
-
+		glPushMatrix();
+		memset(raydium_camera_cursor_place,0,3*sizeof(GLfloat));
+	}
+ 	else raydium_log("Warning: too many calls to camera_* ! (matrix already pushed)");
 }
 
 
@@ -207,7 +216,7 @@ static GLfloat olx,oly,olz;
 static GLfloat ozoom=90;
 static GLfloat oroll=0;
 
-//ydium_log("camera smooth (asked): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",px,py,pz,lx,ly,lz,zoom,step);
+//raydium_log("camera smooth (asked): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",px,py,pz,lx,ly,lz,zoom,step);
     
 if(step<=0 || // wow.. smells inf, do a instantaneous step. (and don't place cam)
    raydium_camera_path_reset_flag)
