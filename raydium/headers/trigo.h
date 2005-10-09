@@ -75,18 +75,11 @@ Returns next power of two of ##value##. Ugly.
 
 //Matrix functions
 /**
-Here there are a few functions also designed for internal uses that aims only at
-matrices. Really the main objective of these functions is give support for the
-inverse function.
+Here there are a few functions also designed for internal uses that aims 
+only at matrices. Really the main objective of these functions is give support
+for the inverse function.
 The data type matrix4x4 is really an 16 double array.
 **/
-
-//new type matrix4x4.
-struct smatrix4x4
-{
-  double  ray[16];
-};
-typedef struct smatrix4x4 matrix4x4;
 
 
 double raydium_matrix_determinant(matrix4x4 matrix);
@@ -102,8 +95,8 @@ Returns the ##adjoint matrix## of the given matrix.
 matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2);
 /**
 Returns the resulting matrix of the multiplication of 2 matrices.
-Remeber that the multiplication of matrices doesn't have the conmutative property,
-so is not equal ##matrix1 X matrix2## than ##matrix2 x matrix1##.
+Remeber that the multiplication of matrices doesn't have the conmutative 
+property, so is not equal ##matrix1 X matrix2## than ##matrix2 x matrix1##.
 **/
 
 matrix4x4 raydium_matrix_inverse(matrix4x4 matrix);
@@ -128,4 +121,5 @@ matrix4x4 inverse(matrix4x4 adjoint_matrix,double det,int dimension);
 /**
 internal, don't use.
 **/
+
 #endif

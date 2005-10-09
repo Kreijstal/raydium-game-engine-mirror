@@ -211,8 +211,8 @@
 
 #define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	50
 
-#define RAYDIUM_SPHERE_MAX_DETAIL 		30
-#define RAYDIUM_SPHERE_DEFAULT_DETAIL 		25
+#define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
+#define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
 
 #ifdef MAIN_H
 #define __global extern
@@ -263,8 +263,12 @@ __global GLfloat raydium_projection_right; 	// ortho only
 __global GLfloat raydium_projection_bottom; 	// ortho only
 __global GLfloat raydium_projection_top; 	// ortho only
 __global GLfloat raydium_background_color[4];
-__global signed char	 raydium_sky_force;
 
+__global signed char raydium_sky_force;
+__global signed char raydium_sky_atmosphere_enable_tag;
+__global GLfloat     raydium_sky_sphere_angle_orbit_u;
+__global GLfloat     raydium_sky_sphere_angle_orbit_v;
+__global signed char raydium_sky_sphere_generated;
 
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
@@ -509,6 +513,12 @@ __global ZFE raydium_register_function_list[RAYDIUM_MAX_REG_FUNCTION];
 __global FILE *raydium_log_file;
 __global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global int raydium_file_log_fopen_index;
+
+typedef struct matrix4x4
+{
+  double  ray[16];
+} matrix4x4;
+
 
 #endif
 // EOF

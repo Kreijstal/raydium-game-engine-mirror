@@ -11,12 +11,6 @@
 #endif
 
 
-//when the function goes to stable, i'll put the next 3 in common.h
-static char raydium_atmosphere_enable_tag;
-static GLfloat angle_orbit_u;
-static GLfloat angle_orbit_v;
-static char sphere_generated;
-
 void raydium_sky_box_cache(void)
 {
 raydium_texture_current_set_name("BOXfront.tga");
@@ -133,14 +127,14 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	int i, j;
 	GLfloat currentradious,z1,z2,ang1;
 	//static cause this will be used to store the vertices of the sphere
-	static GLfloat p[RAYDIUM_SPHERE_MAX_DETAIL][RAYDIUM_SPHERE_MAX_DETAIL][3];	
+	static GLfloat p[RAYDIUM_SKY_SPHERE_MAX_DETAIL][RAYDIUM_SKY_SPHERE_MAX_DETAIL][3];
 
 	//keeping safe the current matrix
 	glPushMatrix();	
-	glPushAttrib(GL_COLOR_BUFFER_BIT);
+	//glPushAttrib(GL_COLOR_BUFFER_BIT);
 	//increasing angles to simulate orbit
-	angle_orbit_u	+=	0.2;
-	angle_orbit_v	+=	0.02;
+	raydium_sky_sphere_angle_orbit_u += 10 * raydium_frame_time;
+	raydium_sky_sphere_angle_orbit_v += 1 * raydium_frame_time;
 	//turning off "specials" for render
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
@@ -153,7 +147,7 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	
 	//check if the points are already calculated.
 	//there is no reason to enter constantly.
-	if(sphere_generated!=1)
+	if(raydium_sky_sphere_generated!=1)
 	{
 		//getting the points of the sphere, but no drawing
 		for(i=0;i<=detail;i++)
@@ -170,14 +164,14 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 				p[i][j][2]	=	z1;
 			}
 		}
-		sphere_generated	=	1;
+		raydium_sky_sphere_generated	=	1;
 	}
 
 	//locating the modelview in the pos of the camera
 	glTranslatef(x,y,z);
 	//rotating according the orbit angles(ugly)
-	glRotatef(angle_orbit_v,0,0,1);
-	glRotatef(angle_orbit_u,1,0,0);
+	glRotatef(raydium_sky_sphere_angle_orbit_v,0,0,1);
+	glRotatef(raydium_sky_sphere_angle_orbit_u,1,0,0);
 	//now drawing with the obtained values
 	for(i=0;i<detail;i++)
 	{
@@ -214,35 +208,36 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	//restoring previus states
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	if(raydium_fog_enabled_tag) glEnable(GL_FOG);
 	if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
 	glDepthMask(GL_TRUE);
-	glPopAttrib();
+	//glPopAttrib();
 	glPopMatrix();
 }
 
 void raydium_sky_atmosphere_enable(void)
 {
-	raydium_atmosphere_enable_tag	=	1;
+	raydium_sky_atmosphere_enable_tag=1;
 	//this will force to recalculate the sphere once
-	sphere_generated				=	0;
+	raydium_sky_sphere_generated=0;
 	raydium_log("atmosphere created");
 }
 
 void raydium_sky_atmosphere_disable(void)
 {
-	raydium_atmosphere_enable_tag=0;
+	raydium_sky_atmosphere_enable_tag=0;
 }
 
 void raydium_sky_atmosphere_render( GLfloat x, GLfloat y, GLfloat z,int detail)
 {
-	if(raydium_atmosphere_enable_tag)
+	if(raydium_sky_atmosphere_enable_tag)
 	{	
 		raydium_sky_sphere_render(x,y,z,detail);
 	}
 }
 
-char raydium_sky_atmosphere_check(void)
+signed char raydium_sky_atmosphere_check(void)
 {
-	return raydium_atmosphere_enable_tag;
+	return raydium_sky_atmosphere_enable_tag;
 }
