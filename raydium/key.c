@@ -70,6 +70,7 @@ if(raydium_console_pos && ( (key>=32 && key<127)
   {
   raydium_console_get_string[i]=key;
   raydium_console_get_string[i+1]=0; 
+  raydium_console_cursor_blink=1;
   }
  }
 else

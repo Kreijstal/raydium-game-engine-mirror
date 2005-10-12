@@ -28,6 +28,7 @@ raydium_console_config_speed=3;
 raydium_init_cli_option_default("consoletexture",raydium_console_config_texture,"rgb(0.2,0.2,0.2)");
 raydium_init_cli_option_default("consolefont",raydium_console_config_font,"font2.tga");
 raydium_console_line_last=-1;
+raydium_console_cursor_blink=0;
 for(i=0;i<RAYDIUM_CONSOLE_MAX_LINES;i++)
  raydium_console_lines[i][0]=0;
 raydium_console_get_string[0]=0;
@@ -82,6 +83,7 @@ fclose(fp);
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int raydium_console_gets(char *where)
 {
+raydium_log("ERROR: raydium_console_gets is now DISABLED ! See API doc.");
 // always here for compat' only, do not use.
 /*if(strlen(raydium_console_get_string_last))
  {
@@ -292,7 +294,8 @@ raydium_osd_stop();
 
 y=100-raydium_console_pos+(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
 
-raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s_",raydium_console_get_string);
+raydium_console_cursor_blink+=(raydium_frame_time*2);
+raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s%c",raydium_console_get_string,( (((int)raydium_console_cursor_blink)%2)?'_':' '));
 y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
 
 start=raydium_console_line_last;

@@ -1014,13 +1014,14 @@ FD_SET(sockfd, &writable);
 timeout.tv_sec=RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT;
 timeout.tv_usec=0;
 
-if (select(sockfd + 1, NULL, &writable, NULL, &timeout) == 0)
+if (select(sockfd + 1, NULL, &writable, NULL, &timeout) <= 0 || errno==ENETUNREACH)
     {
     raydium_log("network: cannot contact remote server, no internet connection detected");
     close(sockfd);
     return 0; // not writable
     }
     
+//raydium_log("network: internet link is ok");
 close(sockfd);
 return 1; // writable
 }

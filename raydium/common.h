@@ -476,6 +476,7 @@ __global GLfloat raydium_console_config_max;
 __global GLfloat raydium_console_config_speed;
 __global char    raydium_console_config_texture[RAYDIUM_MAX_NAME_LEN];
 __global char    raydium_console_config_font[RAYDIUM_MAX_NAME_LEN];
+__global GLfloat raydium_console_cursor_blink;
 __global char	 raydium_console_lines[RAYDIUM_CONSOLE_MAX_LINES][RAYDIUM_MAX_NAME_LEN];
 __global int	 raydium_console_line_last;
 __global char    raydium_console_get_string[RAYDIUM_MAX_NAME_LEN];
