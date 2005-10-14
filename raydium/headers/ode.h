@@ -133,8 +133,8 @@ explosion type) and ##pos##, an array of 3 dReal values for explosion position.
 
 
 - ##raydium_ode_BeforeElementDrawCallback##
-When ##raydium_ode_draw_all(0)## is called, for every element to draw, this
-callback is **before** element drawing.
+When ##raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL)## is called, for every 
+element to draw, this callback is **before** element drawing.
 
 Callback prototype: ##signed char f(int elem);##
 ##elem## is the element'id. Return true (1) if you want to draw this element,
@@ -148,6 +148,10 @@ Same as the previous callback, but **after** element drawing.
 Callback prototype: ##void f(int elem);##
 With the previous example (team colors), this is the place to restore
 default rendering state (see ##raydium_rendering_rgb_normal##).
+
+- ##raydium_ode_RayCallback##
+See ray related functions, below. This callback is used to filter
+elements during a ray launch.
 **/
 
 
@@ -606,7 +610,8 @@ this value is sent to network, and will be available on every connected peer.
 This tag must be greater or equal to 0. Suitable functions are available
 to read back this value later on an element.
 - ##mesh##: 3D model used for rendering this element. Use an empty string to
-disable rendering (and not ##NULL## !).
+disable rendering (and not ##NULL## !), and avoid ##RAYDIUM_ODE_AUTODETECT##
+int this case.
 **/
 
 extern int raydium_ode_object_box_add (char *name, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh);
@@ -618,6 +623,84 @@ use ##RAYDIUM_ODE_AUTODETECT##. Give this value only for ##tx##, this will
 automatically apply to ##ty## and ##tz##.
 Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning 
 "twice the detected size".
+**/
+
+extern signed char raydium_ode_element_ray_attach(int element, dReal length, dReal dirx, dReal diry, dReal dirz);
+/**
+This function will attach a ray to ##element##. This may be used as a
+sensor, "hitscan" line, intersection test, ...
+Then you can get from this ray things like distance between the start
+of the ray (element's center) and the first "touched" element. You will also 
+find wich element was touched, and where. The same applies for the last touched
+element.
+Do not try to retrieve informations until next frame.
+
+You must provide ray's length (the ray won't detect "things" over that point),
+and direction vector (relative to element).
+
+Since you can't set more than one ray per element, there's no problem with
+calling this function twice or more, it will simply override previous settings
+for length and direction.
+
+Warning, ray are linked to GLOBAL object, so they will detect EVERY element,
+even if owned by the same object ! (only ##element## is never reported).
+
+For now, a ray will never generate contact point for touched object, you
+must consider them as "phantom" elements, only looking at the current world
+without modifying it. If you need this feature, ask for it ;)
+
+If you want to filter wich elements are used to generate rays'informations,
+you can use ##raydium_ode_RayCallback##. This callback is following the
+same prototype as ##raydium_ode_CollideCallback## (see at the top of
+this chapter). Return 0 if you don't want this "contact" for ray informations,
+or 1 if you want normal behaviour.
+**/
+
+extern signed char raydium_ode_element_ray_attach_name(char *element, dReal length, dReal dirx, dReal diry, dReal dirz);
+/**
+Same as above, but using element's name.
+**/
+
+extern signed char raydium_ode_element_ray_delete(int element);
+/**
+Delete ray from ##element##. No more ray "reports" will be available after
+this call.
+**/
+
+extern signed char raydium_ode_element_ray_delete_name(char *element);
+/**
+Same as above, but using element's name.
+**/
+
+extern signed char raydium_ode_element_ray_get(int element, raydium_ode_Ray *result);
+/**
+This function allows you to retrieve informations about ray.
+
+Here you are a sample of ##raydium_ode_Ray## structure with
+interesting fields:
+%%(c)
+typedef struct raydium_ode_Ray
+{
+    signed char state; // is this ray active ?
+    dReal   rel_dir[3];
+    // farest contact
+    dReal   max_dist;
+    int     max_elem;   // touched element, -1 if no element was touched
+    dReal   max_pos[3];
+    // nearest contact
+    dReal   min_dist;
+    int     min_elem;   // touched element, -1 if no element was touched
+    dReal   min_pos[3];
+} raydium_ode_Ray;						
+%%
+
+Obviously, this function won't allocate any memory, you must provided a
+valid pointer.
+**/
+
+signed char raydium_ode_element_ray_get_name(char *element, raydium_ode_Ray *result);
+/**
+Same as above, but using element's name.
 **/
 
 extern int raydium_ode_element_fix (char *name, int *elem, int nelems, signed char keepgeoms);
@@ -1324,10 +1407,14 @@ extern void raydium_ode_draw_all (signed char names);
 /**
 This function will draw all RayODE scene. You must call this function
 by yourself.
-Sets ##names## to false (0) for normal rendering.
+Sets ##names## to ##RAYDIUM_ODE_DRAW_NORMAL## for normal rendering.
 Other ##names## values will:
-- draw elements, joints and motors names and elements bounding boxes with ##1##.
-- draw objets AABB (Axis-Aligned Bounding Box).
+- draw only elements, joints and motors names and elements bounding boxes 
+with ##RAYDIUM_ODE_DRAW_DEBUG##
+- draw only objets AABB (Axis-Aligned Bounding Box) with ##RAYDIUM_ODE_DRAW_AABB##
+- draw only element rays (if any) with ##RAYDIUM_ODE_DRAW_RAY##
+
+... so you may need multiple call to this function each frame.
 **/
 
 extern void raydium_ode_near_callback (void *data, dGeomID o1, dGeomID o2);

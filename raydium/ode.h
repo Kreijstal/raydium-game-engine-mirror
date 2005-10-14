@@ -54,6 +54,10 @@
 #define RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL	1
 #define RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW	2
 
+#define RAYDIUM_ODE_DRAW_NORMAL			0
+#define RAYDIUM_ODE_DRAW_DEBUG			1
+#define RAYDIUM_ODE_DRAW_AABB			2
+#define RAYDIUM_ODE_DRAW_RAY			3
 
 dWorldID 	raydium_ode_world;
 dSpaceID 	raydium_ode_space;
@@ -63,6 +67,7 @@ GLint		raydium_ode_timecall; // read only (timecall index for ode callback)
 void *		raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
 void *		raydium_ode_StepCallback; // void f(void)
 void *		raydium_ode_ObjectNearCollide; // signed char f(int,int)
+void *		raydium_ode_RayCallback; // signed char f(int,int,dContact*)
 signed char	raydium_ode_network_distant_create;
 signed char	raydium_ode_network_next_local_only;
 signed char	raydium_ode_network_explosion_create;
@@ -140,6 +145,24 @@ typedef struct raydium_ode_ElementInternalSave
     void *OnDelete;
 } raydium_ode_ElementInternalSave;
 
+
+// Warning: there's a sample of this in doc. Sync when you change something here.
+typedef struct raydium_ode_Ray
+{
+    signed char state; // is this ray active ?
+    dGeomID geom;
+    //signed char visible; // use "drawing debug" to display the ray
+    dReal   rel_dir[3];
+    // farest contact
+    dReal   max_dist;
+    int     max_elem;
+    dReal   max_pos[3];
+    // nearest contact
+    dReal   min_dist;
+    int     min_elem;
+    dReal   min_pos[3];    
+} raydium_ode_Ray;
+
 typedef struct raydium_ode_Element
 {
     int     id;
@@ -177,6 +200,7 @@ typedef struct raydium_ode_Element
     unsigned long net_last_interval;
     int		  ground_texture;
     signed char	  marked_as_deleted;
+    raydium_ode_Ray ray;
 } raydium_ode_Element;
 
 

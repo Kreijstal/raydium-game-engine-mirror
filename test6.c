@@ -4,9 +4,7 @@
     CQFD Corp.
 */
 
-char *version="version 0.6.13";
-
-//#define ODE_MANUAL_CALLBACK
+char *version="version 0.6.16";
 
 #include "raydium/index.c"
 
@@ -268,6 +266,7 @@ raydium_ode_object_delete_name("BUGGY");
     
   a=raydium_ode_object_create("BUGGY");
     raydium_ode_object_box_add("buggy_corps",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"buggy.tri");
+    
 
     raydium_ode_object_sphere_add("buggy_pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"buggy_r.tri");
     raydium_ode_element_rotfriction_name("buggy_pneu_ag",ROTFRICTION);
@@ -307,6 +306,9 @@ raydium_ode_object_delete_name("BUGGY");
     raydium_ode_motor_attach_name("buggy_direction","buggy_suspet_ag",0);
     raydium_ode_motor_attach_name("buggy_direction","buggy_suspet_ad",0);
     raydium_ode_motor_power_max_name("buggy_direction",0.2);
+
+    raydium_ode_element_ray_attach(raydium_ode_element_find("buggy_corps"),10,1,0,-0.02);
+
     {
     //dReal pos[3]={2,2,2};
     //raydium_ode_object_move(a,pos);
@@ -664,11 +666,13 @@ if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_tri
 if(vue==3) raydium_ode_element_camera_inboard_name(cam,0,0,0.1, 1,0,0);
 //if(vue==8) raydium_ode_element_camera_inboard_name("helico",-1,0,1,1,0,0);
 
-raydium_ode_draw_all(0);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
+
 if(draw_debug==1) 
     {
-    raydium_ode_draw_all(1);
-    raydium_ode_draw_all(2);
+    raydium_ode_draw_all(RAYDIUM_ODE_DRAW_DEBUG);
+    raydium_ode_draw_all(RAYDIUM_ODE_DRAW_AABB);
     raydium_osd_network_stat_draw(5,30,20);
     }
 
@@ -711,6 +715,14 @@ if(life<25) c='c';
 raydium_osd_printf(2,15,20,0.5,"font2.tga","Health: ^%c%.1f %%^f",c,life);
 }
 
+
+{
+raydium_ode_Ray r;
+if(raydium_ode_element_ray_get_name("buggy_corps",&r) && r.min_elem>=0)
+    raydium_osd_printf(2,20,18,0.5,"font2.tga","%.3f %s",r.min_dist,raydium_ode_element[r.min_elem].name);
+}
+
+
 //raydium_osd_printf(2,80,18,0.5,"font2.tga","^f Lag-O-meter: %.2f ms",raydium_netwok_queue_ack_delay/(double)raydium_timecall_clocks_per_sec*1000);
 //raydium_osd_printf(2,80,18,0.5,"font2.tga","AF: %i",raydium_ode_element_ground_texture_get_name("buggy_pneu_ad"));
 {
@@ -738,20 +750,6 @@ raydium_rendering_finish();
 //raydium_ode_network_element_send_random(4);
 //raydium_ode_network_element_send_all();
 raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
-
-#ifdef ODE_MANUAL_CALLBACK
-{
-int i;
-static int movie_frame=0;
-char movie_str[255];
-for(i=0;i<movie_spf;i++)
-    raydium_ode_callback();
-sprintf(movie_str,"movie/movie%04i.tga",movie_frame);
-if(record==1) raydium_capture_frame(movie_str);
-movie_frame++;
-}
-#endif
-
 }
 
 
@@ -836,6 +834,7 @@ raydium_ode_ground_set_name(model);
 
 create_game(1);
 raydium_ode_CollideCallback=collide;
+//raydium_ode_RayCallback=collide; // funny: it will kill player when crossing the ray.
 raydium_ode_ExplosionCallback=boom;
 raydium_ode_StepCallback=step;
 
