@@ -43,7 +43,7 @@ function home()
 {
 global $data_dir,$upload_accept,$QUERY_STRING;
 
-echo "<h2>R3S Raydium data repository</h2>\n";
+echo "<h2>R3S <a href=\"http://raydium.org/\">Raydium</a> data repository</h2>\n";
 echo "<h3>Available files:</h3>\n";
 echo "<table border=0 cellpadding=2>";
 
@@ -54,7 +54,7 @@ echo "<table border=0 cellpadding=2>";
 	if($file[0]==".") continue;
 	$size=filesize($data_dir.$file);
 	$total_size+=$size;
-	echo "<tr><td><b> $file </b></td><td align=right>$size byte(s)</td><td>&nbsp;</td><td>".date("Y-m-d H:i:s",filemtime($data_dir.$file))."</td></tr>";
+	echo "<tr><td><b><a href=\"?type=getBin&file=$file\">$file</a></b></td><td align=right>$size byte(s)</td><td>&nbsp;</td><td>".date("Y-m-d H:i:s",filemtime($data_dir.$file))."</td></tr>";
     }
   closedir($dh);
  }
@@ -160,7 +160,18 @@ if($type=="getDate")
 {
 echo filemtime($file);
 }
+
+if($type=="getBin")
+{
+header('Content-type: application/octet-stream');
+header('Content-Transfer-Encoding: Binary');
+header('Content-length: '.filesize($file));
+header('Content-Disposition: attachment; filename="'.basename($file).'"');
+readfile($file);
+}
+
 } // end main()
+
 
 main(GorP("file"),GorP("type"),GorP("username"),GorP("password"),GorP("data"));
 ?>
