@@ -6,7 +6,7 @@
 # Warning ! Be carefull with "/" at the end of urls since Raydium client
 # do not supports redirections !
 
-http://anonymous:nopass@repository.cqfd-corp.org/raydium/
-ftp://anonymous:nopass@ftp.cqfd-corp.org:29/
+http://anonymous:nopass@repository.raydium.org/
+ftp://anonymous:nopass@ftp.raydium.org:29/
 #http://anonymous:nopass@localhost/raydium/repository/
 #http://anonymous:nopass@localhost/
