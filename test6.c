@@ -719,7 +719,7 @@ raydium_osd_printf(2,15,20,0.5,"font2.tga","Health: ^%c%.1f %%^f",c,life);
 {
 raydium_ode_Ray r;
 if(raydium_ode_element_ray_get_name("buggy_corps",&r) && r.min_elem>=0)
-    raydium_osd_printf(2,20,18,0.5,"font2.tga","%.3f %s",r.min_dist,raydium_ode_element[r.min_elem].name);
+    raydium_osd_printf(2,30,18,0.5,"font2.tga","%.3f %s",r.min_dist,raydium_ode_element[r.min_elem].name);
 }
 
 

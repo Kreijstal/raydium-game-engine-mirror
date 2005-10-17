@@ -1014,6 +1014,10 @@ FD_SET(sockfd, &writable);
 timeout.tv_sec=RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT;
 timeout.tv_usec=0;
 
+#ifndef ENETUNREACH
+#define ENETUNREACH   WSAENETUNREACH
+#endif
+
 if (select(sockfd + 1, NULL, &writable, NULL, &timeout) <= 0 || errno==ENETUNREACH)
     {
     raydium_log("network: cannot contact remote server, no internet connection detected");
