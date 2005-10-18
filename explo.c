@@ -61,7 +61,7 @@ raydium_ode_motor_attach_name("direction","suspet_ag",0);
 raydium_ode_motor_attach_name("direction","suspet_ad",0);
 raydium_ode_motor_power_max_name("direction",0.2);
 
-raydium_ode_object_move_name_3f("WATURE",0,0,1);
+//raydium_ode_object_move_name_3f("WATURE",0,0,1);
 raydium_sound_SourcePlay(sound_car);
 }
 
