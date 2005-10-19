@@ -1,3 +1,12 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// This file does not exist. You never see it. ("drawing with a laser with
+// a webcam based app")
+
 #include "raydium/index.c"
 
 unsigned char drawing[512*512*4];

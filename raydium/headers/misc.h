@@ -38,10 +38,10 @@ Please, if you start working on a feature, say it on the Wiki.
 
 // Links
 /**
-http://raydium.cqfd-corp.org (Raydium home)
-svn://cqfd-corp.org/raydium/trunk (SVN trunk)
-http://raydium.cqfd-corp.org/svn.php (SVN "live" changelog)
-http://memak.cqfd-corp.org (MeMak forum: "a game using Raydium", french)
+http://raydium.org (Raydium home)
+svn://raydium.org/raydium/trunk (SVN trunk)
+http://raydium.org/svn.php (SVN "live" changelog)
+http://memak.raydium.org (MeMak forum: "a game using Raydium", french)
 http://www.cqfd-corp.org (CQFD homesite)
 mailto:xfennec -AT- cqfd-corp.org
 **/

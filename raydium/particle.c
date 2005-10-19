@@ -9,7 +9,7 @@
 
 /*
     Raydium - CQFD Corp.
-    http://raydium.cqfd-corp.org
+    http://raydium.org/
     License: GPL - GNU General Public License, see "gpl.txt" file.
 */
 

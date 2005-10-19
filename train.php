@@ -1,4 +1,12 @@
 <?
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// See train.c
+
 
 function set_bog_slip($element)
 {

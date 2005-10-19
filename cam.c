@@ -1,3 +1,11 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// This small app will generate camera paths
+
 #define NO_ODE_SUPPORT
 #include "raydium/index.c"
 

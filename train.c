@@ -1,3 +1,12 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// Small demo of Raydium embedded PHP scripting, building a train
+// using train.php script.
+
 #include "raydium/index.c"
 
 GLfloat cam_angle_x = 0;

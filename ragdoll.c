@@ -1,3 +1,9 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
 // Small and DIRTY ragdoll demo - This file must be cleaned. A lot.
 
 #include "raydium/index.c"

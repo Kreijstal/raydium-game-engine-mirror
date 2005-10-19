@@ -1,3 +1,9 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
 // Small RayODE car creation and explosion. Use SPACE and BACKSPACE.
 
 #include "raydium/index.c"

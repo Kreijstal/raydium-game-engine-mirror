@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#    Raydium - CQFD Corp.
+#    http://raydium.org/
+#    License: GPL - GNU General Public License, see "gpl.txt" file.
+
 # This script will configure Raydium and download, configure and build
 # dependencies if needed. See --help argument.
 

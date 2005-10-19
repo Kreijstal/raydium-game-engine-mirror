@@ -1,4 +1,4 @@
-## auto-generated Makefile
+## Makefile for Raydium dynamic compiled apps.
 EXT_H = .h
 ROOT = ./
 RAYDIUM_DIR = raydium/

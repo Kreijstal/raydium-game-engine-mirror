@@ -1,4 +1,11 @@
-// This is test6 mini server.
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// This is test6 mini server. Consider this as a "base-code" for all
+// RayODE network apps.
 
 #define RAYDIUM_NETWORK_ONLY
 #include "raydium/index.c"

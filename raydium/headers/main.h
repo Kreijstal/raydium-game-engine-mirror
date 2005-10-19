@@ -39,7 +39,7 @@ Some other advanced features are available : physics, scripting,
 live video, transparent networking, GUI, ...
 
 This features list will probably grow up during Raydium developpement, see
-Raydium website: http://raydium.cqfd-corp.org/
+Raydium website: http://raydium.org/
 
 You'll find, in this document, a list of many functions and possibilities 
 of [[Raydium]], but if it's your first view of Raydium, you should

@@ -1,3 +1,14 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// This client application will allow you to spectate any Raydium server (and
+// spawns a wood box into the networked world to avoid timeouts). 
+
+// willou.c based.
+
 #include "raydium/index.c"
 
 GLfloat cam_angle_x = 0;

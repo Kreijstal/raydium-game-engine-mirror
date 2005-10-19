@@ -1,3 +1,9 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
 // Hmm .. this tool is old, ugly ("interface" and code) but very useful.
 #define NO_ODE_SUPPORT
 #include "raydium/index.c"

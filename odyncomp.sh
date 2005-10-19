@@ -1,3 +1,8 @@
+#!/bin/sh
+
+# Small and ugly "dynamic compiler" for Raydium apps, with ODE
+# Use "./odyncomp.sh test6.c" for example.
+
 ulimit -c 0
 make
 

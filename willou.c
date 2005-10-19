@@ -1,3 +1,11 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
+// Small "in-game" model viewer, with mouse look. Use --model option.
+
 #define NO_ODE_SUPPORT
 #include "raydium/index.c"
 

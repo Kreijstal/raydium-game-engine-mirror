@@ -1,5 +1,10 @@
 #!/usr/bin/php
 <?
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
 
 // This script generates a Wiki(ni) style documentation from comments of
 // all header files of Raydium (raydium/header/*.h)

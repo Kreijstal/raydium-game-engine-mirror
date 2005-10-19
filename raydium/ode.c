@@ -1,6 +1,6 @@
 /*
     Raydium - CQFD Corp.
-    http://raydium.cqfd-corp.org
+    http://raydium.org/
     License: GPL - GNU General Public License, see "gpl.txt" file.
 */
 
@@ -3911,6 +3911,8 @@ fprintf(fp,"1\n");
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state && raydium_ode_element[i].mesh>=0)
      {
+        int end;
+	
         dBodyID body;
 	dReal *pos;
 	dQuaternion rot;
@@ -3921,7 +3923,13 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	dBodySetQuaternion(body,rot);
 	k=raydium_ode_element[i].mesh;
 	
-	for(j=raydium_object_start[k];j<raydium_object_end[k];j++)
+	// should prepare "ode" instance here, too ...
+	if(raydium_object_anims[k]>0)
+	    end=raydium_object_start[k]+raydium_object_anim_len[k];
+	else
+	    end=raydium_object_end[k];
+	
+	for(j=raydium_object_start[k];j<end;j++)
 	{
 	  if(raydium_vertex_texture_multi[j])
 	    {

@@ -1,3 +1,9 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
 // TODO:
 // - Blood (red particules)
 // - Update this game to use all last Raydium ODE integrations

@@ -1,3 +1,9 @@
+/*
+    Raydium - CQFD Corp.
+    http://raydium.org/
+    License: GPL - GNU General Public License, see "gpl.txt" file.
+*/
+
 // Early animation support demo for Raydium
 
 #include "raydium/index.c"
