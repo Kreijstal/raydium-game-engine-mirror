@@ -296,7 +296,7 @@ __global GLfloat *raydium_vertex_texture_multi_v;
 __global signed char	 *raydium_vertex_tag;
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
-__global signed char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
+__global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 
 __global GLuint	raydium_object_index;
