@@ -73,7 +73,7 @@ if(!fp)
     return;
     }
 
-fprintf(fp,"d %s\n",data);
+fprintf(fp,"d %s\n",tdata);
 
 for(i=0;i<MAX_ELEMS;i++)
   if(grid[i].state)
@@ -152,9 +152,9 @@ if(c=='b')
 
 if(c=='d')
 {
-    fgets(data,4000,fp);
-    if(data[strlen(data)-1]=='\n')
-	data[strlen(data)-1]=0;
+    fgets(tdata,4000,fp);
+    if(tdata[strlen(tdata)-1]=='\n')
+	tdata[strlen(tdata)-1]=0;
 }
 
     if(i==MAX_ELEMS || j==MAX_ELEMS)
@@ -276,10 +276,10 @@ if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); retu
 
 fprintf(fp,"// generated track data (mania2)\n\n");
 
-strcpy(d,data);
+strcpy(d,tdata);
 cpt=0;
 start=0;
-for(i=0;i<=strlen(data);i++)
+for(i=0;i<=strlen(tdata);i++)
     {
     if(d[i]==';' || d[i]==0)
 	{
@@ -811,7 +811,7 @@ char window[256];
 char autotag=0;
 sprintf(window,"%s - %s",title,version);
 
-sprintf(data,"no name;unknown;0;0");
+sprintf(tdata,"no name;unknown;0;0");
 
 raydium_init_args(argc,argv);
 

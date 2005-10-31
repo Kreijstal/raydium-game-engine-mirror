@@ -47,4 +47,4 @@ typedef struct Box
 #define MAX_ELEMS	4096
 Grid grid[MAX_ELEMS];
 Box box[MAX_ELEMS];
-char data[4096];
+char tdata[4096];
