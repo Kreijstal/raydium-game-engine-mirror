@@ -785,7 +785,7 @@ signed char raydium_network_client_connect_to(char *server)
 struct sockaddr_in sock;
 int ret,empty;
 char str[RAYDIUM_NETWORK_PACKET_SIZE];
-unsigned char type;
+signed char type;
 struct hostent *server_addr;
 
 raydium_network_start=time(NULL);

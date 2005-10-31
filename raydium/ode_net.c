@@ -410,7 +410,7 @@ raydium_ode_element_rotateq(elem,ev->rot);
 // Read new packets (flushed read must be an option !)
 void raydium_ode_network_read(void)
 {
-unsigned char type;
+signed char type;
 int id,i;
 short n;
 char data[RAYDIUM_NETWORK_PACKET_SIZE];
