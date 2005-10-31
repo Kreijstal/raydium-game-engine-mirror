@@ -20,7 +20,7 @@ The function will return 0 if ##option## is not found.
 
 Example (search for: ##--ground##)
 %%(c)
-char ground[RAYDIUM_MAX_NAME_LEN];
+char model[RAYDIUM_MAX_NAME_LEN];
 if(raydium_init_cli_option("ground",model))
     {
     setground(model);
