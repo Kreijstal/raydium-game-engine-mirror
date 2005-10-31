@@ -41,10 +41,11 @@ struct ff_effect effect_tremble;
 extern struct ff_effect effect_tremble;
 extern char effect_tremble_state;
 extern clock_t last_event;
-extern void raydium_joy_init_vars (void);
-extern void raydium_joy_key_emul (void);
 */
 
+extern void raydium_joy_init_vars (void);
+
+extern void raydium_joy_key_emul (void);
 /**
 Emulate keyboard (directional pad) with joy, if any.
 **/
