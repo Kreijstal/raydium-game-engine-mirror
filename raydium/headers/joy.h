@@ -16,17 +16,23 @@ documentation about this subject.
 Interesting variables:
 %%(c)
 signed char raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
+signed char raydium_joy_click;
 GLfloat raydium_joy_x;
 GLfloat raydium_joy_y;
 GLfloat raydium_joy_z;
 int raydium_joy;
+
+char raydium_joy_n_axes;
+char raydium_joy_n_buttons;
+GLfloat raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS]; // "raw" axes data
 %%
 Buttons are booleans, joy x,y and z are -1 <= (x,y,z) <= 1 and 0 means "center".
 **/
 
-#define JS_EVENT_BUTTON         0x01    /* button pressed/released */
-#define JS_EVENT_AXIS           0x02    /* joystick moved */
-#define JS_EVENT_INIT           0x80    /* initial state of device */
+/*
+#define JS_EVENT_BUTTON         0x01
+#define JS_EVENT_AXIS           0x02
+#define JS_EVENT_INIT           0x80
 extern char number_of_axes, number_of_buttons;
 extern int raydium_joy_event_handle;
 #ifndef WIN32
@@ -37,6 +43,8 @@ extern char effect_tremble_state;
 extern clock_t last_event;
 extern void raydium_joy_init_vars (void);
 extern void raydium_joy_key_emul (void);
+*/
+
 /**
 Emulate keyboard (directional pad) with joy, if any.
 **/

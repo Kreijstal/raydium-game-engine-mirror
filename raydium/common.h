@@ -141,7 +141,8 @@
 #define RAYDIUM_PROJECTION_PERSPECTIVE 	     	1
 
 #define RAYDIUM_KEYBOARD_SIZE	       	   	256
-#define RAYDIUM_BUTTONS_MAX_BUTTONS		4
+#define RAYDIUM_JOY_MAX_BUTTONS			16
+#define RAYDIUM_JOY_MAX_AXIS			8
 
 #define RAYDIUM_NETWORK_PORT			29104
 #define RAYDIUM_NETWORK_PACKET_SIZE		512
@@ -235,12 +236,16 @@ __global signed char    raydium_mouse_click;
 __global signed char    raydium_mouse_button[3];
 __global GLuint  raydium_mouse_x;
 __global GLuint  raydium_mouse_y;
-__global signed char    raydium_joy_button[RAYDIUM_BUTTONS_MAX_BUTTONS];
-__global signed char	 raydium_joy_click;
+__global signed char    raydium_joy_button[RAYDIUM_JOY_MAX_BUTTONS];
+__global GLfloat 	raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS];
+__global signed char	raydium_joy_click;
 __global GLfloat raydium_joy_x;
 __global GLfloat raydium_joy_y;
 __global GLfloat raydium_joy_z;
 __global int     raydium_joy;
+__global char    raydium_joy_n_axes;     // read only
+__global char    raydium_joy_n_buttons;  // read only
+
 
 __global GLuint   raydium_texture_index;
 __global GLuint   raydium_texture_current_main;

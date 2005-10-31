@@ -32,7 +32,6 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 */
 
 //int joy;				//file handle
-char number_of_axes,number_of_buttons;	//self explaining ;)
 
 //struct input_event play;
 //struct input_event stop;
@@ -47,7 +46,7 @@ clock_t last_event;
 
 void raydium_joy_init_vars(void)
 {
-memset(raydium_joy_button,0,RAYDIUM_BUTTONS_MAX_BUTTONS);
+memset(raydium_joy_button,0,RAYDIUM_JOY_MAX_BUTTONS);
 raydium_joy_x=raydium_joy_y=raydium_joy_z=0.f;
 raydium_joy_click=0;
 }
@@ -72,6 +71,8 @@ int raydium_joy_process_event(struct js_event e)
     switch(e.type)
     {
         case JS_EVENT_BUTTON:
+		if(e.number<RAYDIUM_JOY_MAX_BUTTONS)
+		{
 		    if(e.value==1)
 		    {
 			raydium_joy_click=e.number+1;
@@ -82,13 +83,18 @@ int raydium_joy_process_event(struct js_event e)
 		    }
 		    else
 		    {
+			// release
 			raydium_joy_button[e.number]=e.value;
 		    }
-        	    break;
+		}
+        	break;
         case JS_EVENT_AXIS:
+		if(e.number<RAYDIUM_JOY_MAX_AXIS)
+		{
 		    #ifdef joy_debug
 		    raydium_log("Axis Moved: %i",e.value);
 		    #endif
+		    raydium_joy_axis[e.number]=e.value/(float)32767;
 		    //here we invert values from the y axis: we want 
 		    //1 for up and -1 for down
 			if(e.value<0)
@@ -140,7 +146,8 @@ int raydium_joy_process_event(struct js_event e)
 			   raydium_joy_x=0.0;
 			  }
 		 	}
-		    break;
+		}
+		break;
         case JS_EVENT_INIT:
 		    //raydium_log("Joystick returned its initial state\n");
         	    break;
@@ -232,24 +239,24 @@ int autocenter=5;         /* default value. between 0 and 100 */
 		    	raydium_log("Joystick driver's signature: %s",name);
 		}
 
-		ret=ioctl (raydium_joy,JSIOCGAXES,&number_of_axes);
+		ret=ioctl (raydium_joy,JSIOCGAXES,&raydium_joy_n_axes);
 		if(ret==-1)
 		{
 	    		raydium_log("Error reading number of axes");
 		}
 		else
 		{
-	    		raydium_log("This joystick has %d axes",number_of_axes);
+	    		raydium_log("This joystick has %d axes",raydium_joy_n_axes);
 		}
 
-		ret=ioctl (raydium_joy,JSIOCGBUTTONS,&number_of_buttons);
+		ret=ioctl (raydium_joy,JSIOCGBUTTONS,&raydium_joy_n_buttons);
 		if(ret==-1)
 		{
 	    		raydium_log("Error reading number of buttons");
 		}
 		else
 		{
-	    		raydium_log("This joystick has %d buttons",number_of_buttons);
+	    		raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
 		}
 	}
 #else
