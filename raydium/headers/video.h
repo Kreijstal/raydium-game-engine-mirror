@@ -21,9 +21,9 @@ movie creation.
 /**
 First, compile ##mk_jpgs##: example: ##gcc mk_jpgs -o mk_jpgs## or any other
 standard build command.
-Then, generate JPEG pictures:
+Then, generate JPEG pictures (using a temporary directory, if possible):
 ##mplayer movie.avi -vo jpeg:quality=50 -vf scale=256:256##, where you may
-change quality factor and output size. Use "hardware firendly" sizes (64,
+change quality factor and output size. Use "hardware friendly" sizes (64,
 128,256,...) !
 You can now build JPGS file:
 ##./mk_jpgs 25 256 256 video.jpgs## (fps, size x, size y, output file)

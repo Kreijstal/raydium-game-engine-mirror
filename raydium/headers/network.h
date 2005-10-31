@@ -11,11 +11,13 @@ Raydium supports networking via UDP/IP, providing high level functions
 for multiplayer game development.
 Raydium servers are limited to 256 clients for now.
 
-You will find in network.c a set of functions and vars dedicated to 
+You will find in network.c a set of "low level" functions and vars dedicated to 
 networked games: players names, event callbacks, UDP sockets, 
 broadcasts, ... 
+See a few chapters below for higher level functions.
+
 All this is ready to use. As it's not done in the introduction of this 
-guide, We will explain here some variables defined in common.c.
+guide, We will explain here some variables defined in common.h.
 
 %%(c)
 #define RAYDIUM_NETWORK_PORT          29104
