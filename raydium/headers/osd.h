@@ -86,7 +86,7 @@ extern void raydium_osd_draw_name (char *tex, GLfloat x1, GLfloat y1, GLfloat x2
 Same as above, but using texture filename.
 **/
 
-extern void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat spacer, char *texture, unsigned char *format, ...);
+extern void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
 This function is an OpenGL equivalent to the standard "printf" C function.
 
@@ -118,7 +118,7 @@ raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium
 %%
 **/
 
-extern void raydium_osd_printf_3D (GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer, char *texture, unsigned char *format, ...);
+extern void raydium_osd_printf_3D (GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
 Same as above, but you can place your text in your application 3D space, 
 using ##x##, ##y## and ##z## values.

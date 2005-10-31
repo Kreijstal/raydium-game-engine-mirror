@@ -231,7 +231,7 @@ if(!treated && raydium_console_gets_callback)
 // need to secure this one too
 void raydium_console_line_add(char *format, ...)
 {
-unsigned char str[RAYDIUM_MAX_NAME_LEN];
+char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
 va_start(argptr,format);
 vsprintf(str,format,argptr);

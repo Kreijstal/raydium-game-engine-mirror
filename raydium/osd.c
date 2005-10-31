@@ -111,9 +111,9 @@ raydium_osd_draw(raydium_texture_find_by_name(tex),x1,y1,x2,y2);
 }
 
 // need to be secured
-void raydium_osd_printf(GLfloat x, GLfloat y, GLfloat size, GLfloat spacer,char *texture, unsigned char *format, ...)
+void raydium_osd_printf(GLfloat x, GLfloat y, GLfloat size, GLfloat spacer,char *texture, char *format, ...)
 {
-unsigned char str[RAYDIUM_MAX_NAME_LEN];
+char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
 int i,texsave;
 GLfloat dx=0;
@@ -171,9 +171,9 @@ raydium_osd_stop();
 }
 
 
-void raydium_osd_printf_3D(GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer,char *texture, unsigned char *format, ...)
+void raydium_osd_printf_3D(GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer,char *texture, char *format, ...)
 {
-unsigned char str[RAYDIUM_MAX_NAME_LEN];
+char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
 
 GLdouble sx,sy,sz;

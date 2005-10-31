@@ -53,9 +53,9 @@ for(i=0;i<raydium_texture_index;i++)
     }
 
 /* is RGB color ? (or texture) */
-strcpy(temp,filename);
+strcpy((char *)temp,filename);
 temp[4]=0;
-if(!strcmp("rgb(",temp)) rgb=1; else rgb=0;
+if(!strcmp("rgb(",(char *)temp)) rgb=1; else rgb=0;
 
 if(!rgb && !faked)
 {
@@ -204,7 +204,7 @@ if(!rgb)
 
  memcpy(temp,filename,3);						// TEMP !!
  temp[3]=0;								// TEMP !!
- if(!strcmp("BOX",temp))						// TEMP !!
+ if(!strcmp("BOX",(char *)temp))					// TEMP !!
  {									// TEMP !!
  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!

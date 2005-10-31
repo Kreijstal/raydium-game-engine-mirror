@@ -600,7 +600,7 @@ return(0);
 
 void raydium_sound_music_callback(void)
 {
-ALuint nprocessed;
+ALint nprocessed;
 ALuint buffer;
 ALint sourcestate;
 char newfile[RAYDIUM_MAX_NAME_LEN];
