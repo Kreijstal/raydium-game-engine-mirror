@@ -249,6 +249,35 @@ return 0; }"
 test_build "$file" "-lopenal"
 exit_if_error "$?" "openal-devel is required. Official CVS may be a good idea"
 
+# OpenAL 1.1
+echo -n "* OpenAL 1.1 and ALut:"
+file="
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+int main(int argc, char **argv) {
+ALCdevice *dev;
+const ALubyte *initstr=(const ALubyte *) \"'( ( devices '( native null ) ) )\";
+dev=alcOpenDevice(initstr);
+sleep(1);
+#ifndef ALUT_API_MAJOR_VERSION
+#error ALUT for OpenAL 1.1 is required
+#endif
+alcCloseDevice(dev);
+return 0; }"
+test_build "$file" "-lopenal -lalut"
+#exit_if_error "$?" ""
+if [ "$?" != "0" ]; then
+    echo "Cannot find OpenAL 1.1 and ALUT. You can try to remove -lalut from Makefile and/or *comp*sh scripts, but Raydium with OpenAL 1.0 is not supported."
+fi
+
+
 # OGG/Vorbis
 echo -n "* OGG/Vorbis :"
 file='

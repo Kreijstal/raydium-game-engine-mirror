@@ -31,7 +31,7 @@ not, a "PACK style" support).
 - better organisation of comp.sh and ocomp.sh files (separate options 
 and build process)
 
-See also my todo: http://raydium.yoopla.org/wiki/XfenneC
+See also my todo: http://wiki.raydium.org/wiki/XfenneC
 
 Please, if you start working on a feature, say it on the Wiki.
 **/

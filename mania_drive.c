@@ -220,7 +220,7 @@ GLfloat to[4]={0,0,0,1};
 raydium_gui_read_name("menu","cboTrack",track);
 strcat(track,".mni");
 strcpy(mni_next,track);
-raydium_sound_source_fade(0,10);
+raydium_sound_source_fade(0,1);
 raydium_osd_fade_from(from,to,1,AfterFade);
 raydium_gui_window_delete_name("menu");
 raydium_gui_window_delete_name("besttime");

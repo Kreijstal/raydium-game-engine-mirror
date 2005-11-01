@@ -10,7 +10,10 @@
 #include "headers/sound.h"
 #endif
 
-// IMPORTANT ! USE A  R E C E N T  RELEASE OF OPENAL (0.0.6)
+#ifndef ALUT_API_MAJOR_VERSION
+#warning You must use OpenAL 1.1 or greater ! See configure script.
+#endif
+
 
 //VERIFIES THAT THE LAST OPERATION DID NOT MAKE ANY ERROR
 //IF AN ERROR IS DETECTED IT PRINTS THE caller NAME
@@ -71,12 +74,17 @@ void raydium_sound_InitSource(int src)
 int raydium_sound_LoadWav(const char *fname)
 {
  int snum;
- ALsizei size,freq;
+ ALsizei size;
  ALenum format;
  ALvoid *data;
  FILE *fp;
 //#ifdef WIN32
+#ifndef ALUT_API_MAJOR_VERSION
  ALboolean boolean;
+ ALsizei freq;
+#else
+ ALfloat freq;
+#endif
 //#endif
 
  if(raydium_sound_top_buffer==RAYDIUM_SOUND_NUM_BUFFERS)
@@ -99,6 +107,17 @@ int raydium_sound_LoadWav(const char *fname)
  }
  fclose(fp);
 
+#ifdef ALUT_API_MAJOR_VERSION
+ data=alutLoadMemoryFromFile(fname,&format,&size,&freq);
+     raydium_sound_verify("alutLoadMemoryFromFile");
+
+ if(data)
+ alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
+     raydium_sound_verify("alBufferData");
+
+ if(data)
+ free(data);
+#else
   alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
      raydium_sound_verify("alutLoadWAVFile");
 
@@ -107,6 +126,7 @@ int raydium_sound_LoadWav(const char *fname)
 
  alutUnloadWAV(format,data,size,freq);
      raydium_sound_verify("alutUnloadWAV");
+#endif
 
  raydium_sound_top_buffer++;
  raydium_sound_InitSource(snum);
@@ -377,7 +397,18 @@ void raydium_sound_init(void)
 return;
 #endif
 
+#ifdef ALUT_API_MAJOR_VERSION
+if(!alutInit(&raydium_init_argc, raydium_init_argv))
+    {
+    alGetError();
+    raydium_log("ERROR: Cannot open Sound System");
+    raydium_sound=0;
+    return;
+    }
+#else
  alutInit(&raydium_init_argc, raydium_init_argv);
+#endif
+
 //alutInit(0, NULL) ;
  alGetError();
 
@@ -559,6 +590,9 @@ int raydium_sound_load_music(char *fname)
 #ifdef NO_SOUND_DEBUG
 return -1;
 #endif
+if(!raydium_sound)
+    return -1;
+
 
  if(raydium_sound_music_file) fclose(raydium_sound_music_file);
  raydium_sound_music_file=NULL;

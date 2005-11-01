@@ -43,7 +43,7 @@ Raydium website: http://raydium.org/
 
 You'll find, in this document, a list of many functions and possibilities 
 of [[Raydium]], but if it's your first view of Raydium, you should
-start with tutorials ( http://raydium.yoopla.org/wiki/RaydiumTutorials ) and
+start with tutorials ( http://wiki.raydium.org/wiki/RaydiumTutorials ) and
 packaged demo programs.
 
 After this short introduction, let's talk about the [[API]] itself, 

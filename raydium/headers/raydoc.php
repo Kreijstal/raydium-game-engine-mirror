@@ -9,7 +9,7 @@
 // This script generates a Wiki(ni) style documentation from comments of
 // all header files of Raydium (raydium/header/*.h)
 
-$page="http://raydium.yoopla.org/wiki/RaydiumApiReference";
+$page="http://wiki.raydium.org/wiki/RaydiumApiReference";
 
 $intro="
 ======Raydium API Reference======
