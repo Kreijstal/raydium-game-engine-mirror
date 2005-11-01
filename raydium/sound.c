@@ -10,6 +10,9 @@
 #include "headers/sound.h"
 #endif
 
+// There's way too much "#ifdef" in this file, but eh ... OpenAL becomes
+// complex when you comes to portability ...
+
 #ifndef ALUT_API_MAJOR_VERSION
 #warning You must use OpenAL 1.1 or greater ! See configure script.
 #endif
@@ -408,7 +411,8 @@ void raydium_sound_init(void)
 return;
 #endif
 
-/*
+#ifndef WIN32
+// I've noticed problems with "manual contexts" under Linux, so let's use ALUT
 #ifdef ALUT_API_MAJOR_VERSION
 if(!alutInit(&raydium_init_argc, raydium_init_argv))
     {
@@ -420,12 +424,14 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
 #else
  alutInit(&raydium_init_argc, raydium_init_argv);
 #endif
-*/
+
+#else
+// With win32, alut may do "bad things" while chosing device ... let's force :
  pDevice = alcOpenDevice("Generic Software"); // or any asked device name ?
  pContext=alcCreateContext(pDevice,NULL);
  alcMakeContextCurrent(pContext);
  alutInitWithoutContext(&raydium_init_argc, raydium_init_argv);
- 
+#endif
  
 //alutInit(0, NULL) ;
  alGetError();
@@ -544,8 +550,10 @@ int raydium_sound_SourceUnpause(int src)
 void raydium_sound_close(void)
 {
 int i;
+#ifdef WIN32
 ALCdevice* pDevice;
 ALCcontext* pContext;
+#endif
     
  if(raydium_sound==1) // WE DO THESE THINGS ONLY IF OPEN AL INIT WAS OK
  {
@@ -557,6 +565,7 @@ ALCcontext* pContext;
    alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
   raydium_log("sound: Releasing OpenAL");
    
+#ifdef WIN32
   	//Get active context
 	pContext=alcGetCurrentContext();
 	//Get device for active context
@@ -565,7 +574,7 @@ ALCcontext* pContext;
 	alcDestroyContext(pContext);
 	//Close device
 	alcCloseDevice(pDevice);
-  
+#endif
   alutExit();
  }
 }
