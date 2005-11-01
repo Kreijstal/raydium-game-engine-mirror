@@ -5,6 +5,7 @@
 typedef struct raydium_video_Video
     {
     signed char state;
+    char name[RAYDIUM_MAX_NAME_LEN];
     FILE *fp;
     int sizex;
     int sizey;

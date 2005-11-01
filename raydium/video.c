@@ -96,11 +96,17 @@ char head[100];
 int head_end;
 int i,j,c;
 
+// we must find any previous load of this video
+for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
+    if( raydium_video_video[i].state && 
+	!strcmp(raydium_video_video[i].name,filename))
+	    return i;
+
 id=raydium_video_find_free();
 
 if(id<0)
     {
-    raydium_log("video: ERROR no more free slot (%i max)",filename,RAYDIUM_MAX_VIDEOS);
+    raydium_log("video: ERROR no more free slot (%i max)",RAYDIUM_MAX_VIDEOS);
     return -1;
     }
 
@@ -158,6 +164,7 @@ for(i=0;i<raydium_video_video[id].frames_total;i++)
 
 raydium_video_video[id].start=ftell(raydium_video_video[id].fp);
 raydium_video_video[id].last_decoded=-1;
+strcpy(raydium_video_video[id].name,filename);
 
 raydium_log("video: %s (%i) as live texture %s (%i), %ix%i %i fps (%i frames)",
 filename,id,as,raydium_video_video[id].live_id,
