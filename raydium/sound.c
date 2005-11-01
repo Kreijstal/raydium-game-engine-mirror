@@ -78,14 +78,20 @@ int raydium_sound_LoadWav(const char *fname)
  ALenum format;
  ALvoid *data;
  FILE *fp;
-//#ifdef WIN32
-#ifndef ALUT_API_MAJOR_VERSION
+
+#ifndef WIN32
+#ifdef ALUT_API_MAJOR_VERSION
+#define ALUT_API_MAJOR_VERSION_BUT_WIN32
+#endif
+#endif
+    
+#ifndef ALUT_API_MAJOR_VERSION_BUT_WIN32
  ALboolean boolean;
  ALsizei freq;
 #else
  ALfloat freq;
 #endif
-//#endif
+
 
  if(raydium_sound_top_buffer==RAYDIUM_SOUND_NUM_BUFFERS)
  {
@@ -107,7 +113,7 @@ int raydium_sound_LoadWav(const char *fname)
  }
  fclose(fp);
 
-#ifdef ALUT_API_MAJOR_VERSION
+#ifdef ALUT_API_MAJOR_VERSION_BUT_WIN32
  data=alutLoadMemoryFromFile(fname,&format,&size,&freq);
      raydium_sound_verify("alutLoadMemoryFromFile");
 
@@ -116,8 +122,9 @@ int raydium_sound_LoadWav(const char *fname)
      raydium_sound_verify("alBufferData");
 
  if(data)
- free(data);
-#else
+  free(data);
+
+ #else
   alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
      raydium_sound_verify("alutLoadWAVFile");
 
@@ -384,6 +391,7 @@ void raydium_sound_GetListenerVel(ALfloat *Vel[] )
 }
 
 
+
 //INITIALISATION
 void raydium_sound_init(void)
 {
@@ -392,11 +400,15 @@ void raydium_sound_init(void)
  ALfloat listenerVel[]={0.0,0.0,0.0};
 // ALfloat back[] ={ 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
  ALfloat front[]={ 1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f };
-
+ const ALchar *tempString;
+ ALCdevice* pDevice;
+ ALCcontext* pContext;
+ 
 #ifdef NO_SOUND_DEBUG
 return;
 #endif
 
+/*
 #ifdef ALUT_API_MAJOR_VERSION
 if(!alutInit(&raydium_init_argc, raydium_init_argv))
     {
@@ -408,7 +420,13 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
 #else
  alutInit(&raydium_init_argc, raydium_init_argv);
 #endif
-
+*/
+ pDevice = alcOpenDevice("Generic Software"); // or any asked device name ?
+ pContext=alcCreateContext(pDevice,NULL);
+ alcMakeContextCurrent(pContext);
+ alutInitWithoutContext(&raydium_init_argc, raydium_init_argv);
+ 
+ 
 //alutInit(0, NULL) ;
  alGetError();
 
@@ -447,8 +465,30 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
  for(i=0;i<RAYDIUM_SOUND_NUM_BUFFERS;i++)
     raydium_sound_source_fade_factor[i]=0;
 
- raydium_log("sound: OK");
- 
+ pContext = alcGetCurrentContext();
+ pDevice = alcGetContextsDevice(pContext);
+ tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
+ raydium_log("sound: OK, using '%s'",tempString);
+/* 
+{
+		const ALchar *tempString;
+
+		ALCcontext* pContext;
+		ALCdevice* pDevice;
+		pContext = alcGetCurrentContext();
+		pDevice = alcGetContextsDevice(pContext);
+		tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
+		printf("OpenAL Context Device Specifier is '%s'\n", tempString);
+		tempString = alGetString(AL_RENDERER);
+		printf("OpenAL Renderer is '%s'\n", tempString);
+		tempString = alGetString(AL_VERSION);
+		printf("OpenAL Version is '%s'\n", tempString);
+		tempString = alGetString(AL_VENDOR);
+		printf("OpenAL Vendor is '%s'\n", tempString);
+		tempString = alGetString(AL_EXTENSIONS);
+		printf("OpenAL Extensions supported are :\n%s\n", tempString);
+}    
+*/ 
 }
 
 //PLAYS A SOURCE
@@ -504,6 +544,9 @@ int raydium_sound_SourceUnpause(int src)
 void raydium_sound_close(void)
 {
 int i;
+ALCdevice* pDevice;
+ALCcontext* pContext;
+    
  if(raydium_sound==1) // WE DO THESE THINGS ONLY IF OPEN AL INIT WAS OK
  {
   for(i=0;i<raydium_sound_top_buffer;i++)
@@ -513,7 +556,17 @@ int i;
   raydium_log("sound: Deleting buffers");
    alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
   raydium_log("sound: Releasing OpenAL");
-   alutExit();
+   
+  	//Get active context
+	pContext=alcGetCurrentContext();
+	//Get device for active context
+	pDevice=alcGetContextsDevice(pContext);
+	//Release context(s)
+	alcDestroyContext(pContext);
+	//Close device
+	alcCloseDevice(pDevice);
+  
+  alutExit();
  }
 }
 
@@ -548,24 +601,23 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
     format=AL_FORMAT_STEREO16;
 
   alBufferData(buffer,format,raydium_sound_music_buf,count,ogginfo->rate);
+  //printf("buffered to %i buffer\n",buffer);
   return 1;
 }
 
 void raydium_sound_internal_cleanstreambuffs(void)
 {
-  ALint format;
-  vorbis_info *ogginfo;
-  
-  ogginfo=raydium_sound_ogginfo;
-  memset(raydium_sound_music_buf,0,SOUNDDATASIZE);
+    ALint lProcessed;
+    ALuint TempBufferID;
 
-  if(ogginfo->channels==1)
-    format=AL_FORMAT_MONO16;
-  else
-    format=AL_FORMAT_STEREO16;
-
-  alBufferData(raydium_sound_buffer[0],format,raydium_sound_music_buf,SOUNDDATASIZE,ogginfo->rate);
-  alBufferData(raydium_sound_buffer[1],format,raydium_sound_music_buf,SOUNDDATASIZE,ogginfo->rate);
+    alGetSourcei(raydium_sound_source[0], AL_BUFFERS_PROCESSED, &lProcessed);
+    //printf("%i -----\n",lProcessed);
+			while (lProcessed)
+			{
+                //printf(".");
+				alSourceUnqueueBuffers(raydium_sound_source[0], 1, &TempBufferID);
+                lProcessed--;
+			}
 }
 
 
@@ -661,16 +713,14 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
     }
 
  alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
- if(nprocessed) // or while...
+ while(nprocessed)
  {
   static int last;
-  alSourceUnqueueBuffers(raydium_sound_source[0],1,&buffer);
+     alSourceUnqueueBuffers(raydium_sound_source[0],1,&buffer);
+        //printf("%i, buff = %i\n",nprocessed,buffer);
   if(buffer==last)
     {
-    raydium_log("sound: OpenAL internal buffer mistake: cleaning buffers");
     alSourceStop(raydium_sound_source[0]);
-    raydium_sound_internal_cleanstreambuffs();
-    alSourcePlay(raydium_sound_source[0]);
     }
     else  
     {
@@ -679,15 +729,19 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
     alSourceQueueBuffers(raydium_sound_source[0],1,&buffer);
     nprocessed--;
     }
+ alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
  } 
 
  //restart playing if needed
  alGetSourcei(raydium_sound_source[0],AL_SOURCE_STATE,&sourcestate);
  if(sourcestate!=AL_PLAYING)
  {
-  raydium_log("sound: music source stopped, back to play");
-  StartMusic(raydium_sound_source[0],raydium_sound_buffer,
-             &raydium_sound_vf,raydium_sound_ogginfo);
+    raydium_sound_internal_cleanstreambuffs();
+    alSourcePlay(raydium_sound_source[0]);
+    alGetSourcei(raydium_sound_source[0],AL_SOURCE_STATE,&sourcestate);
+     if(sourcestate!=AL_PLAYING)
+        StartMusic(raydium_sound_source[0],raydium_sound_buffer,
+           &raydium_sound_vf,raydium_sound_ogginfo);         
  } 
 
 }
