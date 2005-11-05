@@ -189,7 +189,7 @@ glEnable(GL_TEXTURE_2D);
 glEnable(GL_DEPTH_TEST);
 glEnable(GL_COLOR_MATERIAL);
 glShadeModel(GL_SMOOTH);
-glDepthFunc(GL_LESS);
+glDepthFunc(GL_LEQUAL); // LESS only ? shadow maps loves lequal, so ..
 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 

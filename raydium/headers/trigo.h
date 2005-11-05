@@ -104,20 +104,20 @@ matrix4x4 raydium_matrix_inverse(matrix4x4 matrix);
 Returns the inverse matrix of a given matrix.
 **/
 
-double determinant(matrix4x4 matrix, int dimension);
+double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension);
 /**
 internal, don't use.
 **/
 
-matrix4x4 adjoint(matrix4x4 matrix, int dimension);
+matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension);
 /**
 internal, don't use.
 **/
-matrix4x4 multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension);
+matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension);
 /**
 internal, don't use.
 **/
-matrix4x4 inverse(matrix4x4 adjoint_matrix,double det,int dimension);
+matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,int dimension);
 /**
 internal, don't use.
 **/
