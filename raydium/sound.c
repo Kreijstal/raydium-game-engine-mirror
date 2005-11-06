@@ -403,9 +403,11 @@ void raydium_sound_init(void)
  ALfloat listenerVel[]={0.0,0.0,0.0};
 // ALfloat back[] ={ 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
  ALfloat front[]={ 1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f };
+#ifdef ALUT_API_MAJOR_VERSION
  const ALchar *tempString;
  ALCdevice* pDevice;
  ALCcontext* pContext;
+#endif
  
 #ifdef NO_SOUND_DEBUG
 return;
@@ -471,10 +473,14 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
  for(i=0;i<RAYDIUM_SOUND_NUM_BUFFERS;i++)
     raydium_sound_source_fade_factor[i]=0;
 
+#ifdef ALUT_API_MAJOR_VERSION
  pContext = alcGetCurrentContext();
  pDevice = alcGetContextsDevice(pContext);
  tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
  raydium_log("sound: OK, using '%s'",tempString);
+#else
+ raydium_log("sound: OK");
+#endif
 /* 
 {
 		const ALchar *tempString;
