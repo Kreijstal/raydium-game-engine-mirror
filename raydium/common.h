@@ -215,6 +215,10 @@
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
 
+#define RAYDIUM_CAPTURE_NONE			0
+#define RAYDIUM_CAPTURE_TGA			1
+#define RAYDIUM_CAPTURE_JPG			2
+
 #ifdef MAIN_H
 #define __global extern
 #endif
@@ -529,5 +533,7 @@ __global signed char raydium_shadow_tag;
 __global signed char raydium_shadow_rendering;
 __global int raydium_shadow_ground_mesh;
 
+__global signed char raydium_capture_asked;
+__global char raydium_capture_filename[RAYDIUM_MAX_NAME_LEN];
 #endif
 // EOF

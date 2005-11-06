@@ -51,6 +51,12 @@ raydium_shadow_texture=raydium_texture_load_internal("",RAYDIUM_SHADOW_TEXTURE,1
 raydium_shadow_tag=1;
 }
 
+void raydium_shadow_disable(void)
+{
+raydium_shadow_tag=0;
+}
+
+
 signed char raydium_shadow_isenabled(void)
 {
 return raydium_shadow_tag;
@@ -107,16 +113,16 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 glMatrixMode(GL_PROJECTION);
 glPushMatrix();
 glLoadIdentity();
-#define BLA(x) (-((x*2)-0.5))
-glTranslatef(BLA(raydium_shadow_ground_center_factor_x),BLA(raydium_shadow_ground_center_factor_y),0);
+//#define BLA(x) (((x)-0.5)*2)
+//#define BLA2(x) (BLA((x)*raydium_shadow_ground_modelsize/2))
+glTranslatef((raydium_shadow_ground_center_factor_x-0.5)*2,(raydium_shadow_ground_center_factor_y-0.5)*2,0);
 glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
 	-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-	0,1000);  // ?
-
+	-1000,1000); // should probably use far clipping
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
-gluLookAt(raydium_light_position[raydium_shadow_light][0],
-	  raydium_light_position[raydium_shadow_light][1],
+gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
+	  raydium_light_position[raydium_shadow_light][1]*0,
 	  raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
     
 glDisable(GL_LIGHTING);
@@ -125,7 +131,7 @@ glDisable(GL_TEXTURE_2D);
 glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1);
 
 raydium_shadow_rendering=1;
-//raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); //
+//raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
 raydium_ode_draw_all(4);
 raydium_shadow_rendering=0;
 
@@ -146,6 +152,7 @@ glPopMatrix();
 glMatrixMode(GL_MODELVIEW);
 }
 
+// apply shadow map to ground
 void raydium_shadow_map_render(void)
 {
 int i;
@@ -178,8 +185,8 @@ glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
 	-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
 	-1,1);
 
-gluLookAt(raydium_light_position[raydium_shadow_light][0],
-	  raydium_light_position[raydium_shadow_light][1],
+gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
+	  raydium_light_position[raydium_shadow_light][1]*0,
 	  raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
 
 glMultMatrixf(imview);

@@ -15,6 +15,12 @@
 
 void raydium_capture_frame(char *filename)
 {
+raydium_capture_asked=RAYDIUM_CAPTURE_TGA;
+strcpy(raydium_capture_filename,filename);
+}
+
+void raydium_capture_frame_now(char *filename)
+{
 unsigned char cGarbage = 0, type,mode,aux,bpp, *imageData;
 short int iGarbage = 0;
 GLuint i;
@@ -66,8 +72,13 @@ fwrite(&cGarbage, sizeof(unsigned char), 1, file);
     raydium_log("screenshot saved as %s",filename);
 }
 
-
 void raydium_capture_frame_jpeg(char *filename)
+{
+raydium_capture_asked=RAYDIUM_CAPTURE_TGA;
+strcpy(raydium_capture_filename,filename);
+}
+
+void raydium_capture_frame_jpeg_now(char *filename)
 {
 JSAMPLE * image_buffer;	/* Points to large array of R,G,B-order data */
 int image_height;	/* Number of rows in image */

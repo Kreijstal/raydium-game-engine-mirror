@@ -641,10 +641,10 @@ if(reload_time>1) reload_done=0;
 }
 
 
-raydium_light_position[0][0]=0.1;
-raydium_light_position[0][1]=0.1;
-//raydium_light_position[0][0]=50;
-//raydium_light_position[0][1]=150;
+//raydium_light_position[0][0]=0.1;
+//raydium_light_position[0][1]=0.1;
+raydium_light_position[0][0]=50;
+raydium_light_position[0][1]=150;
 raydium_light_position[0][2]=200;
 raydium_light_position[0][3]=1.0;
 //raydium_light_update_all(0);

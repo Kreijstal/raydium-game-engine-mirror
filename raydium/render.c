@@ -216,6 +216,7 @@ if((x+raydium_camera_cursor_place[0])>(raydium_camera_x-raydium_projection_far) 
    (y+raydium_camera_cursor_place[1])<(raydium_camera_y+raydium_projection_far) ) return 1; else return 0;
 }
 
+// used by shadows
 void raydium_rendering_from_to_simple(GLuint from, GLuint to)
 {
 GLuint i;
@@ -227,6 +228,10 @@ glBegin(GL_TRIANGLES);
     glVertex3f(raydium_vertex_x[i+1], raydium_vertex_y[i+1], raydium_vertex_z[i+1]);
     glVertex3f(raydium_vertex_x[i+2], raydium_vertex_y[i+2], raydium_vertex_z[i+2]);
     }
+glEnd();
+
+glBegin(GL_POINTS);
+    glVertex3f(raydium_vertex_x[from], raydium_vertex_y[from], raydium_vertex_z[from]);
 glEnd();
 }
 
@@ -341,11 +346,21 @@ if(raydium_key[GLUT_KEY_F11])
 char name[128];
 static int frame;
 sprintf(name,"movie/frame%04d.jpg",frame);
-raydium_capture_frame_jpeg(name);
+raydium_capture_frame_jpeg_now(name);
 frame++;
 }
 #endif
 
+switch(raydium_capture_asked)
+    {
+    case RAYDIUM_CAPTURE_TGA:
+	raydium_capture_frame_now(raydium_capture_filename);
+	break;
+    case RAYDIUM_CAPTURE_JPG:
+	raydium_capture_frame_jpeg_now(raydium_capture_filename);
+	break;
+}
+raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 
 #ifndef DEBUG_SHADOW_MAP_VIEW
 glutSwapBuffers();

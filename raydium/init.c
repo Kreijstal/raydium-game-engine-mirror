@@ -180,6 +180,7 @@ raydium_register_variable_index=0;
 raydium_register_function_index=0;
 raydium_file_log_fopen_index=0;
 raydium_frame_time=0;
+raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 
 for(i=0;i<4;i++)
 raydium_osd_color[i]=1.f;
