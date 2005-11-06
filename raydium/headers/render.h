@@ -47,6 +47,13 @@ Internal. Deprecated.
 // DO NOT DOCUMENT THIS ... THING !
 extern char infov (GLfloat x, GLfloat y);
 
+void raydium_rendering_from_to_simple(GLuint from, GLuint to);
+/**
+Same as ##raydium_rendering_from_to()##, but only with vertices (no
+UV, no normals, no textures, no colors, ...).
+Mostly used for internal shadow maps creation.
+**/
+
 extern void raydium_rendering_from_to (GLuint from, GLuint to);
 /**
 Renders vertices from ##from## to ##to##.

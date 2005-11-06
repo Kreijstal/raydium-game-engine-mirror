@@ -156,14 +156,19 @@ raydium_camera_internal(x,y,z);
 
 void raydium_camera_replace(void)
 {
- if(!raydium_camera_pushed)
+if(raydium_shadow_rendering)
+    {
+    glLoadIdentity();
+    return;
+    }
+
+if(!raydium_camera_pushed)
  raydium_log("Warning: no camera to replace (matrix stack's empty)");
- else
+else
  {
  glPopMatrix();
  glPushMatrix();
  memset(raydium_camera_cursor_place,0,3*sizeof(GLfloat));
-
  }
 }
 

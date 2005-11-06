@@ -19,6 +19,8 @@ void raydium_live_init(void);
 #endif
 void raydium_video_init(void);
 void raydium_internal_live_close(void);
+void raydium_shadow_init(void);
+
 
 int raydium_init_cli_option(char *option, char *value)
 {
@@ -119,6 +121,7 @@ raydium_gui_init();
 raydium_live_init();
 #endif
 raydium_video_init();
+raydium_shadow_init();
 
 // Must find a way to delete textures from video card's memory, too...
 

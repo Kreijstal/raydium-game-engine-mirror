@@ -31,7 +31,7 @@ Returns true if ##size## is a correct texture size, depending of
 hardware capacities and "power of 2" constraint.
 **/
 
-extern GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int live_id_fake);
+extern GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake);
 /**
 Internal use.
 **/
@@ -69,6 +69,12 @@ if not alread done.
 extern GLuint raydium_texture_find_by_name (char *name);
 /**
 Returns index for texture "name", and load it if not already done.
+**/
+
+extern GLuint raydium_texture_exists(char *name);
+/**
+Same as above, but don't load texture if ##name## isn't already loaded and
+then returns -1. Returns texture id otherwise.
 **/
 
 extern void raydium_texture_filter_change (GLuint filter);

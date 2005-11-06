@@ -40,6 +40,7 @@
 #include "headers/mouse.h"
 #include "headers/joy.h"
 #include "headers/texture.h"
+#include "headers/shadow.h"
 #include "headers/render.h"
 #include "headers/particle2.h"
 #include "headers/sound.h"

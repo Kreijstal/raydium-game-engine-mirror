@@ -72,6 +72,23 @@ This function returns the (maximum) size of the bounding box
 of ##obj## (relative to (0,0,0)).
 **/
 
+extern void raydium_object_find_minmax(GLuint obj, GLfloat *min, GLfloat *max);
+/**
+Returns min and max values for ##obj##. No memory allocation is done, you must
+provide two GLfloat[3] array.
+**/
+
+extern void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz);
+/**
+Returns "centering" factors for ##obj##. A centered object will return (0,0,0).
+**/
+
+extern void raydium_object_callback(void);
+/**
+Internal (frame callback).
+**/
+
+
 // Animations
 /**
 Raydium now supports mesh animation, thru MD2 (Quake 2) files. Raydium file
@@ -149,17 +166,39 @@ extern void raydium_object_anim_automatic_name(char *object, char *anim, GLfloat
 Same as above, but using ##object##'s name and ##anim##'s name.
 **/
 
-extern void raydium_object_callback(void);
+// "Ponctually" anims
 /**
-Internal (frame callback).
+When using animations, you're switching for an "anim" to another, and an
+"anim" will loop forever. "Ponctually" support will allow you to set a
+default "anim" for an object and to do switch punctually to another "anim",
+and automatically return back to default value when this "anim" is finished,
+usefull for animations like jumps, kick, ...
 **/
 
 void raydium_object_anim_default(int object, int anim);
-signed char raydium_object_anim_ispunctually(int object, int instance);
-void raydium_object_anim_punctually(int object, int anim, int instance);
-void raydium_object_anim_punctually_name(char *object, char *anim, int instance);
-signed char raydium_object_anim_ispunctually(int object, int instance);
-signed char raydium_object_anim_ispunctually_name(char *object, int instance);
+/**
+This function will set default ##anim## for ##object##.
+**/
 
+void raydium_object_anim_punctually(int object, int anim, int instance);
+/**
+This function will trigger a punctually ##anim## for ##object##'s ##instance##.
+**/
+
+void raydium_object_anim_punctually_name(char *object, char *anim, int instance);
+/**
+Same as above, but with object's name.
+**/
+
+signed char raydium_object_anim_ispunctually(int object, int instance);
+/**
+Will return true (1) if ##object## is currently running a punctually animation,
+or false (0) otherwise.
+**/
+
+signed char raydium_object_anim_ispunctually_name(char *object, int instance);
+/**
+Same as above, but with object's name.
+**/
 
 #endif

@@ -641,11 +641,13 @@ if(reload_time>1) reload_done=0;
 }
 
 
-raydium_light_position[0][0]=50;
-raydium_light_position[0][1]=150;
+raydium_light_position[0][0]=0.1;
+raydium_light_position[0][1]=0.1;
+//raydium_light_position[0][0]=50;
+//raydium_light_position[0][1]=150;
 raydium_light_position[0][2]=200;
 raydium_light_position[0][3]=1.0;
-raydium_light_update_all(0);
+//raydium_light_update_all(0);
 
 
 {
@@ -745,6 +747,9 @@ else
 
 if(life<=0)
  raydium_osd_mask(blood);
+
+
+//raydium_osd_mask_texture_name("shadowmap",1);
     
 //raydium_osd_network_stat_draw(5,30,20);
 raydium_osd_logo("logo6.tga");
@@ -778,6 +783,7 @@ memcpy(raydium_light_color[0],sun,raydium_internal_size_vector_float_4);
 raydium_light_intensity[0]=1000000;
 raydium_light_update_all(0);
 
+raydium_shadow_enable();
 
 if(raydium_init_cli_option("server",server))
      if(!raydium_network_client_connect_to(server)) 

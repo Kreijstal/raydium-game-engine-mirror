@@ -525,6 +525,9 @@ typedef struct matrix4x4
   double  ray[16];
 } matrix4x4;
 
+__global signed char raydium_shadow_tag;
+__global signed char raydium_shadow_rendering;
+__global int raydium_shadow_ground_mesh;
 
 #endif
 // EOF

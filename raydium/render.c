@@ -216,11 +216,30 @@ if((x+raydium_camera_cursor_place[0])>(raydium_camera_x-raydium_projection_far) 
    (y+raydium_camera_cursor_place[1])<(raydium_camera_y+raydium_projection_far) ) return 1; else return 0;
 }
 
+void raydium_rendering_from_to_simple(GLuint from, GLuint to)
+{
+GLuint i;
+//printf("%i -> %i\n",from,to);
+glBegin(GL_TRIANGLES);
+  for(i=from;i<to;i+=3)
+    {
+    glVertex3f(raydium_vertex_x[i+0], raydium_vertex_y[i+0], raydium_vertex_z[i+0]);
+    glVertex3f(raydium_vertex_x[i+1], raydium_vertex_y[i+1], raydium_vertex_z[i+1]);
+    glVertex3f(raydium_vertex_x[i+2], raydium_vertex_y[i+2], raydium_vertex_z[i+2]);
+    }
+glEnd();
+}
+
 void raydium_rendering_from_to(GLuint from, GLuint to)
 {
 GLuint tex,i,j;
 int multi_prepared=0;
 
+if(raydium_shadow_rendering)
+    {
+    raydium_rendering_from_to_simple(from,to);
+    return;
+    }
 
 for(tex=1;tex<raydium_texture_index;tex++)
 {
@@ -299,7 +318,6 @@ raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
 }
 
 
-
 void raydium_rendering(void)
 {
 raydium_rendering_from_to(0,raydium_vertex_index);
@@ -328,7 +346,12 @@ frame++;
 }
 #endif
 
+
+#ifndef DEBUG_SHADOW_MAP_VIEW
 glutSwapBuffers();
+#endif
+
+raydium_shadow_map_generate();
 raydium_key_last=0;
 raydium_mouse_click=0;
 raydium_camera_pushed=0; 

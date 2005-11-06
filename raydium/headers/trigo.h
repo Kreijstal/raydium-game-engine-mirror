@@ -122,4 +122,11 @@ matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,in
 internal, don't use.
 **/
 
+int _raydium_trigo_MatrixInverse(const float *m,float *out);
+/*
+Our matrix_inverse seems broken. 
+This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
+This code is not native
+*/
+
 #endif

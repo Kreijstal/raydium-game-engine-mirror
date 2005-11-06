@@ -288,3 +288,35 @@ matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,in
 	}
   return(inverse_matrix);
 }
+
+
+// Our matrix_inverse seems broken. 
+// This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
+int _raydium_trigo_MatrixInverse(const float *m,float *out) {
+    float   det;
+    det = m[0] * m[5] * m[10];
+    det += m[4] * m[9] * m[2];
+    det += m[8] * m[1] * m[6];
+    det -= m[8] * m[5] * m[2];
+    det -= m[4] * m[1] * m[10];
+    det -= m[0] * m[9] * m[6];
+    if(det * det < 1e-25) return 0;
+    det = 1.0 / det;    
+    out[0] =    (m[5] * m[10] - m[9] * m[6]) * det;
+    out[1] =  - (m[1] * m[10] - m[9] * m[2]) * det;
+    out[2] =    (m[1] * m[6] -  m[5] * m[2]) * det;
+    out[3] = 0.0;
+    out[4] =  - (m[4] * m[10] - m[8] * m[6]) * det;
+    out[5] =    (m[0] * m[10] - m[8] * m[2]) * det;
+    out[6] =  - (m[0] * m[6] -  m[4] * m[2]) * det;
+    out[7] = 0.0;
+    out[8] =    (m[4] * m[9] -  m[8] * m[5]) * det;
+    out[9] =  - (m[0] * m[9] -  m[8] * m[1]) * det;
+    out[10] =   (m[0] * m[5] -  m[4] * m[1]) * det;
+    out[11] = 0.0;
+    out[12] = - (m[12] * out[0] + m[13] * out[4] + m[14] * out[8]);
+    out[13] = - (m[12] * out[1] + m[13] * out[5] + m[14] * out[9]);
+    out[14] = - (m[12] * out[2] + m[13] * out[6] + m[14] * out[10]);
+    out[15] = 1.0;
+    return 1;
+}

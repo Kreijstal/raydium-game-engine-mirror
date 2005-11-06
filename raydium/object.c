@@ -92,7 +92,7 @@ if(first)
 	dl_state[i]=-1;
 
 
-if(raydium_render_displaylists_tag)
+if(raydium_render_displaylists_tag && !raydium_shadow_rendering)
 {
  if(!dl_state[o])
     {
@@ -248,7 +248,78 @@ for(i=start;i<end;i++)
 *tz*=2;
 }
 
+
+void raydium_object_find_minmax(GLuint obj, GLfloat *min, GLfloat *max)
+{
+int i;
+int start,end;
+//GLfloat min[3];
+//GLfloat max[3];
+
+if(!raydium_object_isvalid(obj))
+    {
+    raydium_log("object: find_size: ERROR: id or name is invalid");
+    return;
+    }
+
+if(raydium_object_anims[obj]>0)
+    {
+    raydium_object_anim_generate_internal(obj,raydium_object_anim_instance_current[obj]);
+    start=raydium_object_start[obj];
+    end=raydium_object_start[obj]+raydium_object_anim_len[obj];
+    }
+else
+    {
+    start=raydium_object_start[obj];
+    end=raydium_object_end[obj];
+    }
+
+min[0]=max[0]=raydium_vertex_x[start];
+min[1]=max[1]=raydium_vertex_y[start];
+min[2]=max[2]=raydium_vertex_z[start];
+
+for(i=start+1;i<end;i++)
+    {
+    if(raydium_vertex_x[i]<min[0])
+	min[0]=raydium_vertex_x[i];
+    if(raydium_vertex_y[i]<min[1])
+	min[1]=raydium_vertex_y[i];
+    if(raydium_vertex_z[i]<min[2])
+	min[2]=raydium_vertex_z[i];
+
+    if(raydium_vertex_x[i]>max[0])
+	max[0]=raydium_vertex_x[i];
+    if(raydium_vertex_y[i]>max[1])
+	max[1]=raydium_vertex_y[i];
+    if(raydium_vertex_z[i]>max[2])
+	max[2]=raydium_vertex_z[i];
+    }
+/*tx=(max[0]-min[0]);
+*ty=(max[1]-min[1]);
+*tz=(max[2]-min[2]);*/
+}
+
+
+void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
+{
+GLfloat min[3];
+GLfloat max[3];
+
+raydium_object_find_minmax(obj,min,max);
+*tx=(max[0]-((max[0]-min[0])/2));
+*ty=(max[1]-((max[1]-min[1])/2));
+*tz=(max[2]-((max[2]-min[2])/2));
+
+(*tx)/=(max[0]-min[0]);
+(*ty)/=(max[1]-min[1]);
+(*tz)/=(max[2]-min[2]);
+}
+
+
+
+//////////////////////////////////////////////////////////
 // Animation support starts here
+
 
 GLint raydium_object_anim_find(int object, char *name)
 {

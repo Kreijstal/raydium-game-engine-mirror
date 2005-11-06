@@ -46,6 +46,7 @@
 #include "mouse.c"
 #include "joy.c"
 #include "texture.c"
+#include "shadow.c"
 #include "render.c"
 #include "particle2.c"
 #include "sound.c"

@@ -43,6 +43,9 @@
 // disable display list optims
 //#define DEBUG_RENDER_DISABLE_DISPLAYLISTS
 
+// draw shadow map (view for main light)
+//#define DEBUG_SHADOW_MAP_VIEW
+
 // debug network "tcp style" ACKs
 //#define DEBUG_NETWORK
 

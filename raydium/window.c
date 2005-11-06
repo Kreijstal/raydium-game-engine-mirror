@@ -66,13 +66,15 @@ switch(rendering)
 	break;
     }
 
-raydium_log("Got %ix%i:%i mode",glutGet(GLUT_WINDOW_WIDTH),
-glutGet(GLUT_WINDOW_HEIGHT),
-glutGet(GLUT_WINDOW_DEPTH_SIZE));
+tx=glutGet(GLUT_WINDOW_WIDTH);
+ty=glutGet(GLUT_WINDOW_HEIGHT);
+raydium_log("Got %ix%i:%i mode",tx,ty,glutGet(GLUT_WINDOW_DEPTH_SIZE));
 
 atexit(raydium_window_close);
 raydium_log("using %s, from %s (version %s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR),glGetString(GL_VERSION));
 raydium_init_engine();
+raydium_window_tx=tx;
+raydium_window_ty=ty;
 raydium_mouse_x=tx/2;
 raydium_mouse_y=ty/2;
 }

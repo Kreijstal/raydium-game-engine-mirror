@@ -31,7 +31,7 @@ for(i=2;i<=raydium_texture_size_max;i*=2)
 return 0;
 }
 
-GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int live_id_fake)
+GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake)
 {
 FILE *file;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
@@ -143,10 +143,21 @@ strcpy(raydium_texture_name[id],as);
 if(faked)
     {
     raydium_live_Texture *tex;
-    tex=&raydium_live_texture[live_id_fake];
-    tx=tex->hardware_tx;
-    ty=tex->hardware_ty;
-    bpp=tex->bpp/8;
+
+    if(or_live_id_fake>=0)
+	{
+	tex=&raydium_live_texture[or_live_id_fake];
+	tx=tex->hardware_tx;
+	ty=tex->hardware_ty;
+	bpp=tex->bpp/8;
+	}
+    else
+	{
+	tx=faked_tx;
+	ty=faked_ty;
+	bpp=faked_bpp;
+	}
+
     texsize = tx * ty * bpp;
     data=malloc(texsize);
     memset(data,0,texsize);
@@ -275,11 +286,11 @@ return id;
 GLuint raydium_texture_load(char *filename)
 {
 GLuint res;
-res=raydium_texture_load_internal(filename,filename,0,0);
+res=raydium_texture_load_internal(filename,filename,0,0,0,0,0);
 if(res<=0)
     {
     raydium_log("texture: faking '%s' with pink color");
-    res=raydium_texture_load_internal("rgb(1,0,1)",filename,0,0);
+    res=raydium_texture_load_internal("rgb(1,0,1)",filename,0,0,0,0,0);
     }
 return res;
 }
@@ -311,6 +322,17 @@ if(!strcmp(raydium_texture_name[i],name)) { flag++; ret=i; }
 
 if(!flag) ret=raydium_texture_load(name);
 return ret;
+}
+
+GLuint raydium_texture_exists(char *name)
+{
+int i;
+
+for(i=0;i<raydium_texture_index;i++)
+if(!strcmp(raydium_texture_name[i],name))
+    return i;
+
+return -1;
 }
 
 

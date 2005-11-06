@@ -54,10 +54,12 @@
 #define RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL	1
 #define RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW	2
 
+// do not change values, some other file are using numeric values ! (shadows)
 #define RAYDIUM_ODE_DRAW_NORMAL			0
 #define RAYDIUM_ODE_DRAW_DEBUG			1
 #define RAYDIUM_ODE_DRAW_AABB			2
 #define RAYDIUM_ODE_DRAW_RAY			3
+#define RAYDIUM_ODE_DRAW_SHADOWERS		4
 
 dWorldID 	raydium_ode_world;
 dSpaceID 	raydium_ode_space;

@@ -583,7 +583,7 @@ tex->ty=dev->win.height;
 tex->hardware_tx=raydium_trigo_pow2_next(dev->win.width);
 tex->hardware_ty=raydium_trigo_pow2_next(dev->win.height);
 tex->bpp=dev->vpic.depth;
-tex->texture=raydium_texture_load_internal("not needed :)",as,1,id);
+tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 
 
 if(tex->texture<=0)
@@ -679,7 +679,7 @@ tex->ty=ty;
 tex->hardware_tx=raydium_trigo_pow2_next(tex->tx);
 tex->hardware_ty=raydium_trigo_pow2_next(tex->ty);
 tex->bpp=bpp;
-tex->texture=raydium_texture_load_internal("not needed :)",as,1,id);
+tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 
 if(tex->texture<=0)
     {

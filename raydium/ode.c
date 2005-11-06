@@ -395,6 +395,8 @@ dGeomSetData(geom,&raydium_ode_element[0]);
 // sets Tri[Array]Callback: (no usable yet !)
 //dGeomTriMeshSetArrayCallback(geom,raydium_ode_ground_dTriArrayCallback);
 //dGeomTriMeshSetCallback(geom,raydium_ode_ground_dTriCallback);
+
+raydium_shadow_ground_change(obj); // send new ground to shadow system
 }
 
 
@@ -3146,17 +3148,20 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
      {
 	
-     if(names==RAYDIUM_ODE_DRAW_NORMAL)
+     if(names==RAYDIUM_ODE_DRAW_NORMAL || names==RAYDIUM_ODE_DRAW_SHADOWERS)
         {
 	
+	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && i==raydium_shadow_ground_mesh)
+	    continue;	
 	if(bef && !bef(i))
     	    continue;
+
     	raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
 	if(raydium_ode_element[i].mesh>=0)
     	   raydium_object_draw(raydium_ode_element[i].mesh);
 	if(aft) aft(i);
 
-	if(raydium_ode_element[i].particle>=0)
+	if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)
 	    {
 	    dVector3 res;
 
@@ -3385,6 +3390,9 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    }
 	}
      }
+
+if(names==RAYDIUM_ODE_DRAW_NORMAL)
+    raydium_shadow_map_render();
 }
 
 
