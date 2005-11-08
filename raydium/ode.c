@@ -3158,7 +3158,12 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 
     	raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
 	if(raydium_ode_element[i].mesh>=0)
-    	   raydium_object_draw(raydium_ode_element[i].mesh);
+	    {
+	    if(raydium_shadow_rendering)
+    		raydium_shadow_object_draw(raydium_ode_element[i].mesh);
+	    else
+    		raydium_object_draw(raydium_ode_element[i].mesh);
+	    }
 	if(aft) aft(i);
 
 	if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)

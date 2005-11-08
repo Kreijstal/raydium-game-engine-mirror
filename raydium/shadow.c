@@ -112,15 +112,44 @@ raydium_shadow_light=l;
 }
 
 
+void raydium_shadow_object_draw(GLuint o)
+{
+#ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
+static GLuint dl[RAYDIUM_MAX_OBJECTS];
+static char dl_state[RAYDIUM_MAX_OBJECTS];
+static int first=0;
+int i;
+
+if(first)
+    for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
+	dl_state[i]=-1;
+
+if(raydium_render_displaylists_tag && raydium_object_anims[o]==0)
+{
+ if(!dl_state[o])
+    {
+    // build DL
+    dl_state[o]=1;
+    dl[o]=glGenLists(1);
+    raydium_log("Object: creating **shadow** display list for object %s",raydium_object_name[o]);
+    glNewList(dl[o],GL_COMPILE);
+    raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
+    glEndList();
+    }
+  glCallList(dl[o]);
+}
+else
+    raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
+#else
+    raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
+#endif
+}
+
 void raydium_shadow_map_generate(void)
 {
-//printf(". %i %i\n",raydium_shadow_tag, raydium_shadow_ground_mesh);
-
 // test shadow support and ground
 if(!raydium_shadow_tag || raydium_shadow_ground_mesh<0)
     return;
-
-//printf("shadow map gen\n");
 
 glViewport(0,0,raydium_shadow_map_size,raydium_shadow_map_size);
 glClearColor(0,0,0,1);
@@ -129,8 +158,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 glMatrixMode(GL_PROJECTION);
 glPushMatrix();
 glLoadIdentity();
-//#define BLA(x) (((x)-0.5)*2)
-//#define BLA2(x) (BLA((x)*raydium_shadow_ground_modelsize/2))
+
 glTranslatef((raydium_shadow_ground_center_factor_x-0.5)*2,(raydium_shadow_ground_center_factor_y-0.5)*2,0);
 glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
 	-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
@@ -175,14 +203,11 @@ glMatrixMode(GL_MODELVIEW);
 // apply shadow map to ground
 void raydium_shadow_map_render(void)
 {
-int i;
 float mview[16],imview[16];
 
 // test shadow support and ground
 if(!raydium_shadow_tag || raydium_shadow_ground_mesh<0)
     return;
-
-//printf("shadow map render\n");
 
 raydium_camera_replace();
 glEnable(GL_TEXTURE_GEN_S);
@@ -219,14 +244,7 @@ glBlendFunc(GL_ZERO,GL_ONE_MINUS_SRC_COLOR);
 glBindTexture(GL_TEXTURE_2D,raydium_shadow_texture);
 //glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("shadowmap1.tga")); // debug
 
-glBegin(GL_TRIANGLES);
-for(i=raydium_object_start[raydium_shadow_ground_mesh];i<raydium_object_end[raydium_shadow_ground_mesh];i+=3)
-    {
-    glVertex3f(raydium_vertex_x[i+0], raydium_vertex_y[i+0], raydium_vertex_z[i+0]);
-    glVertex3f(raydium_vertex_x[i+1], raydium_vertex_y[i+1], raydium_vertex_z[i+1]);
-    glVertex3f(raydium_vertex_x[i+2], raydium_vertex_y[i+2], raydium_vertex_z[i+2]);
-    }
-glEnd();
+raydium_shadow_object_draw(raydium_shadow_ground_mesh);
 
 glDisable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

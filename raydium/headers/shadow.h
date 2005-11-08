@@ -10,6 +10,7 @@ void raydium_shadow_light_main(GLuint l);
 void raydium_shadow_ground_change(int object);
 void raydium_shadow_map_generate(void);
 void raydium_shadow_map_render(void);
+void raydium_shadow_object_draw(GLuint o);
 
 
 #endif
