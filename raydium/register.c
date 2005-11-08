@@ -47,6 +47,7 @@ if(raydium_register_variable_index==RAYDIUM_MAX_REG_VARIABLES)
     }
 
 if( type!=RAYDIUM_REGISTER_INT &&
+    type!=RAYDIUM_REGISTER_SCHAR &&
     type!=RAYDIUM_REGISTER_FLOAT &&
     type!=RAYDIUM_REGISTER_STR)
     {
@@ -168,6 +169,13 @@ if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_INT)
     {
     p_i=raydium_register_variable_addr[i];
     (*p_i)=atoi(args);
+    return i;
+    }
+
+if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_SCHAR)
+    {
+    f_str=raydium_register_variable_addr[i];
+    (*f_str)=atoi(args);
     return i;
     }
 

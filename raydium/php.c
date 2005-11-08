@@ -198,6 +198,13 @@ int raydium_php_exec(char *name)
 	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
 	}
 
+    if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_SCHAR)
+	{
+        MAKE_STD_ZVAL(vars[i]); // init
+	ZVAL_LONG(vars[i],(int)(*(char *)raydium_register_variable_addr[i]));
+	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
+	}
+
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_FLOAT)
 	{
         MAKE_STD_ZVAL(vars[i]); // init
@@ -230,7 +237,6 @@ int raydium_php_exec(char *name)
 				      0 TSRMLS_CC);
 	}
     }
-
 #ifdef WIN32
  zend_register_functions(raydium_register_function_list,CG(function_table), MODULE_PERSISTENT,TSRMLS_C);
  php_execute_script(&file_handle,TSRMLS_C);
@@ -246,6 +252,13 @@ int raydium_php_exec(char *name)
 	 {
 	    if(vars[i]->type == IS_LONG)
 		*(int *)raydium_register_variable_addr[i]=vars[i]->value.lval;
+	    else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
+	 }
+
+        if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_SCHAR)
+	 {
+	    if(vars[i]->type == IS_LONG)
+		*(char *)raydium_register_variable_addr[i]=vars[i]->value.lval;
 	    else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
 	 }
 
@@ -268,7 +281,6 @@ int raydium_php_exec(char *name)
 		sprintf(raydium_register_variable_addr[i],"%li",vars[i]->value.lval);
 	    else raydium_log("php: (char *)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
 	 }
-        
     }
 
  php_request_shutdown(NULL);

@@ -13,7 +13,6 @@
 #include "headers/reg_api.h"
 #endif
 
-
 #ifdef REG_API
 #ifdef PHP_SUPPORT
 
@@ -193,7 +192,7 @@ raydium_register_function(C2PHP(raydium_window_view_perspective),"raydium_window
 raydium_register_function(C2PHP(raydium_window_view_update),"raydium_window_view_update");
 
 // sky.c
-raydium_register_variable(&raydium_sky_force,RAYDIUM_REGISTER_INT,"raydium_sky_force");
+raydium_register_variable(&raydium_sky_force,RAYDIUM_REGISTER_SCHAR,"raydium_sky_force");
 
 // console.c
 raydium_register_function(C2PHP(raydium_console_exec_script),"raydium_console_exec_script");
