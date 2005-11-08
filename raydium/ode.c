@@ -3151,7 +3151,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      if(names==RAYDIUM_ODE_DRAW_NORMAL || names==RAYDIUM_ODE_DRAW_SHADOWERS)
         {
 	
-	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && i==raydium_shadow_ground_mesh)
+	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
 	    continue;	
 	if(bef && !bef(i))
     	    continue;

@@ -17,7 +17,7 @@ void raydium_shadow_init(void)
 raydium_shadow_tag=0;
 raydium_shadow_ground_mesh=-1;
 raydium_shadow_rendering=0;
-raydium_log("shadow: OK (was easy, hard work comes next ;)");
+raydium_log("shadow: OK");
 }
 
 void raydium_shadow_ground_change(int object)
@@ -46,11 +46,12 @@ tz=max[2]-min[2];
 raydium_shadow_ground_modelsize=raydium_trigo_max(tx,raydium_trigo_max(ty,tz));
 raydium_shadow_ground_modelsize/=2;
 
-/*raydium_log("shadow: ground modelsize is %.2f, center factors : %.2f/%.2f",
+raydium_log("shadow: ground (%i) modelsize is %.2f, center factors : %.2f/%.2f",
+    raydium_shadow_ground_mesh,
     raydium_shadow_ground_modelsize,
     raydium_shadow_ground_center_factor_x,
     raydium_shadow_ground_center_factor_y);
-*/
+
 }
 
 
@@ -67,9 +68,6 @@ if(raydium_shadow_tag)
 
 raydium_shadow_tag=1;
 
-/*if(raydium_ode_ground_mesh>=0 || raydium_ode_ground_mesh!=raydium_shadow_ground_mesh)
-    raydium_shadow_ground_change(raydium_ode_ground_mesh);*/
-    
 // There was a previous call
 if(raydium_texture_exists(RAYDIUM_SHADOW_TEXTURE)!=-1)
     return;
@@ -149,10 +147,12 @@ glDisable(GL_TEXTURE_2D);
 glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1);
 
 raydium_shadow_rendering=1;
+glPushMatrix();
 //raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
 #ifdef ODE_SUPPORT 
 raydium_ode_draw_all(4);
 #endif
+glPopMatrix();
 raydium_shadow_rendering=0;
 
 #ifdef DEBUG_SHADOW_MAP_VIEW
