@@ -20,53 +20,6 @@ raydium_shadow_rendering=0;
 raydium_log("shadow: OK (was easy, hard work comes next ;)");
 }
 
-void raydium_shadow_enable(void)
-{
-float S[]={1.0, 0.0, 0.0, 0.0};
-float T[]={0.0, 1.0, 0.0, 0.0};
-float R[]={0.0, 0.0, 1.0, 0.0};
-float Q[]={0.0, 0.0, 0.0, 1.0};
-int tmp;
-
-if(raydium_shadow_tag || raydium_texture_exists(RAYDIUM_SHADOW_TEXTURE)!=-1)
-    return;
-
-tmp=1;
-while(tmp<=raydium_window_tx && 
-      tmp<=raydium_window_ty && 
-      tmp<=raydium_texture_size_max)
-      {
-      tmp*=2;
-      }
-raydium_shadow_map_size=tmp/2;
-raydium_log("shadow: shadow map size detected to %ix%i",raydium_shadow_map_size,raydium_shadow_map_size);
-
-glTexGenfv(GL_S,GL_EYE_PLANE,S);
-glTexGenfv(GL_T,GL_EYE_PLANE,T);
-glTexGenfv(GL_R,GL_EYE_PLANE,R);
-glTexGenfv(GL_Q,GL_EYE_PLANE,Q);
-
-raydium_shadow_texture=raydium_texture_load_internal("",RAYDIUM_SHADOW_TEXTURE,1,raydium_shadow_map_size,raydium_shadow_map_size,4,-1);
-//raydium_shadow_texture=raydium_texture_load("shadowmap1.tga"); // debug
-raydium_shadow_tag=1;
-}
-
-void raydium_shadow_disable(void)
-{
-raydium_shadow_tag=0;
-}
-
-
-signed char raydium_shadow_isenabled(void)
-{
-return raydium_shadow_tag;
-}
-
-void raydium_shadow_light_main(GLuint l)
-{
-raydium_shadow_light=l;
-}
-
 void raydium_shadow_ground_change(int object)
 {
 //modelsize, center factors
@@ -92,19 +45,82 @@ tz=max[2]-min[2];
 
 raydium_shadow_ground_modelsize=raydium_trigo_max(tx,raydium_trigo_max(ty,tz));
 raydium_shadow_ground_modelsize/=2;
-/*
-raydium_log("shadow: ground modelsize is %.2f, center factors : %.2f/%.2f",
+
+/*raydium_log("shadow: ground modelsize is %.2f, center factors : %.2f/%.2f",
     raydium_shadow_ground_modelsize,
     raydium_shadow_ground_center_factor_x,
     raydium_shadow_ground_center_factor_y);
 */
 }
 
+
+void raydium_shadow_enable(void)
+{
+float S[]={1.0, 0.0, 0.0, 0.0};
+float T[]={0.0, 1.0, 0.0, 0.0};
+float R[]={0.0, 0.0, 1.0, 0.0};
+float Q[]={0.0, 0.0, 0.0, 1.0};
+int tmp;
+
+if(raydium_shadow_tag)
+    return;
+
+raydium_shadow_tag=1;
+
+raydium_log("hit (0x%x) - %i",&raydium_shadow_tag,raydium_shadow_tag);
+/*if(raydium_ode_ground_mesh>=0 || raydium_ode_ground_mesh!=raydium_shadow_ground_mesh)
+    raydium_shadow_ground_change(raydium_ode_ground_mesh);*/
+    
+// There was a previous call
+if(raydium_texture_exists(RAYDIUM_SHADOW_TEXTURE)!=-1)
+    return;
+
+tmp=1;
+while(tmp<=raydium_window_tx && 
+      tmp<=raydium_window_ty && 
+      tmp<=raydium_texture_size_max)
+      {
+      tmp*=2;
+      }
+raydium_shadow_map_size=tmp/2;
+raydium_log("shadow: shadow map size detected to %ix%i",raydium_shadow_map_size,raydium_shadow_map_size);
+
+glTexGenfv(GL_S,GL_EYE_PLANE,S);
+glTexGenfv(GL_T,GL_EYE_PLANE,T);
+glTexGenfv(GL_R,GL_EYE_PLANE,R);
+glTexGenfv(GL_Q,GL_EYE_PLANE,Q);
+
+raydium_shadow_texture=raydium_texture_load_internal("",RAYDIUM_SHADOW_TEXTURE,1,raydium_shadow_map_size,raydium_shadow_map_size,4,-1);
+//raydium_shadow_texture=raydium_texture_load("shadowmap1.tga"); // debug
+
+}
+
+void raydium_shadow_disable(void)
+{
+raydium_shadow_tag=0;
+}
+
+
+signed char raydium_shadow_isenabled(void)
+{
+return raydium_shadow_tag;
+}
+
+void raydium_shadow_light_main(GLuint l)
+{
+raydium_shadow_light=l;
+}
+
+
 void raydium_shadow_map_generate(void)
 {
+//printf(". %i %i\n",raydium_shadow_tag, raydium_shadow_ground_mesh);
+
 // test shadow support and ground
 if(!raydium_shadow_tag || raydium_shadow_ground_mesh<0)
     return;
+
+//printf("shadow map gen\n");
 
 glViewport(0,0,raydium_shadow_map_size,raydium_shadow_map_size);
 glClearColor(0,0,0,1);
@@ -132,7 +148,9 @@ glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1
 
 raydium_shadow_rendering=1;
 //raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
+#ifdef ODE_SUPPORT 
 raydium_ode_draw_all(4);
+#endif
 raydium_shadow_rendering=0;
 
 #ifdef DEBUG_SHADOW_MAP_VIEW
@@ -158,9 +176,13 @@ void raydium_shadow_map_render(void)
 int i;
 float mview[16],imview[16];
 
+
+
 // test shadow support and ground
 if(!raydium_shadow_tag || raydium_shadow_ground_mesh<0)
     return;
+
+//printf("shadow map render\n");
 
 //    glLoadIdentity();
 raydium_camera_replace();

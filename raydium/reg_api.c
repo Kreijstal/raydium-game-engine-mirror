@@ -65,6 +65,9 @@ PHP_v_s(raydium_particle_generator_delete_name);
 PHP_v_sfff(raydium_particle_generator_move_name_3f);
 PHP_i_s(raydium_particle_state_dump);
 PHP_i_s(raydium_particle_state_restore);
+// shadow.c
+PHP_v_v(raydium_shadow_enable);
+PHP_v_v(raydium_shadow_disable);
 
 #ifdef ODE_SUPPORT
 //ode.c
@@ -148,6 +151,7 @@ PHP_i_siffsi(raydium_gui_combo_create);
 PHP_i_sss(raydium_gui_read_name);
 PHP_i_v(raydium_gui_button_clicked);
 
+
 // Part 2: register functions
 void raydium_register_api(void)
 {
@@ -230,6 +234,10 @@ raydium_register_function(C2PHP(raydium_particle_state_restore),"raydium_particl
 raydium_register_function(C2PHP(raydium_particle_generator_load),"raydium_particle_generator_load");
 raydium_register_function(C2PHP(raydium_particle_generator_delete_name),"raydium_particle_generator_delete_name");
 raydium_register_function(C2PHP(raydium_particle_generator_move_name_3f),"raydium_particle_generator_move_name_3f");
+
+// shadow.c
+raydium_register_function(C2PHP(raydium_shadow_enable),"raydium_shadow_enable");
+raydium_register_function(C2PHP(raydium_shadow_disable),"raydium_shadow_disable");
 
 // gui.c
 raydium_register_function(C2PHP(raydium_gui_theme_load),"raydium_gui_theme_load");
@@ -323,6 +331,8 @@ raydium_register_function(C2PHP(raydium_ode_network_element_send_all),"raydium_o
 raydium_register_function(C2PHP(raydium_ode_network_element_send_iterative),"raydium_ode_network_element_send_iterative");
 raydium_register_function(C2PHP(raydium_ode_network_element_send_random),"raydium_ode_element_send_random");
 #endif
+
+
 raydium_log("RegAPI: OK");
 done=1;
 }

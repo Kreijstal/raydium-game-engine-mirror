@@ -508,6 +508,14 @@ __global clock_t 	raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
 __global clock_t 	raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
 __global int            raydium_timecall_w32_divmodulo;
 
+__global signed char raydium_shadow_tag;
+__global signed char raydium_shadow_rendering;
+__global int raydium_shadow_ground_mesh;
+
+__global signed char raydium_capture_asked;
+__global char raydium_capture_filename[RAYDIUM_MAX_NAME_LEN];
+
+
 __global int    raydium_register_variable_index;
 __global int    raydium_register_function_index;
 __global char   raydium_register_variable_name[RAYDIUM_MAX_REG_VARIABLES][RAYDIUM_MAX_NAME_LEN];
@@ -529,11 +537,5 @@ typedef struct matrix4x4
   double  ray[16];
 } matrix4x4;
 
-__global signed char raydium_shadow_tag;
-__global signed char raydium_shadow_rendering;
-__global int raydium_shadow_ground_mesh;
-
-__global signed char raydium_capture_asked;
-__global char raydium_capture_filename[RAYDIUM_MAX_NAME_LEN];
 #endif
 // EOF

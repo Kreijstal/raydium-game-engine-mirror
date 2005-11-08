@@ -7,8 +7,6 @@
 #ifndef SHADOW_H
 #define SHADOW_H
 
-// should never exceed screen size ! (should autodetect ?)
-//#define RAYDIUM_SHADOW_MAP_SIZE		512
 #define RAYDIUM_SHADOW_OPACITY		0.5
 #define RAYDIUM_SHADOW_TEXTURE		"shadowmap"
 

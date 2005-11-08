@@ -41,4 +41,15 @@ Same as ##raydium_capture_frame()## but using JPEG image format.
 See ##raydium/config.h## for quality setting.
 **/
 
+extern void raydium_capture_frame_now(char *filename);
+/**
+Same as ##raydium_capture_frame()##, but without waiting the end of the frame,
+saving the hardware color buffer, whatever it contains. Use with caution.
+**/
+
+extern void raydium_capture_frame_jpeg_now(char *filename);
+/**
+Same as above, but using JPEG image format.
+**/
+
 #endif
