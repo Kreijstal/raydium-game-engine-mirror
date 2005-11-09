@@ -28,6 +28,10 @@ Prototype for this callback is ##int callback(char *new_track)##, allowing
 you to do something like ##strcpy(new_track,"foobar.ogg"); return 1;##.
 Return 0 if you do not want to switch to another audio file (this will stops
 music playback).
+Another callback is available, ##raydium_sound_music_changed_callback##, fired
+just after a music track switch, allowing you to get new informations from the
+new stream, such as artist, album and title. See ##raydium_sound_load_music()##
+for more informations about this.
 
 This document is not an alternative to OpenAL papers, and only provides
 informations about Raydium's interface to OpenAL.
@@ -223,7 +227,26 @@ Send ##NULL## or an empty string to cancel music playback.
 Returns 0 if ok, -1 if error
 
 See also ##raydium_sound_music_eof_callback## at the top of this chapter.
+
+You can get OGG informations from ##raydium_sound_music_info##, using
+its members:
+%%(c)
+char artist[RAYDIUM_MAX_NAME_LEN];
+char title [RAYDIUM_MAX_NAME_LEN];
+char album [RAYDIUM_MAX_NAME_LEN];
+%%
 **/
+
+extern void raydium_sound_music_info_init(void);
+/**
+Internal use. Will reset infos.
+**/
+
+extern void raydium_sound_music_info_refresh(void);
+/**
+Internal use. Will flush infos from disk to ##raydium_sound_music_info##.
+**/
+
 
 extern void raydium_sound_music_callback (void);
 /**

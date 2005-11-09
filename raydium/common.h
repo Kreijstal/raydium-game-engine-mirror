@@ -446,6 +446,15 @@ __global FILE   *raydium_sound_music_file;
 __global OggVorbis_File raydium_sound_vf;
 __global vorbis_info   *raydium_sound_ogginfo;
 __global int 	(*raydium_sound_music_eof_callback)(char *);
+__global void 	(*raydium_sound_music_changed_callback)(void);
+
+typedef struct raydium_sound_music_Info {
+    char artist[RAYDIUM_MAX_NAME_LEN];
+    char title [RAYDIUM_MAX_NAME_LEN];
+    char album [RAYDIUM_MAX_NAME_LEN];
+} raydium_sound_music_Info;
+
+__global raydium_sound_music_Info raydium_sound_music_info;
 
 __global GLfloat raydium_osd_logo_angle;
 __global GLuint  raydium_osd_cursor_texture;

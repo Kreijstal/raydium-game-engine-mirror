@@ -18,6 +18,47 @@
 #endif
 
 
+// music OGG infos
+
+void raydium_sound_music_info_init(void)
+{
+strcpy(raydium_sound_music_info.artist,"Unkown artist");
+strcpy(raydium_sound_music_info.album, "Unkown album" );
+strcpy(raydium_sound_music_info.title, "Unkown title" );
+}
+
+void raydium_sound_music_info_refresh(void)
+{
+char **ptr;
+char part1[RAYDIUM_MAX_NAME_LEN];
+char part2[RAYDIUM_MAX_NAME_LEN];
+
+
+// reset ogg infos
+raydium_sound_music_info_init();
+
+ptr=ov_comment(&raydium_sound_vf,-1)->user_comments;
+while(*ptr)
+    {
+    part1[0]=0;
+    part2[0]=0;
+    raydium_parser_cut(*ptr,part1,part2,'=');
+    
+    if(!strcasecmp("title",part1))
+	strcpy(raydium_sound_music_info.title,part2);
+
+    if(!strcasecmp("album",part1))
+	strcpy(raydium_sound_music_info.album,part2);
+
+    if(!strcasecmp("artist",part1))
+	strcpy(raydium_sound_music_info.artist,part2);
+
+      ++ptr;
+    }
+}
+
+// Sound core functions
+
 //VERIFIES THAT THE LAST OPERATION DID NOT MAKE ANY ERROR
 //IF AN ERROR IS DETECTED IT PRINTS THE caller NAME
 void raydium_sound_verify(char *caller)
@@ -127,7 +168,7 @@ int raydium_sound_LoadWav(const char *fname)
  if(data)
   free(data);
 
- #else
+#else
   alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
      raydium_sound_verify("alutLoadWAVFile");
 
@@ -469,6 +510,7 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
  raydium_sound_music_file=NULL;
  raydium_sound_DefaultReferenceDistance=50.f; // default distance where the source sound is half volume
  raydium_sound_music_eof_callback=NULL;
+ raydium_sound_music_changed_callback=NULL;
 
  for(i=0;i<RAYDIUM_SOUND_NUM_BUFFERS;i++)
     raydium_sound_source_fade_factor[i]=0;
@@ -501,6 +543,7 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
 		printf("OpenAL Extensions supported are :\n%s\n", tempString);
 }    
 */ 
+raydium_sound_music_info_init();
 }
 
 //PLAYS A SOURCE
@@ -690,6 +733,10 @@ if(!raydium_sound)
   return(-1);
  }
  raydium_sound_ogginfo=ov_info(&raydium_sound_vf,-1);
+ raydium_sound_music_info_refresh();
+ 
+ if(raydium_sound_music_changed_callback)
+    raydium_sound_music_changed_callback();
  
 // size = bits/8 * ov_info(&raydium_sound_vf, 0)->channels; 
 StartMusic(raydium_sound_source[0],raydium_sound_buffer,
@@ -793,3 +840,4 @@ ALfloat g;
 raydium_sound_GetSourceGain(src,&g);
 raydium_sound_source_fade_factor[src]=-(g/len);
 }
+
