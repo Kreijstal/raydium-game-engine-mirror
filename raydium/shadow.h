@@ -23,5 +23,7 @@ signed char raydium_object_isvalid(int obj);
 void raydium_ode_draw_all(signed char names);
 void raydium_object_find_minmax(GLuint obj, GLfloat *min, GLfloat *max);
 void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz);
+void raydium_rendering_from_to_simple(GLuint from, GLuint to);
+
 
 #endif
