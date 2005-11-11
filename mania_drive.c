@@ -41,6 +41,8 @@ char playername[RAYDIUM_MAX_NAME_LEN];
 char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 
+signed char music_popup_inc=-1;
+
 dReal ptmp=0;
 
 dReal gears[]={-0.4,0.4,0.6,0.8,0.9,1.0};
@@ -49,8 +51,10 @@ int gear=1;
 void change_game_state(int type);
 void create_car(void);
 void load_boxes(char *filename);
+void dat_load(char *filename);
 void hms(GLfloat t,int *h, int *m, int *s, int *ms);
 int mni_load(char *mni);
+void build_gui_Main(void);
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -66,6 +70,15 @@ typedef struct Score
     char player[RAYDIUM_MAX_NAME_LEN];
     } Score;
 
+typedef struct TrackData
+    {
+    char name[RAYDIUM_MAX_NAME_LEN];
+    char author[RAYDIUM_MAX_NAME_LEN];
+    float gold_time;
+    float author_time;
+    } TrackData;
+
+TrackData trackdata;
 Score best_score[RAYDIUM_NETWORK_MAX_CLIENTS];
 Score track_score;
 
@@ -180,6 +193,8 @@ rename("mania.tri",tri);
 raydium_ode_ground_set_name(tri);
 unlink(tri);
 load_boxes("mania.box");
+dat_load("mania.dat");
+
 
 track_score.time=get_score(mni,track_score.player);
 raydium_network_propag_refresh(NET_SCORE_TRACK);
@@ -191,7 +206,6 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 create_car();
 
 raydium_gui_window_delete_name("menu");
-raydium_gui_window_delete_name("besttime");
 raydium_gui_hide();
 raydium_sound_load_music(NULL);
 
@@ -205,11 +219,23 @@ raydium_gui_window_delete_name("besttime");
 }
 
 
+
 void AfterFade(void)
 {
 mni_load(mni_next);
 mni_next[0]=0;
 }
+
+void gui_start(void)
+{
+if(raydium_gui_isvisible())
+    return;
+raydium_gui_show();
+
+// should use a PHP script here
+raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
+}
+
 
 void btnDrive(raydium_gui_Object *w)
 {
@@ -226,6 +252,11 @@ raydium_gui_window_delete_name("menu");
 raydium_gui_window_delete_name("besttime");
 }
 
+void btnBackToMainMenu(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_Main();
+}
 
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
@@ -252,19 +283,15 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblBestTime",handle,50,80,str,0,0,0);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnBestTimeOkOk",handle,35,15,"OK",btnBestTimeOk);
-
-
 }
 
 
-void build_gui(void)
+void build_gui_InternetTracks(void)
 {
 int handle;
 char l[RAYDIUM_GUI_DATASIZE];
 
 get_tracklist(l);
-
-raydium_gui_theme_load("maniadrive.gui");
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
 raydium_gui_widget_sizes(0,0,18);
@@ -288,8 +315,56 @@ raydium_gui_button_create("btnMulti",handle,50,15,"Multiplayer",btnConnect);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnDrive);
 
-raydium_gui_show();
-raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
+raydium_gui_widget_sizes(5,5,18);
+raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+gui_start();
+}
+
+void build_gui_Story(void)
+{
+int handle;
+
+handle=raydium_gui_window_create("menu",48,10,50,40);
+raydium_gui_label_create("lblMode",handle,50,90,"I'm coding it right now ! ;)",0,0,0);
+
+// parse story file
+// parse story state file
+// use PHP for this ?
+
+raydium_gui_widget_sizes(5,5,18);
+raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+gui_start();
+}
+
+void btnModeNetTracks(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_InternetTracks();
+}
+
+void btnModeStory(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_Story();
+}
+
+
+
+void build_gui_Main(void)
+{
+int handle;
+
+handle=raydium_gui_window_create("menu",48,10,50,40);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblMode",handle,50,90,"- Select Game Mode - ",0,0,0);
+
+raydium_gui_widget_sizes(25,4,18);
+raydium_gui_button_create("btnModeStory",handle,25,65,"Story",btnModeStory);
+raydium_gui_button_create("btnModeNetTracks",handle,25,45,"Internet Tracks",btnModeNetTracks);
+raydium_gui_button_create("btnModeLAN",handle,25,25,"LAN Multiplayer",NULL);
+
+gui_start();
 }
 
 
@@ -347,6 +422,86 @@ while(fscanf(fp,"%f %f %f %f %f %f %i\n",&box[j].x,
 raydium_log("%s: %i box(es) loaded",filename,j);
 fclose(fp);
 }
+
+// load associated track data
+void dat_load(char *filename)
+{
+FILE *fp;
+int ret;
+char var[RAYDIUM_MAX_NAME_LEN];
+char val_s[RAYDIUM_MAX_NAME_LEN];
+float val_f[10];
+int size;
+int done;
+
+fp=raydium_file_fopen(filename,"rt");
+
+if(!fp)
+    {
+    raydium_log("error: cannot open '%s'",filename);
+    return;
+    }
+
+// reset
+trackdata.name[0]=0;
+trackdata.author[0]=0;
+trackdata.gold_time=0;
+trackdata.author_time=0;
+
+while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
+    {
+    done=0;
+
+    if(!strcasecmp(var,"name"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+	    {
+	    raydium_log("'name' is wrong type");
+	    continue;
+	    }
+	strcpy(trackdata.name,val_s);
+	done=1;
+	}
+
+    if(!strcasecmp(var,"author"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+	    {
+	    raydium_log("'author' is wrong type");
+	    continue;
+	    }
+	strcpy(trackdata.author,val_s);
+	done=1;
+	}
+
+    if(!strcasecmp(var,"gold_time"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+	    {
+	    raydium_log("'gold_time' is wrong type");
+	    continue;
+	    }
+	trackdata.gold_time=val_f[0];
+	done=1;
+	}
+
+    if(!strcasecmp(var,"author_time"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+	    {
+	    raydium_log("'author_time' is wrong type");
+	    continue;
+	    }
+	trackdata.author_time=val_f[0];
+	done=1;
+	}
+
+    if(!done)
+	raydium_log("invalid statement '%s'",var);
+
+    }
+}
+
 
 void frame_step(GLfloat step)
 {
@@ -487,6 +642,69 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 	cpt++;
 	}
     }
+}
+
+void music_change(void)
+{
+music_popup_inc=1;
+}
+
+#define sizepp 50.f
+#define maxpp	0.f
+#define minpp  -sizepp
+#define posypp 5.f
+#define ratiopp 3.f
+#define rollbackpp 200.f
+#define speedpp	100.f
+#define printoffsetpp 4.f
+#define printcolpp "^0"
+#define printcol2pp "^f"
+#define printlenpp 24
+#define shadowoffpp 0.2f
+void trc(char *in, char *out, int len)
+{
+strcpy(out,in);
+if(strlen(out)>len)
+    {
+    out[len-3]=0;
+    strcat(out,"...");
+    }
+}
+
+void draw_music_popup(void)
+{
+char str[RAYDIUM_MAX_NAME_LEN];
+static GLfloat pos=0;
+GLfloat real;
+
+pos+=(raydium_frame_time*speedpp*music_popup_inc);
+
+real=pos;
+
+if(real>maxpp)
+    real=maxpp;
+
+if(real<minpp)
+    {
+    real=minpp;
+    pos=minpp;
+    }
+
+if(pos>rollbackpp)
+    {
+    music_popup_inc=-1;
+    }
+
+raydium_osd_draw_name("BOXmania_music_popup.tga",real,posypp,sizepp+real,posypp+sizepp/ratiopp);
+trc(raydium_sound_music_info.title,str,printlenpp);
+raydium_osd_printf(real+2+shadowoffpp,posypp+sizepp/ratiopp-printoffsetpp-shadowoffpp,  20,0.4,"font2.tga","%s%s",printcol2pp,str);
+raydium_osd_printf(real+2,posypp+sizepp/ratiopp-printoffsetpp,  20,0.4,"font2.tga","%s%s",printcolpp,str);
+trc(raydium_sound_music_info.artist,str,printlenpp);
+raydium_osd_printf(real+2+shadowoffpp,posypp+sizepp/ratiopp-printoffsetpp*2-shadowoffpp,  20,0.4,"font2.tga","%s%s",printcol2pp,str);
+raydium_osd_printf(real+2,posypp+sizepp/ratiopp-printoffsetpp*2,20,0.4,"font2.tga","%s%s",printcolpp,str);
+trc(raydium_sound_music_info.album,str,printlenpp);
+raydium_osd_printf(real+2+shadowoffpp,posypp+sizepp/ratiopp-printoffsetpp*3-shadowoffpp,  20,0.4,"font2.tga","%s%s",printcol2pp,str);
+raydium_osd_printf(real+2,posypp+sizepp/ratiopp-printoffsetpp*3,20,0.4,"font2.tga","%s%s",printcolpp,str);
 }
 
 void col_car_box(int car, int box_id)
@@ -807,7 +1025,7 @@ if(strlen(mni_current)==0)
 
     if(!raydium_gui_isvisible())
 	{
-	build_gui();
+	build_gui_Main();
 	raydium_video_open("mania_menu_v1.jpgs","video");
 	raydium_osd_cursor_set("BOXcursor.tga",6,6);
 	}
@@ -824,6 +1042,7 @@ if(strlen(mni_current)==0)
     }
 
     //raydium_osd_logo("logoc.tga");
+    draw_music_popup();
     raydium_rendering_finish();
     return;
     }
@@ -1034,6 +1253,8 @@ if(countdown>0)
     raydium_osd_printf(5,50,40,0.5,"font2.tga","^cReady ? Start in ^f%i^c seconds.",(int)countdown+1);
     }
 raydium_osd_logo("logoc.tga");
+draw_music_popup();
+
 //memset(raydium_vertex_tag,0,RAYDIUM_MAX_VERTICES);
 raydium_rendering_finish();
 
@@ -1104,10 +1325,11 @@ raydium_register_variable(&vue,RAYDIUM_REGISTER_INT,"vue");
 if(raydium_init_cli_option_default("mni",mni_current,""))
     mni_load(mni_current);
 
-
+raydium_gui_theme_load("maniadrive.gui");
 raydium_timecall_add(frame_step,-1);
 change_game_state(GAME_COUNTDOWN);
 
+raydium_sound_music_changed_callback=music_change;
 raydium_ode_AfterElementDrawCallback=draw_element_after;
 raydium_ode_CollideCallback=collide;
 raydium_ode_ObjectNearCollide=nearcall;
