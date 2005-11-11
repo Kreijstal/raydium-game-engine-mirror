@@ -26,6 +26,7 @@ int i;
 
 w=&raydium_gui_windows[window];
 
+w->state=0;
 w->id=window;
 w->name[0]=0;
 w->pos[0]=w->pos[1]=0;
