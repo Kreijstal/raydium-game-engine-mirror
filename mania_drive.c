@@ -11,6 +11,9 @@ char *version="version 0.7";
 #define MANIA2_BINARY "./mania2.static"
 #endif
 
+#define STORY_FILE		"mania_drive.story"
+#define HISTORY_STATE_FILE	"mania_drive.state"
+
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
 GLfloat tmp2[]={1.0,1.0,1.0,1.0};
@@ -40,6 +43,8 @@ GLfloat partytime;
 char playername[RAYDIUM_MAX_NAME_LEN];
 char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
+char message[RAYDIUM_MAX_NAME_LEN];
+signed char mode;
 
 signed char music_popup_inc=-1;
 
@@ -86,6 +91,10 @@ Score track_score;
 #define GAME_GAME	2
 #define GAME_END	3
 
+#define MODE_NONE	0
+#define MODE_SOLO	1
+#define MODE_NET	2
+#define MODE_MULTI	3
 
 float get_score(char *track,char *player)
 {
@@ -135,6 +144,20 @@ raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
 }
 
+
+void post_score_local(char *track, float time)
+{
+FILE *fp;
+
+fp=fopen(HISTORY_STATE_FILE,"at");
+if(!fp)
+    {
+    raydium_log("ERROR: cannot save story state");
+    return;
+    }
+fprintf(fp,"%s;%f\n",track,time);
+fclose(fp);
+}
 
 void get_tracklist(char *list)
 {
@@ -195,8 +218,9 @@ unlink(tri);
 load_boxes("mania.box");
 dat_load("mania.dat");
 
+if(mode!=MODE_SOLO)
+    track_score.time=get_score(mni,track_score.player);
 
-track_score.time=get_score(mni,track_score.player);
 raydium_network_propag_refresh(NET_SCORE_TRACK);
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     best_score[i].time=-1;
@@ -208,6 +232,7 @@ create_car();
 raydium_gui_window_delete_name("menu");
 raydium_gui_hide();
 raydium_sound_load_music(NULL);
+raydium_video_delete_name("video");
 
 return 1;
 }
@@ -218,12 +243,30 @@ void btnBestTimeOk(raydium_gui_Object *w)
 raydium_gui_window_delete_name("besttime");
 }
 
+void btnCantDriveOk(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("cantdrive");
+}
+
+
 
 
 void AfterFade(void)
 {
 mni_load(mni_next);
 mni_next[0]=0;
+}
+
+void drive(char *track)
+{
+GLfloat from[4]={0,0,0,0};
+GLfloat to[4]={0,0,0,1};
+
+strcpy(mni_next,track);
+raydium_sound_source_fade(0,1);
+raydium_osd_fade_from(from,to,1,AfterFade);
+raydium_gui_window_delete_name("menu");
+raydium_gui_window_delete_name("besttime");
 }
 
 void gui_start(void)
@@ -237,25 +280,39 @@ raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.o
 }
 
 
-void btnDrive(raydium_gui_Object *w)
+void btnDriveNet(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
-GLfloat from[4]={0,0,0,0};
-GLfloat to[4]={0,0,0,1};
 
 raydium_gui_read_name("menu","cboTrack",track);
 strcat(track,".mni");
-strcpy(mni_next,track);
-raydium_sound_source_fade(0,1);
-raydium_osd_fade_from(from,to,1,AfterFade);
-raydium_gui_window_delete_name("menu");
-raydium_gui_window_delete_name("besttime");
+drive(track);
+mode=MODE_NET;
 }
+
+void btnDriveSolo(raydium_gui_Object *w)
+{
+drive(w->name);
+mode=MODE_SOLO;
+}
+
 
 void btnBackToMainMenu(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
+}
+
+void btnCantDrive(raydium_gui_Object *w)
+{
+int handle;
+char *str="You can't drive yet here !";
+
+handle=raydium_gui_window_create("cantdrive",25,45,50,15);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblCantDrive",handle,50,80,str,0,0,0);
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnCantDriveOk",handle,35,15,"OK",btnCantDriveOk);
 }
 
 void gui_menu_BestTime(raydium_gui_Object *w)
@@ -313,25 +370,73 @@ raydium_gui_widget_sizes(20,5,18);
 raydium_gui_button_create("btnMulti",handle,50,15,"Multiplayer",btnConnect);
 */
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnDrive);
+raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnDriveNet);
 
-raydium_gui_widget_sizes(5,5,18);
+raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
 gui_start();
 }
 
 void build_gui_Story(void)
 {
+char ret[RAYDIUM_GUI_DATASIZE];
+char part1[RAYDIUM_MAX_NAME_LEN];
+char part2[RAYDIUM_MAX_NAME_LEN];
+char part3[RAYDIUM_MAX_NAME_LEN];
+int handle;
+int i,last,len;
+float pos;
+
+handle=raydium_gui_window_create("menu",48,10,50,80);
+
+raydium_gui_widget_sizes(5,5,25);
+raydium_gui_label_create("lblMode",handle,50,95,"Story Mode",0,0,0);
+
+raydium_register_variable(ret,RAYDIUM_REGISTER_STR,"ret");
+raydium_php_exec("mania_story.php");
+raydium_register_variable_unregister_last();
+
+pos=85;
+last=0;
+len=strlen(ret);
+for(i=0;i<len;i++)
+    if(ret[i]=='\n' || ret[i]==0)
+    {
+    ret[i]=0;
+    part1[0]=part2[0]=0;
+    raydium_parser_cut(ret+last,part1,part2,';');
+    raydium_gui_widget_sizes(10,4,12);
+    raydium_gui_button_create(part1,handle,5,pos,"Drive",(part2[1]!='4'?btnDriveSolo:btnCantDrive));
+
+    part1[0]='*'; // avoid name collision
+    strcpy(part3,part2);
+    part3[1]='0';
+    raydium_gui_widget_sizes(0,0,14);
+    raydium_gui_label_create(part1,handle,65,pos+2.5,part3,0,0,0);
+    part1[0]='+'; // avoid name collision
+    raydium_gui_label_create(part1,handle,65-0.2,pos+2.5+0.2,part2,0,0,0);
+
+//    raydium_gui_button_create(part1,handle,5,pos,part2,(part2[1]!='4'?btnDriveSolo:btnCantDrive));
+    last=i+1;
+    pos-=6;
+    }
+
+raydium_gui_widget_sizes(6,3,14);
+raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
+gui_start();
+}
+
+
+void build_gui_Lan(void)
+{
 int handle;
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
-raydium_gui_label_create("lblMode",handle,50,90,"I'm coding it right now ! ;)",0,0,0);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lbl...",handle,25,90,"Not yet ! ;)",0,0,0);
 
-// parse story file
-// parse story state file
-// use PHP for this ?
 
-raydium_gui_widget_sizes(5,5,18);
+raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
 gui_start();
 }
@@ -348,6 +453,16 @@ raydium_gui_window_delete_name("menu");
 build_gui_Story();
 }
 
+void btnModeLan(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_Lan();
+}
+
+void btnQuit(raydium_gui_Object *w)
+{
+exit(0);
+}
 
 
 void build_gui_Main(void)
@@ -362,8 +477,10 @@ raydium_gui_label_create("lblMode",handle,50,90,"- Select Game Mode - ",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_button_create("btnModeStory",handle,25,65,"Story",btnModeStory);
 raydium_gui_button_create("btnModeNetTracks",handle,25,45,"Internet Tracks",btnModeNetTracks);
-raydium_gui_button_create("btnModeLAN",handle,25,25,"LAN Multiplayer",NULL);
+raydium_gui_button_create("btnModeLAN",handle,25,25,"LAN Multiplayer",btnModeLan);
 
+raydium_gui_widget_sizes(6,3,14);
+raydium_gui_button_create("btnBackToMain",handle,3,5,"Quit",btnQuit);
 gui_start();
 }
 
@@ -559,7 +676,28 @@ if(type==GAME_END)
 	}
 
 
-    post_score(mni_current,playername,score);
+    if(mode==MODE_SOLO)
+	{
+	if(timer<=trackdata.gold_time)
+	    {
+	    // win
+	    if(timer<trackdata.author_time)
+		strcpy(message,"Impressive ! Author time is broken !");
+	    else
+		strcpy(message,"Right ! You got it.");
+	    
+	    // (add score to local database)
+	    post_score_local(mni_current,timer);
+	    }
+	else
+	    {
+	    // try again
+	    strcpy(message,"- Try again -");
+	    }
+	}
+
+    if(mode!=MODE_SOLO)
+	post_score(mni_current,playername,score);
     }
 
 if(type==GAME_GAME)
@@ -599,9 +737,18 @@ int h,m,s,ms;
 int h2,m2,s2,ms2;
 
 hms(timer,&h,&m,&s,&ms);
-hms(partytime,&h2,&m2,&s2,&ms2);
 raydium_osd_printf(5,85,18,0.5,"font2.tga","^fLap   %i:%02i:%02i:%03i (^4%s^f)",h,m,s,ms,mni_current);
-raydium_osd_printf(5,80,18,0.5,"font2.tga","^fParty %i:%02i:%02i:%03i",h2,m2,s2,ms2);
+
+if(mode==MODE_MULTI)
+    {
+    hms(partytime,&h2,&m2,&s2,&ms2);
+    raydium_osd_printf(5,80,18,0.5,"font2.tga","^fParty %i:%02i:%02i:%03i",h2,m2,s2,ms2);
+    }
+if(mode==MODE_SOLO)
+    {
+    hms(trackdata.gold_time,&h2,&m2,&s2,&ms2);
+    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eGold  ^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
+    }    
 }
 
 void draw_best_score(void)
@@ -612,6 +759,12 @@ float best;
 float pos;
 int i,j,bestid;
 int cpt=1;
+
+
+if(mode==MODE_SOLO)
+    {
+    return;
+    }
 
 if(track_score.time>=0)
     {
@@ -1005,6 +1158,7 @@ switch(dir)
     }
 rot[0]=rot[1]=0;
 raydium_ode_object_rotate_name("WATURE",rot);
+message[0]=0;
 }
 
 
@@ -1025,7 +1179,16 @@ if(strlen(mni_current)==0)
 
     if(!raydium_gui_isvisible())
 	{
-	build_gui_Main();
+	
+	if(mode==MODE_SOLO)
+	    build_gui_Story();
+	else if(mode==MODE_MULTI)
+	    build_gui_Lan();
+	else if(mode==MODE_NET)
+	    build_gui_InternetTracks();
+	else
+	    build_gui_Main(); // MODE_NONE
+		
 	raydium_video_open("mania_menu_v1.jpgs","video");
 	raydium_osd_cursor_set("BOXcursor.tga",6,6);
 	}
@@ -1050,6 +1213,7 @@ if(strlen(mni_current)==0)
 if(raydium_key_last==1027)
     {
     mni_current[0]=0;
+    message[0]=0;
     raydium_sound_SourceStop(sound_car);
 
     raydium_clear_frame();
@@ -1225,6 +1389,13 @@ raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
 raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font2.tga","^0- %3i FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
 raydium_osd_printf(2,98,16,0.5,"font2.tga","^f- ^c%3i^f FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
 
+
+if(strlen(message))
+    {
+    raydium_osd_printf(10+SHADOW_OFFSET,30-SHADOW_OFFSET,24,0.5,"font2.tga","^0%s",message);
+    raydium_osd_printf(10,30,24,0.5,"font2.tga","^f%s",message);
+    }
+
 /*{
 GLfloat rx,ry,rz;
 raydium_ode_element_rot_get_name("corps",&rx,&ry,&rz);
@@ -1265,6 +1436,7 @@ int main(int argc, char **argv)
 {
 char server[RAYDIUM_MAX_NAME_LEN];
 int i;
+FILE *fp;
 
 raydium_init_args(argc,argv);
 raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,version);
@@ -1280,6 +1452,7 @@ memcpy(raydium_light_color[0],sun,raydium_internal_size_vector_float_4);
 //raydium_light_intensity[0]=400;
 raydium_light_intensity[0]=1000000;
 raydium_light_update_all(0);
+
 
 memcpy(raydium_light_color[1],amb,raydium_internal_size_vector_float_4);
 raydium_light_intensity[1]=10000;
@@ -1328,6 +1501,15 @@ if(raydium_init_cli_option_default("mni",mni_current,""))
 raydium_gui_theme_load("maniadrive.gui");
 raydium_timecall_add(frame_step,-1);
 change_game_state(GAME_COUNTDOWN);
+message[0]=0;
+mode=MODE_NONE;
+fp=raydium_file_fopen(STORY_FILE,"rt");
+if(!fp) 
+    {
+    raydium_log("ERROR: cannot find story file ! abording ...");
+    exit(1);
+    }
+fclose(fp);
 
 raydium_sound_music_changed_callback=music_change;
 raydium_ode_AfterElementDrawCallback=draw_element_after;
