@@ -67,6 +67,8 @@ JSAMPARRAY buffer;
 int row_stride;
 long count;
 
+//printf(".\n");
+
 cinfo.err=jpeg_std_error(&jerr);
 jpeg_create_decompress(&cinfo);
 jpeg_stdio_src(&cinfo, fp);
@@ -146,7 +148,6 @@ sscanf(head,"%i %i %i %i",
 raydium_video_video[id].state=1;
 raydium_video_video[id].elapsed=0;
 raydium_video_video[id].data=malloc(raydium_video_video[id].sizex*raydium_video_video[id].sizey*3);
-
 raydium_video_video[id].live_id=raydium_live_texture_create(as,raydium_video_video[id].data,raydium_video_video[id].sizex,raydium_video_video[id].sizey,24);
 
 raydium_video_video[id].offsets=malloc(sizeof(long)*raydium_video_video[id].frames_total);

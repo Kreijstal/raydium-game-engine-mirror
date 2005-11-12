@@ -668,12 +668,19 @@ for(i=0;i<raydium_texture_index;i++)
     raydium_log("live: WARNING ! %s is duplicated",as);
     // this is the right answer only if duplicated texture
     // is already a "live" one ! (to fix ?)
-    return raydium_live_texture_find(i);
+
+    id=raydium_live_texture_find(i);
+    // ... but reset/update some values
+    tex=&raydium_live_texture[id];
+    tex->device=NULL;
+    tex->data_source=data_source;
+
+    raydium_live_texture_refresh(id);
+    return id;
     }
 
 
 tex=&raydium_live_texture[id];
-
 tex->tx=tx;
 tex->ty=ty;
 tex->hardware_tx=raydium_trigo_pow2_next(tex->tx);
