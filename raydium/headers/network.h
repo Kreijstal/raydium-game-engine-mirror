@@ -282,6 +282,11 @@ extern signed char raydium_network_timeout_check (void);
 Internal use.
 **/
 
+extern void raydium_network_init_sub(void);
+/**
+Internal use.
+**/
+
 extern signed char raydium_network_init (void);
 /**
 Nothing interesting unless you're creating a console server (using the
@@ -376,6 +381,11 @@ You are connected instantaneously, and you must start sending data
 before server timeout (defined by ##RAYDIUM_NETWORK_TIMEOUT##).
 You player number can be found with ##raydium_network_uid## variable, 
 as said before.
+**/
+
+extern void raydium_network_client_disconnect(void);
+/**
+This function will disconnect client from server, if connected.
 **/
 
 extern signed char raydium_server_accept_new (struct sockaddr *from, char *name);

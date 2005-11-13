@@ -294,6 +294,7 @@ raydium_osd_stop();
 
 y=100-raydium_console_pos+(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
 
+raydium_osd_color_ega('f');
 raydium_console_cursor_blink+=(raydium_frame_time*2);
 raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s%c",raydium_console_get_string,( (((int)raydium_console_cursor_blink)%2)?'_':' '));
 y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);

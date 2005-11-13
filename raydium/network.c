@@ -492,6 +492,22 @@ time(&now);
 return 0;
 }
 
+void raydium_network_init_sub(void)
+{
+int i;
+
+if(raydium_network_mode) close(raydium_network_socket);
+raydium_network_uid=-1;
+raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
+raydium_network_socket=-1;
+
+for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
+    {
+    raydium_network_client[i]=0;
+    raydium_network_name[i][0]=0;
+    }
+}
+
 signed char raydium_network_init(void)
 {
 int i;
@@ -508,16 +524,7 @@ if (ret) { raydium_log("network: FAILED ! (Winsock 2 Error: %i while asking for 
 raydium_timecall_init();
 #endif
 
-if(raydium_network_mode) close(raydium_network_socket);
-raydium_network_uid=-1;
-raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
-raydium_network_socket=-1;
-
-for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-    {
-    raydium_network_client[i]=0;
-    raydium_network_name[i][0]=0;
-    }
+raydium_network_init_sub();
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
     {
@@ -856,6 +863,12 @@ raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_log("ERROR ! network: unknow server message type (%i). abort.",type);
 return(0);
 
+}
+
+void raydium_network_client_disconnect(void)
+{
+raydium_network_init_sub();
+raydium_log("network: disconnected");
 }
 
 signed char raydium_server_accept_new(struct sockaddr *from, char *name)
