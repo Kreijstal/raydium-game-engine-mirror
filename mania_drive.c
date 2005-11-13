@@ -60,6 +60,7 @@ void dat_load(char *filename);
 void hms(GLfloat t,int *h, int *m, int *s, int *ms);
 int mni_load(char *mni);
 void build_gui_Main(void);
+void music_random(void);
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -233,7 +234,7 @@ raydium_gui_window_delete_name("menu");
 raydium_gui_hide();
 raydium_sound_load_music(NULL);
 raydium_video_delete_name("video");
-
+music_random();
 return 1;
 }
 
@@ -275,7 +276,6 @@ if(raydium_gui_isvisible())
     return;
 raydium_gui_show();
 
-// should use a PHP script here
 raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
 }
 
@@ -795,6 +795,23 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 	cpt++;
 	}
     }
+}
+
+
+int music_playlist(char *newfile)
+{
+raydium_register_variable(newfile,RAYDIUM_REGISTER_STR,"raydium_ogg_file");
+raydium_php_exec("mania_playlist.php");
+raydium_register_variable_unregister_last();
+return strlen(newfile)!=0;
+}
+
+
+void music_random(void)
+{
+char var[RAYDIUM_MAX_NAME_LEN];
+music_playlist(var);
+raydium_sound_load_music(var);
 }
 
 void music_change(void)
@@ -1511,6 +1528,7 @@ if(!fp)
     }
 fclose(fp);
 
+raydium_sound_music_eof_callback=music_playlist;
 raydium_sound_music_changed_callback=music_change;
 raydium_ode_AfterElementDrawCallback=draw_element_after;
 raydium_ode_CollideCallback=collide;
