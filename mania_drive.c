@@ -315,6 +315,37 @@ raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnCantDriveOk",handle,35,15,"OK",btnCantDriveOk);
 }
 
+void btnErrorOkClick(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("error");
+}
+
+void btnNetworkConnect(raydium_gui_Object *w)
+{
+char server[512];
+int handle;
+
+raydium_gui_read_name("menu","edtServer",server);
+raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
+
+if(!raydium_network_client_connect_to(server))
+    {
+    handle=raydium_gui_window_create("error",25,45,50,15);
+    raydium_gui_widget_sizes(0,0,18);
+    raydium_gui_label_create("lblError",handle,50,80,"Cannot connect to server ...",0,0,0);
+    raydium_gui_widget_sizes(15,5,18);
+    raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
+    return;
+    }
+
+mode=MODE_MULTI;
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",25,45,50,15);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
+}
+
+
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
@@ -432,8 +463,23 @@ void build_gui_Lan(void)
 int handle;
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
+//raydium_gui_widget_sizes(0,0,18);
+//raydium_gui_label_create("lbl...",handle,25,90,"Not yet ! ;)",0,0,0);
+
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lbl...",handle,25,90,"Not yet ! ;)",0,0,0);
+raydium_gui_label_create("lblMode",handle,50,90,"- Network Game - ",0,0,0);
+
+raydium_gui_label_create("lblPlayerName",handle,25,75,"Player Name :",0,0,0);
+raydium_gui_widget_sizes(25,4,18);
+raydium_gui_edit_create("edtPlayerName",handle,47,70,raydium_network_name_local);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblServer",handle,32.5,60,"Server :",0,0,0);
+raydium_gui_widget_sizes(25,4,18);
+raydium_gui_edit_create("edtServer",handle,47,55,"");
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
 
 
 raydium_gui_widget_sizes(6,3,14);
@@ -1232,6 +1278,8 @@ if(raydium_key_last==1027)
     mni_current[0]=0;
     message[0]=0;
     raydium_sound_SourceStop(sound_car);
+    raydium_network_client_disconnect();
+
 
     raydium_clear_frame();
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
@@ -1440,6 +1488,7 @@ if(countdown>0)
     raydium_osd_printf(5+SHADOW_OFFSET,50-SHADOW_OFFSET,40,0.5,"font2.tga","^0Ready ? Start in %i seconds.",(int)countdown+1);
     raydium_osd_printf(5,50,40,0.5,"font2.tga","^cReady ? Start in ^f%i^c seconds.",(int)countdown+1);
     }
+raydium_osd_color_ega('f');
 raydium_osd_logo("logoc.tga");
 draw_music_popup();
 
@@ -1451,7 +1500,7 @@ raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
 
 int main(int argc, char **argv)
 {
-char server[RAYDIUM_MAX_NAME_LEN];
+//char server[RAYDIUM_MAX_NAME_LEN];
 int i;
 FILE *fp;
 
@@ -1480,15 +1529,16 @@ raydium_window_view_update();
 raydium_network_player_name(playername);
 
 
+/*
 if(raydium_init_cli_option("server",server))
      if(!raydium_network_client_connect_to(server)) 
         exit(1);
-
+*/
 
 raydium_sound_DefaultReferenceDistance=4.f;
 sound_car=raydium_sound_LoadWav("murcielago.wav");
 raydium_sound_SetSourcePitch(sound_car,0);
-raydium_sound_SetSourceGain(sound_car,0.05);  // Engine Gain
+raydium_sound_SetSourceGain(sound_car,0.1);  // Engine Gain
 
 sound_checkpoint=raydium_sound_LoadWav("touched.wav");
 raydium_sound_SetSourceLoop(sound_checkpoint,0);
