@@ -50,6 +50,7 @@ $ret="";
 $col='2';
 foreach($story as $s)
     {
+    $s=trim($s);
     $d=get_data($s);
     $b=get_best($s);
 
