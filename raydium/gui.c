@@ -929,17 +929,19 @@ if(raydium_gui_window_focused==window &&
 // draw expanded part, if needed
 if(c->expanded && raydium_gui_windows[window].focused_widget==w)
 {
-if(raydium_key_last==101 && c->current>0)
+if((raydium_key_last==101 || raydium_mouse_click==4) && c->current>0)
     {
     c->current--;
     raydium_key_last=0;
+    raydium_mouse_click=0;
     if(c->current < c->offset)
 	c->offset=c->current;
     }
-if(raydium_key_last==103 && c->current<nitems-1)
+if((raydium_key_last==103 || raydium_mouse_click==5) && c->current<nitems-1)
     {
     c->current++;
     raydium_key_last=0;
+    raydium_mouse_click=0;
     if(c->current >= c->offset+RAYDIUM_GUI_COMBO_LIST_HEIGHT)
 	c->offset=c->current-RAYDIUM_GUI_COMBO_LIST_HEIGHT+1;
     }

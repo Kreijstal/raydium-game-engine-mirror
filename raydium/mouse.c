@@ -38,14 +38,23 @@ raydium_mouse_hide();
 void raydium_mouse_click_callback(int but,int state,int x,int y)
 {
 unsigned char n=0,s=0;
+signed char special=0;
+
 
 if(but==GLUT_LEFT_BUTTON) n=0;
-if(but==GLUT_RIGHT_BUTTON) n=1;
-if(but==GLUT_MIDDLE_BUTTON) n=2;
+else if(but==GLUT_RIGHT_BUTTON) n=1;
+else if(but==GLUT_MIDDLE_BUTTON) n=2;
+else 
+    {
+    special=1;
+    n=but;
+    }
+
 if(state==GLUT_DOWN) s=1;
 if(state==GLUT_UP) s=0;
 if(s) raydium_mouse_click=n+1;
-raydium_mouse_button[n]=s;
+if(!special)
+    raydium_mouse_button[n]=s;
 }
 
 

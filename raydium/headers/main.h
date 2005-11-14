@@ -183,8 +183,9 @@ position on screen, I mean) with ##raydium_mouse_x## and ##raydium_mouse_y##
 when mouse is out of the window ! Check boundaries before using these values).
     
 Raydium use: 1 for left button, 2 for right button, and 3 for 
-middle button (0 for none) with ##raydium_mouse_clic## for the last clic 
-value. (generated one time per clic)
+middle button (0 for none) with ##raydium_mouse_click## for the last click 
+value. (generated one time per click)
+Raydium will now use 4 (up) and 5 (down) for mouse wheel, if any.
     
 You can permanently get a button's state, up (0) or down (non zero), 
 using ##raydium_mouse_button[x]##, where x is 0 for left button, 1 for right 
