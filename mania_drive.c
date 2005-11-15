@@ -40,7 +40,7 @@ int game_state;
 GLfloat timer;
 GLfloat countdown;
 GLfloat partytime;
-char playername[RAYDIUM_MAX_NAME_LEN];
+//char playername[RAYDIUM_MAX_NAME_LEN];
 char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
@@ -285,6 +285,12 @@ void btnDriveNet(raydium_gui_Object *w)
 char track[RAYDIUM_MAX_NAME_LEN];
 
 raydium_gui_read_name("menu","cboTrack",track);
+raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
+
+raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
+raydium_parser_db_set("ManiaDrive-LastInternetTrack",track);
+
+
 strcat(track,".mni");
 drive(track);
 mode=MODE_NET;
@@ -327,7 +333,10 @@ int handle;
 
 raydium_gui_read_name("menu","edtServer",server);
 raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
+
+raydium_parser_db_set("ManiaDrive-Server",server);
 raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
+
 
 if(!raydium_network_client_connect_to(server))
     {
@@ -379,8 +388,15 @@ void build_gui_InternetTracks(void)
 {
 int handle;
 char l[RAYDIUM_GUI_DATASIZE];
+char lasttrack[RAYDIUM_MAX_NAME_LEN];
+int ilt;
+
+raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
+raydium_parser_db_get("ManiaDrive-LastInternetTrack",lasttrack,"");
 
 get_tracklist(l);
+ilt=raydium_gui_list_id(lasttrack,l);
+if(ilt<0) ilt=0;
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
 raydium_gui_widget_sizes(0,0,18);
@@ -391,7 +407,7 @@ raydium_gui_edit_create("edtPlayerName",handle,47,85,raydium_network_name_local)
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblTrack",handle,34,75,"Track :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_combo_create("cboTrack",handle,47,70,l,0);
+raydium_gui_combo_create("cboTrack",handle,47,70,l,ilt);
 
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_button_create("btnBestTime",handle,47,55,"Get best time",gui_menu_BestTime);
@@ -462,8 +478,10 @@ gui_start();
 void build_gui_Lan(void)
 {
 int handle;
+char server[RAYDIUM_MAX_NAME_LEN];
 
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
+raydium_parser_db_get("ManiaDrive-Server",server,"192.168.0.1");
 
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
@@ -480,7 +498,7 @@ raydium_gui_edit_create("edtPlayerName",handle,47,70,raydium_network_name_local)
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblServer",handle,32.5,60,"Server :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_edit_create("edtServer",handle,47,55,"");
+raydium_gui_edit_create("edtServer",handle,47,55,server);
 
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
@@ -714,14 +732,14 @@ if(type==GAME_END)
 	raydium_network_uid>=0)
 	{
 	best_score[raydium_network_uid].time=timer;
-	strcpy(best_score[raydium_network_uid].player,playername);
+	strcpy(best_score[raydium_network_uid].player,raydium_network_name_local);
 	raydium_network_propag_refresh(NET_SCORE_BASE+raydium_network_uid);
 	}
 
     if(timer<track_score.time)
 	{
 	track_score.time=timer;
-	strcpy(track_score.player,playername);
+	strcpy(track_score.player,raydium_network_name_local);
 	raydium_network_propag_refresh(NET_SCORE_TRACK);
 	}
 
@@ -747,7 +765,7 @@ if(type==GAME_END)
 	}
 
     if(mode!=MODE_SOLO)
-	post_score(mni_current,playername,score);
+	post_score(mni_current,raydium_network_name_local,score);
     }
 
 if(type==GAME_GAME)
@@ -1529,8 +1547,6 @@ raydium_light_intensity[1]=10000;
 raydium_light_update_all(1);
 raydium_window_view_update();
 
-
-raydium_network_player_name(playername);
 
 
 /*

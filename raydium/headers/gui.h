@@ -315,4 +315,10 @@ Usefull for PHP scripts, since it's not possible to create callback for
 buttons with RayPHP.
 **/
 
+int raydium_gui_list_id(char *item, char *list);
+/**
+This function will return ##item##'s id in ##list##. Returns -1 if not found.
+Useful for combo index, for example.
+**/
+
 #endif

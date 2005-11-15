@@ -1986,3 +1986,26 @@ ret=raydium_gui_button_clicked_id;
 raydium_gui_button_clicked_id=-1;
 return ret;
 }
+
+
+int raydium_gui_list_id(char *item, char *list)
+{
+int i,cpt,len,start;
+char items[RAYDIUM_GUI_DATASIZE];
+
+strcpy(items,list);
+
+len=strlen(items);
+for(i=0,cpt=0,start=0;i<=len;i++)
+    if(items[i]==RAYDIUM_GUI_ITEM_SEPARATOR || items[i]==0)
+    {
+    items[i]=0;
+    if(!strcmp(item,items+start))
+	{
+	return cpt;
+	}
+    cpt++;
+    start=i+1;
+    }
+return -1;
+}
