@@ -220,6 +220,10 @@
 #define RAYDIUM_CAPTURE_TGA			1
 #define RAYDIUM_CAPTURE_JPG			2
 
+#define RAYDIUM_DB_FILENAME			"raydium.db"
+#define RAYDIUM_DB_TEMP				"raydium.db.temp"
+#define RAYDIUM_DB_SEPARATOR			';'
+
 #ifdef MAIN_H
 #define __global extern
 #endif

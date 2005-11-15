@@ -148,3 +148,99 @@ if(val_s[0]=='{') // is a float array
 return RAYDIUM_PARSER_TYPE_FLOAT;    
 
 }
+
+signed char raydium_parser_db_get(char *key, char *value, char *def)
+{
+FILE *fp;
+char line[(RAYDIUM_MAX_NAME_LEN*2)+1];
+char part1[RAYDIUM_MAX_NAME_LEN];
+char part2[RAYDIUM_MAX_NAME_LEN];
+signed char found=0;
+
+fp=fopen(RAYDIUM_DB_FILENAME,"rt");
+
+while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
+    {
+    raydium_parser_trim(line);
+    if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
+	{
+	raydium_log("db: ERROR: invalid: '%s'",line);
+	continue;
+	}
+
+    if(strcmp(part1,key))
+	continue;
+
+    found=1;
+    strcpy(value,part2);
+    }
+
+if(fp)
+    fclose(fp);
+
+if(!found && def)
+    {
+    strcpy(value,def);
+    found=1;
+    }
+
+return found;
+}
+
+
+signed char raydium_parser_db_set(char *key, char *value)
+{
+FILE *fp,*out;
+char line[(RAYDIUM_MAX_NAME_LEN*2)+1];
+char part1[RAYDIUM_MAX_NAME_LEN];
+char part2[RAYDIUM_MAX_NAME_LEN];
+signed char found=0;
+
+out=fopen(RAYDIUM_DB_TEMP,"wt");
+
+if(!out)
+    {
+    raydium_log("db: cannot create new database !");
+    return 0;
+    }
+
+
+fp=fopen(RAYDIUM_DB_FILENAME,"rt");
+
+
+while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
+    {
+    raydium_parser_trim(line);
+
+    if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
+	{
+	raydium_log("db: ERROR: invalid: '%s'",line);
+	continue;
+	}
+
+    if(!strcmp(part1,key))
+	{
+	fprintf(out,"%s;%s\n",key,value);
+	found=1;
+	continue;
+	}
+
+    fprintf(out,"%s\n",line);
+    }
+
+if(!found)
+    fprintf(out,"%s;%s\n",key,value);
+
+if(fp)
+    fclose(fp);
+fclose(out);
+
+if(rename(RAYDIUM_DB_TEMP,RAYDIUM_DB_FILENAME)==-1)
+    {
+    raydium_log("db: cannot rename new database !");
+    perror("rename");
+    return 0;
+    }
+
+return 1;
+}

@@ -131,7 +131,7 @@ exit_if_error "$?" "Is this script up to date ?"
 # configure
 echo "Configuring ..."
 cd php
-./configure --enable-embed=static --with-zlib --enable-ftp --enable-dba --with-flatfile --enable-static=zlib > ../configure.log
+./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib > ../configure.log
 ret=$?
 cd -
 exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"

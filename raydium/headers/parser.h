@@ -91,4 +91,22 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 %%
 **/
 
+signed char raydium_parser_db_get(char *key, char *value, char *def);
+/**
+This function will copy the value of ##key## from Raydium's database to
+##value##. If ##key## is not found, ##def## is used as a default value.
+
+If you do not want to use a default value, give ##NULL## to ##def##,
+and the function will return 0 when ##key## was not found.
+
+No memory allocation is done for you.
+**/
+
+signed char raydium_parser_db_set(char *key, char *value);
+/**
+Sets ##key## in the Raydium's database to ##value##.
+This function will return 0 if failed.
+**/
+
+
 #endif
