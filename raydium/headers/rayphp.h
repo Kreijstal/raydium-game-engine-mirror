@@ -33,4 +33,15 @@ Will contact R3S servers to get file list, using ##filter## (shell-like
 syntax). Default ##filter## is ##*##.
 **/
 
+signed char raydium_rayphp_db_set(char *key, char *data);
+/**
+...
+**/
+
+signed char raydium_rayphp_db_get(char *key, char *data, char *def);
+/**
+...
+**/
+
+
 #endif

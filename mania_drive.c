@@ -327,6 +327,7 @@ int handle;
 
 raydium_gui_read_name("menu","edtServer",server);
 raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
+raydium_rayphp_db_set("Generic-PlayerName",raydium_network_name_local);
 
 if(!raydium_network_client_connect_to(server))
     {
@@ -461,6 +462,9 @@ gui_start();
 void build_gui_Lan(void)
 {
 int handle;
+
+raydium_rayphp_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
+
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
 //raydium_gui_widget_sizes(0,0,18);
