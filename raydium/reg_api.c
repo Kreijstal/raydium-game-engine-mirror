@@ -67,6 +67,8 @@ PHP_i_s(raydium_particle_state_restore);
 // shadow.c
 PHP_v_v(raydium_shadow_enable);
 PHP_v_v(raydium_shadow_disable);
+// parser.c
+PHP_i_ss(raydium_parser_db_set);
 
 #ifdef ODE_SUPPORT
 //ode.c
@@ -254,6 +256,9 @@ raydium_register_function(C2PHP(raydium_gui_check_create),"raydium_gui_check_cre
 raydium_register_function(C2PHP(raydium_gui_combo_create),"raydium_gui_combo_create");
 raydium_register_function(C2PHP(raydium_gui_read_name),"raydium_gui_read_name");
 raydium_register_function(C2PHP(raydium_gui_button_clicked),"raydium_gui_button_clicked");
+
+// parser
+raydium_register_function(C2PHP(raydium_parser_db_set),"raydium_parser_db_set");
 
 
 #ifdef ODE_SUPPORT
