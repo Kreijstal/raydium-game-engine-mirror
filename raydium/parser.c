@@ -235,6 +235,7 @@ if(fp)
     fclose(fp);
 fclose(out);
 
+unlink(RAYDIUM_DB_FILENAME); // since windows's rename is not POSIX
 if(rename(RAYDIUM_DB_TEMP,RAYDIUM_DB_FILENAME)==-1)
     {
     raydium_log("db: cannot rename new database !");
