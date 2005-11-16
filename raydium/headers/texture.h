@@ -80,11 +80,13 @@ then returns -1. Returns texture id otherwise.
 extern void raydium_texture_filter_change (GLuint filter);
 /**
 
-This function will change all filters at anytime.
-Please note that this function will reload every texture and can be very slow.
+Change texture filter. The new filter will apply on all "next" textures,
+but will not change already loaded ones (this was the case in old Raydium
+release), since it may generate strange bugs with dynamic (aka "faked")
+textures, and it was very slow.
 
 %%(c)
-// will switch all textures to bilinear filter.
+// will switch to bilinear filter for next textures
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_BILINEAR)%%
 **/
 

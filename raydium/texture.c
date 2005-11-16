@@ -354,7 +354,7 @@ return raydium_texture_current_set(raydium_texture_find_by_name(name));
 
 void raydium_texture_filter_change(GLuint filter)
 {
-GLuint i;
+//GLuint i;
 char force[RAYDIUM_MAX_NAME_LEN];
 
 if(raydium_init_cli_option("filter",force))
@@ -366,8 +366,9 @@ if(raydium_init_cli_option("filter",force))
 
 raydium_texture_filter=filter;
 
-for(i=0;i<raydium_texture_index;i++)
-    raydium_texture_load_erase(raydium_texture_name[i],i);
+// too ... dangerous
+/*for(i=0;i<raydium_texture_index;i++)
+    raydium_texture_load_erase(raydium_texture_name[i],i);*/
 
 }
 
