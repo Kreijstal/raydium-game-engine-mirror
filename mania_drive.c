@@ -1,4 +1,4 @@
-char *version="version 0.7";
+char *version="version 0.8";
 #include "raydium/index.c"
 
 #include "mania.h"
@@ -34,7 +34,10 @@ char draw_debug=-1;
 char is_explosive_tag=29;
 dReal cam_angle_h=0;
 dReal cam_angle_v=90;
-int movie_spf=0;
+
+signed char camera_lag;
+float camera_lag_speed;
+
 int object_ground,object_boxes;
 int game_state;
 GLfloat timer;
@@ -355,6 +358,27 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
 }
 
+void btnApplyOptions(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN];
+
+camera_lag=raydium_gui_read_name("menu","chkCameraLag",str);
+camera_lag_speed=raydium_gui_read_name("menu","trkCameraLag",str);
+
+str[1]=0;
+str[0]=(camera_lag?'y':'n');
+raydium_parser_db_set("ManiaDrive-CameraLagActive",str);
+
+sprintf(str,"%f",camera_lag_speed);
+raydium_parser_db_set("ManiaDrive-CameraSpeed",str);
+
+raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
+
+
+raydium_gui_window_delete_name("menu");
+build_gui_Main();
+}
+
 
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
@@ -509,6 +533,37 @@ raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
 gui_start();
 }
 
+void build_gui_Options(void)
+{
+int handle;
+
+raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
+
+handle=raydium_gui_window_create("menu",48,10,50,40);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblPlayerName",handle,25,80,"Player Name :",0,0,0);
+raydium_gui_widget_sizes(25,4,18);
+raydium_gui_edit_create("edtPlayerName",handle,47,75,raydium_network_name_local);
+
+raydium_gui_widget_sizes(4,4,18);
+raydium_gui_check_create("chkCameraLag",handle,10,50," Camera lagging support",camera_lag);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblCamLagFact",handle,30,40,"Camera's speed :",0,0,0);
+raydium_gui_widget_sizes(20,2,0);
+raydium_gui_track_create("trkCameraLag",handle,55,37.5, 2,10,camera_lag_speed);
+
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnApply",handle,35,5,"Apply",btnApplyOptions);
+
+raydium_gui_widget_sizes(6,3,14);
+raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+
+gui_start();
+}
+
 void btnModeNetTracks(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("menu");
@@ -532,6 +587,12 @@ void btnQuit(raydium_gui_Object *w)
 exit(0);
 }
 
+void btnOptions(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_Options();
+}
+
 
 void build_gui_Main(void)
 {
@@ -543,9 +604,10 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblMode",handle,50,90,"- Select Game Mode - ",0,0,0);
 
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_button_create("btnModeStory",handle,25,65,"Story",btnModeStory);
-raydium_gui_button_create("btnModeNetTracks",handle,25,45,"Internet Tracks",btnModeNetTracks);
-raydium_gui_button_create("btnModeLAN",handle,25,25,"LAN Multiplayer",btnModeLan);
+raydium_gui_button_create("btnModeStory",handle,25,70,"Story",btnModeStory);
+raydium_gui_button_create("btnModeNetTracks",handle,25,55,"Internet Tracks",btnModeNetTracks);
+raydium_gui_button_create("btnModeLAN",handle,25,40,"LAN Multiplayer",btnModeLan);
+raydium_gui_button_create("btnOptions",handle,25,25,"Options",btnOptions);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,3,5,"Quit",btnQuit);
@@ -1359,9 +1421,9 @@ if(raydium_key_last==1032)
 if(raydium_key_last==1008)
     network_ask_restart();
 
-if(raydium_key_last==1097) { movie_spf=0; raydium_ode_time_change(0); }
-if(raydium_key_last==1122) { movie_spf=3; raydium_ode_time_change(10); }
-if(raydium_key_last==1101) { movie_spf=16; raydium_ode_time_change(100); }
+if(raydium_key_last==1097) { raydium_ode_time_change(0); }
+if(raydium_key_last==1122) { raydium_ode_time_change(10); }
+if(raydium_key_last==1101) { raydium_ode_time_change(100); }
 
 if(raydium_key_last==5)
 {
@@ -1383,7 +1445,7 @@ if(raydium_key_last==3)
 {
 vue=3;
 raydium_projection_near=0.05 ;
-raydium_projection_fov=60;
+raydium_projection_fov=70;
 raydium_window_view_update();                                                                 
 }
 
@@ -1438,8 +1500,12 @@ if(vue==3)
     cam[2]=pos[2]+0.4;
     
     // standard smooth lookat camera
-    raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],
-			  70,0,raydium_frame_time*3);
+    if(camera_lag)
+      raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],
+			    70,0,raydium_frame_time*camera_lag_speed);
+    else
+      raydium_camera_look_at(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0]);
+
     }
 
 if(vue==4) raydium_ode_element_camera_inboard_name("corps",0,0.35,-0.2,2,0,-0.2);
@@ -1525,13 +1591,15 @@ int main(int argc, char **argv)
 //char server[RAYDIUM_MAX_NAME_LEN];
 int i;
 FILE *fp;
+char lagActive[RAYDIUM_MAX_NAME_LEN];
+char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_args(argc,argv);
 raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,version);
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;	
-raydium_projection_fov=60;
+raydium_projection_fov=70;
 //raydium_light_disable();
 raydium_fog_disable();
 raydium_light_on(0);
@@ -1580,6 +1648,12 @@ raydium_register_variable(&cam,RAYDIUM_REGISTER_STR,"cam");
 
 raydium_register_variable(&ptmp,RAYDIUM_REGISTER_FLOAT,"ptmp");
 raydium_register_variable(&vue,RAYDIUM_REGISTER_INT,"vue");
+
+// read options
+raydium_parser_db_get("ManiaDrive-CameraLagActive",lagActive,"y");
+raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"3.0");
+camera_lag=(lagActive[0]=='y'?1:0);
+sscanf(lagSpeed,"%f",&camera_lag_speed);
 
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
