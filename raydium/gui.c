@@ -1834,7 +1834,7 @@ if(wid<0)
 strcpy(c->items,items);
 c->current=current;
 c->expanded=0;
-c->offset=0;
+c->offset=current;
 c->body_border_right=0;
 memset(c->uv_body_normal,0,sizeof(GLfloat)*4);
 memset(c->uv_body_focus,0,sizeof(GLfloat)*4);
