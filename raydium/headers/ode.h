@@ -129,7 +129,9 @@ place to play suitable sound, create particles and such things.
 Callback prototype: ##void f(signed char type, dReal radius, dReal force_or_propag, dReal *pos);##
 You can find in callback params:
 explosion ##type## (see above), ##radius##, force or propag (depending on
-explosion type) and ##pos##, an array of 3 dReal values for explosion position.
+explosion type) and ##pos##, an array of 3 dReal values for explosion position. 
+The value you will find in ##force_or_propag## is something 
+like ##RAYDIUM_ODE_NETWORK_EXPLOSION_*## (EXPL or BLOW).
 
 
 - ##raydium_ode_BeforeElementDrawCallback##
@@ -259,27 +261,27 @@ switching from one ground to another on the fly.
 
 extern int raydium_ode_object_find (char *name);
 /**
-Resolves object id from it's ##name##.
+Resolves object id from its ##name##.
 **/
 
 extern int raydium_ode_element_find (char *name);
 /**
-Resolves element id from it's ##name##.
+Resolves element id from its ##name##.
 **/
 
 extern int raydium_ode_joint_find (char *name);
 /**
-Resolves joint id from it's ##name##.
+Resolves joint id from its ##name##.
 **/
 
 extern int raydium_ode_motor_find (char *name);
 /**
-Resolves motor id from it's ##name##.
+Resolves motor id from its ##name##.
 **/
 
 extern int raydium_ode_explosion_find (char *name);
 /**
-Resolves explosion id from it's ##name##.
+Resolves explosion id from its ##name##.
 **/
 
 extern int raydium_ode_object_create (char *name);

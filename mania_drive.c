@@ -617,7 +617,7 @@ gui_start();
 
 void network_ask_restart(void)
 {
-unsigned char buff[RAYDIUM_NETWORK_PACKET_SIZE];
+char buff[RAYDIUM_NETWORK_PACKET_SIZE];
 buff[RAYDIUM_NETWORK_PACKET_OFFSET]=0;
 raydium_network_write(NULL,raydium_network_uid,NET_RESTART,buff);
 }

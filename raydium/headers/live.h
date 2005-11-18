@@ -10,10 +10,10 @@ Live textures and videos API
 
 // Introduction
 /**
-Live API provides two distinct features:
+Live API features two distinct parts:
 
 1 - It provides an easy way to create and manage dynamic textures, since you
-just have to provide a pointer to your image data, and call suitable function
+just have to give a pointer to your image data, and call suitable function
 each time this image is changing.
 
 2 - This API also supports video4linux (aka V4L), as an extension of
@@ -27,7 +27,7 @@ You'll find detailed informations for each domain below.
 
 // Color conversion
 /**
-Live API used to work with RGB and RGA color formats. Since some V4L 
+Live API used to work with RGB and RGBA color formats. Since some V4L 
 devices use other patterns, Live API needs conversion functions.
 You've no need to do color conversion by yourself, consider all this 
 as internal functions.
@@ -70,7 +70,7 @@ Finds a free live video device slot.
 int raydium_live_video_open(char *device, int sizex, int sizey);
 /**
 This is where you should start. This function opens ##device## (something
-like "/dev/video0"), requestion ##sizex## x ##sizey## resolution.
+like "/dev/video0"), requesting ##sizex## x ##sizey## resolution.
 If ##device## is ##RAYDIUM_LIVE_DEVICE_AUTO##, Raydium will use a default device, 
 hardcoded or given thru commande line (##--video-device##).
 Same story for sizes, with ##RAYDIUM_LIVE_SIZE_AUTO##.
