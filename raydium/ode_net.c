@@ -430,8 +430,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    }
 
 // read (flushed ?), and if RAYDIUM_NETWORK_PACKET_DATA, search nid and update pos/rot
-//if(raydium_network_read(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
-if(raydium_network_read_flushed(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
+if(raydium_network_read(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
+//if(raydium_network_read_flushed(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
     return;
     
 #ifndef ODE_NETWORK_GHOSTS
