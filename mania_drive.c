@@ -1601,8 +1601,22 @@ FILE *fp;
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
+char full_sx[RAYDIUM_MAX_NAME_LEN];
+char full_sy[RAYDIUM_MAX_NAME_LEN];
+int full_sx_i,full_sy_i;
+
 raydium_init_args(argc,argv);
-raydium_window_create(640,480,RAYDIUM_RENDERING_FULLSCREEN,version);
+
+raydium_parser_db_get("Generic-FullscreenSizeX",full_sx,"1024");
+raydium_parser_db_get("Generic-FullscreenSizeY",full_sy,"768");
+sscanf(full_sx,"%i",&full_sx_i);
+sscanf(full_sy,"%i",&full_sy_i);
+
+raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
+
+raydium_parser_db_set("Generic-FullscreenSizeX",full_sx);
+raydium_parser_db_set("Generic-FullscreenSizeY",full_sy);
+
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;	
