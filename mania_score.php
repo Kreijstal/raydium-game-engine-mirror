@@ -1,21 +1,54 @@
 <?
-// this file is used by ManiaDrive to upload
+// This file is used by ManiaDrive to upload
 // scores to CQFD Corp website.
-// See how it's easy to cheat ? ... No interest then ;)
 
-$scoreE=rawurlencode($score);
-$trackE=rawurlencode($track);
-$nameE=rawurlencode($name);
-$versionE=rawurlencode($version);
+require_once('./nusoap/nusoap.php');
 
-$url="http://maniadrive.cqfd-corp.org/score/?track=$trackE&score=$scoreE&name=$nameE&version=$versionE";
-$res=file($url);
+// Webservice WSDL URL
+$url = "http://maniadrive.raydium.org/ecrire/tools/maniadrive/WSManiaDrive.php?wsdl";
 
-if($res[0]=="OK")
-    {
-    echo "Score successfuly posted to Mania website";
-    //echo "Visit http://skydiver.cqfd-corp.org/ to compare ;)";
+// Create the client instance
+$client = new soapclient($url,true);
+
+// Check for an error
+$err = $client->getError();
+if ($err) {
+    // Log the error 
+    raydium_log('Error: '.$err);
+    exit();
+} 
+
+// Parameters
+$parameters = array(
+  'name' => $name,
+  'track' => $track,
+  'score' => $score,
+  'version' => $version
+); 
+
+// Call the SOAP method
+$result = $client->call('ScoreAddNew', $parameters);
+
+// Display the result
+//print_r($result);
+
+// Check for a fault
+if ($client->fault) {
+    raydium_log('Fault: '.$result);
+} else {
+    // Check for errors
+    $err = $client->getError();
+    if ($err) {
+       raydium_log('Error: '.$err);
+    } else {
+        // Display the result
+        $result++;
+        raydium_log('Debug : Level=' . $result);
     }
-else raydium_log("^cScore posting failed : ".$res[0]); // echo == raydium_log
+    
+}
+
+$position = (int) $result;
+
 
 ?>

@@ -107,7 +107,11 @@ char ltrack[RAYDIUM_MAX_NAME_LEN];
 float res;
 
 if(do_not_post)
+    {
+    track[0]=0;
+    player[0]=0;
     return 0;
+    }
 
 // since PHP will write to variables ..
 strcpy(ltrack,track);
@@ -126,15 +130,16 @@ return res;
 }
 
 
-void post_score(char *track, char *name, char *score)
+int post_score(char *track, char *name, char *score)
 {
 char ltrack[RAYDIUM_MAX_NAME_LEN];
 char lname[RAYDIUM_MAX_NAME_LEN];
 char lscore[RAYDIUM_MAX_NAME_LEN];
 char lversion[RAYDIUM_MAX_NAME_LEN];
+int position;
 
 if(do_not_post)
-    return;
+    return 0;
 
 // since PHP will write to variables ..
 strcpy(ltrack,track);
@@ -146,6 +151,7 @@ raydium_register_variable(ltrack,RAYDIUM_REGISTER_STR,"track");
 raydium_register_variable(lname,RAYDIUM_REGISTER_STR,"name");
 raydium_register_variable(lscore,RAYDIUM_REGISTER_STR,"score");
 raydium_register_variable(lversion,RAYDIUM_REGISTER_STR,"version");
+raydium_register_variable(&position,RAYDIUM_REGISTER_INT,"position");
 
 raydium_php_exec("mania_score.php");
 
@@ -153,6 +159,9 @@ raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
+
+return position;
 }
 
 
@@ -836,7 +845,12 @@ if(type==GAME_END)
 	}
 
     if(mode!=MODE_SOLO)
-	post_score(mni_current,raydium_network_name_local,score);
+	{
+	int p;
+	p=post_score(mni_current,raydium_network_name_local,score);
+	if(p)
+	    sprintf(message,"Your place: %i",p);
+	}
     }
 
 if(type==GAME_GAME)
@@ -1687,7 +1701,10 @@ sscanf(lagSpeed,"%f",&camera_lag_speed);
 if(raydium_init_cli_option_default("mni",mni_current,""))
     {
     mni_load(mni_current);
-    do_not_post=1;
+    if(strlen(mni_current))
+	{
+	do_not_post=1;
+	}
     }
 
 raydium_gui_theme_load("maniadrive.gui");
