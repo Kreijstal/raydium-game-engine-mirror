@@ -364,6 +364,8 @@ char str[RAYDIUM_MAX_NAME_LEN];
 
 camera_lag=raydium_gui_read_name("menu","chkCameraLag",str);
 camera_lag_speed=raydium_gui_read_name("menu","trkCameraLag",str);
+raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
+
 
 str[1]=0;
 str[0]=(camera_lag?'y':'n');
