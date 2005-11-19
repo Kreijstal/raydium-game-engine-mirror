@@ -1166,6 +1166,7 @@ if(type==TYPE_CAR_BODY && raydium_ode_network_element_isdistant(elem))
     pos=raydium_ode_element_pos_get(elem);
     player=raydium_ode_network_element_distantowner(elem);
     raydium_osd_printf_3D(pos[0],pos[1],pos[2],12,0.5,"font2.tga","^f%s",raydium_network_name[player]);
+    raydium_ode_element[elem].mesh=raydium_object_find_load("clio_wheels.tri");
     }
 return 1;
 }
@@ -1601,7 +1602,7 @@ char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_args(argc,argv);
-raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,version);
+raydium_window_create(640,480,RAYDIUM_RENDERING_FULLSCREEN,version);
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;	
