@@ -901,7 +901,7 @@ if(mode==MODE_SOLO)
 if(track_score.time>=0)
     {
     hms(track_score.time,&h,&m,&s,&ms);
-    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eTrack record: ^f%i:%02i:%02i:%i - %s",h,m,s,ms,track_score.player);
+    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eTrack record: ^f%i:%02i:%02i:%03i - %s",h,m,s,ms,track_score.player);
     }
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
@@ -922,7 +922,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     hms(best_score[bestid].time,&h,&m,&s,&ms);
     if(best_score[bestid].time>=0)
 	{
-	raydium_osd_printf(5,pos,18,0.5,"font2.tga","^c%i. ^f%i:%02i:%02i:%i - %s",cpt,h,m,s,ms,best_score[bestid].player);
+	raydium_osd_printf(5,pos,18,0.5,"font2.tga","^c%i. ^f%i:%02i:%02i:%03i - %s",cpt,h,m,s,ms,best_score[bestid].player);
 	pos-=5;
 	cpt++;
 	}
