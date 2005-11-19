@@ -226,6 +226,9 @@ for(i=0;i<MAX_ELEMS;i++)
 	raydium_vertex_texture_u[raydium_vertex_index]=raydium_vertex_texture_u[j];
 	raydium_vertex_texture_v[raydium_vertex_index]=raydium_vertex_texture_v[j];
 	raydium_vertex_texture[raydium_vertex_index]=raydium_vertex_texture[j];
+	raydium_vertex_texture_multi[raydium_vertex_index]=raydium_vertex_texture_multi[j];
+	raydium_vertex_texture_multi_u[raydium_vertex_index]=raydium_vertex_texture_multi_u[j];
+	raydium_vertex_texture_multi_v[raydium_vertex_index]=raydium_vertex_texture_multi_v[j];
 	raydium_vertex_index++;
 	}
     rotatez(-grid[i].rot,grid[i].obj);
