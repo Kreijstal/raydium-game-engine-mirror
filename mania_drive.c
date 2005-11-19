@@ -31,6 +31,7 @@ GLfloat camz=40;
 char cam[255];
 char record=-1;
 char draw_debug=-1;
+char do_not_post=0;
 char is_explosive_tag=29;
 dReal cam_angle_h=0;
 dReal cam_angle_v=90;
@@ -105,6 +106,9 @@ float get_score(char *track,char *player)
 char ltrack[RAYDIUM_MAX_NAME_LEN];
 float res;
 
+if(do_not_post)
+    return 0;
+
 // since PHP will write to variables ..
 strcpy(ltrack,track);
 strcpy(player,"unavailable");
@@ -128,6 +132,9 @@ char ltrack[RAYDIUM_MAX_NAME_LEN];
 char lname[RAYDIUM_MAX_NAME_LEN];
 char lscore[RAYDIUM_MAX_NAME_LEN];
 char lversion[RAYDIUM_MAX_NAME_LEN];
+
+if(do_not_post)
+    return;
 
 // since PHP will write to variables ..
 strcpy(ltrack,track);
@@ -1678,7 +1685,10 @@ sscanf(lagSpeed,"%f",&camera_lag_speed);
 
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
+    {
     mni_load(mni_current);
+    do_not_post=1;
+    }
 
 raydium_gui_theme_load("maniadrive.gui");
 raydium_timecall_add(frame_step,-1);
