@@ -355,5 +355,5 @@ exit_if_error "$?" "libjpeg-devel not available."
 ##### End of tests
 
 echo "- Build system seems ready -"
-echo "- Use \"make\" to build Raydium, and try: \"./odympcomp.sh test6.c\""
+echo "- Use \"make\" to build Raydium, and try: \"./odyncomp.sh test6.c\""
 echo "- You can also use \"./ocomp.sh test6.c\" for a quick direct test"
