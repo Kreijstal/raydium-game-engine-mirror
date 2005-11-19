@@ -16,5 +16,12 @@ while (($file = readdir($dir)) != false)
 
 $raydium_ogg_file=$rep.$tbl[rand(0,count($tbl)-1)];
 
-echo "Now playing $raydium_ogg_file ...";
+if($rep!=$raydium_ogg_file)
+    echo "Now playing $raydium_ogg_file ...";
+else
+    {
+    echo "Cannot find any music";
+    $raydium_ogg_file="";
+    }
+
 ?>
