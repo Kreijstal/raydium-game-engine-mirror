@@ -1240,6 +1240,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_attach_fixed_name("balanfixed","corps","balancier");
 
 
+    raydium_ode_network_next_local_only=1;
     raydium_ode_object_sphere_add("pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
     raydium_ode_element_rotfriction_name("pneu_ag",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_ag",0.42,0.253,-0.180);
@@ -1247,6 +1248,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_break_force_name("suspet_ag",BREAK_FORCE);
     raydium_ode_joint_suspension_name("suspet_ag",ERP_CFM);
 
+    raydium_ode_network_next_local_only=1;
     raydium_ode_object_sphere_add("pneu_ad",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
     raydium_ode_element_rotfriction_name("pneu_ad",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_ad",0.42,-0.253,-0.180);
@@ -1254,6 +1256,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_break_force_name("suspet_ad",BREAK_FORCE);
     raydium_ode_joint_suspension_name("suspet_ad",ERP_CFM);
 
+    raydium_ode_network_next_local_only=1;
     raydium_ode_object_sphere_add("pneu_rg",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
     raydium_ode_element_rotfriction_name("pneu_rg",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_rg",-0.444,0.253,-0.180);
@@ -1262,6 +1265,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_break_force_name("suspet_rg",BREAK_FORCE);
     raydium_ode_joint_suspension_name("suspet_rg",ERP_CFM);
 
+    raydium_ode_network_next_local_only=1;
     raydium_ode_object_sphere_add("pneu_rd",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
     raydium_ode_element_rotfriction_name("pneu_rd",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_rd",-0.444,-0.253,-0.180);
