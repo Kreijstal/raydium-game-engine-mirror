@@ -108,7 +108,6 @@ float res;
 
 if(do_not_post)
     {
-    track[0]=0;
     player[0]=0;
     return 0;
     }
@@ -1700,11 +1699,11 @@ sscanf(lagSpeed,"%f",&camera_lag_speed);
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
     {
-    mni_load(mni_current);
     if(strlen(mni_current))
 	{
 	do_not_post=1;
 	}
+    mni_load(mni_current);
     }
 
 raydium_gui_theme_load("maniadrive.gui");
