@@ -23,7 +23,7 @@ for(i=0;i<strlen(temp);i++)
 strcpy(org,temp+i); // heading spaces: ok
 
 for(i=strlen(org);i>=0;i--)
-    if(org[i]!=' ' && org[i]!='\n' && org[i]!=0 && org[i]!=';')
+    if(org[i]!=' ' && org[i]!='\n' && org[i]!='\r' && org[i]!=0 && org[i]!=';')
 	break;
 
 org[i+1]=0; // tailing chars: ok

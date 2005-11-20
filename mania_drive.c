@@ -1,4 +1,4 @@
-char *version="version 0.8";
+char *version="version 0.9";
 #include "raydium/index.c"
 
 #include "mania.h"
