@@ -781,7 +781,6 @@ while(fgets(trifile,255,fp)!=NULL)
 //    if(!strlen(trifile)) continue;
 //    trifile[strlen(trifile)-1]=0;
     raydium_parser_trim(trifile);
-    printf("-%s-\n",trifile);
     if(!strlen(trifile)) continue;
     if(trifile[0]=='#') continue;
     if(trifile[0]=='*')
