@@ -1631,10 +1631,13 @@ raydium_parser_db_get("Generic-FullscreenSizeY",full_sy,"768");
 sscanf(full_sx,"%i",&full_sx_i);
 sscanf(full_sy,"%i",&full_sy_i);
 
+
 raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
 
 raydium_parser_db_set("Generic-FullscreenSizeX",full_sx);
 raydium_parser_db_set("Generic-FullscreenSizeY",full_sy);
+
+raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
