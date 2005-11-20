@@ -1390,6 +1390,7 @@ if(raydium_key_last==1027)
     message[0]=0;
     raydium_sound_SourceStop(sound_car);
     raydium_network_client_disconnect();
+    raydium_ode_time_change(0);
 
 
     raydium_clear_frame();
