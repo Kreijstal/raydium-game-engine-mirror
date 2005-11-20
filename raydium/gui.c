@@ -192,7 +192,7 @@ signed char raydium_gui_widget_isvalid(int i, int window)
 if(!raydium_gui_window_isvalid(window))
     return 0;
     
-if(i>=0 && i<RAYDIUM_GUI_MAX_WINDOWS &&
+if(i>=0 && i<RAYDIUM_GUI_MAX_OBJECTS &&
    raydium_gui_windows[window].widgets[i].state)
     return 1;
 return 0;
