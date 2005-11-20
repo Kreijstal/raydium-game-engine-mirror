@@ -484,6 +484,7 @@ raydium_register_variable(ret,RAYDIUM_REGISTER_STR,"ret");
 raydium_php_exec("mania_story.php");
 raydium_register_variable_unregister_last();
 
+
 pos=85;
 last=0;
 len=strlen(ret);
@@ -504,11 +505,9 @@ for(i=0;i<len;i++)
     part1[0]='+'; // avoid name collision
     raydium_gui_label_create(part1,handle,65-0.2,pos+2.5+0.2,part2,0,0,0);
 
-//    raydium_gui_button_create(part1,handle,5,pos,part2,(part2[1]!='4'?btnDriveSolo:btnCantDrive));
     last=i+1;
     pos-=6;
     }
-
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
 gui_start();
@@ -1239,6 +1238,7 @@ float x,y,z;
 char dir;
 dReal pos[3];
 dReal rot[3];
+dReal partoffset1[]={-0.6,-0.134,-0.207};
 
 change_game_state(GAME_COUNTDOWN);
 partytime=0;
@@ -1307,6 +1307,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_motor_power_max_name("direction",0.2);
 
 raydium_sound_SourcePlay(sound_car);
+raydium_ode_element_particle_offset_name("corps","smokeexhaustpipe.prt", partoffset1);
 
 
 if(find_start(&x,&y,&z,&dir)<0) return;
