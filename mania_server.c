@@ -108,7 +108,7 @@ void loop(void)
 char type;
 int id;
 
-if(raydium_network_read_flushed(&id, &type, str)==RAYDIUM_NETWORK_DATA_OK)
+if(raydium_network_read(&id, &type, str)==RAYDIUM_NETWORK_DATA_OK)
     {
     raydium_network_broadcast(type,str);
 //    printf(".");
