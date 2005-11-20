@@ -1324,10 +1324,10 @@ switch(dir)
 	rot[2]=M_PI;
 	break;
     case 'n':
-	rot[2]=M_PI/2;
+	rot[2]=-M_PI/2;
 	break;
     case 's':
-        rot[2]=-M_PI/2;
+        rot[2]=M_PI/2;
 	break;
     }
 rot[0]=rot[1]=0;
