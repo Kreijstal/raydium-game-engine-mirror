@@ -22,6 +22,7 @@ GLint curobj=0;
 GLint curbox=0;
 GLint curangle=0;
 int pop_mode=POP_MODE_ELEM;
+char autotag=0;
 
 
 int n_boxpresets=0;	
@@ -659,7 +660,8 @@ dump_boxes_to("mania.box",FACT,MOVE_X,MOVE_Y,MOVE_Z);
 dump_data_to("mania.dat");
 
 grid_generate_obj();
-grid_save("dyn_track.mni");
+if(!autotag)
+    grid_save("dyn_track.mni");
 }
 
 void mouse_n_keys_event(void)
@@ -811,7 +813,6 @@ int main(int argc, char **argv)
 {
 char autogen[256];
 char window[256];
-char autotag=0;
 sprintf(window,"%s - %s",title,version);
 
 sprintf(tdata,"no name;unknown;0;0");

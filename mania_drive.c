@@ -31,7 +31,6 @@ GLfloat camz=40;
 char cam[255];
 char record=-1;
 char draw_debug=-1;
-char do_not_post=0;
 char is_explosive_tag=29;
 dReal cam_angle_h=0;
 dReal cam_angle_v=90;
@@ -106,7 +105,7 @@ float get_score(char *track,char *player)
 char ltrack[RAYDIUM_MAX_NAME_LEN];
 float res;
 
-if(do_not_post)
+if(!strcmp(track,"dyn_track.mni"))
     {
     player[0]=0;
     return 0;
@@ -137,7 +136,7 @@ char lscore[RAYDIUM_MAX_NAME_LEN];
 char lversion[RAYDIUM_MAX_NAME_LEN];
 int position;
 
-if(do_not_post)
+if(!strcmp(track,"dyn_track.mni"))
     return 0;
 
 // since PHP will write to variables ..
@@ -1699,10 +1698,6 @@ sscanf(lagSpeed,"%f",&camera_lag_speed);
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
     {
-    if(strlen(mni_current))
-	{
-	do_not_post=1;
-	}
     mni_load(mni_current);
     }
 
