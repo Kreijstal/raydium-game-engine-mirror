@@ -23,6 +23,7 @@ void raydium_window_close(void)
 void raydium_window_create(GLuint tx, GLuint ty, signed char rendering, char *name)
 {
 char mode[RAYDIUM_MAX_NAME_LEN];
+GLuint gtx,gty;
 
 glutInit(&raydium_init_argc, raydium_init_argv);
 if(raydium_init_cli_option("fullscreen",NULL) && rendering!=RAYDIUM_RENDERING_NONE)
@@ -51,8 +52,9 @@ switch(rendering)
     case RAYDIUM_RENDERING_FULLSCREEN:
     
 	glutGameModeString(mode);
-	if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) raydium_log("cannot fullscreen to %s mode",mode);
-	    glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
+	if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+	    raydium_log("cannot fullscreen to %s mode",mode);
+	glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
 	break;    
  
     case RAYDIUM_RENDERING_WINDOW:
@@ -66,8 +68,21 @@ switch(rendering)
 	break;
     }
 
-tx=glutGet(GLUT_WINDOW_WIDTH);
-ty=glutGet(GLUT_WINDOW_HEIGHT);
+gtx=glutGet(GLUT_WINDOW_WIDTH);
+gty=glutGet(GLUT_WINDOW_HEIGHT);
+
+// (some version of) freeglut + fullscreen = high failure ratio :)
+if(gtx==0 && gty==0)
+    {
+    glutInitWindowSize(tx,ty);
+    glutCreateWindow(name);    
+    gtx=glutGet(GLUT_WINDOW_WIDTH);
+    gty=glutGet(GLUT_WINDOW_HEIGHT);
+    }
+
+tx=gtx;
+ty=gty;
+
 raydium_log("Got %ix%i:%i mode",tx,ty,glutGet(GLUT_WINDOW_DEPTH_SIZE));
 
 atexit(raydium_window_close);
