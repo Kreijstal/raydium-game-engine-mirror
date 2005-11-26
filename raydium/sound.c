@@ -684,6 +684,7 @@ int StartMusic(ALuint musicsource,ALuint *buffers,OggVorbis_File *file,
 {
   int ok;
   alSourceStop(musicsource);
+  raydium_sound_internal_cleanstreambuffs();
   memset(raydium_sound_music_buf,0,SOUNDDATASIZE);
   ok=BufferData(raydium_sound_buffer[0],file,ogginfo) 
      && BufferData(raydium_sound_buffer[1],file,ogginfo);
@@ -704,13 +705,14 @@ if(!raydium_sound)
     return -1;
 
 
+
  if(raydium_sound_music_file) fclose(raydium_sound_music_file);
  raydium_sound_music_file=NULL;
  
  if(fname==NULL || strlen(fname)==0)
     {
     // seems to fail ... :/
-    raydium_sound_internal_cleanstreambuffs();
+    //raydium_sound_internal_cleanstreambuffs();
     return 0;
     }
  
