@@ -41,7 +41,7 @@ if(rendering==RAYDIUM_RENDERING_NONE)
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 #else
 // seems to be the only way to get 24b zbuffer under win32
-glutInitDisplayString("rgb>=8 double depth>=16");
+glutInitDisplayString("rgb>=4 double depth>=16");
 #endif
 
 sprintf(mode,"%ix%i:32",tx,ty);
