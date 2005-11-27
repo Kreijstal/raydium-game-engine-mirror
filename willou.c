@@ -46,9 +46,12 @@ void display(void)
 	exit(0);
 
 
-    if(raydium_key_last==1)
+    if(raydium_key[GLUT_KEY_F1]) { raydium_projection_fov/=(1.04); raydium_window_view_update(); }
+    if(raydium_key[GLUT_KEY_F2]) { raydium_projection_fov*=(1.04); raydium_window_view_update(); }
+
+    if(raydium_key_last==3)
 	raydium_light_disable();
-    if(raydium_key_last==2)
+    if(raydium_key_last==4)
 	raydium_light_enable();
 
     

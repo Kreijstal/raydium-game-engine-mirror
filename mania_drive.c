@@ -776,7 +776,8 @@ if(game_state==GAME_GAME)
     
 if(game_state==GAME_COUNTDOWN)
     {
-    countdown-=step;
+    if(step<1) // wow .. this a a "track loading" lag
+	countdown-=step;
 
     if(countdown<=0)
 	change_game_state(GAME_GAME);
@@ -857,7 +858,7 @@ if(type==GAME_GAME)
 
 if(type==GAME_COUNTDOWN)
     {
-    countdown=3;
+    countdown=2;
     raydium_ode_time_change(0);
     }
 }
