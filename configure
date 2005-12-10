@@ -196,36 +196,36 @@ test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
 exit_if_error "$?" "You must install glu-devel package"
 
 # Test GLUT
-echo -n "* GLUT lib :"
+#echo -n "* GLUT lib :"
 
-file='#include <GL/glut.h>
-int main(void) { gluGetString(GLU_VERSION); return 0; }'
-test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lglut"
-exit_if_error "$?" "You must install glut-devel package"
+#file='#include <GL/glut.h>
+#int main(void) { gluGetString(GLU_VERSION); return 0; }'
+#test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lglut"
+#exit_if_error "$?" "You must install glut-devel package"
 
 # Full GL/GLU/Glut test, looking for hardware accel
-echo -n "* GL/GLU/GLUT and hardware support :"
+#echo -n "* GL/GLU/GLUT and hardware support :"
 
-file='
+#file='
 #include <stdio.h>
-#include <string.h>
-#include <GL/glut.h>
-int main(int argc, char **argv) { 
-char *r;
-glutInit(&argc,argv);
-glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-glutInitWindowSize(320,240);
-glutCreateWindow("Test window");
-r=glGetString(GL_RENDERER);
-if(!strcmp(r,"Mesa GLX Indirect"))
-    {
-    fprintf(stderr,"WARNING ! Mesa Software renderer detected !");
-    fprintf(stdout,"WARNING ! Mesa Software renderer detected !");
-    }
-return 0; }
-'
-test_build "$file" "-L/usr/X11R6/lib/ -lGL -lglut -lGLU"
-exit_if_error "$?" "Full GL test faild, see configure.log"
+##include <string.h>
+##include <GL/glut.h>
+#int main(int argc, char **argv) { 
+#char *r;
+#glutInit(&argc,argv);
+#glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+#glutInitWindowSize(320,240);
+#glutCreateWindow("Test window");
+#r=glGetString(GL_RENDERER);
+#if(!strcmp(r,"Mesa GLX Indirect"))
+#    {
+#    fprintf(stderr,"WARNING ! Mesa Software renderer detected !");
+#    fprintf(stdout,"WARNING ! Mesa Software renderer detected !");
+#    }
+#return 0; }
+#'
+#test_build "$file" "-L/usr/X11R6/lib/ -lGL -lglut -lGLU"
+#exit_if_error "$?" "Full GL test faild, see configure.log"
 
 # OpenAL
 echo -n "* OpenAL :"
