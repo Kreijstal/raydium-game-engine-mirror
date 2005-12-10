@@ -136,7 +136,6 @@ int main(int argc, char **argv)
     raydium_object_find_load("wagon.tri");
     raydium_object_find_load("train_a.tri");
     raydium_php_exec("train.php");
-    raydium_sky_atmosphere_enable();
     raydium_callback(&display);
     return(0);
 }
