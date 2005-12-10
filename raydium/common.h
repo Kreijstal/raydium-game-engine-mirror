@@ -19,6 +19,18 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef MAIN_H
+#define __global extern
+#endif
+
+#ifdef MAIN_C
+#define __global
+#endif
+
+#ifdef SWIG
+#define __global
+#endif
+
 #ifdef WIN32
 #include "windows.h"
 #endif
@@ -28,7 +40,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+//#include <GL/glut.h>
 #ifndef WIN32
 #include <GL/glext.h>
 #endif
@@ -224,17 +238,6 @@
 #define RAYDIUM_DB_TEMP				"raydium.db.temp"
 #define RAYDIUM_DB_SEPARATOR			';'
 
-#ifdef MAIN_H
-#define __global extern
-#endif
-
-#ifdef MAIN_C
-#define __global
-#endif
-
-#ifdef SWIG
-#define __global
-#endif
 
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;

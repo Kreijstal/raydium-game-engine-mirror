@@ -29,6 +29,7 @@
 
 // let's start "compile time static linking" ;)
 #ifndef RAYDIUM_NETWORK_ONLY
+#include "myglut/myglut.c"
 #include "log.c"
 #include "signal.c"
 #include "trigo.c"

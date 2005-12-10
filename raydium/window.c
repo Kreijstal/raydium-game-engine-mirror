@@ -23,7 +23,9 @@ void raydium_window_close(void)
 void raydium_window_create(GLuint tx, GLuint ty, signed char rendering, char *name)
 {
 char mode[RAYDIUM_MAX_NAME_LEN];
+#ifndef MYGLUT
 GLuint gtx,gty;
+#endif
 
 glutInit(&raydium_init_argc, raydium_init_argv);
 if(raydium_init_cli_option("fullscreen",NULL) && rendering!=RAYDIUM_RENDERING_NONE)
@@ -36,6 +38,10 @@ if(rendering==RAYDIUM_RENDERING_NONE)
     return;
     }
 
+sprintf(mode,"%ix%i:32",tx,ty);
+raydium_log("Requesting %s mode",mode);
+
+#ifndef MYGLUT
 #ifndef WIN32
 // prefered under Linux
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -44,8 +50,6 @@ glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 glutInitDisplayString("rgb>=4 double depth>=16");
 #endif
 
-sprintf(mode,"%ix%i:32",tx,ty);
-raydium_log("Requesting %s mode",mode);
 
 switch(rendering)
     {
@@ -84,6 +88,9 @@ tx=gtx;
 ty=gty;
 
 raydium_log("Got %ix%i:%i mode",tx,ty,glutGet(GLUT_WINDOW_DEPTH_SIZE));
+#else
+myglutCreateWindow(tx,ty,rendering,name);
+#endif
 
 atexit(raydium_window_close);
 raydium_log("using %s, from %s (version %s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR),glGetString(GL_VERSION));
