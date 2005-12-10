@@ -124,25 +124,44 @@ glDepthMask(GL_TRUE);
 
 void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 {	
-	int i, j;
-	GLfloat currentradious,z1,z2,ang1;
-	//static cause this will be used to store the vertices of the sphere
+	int i, j,co;
+	GLfloat currentradious,z1,z2,ang1,dx,dy,h;
+	//the next is static cause this will be used to store the vertices of the sphere.
+	//i suppose that it could be external to this function.
 	static GLfloat p[RAYDIUM_SKY_SPHERE_MAX_DETAIL][RAYDIUM_SKY_SPHERE_MAX_DETAIL][3];
 
 	//keeping safe the current matrix
-	glPushMatrix();	
-	//glPushAttrib(GL_COLOR_BUFFER_BIT);
+	glPushMatrix();
+	
+	//glPushAttrib(GL_COLOR_BUFFER_BIT); Gl attrib functions shoudn't be used
+
 	//increasing angles to simulate orbit
 	raydium_sky_sphere_angle_orbit_u += 10 * raydium_frame_time;
 	raydium_sky_sphere_angle_orbit_v += 1 * raydium_frame_time;
+
+	//test code.
+	//the rotation speed should be changed with a function
+	raydium_sky_sphere_y_vel=0.01;
+	raydium_sky_sphere_x_vel=0.01;
+
+	//updating the x and y values according the speed and the framerate
+	raydium_sky_sphere_x_pos+=raydium_sky_sphere_x_vel * raydium_frame_time;
+	raydium_sky_sphere_y_pos+=raydium_sky_sphere_y_vel * raydium_frame_time;
+
+	//using dx and dy to simplify the code
+	dx=raydium_sky_sphere_x_pos;
+	dy=raydium_sky_sphere_y_pos;
+
 	//turning off "specials" for render
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
-	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 	glColor4fv(raydium_background_color);
 	glDepthMask(GL_FALSE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
+	
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
+	
 	//MAKING THE SPHERE
 	
 	//check if the points are already calculated.
@@ -152,10 +171,10 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 		//getting the points of the sphere, but no drawing
 		for(i=0;i<=detail;i++)
 		{
-			//getting the radious for each section of the sphere
+			//getting the radius for each section of the sphere
 			currentradious		=	raydium_trigo_sin(180*((float)i/(float)detail));
 			//getting the heights for each section of the sphere
-			z1					=	raydium_trigo_cos(180*((float)i/(float)detail));		
+			z1	 		=	raydium_trigo_cos(180*((float)i/(float)detail));		
 			for(j=0;j<=detail;j++)
 			{
 				ang1		=	360*((float)j/(float)detail);
@@ -167,19 +186,127 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 		raydium_sky_sphere_generated	=	1;
 	}
 
-	//locating the modelview in the pos of the camera
+	//Postioning the modelview in the pos of the camera
 	glTranslatef(x,y,z);
+
+	//test code
+	//the texture should be loaded with a different function
+	if(!raydium_texture_exists("SKYCLOUDS.tga"))
+	{
+		raydium_texture_load("SKYCLOUDS.tga");
+	}
+	raydium_texture_current_set_name("SKYCLOUDS.tga");	
+	
+	//activating texture 
+	raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+	
+	//shutdown the DEPTH writting
+	glDepthMask(GL_FALSE);
+
+	//activating and setting fog
+	raydium_fog_enable();
+	glFogf(GL_FOG_START,0.6);
+	glFogf(GL_FOG_END,1);
+	glFogi(GL_FOG_MODE,GL_EXP2);
+	
+	//setting h to the height of the vault
+	h=raydium_sky_sphere_heigth;
+
+	//activating the blending needed for the clouds
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_COLOR,GL_ONE_MINUS_SRC_ALPHA);
+
+	//drawing the layers of clouds
+	for(co=0;co<raydium_sky_sphere_quality;co++)
+	{
+		//drawing the upper vault		
+		
+		glBegin(GL_TRIANGLES);
+		glColor4f(1,1,1,1*(co/raydium_sky_sphere_quality));
+		glTexCoord2f(-1+dx,1+dy);
+		glVertex3f(-1,1,0);
+		glTexCoord2f(1+dx,1+dy);
+		glVertex3f(1,1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+	
+		glTexCoord2f(1+dx,1+dy);
+		glVertex3f(1,1,0);
+		glTexCoord2f(1+dx,-1+dy);
+		glVertex3f(1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+	
+		glTexCoord2f(1+dx,-1+dy);
+		glVertex3f(1,-1,0);
+		glTexCoord2f(-1+dx,-1+dy);
+		glVertex3f(-1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);	
+	
+		glTexCoord2f(-1+dx,1+dy);
+		glVertex3f(-1,1,0);
+		glTexCoord2f(-1+dx,-1+dy);
+		glVertex3f(-1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+		
+		//drawing the botom vault, mirror of the upper one
+		h=-h;
+		
+		//glColor4f(1,1,1,1);
+		glTexCoord2f(-1+dx,1+dy);
+		glVertex3f(-1,1,0);
+		glTexCoord2f(1+dx,1+dy);
+		glVertex3f(1,1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+	
+		glTexCoord2f(1+dx,1+dy);
+		glVertex3f(1,1,0);
+		glTexCoord2f(1+dx,-1+dy);
+		glVertex3f(1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+	
+		glTexCoord2f(1+dx,-1+dy);
+		glVertex3f(1,-1,0);
+		glTexCoord2f(-1+dx,-1+dy);
+		glVertex3f(-1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);	
+	
+		glTexCoord2f(-1+dx,1+dy);
+		glVertex3f(-1,1,0);
+		glTexCoord2f(-1+dx,-1+dy);
+		glVertex3f(-1,-1,0);
+		glTexCoord2f(0+dx,0+dy);
+		glVertex3f(0,0,h);
+		glEnd();
+	
+		//recalculating the new heigth of the vault(a new layer)
+		h=-h*0.95;	
+	}
+
+	//deactivating the fog, unused
+	raydium_fog_disable();
+	//reactivating the previous blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE_MINUS_SRC_COLOR,GL_SRC_COLOR);
+
+	//match the orientation of the camera with the universe
 	//rotating according the orbit angles(ugly)
 	glRotatef(raydium_sky_sphere_angle_orbit_v,0,0,1);
 	glRotatef(raydium_sky_sphere_angle_orbit_u,1,0,0);
-	//now drawing with the obtained values
+
+	//now drawing the sphere with the pre-obtained values
 	for(i=0;i<detail;i++)
 	{
 		for(j=0;j<detail;j++)
 		{
 			//calculating colors
-			z1	=	1-(float)i/detail;
-			z2	=	1-(float)(i+1)/detail;
+			z1 = 1-sin((float)2*i/detail);
+			z2 = 1-sin((float)(2*i+2)/detail);
 			
 			glBegin(GL_TRIANGLES);
 			
@@ -198,7 +325,7 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 			glColor4f(z2,z2,z2,1);
 			glVertex3f(p[i+1][j+1][0],p[i+1][j+1][1],p[i+1][j+1][2]);
 			
-			glColor4f(z1,z1,z1,z1);
+			glColor4f(z1,z1,z1,1);
 			glVertex3f(p[i][j+1][0],p[i][j+1][1],p[i][j+1][2]);
 			
 			glEnd();
@@ -214,14 +341,17 @@ void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 	glDepthMask(GL_TRUE);
 	//glPopAttrib();
 	glPopMatrix();
+
 }
 
 void raydium_sky_atmosphere_enable(void)
 {
 	raydium_sky_atmosphere_enable_tag=1;
+	raydium_sky_sphere_quality=20;
+	raydium_sky_sphere_heigth=0.09;
 	//this will force to recalculate the sphere once
 	raydium_sky_sphere_generated=0;
-	raydium_log("atmosphere created");
+	raydium_log("atmosphere created with quality 20");
 }
 
 void raydium_sky_atmosphere_disable(void)

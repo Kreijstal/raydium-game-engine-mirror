@@ -282,6 +282,12 @@ __global signed char raydium_sky_force;
 __global signed char raydium_sky_atmosphere_enable_tag;
 __global GLfloat     raydium_sky_sphere_angle_orbit_u;
 __global GLfloat     raydium_sky_sphere_angle_orbit_v;
+__global GLfloat     raydium_sky_sphere_x_vel;
+__global GLfloat     raydium_sky_sphere_y_vel;
+__global GLfloat     raydium_sky_sphere_x_pos;
+__global GLfloat     raydium_sky_sphere_y_pos;
+__global GLfloat     raydium_sky_sphere_quality;
+__global GLfloat     raydium_sky_sphere_heigth;
 __global signed char raydium_sky_sphere_generated;
 
 __global GLsizei raydium_window_tx;
