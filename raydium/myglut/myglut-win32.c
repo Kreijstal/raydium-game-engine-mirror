@@ -260,6 +260,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   
 //  if (glutReshapeFuncCB)
 //      glutReshapeFuncCB(w, h);
+  DescribePixelFormat(currDC, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd); 
   raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",w,h,pfd.cColorBits,pfd.cDepthBits);
 
 }
