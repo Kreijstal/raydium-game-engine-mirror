@@ -258,8 +258,10 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers () ;
   
-  if (glutReshapeFuncCB)
-      glutReshapeFuncCB(w, h);
+//  if (glutReshapeFuncCB)
+//      glutReshapeFuncCB(w, h);
+  raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",w,h,pfd.cColorBits,pfd.cDepthBits);
+
 }
 
 

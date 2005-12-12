@@ -13,8 +13,9 @@
 #include "myglut.h"
 #endif
 
-
+#ifndef raydium_log
 void raydium_log(char *format, ...);
+#endif
 
 #ifdef WIN32
 #include "myglut-win32.c"
