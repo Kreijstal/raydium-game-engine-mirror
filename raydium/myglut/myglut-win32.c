@@ -50,20 +50,25 @@ DestroyWindow ( currWnd ) ;
 //glutSetCursor
 void glutSetCursor(int cursor)
 {
-LPCSTR wcursor;
-    
+static signed char visible=1;
+
 switch(cursor)
     {
     case GLUT_CURSOR_LEFT_ARROW:
-        wcursor = IDC_ARROW;
-	    break;
-    case GLUT_CURSOR_NONE:	
+	if(visible) break;
+	ShowCursor(1);
+	visible=1;
+	break;
+    case GLUT_CURSOR_NONE:
     default:
-        wcursor = 0;
+	if(!visible) break;
+	ShowCursor(0);
+	visible=0;
         break;
     break;
     }
-SetCursor( LoadCursor ( NULL, wcursor ) ) ;
+//SetCursor( LoadCursor ( NULL, wcursor ) ) ;
+
 }
 
 //glutWarpPointer (move mouse)
@@ -124,7 +129,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   wc.cbWndExtra    = 0 ;
   wc.hInstance     = currInstance ;
   wc.hIcon         = LoadIcon ( NULL, IDI_APPLICATION ) ;
-  wc.hCursor       = LoadCursor ( NULL, 0 ) ;
+  wc.hCursor       = LoadCursor ( NULL, IDC_ARROW ) ;
   wc.hbrBackground = ( HBRUSH ) ( COLOR_WINDOW + 1 ) ;
   wc.lpszMenuName  = NULL ;
   wc.lpszClassName = "RaydiumAppClass" ;
