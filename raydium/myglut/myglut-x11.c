@@ -16,6 +16,10 @@
 
 #include <GL/glx.h>
 
+#ifdef HAVE_XINERAMA
+#include <X11/extensions/Xinerama.h>
+#endif
+
 #ifdef HAVE_MOTIF
 #include <X11/Xm/MwmUtil.h>
 #else
@@ -83,6 +87,7 @@ PixelFormat preferred_pixel_formats [] =
 
 void pwInit ( int x, int y, int w, int h, int multisample,
               char *title, int border, int num_samples );
+int raydium_init_cli_option(char *option, char *value);
 
 
 // ---------------------- public API
@@ -221,10 +226,11 @@ void chooseVisual (PixelFormat *pf)
 void pwInit ( int x, int y, int w, int h, int multisample,
               char *title, int border, int num_samples )
 {
-  char *displayName;
+  char *displayName = NULL;
   int i;
   int origin[2];
   int size[2];
+  int DispX,DispY; // X screen size
 
   XSetWindowAttributes attribs ;
   XTextProperty   textProperty ;
@@ -233,6 +239,9 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   unsigned int            mask ;
   PixelFormat               pf ;
   
+#ifdef HAVE_XINERAMA
+  int i_d1, i_d2;
+#endif
 
   displayName=getenv ( "DISPLAY" ) ;
 
@@ -261,8 +270,66 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   currConnect  = ConnectionNumber ( currDisplay ) ;
   delWinAtom   = XInternAtom      ( currDisplay, "WM_DELETE_WINDOW", 0 ) ;
 
-  if ( w == -1 ) w = DisplayWidth  ( currDisplay, currScreen ) ;
-  if ( h == -1 ) h = DisplayHeight ( currDisplay, currScreen ) ;
+  DispX = DisplayWidth  ( currDisplay, currScreen ) ;
+  DispY = DisplayHeight ( currDisplay, currScreen ) ;
+
+#ifdef HAVE_XINERAMA
+  if(XineramaQueryExtension( currDisplay, &i_d1, &i_d2 ) 
+  && XineramaIsActive( currDisplay ) )
+  {
+  XineramaScreenInfo *screens;
+  int num_screens;
+  int selected;
+  char str[RAYDIUM_MAX_NAME_LEN];
+
+  
+  screens = XineramaQueryScreens(currDisplay,&num_screens);
+  raydium_log("Xinerama detected with %i screens:",num_screens);
+
+  for(i=0;i<num_screens;i++)
+    {
+    raydium_log("*** screen %i : %ix%i at (%i,%i)",i,screens[i].width,screens[i].height,screens[i].x_org,screens[i].y_org);
+    }
+
+  if(raydium_init_cli_option("xinerama-fullscreen",NULL))
+    {
+    raydium_log("... but using Xinerama fullscreen anyway !");
+    }
+    else
+    {
+    if(raydium_init_cli_option("xinerama-screen",str))
+	selected=atoi(str);
+    else
+	selected=0;
+
+    if(selected<0 || selected >=num_screens)
+	{
+	raydium_log("invalid screen id !");
+	selected=0;
+	}
+    raydium_log("using Xinerama screen %i",selected);
+
+    x+=screens[selected].x_org;
+    y+=screens[selected].y_org;
+    DispX=screens[selected].width;
+    DispY=screens[selected].height;
+    }
+
+  XFree(screens);
+  } // end Xinerama
+  else
+  {
+  raydium_log("no Xinerama on this display");
+  }
+#else
+  raydium_log("no Xinerama support for Raydium here ...");
+#endif
+
+  if ( w == -1 && h == -1)
+  {
+  w = DispX;
+  h = DispY;
+  }
 
   origin [ 0 ] = x ;
   origin [ 1 ] = y ;
