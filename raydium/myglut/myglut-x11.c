@@ -74,6 +74,9 @@ typedef struct PixelFormat
   int z_bits ;
 } PixelFormat;
 
+signed char XineramaAndFullscreenFocusHack=0;
+signed char FullscreenFlag=0;
+int FullScreenOriginAndSize[4];
 
 PixelFormat preferred_pixel_formats [] =
 {
@@ -313,6 +316,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
     y+=screens[selected].y_org;
     DispX=screens[selected].width;
     DispY=screens[selected].height;
+    if(w==-1 && h==-1) XineramaAndFullscreenFocusHack=1;
     }
 
   XFree(screens);
@@ -322,13 +326,18 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   raydium_log("no Xinerama on this display");
   }
 #else
-  raydium_log("no Xinerama support for Raydium here ...");
+  raydium_log("no Xinerama support. See config.h for HAVE_XINERAMA symbol");
 #endif
 
   if ( w == -1 && h == -1)
   {
   w = DispX;
   h = DispY;
+  FullscreenFlag = 1;
+  FullScreenOriginAndSize[0]=x;
+  FullScreenOriginAndSize[1]=y;
+  FullScreenOriginAndSize[2]=w;
+  FullScreenOriginAndSize[3]=h;
   }
 
   origin [ 0 ] = x ;
@@ -411,6 +420,17 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   sizeHints.x      = x ; sizeHints.y      = y ;
   sizeHints.width  = w ; sizeHints.height = h ;
 
+  if(FullscreenFlag)
+    {
+    // make this window unresizable
+    sizeHints.flags |= PMinSize;
+    sizeHints.flags |= PMaxSize;
+    sizeHints.min_width=w;
+    sizeHints.max_width=w;
+    sizeHints.min_height=h;
+    sizeHints.max_height=h;
+    }
+
   wmHints.flags = StateHint;
   wmHints.initial_state = NormalState ;
 
@@ -477,11 +497,27 @@ void myglutGetEvents (void)
       case ClientMessage   : exit(0) ; break ;
       case DestroyNotify   : exit(0) ; break ;
 
-      case ConfigureNotify :
+      case ConfigureNotify :      
         if ( currHandle == event.xconfigure.window &&
               ( size[0] != event.xconfigure.width ||
                 size[1] != event.xconfigure.height ) )
         {
+	/*
+	  if(FullscreenFlag &&
+	    (event.xconfigure.width !=FullScreenOriginAndSize[2] ||
+	     event.xconfigure.height!=FullScreenOriginAndSize[3]))
+		{
+		XResizeWindow(currDisplay,currHandle,FullScreenOriginAndSize[2],FullScreenOriginAndSize[3]);
+		//break;
+		}
+	  if(FullscreenFlag &&
+	    (event.xconfigure.x!=FullScreenOriginAndSize[0] ||
+	     event.xconfigure.y!=FullScreenOriginAndSize[1]))
+		{
+		XMoveWindow(currDisplay,currHandle,FullScreenOriginAndSize[0],FullScreenOriginAndSize[1]);
+		//break;
+		}
+	*/
           size[0] = event.xconfigure.width ;
           size[1] = event.xconfigure.height ;
 
@@ -498,6 +534,12 @@ void myglutGetEvents (void)
 	break;
 
       case EnterNotify     :
+        if(XineramaAndFullscreenFocusHack)
+    	    {
+	    XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
+	    XRaiseWindow(currDisplay,currHandle);
+	    }
+	break;
       case LeaveNotify     :
       case VisibilityNotify:
       case Expose          : break ;
