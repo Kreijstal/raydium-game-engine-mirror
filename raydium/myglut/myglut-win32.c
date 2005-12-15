@@ -13,7 +13,6 @@ static HINSTANCE       currInstance;
 static HWND            currWnd;
 static HDC             currDC;
 static HGLRC           currGLRC;
-int _glutWindowSize[2];
 
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 

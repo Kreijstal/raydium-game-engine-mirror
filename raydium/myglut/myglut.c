@@ -17,6 +17,8 @@
 void raydium_log(char *format, ...);
 #endif
 
+int _glutWindowSize[2];
+
 #ifdef WIN32
 #include "myglut-win32.c"
 #else
@@ -47,11 +49,11 @@ switch(rendering)
 //glutMainLoop
 void glutMainLoop(void)
 {
-#ifdef WIN32
+//#ifdef WIN32
     // since windows is firing WM_SIZE too quickly ...
     if(glutReshapeFuncCB)
         glutReshapeFuncCB(_glutWindowSize[0],_glutWindowSize[1]);
-#endif
+//#endif
 do{
     glutIdleFuncCB();
     myglutGetEvents();

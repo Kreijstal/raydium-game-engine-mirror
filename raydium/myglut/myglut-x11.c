@@ -76,7 +76,6 @@ typedef struct PixelFormat
 
 signed char XineramaAndFullscreenFocusHack=0;
 signed char FullscreenFlag=0;
-int FullScreenOriginAndSize[4];
 
 PixelFormat preferred_pixel_formats [] =
 {
@@ -334,16 +333,14 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   w = DispX;
   h = DispY;
   FullscreenFlag = 1;
-  FullScreenOriginAndSize[0]=x;
-  FullScreenOriginAndSize[1]=y;
-  FullScreenOriginAndSize[2]=w;
-  FullScreenOriginAndSize[3]=h;
   }
 
   origin [ 0 ] = x ;
   origin [ 1 ] = y ;
   size   [ 0 ] = w ;
   size   [ 1 ] = h ;
+  _glutWindowSize[0]=w;
+  _glutWindowSize[1]=h;
 
 
   for (i = 0 ; preferred_pixel_formats [ i ] . num_samples >= 0 ; i++ )
@@ -396,6 +393,12 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 
   mask = CWBackPixmap | CWBorderPixel | CWColormap | CWEventMask;
 
+  if(FullscreenFlag)
+    {
+    attribs.override_redirect = True;
+    mask |= CWOverrideRedirect;
+    }
+
   currHandle = XCreateWindow ( currDisplay, rootWindow,
                            x, y, w, h, 0, visualInfo->depth,
                            InputOutput, visualInfo->visual,
@@ -431,6 +434,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
     sizeHints.max_height=h;
     }
 
+
   wmHints.flags = StateHint;
   wmHints.initial_state = NormalState ;
 
@@ -458,6 +462,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   glXMakeCurrent   ( currDisplay, currHandle, currContext ) ;
 
   glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+  XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
 
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers();
@@ -502,22 +507,6 @@ void myglutGetEvents (void)
               ( size[0] != event.xconfigure.width ||
                 size[1] != event.xconfigure.height ) )
         {
-	/*
-	  if(FullscreenFlag &&
-	    (event.xconfigure.width !=FullScreenOriginAndSize[2] ||
-	     event.xconfigure.height!=FullScreenOriginAndSize[3]))
-		{
-		XResizeWindow(currDisplay,currHandle,FullScreenOriginAndSize[2],FullScreenOriginAndSize[3]);
-		//break;
-		}
-	  if(FullscreenFlag &&
-	    (event.xconfigure.x!=FullScreenOriginAndSize[0] ||
-	     event.xconfigure.y!=FullScreenOriginAndSize[1]))
-		{
-		XMoveWindow(currDisplay,currHandle,FullScreenOriginAndSize[0],FullScreenOriginAndSize[1]);
-		//break;
-		}
-	*/
           size[0] = event.xconfigure.width ;
           size[1] = event.xconfigure.height ;
 
