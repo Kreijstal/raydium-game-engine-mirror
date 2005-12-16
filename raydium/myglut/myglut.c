@@ -18,6 +18,7 @@ void raydium_log(char *format, ...);
 #endif
 
 int _glutWindowSize[2];
+signed char _glutMouseVisible;
 
 #ifdef WIN32
 #include "myglut-win32.c"
@@ -78,6 +79,8 @@ int glutGet(int enu)
 {
 switch(enu)
     {
+    case GLUT_WINDOW_CURSOR:
+	return _glutMouseVisible;
     default:
 	raydium_log("(my)glutGet: ERROR: unknown 'enu' %i",enu);
     }

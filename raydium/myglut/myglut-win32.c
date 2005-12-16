@@ -34,6 +34,8 @@ glutPassiveMotionFuncCB=NULL;
 glutMouseFuncCB=NULL;
 glutDisplayFuncCB=NULL;
 glutIdleFuncCB=NULL;
+
+_glutMouseVisible=1;
 }
 
 
@@ -49,20 +51,19 @@ DestroyWindow ( currWnd ) ;
 //glutSetCursor
 void glutSetCursor(int cursor)
 {
-static signed char visible=1;
 
 switch(cursor)
     {
     case GLUT_CURSOR_LEFT_ARROW:
-	if(visible) break;
+	if(_glutMouseVisible) break;
 	ShowCursor(1);
-	visible=1;
+	_glutMouseVisible=1;
 	break;
     case GLUT_CURSOR_NONE:
     default:
-	if(!visible) break;
+	if(!_glutMouseVisible) break;
 	ShowCursor(0);
-	visible=0;
+	_glutMouseVisible=0;
         break;
     break;
     }

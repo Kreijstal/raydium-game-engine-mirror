@@ -111,6 +111,8 @@ glutPassiveMotionFuncCB=NULL;
 glutMouseFuncCB=NULL;
 glutDisplayFuncCB=NULL;
 glutIdleFuncCB=NULL;
+
+_glutMouseVisible=1;
 }
 
 
@@ -139,6 +141,7 @@ switch(cursor)
 	currCursor = XC_left_ptr;
 	XDefineCursor( currDisplay, currHandle,
                  XCreateFontCursor ( currDisplay, currCursor ) ) ;
+	_glutMouseVisible=1;
 	break;
     case GLUT_CURSOR_NONE:	
     default:
@@ -151,7 +154,7 @@ switch(cursor)
                         XCreatePixmapCursor ( currDisplay,
                             pix, pix, &bcol, &bcol, 0, 0 ) ) ;
         XFreePixmap   ( currDisplay, pix ) ;
-        currCursor = 0 ;
+	_glutMouseVisible=1;
     }
 }
 
