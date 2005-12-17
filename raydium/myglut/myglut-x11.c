@@ -475,7 +475,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",sizeHints.width,sizeHints.height,pf.bits_per_pixel,pf.z_bits);
 
   if(FullscreenFlag)
-     XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
+     XSetInputFocus(currDisplay,currHandle,RevertToNone,CurrentTime);
 }
 
 
