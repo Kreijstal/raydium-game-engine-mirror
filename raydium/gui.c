@@ -88,6 +88,7 @@ raydium_gui_theme_current.texture=0;
 raydium_gui_theme_current.texture_size[0]=1;
 raydium_gui_theme_current.texture_size[1]=1;
 memset(raydium_gui_theme_current.background_uv,0,sizeof(GLfloat)*4);
+strcpy(raydium_gui_theme_current.font,"font2.tga");
 }
 
 int raydium_gui_theme_load(char *filename)
@@ -130,6 +131,23 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 	    return 0;
 	    }
 	raydium_gui_theme_current.texture=t;
+	done=1;
+	}
+
+    if(!strcasecmp(var,"font"))
+	{
+	int t;
+	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+	    {
+	    raydium_log("gui: parser: font: wrong type");
+	    continue;
+	    }
+	
+	t=raydium_texture_find_by_name(val_s);
+	if(t)
+	    strcpy(raydium_gui_theme_current.font,val_s);
+	else
+	    raydium_log("gui: parser: load: cannt load font '%s'",val_s);
 	done=1;
 	}
 
@@ -346,7 +364,7 @@ else
 raydium_osd_color_change(b->font_color[0],b->font_color[1],b->font_color[2]);
 raydium_osd_printf(fxy[0]-tmp,fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",b->caption);
+		   0.5,raydium_gui_theme_current.font,"%s",b->caption);
 } // end caption drawing
 
 // Events management
@@ -526,7 +544,7 @@ else
 raydium_osd_color_change(l->font_color[0],l->font_color[1],l->font_color[2]);
 raydium_osd_printf(xy[0]-tmp,xy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",l->caption);
+		   0.5,raydium_gui_theme_current.font,"%s",l->caption);
 } // end caption drawing
 }
 
@@ -627,12 +645,12 @@ zone[(int)tmp2+1]=0;
 raydium_osd_color_change(e->font_color[0],e->font_color[1],e->font_color[2]);
 raydium_osd_printf(fxy[0]+tmp,fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",zone);
+		   0.5,raydium_gui_theme_current.font,"%s",zone);
 
 if(style==RAYDIUM_GUI_FOCUS)
 raydium_osd_printf(fxy[0]+tmp+(tmp*e->cursor)-(tmp/2)-(e->offset*tmp),fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","|");
+		   0.5,raydium_gui_theme_current.font,"|");
 // end of "printf"
 
 // Events management
@@ -749,7 +767,7 @@ fxy[1]=xy[1]+(xy[3]-xy[1])/2;
 raydium_osd_color_change(scol[0],scol[1],scol[2]);
 raydium_osd_printf(fxy[0],fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",c->caption);
+		   0.5,raydium_gui_theme_current.font,"%s",c->caption);
 } // end caption drawing
 
 if(raydium_gui_window_focused==window &&
@@ -899,7 +917,7 @@ if(tmp3 < strlen(str))
 raydium_osd_color_change(c->font_color[0],c->font_color[1],c->font_color[2]);
 raydium_osd_printf(fxy[0]+tmp,fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",str);
+		   0.5,raydium_gui_theme_current.font,"%s",str);
 } // end caption drawing
 
 
@@ -1059,7 +1077,7 @@ for(i=0,cpt=0;i<strlen(c->items)+1;i++)
 	    raydium_osd_color_change(c->font_color[0],c->font_color[1],c->font_color[2]);
 	    raydium_osd_printf(fxy[0]+tmp,fxy[1],
 		   raydium_gui_windows[window].widgets[w].font_size,
-		   0.5,"font2.tga","%s",str);
+		   0.5,raydium_gui_theme_current.font,"%s",str);
 
 	    //	events (change current ?)
 	    if(raydium_gui_window_focused==window &&

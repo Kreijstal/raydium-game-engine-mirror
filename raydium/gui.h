@@ -129,6 +129,7 @@ typedef struct raydium_gui_Theme
     int      texture;
     int      texture_size[2];
     GLfloat  background_uv[4];
+    char     font[RAYDIUM_MAX_NAME_LEN];
 } raydium_gui_Theme;
 
 raydium_gui_Theme  raydium_gui_theme_current;
