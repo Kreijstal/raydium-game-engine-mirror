@@ -1370,13 +1370,13 @@ if(strlen(mni_current)==0)
 
     raydium_live_texture_mask_name("video",1);
     {
-    static float a=2;
+    static float a=1.5;
     float b;
-    a-=(raydium_frame_time/3);
+    a-=(raydium_frame_time/6);
     b=a;
-    if(b<0.8) b=0.8;
+    if(b<0.9) b=0.9;
     if(b>1) b=1;
-    raydium_osd_mask_texture_name("mania_logo.tga",b);
+    raydium_osd_mask_texture_name("mania_logo2.tga",b);
     }
 
     //raydium_osd_logo("logoc.tga");
@@ -1396,7 +1396,7 @@ if(raydium_key_last==1027)
 
     raydium_clear_frame();
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
-    raydium_osd_draw_name("mania_logo.tga",0,0,100,100);
+    raydium_osd_draw_name("mania_logo2.tga",0,0,100,100);
     raydium_rendering_finish();
     return;
     }
@@ -1635,7 +1635,7 @@ sscanf(full_sx,"%i",&full_sx_i);
 sscanf(full_sy,"%i",&full_sy_i);
 
 
-raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
+raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_WINDOW,version);
 
 raydium_parser_db_set("Generic-FullscreenSizeX",full_sx);
 raydium_parser_db_set("Generic-FullscreenSizeY",full_sy);
