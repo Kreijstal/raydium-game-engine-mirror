@@ -100,7 +100,7 @@ function swig_wrappers_perl()
 if(chdir("raydium/swig")===false)
     die("not in Raydium's root dir, cannot find swig dir\n");
 
-passthru("swig -perl5 raydium.i",&$ret);
+passthru("swig -perl5 raydium.i",$ret);
 echo "\n";
 if($ret!=0)
     die("");
@@ -224,7 +224,7 @@ $fp=fopen("raydium.i","at");
 fwrite($fp,$contents);
 fclose($fp);
 
-passthru("swig -python raydium.i",&$ret);
+passthru("swig -python raydium.i",$ret);
 echo "\n";
 if($ret!=0)
     die("");
@@ -232,8 +232,9 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -ljpeg -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.3/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz";
-echo "\n";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lGLU -lm -ljpeg -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.4/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz -lXinerama -lalut";
+echo "\n\n";
+echo "You may need to adapt python devel lib path\n";
 }
 
 
