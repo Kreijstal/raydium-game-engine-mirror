@@ -478,7 +478,7 @@ float pos;
 handle=raydium_gui_window_create("menu",48,10,50,80);
 
 raydium_gui_widget_sizes(5,5,25);
-raydium_gui_label_create("lblMode",handle,50,95,"Story Mode",0,0,0);
+raydium_gui_label_create("lblMode",handle,50,93,"Story Mode",0,0,0);
 
 raydium_register_variable(ret,RAYDIUM_REGISTER_STR,"ret");
 raydium_php_exec("mania_story.php");
@@ -1635,7 +1635,7 @@ sscanf(full_sx,"%i",&full_sx_i);
 sscanf(full_sy,"%i",&full_sy_i);
 
 
-raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_WINDOW,version);
+raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
 
 raydium_parser_db_set("Generic-FullscreenSizeX",full_sx);
 raydium_parser_db_set("Generic-FullscreenSizeY",full_sy);
