@@ -465,7 +465,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   glXMakeCurrent   ( currDisplay, currHandle, currContext ) ;
 
   glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
-  XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
+
 
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers();
@@ -473,6 +473,9 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   glutSwapBuffers();
 
   raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",sizeHints.width,sizeHints.height,pf.bits_per_pixel,pf.z_bits);
+
+  if(FullscreenFlag)
+     XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
 }
 
 
