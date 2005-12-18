@@ -482,8 +482,6 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 void myglutGetEvents (void)
 {
   static int size[2]={-1,-1};
-  signed char repeating = 0 ;
-  char keyflags [ 32 ] ;
   XEvent event ;
 
   XComposeStatus composeStatus ;
@@ -550,15 +548,6 @@ void myglutGetEvents (void)
 
       case ButtonPress     :
         {
-/*          int button = -1 ;
-
-          switch ( event.xbutton.button )
-          {
-            case 1 : button = PW_LEFT_BUTTON   ; break ;
-            case 2 : button = PW_MIDDLE_BUTTON ; break ;
-            case 3 : button = PW_RIGHT_BUTTON  ; break ;
-          }
-*/
           if (glutMouseFuncCB)
             glutMouseFuncCB(event.xbutton.button-1, updown, event.xbutton.x, event.xbutton.y ) ;
         }
@@ -566,22 +555,9 @@ void myglutGetEvents (void)
 
       case KeyRelease      :
         updown = GLUT_UP ;
-
-        XQueryKeymap ( currDisplay, keyflags ) ;
-
-        repeating = ( ( keyflags [ event.xkey.keycode >> 3 ] &
-                          ( 1 << ( event.xkey.keycode & 7 ) ) ) != 0 ) ;
-
         // FALLTHROUGH 
 
       case KeyPress        :
-        
-        //  Only generate a key up callback if the key is actually up
-        //  and not repeating.
-
-//        if ( ! autoRepeat && repeating )
-    //      break ;
-
 
         len = XLookupString( &event.xkey, asciiCode, sizeof(asciiCode),
                                  &keySym, &composeStatus ) ;
@@ -627,12 +603,27 @@ void myglutGetEvents (void)
 
 	if(result!=-1)
 	    {
+	    // check autorepeat with current KeyRelease and next event
+	    if (special && XEventsQueued(currDisplay, QueuedAfterReading))
+	    {
+	    XEvent ahead;
+	    XPeekEvent(currDisplay, &ahead);
+	    if (ahead.type == KeyPress && event.type == KeyRelease
+	        && ahead.xkey.window == event.xkey.window
+	        && ahead.xkey.keycode == event.xkey.keycode
+	        && ahead.xkey.time == event.xkey.time) 
+		{
+		// repeating key. Discard event.
+		break;
+		}
+	    }
+
 	    // special down
-	    if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !repeating)
+	    if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !raydium_key[result])
 		glutSpecialFuncCB(result,event.xkey.x, event.xkey.y);
 
 	    // special up
-	    if(special && updown==GLUT_UP && glutSpecialUpFuncCB && !repeating)
+	    if(special && updown==GLUT_UP && glutSpecialUpFuncCB && raydium_key[result])
 		glutSpecialUpFuncCB(result,event.xkey.x, event.xkey.y);
 
 	    // normal

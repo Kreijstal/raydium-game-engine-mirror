@@ -207,11 +207,13 @@ exit_if_error "$?" "You must install glu-devel package"
 echo -n "* GL/GLU and hardware support :"
 
 file='
+// define a dummy Raydium background for myglut :
 #define RAYDIUM_RENDERING_WINDOW      	    	0
 #define RAYDIUM_RENDERING_FULLSCREEN  	     	1
 #define RAYDIUM_RENDERING_NONE  	     	2
 #define DONT_INCLUDE_HEADERS
 #define raydium_log printf
+signed char    raydium_key[256];
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
