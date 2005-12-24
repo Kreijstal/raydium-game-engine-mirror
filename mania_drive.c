@@ -249,6 +249,7 @@ create_car();
 
 raydium_gui_window_delete_name("menu");
 raydium_gui_hide();
+raydium_osd_cursor_set(NULL,0,0); // hide mouse cursor
 raydium_sound_load_music(NULL);
 raydium_video_delete_name("video");
 music_random();
@@ -291,8 +292,8 @@ void gui_start(void)
 {
 if(raydium_gui_isvisible())
     return;
-raydium_gui_show();
 
+raydium_gui_show();
 raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
 }
 
@@ -341,6 +342,11 @@ raydium_gui_button_create("btnCantDriveOk",handle,35,15,"OK",btnCantDriveOk);
 void btnErrorOkClick(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("error");
+}
+
+void btnStoryCompletedOk(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("storycompleted");
 }
 
 void btnNetworkConnect(raydium_gui_Object *w)
@@ -396,6 +402,7 @@ build_gui_Main();
 }
 
 
+
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
@@ -421,6 +428,27 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblBestTime",handle,50,80,str,0,0,0);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnBestTimeOkOk",handle,35,15,"OK",btnBestTimeOk);
+}
+
+
+void build_gui_StoryCompleted(void)
+{
+int handle;
+char *str1= "  ^cCongratulations !";
+char *str1s="  ^0Congratulations !";
+char *str2="Story mode is completed !";
+
+handle=raydium_gui_window_create("storycompleted",5,45,50,25);
+raydium_gui_widget_sizes(0,0,28);
+raydium_gui_label_create("lblStoryCompleted1s",handle,50,80,str1s,0,0,0);
+raydium_gui_label_create("lblStoryCompleted1" ,handle,50.3,81,str1,0,0,0);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblStoryCompleted2",handle,50,50,str2,0,0,0);
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnStoryCompletedOk",handle,35,15,"OK",btnStoryCompletedOk);
+
+raydium_gui_widget_focus_name("btnStoryCompletedOk","storycompleted");
 }
 
 
@@ -474,6 +502,7 @@ char part3[RAYDIUM_MAX_NAME_LEN];
 int handle;
 int i,last,len;
 float pos;
+signed char completed;
 
 handle=raydium_gui_window_create("menu",48,10,50,80);
 
@@ -481,7 +510,9 @@ raydium_gui_widget_sizes(5,5,25);
 raydium_gui_label_create("lblMode",handle,50,93,"Story Mode",0,0,0);
 
 raydium_register_variable(ret,RAYDIUM_REGISTER_STR,"ret");
+raydium_register_variable(&completed,RAYDIUM_REGISTER_SCHAR,"completed");
 raydium_php_exec("mania_story.php");
+raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
 
 
@@ -511,6 +542,12 @@ for(i=0;i<len;i++)
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
 gui_start();
+
+if(completed)
+    {
+    raydium_log("Completed !");
+    build_gui_StoryCompleted();
+    }
 }
 
 
@@ -1620,6 +1657,7 @@ int main(int argc, char **argv)
 //char server[RAYDIUM_MAX_NAME_LEN];
 int i;
 FILE *fp;
+char str[RAYDIUM_MAX_NAME_LEN];
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
@@ -1700,6 +1738,12 @@ raydium_parser_db_get("ManiaDrive-CameraLagActive",lagActive,"y");
 raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"3.0");
 camera_lag=(lagActive[0]=='y'?1:0);
 sscanf(lagSpeed,"%f",&camera_lag_speed);
+
+// undocumented feature
+raydium_parser_db_get("ManiaDrive-ShadowSupport",str,"0");
+raydium_parser_db_set("ManiaDrive-ShadowSupport",str);
+if(strlen(str) && str[0]=='1')
+    raydium_shadow_enable();
 
 
 if(raydium_init_cli_option_default("mni",mni_current,""))

@@ -3,6 +3,8 @@
 // Generates story track list for ingame menu
 
 $ret="";
+$completed=0;
+
 $scores=array();
 
 
@@ -58,5 +60,8 @@ foreach($story as $s)
     if($b>$d[2])
 	$col='4';
     }
+
+if($col=='2')
+    $completed=1;
 
 ?>
