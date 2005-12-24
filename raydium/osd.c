@@ -226,7 +226,11 @@ raydium_osd_stop();
 void raydium_osd_cursor_set(char *texture,GLfloat xsize, GLfloat ysize)
 {
 raydium_mouse_hide();
-raydium_osd_cursor_texture=raydium_texture_find_by_name(texture);
+if(texture && strlen(texture))
+    raydium_osd_cursor_texture=raydium_texture_find_by_name(texture);
+else
+    raydium_osd_cursor_texture=0;
+
 raydium_osd_cursor_xsize=xsize;
 raydium_osd_cursor_ysize=ysize;
 }

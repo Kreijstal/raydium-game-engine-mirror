@@ -321,4 +321,14 @@ This function will return ##item##'s id in ##list##. Returns -1 if not found.
 Useful for combo index, for example.
 **/
 
+void raydium_gui_widget_focus(int widget, int window);
+/**
+Sets focus on ##widget## for ##window##.
+**/
+
+void raydium_gui_widget_focus_name(char *widget, char *window);
+/**
+Same as above, but using widget and window names
+**/
+
 #endif

@@ -238,6 +238,7 @@ raydium_gui_Window *w;
 
 if(!raydium_gui_window_isvalid(raydium_gui_window_focused))
     return;
+
 w=&raydium_gui_windows[raydium_gui_window_focused];
 
 for(i=w->focused_widget+1;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
@@ -247,7 +248,7 @@ for(i=w->focused_widget+1;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
 	return;
 	}
 
-// No found : rewind
+// Not found : rewind
 for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
     if(raydium_gui_widget_isvalid(i,raydium_gui_window_focused))
 	{
@@ -255,6 +256,33 @@ for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
 	return;
 	}
 }
+
+
+void raydium_gui_widget_focus(int widget, int window)
+{
+if(!raydium_gui_window_isvalid(raydium_gui_window_focused))
+    {
+    raydium_log("gui: error: cannot set focus: invalid window");
+    return;
+    }
+
+if(raydium_gui_widget_isvalid(widget,raydium_gui_window_focused))
+    {
+    printf("%i %i\n",widget,raydium_gui_window_focused);
+    raydium_gui_windows[raydium_gui_window_focused].focused_widget=widget;
+    }
+else
+    raydium_log("gui: error: cannot set focus: invalid widget");
+}
+
+
+void raydium_gui_widget_focus_name(char *widget, char *window)
+{
+int w;
+w=raydium_gui_window_find(window);
+raydium_gui_widget_focus(raydium_gui_widget_find(widget,w),w);
+}
+
 
 
 void raydium_gui_widget_draw_internal(GLfloat *uv, GLfloat *xy)

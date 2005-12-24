@@ -228,7 +228,7 @@ return (int)max;
 
 int raydium_timecall_detect_frequency(void)
 {
-int i;
+int i=0;
 unsigned long first,second;
 float accu,max;
 
@@ -239,7 +239,7 @@ i++;
 second=raydium_timecall_clock();
 }
 
-raydium_log("timer: detection: %i iterations: diff: %li steps (%li/sec)",i,second-first,raydium_timecall_clocks_per_sec);
+raydium_log("timer: detection: %li iterations: diff: %li steps (%li/sec)",i,second-first,raydium_timecall_clocks_per_sec);
 accu=((second-first)/(float)raydium_timecall_clocks_per_sec)*1000;
 max=1.0/(accu/1000);
 raydium_log("timecall: method accuracy = %.3f ms (%.2f Hz)",accu,max);

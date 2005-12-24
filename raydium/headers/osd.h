@@ -139,6 +139,8 @@ example:
 %%(c)
 raydium_osd_cursor_set("BOXcursor.tga",4,4);
 %%
+
+You can set ##texture## to NULL or empty string to cancel OSD cursor texture.
 **/
 
 extern void raydium_osd_cursor_draw (void);

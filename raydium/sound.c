@@ -519,7 +519,7 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
  pContext = alcGetCurrentContext();
  pDevice = alcGetContextsDevice(pContext);
  tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
- raydium_log("sound: OK, using '%s'",tempString);
+ raydium_log("sound: OK, using '%s'",(strlen(tempString)?tempString:"default device"));
 #else
  raydium_log("sound: OK");
 #endif
