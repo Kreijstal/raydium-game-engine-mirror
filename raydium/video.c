@@ -48,8 +48,8 @@ int raydium_video_find(char *name)
 {
 int live,i;
 
-live=raydium_live_texture_find(raydium_texture_find_by_name(name));
-
+//live=raydium_live_texture_find(raydium_texture_find_by_name(name));
+live=raydium_live_texture_find(raydium_texture_exists(name));
 
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if(raydium_video_video[i].state &&
