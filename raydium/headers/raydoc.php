@@ -148,6 +148,7 @@ return $i++;
 
 // Main
 
+$id="";
 $files=getHeaders(".");
 //var_dump($files);
 if($files==-1)
