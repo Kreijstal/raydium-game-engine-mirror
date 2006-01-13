@@ -1,4 +1,17 @@
-char *version="version 0.9";
+// ManiaDrive - CQFD Corp
+// http://maniadrive.raydium.org/
+// Needs mania2.static / mania2.exe
+char *version="ManiaDrive 0.93";
+
+// TODO:
+// ... code :
+// custom tracks (solo + network ?) (with a webserver on mania_server ?)
+// new camera code ?
+// network game end stats
+// ... data :
+// new tracks (mainly for solo mode)
+// new road texture
+
 #include "raydium/index.c"
 
 #include "mania.h"
@@ -37,13 +50,14 @@ dReal cam_angle_v=90;
 
 signed char camera_lag;
 float camera_lag_speed;
+signed char shadow_support;
+float music_volume;
 
 int object_ground,object_boxes;
 int game_state;
 GLfloat timer;
 GLfloat countdown;
 GLfloat partytime;
-//char playername[RAYDIUM_MAX_NAME_LEN];
 char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
@@ -100,10 +114,15 @@ Score track_score;
 #define MODE_NET	2
 #define MODE_MULTI	3
 
+void change_music_volume(float vol)
+{
+raydium_sound_SetSourceGain(0,vol);
+}
+
 float get_score(char *track,char *player)
 {
 char ltrack[RAYDIUM_MAX_NAME_LEN];
-float res;
+float res=0;
 
 if(!strcmp(track,"dyn_track.mni"))
     {
@@ -243,9 +262,14 @@ raydium_network_propag_refresh(NET_SCORE_TRACK);
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     best_score[i].time=-1;
 
+if(shadow_support)
+    raydium_shadow_enable();
+else
+    raydium_shadow_disable();
 
-// flush timers !
 create_car();
+
+partytime=0;
 
 raydium_gui_window_delete_name("menu");
 raydium_gui_hide();
@@ -295,6 +319,7 @@ if(raydium_gui_isvisible())
 
 raydium_gui_show();
 raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
+change_music_volume(music_volume);
 }
 
 
@@ -307,7 +332,6 @@ raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
 
 raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
 raydium_parser_db_set("ManiaDrive-LastInternetTrack",track);
-
 
 strcat(track,".mni");
 drive(track);
@@ -323,6 +347,7 @@ mode=MODE_SOLO;
 
 void btnBackToMainMenu(raydium_gui_Object *w)
 {
+change_music_volume(music_volume);
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
 }
@@ -330,7 +355,7 @@ build_gui_Main();
 void btnCantDrive(raydium_gui_Object *w)
 {
 int handle;
-char *str="You can't drive yet here !";
+char *str="You can't drive here yet !";
 
 handle=raydium_gui_window_create("cantdrive",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
@@ -376,6 +401,8 @@ raydium_gui_window_delete_name("menu");
 handle=raydium_gui_window_create("menu",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
+
+//raydium_web_client_get("simple.mni");
 }
 
 void btnApplyOptions(raydium_gui_Object *w)
@@ -385,7 +412,8 @@ char str[RAYDIUM_MAX_NAME_LEN];
 camera_lag=raydium_gui_read_name("menu","chkCameraLag",str);
 camera_lag_speed=raydium_gui_read_name("menu","trkCameraLag",str);
 raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
-
+shadow_support=raydium_gui_read_name("menu","chkShadow",str);
+music_volume=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
 
 str[1]=0;
 str[0]=(camera_lag?'y':'n');
@@ -396,12 +424,26 @@ raydium_parser_db_set("ManiaDrive-CameraSpeed",str);
 
 raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
 
+sprintf(str,"%i",shadow_support);
+raydium_parser_db_set("ManiaDrive-ShadowSupport",str);
+
+sprintf(str,"%f",music_volume);
+raydium_parser_db_set("ManiaDrive-MusicVolume",str);
+change_music_volume(music_volume);
+
 
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
 }
 
+void btnMusicVolTest(raydium_gui_Object *w)
+{
+float v;
+char str[RAYDIUM_MAX_NAME_LEN];
 
+v=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
+change_music_volume(v);
+}
 
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
@@ -561,8 +603,6 @@ raydium_parser_db_get("ManiaDrive-Server",server,"192.168.0.1");
 
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
-//raydium_gui_widget_sizes(0,0,18);
-//raydium_gui_label_create("lbl...",handle,25,90,"Not yet ! ;)",0,0,0);
 
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblMode",handle,50,90,"- Network Game - ",0,0,0);
@@ -591,20 +631,32 @@ int handle;
 
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
-handle=raydium_gui_window_create("menu",48,10,50,40);
+handle=raydium_gui_window_create("menu",48,10,50,60);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblPlayerName",handle,25,80,"Player Name :",0,0,0);
+raydium_gui_label_create("lblPlayerName",handle,25,90,"Player Name :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_edit_create("edtPlayerName",handle,47,75,raydium_network_name_local);
+raydium_gui_edit_create("edtPlayerName",handle,47,87,raydium_network_name_local);
 
 raydium_gui_widget_sizes(4,4,18);
-raydium_gui_check_create("chkCameraLag",handle,10,50," Camera lagging support",camera_lag);
+raydium_gui_check_create("chkCameraLag",handle,10,70," Camera lagging support",camera_lag);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblCamLagFact",handle,30,40,"Camera's speed :",0,0,0);
+raydium_gui_label_create("lblCamLagFact",handle,30,64,"Camera's speed :",0,0,0);
 raydium_gui_widget_sizes(20,2,0);
-raydium_gui_track_create("trkCameraLag",handle,55,37.5, 2,10,camera_lag_speed);
+raydium_gui_track_create("trkCameraLag",handle,56,62, 2,10,camera_lag_speed);
+
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblMusicVol",handle,25,44,"Music volume :",0,0,0);
+raydium_gui_widget_sizes(15,2,0);
+raydium_gui_track_create("trkMusicVol",handle,48,42, 0,100,music_volume*100);
+raydium_gui_widget_sizes(6,3,14);
+raydium_gui_button_create("btnMusicVolTest",handle,82,41,"test",btnMusicVolTest);
+//
+
+raydium_gui_widget_sizes(4,4,18);
+raydium_gui_check_create("chkShadow",handle,2,20," Shadow support (experimental)",shadow_support);
 
 
 raydium_gui_widget_sizes(15,5,18);
@@ -925,17 +977,28 @@ int h,m,s,ms;
 int h2,m2,s2,ms2;
 
 hms(timer,&h,&m,&s,&ms);
-raydium_osd_printf(5,85,18,0.5,"font2.tga","^fLap   %i:%02i:%02i:%03i (^4%s^f)",h,m,s,ms,mni_current);
+//raydium_osd_printf(5,85,18,0.5,"font2.tga","^fLap   %i:%02i:%02i:%03i (^4%s^f)",h,m,s,ms,mni_current);
+//raydium_osd_printf(5,85,18,0.5,"font2.tga","^fLap   %i:%02i:%02i:%03i",h,m,s,ms);
+raydium_osd_color_change(0.89,0.85,0.66);
+raydium_osd_printf(55,4,12,0.5,"font-impact.tga","   lap time:");
+raydium_osd_printf(68,4,12,0.7,"font-lcdmono.tga","%i:%02i:%02i:%03i",h,m,s,ms);
+
 
 if(mode==MODE_MULTI)
     {
     hms(partytime,&h2,&m2,&s2,&ms2);
-    raydium_osd_printf(5,80,18,0.5,"font2.tga","^fParty %i:%02i:%02i:%03i",h2,m2,s2,ms2);
+//    raydium_osd_printf(5,80,18,0.5,"font2.tga","^fParty %i:%02i:%02i:%03i",h2,m2,s2,ms2);
+    raydium_osd_color_change(0.89,0.85,0.66);
+    raydium_osd_printf(10,4,12,0.5,"font-impact.tga"," party time:");
+    raydium_osd_printf(23,4,12,0.7,"font-lcdmono.tga","^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }
 if(mode==MODE_SOLO)
     {
     hms(trackdata.gold_time,&h2,&m2,&s2,&ms2);
-    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eGold  ^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
+//    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eGold  ^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
+    raydium_osd_color_change(0.89,0.85,0.66);
+    raydium_osd_printf(20,7,12,0.5,"font-impact.tga","  gold time:");
+    raydium_osd_printf(33,7,12,0.7,"font-lcdmono.tga","^e%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }    
 }
 
@@ -957,13 +1020,17 @@ if(mode==MODE_SOLO)
 if(track_score.time>=0)
     {
     hms(track_score.time,&h,&m,&s,&ms);
-    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eTrack record: ^f%i:%02i:%02i:%03i - %s",h,m,s,ms,track_score.player);
+//    raydium_osd_printf(5,90,18,0.5,"font2.tga","^eTrack record: ^f%i:%02i:%02i:%03i - %s",h,m,s,ms,track_score.player);
+    raydium_osd_color_change(0.89,0.85,0.66);
+    raydium_osd_printf(10,7,12,0.5,"font-impact.tga","     record:");
+    raydium_osd_printf(23,7,12,0.7,"font-lcdmono.tga","^e%i:%02i:%02i:%03i",h,m,s,ms);
+    raydium_osd_printf(39,7,12,0.5,"font-impact.tga","^f- %s",track_score.player);
     }
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     ok[i]=0;
 
-pos=65;
+pos=90;
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
     bestid=-1;
@@ -978,8 +1045,12 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     hms(best_score[bestid].time,&h,&m,&s,&ms);
     if(best_score[bestid].time>=0)
 	{
-	raydium_osd_printf(5,pos,18,0.5,"font2.tga","^c%i. ^f%i:%02i:%02i:%03i - %s",cpt,h,m,s,ms,best_score[bestid].player);
-	pos-=5;
+	raydium_osd_printf(2,pos,10,0.5,"font-impact.tga","^c%i ^f-",cpt);
+	raydium_osd_color_change(0.89,0.85,0.66);
+	raydium_osd_printf(5,pos,10,0.5,"font-lcdmono.tga","%i:%02i:%02i:%03i",h,m,s,ms);
+	raydium_osd_printf(15,pos-0.05,12,0.5,"font-impact.tga","^f%s",best_score[bestid].player);
+//	raydium_osd_printf(5,pos,18,0.5,"font2.tga","^c%i. ^f%i:%02i:%02i:%03i - %s",cpt,h,m,s,ms,best_score[bestid].player);
+	pos-=3;
 	cpt++;
 	}
     }
@@ -1000,6 +1071,7 @@ void music_random(void)
 char var[RAYDIUM_MAX_NAME_LEN];
 music_playlist(var);
 raydium_sound_load_music(var);
+change_music_volume(music_volume);
 }
 
 void music_change(void)
@@ -1279,7 +1351,6 @@ dReal rot[3];
 dReal partoffset1[]={-0.6,-0.134,-0.207};
 
 change_game_state(GAME_COUNTDOWN);
-partytime=0;
 
 timer=0;
 for(i=0;i<MAX_ELEMS;i++)
@@ -1533,11 +1604,13 @@ raydium_window_view_update();
 }
 */
 
+/*
 if( (raydium_key_last==1113 || raydium_joy_click==6) && gear<5)
  gear++;
 
 if( (raydium_key_last==1119 || raydium_joy_click==5) && gear>0)
  gear--;
+*/
 
 raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 
@@ -1593,7 +1666,26 @@ raydium_joy_ff_autocenter(speed/2.f);
 
 speed=raydium_ode_motor_speed_get_name("moteur",1);
 //raydium_osd_printf(10,10,30,0.5,"font2.tga","%i",gear);
-raydium_osd_printf(13,10,15,0.5,"font2.tga","^e%.1f Km/h",speed*3);
+
+
+///////////////////////////////////////////////// OSD
+raydium_osd_color_ega('f');
+raydium_osd_draw_name("BOXmaniadrive-bottom.tga",0,0,100,16);
+raydium_osd_draw_name("BOXmaniadrive-bottom.tga",100,100,0,94);
+
+
+//raydium_osd_printf(13,10,15,0.5,"font2.tga","^e%.1f Km/h",speed*3);
+raydium_osd_color_change(0.7,0.7,0.7);
+raydium_osd_printf(85,5,26,0.6,"font-lcdmono.tga","%3i",(int)(speed*3));
+raydium_osd_printf(93,4,12,0.6,"font-impact.tga","KMH");
+
+raydium_osd_printf(88,98,16,0.6,"font-lcdmono.tga","%3i",raydium_render_fps);
+raydium_osd_printf(93,97.5,12,0.6,"font-impact.tga","FPS");
+
+// player's name
+raydium_osd_printf(14,12,22,0.5,"font-marcelle.tga","^f%s",raydium_network_name_local);
+
+
 //if(speed<10 && gear>1) gear--;
 //if(speed>45 && gear<5) gear++;
 //raydium_ode_motor_gear_change_name("moteur",gear);
@@ -1605,9 +1697,10 @@ speed+=(raydium_random_neg_pos_1()/15);
 raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
 
 #define SHADOW_OFFSET 0.3
-raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font2.tga","^0- %3i FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
-raydium_osd_printf(2,98,16,0.5,"font2.tga","^f- ^c%3i^f FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
-
+//raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font2.tga","^0- %3i FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
+//raydium_osd_printf(2,98,16,0.5,"font2.tga","^f- ^c%3i^f FPS - ManiaDrive %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
+raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font-impact.tga","^0track %s by %s",mni_current,trackdata.author);
+raydium_osd_printf(2,98,16,0.5,"font-impact.tga","^ftrack ^c%s^f by ^c%s^f",mni_current,trackdata.author);
 
 if(strlen(message))
     {
@@ -1631,7 +1724,10 @@ raydium_osd_printf(2,4,12,0.5,"font2.tga","^f%f %f %f",rx*180/PI,ry*180/PI,rz*18
 	if(box[i].state==2)
 	    n++;
 	}
-	raydium_osd_printf(5,75,18,0.5,"font2.tga","^aCheckpoints :^f %i/%i",n,total);
+//	raydium_osd_printf(5,75,18,0.5,"font2.tga","^aCheckpoints :^f %i/%i",n,total);
+	raydium_osd_color_change(0.89,0.85,0.66);
+	raydium_osd_printf(55,7,12,0.5,"font-impact.tga","checkpoints:");
+	raydium_osd_printf(68,7,12,0.7,"font-lcdmono.tga","%02i/%02i",n,total);
     }
 
 draw_timer();
@@ -1639,11 +1735,11 @@ draw_best_score();
 
 if(countdown>0)
     {
-    raydium_osd_printf(5+SHADOW_OFFSET,50-SHADOW_OFFSET,40,0.5,"font2.tga","^0Ready ? Start in %i seconds.",(int)countdown+1);
-    raydium_osd_printf(5,50,40,0.5,"font2.tga","^cReady ? Start in ^f%i^c seconds.",(int)countdown+1);
+    raydium_osd_printf(10+SHADOW_OFFSET,50-SHADOW_OFFSET,40,0.5,"font-impact.tga","^0Ready ? Start in %i seconds",(int)countdown+1);
+    raydium_osd_printf(10,50,40,0.5,"font-impact.tga","^cReady ? Start in ^f%i^c seconds",(int)countdown+1);
     }
 raydium_osd_color_ega('f');
-raydium_osd_logo("logoc.tga");
+//raydium_osd_logo("logoc.tga");
 draw_music_popup();
 
 //memset(raydium_vertex_tag,0,RAYDIUM_MAX_VERTICES);
@@ -1667,16 +1763,16 @@ int full_sx_i,full_sy_i;
 
 raydium_init_args(argc,argv);
 
-raydium_parser_db_get("Generic-FullscreenSizeX",full_sx,"1024");
-raydium_parser_db_get("Generic-FullscreenSizeY",full_sy,"768");
+raydium_parser_db_get("Generic-WindowSizeX",full_sx,"1024");
+raydium_parser_db_get("Generic-WindowSizeY",full_sy,"768");
 sscanf(full_sx,"%i",&full_sx_i);
 sscanf(full_sy,"%i",&full_sy_i);
 
 
 raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
 
-raydium_parser_db_set("Generic-FullscreenSizeX",full_sx);
-raydium_parser_db_set("Generic-FullscreenSizeY",full_sy);
+raydium_parser_db_set("Generic-WindowSizeX",full_sx);
+raydium_parser_db_set("Generic-WindowSizeY",full_sy);
 
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
@@ -1739,11 +1835,11 @@ raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"3.0");
 camera_lag=(lagActive[0]=='y'?1:0);
 sscanf(lagSpeed,"%f",&camera_lag_speed);
 
-// undocumented feature
 raydium_parser_db_get("ManiaDrive-ShadowSupport",str,"0");
-raydium_parser_db_set("ManiaDrive-ShadowSupport",str);
-if(strlen(str) && str[0]=='1')
-    raydium_shadow_enable();
+shadow_support=atoi(str);
+
+raydium_parser_db_get("ManiaDrive-MusicVolume",str,"1.0");
+sscanf(str,"%f",&music_volume);
 
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
@@ -1779,9 +1875,6 @@ raydium_network_netcall_add(netcall_mni_change,NET_CHANGE_MAP,1);
 raydium_network_netcall_add(netcall_remaining_time,NET_REMAINING,1);
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     raydium_network_propag_add(NET_SCORE_BASE+i,&best_score[i],sizeof(Score));
-
-//raydium_ode_time_change(0);
-//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);    
 
 raydium_callback(&display);
 return 0;

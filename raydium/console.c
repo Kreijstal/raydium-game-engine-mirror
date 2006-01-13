@@ -246,6 +246,18 @@ strcpy(raydium_console_lines[raydium_console_line_last],str);
 
 void raydium_console_event(void)
 {
+#ifdef PHP_SUPPORT
+static signed char first=1;
+
+if(first)
+    {
+    raydium_texture_find_by_name(raydium_console_config_texture); // cache
+//    raydium_texture_find_by_name(RAYDIUM_CONSOLE_FONT_SIZE); // cache
+    raydium_log("    --- This console provides a PHP parser and text completion ---");
+    first=0;
+    }
+#endif
+
 if(raydium_console_inc!=0) raydium_console_inc*=-1;
 else {
 	if(raydium_console_pos==0) raydium_console_inc=raydium_console_config_speed;

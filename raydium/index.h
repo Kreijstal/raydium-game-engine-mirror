@@ -69,6 +69,7 @@
 #endif
 #include "headers/live.h"
 #include "headers/video.h"
+#include "headers/web.h"
 #include "headers/reg_api.h"
 
 #else
@@ -85,4 +86,5 @@ dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #ifdef PHP_SUPPORT
 #include "headers/php.h"
 #endif
+#include "headers/web.h"
 #endif

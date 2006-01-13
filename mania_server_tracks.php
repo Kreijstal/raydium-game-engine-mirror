@@ -4,11 +4,11 @@
 // < $track
 
 //$tracks[]="finchtrack.mni";
+$tracks[]="simple.mni";
 $tracks[]="deathonion.mni";
 $tracks[]="carot.mni";
 $tracks[]="et_hop.mni";
 $tracks[]="bennin.mni";
-$tracks[]="simple.mni";
 $tracks[]="simple8.mni";
 $tracks[]="speedturn.mni";
 $tracks[]="complex1.mni";

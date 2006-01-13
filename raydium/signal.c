@@ -12,14 +12,20 @@
 
 void raydium_signal_handler(int sig)
 {
-raydium_log("SIGINT disabled.",sig); // sig not used (compilo warning)
+raydium_log("signal %i disabled.",sig);
 }
 
 void raydium_signal_install_trap(void)
 {
+signed err=0;
 
 if(signal(SIGINT,raydium_signal_handler)==SIG_ERR)
-    raydium_log("Signal Handler: FAILED !");
+    err++;
+if(signal(SIGPIPE,raydium_signal_handler)==SIG_ERR)
+    err++;
+
+if(err)
+    raydium_log("Signal Handlers: FAILED !");
 else
-    raydium_log("Signal Handler: OK");
+    raydium_log("Signal Handlers: OK");
 }

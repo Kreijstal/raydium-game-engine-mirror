@@ -75,6 +75,7 @@
 #endif
 #include "live.c"
 #include "video.c"
+#include "web.c"
 #include "reg_api.c"
 
 #else
@@ -89,6 +90,7 @@
 #ifdef PHP_SUPPORT
 #include "php.c"
 #endif
+#include "web.c"
 #endif
 
 #else

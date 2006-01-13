@@ -15,6 +15,7 @@ $err = $client->getError();
 if ($err) {
     // Log the error 
     raydium_log('Error: '.$err);
+    $position=0;
     exit();
 } 
 

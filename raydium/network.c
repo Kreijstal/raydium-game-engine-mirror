@@ -564,6 +564,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 raydium_network_write_notcp=0;
 
 raydium_network_name_local[0]=0;
+raydium_network_connected_server[0]=0;
 #ifndef RAYDIUM_NETWORK_ONLY
 if(raydium_init_cli_option("name",raydium_network_name_local))
 {
@@ -849,6 +850,7 @@ if(type==RAYDIUM_NETWORK_PACKET_ATTRIB_UID)
     raydium_network_uid=str[RAYDIUM_NETWORK_PACKET_OFFSET];
     raydium_log("network: accepted as client %i",raydium_network_uid);
     raydium_network_set_socket_block(0);
+    strcpy(raydium_network_connected_server,server);
     return(1);
     }
 

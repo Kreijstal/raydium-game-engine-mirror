@@ -28,6 +28,8 @@ GLuint gtx,gty;
 #endif
 
 glutInit(&raydium_init_argc, raydium_init_argv);
+if(raydium_init_cli_option("window",NULL) && rendering!=RAYDIUM_RENDERING_NONE)
+    rendering=RAYDIUM_RENDERING_WINDOW;
 if(raydium_init_cli_option("fullscreen",NULL) && rendering!=RAYDIUM_RENDERING_NONE)
     rendering=RAYDIUM_RENDERING_FULLSCREEN;
 

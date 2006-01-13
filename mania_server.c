@@ -105,7 +105,7 @@ void broad(int type,char *buff)
 
 void loop(void)
 {
-char type;
+signed char type;
 int id;
 
 if(raydium_network_read(&id, &type, str)==RAYDIUM_NETWORK_DATA_OK)
@@ -114,6 +114,7 @@ if(raydium_network_read(&id, &type, str)==RAYDIUM_NETWORK_DATA_OK)
 //    printf(".");
     }
 raydium_timecall_callback();
+raydium_web_callback();
 }
 
 
@@ -127,6 +128,9 @@ raydium_php_init();
 raydium_network_init();
 raydium_network_server_create();
 
+raydium_web_init();
+raydium_web_start("ManiaDrive Server");
+raydium_web_extension_add("mni", "raw/unknown");
 
 // Ugly hack, for now...
 raydium_network_netcall_add(broad,RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION,1);
@@ -142,7 +146,6 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 raydium_timecall_add(change_track_netcall,-1);
 raydium_timecall_add(send_time,-1);
 
-//strcpy(track,"simple.mni");
 switch_track();
 
 do{

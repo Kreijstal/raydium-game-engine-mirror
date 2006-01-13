@@ -112,4 +112,9 @@ extern void read_vertex_from (char *filename);
 Loads filename. Again, avoid use of this function.
 **/
 
+extern unsigned long raydium_file_sum_simple(char *filename);
+/**
+This function will generate a very simple checksum on ##filename##.
+**/
+
 #endif

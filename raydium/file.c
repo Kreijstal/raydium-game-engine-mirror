@@ -343,3 +343,27 @@ raydium_texture_current_set(save);
 //printf("loaded.\n");
 }
 
+unsigned long raydium_file_sum_simple(char *filename)
+{
+unsigned long total=0;
+unsigned long cpt=0;
+int c;
+FILE *fp;
+
+fp=raydium_file_fopen(filename,"rb");
+if(!fp)
+    {
+    raydium_log("file simple sum: error: cannot open file '%s'",filename);
+    return 0;
+    }
+
+while( (c=fgetc(fp))!=EOF )
+    {
+    c*=cpt;
+    total+=c;
+    cpt++;
+    }
+
+fclose(fp);
+return total;
+}

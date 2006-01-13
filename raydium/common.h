@@ -403,6 +403,7 @@ __global struct sockaddr
 __global time_t raydium_network_keepalive[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global char   raydium_network_name_local[RAYDIUM_MAX_NAME_LEN];
 __global char   raydium_network_name[RAYDIUM_NETWORK_MAX_CLIENTS][RAYDIUM_MAX_NAME_LEN];
+__global char   raydium_network_connected_server[RAYDIUM_MAX_NAME_LEN];
 __global int    raydium_network_netcall_type[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global void * raydium_network_netcall_func[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global signed char   raydium_network_netcall_tcp[RAYDIUM_NETWORK_MAX_NETCALLS];
