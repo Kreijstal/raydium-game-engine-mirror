@@ -267,7 +267,7 @@ else {
 
 void raydium_console_draw(void)
 {
-GLfloat y;
+GLfloat y,off;
 int i,start;
 int texsave;
 raydium_console_pos+=raydium_console_inc*(raydium_frame_time*100);
@@ -291,15 +291,16 @@ texsave=raydium_texture_current_main;
 raydium_texture_current_set_name(raydium_console_config_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
+off=raydium_console_config_max-raydium_console_pos;
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(0,100-raydium_console_pos,0);
 glTexCoord2f(1,0);
 glVertex3f(100,100-raydium_console_pos,0);
 glTexCoord2f(1,1);
-glVertex3f(100,100,0);
+glVertex3f(100,100+off,0);
 glTexCoord2f(0,1);
-glVertex3f(0,100,0);
+glVertex3f(0,100+off,0);
 glEnd();
 
 raydium_osd_stop();
