@@ -76,8 +76,12 @@ void load_boxes(char *filename);
 void dat_load(char *filename);
 void hms(GLfloat t,int *h, int *m, int *s, int *ms);
 int mni_load(char *mni);
+signed char mni_network_get(char *mni);
 void build_gui_Main(void);
 void music_random(void);
+void leave(void);
+void build_gui_ErrorDownload(void);
+void build_gui_Lan(void);
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -212,6 +216,8 @@ create_car();
 
 void netcall_mni_change(int type, char *buff)
 {
+if(!mni_network_get(buff+RAYDIUM_NETWORK_PACKET_OFFSET))
+	return;
 mni_load(buff+RAYDIUM_NETWORK_PACKET_OFFSET);
 }
 
@@ -223,10 +229,28 @@ memcpy(&f,buff+RAYDIUM_NETWORK_PACKET_OFFSET,sizeof(float));
 
 trck=buff+RAYDIUM_NETWORK_PACKET_OFFSET+sizeof(float);
 if(strlen(mni_current)==0 || strcmp(mni_current,trck))
+    {
+    if(!mni_network_get(trck))
+	return;
     mni_load(trck);
+    }
 partytime=f;
 }
 
+
+signed char mni_network_get(char *mni)
+{
+// download track from server, and exit multiplayer mode in case of failure,
+// displaying an error window
+if(raydium_web_client_get(mni))
+    return 1; // ok
+// failed
+leave();
+raydium_gui_window_delete_name("menu");
+build_gui_Lan();
+build_gui_ErrorDownload();
+return 0;
+}
 
 
 int mni_load(char *mni)
@@ -280,7 +304,6 @@ music_random();
 return 1;
 }
 
-
 void btnBestTimeOk(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("besttime");
@@ -290,8 +313,6 @@ void btnCantDriveOk(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("cantdrive");
 }
-
-
 
 
 void AfterFade(void)
@@ -401,8 +422,6 @@ raydium_gui_window_delete_name("menu");
 handle=raydium_gui_window_create("menu",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
-
-//raydium_web_client_get("simple.mni");
 }
 
 void btnApplyOptions(raydium_gui_Object *w)
@@ -472,6 +491,17 @@ raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnBestTimeOkOk",handle,35,15,"OK",btnBestTimeOk);
 }
 
+
+void build_gui_ErrorDownload(void)
+{
+int handle;
+
+handle=raydium_gui_window_create("error",25,45,60,15);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblError",handle,50,80,"Can't download track from server !",0,0,0);
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
+}
 
 void build_gui_StoryCompleted(void)
 {
@@ -1444,6 +1474,22 @@ raydium_ode_object_rotate_name("WATURE",rot);
 message[0]=0;
 }
 
+void leave(void)
+{
+mni_current[0]=0;
+message[0]=0;
+raydium_sound_SourceStop(sound_car);
+raydium_network_client_disconnect();
+raydium_ode_time_change(0);
+mode=MODE_NONE;
+
+raydium_clear_frame();
+raydium_camera_look_at(0.1,0.1,0,0,1,0);
+raydium_osd_draw_name("mania_logo2.tga",0,0,100,100);
+raydium_rendering_finish();
+}
+
+
 
 void display(void)
 {
@@ -1495,17 +1541,7 @@ if(strlen(mni_current)==0)
 
 if(raydium_key_last==1027)
     {
-    mni_current[0]=0;
-    message[0]=0;
-    raydium_sound_SourceStop(sound_car);
-    raydium_network_client_disconnect();
-    raydium_ode_time_change(0);
-
-
-    raydium_clear_frame();
-    raydium_camera_look_at(0.1,0.1,0,0,1,0);
-    raydium_osd_draw_name("mania_logo2.tga",0,0,100,100);
-    raydium_rendering_finish();
+    leave();
     return;
     }
 

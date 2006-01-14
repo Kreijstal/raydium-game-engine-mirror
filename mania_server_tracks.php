@@ -4,6 +4,7 @@
 // < $track
 
 //$tracks[]="finchtrack.mni";
+//$tracks[]="error.mni";
 $tracks[]="simple.mni";
 $tracks[]="deathonion.mni";
 $tracks[]="carot.mni";

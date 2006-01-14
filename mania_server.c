@@ -131,7 +131,8 @@ raydium_log("-%s-",req);
 if(!strcmp("data.dyn",req))
     {
     sprintf(response,"Party informations\n\
-    Running on track <b>%s</b> since <b>%.2f</b> seconds (<b>%.2f</b> left)<br/><br/><a href=\"/\">Back</a>",track,steps,PARTY_TIMEOUT-steps);
+    Running on track <b>%s</b> since <b>%.2f</b> seconds (<b>%.2f</b> left)\
+    <br/><br/><a href=\"/\">Back</a>",track,steps,PARTY_TIMEOUT-steps);
     return 1;
     }
 return 0;
@@ -151,7 +152,6 @@ raydium_network_server_create();
 raydium_web_init();
 raydium_web_start("ManiaDrive Server");
 raydium_web_extension_add("mni","raw/unknown",NULL);
-//raydium_web_extension_add("dyn","text/html",http_req); // use our own writer
 raydium_web_extension_add("dyn",NULL,http_req); // use default "writer"
 raydium_web_body_default=index_text;
 
