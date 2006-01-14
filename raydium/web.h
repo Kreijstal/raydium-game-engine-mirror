@@ -20,6 +20,7 @@ typedef struct raydium_web_Extension
 {
 char ext[RAYDIUM_MAX_NAME_LEN];
 char filetype[RAYDIUM_MAX_NAME_LEN];
+void *handler;
 } raydium_web_Extension;
 
 
@@ -33,5 +34,6 @@ char raydium_web_title[RAYDIUM_MAX_NAME_LEN];
 
 char *raydium_web_header;
 char *raydium_web_footer;
+char *raydium_web_body_default;
 
 #endif

@@ -20,6 +20,14 @@ float steps=0;
 //char str_send[RAYDIUM_NETWORK_PACKET_SIZE];
 //int freq;
 
+char *index_text="\
+Here, you can find :<br/>\
+- <a href=\"data.dyn\">Informations about current party</a><br/>\
+- <a href=\"http://maniadrive.raydium.org/index.php?scores=all\">Live scores on the web</a><br/>\
+- <a href=\"http://maniadrive.raydium.org/\">Maniadrive website</a><br/>\
+- <a href=\"http://raydium.org/\">Raydium website</a><br/>\
+";
+
 
 
 void switch_track(void)
@@ -117,6 +125,18 @@ raydium_timecall_callback();
 raydium_web_callback();
 }
 
+signed char http_req(char *req, char *response, int max_size)
+{
+raydium_log("-%s-",req);
+if(!strcmp("data.dyn",req))
+    {
+    sprintf(response,"Party informations\n\
+    Running on track <b>%s</b> since <b>%.2f</b> seconds (<b>%.2f</b> left)<br/><br/><a href=\"/\">Back</a>",track,steps,PARTY_TIMEOUT-steps);
+    return 1;
+    }
+return 0;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -130,7 +150,10 @@ raydium_network_server_create();
 
 raydium_web_init();
 raydium_web_start("ManiaDrive Server");
-raydium_web_extension_add("mni", "raw/unknown");
+raydium_web_extension_add("mni","raw/unknown",NULL);
+//raydium_web_extension_add("dyn","text/html",http_req); // use our own writer
+raydium_web_extension_add("dyn",NULL,http_req); // use default "writer"
+raydium_web_body_default=index_text;
 
 // Ugly hack, for now...
 raydium_network_netcall_add(broad,RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION,1);

@@ -13,7 +13,7 @@ void raydium_web_request(int fd);
 void raydium_web_start(char *title);
 void raydium_web_callback(void);
 void raydium_web_init(void);
-void raydium_web_extension_add(char *ext, char *mime);
+void raydium_web_extension_add(char *ext, char *mime, void *handler);
 signed char raydium_web_client_get(char *filename);
 
 

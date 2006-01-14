@@ -15,18 +15,33 @@
 
 void raydium_web_answer(char *message, int fd)
 {
-char buffer[RAYDIUM_WEB_BUFSIZE+1];
-raydium_log("web: %s",message);
+char buffer[RAYDIUM_WEB_BUFSIZE*2]; // for header
+char title[RAYDIUM_WEB_BUFSIZE];
+char *body_start;
+
+body_start=strchr(message,'\n');
 
 // WARNING: do not change "Type: message" header offset !
 // See raydium_web_client_get() otherwise.
 sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nType: message\r\n\r\n");
 write(fd,buffer,strlen(buffer));
-
 buffer[0]=0;
 sprintf(buffer+strlen(buffer),raydium_web_header,raydium_web_title);
-sprintf(buffer+strlen(buffer),"%s",message);
-sprintf(buffer+strlen(buffer),raydium_web_footer,raydium_web_title);
+
+if(!body_start)
+    {
+    sprintf(buffer+strlen(buffer),"%s",message);
+    sprintf(buffer+strlen(buffer),raydium_web_footer,raydium_web_body_default);
+    raydium_log("web: %s",message);
+    }
+else
+    {
+    strncpy(title,message,body_start-message);
+    title[body_start-message]=0;
+    sprintf(buffer+strlen(buffer),"%s",title);
+    sprintf(buffer+strlen(buffer),raydium_web_footer,body_start+1);
+    raydium_log("web: %s",title);
+    }
 
 write(fd,buffer,strlen(buffer));
 }
@@ -39,6 +54,8 @@ void raydium_web_request(int fd)
 	long i, ret;
 	char * fstr;
 	static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
+	static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
+	signed char (*handler)(char *,char *, int);
 
 	ret =read(fd,buffer,RAYDIUM_WEB_BUFSIZE); 	/* read Web request in one go */
 	if(ret == 0 || ret == -1)
@@ -94,21 +111,52 @@ void raydium_web_request(int fd)
 	/* work out the file type and check we support it */
 	buflen=strlen(buffer);
 	fstr = (char *)0;
+	handler=NULL;
 	for(i=0;i<raydium_web_extension_count;i++) 
 	    {
 	    len = strlen(raydium_web_extensions[i].ext);
 	    if( !strncmp(&buffer[buflen-len], raydium_web_extensions[i].ext, len))
 		{
 		fstr=raydium_web_extensions[i].filetype;
+		handler=raydium_web_extensions[i].handler;
 		break;
 		}
 	    }
+
 
 	if(fstr == 0)
 	    {
 	    raydium_web_answer("error: Invalid target request",fd);
 	    return;
 	    }
+
+
+	if(handler)
+	    {
+	    answer[0]=0;
+	    if(!handler(&buffer[5],answer,RAYDIUM_WEB_BUFSIZE))
+		{
+		raydium_web_answer("error: Handler denied this request",fd);
+		return;
+		}
+	    
+	    // if there's no filetype, use web_answer
+	    if(!strlen(fstr))
+		raydium_web_answer(answer,fd);
+	    // else let the user control the whole output
+	    else
+		{
+		// WARNING: do not change "Type: message" header offset !
+		// See raydium_web_client_get() otherwise.
+		sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
+		write(fd,buffer,strlen(buffer));
+		write(fd,answer,strlen(answer));
+		}
+	    return;
+	    }
+
+
+
 
 	if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
 	    {
@@ -131,6 +179,9 @@ void raydium_web_request(int fd)
 
 void raydium_web_start(char *title)
 {
+int     opt = 1;                /* option-dummys for setsockopt */
+int     optlen = sizeof(opt); 
+
 if(raydium_web_active)
     {
     raydium_log("web: warning: server already started");
@@ -145,13 +196,17 @@ if((raydium_web_listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
     return;
     }
 
-raydium_web_serv_addr.sin_family = AF_INET;
-raydium_web_serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-raydium_web_serv_addr.sin_port = htons(RAYDIUM_NETWORK_PORT);
+// avoiding bind's "Address already in use" error
+setsockopt(raydium_web_listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, optlen);
+
+raydium_web_serv_addr.sin_family=AF_INET;
+raydium_web_serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
+raydium_web_serv_addr.sin_port=htons(RAYDIUM_NETWORK_PORT);
 
 if(bind(raydium_web_listenfd, (struct sockaddr *)&raydium_web_serv_addr,sizeof(raydium_web_serv_addr)) <0)
     {
     raydium_log("web: error: bind failed");
+    perror("bind");
     return;
     }
 
@@ -223,6 +278,13 @@ A:HOVER {color: #227CBF;}\
 .publi_info a {color: #A9A9A9;  text-decoration: none;}\
 .publi_info a:hover {color: #696969;  text-decoration: none;}\
 .publi_corps{ padding: 10px;}\
+\
+IMG {border: 1px solid; margin: 5px;}\
+.tables {background: #f3f3f3;border-collapse:collapse;margin-left: auto; margin-right: auto;}\
+.tables TD {border-style: solid; border-color:black; border-width:1px; text-align: center; padding-left: 5px; padding-right: 5px;}\
+.redfont { color: #dd0000;}\
+.greenfont { color: #00dd00;}\
+.noborder { border : 0;}\
 -->\
 </style>\
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-15\"></head><body>\
@@ -231,20 +293,25 @@ A:HOVER {color: #227CBF;}\
 <div class=\"contenu\"><div class=\"publi_bloc\"><div class=\"publi_head\"><strong>%s</strong> &gt; message<h2>\
 ";
 
-static char *footer="\
-</h2></div><div class=\"publi_corps\">\
+static char *body="\
 This server is used to be an entry point to application data. Only simple requests (GET) are supported yet, \
-with a limited set of file types and directories. Right now, this server is only able to send static data, \
-but dynamic page support is to come, using Raydium's PHP parser.\
+with a limited set of file types and directories. Right now, this server is able to send static and dynamic data, \
+and dynamic scripted page support is to come, using Raydium's PHP parser.\
 <br/><br/>\
 This server is a modified version of IBM's nweb server, from Nigel Griffiths (nag@uk.ibm.com).\
 <br/><br/>\
 For more information, see Raydium website <a href=\"http://raydium.org/\">http://raydium.org/</a><br/>\
 See also <i>raydium/web.h</i>,  <i>raydium/web.c</i> and <i>raydium/headers/web.h</i> files from the source directory.\
+";
+
+static char *footer="\
+</h2></div><div class=\"publi_corps\">\
+%s\
 </div></body></html>\
 ";
 
 raydium_web_header=header;
+raydium_web_body_default=body;
 raydium_web_footer=footer;
 
 #ifdef RAYDIUM_NETWORK_ONLY
@@ -258,7 +325,7 @@ strcpy(raydium_web_title,"Default");
 raydium_log("webserver: OK");
 }
 
-void raydium_web_extension_add(char *ext, char *mime)
+void raydium_web_extension_add(char *ext, char *mime, void *handler)
 {
 if(raydium_web_extension_count==RAYDIUM_MAX_EXTENSIONS)
     {
@@ -267,7 +334,13 @@ if(raydium_web_extension_count==RAYDIUM_MAX_EXTENSIONS)
     }
 
 strcpy(raydium_web_extensions[raydium_web_extension_count].ext,ext);
-strcpy(raydium_web_extensions[raydium_web_extension_count].filetype,mime);
+if(mime)
+    strcpy(raydium_web_extensions[raydium_web_extension_count].filetype,mime);
+else
+    raydium_web_extensions[raydium_web_extension_count].filetype[0]=0;
+
+raydium_web_extensions[raydium_web_extension_count].handler=handler;
+
 raydium_web_extension_count++;
 }
 
@@ -376,7 +449,7 @@ close(sockfd);
 if(raydium_file_sum_simple(filename)!=
    raydium_file_sum_simple(RAYDIUM_WEB_CLIENT_TEMP))
 #else
-raydium_log("web: client: warning: no file comparaison function is available (server only)");
+raydium_log("web: client: warning: no file comparaison function available (since server only)");
 if(1)
 #endif
     {
