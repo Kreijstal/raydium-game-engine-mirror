@@ -401,6 +401,7 @@ if( (style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
     {
     void (*f)(raydium_gui_Object *);
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     raydium_gui_windows[window].focused_widget=w;
     f=b->OnClick;
     if(f)
@@ -690,6 +691,7 @@ if(raydium_gui_window_focused==window &&
     {
     GLfloat fact;
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     raydium_gui_windows[window].focused_widget=w;
     fact=(mxy[0]-xy[0])/(xy[2]-xy[0]);
     e->cursor=(tmp2*fact)+(tmp/3.f)+e->offset; // need some work
@@ -808,6 +810,7 @@ if( (style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
     (style==RAYDIUM_GUI_FOCUS && raydium_key_last==1013) )
     {
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     raydium_gui_windows[window].focused_widget=w;
     c->checked=!c->checked;
     }
@@ -959,6 +962,7 @@ if(raydium_gui_window_focused==window &&
    raydium_mouse_click==1 )
     {
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     c->expanded=!c->expanded;
     raydium_gui_windows[window].focused_widget=w;
     }
@@ -980,6 +984,7 @@ if((raydium_key_last==101 || raydium_mouse_click==4) && c->current>0)
     c->current--;
     raydium_key_last=0;
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     if(c->current < c->offset)
 	c->offset=c->current;
     }
@@ -988,6 +993,7 @@ if((raydium_key_last==103 || raydium_mouse_click==5) && c->current<nitems-1)
     c->current++;
     raydium_key_last=0;
     raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
     if(c->current >= c->offset+RAYDIUM_GUI_COMBO_LIST_HEIGHT)
 	c->offset=c->current-RAYDIUM_GUI_COMBO_LIST_HEIGHT+1;
     }
@@ -1088,6 +1094,7 @@ for(i=0,cpt=0;i<strlen(c->items)+1;i++)
 		   raydium_mouse_click==1 )
 		    {
 	    	    raydium_mouse_click=0;
+		    raydium_mouse_button[0]=0;
 	    	    raydium_gui_windows[window].focused_widget=w;
 		    inc=arrow;
 	    	    }
@@ -1115,6 +1122,7 @@ for(i=0,cpt=0;i<strlen(c->items)+1;i++)
 		{
 		c->current=cpt+c->offset;
 	        raydium_mouse_click=0;
+		raydium_mouse_button[0]=0;
 	        c->expanded=0;
 	        raydium_gui_windows[window].focused_widget=w;
 	        }
