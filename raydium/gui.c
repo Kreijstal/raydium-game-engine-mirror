@@ -242,7 +242,7 @@ if(!raydium_gui_window_isvalid(raydium_gui_window_focused))
 w=&raydium_gui_windows[raydium_gui_window_focused];
 
 for(i=w->focused_widget+1;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
-    if(raydium_gui_widget_isvalid(i,raydium_gui_window_focused))
+    if(raydium_gui_widget_isvalid(i,raydium_gui_window_focused) && w->widgets[i].type!=RAYDIUM_GUI_LABEL)
 	{
 	w->focused_widget=i;
 	return;
@@ -250,7 +250,7 @@ for(i=w->focused_widget+1;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
 
 // Not found : rewind
 for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
-    if(raydium_gui_widget_isvalid(i,raydium_gui_window_focused))
+    if(raydium_gui_widget_isvalid(i,raydium_gui_window_focused) && w->widgets[i].type!=RAYDIUM_GUI_LABEL)
 	{
 	w->focused_widget=i;
 	return;
