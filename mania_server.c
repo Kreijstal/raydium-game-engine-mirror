@@ -127,12 +127,25 @@ raydium_web_callback();
 
 signed char http_req(char *req, char *response, int max_size)
 {
+int i;
+
 raydium_log("-%s-",req);
 if(!strcmp("data.dyn",req))
     {
     sprintf(response,"Party informations\n\
     Running on track <b>%s</b> since <b>%.2f</b> seconds (<b>%.2f</b> left)\
-    <br/><br/><a href=\"/\">Back</a>",track,steps,PARTY_TIMEOUT-steps);
+    <br/><br/>",track,steps,PARTY_TIMEOUT-steps);
+
+    sprintf(response+strlen(response),"<table class=\"tables\">\
+    <tr><td><div class=\"greenfont\">Connected players (%i max)</div></td></tr>\
+    ",RAYDIUM_NETWORK_MAX_CLIENTS);
+
+    for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
+	if(raydium_network_client[i])
+	    sprintf(response+strlen(response),"<tr><td>%s</td></tr>",raydium_network_name[i]);
+    
+    sprintf(response+strlen(response),"</table><br/><br/><a href=\"/\">Back</a>");
+    
     return 1;
     }
 return 0;

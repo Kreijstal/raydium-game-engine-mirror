@@ -5,12 +5,12 @@ char *version="ManiaDrive 0.93";
 
 // TODO:
 // ... code :
-// custom tracks (solo + network ?) (with a webserver on mania_server ?)
 // new camera code ?
 // network game end stats
 // ... data :
 // new tracks (mainly for solo mode)
 // new road texture
+// better track editor
 
 #include "raydium/index.c"
 
@@ -62,6 +62,7 @@ char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
 signed char mode;
+signed char simple_mni=0;
 
 signed char music_popup_inc=-1;
 
@@ -1541,6 +1542,8 @@ if(strlen(mni_current)==0)
 
 if(raydium_key_last==1027)
     {
+    if(simple_mni)
+	exit(0);    
     leave();
     return;
     }
@@ -1585,7 +1588,7 @@ raydium_ode_motor_speed_name("moteur",-speed);
 raydium_ode_motor_angle_name("direction",direct);
 }
 
-if(raydium_key_last==1027) exit(0);
+//if(raydium_key_last==1027) exit(0);
 if(raydium_key_last==1116) draw_debug*=-1;
 
 if(raydium_key_last==1032)
@@ -1880,6 +1883,7 @@ sscanf(str,"%f",&music_volume);
 
 if(raydium_init_cli_option_default("mni",mni_current,""))
     {
+    simple_mni=1;
     mni_load(mni_current);
     }
 

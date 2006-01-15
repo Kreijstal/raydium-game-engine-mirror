@@ -1,4 +1,4 @@
-char *version="0.20";
+char *version="0.30";
 char *title="CQFD Corp. Mania2";
 
 // since we play with our own camera and not Raydium's one:
@@ -7,13 +7,27 @@ char *title="CQFD Corp. Mania2";
 #include "raydium/index.c"
 #include "mania.h"
 
-
 #define POP_MODE_ELEM	1
 #define POP_MODE_BOX	2
 
+#ifdef WIN32
+#define MANIA_BINARY "mania_drive.exe"
+#else
+#define MANIA_BINARY "./mania_drive.static"
+#endif
 
+
+int grid_load(char *filename);
+void grid_save(char *filename);
+void build_gui_access(raydium_gui_Object *w);
+void build_gui_menu(raydium_gui_Object *w);
 void grid_generate_obj(void);
-
+void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time);
+void grid_init_all(void);
+void box_init_all(void);
+void grid_generate_obj(void);
+void data_init(void);
+void export_all(void);
 
 GLfloat modl_zoom=10;
 GLint px=0,py=0;
@@ -24,9 +38,276 @@ GLint curangle=0;
 int pop_mode=POP_MODE_ELEM;
 char autotag=0;
 
-
 int n_boxpresets=0;	
 Box boxpreset[MAX_ELEMS];
+
+char current_track[RAYDIUM_MAX_NAME_LEN];
+
+//////////////////////////////////////////////////////////// gui
+void btnExitOk(raydium_gui_Object *w)
+{
+raydium_parser_db_set("Mania2-CurrentTrack",current_track);
+exit(0);
+}
+
+void btnExitCancel(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("exit");
+}
+
+void btnClearOk(raydium_gui_Object *w)
+{
+grid_init_all();
+box_init_all();
+data_init();
+grid_generate_obj();
+current_track[0]=0;
+raydium_gui_window_delete_name("clear");
+}
+
+void btnClearCancel(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("clear");
+}
+
+
+void gui_exit(void)
+{
+int handle;
+
+if(raydium_gui_window_find("exit")>=0)
+    {
+    btnExitCancel(NULL);
+    return;
+    }
+
+handle=raydium_gui_window_create("exit",25,45,60,15);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblExit",handle,50,80,"Do you really want to exit ?",0,0,0);
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnExitOk",handle,20,15,"OK",btnExitOk);
+raydium_gui_button_create("btnExitCancel",handle,50,15,"Cancel",btnExitCancel);
+
+raydium_gui_widget_focus_name("btnExitOk","exit");
+}
+
+void btnLoad(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN];
+raydium_gui_read_name("menu","edtFilename",str);
+if(grid_load(str))
+    build_gui_access(NULL);
+}
+
+void btnSave(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN];
+raydium_gui_read_name("menu","edtFilename",str);
+grid_save(str);
+build_gui_access(NULL);
+}
+
+void btnExit(raydium_gui_Object *w)
+{
+gui_exit();
+}
+
+void btnMetaOk(raydium_gui_Object *w)
+{
+char d[4][512];
+
+raydium_gui_read_name("menu","edtName",d[0]);
+raydium_gui_read_name("menu","edtAuthor",d[1]);
+raydium_gui_read_name("menu","edtGold",d[2]);
+raydium_gui_read_name("menu","edtAuthorTime",d[3]);
+
+sprintf(tdata,"%s;%s;%s;%s",d[0],d[1],d[2],d[3]);
+build_gui_menu(NULL);
+}
+
+
+void btnTest(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN*2];
+char *mni="dyn_track.mni";
+int ret;
+
+// must protect mni from shell
+export_all();
+sprintf(str,"%s --mni %s",MANIA_BINARY,mni);
+ret=system(str);
+if(ret!=0)
+    {
+    raydium_log("CANNOT TEST MNI TRACK FROM '%s'",mni);
+    }		
+}
+
+void build_gui_clear(raydium_gui_Object *w)
+{
+int handle;
+
+handle=raydium_gui_window_create("clear",25,45,60,15);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblClear",handle,50,80,"Do you really want to clear track ?",0,0,0);
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnClearOk",handle,20,15,"OK",btnClearOk);
+raydium_gui_button_create("btnClearCancel",handle,50,15,"Cancel",btnClearCancel);
+
+raydium_gui_widget_focus_name("btnClearOk","clear");
+}
+
+
+#undef YDEC
+#define YDEC 5.f
+void build_gui_help(raydium_gui_Object *w)
+{
+int handle;
+float y;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",10,25,80,50);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblTitle",handle,50,93,"Key help for Mania2 Track Editor",0.3,0,0);
+
+y=90;
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblh1",handle,50,y-=YDEC,"mouse left click : mouve view",0,0,0);
+raydium_gui_label_create("lblh2",handle,50,y-=YDEC,"+/- : change zoom",0,0,0);
+raydium_gui_label_create("lblh3",handle,50,y-=YDEC,"arrows : move block",0,0,0);
+raydium_gui_label_create("lblh4",handle,50,y-=YDEC,"pageUp/pageDown : change block",0,0,0);
+raydium_gui_label_create("lbli4",handle,50,y-=YDEC,"insert/end : move block up and down (move view to see)",0,0,0);
+raydium_gui_label_create("lblh5",handle,50,y-=YDEC,"d : delete block",0,0,0);
+raydium_gui_label_create("lblh6",handle,50,y-=YDEC,"tab : rotate block (90°)",0,0,0);
+raydium_gui_label_create("lblh7",handle,50,y-=YDEC,"space : add block",0,0,0);
+raydium_gui_label_create("lblh8",handle,50,y-=YDEC,"enter : switch between blocks and entities",0,0,0);
+raydium_gui_label_create("lbli8",handle,50,y-=YDEC,"m : open menu",0,0,0);
+raydium_gui_label_create("lblh9",handle,50,y-=YDEC,"esc : quits",0,0,0);
+y-=YDEC;
+raydium_gui_label_create("lblh10",handle,50,y-=YDEC,"               entities: ^agreen^0=start, ^cred^0=end, ^9blue^0=checkpoint, ^6yellow^0=turbo",0,0,0);
+
+raydium_gui_widget_sizes(10,3,14);
+raydium_gui_button_create("btnOk",handle,45,3,"OK",build_gui_menu);
+
+raydium_gui_widget_focus_name("btnOk","menu");
+}
+
+
+void build_gui_meta(raydium_gui_Object *w)
+{
+int handle;
+char d[4][512];
+
+extract_data(tdata,d[0],d[1],d[2],d[3]);
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",10,35,80,30);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblTitle",handle,50,93,"Editing track meta informations",0.3,0,0);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblName",handle,15,80,"Track name",0,0,0);
+raydium_gui_widget_sizes(50,3,14);
+raydium_gui_edit_create("edtName",handle,30,74,d[0]);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblAuthor",handle,15,60,"Track author",0,0,0);
+raydium_gui_widget_sizes(30,3,14);
+raydium_gui_edit_create("edtAuthor",handle,30,54,d[1]);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblGold",handle,15,40,"Gold time (secs)",0,0,0);
+raydium_gui_widget_sizes(20,3,14);
+raydium_gui_edit_create("edtGold",handle,30,34,d[2]);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblAuthorTime",handle,15,20,"Author time (secs)",0,0,0);
+raydium_gui_widget_sizes(20,3,14);
+raydium_gui_edit_create("edtAuthorTime",handle,30,14,d[3]);
+
+raydium_gui_widget_sizes(10,3,14);
+raydium_gui_button_create("btnLoad",handle,70,13,"OK",btnMetaOk);
+raydium_gui_button_create("btnCancel",handle,85,13,"cancel",build_gui_menu);
+}
+
+void build_gui_load(raydium_gui_Object *w)
+{
+int handle;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",25,50,50,15);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblAction",handle,25,80,"Load MNI : ",0,0,0);
+
+raydium_gui_widget_sizes(25,3,14);
+raydium_gui_edit_create("edtFilename",handle,40,70,"");
+
+raydium_gui_widget_sizes(10,3,14);
+raydium_gui_button_create("btnLoad",handle,20,20,"load",btnLoad);
+raydium_gui_button_create("btnCancel",handle,60,20,"cancel",build_gui_menu);
+
+raydium_gui_widget_focus_name("edtFilename","menu");
+}
+
+void build_gui_save(raydium_gui_Object *w)
+{
+int handle;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",25,50,50,15);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblAction",handle,25,80,"Save MNI : ",0,0,0);
+
+raydium_gui_widget_sizes(25,3,14);
+raydium_gui_edit_create("edtFilename",handle,40,70,"");
+
+raydium_gui_widget_sizes(10,3,14);
+raydium_gui_button_create("btnSave",handle,20,20,"save",btnSave);
+raydium_gui_button_create("btnCancel",handle,60,20,"cancel",build_gui_menu);
+
+raydium_gui_widget_focus_name("edtFilename","menu");
+}
+
+#undef YDEC
+#define YDEC 10.f
+void build_gui_menu(raydium_gui_Object *w)
+{
+int handle;
+float y;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",75,50,25,50);
+
+y=95;
+raydium_gui_widget_sizes(20,3.33,14);
+raydium_gui_button_create("btnLoad",handle,10,y-=YDEC,"load",build_gui_load);
+raydium_gui_button_create("btnSave",handle,10,y-=YDEC,"save",build_gui_save);
+raydium_gui_button_create("btnClear",handle,10,y-=YDEC,"clear all",build_gui_clear);
+raydium_gui_button_create("btnEdit",handle,10,y-=YDEC,"edit infos",build_gui_meta);
+raydium_gui_button_create("btnTest",handle,10,y-=YDEC,"test track",btnTest);
+raydium_gui_button_create("btnHelp",handle,10,y-=YDEC,"key help",build_gui_help);
+raydium_gui_button_create("btnClose",handle,10,y-=YDEC,"close menu",build_gui_access);
+
+raydium_gui_button_create("btnExit",handle,10,y-=(YDEC*2),"exit",btnExit);
+}
+
+
+void build_gui_access(raydium_gui_Object *w)
+{
+int handle;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",85,95,15,5);
+raydium_gui_widget_sizes(10,3.33,14);
+raydium_gui_button_create("btnMenu",handle,18,15,"menu",build_gui_menu);
+}
+
+/////////////////////////////////////////////////////////// end gui
+
+
 
 void grid_init_elem(int e)
 {
@@ -97,6 +378,7 @@ for(i=0;i<MAX_ELEMS;i++)
 
 
 fclose(fp);
+strcpy(current_track,filename);
 }
 
 int grid_load(char *filename)
@@ -115,6 +397,7 @@ if(!fp)
 
 grid_init_all();
 box_init_all();
+data_init();
 
 i=j=0;
 
@@ -167,6 +450,7 @@ if(c=='d')
 raydium_log("%s: %i grid elements loaded, %i box(es)",filename,i,j);
 fclose(fp);
 grid_generate_obj();
+strcpy(current_track,filename);
 return 1;
 }
 
@@ -268,41 +552,56 @@ fclose(fp);
 printf("tri file generated.\n");
 }
 
-
-void dump_data_to(char *filename)
+void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time)
 {
-FILE *fp;
 char d[4096];
 int i,start,cpt;
 
-fp=fopen(filename,"wt");
-if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
-
-fprintf(fp,"// generated track data (mania2)\n\n");
-
-strcpy(d,tdata);
+strcpy(d,from);
 cpt=0;
 start=0;
-for(i=0;i<=strlen(tdata);i++)
+for(i=0;i<=strlen(from);i++)
     {
-    if(d[i]==';' || d[i]==0)
+    if(d[i]==';' || d[i]==0 || d[i]=='\r')
 	{
 	d[i]=0;
 	//printf("%i %s\n",cpt,d+start);
 	if(cpt==0)
-	    fprintf(fp,"name=\"%s\";\n",d+start);
+	    strcpy(to_name,d+start);
 	if(cpt==1)
-	    fprintf(fp,"author=\"%s\";\n",d+start);
+	    strcpy(to_author,d+start);
 	if(cpt==2)
-	    fprintf(fp,"gold_time=%s;\n",d+start);
+	    strcpy(to_gold,d+start);	
 	if(cpt==3)
-	    fprintf(fp,"author_time=%s;\n",d+start);
+	    strcpy(to_author_time,d+start);	
 
 	// finalize
 	cpt++;
 	start=i+1;
 	}
     }
+}
+
+void data_init(void)
+{
+sprintf(tdata,"no name;unknown;0;0");
+}
+
+void dump_data_to(char *filename)
+{
+FILE *fp;
+char d[4][512];
+
+fp=fopen(filename,"wt");
+if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
+
+fprintf(fp,"// generated track data (mania2)\n\n");
+
+extract_data(tdata,d[0],d[1],d[2],d[3]);
+fprintf(fp,"name=\"%s\";\n",d[0]);
+fprintf(fp,"author=\"%s\";\n",d[1]);
+fprintf(fp,"gold_time=%s;\n",d[2]);
+fprintf(fp,"author_time=%s;\n",d[3]);
 
 fprintf(fp,"\n// EOF\n");
 fclose(fp);
@@ -667,43 +966,50 @@ if(!autotag)
 void mouse_n_keys_event(void)
 {
 GLfloat rotx,roty;
+int window;
 
-//printf("%i\n",raydium_key_last);
-if(raydium_key_last==1027) exit(0);
-if(raydium_key_last==1045)  modl_zoom--;
-if(raydium_key_last==1043)  modl_zoom++;
-if(raydium_key_last==1100)  del();
-if(raydium_key_last==1009)  curangle+=90;
-if(raydium_key_last==1032 && pop_mode==POP_MODE_ELEM)  add();
-if(raydium_key_last==1032 && pop_mode==POP_MODE_BOX)  add_box();
-if(raydium_key_last==2) export_all();
+if(raydium_key_last==1027) gui_exit();
 
-if(raydium_key_last==101) py++;
-if(raydium_key_last==103) py--;
-if(raydium_key_last==100) px--;
-if(raydium_key_last==102) px++;
+window=raydium_gui_window_find("menu");
 
-if(raydium_key_last==105 && pop_mode==POP_MODE_ELEM) curobj--;
-if(raydium_key_last==104 && pop_mode==POP_MODE_ELEM) curobj++;
-if(raydium_key_last==105 && pop_mode==POP_MODE_BOX) curbox--;
-if(raydium_key_last==104 && pop_mode==POP_MODE_BOX) curbox++;
-if(raydium_key_last==106) pz+=0.25;
-if(raydium_key_last==107) pz-=0.25;
+if(raydium_gui_widget_find("btnMenu",window)>=0)
+{
+ if(raydium_key_last==1045)  modl_zoom--;
+ if(raydium_key_last==1043)  modl_zoom++;
+ if(raydium_key_last==1100)  del();
+ if(raydium_key_last==1009)  curangle+=90;
+ if(raydium_key_last==1032 && pop_mode==POP_MODE_ELEM)  add();
+ if(raydium_key_last==1032 && pop_mode==POP_MODE_BOX)  add_box();
+ if(raydium_key_last==2) export_all();
 
-if(raydium_key_last==1013 && pop_mode==POP_MODE_ELEM) pop_mode=POP_MODE_BOX;
-else
-if(raydium_key_last==1013 && pop_mode==POP_MODE_BOX) pop_mode=POP_MODE_ELEM;
+ if(raydium_key_last==101) py++;
+ if(raydium_key_last==103) py--;
+ if(raydium_key_last==100) px--;
+ if(raydium_key_last==102) px++;
+
+ if(raydium_key_last==105 && pop_mode==POP_MODE_ELEM) curobj--;
+ if(raydium_key_last==104 && pop_mode==POP_MODE_ELEM) curobj++;
+ if(raydium_key_last==105 && pop_mode==POP_MODE_BOX) curbox--;
+ if(raydium_key_last==104 && pop_mode==POP_MODE_BOX) curbox++;
+ if(raydium_key_last==106) pz+=0.25;
+ if(raydium_key_last==107) pz-=0.25;
+
+ if(raydium_key_last==1013 && pop_mode==POP_MODE_ELEM) pop_mode=POP_MODE_BOX;
+ else
+ if(raydium_key_last==1013 && pop_mode==POP_MODE_BOX) pop_mode=POP_MODE_ELEM;
+
+ if(raydium_key_last==1109) build_gui_menu(NULL);
 
 
-if(curobj<0) curobj=0;
-if(curbox<0) curbox=0;
-if((curobj+1)>=raydium_object_index) curobj=raydium_object_index-2;
-if(curbox>=n_boxpresets) curbox=n_boxpresets-1;
+ if(curobj<0) curobj=0;
+ if(curbox<0) curbox=0;
+ if((curobj+1)>=raydium_object_index) curobj=raydium_object_index-2;
+ if(curbox>=n_boxpresets) curbox=n_boxpresets-1;
 
-curangle%=360;
-if(modl_zoom<1) modl_zoom=1;
+ curangle%=360;
+ if(modl_zoom<1) modl_zoom=1;
 
-// Camera
+ // Camera
  if(raydium_mouse_button[0]) 
  {
   rotx=((float)raydium_mouse_x-((float)raydium_window_tx/(float)2)) * ((float)360/(float)raydium_window_tx);
@@ -711,7 +1017,8 @@ if(modl_zoom<1) modl_zoom=1;
   glRotatef(roty,1,0,0);
   glRotatef(rotx,0,1,0);
  }
-glTranslatef(-px,-py,-pz);
+ glTranslatef(-px,-py,-pz);
+} // end if "acess menu visible"
 
 }
 
@@ -814,9 +1121,11 @@ int main(int argc, char **argv)
 {
 char autogen[256];
 char window[256];
+
 sprintf(window,"%s - %s",title,version);
 
-sprintf(tdata,"no name;unknown;0;0");
+data_init();
+current_track[0]=0;
 
 raydium_init_args(argc,argv);
 
@@ -832,6 +1141,7 @@ else
 
 raydium_background_color_change(0,0,0,1);
 raydium_rendering_displaylists_disable();
+raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
 
 // place here all available objets:
 load_all_in("mania.cfg");
@@ -842,8 +1152,10 @@ box_init_all();
 // stop here (must be LAST object)
 if(!autotag)
     {
-    if(file_exists("dyn_track.mni"))
-	grid_load("dyn_track.mni");
+    raydium_parser_db_get("Mania2-CurrentTrack",current_track,"");
+
+    if(file_exists(current_track))
+	grid_load(current_track);
     }
 else
     {
@@ -854,8 +1166,10 @@ else
     }
 
 raydium_mouse_show();
-raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
-//raydium_texture_current=1;
+raydium_gui_theme_load("theme-raydium2.gui");
+raydium_gui_show();
+build_gui_access(NULL);
+//build_gui_help(NULL);
 
 raydium_callback(&display);
 
