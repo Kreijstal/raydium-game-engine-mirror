@@ -62,6 +62,9 @@ box_init_all();
 data_init();
 grid_generate_obj();
 current_track[0]=0;
+px=0;
+py=0;
+pz=0;
 raydium_gui_window_delete_name("clear");
 }
 
@@ -140,6 +143,7 @@ if(ret!=0)
     {
     raydium_log("CANNOT TEST MNI TRACK FROM '%s'",mni);
     }		
+build_gui_access(NULL);
 }
 
 void build_gui_clear(raydium_gui_Object *w)
@@ -242,7 +246,7 @@ raydium_gui_widget_sizes(0,0,14);
 raydium_gui_label_create("lblAction",handle,25,80,"Load MNI : ",0,0,0);
 
 raydium_gui_widget_sizes(25,3,14);
-raydium_gui_edit_create("edtFilename",handle,40,70,"");
+raydium_gui_edit_create("edtFilename",handle,40,70,current_track);
 
 raydium_gui_widget_sizes(10,3,14);
 raydium_gui_button_create("btnLoad",handle,20,20,"load",btnLoad);
@@ -262,7 +266,7 @@ raydium_gui_widget_sizes(0,0,14);
 raydium_gui_label_create("lblAction",handle,25,80,"Save MNI : ",0,0,0);
 
 raydium_gui_widget_sizes(25,3,14);
-raydium_gui_edit_create("edtFilename",handle,40,70,"");
+raydium_gui_edit_create("edtFilename",handle,40,70,current_track);
 
 raydium_gui_widget_sizes(10,3,14);
 raydium_gui_button_create("btnSave",handle,20,20,"save",btnSave);
@@ -451,6 +455,9 @@ raydium_log("%s: %i grid elements loaded, %i box(es)",filename,i,j);
 fclose(fp);
 grid_generate_obj();
 strcpy(current_track,filename);
+px=0;
+py=0;
+pz=0;
 return 1;
 }
 
@@ -937,6 +944,7 @@ void export_all(void)
 #define MOVE_Z -1
 int i;
 int obj;
+char sav[RAYDIUM_MAX_NAME_LEN];
 
 obj=raydium_object_find("mania.tri");
 
@@ -959,8 +967,10 @@ dump_boxes_to("mania.box",FACT,MOVE_X,MOVE_Y,MOVE_Z);
 dump_data_to("mania.dat");
 
 grid_generate_obj();
+strcpy(sav,current_track);
 if(!autotag)
     grid_save("dyn_track.mni");
+strcpy(current_track,sav);
 }
 
 void mouse_n_keys_event(void)
@@ -977,7 +987,7 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
  if(raydium_key_last==1045)  modl_zoom--;
  if(raydium_key_last==1043)  modl_zoom++;
  if(raydium_key_last==1100)  del();
- if(raydium_key_last==1009)  curangle+=90;
+ if(raydium_key_last==1009)  { curangle+=90; raydium_key_last=0; }
  if(raydium_key_last==1032 && pop_mode==POP_MODE_ELEM)  add();
  if(raydium_key_last==1032 && pop_mode==POP_MODE_BOX)  add_box();
  if(raydium_key_last==2) export_all();
@@ -1017,9 +1027,9 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
   glRotatef(roty,1,0,0);
   glRotatef(rotx,0,1,0);
  }
- glTranslatef(-px,-py,-pz);
 } // end if "acess menu visible"
 
+ glTranslatef(-px,-py,-pz);
 }
 
 

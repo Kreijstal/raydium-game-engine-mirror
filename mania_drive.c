@@ -58,6 +58,7 @@ int game_state;
 GLfloat timer;
 GLfloat countdown;
 GLfloat partytime;
+GLfloat yourbest;
 char mni_current[RAYDIUM_MAX_NAME_LEN];
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
@@ -295,6 +296,7 @@ else
 create_car();
 
 partytime=0;
+yourbest=0;
 
 raydium_gui_window_delete_name("menu");
 raydium_gui_hide();
@@ -941,6 +943,8 @@ if(type==GAME_END)
 	raydium_network_propag_refresh(NET_SCORE_TRACK);
 	}
 
+    if(timer<yourbest || yourbest==0)
+	yourbest=timer;
 
     if(mode==MODE_SOLO)
 	{
@@ -1023,6 +1027,19 @@ if(mode==MODE_MULTI)
     raydium_osd_printf(10,4,12,0.5,"font-impact.tga"," party time:");
     raydium_osd_printf(23,4,12,0.7,"font-lcdmono.tga","^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }
+else
+    {
+    int off=0;
+    
+    if(mode==MODE_NET || simple_mni)
+	off=10;
+	
+    hms(yourbest,&h2,&m2,&s2,&ms2);
+    raydium_osd_color_change(0.89,0.85,0.66);
+    raydium_osd_printf(20-off,4,12,0.5,"font-impact.tga","  your best:");
+    raydium_osd_printf(33-off,4,12,0.7,"font-lcdmono.tga","^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
+    }
+
 if(mode==MODE_SOLO)
     {
     hms(trackdata.gold_time,&h2,&m2,&s2,&ms2);
@@ -1881,7 +1898,7 @@ raydium_parser_db_get("ManiaDrive-MusicVolume",str,"1.0");
 sscanf(str,"%f",&music_volume);
 
 
-if(raydium_init_cli_option_default("mni",mni_current,""))
+if(raydium_init_cli_option("mni",mni_current))
     {
     simple_mni=1;
     mni_load(mni_current);
