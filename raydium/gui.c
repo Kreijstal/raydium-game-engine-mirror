@@ -403,6 +403,7 @@ if( raydium_gui_window_focused==window &&
      ((style==RAYDIUM_GUI_FOCUS || style==RAYDIUM_GUI_HOVER) && raydium_key_last==1013)) )
     {
     void (*f)(raydium_gui_Object *);
+    raydium_key_last=0;
     raydium_mouse_click=0;
     raydium_mouse_button[0]=0;
     raydium_gui_windows[window].focused_widget=w;
@@ -530,10 +531,15 @@ if(raydium_gui_window_focused==window &&
     }
 
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
+    {
     t->current--;
+    raydium_key_last=0;
+    }
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
+    {
     t->current++;
-
+    raydium_key_last=0;
+    }
 
 if(t->current<t->min)
     t->current=t->min;
@@ -702,34 +708,48 @@ if(raydium_gui_window_focused==window &&
     }
 
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
+    {
     e->cursor--;
+    raydium_key_last=0;
+    }
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
+    {
     e->cursor++;
-
+    raydium_key_last=0;
+    }
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && (raydium_key_last>=1032 && raydium_key_last<1127) &&
 		       len<(RAYDIUM_GUI_DATASIZE-1))
     {
     memmove(e->text+e->cursor+1,e->text+e->cursor,strlen(e->text+e->cursor)+1);
     e->text[e->cursor]=raydium_key_last-1000;
     e->cursor++;
+    raydium_key_last=0;
     }
 
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==1008 && len>0 && e->cursor>0)
     {
     memmove(e->text+e->cursor-1,e->text+e->cursor,strlen(e->text+e->cursor)+1);
     e->cursor--;
+    raydium_key_last=0;
     }
 
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==1127 && e->cursor<len)
     {
     memmove(e->text+e->cursor,e->text+e->cursor+1,strlen(e->text+e->cursor)+1);
+    raydium_key_last=0;
     }
 
 
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==106)
+    {
     e->cursor=0;
+    raydium_key_last=0;
+    }
 if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==107)
+    {
     e->cursor=len;
+    raydium_key_last=0;
+    }    
 }
 
 
@@ -816,6 +836,7 @@ if(raydium_gui_window_focused==window &&
     {
     raydium_mouse_click=0;
     raydium_mouse_button[0]=0;
+    raydium_key_last=0;
     raydium_gui_windows[window].focused_widget=w;
     c->checked=!c->checked;
     }
@@ -1233,7 +1254,10 @@ if(!raydium_gui_window_isvalid(raydium_gui_window_focused))
     raydium_gui_window_focused=-1;
 
 if(raydium_key_last==1009)
+    {
     raydium_gui_widget_next();
+    raydium_key_last=0;
+    }
 
 // non focused windows (~ creation order)
 for(i=0;i<RAYDIUM_GUI_MAX_WINDOWS;i++)
