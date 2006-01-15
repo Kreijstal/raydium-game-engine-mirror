@@ -319,6 +319,7 @@ GLfloat wfactor[2];
 GLfloat *suv;
 GLfloat tmp;
 char style;
+char substyle;
 raydium_gui_Button *b;
 
 if(!raydium_gui_window_isvalid(window))
@@ -348,9 +349,13 @@ xy[3]=raydium_gui_windows[window].pos[1] +
 
 
 style=RAYDIUM_GUI_NORMAL;
+substyle=RAYDIUM_GUI_NORMAL;
 
 if(raydium_gui_windows[window].focused_widget==w)
+    {
     style=RAYDIUM_GUI_FOCUS;
+    substyle=RAYDIUM_GUI_FOCUS;
+    }
 
 if(raydium_gui_window_focused==window &&
   (mxy[0]>=xy[0] && mxy[1]>=xy[1] &&
@@ -400,7 +405,7 @@ raydium_osd_printf(fxy[0]-tmp,fxy[1],
 // Here, I consider that HOVER (mouse) have priority over FOCUS for Enter key
 if( raydium_gui_window_focused==window &&
     ((style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
-     ((style==RAYDIUM_GUI_FOCUS || style==RAYDIUM_GUI_HOVER) && raydium_key_last==1013)) )
+     ((style==RAYDIUM_GUI_FOCUS || substyle==RAYDIUM_GUI_FOCUS) && raydium_key_last==1013)) )
     {
     void (*f)(raydium_gui_Object *);
     raydium_key_last=0;
