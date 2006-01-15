@@ -268,7 +268,7 @@ if(!raydium_gui_window_isvalid(raydium_gui_window_focused))
 
 if(raydium_gui_widget_isvalid(widget,raydium_gui_window_focused))
     {
-    printf("%i %i\n",widget,raydium_gui_window_focused);
+    //printf("%i %i\n",widget,raydium_gui_window_focused);
     raydium_gui_windows[raydium_gui_window_focused].focused_widget=widget;
     }
 else
@@ -357,6 +357,7 @@ if(raydium_gui_window_focused==window &&
    mxy[0]<=xy[2] && mxy[1]<=xy[3] ))
 	style=RAYDIUM_GUI_HOVER;
 
+
 // uv
 switch(style)
     {
@@ -396,14 +397,17 @@ raydium_osd_printf(fxy[0]-tmp,fxy[1],
 } // end caption drawing
 
 // Events management
-if( (style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
-    (style==RAYDIUM_GUI_FOCUS && raydium_key_last==1013) )
+// Here, I consider that HOVER (mouse) have priority over FOCUS for Enter key
+if( raydium_gui_window_focused==window &&
+    ((style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
+     ((style==RAYDIUM_GUI_FOCUS || style==RAYDIUM_GUI_HOVER) && raydium_key_last==1013)) )
     {
     void (*f)(raydium_gui_Object *);
     raydium_mouse_click=0;
     raydium_mouse_button[0]=0;
     raydium_gui_windows[window].focused_widget=w;
     f=b->OnClick;
+
     if(f)
 	f(&raydium_gui_windows[window].widgets[w]);
     raydium_gui_button_clicked_id=window*1000+w;
@@ -525,9 +529,9 @@ if(raydium_gui_window_focused==window &&
     t->current= t->min + (fact*(t->max - t->min));
     }
 
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
     t->current--;
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
     t->current++;
 
 
@@ -697,12 +701,12 @@ if(raydium_gui_window_focused==window &&
     e->cursor=(tmp2*fact)+(tmp/3.f)+e->offset; // need some work
     }
 
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==100)
     e->cursor--;
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==102)
     e->cursor++;
 
-if(style==RAYDIUM_GUI_FOCUS && (raydium_key_last>=1032 && raydium_key_last<1127) &&
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && (raydium_key_last>=1032 && raydium_key_last<1127) &&
 		       len<(RAYDIUM_GUI_DATASIZE-1))
     {
     memmove(e->text+e->cursor+1,e->text+e->cursor,strlen(e->text+e->cursor)+1);
@@ -710,21 +714,21 @@ if(style==RAYDIUM_GUI_FOCUS && (raydium_key_last>=1032 && raydium_key_last<1127)
     e->cursor++;
     }
 
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==1008 && len>0 && e->cursor>0)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==1008 && len>0 && e->cursor>0)
     {
     memmove(e->text+e->cursor-1,e->text+e->cursor,strlen(e->text+e->cursor)+1);
     e->cursor--;
     }
 
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==1127 && e->cursor<len)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==1127 && e->cursor<len)
     {
     memmove(e->text+e->cursor,e->text+e->cursor+1,strlen(e->text+e->cursor)+1);
     }
 
 
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==106)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==106)
     e->cursor=0;
-if(style==RAYDIUM_GUI_FOCUS && raydium_key_last==107)
+if(raydium_gui_window_focused==window && style==RAYDIUM_GUI_FOCUS && raydium_key_last==107)
     e->cursor=len;
 }
 
@@ -806,8 +810,9 @@ if(raydium_gui_window_focused==window &&
     style=RAYDIUM_GUI_HOVER;
 
 // Events management
-if( (style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
-    (style==RAYDIUM_GUI_FOCUS && raydium_key_last==1013) )
+if(raydium_gui_window_focused==window && 
+    ((style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
+     (style==RAYDIUM_GUI_FOCUS && raydium_key_last==1013)) )
     {
     raydium_mouse_click=0;
     raydium_mouse_button[0]=0;
