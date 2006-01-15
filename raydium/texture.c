@@ -39,7 +39,7 @@ unsigned char *data;
 GLuint tx,ty,bpp,id;
 GLuint i,j,k,GLbpp=0,GLbppi;
 GLuint texsize=0;
-char blended=0,filter=0,cutout=0;
+char blended=0,filter=0,cutout=0,simulate=0;
 char rgb;
 GLfloat r,g,b;
 
@@ -51,6 +51,10 @@ for(i=0;i<raydium_texture_index;i++)
     raydium_log("texture: (internal) %s is duplicated",as);
     return i;
     }
+
+
+if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
+    simulate=1;
 
 /* is RGB color ? (or texture) */
 strcpy((char *)temp,filename);
@@ -207,6 +211,7 @@ if(!rgb)
  if(raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && !faked)
     raydium_texture_used_memory+=(texsize/3); // mipmaps
 
+if(!simulate)
  glBindTexture(GL_TEXTURE_2D,id);
 
 
@@ -215,15 +220,18 @@ if(!rgb)
 
  memcpy(temp,filename,3);						// TEMP !!
  temp[3]=0;								// TEMP !!
- if(!strcmp("BOX",(char *)temp))					// TEMP !!
- {									// TEMP !!
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
- glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!
- }									// TEMP !!
- else
+ if(!simulate)
  {
- glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
- glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  if(!strcmp("BOX",(char *)temp))					// TEMP !!
+  {									// TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!
+  }									// TEMP !!
+  else
+  {
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  }
  }
 
  filter=raydium_texture_filter;
@@ -234,21 +242,21 @@ if(!rgb)
  if(faked)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
  
-  if(filter==RAYDIUM_TEXTURE_FILTER_NONE)
+  if(filter==RAYDIUM_TEXTURE_FILTER_NONE && !simulate)
   {
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST); 
   glTexImage2D(GL_TEXTURE_2D,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
   }
 
-  if(filter==RAYDIUM_TEXTURE_FILTER_BILINEAR)
+  if(filter==RAYDIUM_TEXTURE_FILTER_BILINEAR && !simulate)
   {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
   }
 
-  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR)
+  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && !simulate)
   {
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
