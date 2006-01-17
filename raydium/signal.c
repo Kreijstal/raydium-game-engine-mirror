@@ -17,12 +17,14 @@ raydium_log("signal %i disabled.",sig);
 
 void raydium_signal_install_trap(void)
 {
-signed err=0;
+signed int err=0;
 
 if(signal(SIGINT,raydium_signal_handler)==SIG_ERR)
     err++;
+#ifndef WIN32
 if(signal(SIGPIPE,raydium_signal_handler)==SIG_ERR)
     err++;
+#endif
 
 if(err)
     raydium_log("Signal Handlers: FAILED !");

@@ -179,8 +179,7 @@ void raydium_web_request(int fd)
 
 void raydium_web_start(char *title)
 {
-int     opt = 1;                /* option-dummys for setsockopt */
-int     optlen = sizeof(opt); 
+char     opt[32];
 
 if(raydium_web_active)
     {
@@ -197,7 +196,7 @@ if((raydium_web_listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
     }
 
 // avoiding bind's "Address already in use" error
-setsockopt(raydium_web_listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, optlen);
+setsockopt(raydium_web_listenfd, SOL_SOCKET, SO_REUSEADDR, opt, 32);
 
 raydium_web_serv_addr.sin_family=AF_INET;
 raydium_web_serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
