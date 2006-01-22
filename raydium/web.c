@@ -314,8 +314,11 @@ raydium_web_body_default=body;
 raydium_web_footer=footer;
 
 #ifdef RAYDIUM_NETWORK_ONLY
+// ... and ...
+#ifndef WIN32
 // since we will not install our default signal handlers ...
 signal(SIGPIPE,raydium_web_sigpipe_hack);
+#endif
 #endif
 memset(&raydium_web_serv_addr,0,sizeof(struct sockaddr_in));
 raydium_web_active=0;

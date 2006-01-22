@@ -1,6 +1,7 @@
 // ManiaDrive - CQFD Corp
 // http://maniadrive.raydium.org/
 // Needs mania2.static / mania2.exe
+// and mania_server.static / mania_server.exe
 char *version="ManiaDrive 0.93";
 
 // TODO:
@@ -10,7 +11,6 @@ char *version="ManiaDrive 0.93";
 // ... data :
 // new tracks (mainly for solo mode)
 // new road texture
-// better track editor
 
 #include "raydium/index.c"
 
@@ -20,8 +20,10 @@ char *version="ManiaDrive 0.93";
 
 #ifdef WIN32
 #define MANIA2_BINARY "mania2.exe"
+#define SERVER_BINARY "mania_server.exe"
 #else
 #define MANIA2_BINARY "./mania2.static"
+#define SERVER_BINARY "./mania_server.static"
 #endif
 
 #define STORY_FILE		"mania_drive.story"
@@ -110,6 +112,8 @@ typedef struct TrackData
 TrackData trackdata;
 Score best_score[RAYDIUM_NETWORK_MAX_CLIENTS];
 Score track_score;
+
+pid_t server_pid=0;
 
 #define GAME_COUNTDOWN	1
 #define GAME_GAME	2
@@ -427,6 +431,23 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
 }
 
+
+// NON-ACTIVATED CODE (child "thread" is never killed)
+void btnCreateServer(raydium_gui_Object *w)
+{
+
+server_pid=fork();
+
+if(server_pid==0)
+    {
+    // child
+    execl(SERVER_BINARY,SERVER_BINARY,NULL);
+    // never returns ...
+    }
+
+}
+
+
 void btnApplyOptions(raydium_gui_Object *w)
 {
 char str[RAYDIUM_MAX_NAME_LEN];
@@ -649,9 +670,11 @@ raydium_gui_label_create("lblServer",handle,32.5,60,"Server :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtServer",handle,47,55,server);
 
-raydium_gui_widget_sizes(15,5,18);
+raydium_gui_widget_sizes(18,5,18);
 raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
 
+raydium_gui_widget_sizes(18,5,15);
+raydium_gui_button_create("btnCreateServ",handle,55,15,"Create server",btnCreateServer);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
