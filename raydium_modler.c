@@ -408,7 +408,7 @@ if(raydium_object_anims[0]>0)
     for(i=0;i<raydium_object_anims[0];i++)
       for(j=0;j<raydium_object_anim_end[0][i]-raydium_object_anim_start[0][i];j++)
 	{
-	if(raydium_object_anim_names[0][i][0]=="*")
+	if(raydium_object_anim_names[0][i][0]=='*')
 	    center_(cpt,cpt+len);
 	cpt+=len;
 	}

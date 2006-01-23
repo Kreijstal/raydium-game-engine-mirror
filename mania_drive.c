@@ -435,7 +435,8 @@ raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
 // NON-ACTIVATED CODE (child "thread" is never killed)
 void btnCreateServer(raydium_gui_Object *w)
 {
-
+// no fork under win32 !
+/*
 server_pid=fork();
 
 if(server_pid==0)
@@ -444,7 +445,7 @@ if(server_pid==0)
     execl(SERVER_BINARY,SERVER_BINARY,NULL);
     // never returns ...
     }
-
+*/
 }
 
 
@@ -673,8 +674,8 @@ raydium_gui_edit_create("edtServer",handle,47,55,server);
 raydium_gui_widget_sizes(18,5,18);
 raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
 
-raydium_gui_widget_sizes(18,5,15);
-raydium_gui_button_create("btnCreateServ",handle,55,15,"Create server",btnCreateServer);
+//raydium_gui_widget_sizes(18,5,15);
+//raydium_gui_button_create("btnCreateServ",handle,55,15,"Create server",btnCreateServer);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);

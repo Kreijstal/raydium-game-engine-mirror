@@ -24,7 +24,7 @@ body_start=strchr(message,'\n');
 // WARNING: do not change "Type: message" header offset !
 // See raydium_web_client_get() otherwise.
 sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nType: message\r\n\r\n");
-write(fd,buffer,strlen(buffer));
+send(fd,buffer,strlen(buffer),0);
 buffer[0]=0;
 sprintf(buffer+strlen(buffer),raydium_web_header,raydium_web_title);
 
@@ -43,7 +43,7 @@ else
     raydium_log("web: %s",title);
     }
 
-write(fd,buffer,strlen(buffer));
+send(fd,buffer,strlen(buffer),0);
 }
 
 
@@ -56,11 +56,13 @@ void raydium_web_request(int fd)
 	static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
 	static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
 	signed char (*handler)(char *,char *, int);
-
-	ret =read(fd,buffer,RAYDIUM_WEB_BUFSIZE); 	/* read Web request in one go */
-	if(ret == 0 || ret == -1)
+    
+    ret=recv(fd,buffer,RAYDIUM_WEB_BUFSIZE,0);
+    
+    if(ret == 0 || ret == -1)
 	    {
 	    /* read failure stop now */
+        //perror("read");
 	    raydium_web_answer("error: Failed to read browser request",fd);
 	    return;
 	    }
@@ -149,8 +151,8 @@ void raydium_web_request(int fd)
 		// WARNING: do not change "Type: message" header offset !
 		// See raydium_web_client_get() otherwise.
 		sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
-		write(fd,buffer,strlen(buffer));
-		write(fd,answer,strlen(answer));
+		send(fd,buffer,strlen(buffer),0);
+		send(fd,answer,strlen(answer),0);
 		}
 	    return;
 	    }
@@ -168,12 +170,12 @@ void raydium_web_request(int fd)
 	raydium_log("web: ... sending '%s'",&buffer[5]);
 
 	sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
-	write(fd,buffer,strlen(buffer));
+	send(fd,buffer,strlen(buffer),0);
 
 	/* send file in 8KB block - last block may be smaller */
-	while (	(ret = read(file_fd, buffer, RAYDIUM_WEB_BUFSIZE)) > 0 )
+	while (	(ret = recv(file_fd, buffer, RAYDIUM_WEB_BUFSIZE,0)) > 0 )
 	    {
-	    write(fd,buffer,ret);
+        send(fd,buffer,ret,0);
 	    }
 }
 
@@ -234,7 +236,9 @@ length = sizeof(cli_addr);
 
 raydium_network_set_socket_block_internal(raydium_web_listenfd,0);
 if((socketfd = accept(raydium_web_listenfd, (struct sockaddr *)&cli_addr, &length)) < 0)
+{
     return;
+}
 raydium_network_set_socket_block_internal(raydium_web_listenfd,1);
 
 // /!\ FIXME ! must fork here. (see original nweb for details)
@@ -381,10 +385,10 @@ if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <0)
     }
 
 sprintf(req,"GET /%s \r\n",filename);			
-write(sockfd,req,strlen(req));
+send(sockfd,req,strlen(req),0);
 
 chunk=0;
-while( (i=read(sockfd,buffer,RAYDIUM_WEB_BUFSIZE)) > 0)
+while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
     {
     data=buffer;
     if(chunk==0)
