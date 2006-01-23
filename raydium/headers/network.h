@@ -255,6 +255,18 @@ will return "no data" instead.
 You've almost no reason to call this function by yourself.
 **/
 
+extern int raydium_network_socket_close(int fd);
+/**
+Portable socket closing function. See "man 2 close" or closesocket (win32)
+docs.
+**/
+
+extern signed char raydium_network_socket_is_readable(int fd);
+/**
+Will return true (1) if there is some data ready on ##fd## socket,
+false (0) otherwise.
+**/
+
 extern signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
 /**
 This function will register a new Network Callback ("netcall").

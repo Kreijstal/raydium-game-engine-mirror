@@ -421,6 +421,44 @@ return raydium_network_set_socket_block_internal(raydium_network_socket,block);
 //return !( fcntl(raydium_network_socket, F_GETFL) & O_NONBLOCK );
 //}
 
+int raydium_network_socket_close(int fd)
+{
+#ifndef WIN32
+return close(fd);
+#else
+return closesocket(fd);
+#endif
+}
+
+// I've no idea why some version of Dev-CPP are losing this value ...
+#ifndef FD_SETSIZE
+#define FD_SETSIZE	64
+#endif
+
+signed char raydium_network_socket_is_readable(int fd)
+{
+fd_set readSet;
+struct timeval timeVal;
+int selectCount;
+
+timeVal.tv_sec=0;
+timeVal.tv_usec=0;
+
+
+FD_ZERO(&readSet);
+FD_SET(fd,&readSet);
+
+selectCount=select(fd+1,&readSet,NULL,NULL,&timeVal);
+
+if (selectCount<0)
+    return 0; // failed
+if (selectCount==0)
+    return 0; // not readable
+if (FD_ISSET(fd,&readSet))
+    return 1; // readable
+
+return 0; // ?!!
+}
 
 signed char raydium_network_netcall_add(void *ptr, int type, signed char tcp)
 {
@@ -492,6 +530,7 @@ time(&now);
 return 0;
 }
 
+    
 void raydium_network_init_sub(void)
 {
 int i;

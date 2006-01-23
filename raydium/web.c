@@ -62,7 +62,7 @@ void raydium_web_request(int fd)
     if(ret == 0 || ret == -1)
 	    {
 	    /* read failure stop now */
-        //perror("read");
+        perror("read");
 	    raydium_web_answer("error: Failed to read browser request",fd);
 	    return;
 	    }
@@ -222,28 +222,30 @@ raydium_web_active=1;
 }
 
 
+
 void raydium_web_callback(void)
 {
 static int socketfd;
 static struct sockaddr_in cli_addr; /* static = initialised to zeros */
-
 size_t length;
 
 if(!raydium_web_active)
     return;
 
-length = sizeof(cli_addr);
+if(!raydium_network_socket_is_readable(raydium_web_listenfd))
+    return;
 
-raydium_network_set_socket_block_internal(raydium_web_listenfd,0);
+length = sizeof(cli_addr);
+//raydium_network_set_socket_block_internal(raydium_web_listenfd,0);
 if((socketfd = accept(raydium_web_listenfd, (struct sockaddr *)&cli_addr, &length)) < 0)
 {
     return;
 }
-raydium_network_set_socket_block_internal(raydium_web_listenfd,1);
+//raydium_network_set_socket_block_internal(raydium_web_listenfd,1);
 
 // /!\ FIXME ! must fork here. (see original nweb for details)
 raydium_web_request(socketfd);
-close(socketfd);
+raydium_network_socket_close(socketfd);
 }
 
 #ifdef RAYDIUM_NETWORK_ONLY
@@ -399,7 +401,7 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
 	    {
 	    buffer[12]=0;
 	    raydium_log("web: client: error: server said %s",buffer);
-	    close(sockfd);
+	    raydium_network_socket_close(sockfd);
 	    return 0;
 	    }
 
@@ -411,7 +413,7 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
 	if(!strcmp(req+42,"Type: message"))
 	    {
 	    raydium_log("web: client: error: no data, this is a server message (not found ?)");
-	    close(sockfd);
+	    raydium_network_socket_close(sockfd);
 	    return 0;
 	    }
 
@@ -426,7 +428,7 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
 	if(x==i)
 	    {
 	    raydium_log("web: client: error: cannot found header end");
-	    close(sockfd);
+	    raydium_network_socket_close(sockfd);
 	    return 0;
 	    }
 	// found, adjust offset 1 byte after
@@ -438,7 +440,7 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
 	if(!fp)
 	    {
 	    raydium_log("web: client: error: cannot create temporary file");
-	    close(sockfd);
+	    raydium_network_socket_close(sockfd);
 	    return 0;
 	    }	
 	}
@@ -448,7 +450,7 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
     }
 			
 fclose(fp);
-close(sockfd);
+raydium_network_socket_close(sockfd);
 
 // compare files and rename if not the same
 #ifndef RAYDIUM_NETWORK_ONLY
