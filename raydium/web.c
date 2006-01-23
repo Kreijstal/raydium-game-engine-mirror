@@ -173,9 +173,9 @@ void raydium_web_request(int fd)
 	send(fd,buffer,strlen(buffer),0);
 
 	/* send file in 8KB block - last block may be smaller */
-	while (	(ret = recv(file_fd, buffer, RAYDIUM_WEB_BUFSIZE,0)) > 0 )
+	while (	(ret = read(file_fd, buffer, RAYDIUM_WEB_BUFSIZE)) > 0 )
 	    {
-        send(fd,buffer,ret,0);
+    	    send(fd,buffer,ret,0);
 	    }
 }
 
