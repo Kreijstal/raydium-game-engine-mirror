@@ -30,9 +30,10 @@ Here, you can find :<br/>\
 
 
 
-void switch_track(void)
+signed char switch_track(void)
 {
 static int last=-1;
+FILE *fp;
 
 raydium_register_variable(track,RAYDIUM_REGISTER_STR,"track");
 raydium_register_variable(&last,RAYDIUM_REGISTER_INT,"last");
@@ -41,7 +42,15 @@ raydium_php_exec("mania_server_tracks.php");
 
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
+
+if(! (fp=raydium_file_fopen(track,"rt")) )
+    {
+    raydium_log("ERROR ! cannot switch to track '%s' !",track);    
+    return 0;
+    }
+fclose(fp);
 raydium_log("Switching to track '%s'",track);
+return 1;
 }
 
 void change_track(char *track)
@@ -92,8 +101,8 @@ if(steps>=PARTY_TIMEOUT)
     {
     steps=0;
     // change map
-    switch_track();
-    change_track(track);
+    if(switch_track())
+	change_track(track);
     }
 }
 
