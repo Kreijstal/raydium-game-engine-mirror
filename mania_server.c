@@ -21,11 +21,13 @@ float steps=0;
 //int freq;
 
 char *index_text="\
+<br/><center>This is a <b>ManiaServer</b>. You can connect to this server using \
+<a href=\"http://maniadrive.raydium.org/\">the ManiaDrive game</a>.</center><br/>\
 Here, you can find :<br/>\
 - <a href=\"data.dyn\">Informations about current party</a><br/>\
 - <a href=\"http://maniadrive.raydium.org/index.php?scores=all\">Live scores on the web</a><br/>\
 - <a href=\"http://maniadrive.raydium.org/\">Maniadrive website</a><br/>\
-- <a href=\"http://raydium.org/\">Raydium website</a><br/>\
+- <a href=\"http://raydium.org/\">Game Engine: Raydium website</a><br/>\
 ";
 
 
@@ -153,7 +155,11 @@ if(!strcmp("data.dyn",req))
 	if(raydium_network_client[i])
 	    sprintf(response+strlen(response),"<tr><td>%s</td></tr>",raydium_network_name[i]);
     
-    sprintf(response+strlen(response),"</table><br/><br/><a href=\"/\">Back</a>");
+    sprintf(response+strlen(response),"</table><br/>");
+    sprintf(response+strlen(response),"<center><a href=\"http://maniadrive.raydium.org/index.php?scores=track&track=%s\">\
+    You can find bests online scores for '%s' track here !</a></center>\
+    ",track,track);
+    sprintf(response+strlen(response),"<a href=\"/\">Back</a>");
     
     return 1;
     }
