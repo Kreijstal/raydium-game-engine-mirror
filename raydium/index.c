@@ -80,6 +80,7 @@
 
 #else
 
+#include "network.h"
 #include "log.c"
 #include "trigo.c"
 #include "random.c"
@@ -89,6 +90,7 @@
 #include "register.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
+#include "rayphp.c"
 #endif
 #include "web.c"
 #endif

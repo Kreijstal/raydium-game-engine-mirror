@@ -18,10 +18,6 @@
 #define C2PHP ZEND_FN
 
 
-#ifdef RAYDIUM_NETWORK_ONLY
-#define raydium_file_fopen fopen
-#endif
-
 // Dirty globals... (needed for WIN32 PHP support)
 #ifdef ZTS
 zend_compiler_globals *compiler_globals;

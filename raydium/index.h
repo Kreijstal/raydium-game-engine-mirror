@@ -76,6 +76,7 @@
 
 #warning "unless you know what you're doing, RAYDIUM_NETWORK_ONLY with \
 dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
+#include "network.h"
 #include "headers/log.h"
 #include "headers/trigo.h"
 #include "headers/random.h"
@@ -84,6 +85,7 @@ dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #include "headers/network.h"
 #include "headers/register.h"
 #ifdef PHP_SUPPORT
+#include "headers/rayphp.h"
 #include "headers/php.h"
 #endif
 #include "headers/web.h"
