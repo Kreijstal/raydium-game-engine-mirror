@@ -52,6 +52,7 @@ echo "Quick configure script for Raydium 3D Game Engine"
 echo "  --help               this text"
 echo "  --install-ode        ODE local auto-install"
 echo "  --install-php        PHP 4 local auto-install"
+echo "  --disable-x          Disable X/GL/GLU test (server)"
 exit 0
 }
 
@@ -186,6 +187,14 @@ int main(void) { if(0) glVertex3f(0,0,0); return 0; }'
 test_build "$file" "-L/usr/X11R6/lib/ -lGL"
 exit_if_error "$?" "You must install opengl-devel package"
 
+
+disable_x="no";
+for i in "$@"; do
+    if [ $i = "--disable-x" ]; then
+    disable_x="yes";
+    fi
+done
+
 # Test GLU
 echo -n "* GLU lib :"
 
@@ -203,9 +212,11 @@ exit_if_error "$?" "You must install glu-devel package"
 #test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lglut"
 #exit_if_error "$?" "You must install glut-devel package"
 
+
 # Full GL/GLU test, looking for hardware accel
 echo -n "* GL/GLU and hardware support :"
 
+if [ $disable_x = "no" ]; then
 file='
 // define a dummy Raydium background for myglut :
 #define RAYDIUM_RENDERING_WINDOW      	    	0
@@ -233,6 +244,9 @@ return 0; }
 '
 test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
 exit_if_error "$?" "Full GL test failed, see configure.log"
+else
+echo " DISABLED";
+fi
 
 # OpenAL
 echo -n "* OpenAL :"
