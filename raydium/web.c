@@ -158,14 +158,20 @@ void raydium_web_request(int fd)
 	    }
 
 
+// POSIX layer, hmmm ?
+#ifdef WIN32
+#define _RAYDIUM_FILE_MODE (O_RDONLY|O_BINARY)
+#else
+#define _RAYDIUM_FILE_MODE O_RDONLY
+#endif
 
-
-	if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
+	if(( file_fd = open(&buffer[5],_RAYDIUM_FILE_MODE)) == -1) /* open the file for reading */
 	    {
 	    raydium_web_answer("error: Not found",fd);
 	    return;
 	    }
 
+#undef _RAYDIUM_FILE_MODE
 
 	raydium_log("web: ... sending '%s'",&buffer[5]);
 
@@ -236,12 +242,9 @@ if(!raydium_network_socket_is_readable(raydium_web_listenfd))
     return;
 
 length = sizeof(cli_addr);
-//raydium_network_set_socket_block_internal(raydium_web_listenfd,0);
 if((socketfd = accept(raydium_web_listenfd, (struct sockaddr *)&cli_addr, &length)) < 0)
-{
     return;
-}
-//raydium_network_set_socket_block_internal(raydium_web_listenfd,1);
+
 
 // /!\ FIXME ! must fork here. (see original nweb for details)
 raydium_web_request(socketfd);
