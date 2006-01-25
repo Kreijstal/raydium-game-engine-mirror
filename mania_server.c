@@ -25,6 +25,8 @@ char *index_text="\
 <a href=\"http://maniadrive.raydium.org/\">the ManiaDrive game</a>.</center><br/>\
 Here, you can find :<br/>\
 - <a href=\"data.dyn\">Informations about current party</a><br/>\
+- <a href=\"console.dyn\">Server console</a><br/>\
+<br>\
 - <a href=\"http://maniadrive.raydium.org/index.php?scores=all\">Live scores on the web</a><br/>\
 - <a href=\"http://maniadrive.raydium.org/\">Maniadrive website</a><br/>\
 - <a href=\"http://raydium.org/\">Game Engine: Raydium website</a><br/>\
@@ -109,12 +111,6 @@ if(steps>=PARTY_TIMEOUT)
 }
 
 
-void quit(int sig)
-{
-raydium_network_internal_dump();
-exit(0);
-}
-
 void broad(int type,char *buff)
 {
     raydium_network_broadcast(type,buff);
@@ -163,6 +159,26 @@ if(!strcmp("data.dyn",req))
     
     return 1;
     }
+
+
+if(!strcmp("console.dyn",req))
+    {
+    char *hist[RAYDIUM_CONSOLE_MAX_LINES];
+    int i,n;
+    
+    n=raydium_console_history_get(hist);
+
+    sprintf(response,"Server Console\n\
+    <i>Raydium console:</i><pre class=\"border_one\">");
+
+    for(i=0;i<n;i++)
+	sprintf(response+strlen(response),"%s\n",hist[i]);
+
+    sprintf(response+strlen(response),"</pre>");
+    sprintf(response+strlen(response),"<br/><a href=\"/\">Back</a>");
+    return 1;
+    }
+
 return 0;
 }
 
@@ -170,12 +186,7 @@ return 0;
 int main(int argc, char **argv)
 {
 int i;
-
-setbuf(stdout,NULL);
-signal(SIGINT,quit);
-raydium_php_init();
-raydium_network_init();
-raydium_network_server_create();
+raydium_network_only_init();
 
 raydium_web_init();
 raydium_web_start("ManiaDrive Server");
