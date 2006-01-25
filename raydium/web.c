@@ -290,6 +290,7 @@ IMG {border: 1px solid; margin: 5px;}\
 .redfont { color: #dd0000;}\
 .greenfont { color: #00dd00;}\
 .noborder { border : 0;}\
+.border_one { border: 1px dashed #ACACAC; background-color: #EEEEEE; }\
 -->\
 </style>\
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-15\"></head><body>\

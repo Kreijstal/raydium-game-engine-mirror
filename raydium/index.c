@@ -92,6 +92,7 @@
 #include "php.c"
 #include "rayphp.c"
 #endif
+#include "console.c"
 #include "web.c"
 #endif
 

@@ -83,6 +83,22 @@ Mostly reserved for internal use, but unless ##raydium_log##, this function will
 add the provided data only to ingame console, and not to "native" console.
 **/
 
+extern int raydium_console_history_get(char **hist);
+/**
+This function will build an history list.
+See this example :
+%%(c)
+char *hist[RAYDIUM_CONSOLE_MAX_LINES];
+int i,n;
+n=raydium_console_history_get(hist);
+for(i=0;i<n;i++)
+    printf("> %s\n",hist[i]);
+%%
+**Warning**: Be sure that there's no new history line between the call and
+the end of ##hist## usage (Or copy ##hist## to a safer place).
+**/
+
+
 extern void raydium_console_event (void);
 /**
 Internal use. Will switch console up and down.

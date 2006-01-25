@@ -244,6 +244,31 @@ if(raydium_console_line_last>=RAYDIUM_CONSOLE_MAX_LINES)
 strcpy(raydium_console_lines[raydium_console_line_last],str);
 }
 
+int raydium_console_history_get(char **hist)
+{
+int i,start,cpt=0;
+
+cpt=0;
+start=raydium_console_line_last;
+
+//for(i=RAYDIUM_CONSOLE_MAX_LINES-1;i>raydium_console_line_last;i--)
+for(i=raydium_console_line_last+1;i<RAYDIUM_CONSOLE_MAX_LINES;i++)
+ {
+ hist[cpt]=raydium_console_lines[i];
+ cpt++;
+ }
+
+//for(i=start;i>=0;i--)
+for(i=0;i<=start;i++)
+ {
+ hist[cpt]=raydium_console_lines[i];
+ cpt++;
+ }
+
+
+return cpt++;
+}
+
 void raydium_console_event(void)
 {
 #ifdef PHP_SUPPORT
@@ -268,8 +293,10 @@ else {
 void raydium_console_draw(void)
 {
 GLfloat y,off;
-int i,start;
+int i,cpt;
 int texsave;
+char *hist[RAYDIUM_CONSOLE_MAX_LINES];
+
 raydium_console_pos+=raydium_console_inc*(raydium_frame_time*100);
 
 if(raydium_console_pos<0)
@@ -312,18 +339,12 @@ raydium_console_cursor_blink+=(raydium_frame_time*2);
 raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s%c",raydium_console_get_string,( (((int)raydium_console_cursor_blink)%2)?'_':' '));
 y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
 
-start=raydium_console_line_last;
-for(i=start;i>=0;i--)
- {
- raydium_osd_color_ega('f');
- raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,raydium_console_lines[i]);
- y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
- }
+cpt=raydium_console_history_get(hist);
 
-for(i=RAYDIUM_CONSOLE_MAX_LINES-1;i>raydium_console_line_last;i--)
+for(i=cpt-1;i>=0;i--)
  {
  raydium_osd_color_ega('f');
- raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,raydium_console_lines[i]);
+ raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s",hist[i]);
  y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
  }
 
