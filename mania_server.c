@@ -3,8 +3,9 @@
 #define RAYDIUM_NETWORK_ONLY
 #include "raydium/index.c"
 
-#define PARTY_TIMEOUT   (5*60)
-#define REMAINING_SEND	5
+#define PARTY_TIMEOUT   	(5*60) // default : 5
+#define PARTY_SCORE_TIME	(10)
+#define REMAINING_SEND		5
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -101,7 +102,7 @@ void change_track_netcall(GLfloat step)
 {
 steps+=step;
 //printf("%f\n",steps);
-if(steps>=PARTY_TIMEOUT)
+if(steps>=(PARTY_TIMEOUT+PARTY_SCORE_TIME))
     {
     steps=0;
     // change map
