@@ -351,6 +351,8 @@ if(raydium_gui_isvisible())
 raydium_gui_show();
 raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
 change_music_volume(music_volume);
+raydium_video_open("mania_menu_v1.jpgs","video");
+raydium_osd_cursor_set("BOXmania_cursor.tga",4,6);
 }
 
 
@@ -1569,20 +1571,7 @@ if(strlen(mni_current)==0)
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
 
     if(!raydium_gui_isvisible())
-	{
-	
-	if(mode==MODE_SOLO)
-	    build_gui_Story();
-	else if(mode==MODE_MULTI)
-	    build_gui_Lan();
-	else if(mode==MODE_NET)
-	    build_gui_InternetTracks();
-	else
-	    build_gui_Main(); // MODE_NONE
-		
-	raydium_video_open("mania_menu_v1.jpgs","video");
-	raydium_osd_cursor_set("BOXcursor.tga",6,6);
-	}
+	build_gui_Main(); // MODE_NONE
 
     raydium_live_texture_mask_name("video",1);
     {
@@ -1889,7 +1878,6 @@ sound_owww=raydium_sound_LoadWav("owww.wav");
 raydium_sound_SetSourceLoop(sound_owww,0);
 
 
-//raydium_osd_cursor_set("BOXcursor.tga",4,4);
 strcpy(raydium_console_config_texture,"logo_console.tga");
 raydium_sky_box_cache();
 
