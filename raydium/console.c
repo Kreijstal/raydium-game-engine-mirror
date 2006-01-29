@@ -244,7 +244,7 @@ if(raydium_console_line_last>=RAYDIUM_CONSOLE_MAX_LINES)
 strcpy(raydium_console_lines[raydium_console_line_last],str);
 }
 
-int raydium_console_history_get(char **hist)
+int raydium_console_history_read(char **hist)
 {
 int i,start,cpt=0;
 
@@ -339,7 +339,7 @@ raydium_console_cursor_blink+=(raydium_frame_time*2);
 raydium_osd_printf(1,y,RAYDIUM_CONSOLE_FONT_SIZE,RAYDIUM_CONSOLE_FONT_SPACER,raydium_console_config_font,"%s%c",raydium_console_get_string,( (((int)raydium_console_cursor_blink)%2)?'_':' '));
 y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
 
-cpt=raydium_console_history_get(hist);
+cpt=raydium_console_history_read(hist);
 
 for(i=cpt-1;i>=0;i--)
  {

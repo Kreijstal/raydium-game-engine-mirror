@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # This a Python version of a Raydium's tutorial:
-# http://raydium.yoopla.org/wiki/TutorielUtiliserLaPhysique (fr)
-# http://raydium.yoopla.org/wiki/TutorialUsePhysics (bad en)
+# http://wiki.raydium.org/wiki/TutorielUtiliserLaPhysique (fr)
+# http://wiki.raydium.org/wiki/TutorialUsePhysics (bad en)
 
 # See gen_bindings.php to generate bindings and copy rayphp/ in this
 # directory to test this script.

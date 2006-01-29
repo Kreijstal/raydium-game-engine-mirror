@@ -167,7 +167,7 @@ if(!strcmp("console.dyn",req))
     char *hist[RAYDIUM_CONSOLE_MAX_LINES];
     int i,n;
     
-    n=raydium_console_history_get(hist);
+    n=raydium_console_history_read(hist);
 
     sprintf(response,"Server Console\n\
     <i>Raydium console:</i><pre class=\"border_one\">");
