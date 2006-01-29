@@ -52,6 +52,7 @@ echo "Quick configure script for Raydium 3D Game Engine"
 echo "  --help               this text"
 echo "  --install-ode        ODE local auto-install"
 echo "  --install-php        PHP 4 local auto-install"
+echo "  --ode-cvs            Use ODE CVS version"
 echo "  --disable-x          Disable X/GL/GLU test (server)"
 exit 0
 }
@@ -65,11 +66,26 @@ if [ -d "ode" ]; then
 fi
 
 # download
-echo "Downloading from CVS ..."
-cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
-exit_if_error "$?" "No cvs client installed ?"
-cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P ode
-exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
+
+if [ $ode_cvs = "true" ]; then
+    echo "Downloading from CVS ..."
+    cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
+    exit_if_error "$?" "No cvs client installed ?"
+    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P ode
+    exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
+else
+    echo "Downloading 'stable CVS' version from Raydium website ..."
+    if [ -f "ode.tar.gz" ]; then
+        rm -f ode.tar.gz
+    fi
+    wget -O ode.tar.gz http://raydium.org/data/stable_mirrors/ode.tar.gz
+    exit_if_error "$?" "Error downloading."
+
+    # uncompress
+    echo "Uncompressing ..."
+    tar xzf ode.tar.gz
+    exit_if_error "$?" "tar not found, or corrupted archive"
+fi
 
 # configure (step 1)
 echo '
@@ -160,6 +176,14 @@ for i in "$@"; do
     usage_print
     fi
 done
+
+ode_cvs="false"
+for i in "$@"; do
+    if [ $i = "--ode-cvs" ]; then
+    ode_cvs="true"
+    fi
+done
+
 
 for i in "$@"; do
     if [ $i = "--install-ode" ]; then
