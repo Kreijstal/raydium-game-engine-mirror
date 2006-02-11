@@ -223,9 +223,9 @@
 #define RAYDIUM_PARSER_TYPE_DEBUG		3
 #define RAYDIUM_PARSER_TYPE_RAWDATA		4
 
-#define RAYDIUM_OSD_FONT_SIZE_FACTOR		12
+#define RAYDIUM_OSD_FONT_SIZE_FACTOR		(12.f)
 
-#define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	50
+#define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	(50.f)
 
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
@@ -452,6 +452,7 @@ __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPA
 __global ALuint  raydium_sound_buffer[RAYDIUM_SOUND_NUM_BUFFERS];
 __global ALuint  raydium_sound_source[RAYDIUM_SOUND_NUM_SOURCES];
 __global ALfloat raydium_sound_source_fade_factor[RAYDIUM_SOUND_NUM_SOURCES];
+__global char    raydium_sound_source_fade_tofile[RAYDIUM_SOUND_NUM_SOURCES][RAYDIUM_MAX_NAME_LEN];
 __global ALfloat raydium_sound_DefaultReferenceDistance;
 __global int 	 raydium_sound;
 __global int 	 raydium_sound_top_buffer;

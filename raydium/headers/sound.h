@@ -261,8 +261,8 @@ Internal use.
 extern void raydium_sound_source_fade(int src, ALfloat len);
 /**
 This function will fade down source ##src## over ##len## seconds.
-Since gain is not linear, you may have to play with ##len## to
-find the correct value.
+Since gain is not linear, you may have to play a bit with ##len## to
+find the correct value for you.
 Use source 0 for music source.
 **/
 
@@ -275,6 +275,12 @@ raydium_sound_SetSourceLoop(sound,0);
 [...]
 if(explosion) raydium_sound_SourcePlay(sound);
 %%
+**/
+
+extern void raydium_sound_source_fade_to(int src, ALfloat len, char *to);
+/**
+Same as above, but plays ##to## file at the end of the fade.
+Warning: Works only for "music" source (##src## = 0).
 **/
 
 #endif

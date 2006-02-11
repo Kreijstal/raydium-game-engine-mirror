@@ -110,6 +110,7 @@ void raydium_sound_InitSource(int src)
    raydium_sound_verify("setting source loop state");
 
  raydium_sound_source_fade_factor[src]=0;
+ raydium_sound_source_fade_tofile[src][0]=0;
 }
 
 
@@ -827,8 +828,18 @@ for(i=0;i<raydium_sound_top_buffer;i++)
 	    {
 	    raydium_sound_source_fade_factor[i]=0;
 	    
-	    if(i==0)
+	    if(i==0) // music source
+		{
+		if(raydium_sound_source_fade_tofile[i][0]==0)
+		    {
 		    raydium_sound_load_music(NULL);
+		    }
+		else
+		    {
+		    raydium_sound_load_music(raydium_sound_source_fade_tofile[i]);
+		    raydium_sound_source_fade_tofile[i][0]=0;
+		    }
+		}
 	    else
 		    raydium_sound_SourceStop(i);
 	    }
@@ -843,3 +854,8 @@ raydium_sound_GetSourceGain(src,&g);
 raydium_sound_source_fade_factor[src]=-(g/len);
 }
 
+void raydium_sound_source_fade_to(int src, ALfloat len, char *to)
+{
+raydium_sound_source_fade(src,len);
+strcpy(raydium_sound_source_fade_tofile[src],to);
+}
