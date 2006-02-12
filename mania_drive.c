@@ -2,7 +2,7 @@
 // http://maniadrive.raydium.org/
 // Needs mania2.static / mania2.exe
 // and mania_server.static / mania_server.exe
-char *version="ManiaDrive 0.94";
+char *version="ManiaDrive 0.95";
 
 // TODO:
 // ... code :
@@ -14,6 +14,7 @@ char *version="ManiaDrive 0.94";
 #include "raydium/index.c"
 
 #include "mania.h"
+#include "mania_creds.h"
 
 #define NO_NETWORK_COLLISIONS
 
@@ -27,6 +28,8 @@ char *version="ManiaDrive 0.94";
 
 #define STORY_FILE		"mania_drive.story"
 #define HISTORY_STATE_FILE	"mania_drive.state"
+
+#define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
@@ -48,6 +51,7 @@ char draw_debug=-1;
 char is_explosive_tag=29;
 dReal cam_angle_h=0;
 dReal cam_angle_v=90;
+float scroll=-1;
 
 signed char camera_lag;
 float camera_lag_speed;
@@ -349,12 +353,27 @@ if(raydium_gui_isvisible())
     return;
 
 raydium_gui_show();
-raydium_sound_load_music("mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg");
+raydium_sound_load_music(MUSIC_MENU);
 change_music_volume(music_volume);
 raydium_video_open("mania_menu_v1.jpgs","video");
 raydium_osd_cursor_set("BOXmania_cursor.tga",4,6);
 }
 
+void credits_start(void)
+{
+// shhhh ... :)
+raydium_video_open("mania_creds.jpd","video2");
+raydium_sound_source_fade_to(0,1,"mania_creds.ogd");
+scroll=0;
+}
+
+void credits_stop(void)
+{
+raydium_video_delete_name("video2");
+raydium_sound_source_fade_to(0,1,MUSIC_MENU);
+build_gui_Main();
+scroll=-1;
+}
 
 void btnDriveNet(raydium_gui_Object *w)
 {
@@ -494,6 +513,13 @@ v=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
 change_music_volume(v);
 }
 
+void btnCredits(raydium_gui_Object *w)
+{
+btnStoryCompletedOk(NULL);
+raydium_gui_window_delete_name("menu");
+credits_start();
+}
+
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
@@ -547,8 +573,9 @@ raydium_gui_label_create("lblStoryCompleted1" ,handle,50.3,81,str1,0,0,0);
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblStoryCompleted2",handle,50,50,str2,0,0,0);
 
-raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnStoryCompletedOk",handle,35,15,"OK",btnStoryCompletedOk);
+raydium_gui_widget_sizes(18,5,18);
+raydium_gui_button_create("btnStoryCompletedOk",handle,15,15,"OK",btnStoryCompletedOk);
+raydium_gui_button_create("btnCredits",handle,55,15,"Credits !",btnCredits);
 
 raydium_gui_widget_focus_name("btnStoryCompletedOk","storycompleted");
 }
@@ -1511,7 +1538,8 @@ raydium_ode_object_move(a,pos);
 switch(dir)
     {
     case 'e':
-	return;
+	rot[2]=0;
+	break;
     case 'w':
 	rot[2]=M_PI;
 	break;
@@ -1561,6 +1589,58 @@ void display(void)
 dReal speed,accel;
 dReal direct;
 dReal *tmp;
+
+
+if(scroll>=0)
+    {
+    int i,cpt;
+    float y,tmp;
+    
+    if(scroll!=99999)
+	scroll+=raydium_frame_time*10; // must #define factor
+
+    if(raydium_key_last==1027)
+	credits_stop();
+    
+    raydium_clear_frame();
+    raydium_camera_look_at(0.1,0.1,0,0,1,0);
+
+    raydium_live_texture_mask_name("video2",1);
+
+    // draw credits
+    y=scroll;
+    cpt=0;
+    for(i=0;i<credits_nlines();i++)
+	{
+	if(y>-10 && y<110)
+	    {
+	    // centering ...
+	    tmp=30/RAYDIUM_OSD_FONT_SIZE_FACTOR;
+	    tmp=((strlen(credits_lines[i])-1)*tmp)/2;
+	    tmp=50-tmp;
+	    raydium_osd_printf(tmp+(SHADOW_OFFSET*3),y-(SHADOW_OFFSET*3),30,0.5,"font-impact.tga","^0%s",credits_lines[i]);
+	    raydium_osd_printf(tmp,y,30,0.5,"font-impact.tga","^f%s",credits_lines[i]);
+	    cpt++;
+	    }
+	y-=10; // per line step (must #define it)
+	}
+
+    draw_music_popup();
+
+//    raydium_log("%i %f",cpt,y);
+
+    if(cpt==0 && scroll!=99999)
+	{
+	GLfloat from[4]={0,0,0,0};
+	GLfloat to[4]={0,0,0,1};	
+	scroll=99999; // ugly :)
+	raydium_osd_fade_from(from,to,1,credits_stop);
+	}
+    raydium_rendering_finish();
+
+    return;
+    }
+
 
 
 if(strlen(mni_current)==0)

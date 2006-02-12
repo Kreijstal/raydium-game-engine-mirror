@@ -1,3 +1,5 @@
+// ManiaDrive Track Editor - CQFD Corp
+// http://maniadrive.raydium.org/
 char *version="0.30";
 char *title="CQFD Corp. Mania2";
 
