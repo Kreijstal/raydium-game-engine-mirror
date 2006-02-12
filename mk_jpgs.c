@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <dirent.h>
 
 char EXT[]=".jpg";
@@ -64,7 +66,8 @@ return 0;
 
 int main(int argc, char **argv)
 {
-int fps,sx,sy,total;
+float fps;
+int sx,sy,total;
 char out[512];
 char head[100];
 FILE *fpo;
@@ -80,7 +83,7 @@ if(argc!=5)
     exit(0);
     }
 
-fps=atoi(argv[1]);
+fps=atof(argv[1]);
 sx=atoi(argv[2]);
 sy=atoi(argv[3]);
 strcpy(out,argv[4]);
@@ -107,7 +110,7 @@ while ((tmp = readdir(dir)))
     }
 
 offset=0;
-sprintf(head,"%i %i %i %i|",fps,sx,sy,total);
+sprintf(head,"%f %i %i %i|",fps,sx,sy,total);
 fprintf(fpo,"%s",head);
 
 // header, second part
