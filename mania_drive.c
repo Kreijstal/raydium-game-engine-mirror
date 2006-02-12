@@ -1784,19 +1784,26 @@ tmp=raydium_ode_element_pos_get_name(cam);
 if(vue==3) 
     {
     dReal *pos;
+    dReal mpos[3];
+    dReal *vel;
     dReal cam[3];
     // get element position
     pos=raydium_ode_element_pos_get_name("corps");
+    vel=raydium_ode_element_linearvelocity_get_name("corps");
 
     // get position of camera in world coords
     raydium_ode_element_RelPointPos_name("corps",-1,0,0,cam);
 
     // correct z pos (always at top of the car, for example)
     cam[2]=pos[2]+0.4;
+
+    mpos[0]=pos[0]+vel[0];
+    mpos[1]=pos[1]+vel[1];
+    mpos[2]=pos[2]+vel[2];
     
     // standard smooth lookat camera
     if(camera_lag)
-      raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],
+      raydium_camera_smooth(cam[0],cam[1],cam[2],mpos[1],-mpos[2],mpos[0],
 			    70,0,raydium_frame_time*camera_lag_speed);
     else
       raydium_camera_look_at(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0]);
@@ -1973,7 +1980,7 @@ raydium_register_variable(&vue,RAYDIUM_REGISTER_INT,"vue");
 
 // read options
 raydium_parser_db_get("ManiaDrive-CameraLagActive",lagActive,"y");
-raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"3.0");
+raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"5.0");
 camera_lag=(lagActive[0]=='y'?1:0);
 sscanf(lagSpeed,"%f",&camera_lag_speed);
 
