@@ -98,11 +98,13 @@ char head[100];
 int head_end;
 int i,j,c;
 
+/*
 // we must find any previous load of this video
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if( raydium_video_video[i].state && 
 	!strcmp(raydium_video_video[i].name,filename))
 	    return i;
+*/
 
 id=raydium_video_find_free();
 
@@ -139,7 +141,7 @@ if(!head_end)
 head[head_end]=0;
 fseek(raydium_video_video[id].fp,head_end+1,SEEK_SET);
 
-sscanf(head,"%i %i %i %i",
+sscanf(head,"%f %i %i %i",
 &raydium_video_video[id].fps,
 &raydium_video_video[id].sizex,
 &raydium_video_video[id].sizey,
@@ -167,7 +169,7 @@ raydium_video_video[id].start=ftell(raydium_video_video[id].fp);
 raydium_video_video[id].last_decoded=-1;
 strcpy(raydium_video_video[id].name,filename);
 
-raydium_log("video: %s (%i) as live texture %s (%i), %ix%i %i fps (%i frames)",
+raydium_log("video: %s (%i) as live texture %s (%i), %ix%i %.2f fps (%i frames)",
 filename,id,as,raydium_video_video[id].live_id,
 raydium_video_video[id].sizex,raydium_video_video[id].sizey,
 raydium_video_video[id].fps,

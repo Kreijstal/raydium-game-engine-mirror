@@ -9,7 +9,7 @@ typedef struct raydium_video_Video
     FILE *fp;
     int sizex;
     int sizey;
-    int fps;
+    float fps;
     int frames_total;
     int live_id;
     float elapsed;
