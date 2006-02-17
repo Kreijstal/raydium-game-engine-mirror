@@ -627,6 +627,14 @@ int handle;
 int i,last,len;
 float pos;
 signed char completed;
+FILE *fp;
+
+while(fscanf(fp,"%s\n",ret)!=EOF )
+ {
+ fp=raydium_file_fopen(ret,"rt");
+ if(fp) fclose(fp);
+ }
+
 
 handle=raydium_gui_window_create("menu",48,10,50,80);
 
@@ -1010,7 +1018,7 @@ if(type==GAME_END)
 	    {
 	    // win
 	    if(timer<trackdata.author_time)
-		strcpy(message,"Impressive ! Author time is broken !");
+		strcpy(message,"Impressive ! Quicker than the author !");
 	    else
 		strcpy(message,"Right ! You got it.");
 	    
