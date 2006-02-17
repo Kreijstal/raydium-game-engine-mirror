@@ -627,14 +627,21 @@ int handle;
 int i,last,len;
 float pos;
 signed char completed;
-FILE *fp;
+FILE *fp,*fp2;
+
+fp=raydium_file_fopen(STORY_FILE,"rt");
+if(!fp) 
+    {
+    raydium_log("ERROR: cannot find story file ! abording ...");
+    exit(1);
+    }
 
 while(fscanf(fp,"%s\n",ret)!=EOF )
- {
- fp=raydium_file_fopen(ret,"rt");
- if(fp) fclose(fp);
- }
-
+    {
+    fp2=raydium_file_fopen(ret,"rt");
+    if(fp2) fclose(fp2);
+    }
+fclose(fp);
 
 handle=raydium_gui_window_create("menu",48,10,50,80);
 
@@ -1911,7 +1918,6 @@ int main(int argc, char **argv)
 {
 //char server[RAYDIUM_MAX_NAME_LEN];
 int i;
-FILE *fp;
 char str[RAYDIUM_MAX_NAME_LEN];
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
@@ -2010,13 +2016,6 @@ raydium_timecall_add(frame_step,-1);
 change_game_state(GAME_COUNTDOWN);
 message[0]=0;
 mode=MODE_NONE;
-fp=raydium_file_fopen(STORY_FILE,"rt");
-if(!fp) 
-    {
-    raydium_log("ERROR: cannot find story file ! abording ...");
-    exit(1);
-    }
-fclose(fp);
 
 raydium_sound_music_eof_callback=music_playlist;
 raydium_sound_music_changed_callback=music_change;
