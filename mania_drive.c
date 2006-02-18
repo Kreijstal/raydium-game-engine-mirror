@@ -614,6 +614,9 @@ raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnDriveNet);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+
+raydium_gui_label_create("lblURL1",handle,50,40,"Live scores :",0,0,0);
+raydium_gui_label_create("lblURL2",handle,50,30,"http://maniadrive.raydium.org/",0.7,0,0);
 gui_start();
 }
 
@@ -1035,7 +1038,7 @@ if(type==GAME_END)
 	else
 	    {
 	    // try again
-	    strcpy(message,"- Try again -");
+	    strcpy(message,"- Try again (press space key) -");
 	    }
 	}
 
@@ -1189,6 +1192,7 @@ int music_playlist(char *newfile)
 raydium_register_variable(newfile,RAYDIUM_REGISTER_STR,"raydium_ogg_file");
 raydium_php_exec("mania_playlist.php");
 raydium_register_variable_unregister_last();
+change_music_volume(music_volume);
 return strlen(newfile)!=0;
 }
 
@@ -1866,6 +1870,8 @@ speed/=4;
 speed+=0.5;
 speed+=(raydium_random_neg_pos_1()/15);
 raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
+
+change_music_volume(music_volume); // since eof callback will reset volume to 1
 
 raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font-impact.tga","^0track %s by %s",mni_current,trackdata.author);
 raydium_osd_printf(2,98,16,0.5,"font-impact.tga","^ftrack ^c%s^f by ^c%s^f",mni_current,trackdata.author);
