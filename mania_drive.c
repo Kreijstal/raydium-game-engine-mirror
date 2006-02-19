@@ -281,6 +281,10 @@ ret=system(str);
 if(ret!=0)
     {
     raydium_log("CANNOT GENERATE TRACK FROM MNI FILE '%s'",mni);
+
+    if(simple_mni)
+	exit(1);
+    
     return 0;
     }
 strcpy(mni_current,mni);
@@ -1048,6 +1052,9 @@ if(type==GAME_END)
 	p=post_score(mni_current,raydium_network_name_local,score);
 	if(p)
 	    sprintf(message,"Your place: %i",p);
+	else
+	    sprintf(message,"(unofficial track, no live score support)");
+	
 	}
     }
 
