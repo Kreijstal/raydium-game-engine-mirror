@@ -283,7 +283,6 @@ void raydium_init_args(int argc, char **argv)
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
 
-
 raydium_init_argc=argc;
 raydium_init_argv=malloc(argc*sizeof(char *));
 
@@ -302,5 +301,11 @@ if(raydium_init_cli_option("logfile",logfile))
 else raydium_log_file=NULL;
 
 raydium_log("command line args: OK");
+
+raydium_file_dirname(raydium_init_wd,raydium_init_argv[0]);
+if(!chdir(raydium_init_wd))
+    raydium_log("chdir to '%s': OK",raydium_init_wd);
+else
+    perror("chdir");    
 }
 

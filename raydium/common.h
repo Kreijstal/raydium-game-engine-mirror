@@ -120,6 +120,7 @@
 #define RAYDIUM_MAX_TEXTURES    	   	256
 #define RAYDIUM_MAX_LIGHTS         	     	8
 #define RAYDIUM_MAX_NAME_LEN     	   	255
+#define RAYDIUM_MAX_DIR_LEN     	   	4096
 #define RAYDIUM_MAX_OBJECTS		  	1024
 #define RAYDIUM_MAX_OBJECT_ANIMS		20
 #define RAYDIUM_MAX_OBJECT_ANIM_INSTANCES	64
@@ -241,6 +242,7 @@
 
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
+__global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
 
 __global int     raydium_key_last;
 __global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
