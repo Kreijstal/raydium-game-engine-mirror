@@ -76,9 +76,8 @@ if(raydium_console_pos && ( (key>=32 && key<127)
 else
  {
  raydium_key_last=key+1000;
-#ifdef DEBUG_KEYS
- raydium_log("normal key %i pressed",key+1000);
-#endif
+ if(raydium_key_trace)
+    raydium_log("normal key %i pressed",key+1000);
  }
 
 }
@@ -101,18 +100,16 @@ if(raydium_console_pos && key==GLUT_KEY_DOWN)
 key%=65536;
 raydium_key[key]=2;
 raydium_key_last=key;
-#ifdef DEBUG_KEYS
-raydium_log("special key %i down (normal key updated too)",key);
-#endif
+if(raydium_key_trace)
+    raydium_log("special key %i down (normal key updated too)",key);
 }
 
 void raydium_key_special_up_callback(GLuint key, int x, int y)
 {
 key%=65536;
 raydium_key[key]=0;
-#ifdef DEBUG_KEYS
-raydium_log("special key %i up",key);
-#endif
+if(raydium_key_trace)
+    raydium_log("special key %i up",key);
 }
 
 // moslty used for php

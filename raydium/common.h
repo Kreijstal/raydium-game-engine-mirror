@@ -246,6 +246,7 @@ __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
 
 __global int     raydium_key_last;
 __global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
+__global signed char    raydium_key_trace; // change this from ingame console !
 __global signed char    raydium_mouse_click;
 __global signed char    raydium_mouse_button[3];
 __global GLuint  raydium_mouse_x;

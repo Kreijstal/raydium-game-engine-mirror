@@ -209,6 +209,7 @@ raydium_register_function(C2PHP(raydium_capture_frame),"raydium_capture_frame");
 
 // key.c
 raydium_register_variable(&raydium_key_last,RAYDIUM_REGISTER_INT,"raydium_key_last");
+raydium_register_variable(&raydium_key_trace,RAYDIUM_REGISTER_SCHAR,"raydium_key_trace");
 raydium_register_function(C2PHP(raydium_key_pressed),"raydium_key_pressed");
 
 // mouse.c

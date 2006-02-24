@@ -96,6 +96,7 @@ if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
 glutIgnoreKeyRepeat(1);
 memset(raydium_key,0,RAYDIUM_KEYBOARD_SIZE);
 raydium_key_last=0;
+raydium_key_trace=0;
 raydium_log("keyboard: OK");
 }
 

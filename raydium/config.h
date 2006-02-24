@@ -34,9 +34,6 @@
 // Allow Xinerama Support for X11
 #define HAVE_XINERAMA
 
-// enable key traces
-//#define DEBUG_KEYS
-
 // will highlight triangle with tag != 0 at render time :
 //#define RENDER_DEBUG_TAG
 
