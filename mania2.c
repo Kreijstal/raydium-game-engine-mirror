@@ -1,6 +1,6 @@
 // ManiaDrive Track Editor - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="0.30";
+char *version="0.32";
 char *title="CQFD Corp. Mania2";
 
 // since we play with our own camera and not Raydium's one:
@@ -39,6 +39,8 @@ GLint curbox=0;
 GLint curangle=0;
 int pop_mode=POP_MODE_ELEM;
 char autotag=0;
+signed char view_glue=0;
+
 
 int n_boxpresets=0;	
 Box boxpreset[MAX_ELEMS];
@@ -178,7 +180,8 @@ raydium_gui_label_create("lblTitle",handle,50,93,"Key help for Mania2 Track Edit
 
 y=90;
 raydium_gui_widget_sizes(0,0,14);
-raydium_gui_label_create("lblh1",handle,50,y-=YDEC,"mouse left click : mouve view",0,0,0);
+raydium_gui_label_create("lblh0",handle,50,y-=YDEC,"mouse left click : mouve view",0,0,0);
+raydium_gui_label_create("lblh1",handle,50,y-=YDEC,"mouse right click : mouve view (glue)",0,0,0);
 raydium_gui_label_create("lblh2",handle,50,y-=YDEC,"+/- : change zoom",0,0,0);
 raydium_gui_label_create("lblh3",handle,50,y-=YDEC,"arrows : move block",0,0,0);
 raydium_gui_label_create("lblh4",handle,50,y-=YDEC,"pageUp/pageDown : change block",0,0,0);
@@ -188,6 +191,7 @@ raydium_gui_label_create("lblh6",handle,50,y-=YDEC,"tab : rotate block (90°)",0,
 raydium_gui_label_create("lblh7",handle,50,y-=YDEC,"space : add block",0,0,0);
 raydium_gui_label_create("lblh8",handle,50,y-=YDEC,"enter : switch between blocks and entities",0,0,0);
 raydium_gui_label_create("lbli8",handle,50,y-=YDEC,"m : open menu",0,0,0);
+raydium_gui_label_create("lblj8",handle,50,y-=YDEC,"shift + T : test track",0,0,0);
 raydium_gui_label_create("lblh9",handle,50,y-=YDEC,"esc : quits",0,0,0);
 y-=YDEC;
 raydium_gui_label_create("lblh10",handle,50,y-=YDEC,"               entities: ^agreen^0=start, ^cred^0=end, ^9blue^0=checkpoint, ^6yellow^0=turbo",0,0,0);
@@ -977,7 +981,7 @@ strcpy(current_track,sav);
 
 void mouse_n_keys_event(void)
 {
-GLfloat rotx,roty;
+static GLfloat rotx,roty;
 int window;
 
 if(raydium_key_last==1027) gui_exit();
@@ -1012,6 +1016,7 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
 
  if(raydium_key_last==1109) build_gui_menu(NULL);
 
+ if(raydium_key_last==1084) btnTest(NULL);
 
  if(curobj<0) curobj=0;
  if(curbox<0) curbox=0;
@@ -1021,14 +1026,25 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
  curangle%=360;
  if(modl_zoom<1) modl_zoom=1;
 
- // Camera
- if(raydium_mouse_button[0]) 
+ if(!view_glue)
+    rotx=roty=0;
+
+ if(raydium_mouse_button[1])
  {
+  view_glue=1;
   rotx=((float)raydium_mouse_x-((float)raydium_window_tx/(float)2)) * ((float)360/(float)raydium_window_tx);
   roty=((float)raydium_mouse_y-((float)raydium_window_ty/(float)2)) * ((float)360/(float)raydium_window_ty);
+ }
+
+ if(raydium_mouse_button[0]) 
+ {
+  view_glue=0;
+  rotx=((float)raydium_mouse_x-((float)raydium_window_tx/(float)2)) * ((float)360/(float)raydium_window_tx);
+  roty=((float)raydium_mouse_y-((float)raydium_window_ty/(float)2)) * ((float)360/(float)raydium_window_ty);
+ }
+
   glRotatef(roty,1,0,0);
   glRotatef(rotx,0,1,0);
- }
 } // end if "acess menu visible"
 
  glTranslatef(-px,-py,-pz);
@@ -1060,8 +1076,12 @@ update_vars();
 mouse_n_keys_event();
 
 glDisable(GL_TEXTURE_2D);
-draw_grid();
-draw_axes();
+
+if(!view_glue)
+    {
+    draw_grid();
+    draw_axes();
+    }
 
 for(i=0;i<MAX_ELEMS;i++)
   if(box[i].state)
