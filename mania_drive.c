@@ -2,11 +2,11 @@
 // http://maniadrive.raydium.org/
 // Needs mania2.static / mania2.exe
 // and mania_server.static / mania_server.exe
-char *version="ManiaDrive 0.95";
+char *version="ManiaDrive 0.96";
 
 // TODO:
 // ... code :
-// new camera code ?
+//
 // ... data :
 // new tracks (mainly for solo mode)
 // new road texture
@@ -46,7 +46,6 @@ GLfloat camx=-20;
 GLfloat camy=50;
 GLfloat camz=40;
 char cam[255];
-char record=-1;
 char draw_debug=-1;
 char is_explosive_tag=29;
 dReal cam_angle_h=0;
@@ -57,6 +56,7 @@ signed char camera_lag;
 float camera_lag_speed;
 signed char shadow_support;
 float music_volume;
+signed joystick_enabled;
 
 int object_ground,object_boxes;
 int game_state;
@@ -65,14 +65,13 @@ GLfloat countdown;
 GLfloat partytime;
 GLfloat yourbest;
 char mni_current[RAYDIUM_MAX_NAME_LEN];
+GLfloat track_bottom;
 char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
 signed char mode;
 signed char simple_mni=0;
 
 signed char music_popup_inc=-1;
-
-dReal ptmp=0;
 
 dReal gears[]={-0.4,0.4,0.6,0.8,0.9,1.0};
 int gear=1;
@@ -215,7 +214,6 @@ fclose(fp);
 
 void get_tracklist(char *list)
 {
-//printf("%i\n",raydium_network_internet_test());
 raydium_register_variable(list,RAYDIUM_REGISTER_STR,"list");
 raydium_php_exec("mania_tracklist.php");
 raydium_register_variable_unregister_last();
@@ -270,6 +268,8 @@ int mni_load(char *mni)
 {
 char str[RAYDIUM_MAX_NAME_LEN*2];
 char tri[RAYDIUM_MAX_NAME_LEN];
+GLfloat min[3];
+GLfloat max[3];
 int i,ret;
 
 if(!mni || !strlen(mni))
@@ -295,6 +295,8 @@ raydium_ode_ground_set_name(tri);
 unlink(tri);
 load_boxes("mania.box");
 dat_load("mania.dat");
+raydium_object_find_minmax(raydium_object_find(tri),min,max);
+track_bottom=min[2];
 
 if(mode!=MODE_SOLO)
     track_score.time=get_score(mni,track_score.player);
@@ -332,6 +334,14 @@ void btnCantDriveOk(raydium_gui_Object *w)
 raydium_gui_window_delete_name("cantdrive");
 }
 
+void btnKeyHelpOk(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN]; // useless
+joystick_enabled=raydium_gui_read_name("keyhelp","chkJoy",str);
+raydium_parser_db_set("ManiaDrive-JoystickEnabled",(joystick_enabled?"y":"n"));
+raydium_gui_window_delete_name("keyhelp");
+}
+
 
 void AfterFade(void)
 {
@@ -361,6 +371,7 @@ raydium_sound_load_music(MUSIC_MENU);
 change_music_volume(music_volume);
 raydium_video_open("mania_menu_v1.jpgs","video");
 raydium_osd_cursor_set("BOXmania_cursor.tga",4,6);
+raydium_ode_object_delete_name("WATURE");
 }
 
 void credits_start(void)
@@ -419,6 +430,43 @@ raydium_gui_label_create("lblCantDrive",handle,50,80,str,0,0,0);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnCantDriveOk",handle,35,15,"OK",btnCantDriveOk);
 }
+
+void btnKeyHelp(raydium_gui_Object *w)
+{
+int handle;
+
+handle=raydium_gui_window_create("keyhelp",5,45,50,50);
+
+raydium_gui_widget_sizes(5,5,25);
+raydium_gui_label_create("lblTitle",handle,50,90,"- Controls Help -",0.7,0,0);
+
+raydium_gui_widget_sizes(0,0,16);
+raydium_gui_label_create("lblKH10",handle,50,80,"Key Up : accelerate",0,0,0);
+raydium_gui_label_create("lblKH20",handle,50,75,"Key Down : brake / reverse",0,0,0);
+
+raydium_gui_label_create("lblKH30",handle,50,65,"Space : restart track",0,0,0);
+raydium_gui_label_create("lblKH40",handle,50,60,"Backspace : restart LAN clients",0,0,0);
+
+raydium_gui_label_create("lblKH50",handle,50,50,"F3 : default external view",0,0,0);
+raydium_gui_label_create("lblKH60",handle,50,45,"F6 : in-board view",0,0,0);
+
+raydium_gui_label_create("lblKH70",handle,50,35,"... and maybe hidden ones :)",0,0,0);
+
+// tagxf
+raydium_gui_widget_sizes(3,3,16);
+if(raydium_joy)
+    {
+    raydium_gui_check_create("chkJoy",handle,15,22,"joystick/joypad enabled",joystick_enabled);
+    }
+else
+    {
+    raydium_gui_label_create("lblKH80",handle,50,25,"(no joystick/joypad found)",0.3,0,0);
+    }
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnCantDriveOk",handle,35,5,"OK",btnKeyHelpOk);
+}
+
 
 void btnErrorOkClick(raydium_gui_Object *w)
 {
@@ -533,8 +581,6 @@ float t;
 char p[RAYDIUM_MAX_NAME_LEN];
 char str[RAYDIUM_MAX_NAME_LEN];
 int h,m,s,ms;
-
-//track_score.time=get_score(mni,track_score.player);
 
 raydium_gui_read_name("menu","cboTrack",track);
 
@@ -759,17 +805,20 @@ raydium_gui_widget_sizes(15,2,0);
 raydium_gui_track_create("trkMusicVol",handle,48,42, 0,100,music_volume*100);
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnMusicVolTest",handle,82,41,"test",btnMusicVolTest);
-//
 
 raydium_gui_widget_sizes(4,4,18);
 raydium_gui_check_create("chkShadow",handle,2,20," Shadow support (experimental)",shadow_support);
 
-
-raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnApply",handle,35,5,"Apply",btnApplyOptions);
-
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnApply",handle,30,5,"Apply",btnApplyOptions);
+
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnKeyHelp",handle,65,5,"Controls",btnKeyHelp);
+
 
 gui_start();
 }
@@ -1053,7 +1102,7 @@ if(type==GAME_END)
 	if(p)
 	    sprintf(message,"Your place: %i",p);
 	else
-	    sprintf(message,"(unofficial track, no live score support)");
+	    sprintf(message,"(unofficial track or connection failure)");
 	
 	}
     }
@@ -1615,6 +1664,7 @@ void display(void)
 dReal speed,accel;
 dReal direct;
 dReal *tmp;
+dReal *pos;
 
 
 if(scroll>=0)
@@ -1722,17 +1772,20 @@ accel=0.12;
 	{
         speed=raydium_joy_y*55;
 	raydium_ode_motor_power_max_name("moteur",accel);
+	raydium_particle_generator_enable_name("corps",1);
 	}
     else
     if(raydium_joy_y<0.3)
 	{
         speed=raydium_joy_y*5;
 	raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y);
+	raydium_particle_generator_enable_name("corps",0);
 	}
     else
 	{
 	speed=0;
 	raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y); // 0.2 ? joy_y ?
+	raydium_particle_generator_enable_name("corps",0);
 	}
 
 direct=raydium_joy_x*0.3;
@@ -1805,11 +1858,17 @@ raydium_light_position[0][3]=1.0;
 raydium_clear_frame();
 glLoadIdentity();
 
+pos=raydium_ode_element_pos_get_name("corps");
+if(pos[2]<track_bottom)
+    {
+    create_car();
+    return;
+    }
+
 // camera + drawing
 tmp=raydium_ode_element_pos_get_name(cam);
 if(vue==3) 
     {
-    dReal *pos;
     dReal mpos[3];
     dReal *vel;
     dReal cam[3];
@@ -2001,8 +2060,6 @@ raydium_register_variable(&camx,RAYDIUM_REGISTER_FLOAT,"camx");
 raydium_register_variable(&camy,RAYDIUM_REGISTER_FLOAT,"camy");
 raydium_register_variable(&camz,RAYDIUM_REGISTER_FLOAT,"camz");
 raydium_register_variable(&cam,RAYDIUM_REGISTER_STR,"cam");
-
-raydium_register_variable(&ptmp,RAYDIUM_REGISTER_FLOAT,"ptmp");
 raydium_register_variable(&vue,RAYDIUM_REGISTER_INT,"vue");
 
 // read options
@@ -2017,6 +2074,8 @@ shadow_support=atoi(str);
 raydium_parser_db_get("ManiaDrive-MusicVolume",str,"1.0");
 sscanf(str,"%f",&music_volume);
 
+raydium_parser_db_get("ManiaDrive-JoystickEnabled",str,"y");
+joystick_enabled=(str[0]=='y'?1:0);
 
 if(raydium_init_cli_option("mni",mni_current))
     {

@@ -61,7 +61,7 @@ ode_install()
 {
 echo "ODE Auto local installation ..."
 if [ -d "ode" ]; then
-    echo "ODE (partial ?) install detected, abort (ode/)"
+    echo "ODE (partial ?) install detected, abort (ode/). Try removing --ode-install or ode/ directory."
     exit 1
 fi
 
@@ -125,7 +125,7 @@ php_install()
 {
 echo "PHP4 Auto local installation ..."
 if [ -d "php" ]; then
-    echo "PHP (partial ?) install detected, abort (php/)"
+    echo "PHP (partial ?) install detected, abort (php/). Try removing --instal-php or php/ directory."
     exit 1
 fi
 
