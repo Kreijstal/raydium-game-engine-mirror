@@ -1755,7 +1755,19 @@ if(raydium_key_last==1027)
     }
 
 
-raydium_joy_key_emul();
+if(!joystick_enabled)
+    {
+    // all this should be Raydium's job, not our ...
+    int sav;
+    sav=raydium_joy;
+    raydium_joy=0;
+    raydium_joy_x=raydium_joy_y=0;
+    raydium_joy_key_emul();
+    raydium_joy=sav;
+    }
+else
+    raydium_joy_key_emul();
+
 
 if(raydium_key[GLUT_KEY_F1]) { raydium_projection_fov/=(1.04); raydium_window_view_update(); }
 if(raydium_key[GLUT_KEY_F2]) { raydium_projection_fov*=(1.04); raydium_window_view_update(); }
