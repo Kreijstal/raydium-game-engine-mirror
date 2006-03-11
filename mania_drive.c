@@ -1951,8 +1951,17 @@ raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
 
 change_music_volume(music_volume); // since eof callback will reset volume to 1
 
-raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font-impact.tga","^0track %s by %s",mni_current,trackdata.author);
-raydium_osd_printf(2,98,16,0.5,"font-impact.tga","^ftrack ^c%s^f by ^c%s^f",mni_current,trackdata.author);
+if( ((int)(timer/5.f)) % 2 )
+    {
+    raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font-impact.tga","^0track %s by %s",mni_current,trackdata.author);
+    raydium_osd_printf(2,98,16,0.5,"font-impact.tga","^ftrack ^c%s^f by ^c%s^f",mni_current,trackdata.author);
+    }
+else
+    {
+    raydium_osd_printf(2+SHADOW_OFFSET,98-SHADOW_OFFSET,16,0.5,"font-impact.tga","^0- %s -",trackdata.name);
+    raydium_osd_printf(2,98,16,0.5,"font-impact.tga","^f- ^c%s^f -",trackdata.name);
+    }
+
 
 if(strlen(message))
     {
