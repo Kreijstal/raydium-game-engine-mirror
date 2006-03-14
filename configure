@@ -118,6 +118,10 @@ make > ../configure.log
 ret=$?
 cd -
 exit_if_error "$?" "ODE Build failed (see configure.log)"
+echo "deleting ode.tar.gz"
+if [ -f "ode.tar.gz" ]; then
+    rm -f ode.tar.gz
+fi
 echo "- ODE seems ready -"
 }
 
