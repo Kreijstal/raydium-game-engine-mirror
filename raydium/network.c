@@ -540,11 +540,17 @@ raydium_network_uid=-1;
 raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_network_socket=-1;
 
+raydium_network_beacon[RAYDIUM_NETWORK_PACKET_OFFSET]=0;
+
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
     raydium_network_client[i]=0;
     raydium_network_name[i][0]=0;
     }
+
+for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+    raydium_network_server_list[i].ttl=0;
+
 }
 
 signed char raydium_network_init(void)
@@ -683,6 +689,7 @@ char dbl=0;
 
 raydium_network_timeout_check();
 raydium_network_queue_check_time();
+raydium_network_server_broadcast_check();
 
 len=sizeof(struct sockaddr);
 ret=recvfrom(raydium_network_socket,buff,RAYDIUM_NETWORK_PACKET_SIZE,0,&from,&len);
@@ -716,6 +723,16 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
  
  if(dbl) // discard double packet
     return(RAYDIUM_NETWORK_DATA_NONE);
+
+ // user must no see this type with netcalls !
+ if(*type==RAYDIUM_NETWORK_PACKET_SERVER_BEACON)
+    {
+    if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
+	{
+	raydium_log("***** debug - broad *****");
+	}
+    return(RAYDIUM_NETWORK_DATA_NONE);
+    }
  
  raydium_network_netcall_exec(*type,buff);
  
@@ -793,10 +810,73 @@ else return ret;
 }
 
 
+signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version)
+{
+int dec=0;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
+    {
+    raydium_log("network: ERROR: cannot set server broadcast attributes: not a server");
+    return 0;
+    }
+
+dec=RAYDIUM_NETWORK_PACKET_OFFSET;
+
+if( strlen(name)+strlen(app_or_mod)+dec+sizeof(version) >= 
+    RAYDIUM_NETWORK_PACKET_SIZE-10)
+    {
+    raydium_log("network: ERROR: cannot set server attributes: packet's too small");
+    return 0;   
+    }    
+
+dec=RAYDIUM_NETWORK_PACKET_OFFSET;
+raydium_network_beacon[dec]=1;
+dec++;
+memcpy(raydium_network_beacon+dec,&version,sizeof(version));
+dec+=sizeof(version);
+strcpy(raydium_network_beacon+dec,app_or_mod);
+dec+=(strlen(app_or_mod)+1);
+strcpy(raydium_network_beacon+dec,name);
+raydium_log("network: now broadcasting : '%s' (%s) version %i",name,app_or_mod,version);
+return 1;
+}
+
+void raydium_network_server_broadcast_check(void)
+{
+static time_t last=0;
+time_t now;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
+    return;
+
+// no beacon is ready ? (see _server_broadcast())
+if(!raydium_network_beacon[RAYDIUM_NETWORK_PACKET_OFFSET])
+    return;
+
+time(&now);
+if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
+    {
+    struct sockaddr_in sock;
+    sock.sin_family=AF_INET;
+    sock.sin_addr.s_addr=htonl(INADDR_BROADCAST);
+    sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+    raydium_network_write((struct sockaddr *)&sock,255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
+    last=now;
+    }
+}
+
+
 signed char raydium_network_server_create(void)
 {
 struct sockaddr_in sock;
+int on=1;
 int ret;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
+    {
+    raydium_log("network: ERROR: cannot create server : already connected");
+    return 0;
+    }
 
 raydium_network_start=time(NULL);
 raydium_network_socket=socket(AF_INET,RAYDIUM_NETWORK_UDP,0);
@@ -821,6 +901,7 @@ if(ret)
 
 raydium_log("network: server OK: waiting for clients (%i max) at udp port %i",RAYDIUM_NETWORK_MAX_CLIENTS,RAYDIUM_NETWORK_PORT);
 raydium_network_mode=RAYDIUM_NETWORK_MODE_SERVER;
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
 raydium_network_set_socket_block(0);
 return(1);
 }
@@ -834,6 +915,13 @@ int ret,empty;
 char str[RAYDIUM_NETWORK_PACKET_SIZE];
 signed char type;
 struct hostent *server_addr;
+int on=1;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
+    {
+    raydium_log("network: ERROR: cannot create client : already connected");
+    return 0;
+    }
 
 raydium_network_start=time(NULL);
 raydium_network_socket=socket(AF_INET,RAYDIUM_NETWORK_UDP,0);
@@ -868,6 +956,7 @@ if(ret)
     }
 raydium_log("network: connecting to %s and waiting UID...",server);
 raydium_network_set_socket_block(1);
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
 // needed now, because we use network_write
 raydium_network_mode=RAYDIUM_NETWORK_MODE_CLIENT;
 // we need to send request for uid (and send our name)
@@ -903,8 +992,50 @@ if(type==RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE)
 raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_log("ERROR ! network: unknow server message type (%i). abort.",type);
 return(0);
-
 }
+
+
+signed char raydium_network_client_discover(char *game,int version)
+{
+struct sockaddr_in sock;
+int on=1;
+int ret;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
+    {
+    raydium_log("network: ERROR: cannot create discover : already connected");
+    return 0;
+    }
+
+raydium_network_start=time(NULL);
+raydium_network_socket=socket(AF_INET,RAYDIUM_NETWORK_UDP,0);
+if(raydium_network_socket==-1)
+    {
+    raydium_log("ERROR ! network: cannot create discover socket");
+    perror("System");
+    return(0);
+    }
+raydium_log("network: discover socket created");
+
+sock.sin_family=AF_INET;
+sock.sin_addr.s_addr=htonl(INADDR_ANY);
+sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+ret=bind(raydium_network_socket,(struct sockaddr *)&sock,sizeof(sock));
+if(ret)
+    {
+    raydium_log("ERROR ! network: cannot open discover socket (already used ?)");
+    perror("System");
+    return(0);
+    }
+
+// need to copy game+version somewhere, here
+raydium_network_mode=RAYDIUM_NETWORK_MODE_DISCOVER;
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
+raydium_network_set_socket_block(0);
+raydium_log("network: discover OK: waiting for server beacons with '%s' (version %i)",game,version);
+return 1;
+}
+
 
 void raydium_network_client_disconnect(void)
 {

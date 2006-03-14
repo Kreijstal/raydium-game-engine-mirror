@@ -164,15 +164,19 @@
 #define RAYDIUM_NETWORK_TIMEOUT			10
 #define RAYDIUM_NETWORK_PACKET_OFFSET		4
 #define RAYDIUM_NETWORK_MAX_CLIENTS		8
+#define RAYDIUM_NETWORK_MAX_SERVERS		32 // LAN server list
 #define RAYDIUM_NETWORK_TX_QUEUE_SIZE		128
 #define RAYDIUM_NETWORK_MAX_TRIES		8
 #define RAYDIUM_NETWORK_MAX_NETCALLS 		32
 #define RAYDIUM_NETWORK_MAX_PROPAGS 		32
 #define RAYDIUM_NETWORK_ACK_DELAY_MAX		2
 #define RAYDIUM_NETWORK_PROPAG_HEAD		sizeof(int)
+#define RAYDIUM_NETWORK_BEACON_DELAY		1 // 5
+#define RAYDIUM_NETWORK_BEACON_DEFAULT_TTL	15
 #define RAYDIUM_NETWORK_MODE_NONE		0
 #define RAYDIUM_NETWORK_MODE_CLIENT		1
 #define RAYDIUM_NETWORK_MODE_SERVER		2
+#define RAYDIUM_NETWORK_MODE_DISCOVER		3
 //#define RAYDIUM_NETWORK_TCP			SOCK_STREAM
 #define RAYDIUM_NETWORK_UDP			SOCK_DGRAM
 #define RAYDIUM_NETWORK_DATA_OK			1
@@ -185,6 +189,7 @@
 #define RAYDIUM_NETWORK_PACKET_REQUEST_UID		4
 #define RAYDIUM_NETWORK_PACKET_INFO_NAME		5
 #define RAYDIUM_NETWORK_PACKET_ACK			6
+#define RAYDIUM_NETWORK_PACKET_SERVER_BEACON		7
 #define RAYDIUM_NETWORK_PACKET_ODE_DATA			10
 #define RAYDIUM_NETWORK_PACKET_ODE_NEWELEM		11
 #define RAYDIUM_NETWORK_PACKET_ODE_REMELEM		12
@@ -451,6 +456,19 @@ typedef struct raydium_network_Propag
     } raydium_network_Propag;
 
 __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPAGS];
+
+typedef struct raydium_network_Beacon
+    {
+    int id;
+    unsigned long ttl; // 0 means "free"
+    char name[RAYDIUM_MAX_NAME_LEN];
+    char ip[RAYDIUM_MAX_NAME_LEN];
+    //char app_or_mod[RAYDIUM_MAX_NAME_LEN];
+    //int version;
+    } raydium_network_Beacon;
+
+__global raydium_network_Beacon raydium_network_server_list[RAYDIUM_NETWORK_MAX_SERVERS];
+__global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 
 __global ALuint  raydium_sound_buffer[RAYDIUM_SOUND_NUM_BUFFERS];
 __global ALuint  raydium_sound_source[RAYDIUM_SOUND_NUM_SOURCES];

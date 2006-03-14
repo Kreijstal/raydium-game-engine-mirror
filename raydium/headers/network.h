@@ -356,6 +356,7 @@ This function uses the same arguments as previous one, except ##to## and
 ##from##, not needed here.
 **/
 
+
 extern signed char raydium_network_read (int *id, signed char *type, char *buff);
 /**
 Reads next packet from network (FIFO) stack.
@@ -373,6 +374,22 @@ be read (if any).
 As you may miss some important informations, you can use netcalls 
 (see above) if you want to capture packets with a particular 
 type, even with flushed reading.
+**/
+
+signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version);
+/**
+This function will start to broadcast a server to the LAN.
+You must provide a party ##name##, the application or mod name (##app_or_mod##)
+and a "protocol" version of you choice.
+The server is going to broadcast a "beacon" packet  to the LAN 
+every ##RAYDIUM_NETWORK_BEACON_DELAY##.
+Any client in "discovery mode" with the same ##app_or_mod## and ##version##
+will see this beacon.
+**/
+
+void raydium_network_server_broadcast_check(void);
+/**
+Internal use.
 **/
 
 extern signed char raydium_network_server_create (void);
@@ -393,6 +410,14 @@ You are connected instantaneously, and you must start sending data
 before server timeout (defined by ##RAYDIUM_NETWORK_TIMEOUT##).
 You player number can be found with ##raydium_network_uid## variable, 
 as said before.
+**/
+
+signed char raydium_network_client_discover(char *game,int version);
+/**
+This function will set client in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode.
+While using this mode, a client will search every LAN server with the
+same ##game## (or mod name) and ##version## as itself.
+Then, you can access to this server list using [undocumented yet].
 **/
 
 extern void raydium_network_client_disconnect(void);
