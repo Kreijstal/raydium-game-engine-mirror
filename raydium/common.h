@@ -75,6 +75,11 @@
 #include <pwd.h>
 #endif
 
+#ifdef linux
+#include <linux/if.h>
+#include <linux/sockios.h>
+#endif
+
 #include <errno.h>
 #include "config.h"
 
@@ -469,6 +474,12 @@ typedef struct raydium_network_Beacon
 
 __global raydium_network_Beacon raydium_network_server_list[RAYDIUM_NETWORK_MAX_SERVERS];
 __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
+
+#ifdef linux
+#define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX	8
+__global int raydium_network_broadcast_interface_index;
+__global struct sockaddr_in raydium_network_broadcast_interfaces[RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX];
+#endif
 
 __global ALuint  raydium_sound_buffer[RAYDIUM_SOUND_NUM_BUFFERS];
 __global ALuint  raydium_sound_source[RAYDIUM_SOUND_NUM_SOURCES];

@@ -451,4 +451,11 @@ This function will test if direct internet connection is available,
 using a DNS root server. Use with caution.
 **/
 
+#ifdef linux
+extern signed char raydium_network_linux_find_broadcast_interfaces(void);
+/**
+Internal use. Linux only.
+**/
+#endif
+
 #endif

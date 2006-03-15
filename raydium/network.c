@@ -729,6 +729,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     {
     if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
 	{
+	// must store "from, too"
 	raydium_log("***** debug - broad *****");
 	}
     return(RAYDIUM_NETWORK_DATA_NONE);
@@ -856,11 +857,18 @@ if(!raydium_network_beacon[RAYDIUM_NETWORK_PACKET_OFFSET])
 time(&now);
 if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
     {
+#ifdef linux
+    int i;
+    for(i=0;i<raydium_network_broadcast_interface_index;i++)
+	    raydium_network_write((struct sockaddr *)&raydium_network_broadcast_interfaces[i],
+	    255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
+#else
     struct sockaddr_in sock;
     sock.sin_family=AF_INET;
     sock.sin_addr.s_addr=htonl(INADDR_BROADCAST);
     sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
     raydium_network_write((struct sockaddr *)&sock,255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
+#endif
     last=now;
     }
 }
@@ -898,6 +906,10 @@ if(ret)
     perror("System");
     return(0);
     }
+
+#ifdef linux
+raydium_network_linux_find_broadcast_interfaces();
+#endif
 
 raydium_log("network: server OK: waiting for clients (%i max) at udp port %i",RAYDIUM_NETWORK_MAX_CLIENTS,RAYDIUM_NETWORK_PORT);
 raydium_network_mode=RAYDIUM_NETWORK_MODE_SERVER;
@@ -1214,3 +1226,106 @@ if (select(sockfd + 1, NULL, &writable, NULL, &timeout) <= 0 || errno==ENETUNREA
 close(sockfd);
 return 1; // writable
 }
+
+
+#ifdef linux
+signed char raydium_network_linux_find_broadcast_interfaces(void)
+{
+int fd,len, ifflags;
+struct sockaddr_in addr;
+struct ifconf ifconf;
+struct ifreq *ifreqp, ifreq, ifbuf[RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX];
+char name[RAYDIUM_MAX_NAME_LEN];
+char msg[RAYDIUM_MAX_NAME_LEN];
+
+msg[0]=0;
+raydium_network_broadcast_interface_index=0;
+
+if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) 
+    {
+    raydium_log("network: linux broadcast find interfaces: ERROR");
+    perror("socket");
+    return 0;
+    }
+
+ifconf.ifc_len = sizeof(ifbuf);
+ifconf.ifc_buf = (caddr_t)ifbuf;
+memset((void *)ifbuf, 0, sizeof(ifbuf));
+
+if (ioctl(fd, SIOCGIFCONF, (char *)&ifconf) == -1) 
+    {
+    raydium_log("network: linux broadcast find interfaces: ERROR");
+    perror("ioctl SIOCGIFCONF");
+    close(fd);
+    return 0;
+    }
+
+for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
+    {
+    ifreqp = (struct ifreq *)&ifconf.ifc_buf[len];
+
+
+    len += sizeof(struct ifreq);
+
+    if (ifreqp->ifr_addr.sa_family != AF_INET)
+	    continue;
+
+    addr = *(struct sockaddr_in *)&ifreqp->ifr_addr;
+    strcpy(name,ifreqp->ifr_name);
+    //printf("interface name %s\n", ifreqp->ifr_name);
+    //printf("\taddress %s\n", inet_ntoa(addr.sin_addr));
+
+    ifreq = *ifreqp;
+    if (ioctl(fd, SIOCGIFFLAGS, (char *)&ifreq) == -1) 
+	{
+	raydium_log("network: linux broadcast find interfaces: ERROR");
+	perror("ioctl SIOCGIFFLAGS");
+	continue;
+	}
+
+    ifflags = ifreq.ifr_flags;
+
+    // interface up ?
+    if ((ifflags & IFF_UP) == 0) 
+	continue;
+
+    // running ?
+    if ((ifflags & IFF_RUNNING) == 0)
+	continue;
+
+    // is loopback ?
+    if ((ifflags & IFF_LOOPBACK) != 0) 
+	continue;
+
+    // can broadcast ?
+    if ((ifflags & IFF_BROADCAST) == 0)
+	continue;
+    
+    ifreq = *ifreqp;
+
+    if (ioctl(fd, SIOCGIFBRDADDR, (char *)&ifreq) == -1) 
+	{
+	perror("ioctl SIOCGIFBRDADDR");
+	continue;
+	}
+
+    addr = *(struct sockaddr_in *)&ifreq.ifr_addr;
+
+    //memset(&full_addr, 0, sizeof(full_addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port=htons(RAYDIUM_NETWORK_PORT);
+    //s.sin_addr.s_addr=htonl(INADDR_BROADCAST); // tagxf
+    //memcpy(&(full_addr.sin_addr),&addr.sin_addr,sizeof(struct in_addr));
+    memcpy( &raydium_network_broadcast_interfaces[raydium_network_broadcast_interface_index],
+	    &addr,sizeof(addr));
+    //printf("\tbroadcast address %s\n", inet_ntoa(addr.sin_addr));
+    strcat(msg,name);
+    strcat(msg,"");
+    raydium_network_broadcast_interface_index++;
+    }
+
+close(fd);
+raydium_log("network: linux broadcast interface(s): %s",msg);
+return 1;
+}
+#endif
