@@ -188,6 +188,7 @@ int main(int argc, char **argv)
 {
 int i;
 raydium_network_only_init();
+raydium_network_server_broadcast("My Server","ManiaDrive",10);
 
 raydium_web_init();
 raydium_web_start("ManiaDrive Server");

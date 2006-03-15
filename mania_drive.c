@@ -751,6 +751,7 @@ char server[RAYDIUM_MAX_NAME_LEN];
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 raydium_parser_db_get("ManiaDrive-Server",server,"192.168.0.1");
 
+raydium_network_client_discover("ManiaDrive",10);
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
 
