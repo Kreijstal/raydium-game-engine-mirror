@@ -376,6 +376,14 @@ As you may miss some important informations, you can use netcalls
 type, even with flushed reading.
 **/
 
+extern void raydium_network_read_faked(void);
+/**
+Reads from network, but do not care of received data. This is useful for
+listen to internal packets (server "beacon" broadcasts, for example).
+Reading is done thru ##raydium_network_read_flushed##.
+Mostly for internal use.
+**/
+
 signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version);
 /**
 This function will start to broadcast a server to the LAN.

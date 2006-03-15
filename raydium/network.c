@@ -810,6 +810,14 @@ if(data)
 else return ret;
 }
 
+void raydium_network_read_faked(void)
+{
+int id;
+signed char type;
+char buff[RAYDIUM_NETWORK_PACKET_SIZE];
+
+raydium_network_read_flushed(&id,&type,buff);
+}
 
 signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version)
 {
@@ -1320,7 +1328,7 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
 	    &addr,sizeof(addr));
     //printf("\tbroadcast address %s\n", inet_ntoa(addr.sin_addr));
     strcat(msg,name);
-    strcat(msg,"");
+    strcat(msg," ");
     raydium_network_broadcast_interface_index++;
     }
 
