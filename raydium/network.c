@@ -921,7 +921,7 @@ raydium_network_linux_find_broadcast_interfaces();
 
 raydium_log("network: server OK: waiting for clients (%i max) at udp port %i",RAYDIUM_NETWORK_MAX_CLIENTS,RAYDIUM_NETWORK_PORT);
 raydium_network_mode=RAYDIUM_NETWORK_MODE_SERVER;
-setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 raydium_network_set_socket_block(0);
 return(1);
 }
@@ -976,7 +976,7 @@ if(ret)
     }
 raydium_log("network: connecting to %s and waiting UID...",server);
 raydium_network_set_socket_block(1);
-setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 // needed now, because we use network_write
 raydium_network_mode=RAYDIUM_NETWORK_MODE_CLIENT;
 // we need to send request for uid (and send our name)
@@ -1050,7 +1050,7 @@ if(ret)
 
 // need to copy game+version somewhere, here
 raydium_network_mode=RAYDIUM_NETWORK_MODE_DISCOVER;
-setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,&on,sizeof(on));
+setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 raydium_network_set_socket_block(0);
 raydium_log("network: discover OK: waiting for server beacons with '%s' (version %i)",game,version);
 return 1;
