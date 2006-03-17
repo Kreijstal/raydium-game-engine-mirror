@@ -428,6 +428,41 @@ same ##game## (or mod name) and ##version## as itself.
 Then, you can access to this server list using [undocumented yet].
 **/
 
+int raydium_network_discover_numservers(void);
+/**
+While the client is in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode, you
+can fetch all "detected" servers in the LAN.
+This function will return :
+ - -1 : "not in discovery mode". See ##raydium_network_client_discover()##.
+ - 0 : no server detected (yet ... try during next frame)
+ - more : total number of compatible servers (same game/application 
+ and protocol version)
+**/
+
+signed char raydium_network_discover_getserver(int num, char *name, char *ip);
+/**
+Use this function with the help of ##raydium_network_discover_numservers()##, 
+with something like :
+%%(c)
+int i;
+char name[RAYDIUM_MAX_NAME_LEN];
+char ip[RAYDIUM_MAX_NAME_LEN];
+...
+for(i=0;i<raydium_network_discover_numservers();i++)
+    {
+    raydium_network_discover_getserver(i,name,ip);
+    raydium_log("server %02i: %s (%s)",i,name,ip);
+    }
+
+No memory allocation is done for ##name## and ##ip##. It's your job.
+
+This function will return :
+ - -1 : "not in discovery mode". See ##raydium_network_client_discover()##.
+ - 0 : invalid ##num##.
+ - 1 : OK.
+%%
+**/
+
 extern void raydium_network_client_disconnect(void);
 /**
 This function will disconnect client from server, if connected.

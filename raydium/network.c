@@ -541,6 +541,7 @@ raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_network_socket=-1;
 
 raydium_network_beacon[RAYDIUM_NETWORK_PACKET_OFFSET]=0;
+raydium_network_beacon_search.active=0;
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
@@ -549,7 +550,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     }
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
-    raydium_network_server_list[i].ttl=0;
+    raydium_network_server_list[i].when=0;
 
 }
 
@@ -727,10 +728,71 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
  // user must no see this type with netcalls !
  if(*type==RAYDIUM_NETWORK_PACKET_SERVER_BEACON)
     {
-    if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
-	{
-	// must store "from, too"
-	raydium_log("***** debug - broad *****");
+    if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER && 
+       raydium_network_beacon_search.active)
+	{	
+	time_t now;
+	int id;
+	int dec;
+	int version;
+	char *app_or_mod;
+	char *name;
+	int slot;
+
+	time(&now);
+	// must store "from.sin_addr, too"
+	//raydium_log("***** debug - broad *****");
+
+	// search for outdated slots
+	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+	    if(raydium_network_server_list[i].when!=0)
+		if(raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
+		    raydium_network_server_list[i].when=0;
+
+	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
+	dec++; // 1st byte is useless for us (server side flag)
+
+	memcpy(&id,raydium_network_beacon+dec,sizeof(id));
+	dec+=sizeof(id);
+
+	// search id -> id already found -> update time -> return
+	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+	    if(raydium_network_server_list[i].when!=0)
+		if(raydium_network_server_list[i].id==id)
+		    {
+		    raydium_network_server_list[i].when=now;
+		    return(RAYDIUM_NETWORK_DATA_NONE);
+		    }
+
+	memcpy(&version,raydium_network_beacon+dec,sizeof(version));
+	dec+=sizeof(version);
+
+	app_or_mod=raydium_network_beacon+dec;
+	dec+=(strlen(app_or_mod)+1);
+	
+	// else -> id not found -> test game+version
+	if(version != raydium_network_beacon_search.version ||
+	   strcmp(app_or_mod,raydium_network_beacon_search.app_or_mod))
+		return(RAYDIUM_NETWORK_DATA_NONE); // not for us ...
+
+	name=raydium_network_beacon+dec;	
+
+	// true -> search free -> add server
+	slot=-1;
+	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+	    if(raydium_network_server_list[i].when==0)
+		slot=i;
+
+	if(slot<0)
+	    {
+	    raydium_log("network: discover: too much server in this LAN ! (max=%i)",RAYDIUM_NETWORK_MAX_SERVERS);
+	    return(RAYDIUM_NETWORK_DATA_NONE);
+	    }
+
+	raydium_network_server_list[slot].id=id;
+	raydium_network_server_list[slot].when=now;
+	strcpy(raydium_network_server_list[slot].name,name);
+	strcpy(raydium_network_server_list[slot].ip,inet_ntoa(((struct sockaddr_in *)(&from))->sin_addr));
 	}
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
@@ -822,6 +884,7 @@ raydium_network_read_flushed(&id,&type,buff);
 signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version)
 {
 int dec=0;
+int id;
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
     {
@@ -831,16 +894,18 @@ if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
 
 dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 
-if( strlen(name)+strlen(app_or_mod)+dec+sizeof(version) >= 
+if( strlen(name)+strlen(app_or_mod)+dec+sizeof(version)+sizeof(id) >= 
     RAYDIUM_NETWORK_PACKET_SIZE-10)
     {
     raydium_log("network: ERROR: cannot set server attributes: packet's too small");
     return 0;   
     }    
-
+id=rand();
 dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 raydium_network_beacon[dec]=1;
 dec++;
+memcpy(raydium_network_beacon+dec,&id,sizeof(id)); // server id
+dec+=sizeof(id);
 memcpy(raydium_network_beacon+dec,&version,sizeof(version));
 dec+=sizeof(version);
 strcpy(raydium_network_beacon+dec,app_or_mod);
@@ -1048,11 +1113,66 @@ if(ret)
     return(0);
     }
 
-// need to copy game+version somewhere, here
+raydium_network_beacon_search.active=1;
+strcpy(raydium_network_beacon_search.app_or_mod,game);
+raydium_network_beacon_search.version=version;
 raydium_network_mode=RAYDIUM_NETWORK_MODE_DISCOVER;
 setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 raydium_network_set_socket_block(0);
 raydium_log("network: discover OK: waiting for server beacons with '%s' (version %i)",game,version);
+return 1;
+}
+
+
+// return :
+// -1 : not in discover mode
+// 0 and more : number of broadcasting servers
+int raydium_network_discover_numservers(void)
+{
+int i;
+int cpt=0;
+
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_DISCOVER ||
+   !raydium_network_beacon_search.active)
+    return -1;
+
+for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+    if(raydium_network_server_list[i].when!=0)
+	cpt++;
+
+return cpt;
+}
+
+// "num" starts from 0 to raydium_network_discover_numservers()-1
+// return :
+// -1 : not in discover mode
+// 0 : "num" is invalid
+// 1 : ok
+signed char raydium_network_discover_getserver(int num, char *name, char *ip)
+{
+int i,cpt;
+int slot=-1;
+
+if( raydium_network_mode!=RAYDIUM_NETWORK_MODE_DISCOVER ||
+   !raydium_network_beacon_search.active)
+    return -1;
+
+for(cpt=0,i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+    if(raydium_network_server_list[i].when!=0)
+	{
+	if(cpt==num)
+	    {
+	    slot=i;
+	    break;
+	    }
+	cpt++;
+	}
+
+if(slot<0)
+    return 0;
+
+strcpy(name,raydium_network_server_list[slot].name);
+strcpy(ip,raydium_network_server_list[slot].ip);
 return 1;
 }
 
@@ -1280,7 +1400,6 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
 
     addr = *(struct sockaddr_in *)&ifreqp->ifr_addr;
     strcpy(name,ifreqp->ifr_name);
-    //printf("interface name %s\n", ifreqp->ifr_name);
     //printf("\taddress %s\n", inet_ntoa(addr.sin_addr));
 
     ifreq = *ifreqp;
@@ -1319,14 +1438,10 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
 
     addr = *(struct sockaddr_in *)&ifreq.ifr_addr;
 
-    //memset(&full_addr, 0, sizeof(full_addr));
     addr.sin_family = AF_INET;
     addr.sin_port=htons(RAYDIUM_NETWORK_PORT);
-    //s.sin_addr.s_addr=htonl(INADDR_BROADCAST); // tagxf
-    //memcpy(&(full_addr.sin_addr),&addr.sin_addr,sizeof(struct in_addr));
     memcpy( &raydium_network_broadcast_interfaces[raydium_network_broadcast_interface_index],
-	    &addr,sizeof(addr));
-    //printf("\tbroadcast address %s\n", inet_ntoa(addr.sin_addr));
+	    &addr,sizeof(addr)); // broadcast address
     strcat(msg,name);
     strcat(msg," ");
     raydium_network_broadcast_interface_index++;

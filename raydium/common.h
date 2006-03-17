@@ -465,15 +465,21 @@ __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPA
 typedef struct raydium_network_Beacon
     {
     int id;
-    unsigned long ttl; // 0 means "free"
     char name[RAYDIUM_MAX_NAME_LEN];
     char ip[RAYDIUM_MAX_NAME_LEN];
-    //char app_or_mod[RAYDIUM_MAX_NAME_LEN];
-    //int version;
+    unsigned long when; // 0 means "free"
     } raydium_network_Beacon;
+
+typedef struct raydium_network_BeaconSearch
+    {
+    signed char active;
+    char app_or_mod[RAYDIUM_MAX_NAME_LEN];
+    int version;
+    } raydium_network_BeaconSearch;
 
 __global raydium_network_Beacon raydium_network_server_list[RAYDIUM_NETWORK_MAX_SERVERS];
 __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
+__global raydium_network_BeaconSearch raydium_network_beacon_search;
 
 #ifdef linux
 #define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX	8
