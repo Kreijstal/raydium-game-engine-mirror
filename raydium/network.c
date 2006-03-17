@@ -752,7 +752,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 	dec++; // 1st byte is useless for us (server side flag)
 
-	memcpy(&id,raydium_network_beacon+dec,sizeof(id));
+	memcpy(&id,buff+dec,sizeof(id));
 	dec+=sizeof(id);
 
 	// search id -> id already found -> update time -> return
@@ -764,10 +764,11 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 		    return(RAYDIUM_NETWORK_DATA_NONE);
 		    }
 
-	memcpy(&version,raydium_network_beacon+dec,sizeof(version));
+
+	memcpy(&version,buff+dec,sizeof(version));
 	dec+=sizeof(version);
 
-	app_or_mod=raydium_network_beacon+dec;
+	app_or_mod=buff+dec;
 	dec+=(strlen(app_or_mod)+1);
 	
 	// else -> id not found -> test game+version
@@ -775,7 +776,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	   strcmp(app_or_mod,raydium_network_beacon_search.app_or_mod))
 		return(RAYDIUM_NETWORK_DATA_NONE); // not for us ...
 
-	name=raydium_network_beacon+dec;	
+	name=buff+dec;	
 
 	// true -> search free -> add server
 	slot=-1;
