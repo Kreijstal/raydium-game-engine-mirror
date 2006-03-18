@@ -178,6 +178,7 @@
 #define RAYDIUM_NETWORK_PROPAG_HEAD		sizeof(int)
 #define RAYDIUM_NETWORK_BEACON_DELAY		5
 #define RAYDIUM_NETWORK_BEACON_DEFAULT_TTL	15
+#define RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN	100
 #define RAYDIUM_NETWORK_MODE_NONE		0
 #define RAYDIUM_NETWORK_MODE_CLIENT		1
 #define RAYDIUM_NETWORK_MODE_SERVER		2
@@ -467,6 +468,9 @@ typedef struct raydium_network_Beacon
     int id;
     char name[RAYDIUM_MAX_NAME_LEN];
     char ip[RAYDIUM_MAX_NAME_LEN];
+    char info[RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN];
+    int player_count;
+    int player_max;
     unsigned long when; // 0 means "free"
     } raydium_network_Beacon;
 
@@ -479,6 +483,7 @@ typedef struct raydium_network_BeaconSearch
 
 __global raydium_network_Beacon raydium_network_server_list[RAYDIUM_NETWORK_MAX_SERVERS];
 __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
+__global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
 #ifdef linux

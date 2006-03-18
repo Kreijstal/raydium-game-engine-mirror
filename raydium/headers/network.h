@@ -395,6 +395,13 @@ Any client in "discovery mode" with the same ##app_or_mod## and ##version##
 will see this beacon.
 **/
 
+void raydium_network_server_broadcast_info(char *info);
+/**
+Update "information" field of this server (current track or map, for example).
+Size cannot exceed ##RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN##.
+**/
+
+
 void raydium_network_server_broadcast_check(void);
 /**
 Internal use.
@@ -439,7 +446,7 @@ This function will return :
  and protocol version)
 **/
 
-signed char raydium_network_discover_getserver(int num, char *name, char *ip);
+signed char raydium_network_discover_getserver(int num, char *name, char *ip, char *info, int *player_count, int *player_max);
 /**
 Use this function with the help of ##raydium_network_discover_numservers()##, 
 with something like :
@@ -447,10 +454,13 @@ with something like :
 int i;
 char name[RAYDIUM_MAX_NAME_LEN];
 char ip[RAYDIUM_MAX_NAME_LEN];
+char info[RAYDIUM_MAX_NAME_LEN];
+int player_count;
+int player_max;
 ...
 for(i=0;i<raydium_network_discover_numservers();i++)
     {
-    raydium_network_discover_getserver(i,name,ip);
+    raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
     raydium_log("server %02i: %s (%s)",i,name,ip);
     }
 

@@ -1744,6 +1744,26 @@ if(strlen(mni_current)==0)
     //raydium_osd_logo("logoc.tga");
     draw_music_popup();
     raydium_rendering_finish();
+    
+    {
+    int i;
+    int n;
+    char name[RAYDIUM_MAX_NAME_LEN];
+    char ip[RAYDIUM_MAX_NAME_LEN];
+    char info[RAYDIUM_MAX_NAME_LEN];
+    int player_count;
+    int player_max;
+
+    n=raydium_network_discover_numservers();
+    //raydium_log("- %i",n);
+
+    for(i=0;i<n;i++)
+	{
+	raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
+	raydium_log("server %02i: %s - %s - %i/%i (%s)",i,name,ip,info,player_count,player_max);
+	}		
+    }
+    
     return;
     }
 

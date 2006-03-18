@@ -65,6 +65,7 @@ char buff[RAYDIUM_NETWORK_PACKET_SIZE];
 raydium_log("Broadcasting MNI track '%s'",track);
 strcpy(buff+RAYDIUM_NETWORK_PACKET_OFFSET,track);
 raydium_network_broadcast(NET_CHANGE_MAP,buff);
+raydium_network_server_broadcast_info(track);
 }
 
 
