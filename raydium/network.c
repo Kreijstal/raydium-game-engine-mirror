@@ -687,10 +687,20 @@ struct sockaddr from;
 socklen_t len;
 int ret;
 char dbl=0;
+time_t now;
+
+time(&now);
+
 
 raydium_network_timeout_check();
 raydium_network_queue_check_time();
 raydium_network_server_broadcast_check();
+
+// search for outdated server slots (should isolate this in a function ?)
+for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+    if(raydium_network_server_list[i].when!=0)
+	if(raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
+	    raydium_network_server_list[i].when=0;
 
 len=sizeof(struct sockaddr);
 ret=recvfrom(raydium_network_socket,buff,RAYDIUM_NETWORK_PACKET_SIZE,0,&from,&len);
@@ -703,8 +713,8 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
  *id=buff[1];
  raydium_network_stat_rx+=RAYDIUM_NETWORK_PACKET_SIZE;
 
-
  memcpy(&tcpid,buff+2,sizeof(unsigned short));
+
  if(tcpid)
     {
 #ifdef DEBUG_NETWORK
@@ -731,23 +741,12 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER && 
        raydium_network_beacon_search.active)
 	{	
-	time_t now;
 	int id;
 	int dec;
 	int version;
 	char *app_or_mod;
 	char *name;
 	int slot;
-
-	time(&now);
-	// must store "from.sin_addr, too"
-	//raydium_log("***** debug - broad *****");
-
-	// search for outdated slots
-	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
-	    if(raydium_network_server_list[i].when!=0)
-		if(raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
-		    raydium_network_server_list[i].when=0;
 
 	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 	dec++; // 1st byte is useless for us (server side flag)
