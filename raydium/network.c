@@ -754,6 +754,8 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 	dec++; // 1st byte is useless for us (server side flag)
 
+	memcpy(&id,buff+dec,sizeof(id));
+	dec+=sizeof(id);
 
 	// search id -> id already found -> update time -> return
 	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
@@ -777,7 +779,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 		return(RAYDIUM_NETWORK_DATA_NONE); // not for us ...
 
 	name=buff+dec;	
-	dec+=strlen(name)+1;
+	dec+=(strlen(name)+1);
 	
 	info=buff+dec;
 	dec+=RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN;
@@ -1062,6 +1064,8 @@ char str[RAYDIUM_NETWORK_PACKET_SIZE];
 signed char type;
 struct hostent *server_addr;
 int on=1;
+
+// should automaticaly stop discover mode here ...
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
     {
