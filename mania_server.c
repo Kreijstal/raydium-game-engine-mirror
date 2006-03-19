@@ -55,6 +55,7 @@ if(! (fp=raydium_file_fopen(track,"rt")) )
     }
 fclose(fp);
 raydium_log("Switching to track '%s'",track);
+raydium_network_server_broadcast_info(track);
 return 1;
 }
 
@@ -65,7 +66,6 @@ char buff[RAYDIUM_NETWORK_PACKET_SIZE];
 raydium_log("Broadcasting MNI track '%s'",track);
 strcpy(buff+RAYDIUM_NETWORK_PACKET_OFFSET,track);
 raydium_network_broadcast(NET_CHANGE_MAP,buff);
-raydium_network_server_broadcast_info(track);
 }
 
 
@@ -196,6 +196,8 @@ raydium_web_start("ManiaDrive Server");
 raydium_web_extension_add("mni","raw/unknown",NULL);
 raydium_web_extension_add("dyn",NULL,http_req); // use default "writer"
 raydium_web_body_default=index_text;
+
+raydium_network_server_broadcast("My Server","ManiaDrive",10);
 
 // Ugly hack, for now...
 raydium_network_netcall_add(broad,RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION,1);
