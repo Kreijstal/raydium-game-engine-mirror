@@ -125,6 +125,11 @@ void raydium_gui_combo_draw(int w, int window);
 Internal use.
 **/
 
+void raydium_gui_zone_draw(int w, int window);
+/**
+Internal use.
+**/
+
 void raydium_gui_window_draw(int window);
 /**
 Internal use.
@@ -163,6 +168,11 @@ Internal use. Check read accessor.
 int raydium_gui_combo_read(int window, int widget, char *str);
 /**
 Internal use. Combo read accessor.
+**/
+
+int raydium_gui_zone_read(int window, int widget, char *str);
+/**
+Internal use. Zone read accessor.
 **/
 
 void raydium_gui_show(void);
@@ -229,7 +239,7 @@ Unit for position (##px## and ##py##): percents (**window**)
 int raydium_gui_button_create_simple(char *name, int window,  GLfloat px, GLfloat py, char *caption);
 /**
 Same as above, but no OnClick callback function is asked. This type of button 
-is "readable" thru ##raydium_gui_button_clicked##.
+is "readable" thru ##raydium_gui_button_clicked()##.
 **/
 
 
@@ -286,6 +296,17 @@ strings. See ##raydium/gui.h## for more informations.
 Unit for position (##px## and ##py##): percents (**window**)
 **/
 
+int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, int tag, void *OnClick);
+/**
+This function will create a "zone". A zone will act like a button, but 
+will highlight a rectangular area of the window.
+
+This widget will return his ##tag## when you'll read it, and will 
+update ##raydium_gui_button_clicked()## value.
+
+Unit for position/size (##px##, ##py##, ##sx## and ##sy##): percents (**window**)
+**/
+
 int raydium_gui_read(int window, int widget, char *str);
 /**
 Use this function to get ##widget##'s state (for ##window##).
@@ -306,6 +327,12 @@ int raydium_gui_read_name(char *window, char *widget, char *str);
 /**
 Same as above, but ##window## and ##widget## are resolved thru names, and
 not numeric id.
+**/
+
+int raydium_gui_read_widget(raydium_gui_Object *w, char *str);
+/**
+Same as ##raydium_gui_read()##, but using a ##raydium_gui_Object## pointer.
+Useful for button callbacks, for example.
 **/
 
 int raydium_gui_button_clicked(void);

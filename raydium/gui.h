@@ -20,6 +20,7 @@
 #define RAYDIUM_GUI_EDIT	4
 #define RAYDIUM_GUI_CHECK	5
 #define RAYDIUM_GUI_COMBO	6
+#define RAYDIUM_GUI_ZONE	7
 
 #define RAYDIUM_GUI_NORMAL	1
 #define RAYDIUM_GUI_FOCUS	2
@@ -39,6 +40,15 @@ typedef struct raydium_gui_Button
     GLfloat  uv_hover[4];
     GLfloat  font_color[3];
 } raydium_gui_Button;
+
+typedef struct raydium_gui_Zone
+{
+    void *   OnClick;
+    GLfloat  col_normal[4];
+    GLfloat  col_focus[4];
+    GLfloat  col_hover[4];
+    int	     tag;
+} raydium_gui_Zone;
 
 typedef struct raydium_gui_Label
 {

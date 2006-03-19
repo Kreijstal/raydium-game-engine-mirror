@@ -420,6 +420,97 @@ if( raydium_gui_window_focused==window &&
     }
 }
 
+void raydium_gui_zone_draw(int w, int window)
+{
+raydium_gui_Zone *z;
+GLfloat xy[4];
+GLfloat mxy[2];
+GLfloat wfactor[2];
+char style;
+GLfloat *col;
+
+if(!raydium_gui_window_isvalid(window))
+    return;
+if(!raydium_gui_widget_isvalid(w,window))
+    return;
+
+z=raydium_gui_windows[window].widgets[w].widget;
+
+mxy[0]=    ((float)raydium_mouse_x/raydium_window_tx)*100;
+mxy[1]=100-((float)raydium_mouse_y/raydium_window_ty)*100;
+
+wfactor[0]=raydium_gui_windows[window].size[0]/100.;
+wfactor[1]=raydium_gui_windows[window].size[1]/100.;
+
+xy[0]=raydium_gui_windows[window].pos[0]+
+     (raydium_gui_windows[window].widgets[w].pos[0]*wfactor[0]);
+xy[1]=raydium_gui_windows[window].pos[1]+
+     (raydium_gui_windows[window].widgets[w].pos[1]*wfactor[1]);
+xy[2]=raydium_gui_windows[window].pos[0] +
+     (raydium_gui_windows[window].widgets[w].pos[0]*wfactor[0]) +
+      raydium_gui_windows[window].widgets[w].size[0];
+xy[3]=raydium_gui_windows[window].pos[1] +
+     (raydium_gui_windows[window].widgets[w].pos[1]*wfactor[1]) +
+      raydium_gui_windows[window].widgets[w].size[1];
+
+//printf("%f %f\n",
+
+style=RAYDIUM_GUI_NORMAL;
+
+if(raydium_gui_windows[window].focused_widget==w)
+    style=RAYDIUM_GUI_FOCUS;
+
+if(raydium_gui_window_focused==window &&
+  (mxy[0]>=xy[0] && mxy[1]>=xy[1] &&
+   mxy[0]<=xy[2] && mxy[1]<=xy[3] ))
+	style=RAYDIUM_GUI_HOVER;
+
+// uv
+switch(style)
+    {
+    case RAYDIUM_GUI_NORMAL:
+	col=z->col_normal;
+	break;
+    case RAYDIUM_GUI_FOCUS:
+	col=z->col_focus;
+	break;
+    case RAYDIUM_GUI_HOVER:
+	col=z->col_hover;
+	break;
+    }
+
+raydium_osd_start();
+glDisable(GL_TEXTURE_2D);
+glEnable(GL_BLEND);
+glColor4fv(col);
+glBegin(GL_QUADS);
+glVertex3f(xy[0],xy[3],0);
+glVertex3f(xy[2],xy[3],0);
+glVertex3f(xy[2],xy[1],0);
+glVertex3f(xy[0],xy[1],0);
+glEnd();
+glDisable(GL_BLEND);
+glEnable(GL_TEXTURE_2D);
+raydium_osd_stop();
+
+if( raydium_gui_window_focused==window &&
+    ((style==RAYDIUM_GUI_HOVER && raydium_mouse_click==1)  ||
+     (style==RAYDIUM_GUI_FOCUS && raydium_key_last==1013)) )
+    {
+    void (*f)(raydium_gui_Object *);
+    raydium_key_last=0;
+    raydium_mouse_click=0;
+    raydium_mouse_button[0]=0;
+    raydium_gui_windows[window].focused_widget=w;
+    f=z->OnClick;
+
+    if(f)
+	f(&raydium_gui_windows[window].widgets[w]);
+    raydium_gui_button_clicked_id=window*1000+w;
+    }
+}
+
+
 void raydium_gui_track_draw(int w, int window)
 {
 GLfloat uv[4];
@@ -1227,6 +1318,9 @@ for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
 	case RAYDIUM_GUI_CHECK:
 	    raydium_gui_check_draw(i,window);
 	    break;
+	case RAYDIUM_GUI_ZONE:
+	    raydium_gui_zone_draw(i,window);
+	    break;
 	}
 
 // draw combos last (overlay all components)
@@ -1367,6 +1461,21 @@ if(!raydium_gui_widget_isvalid(widget,window))
 c=raydium_gui_windows[window].widgets[widget].widget;
 strcpy(str,c->current_str);
 return c->current;
+}
+
+int raydium_gui_zone_read(int window, int widget, char *str)
+{
+raydium_gui_Zone *z;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot read widget value: invalid name or index");
+    return 0;
+    }
+// Nothing is readable on a zone :
+z=raydium_gui_windows[window].widgets[widget].widget;
+sprintf(str,"%i",z->tag);
+return z->tag;
 }
 
 
@@ -2033,6 +2142,91 @@ raydium_gui_windows[window].widgets[wid].widget=c;
 return wid;
 }
 
+int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, int tag, void *OnClick)
+{
+int wid;
+raydium_gui_Zone *z;
+// used for parsing
+FILE *fp;
+int ret;
+char var[RAYDIUM_MAX_NAME_LEN];
+char val_s[RAYDIUM_MAX_NAME_LEN];
+GLfloat val_f[4];
+int size;
+
+
+z=malloc(sizeof(raydium_gui_Zone));
+if(!z)
+    {
+    raydium_log("GUI: Error: Cannot create \"%s\" zone: malloc failed",name);
+    return -1;
+    }
+
+fp=raydium_file_fopen(raydium_gui_theme_current.filename,"rt");
+if(!fp)
+    {
+    raydium_log("gui: ERROR: Cannot open current theme file");
+    return -1;
+    }
+
+
+if(raydium_gui_window_isvalid(window))
+    {
+    sx*=raydium_gui_windows[window].size[0]/100.;
+    sy*=raydium_gui_windows[window].size[1]/100.;
+    }
+
+wid=raydium_gui_internal_object_create(name,window,RAYDIUM_GUI_ZONE,px,py,sx,sy,0);
+if(wid<0)
+    {
+    raydium_log("GUI: Error: early init failed for zone '%s'",name);
+    return -1;
+    }
+
+z->OnClick=OnClick;
+z->tag=tag;
+memset(z->col_normal, 0,sizeof(GLfloat)*4);
+memset(z->col_focus,  1,sizeof(GLfloat)*4);
+memset(z->col_hover,  1,sizeof(GLfloat)*4);
+
+while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)    
+    {
+    if(!strcasecmp(var,"zone_normal"))
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+	    raydium_log("gui: parser: zone_normal: wrong type");
+            continue;
+            }
+        memcpy(z->col_normal,val_f,sizeof(GLfloat)*4);
+        }
+
+    if(!strcasecmp(var,"zone_focus"))
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+	    raydium_log("gui: parser: zone_focus: wrong type");
+            continue;
+            }
+        memcpy(z->col_focus,val_f,sizeof(GLfloat)*4);
+        }
+
+    if(!strcasecmp(var,"zone_hover"))
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+	    raydium_log("gui: parser: zone_hover: wrong type");
+            continue;
+            }
+        memcpy(z->col_hover,val_f,sizeof(GLfloat)*4);
+        }
+    }
+fclose(fp);
+
+raydium_gui_windows[window].widgets[wid].widget=z;
+return wid;
+
+}
 
 // str may be big !
 int raydium_gui_read(int window, int widget, char *str)
@@ -2053,6 +2247,8 @@ int raydium_gui_read(int window, int widget, char *str)
 	    return raydium_gui_check_read(window,widget,str);
 	case RAYDIUM_GUI_COMBO:
 	    return raydium_gui_combo_read(window,widget,str);
+	case RAYDIUM_GUI_ZONE:
+	    return raydium_gui_zone_read(window,widget,str);
 	}
     }
     else 
@@ -2066,6 +2262,16 @@ int raydium_gui_read_name(char *window, char *widget, char *str)
 int w;
 w=raydium_gui_window_find(window);
 return raydium_gui_read(w,raydium_gui_widget_find(widget,w),str);
+}
+
+int raydium_gui_read_widget(raydium_gui_Object *w, char *str)
+{
+if(!w)
+    {
+    raydium_log("gui: error: cannot read widget value: invalid name or index");
+    return 0;
+    }
+return raydium_gui_read(w->window,w->id,str);
 }
 
 int raydium_gui_button_clicked(void)
