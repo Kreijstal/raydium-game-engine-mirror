@@ -1463,11 +1463,12 @@ if(!raydium_gui_window_isvalid(window))
     return -1;
     }
 
-if(raydium_gui_widget_find(name,window)>=0)
-    {
-    raydium_log("GUI: Error: Cannot create \"%s\" widget: name already exists in this window",name);
-    return -1;
-    }
+if(!(strlen(name)>0 && name[0]=='*'))
+    if(raydium_gui_widget_find(name,window)>=0)
+	{
+	raydium_log("GUI: Error: Cannot create \"%s\" widget: name already exists in this window",name);
+	return -1;
+	}
 
 for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
     if(!raydium_gui_windows[window].widgets[i].state)

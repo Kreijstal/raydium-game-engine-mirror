@@ -209,6 +209,8 @@ Unit: percents (screen)
 int raydium_gui_internal_object_create(char *name, int window, signed char type, GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey, GLfloat font_size);
 /**
 Internal use.
+Small (and ugly) tip: you can build many widgets with the same name, prefixing
+the name with '*'.
 **/
 
 int raydium_gui_button_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, void *OnClick);
