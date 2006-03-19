@@ -957,7 +957,7 @@ void raydium_network_server_broadcast_info(char *info)
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
     {
     raydium_log("network: ERROR: cannot set server broadcast infos: not a server");
-    return 0;
+    return;
     }
 
 if(strlen(info)<RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN-1)
