@@ -30,6 +30,7 @@ void raydium_network_only_init(int argc, char **argv)
 setbuf(stdout,NULL);
 signal(SIGINT,raydium_network_only_quit);
 raydium_init_args(argc,argv);
+raydium_random_randomize();
 raydium_console_init();
 #ifdef PHP_SUPPORT
 raydium_php_init();
