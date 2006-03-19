@@ -11,6 +11,7 @@
 #define NETWORK_H
 #ifdef RAYDIUM_NETWORK_ONLY
 
+void raydium_init_args(int argc, char **argv);
 int raydium_rayphp_repository_file_get(char *path);
 void raydium_console_init(void);
 void raydium_php_init(void);
@@ -24,10 +25,11 @@ raydium_network_internal_dump();
 exit(0);
 }
 
-void raydium_network_only_init(void)
+void raydium_network_only_init(int argc, char **argv)
 {
 setbuf(stdout,NULL);
 signal(SIGINT,raydium_network_only_quit);
+raydium_init_args(argc,argv);
 raydium_console_init();
 #ifdef PHP_SUPPORT
 raydium_php_init();
@@ -53,18 +55,6 @@ if(fp)
 
 return NULL;
 }
-
-int raydium_init_cli_option(char *option, char *value)
-{
-return 0;
-}
-
-int raydium_init_cli_option_default(char *option, char *value,char *def)
-{
-strcpy(value,def);
-return 1;
-}
-
 
 void raydium_osd_color_ega(char hexa)
 {

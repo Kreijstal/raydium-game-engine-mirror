@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 {
 setbuf(stdout,NULL);
 signal(SIGINT,quit);
-raydium_network_init();
+raydium_network_init(argc,argv);
 raydium_network_server_create();
 
 // Ugly hack, for now...
@@ -71,7 +71,11 @@ raydium_timecall_add(infos,1);
 
 do{
 loop();
-//usleep(1); // MUST disable this with real servers
+#ifndef WIN32
+usleep(1); // MUST disable this with real servers
+#else
+sleep(0);
+#endif
 }while(1);
 
 }

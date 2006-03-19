@@ -68,6 +68,7 @@
 #include "file.c"
 #include "camera.c"
 #include "object.c"
+#include "cli.c"
 #include "network.c"
 #include "init.c"
 #ifdef ODE_SUPPORT
@@ -86,6 +87,7 @@
 #include "random.c"
 #include "timecall.c"
 #include "parser.c"
+#include "cli.c"
 #include "network.c"
 #include "register.c"
 #ifdef PHP_SUPPORT

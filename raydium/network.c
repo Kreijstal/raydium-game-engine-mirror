@@ -612,13 +612,11 @@ raydium_network_write_notcp=0;
 
 raydium_network_name_local[0]=0;
 raydium_network_connected_server[0]=0;
-#ifndef RAYDIUM_NETWORK_ONLY
 if(raydium_init_cli_option("name",raydium_network_name_local))
 {
     if(strlen(raydium_network_name_local)==0)
 	raydium_log("Warning: network: --name option needs an argument");
 }
-#endif
 
 if(strlen(raydium_network_name_local)==0)
     raydium_network_player_name(raydium_network_name_local);

@@ -188,7 +188,9 @@ return 0;
 int main(int argc, char **argv)
 {
 int i;
-raydium_network_only_init();
+char title[RAYDIUM_MAX_NAME_LEN];
+
+raydium_network_only_init(argc,argv);
 raydium_network_server_broadcast("My Server","ManiaDrive",10);
 
 raydium_web_init();
@@ -197,7 +199,9 @@ raydium_web_extension_add("mni","raw/unknown",NULL);
 raydium_web_extension_add("dyn",NULL,http_req); // use default "writer"
 raydium_web_body_default=index_text;
 
-raydium_network_server_broadcast("My Server","ManiaDrive",10);
+raydium_init_cli_option_default("title",title,"ManiaDrive Server. Use --title to change :)");
+
+raydium_network_server_broadcast(title,"ManiaDrive",10);
 
 // Ugly hack, for now...
 raydium_network_netcall_add(broad,RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION,1);

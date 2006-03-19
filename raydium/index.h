@@ -62,6 +62,7 @@
 #include "headers/file.h"
 #include "headers/camera.h"
 #include "headers/object.h"
+#include "headers/cli.h"
 #include "headers/network.h"
 #include "headers/init.h"
 #ifdef ODE_SUPPORT
@@ -82,6 +83,7 @@ dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #include "headers/random.h"
 #include "headers/timecall.h"
 #include "headers/parser.h"
+#include "headers/cli.h"
 #include "headers/network.h"
 #include "headers/register.h"
 #ifdef PHP_SUPPORT
