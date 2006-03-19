@@ -1760,7 +1760,7 @@ if(strlen(mni_current)==0)
     for(i=0;i<n;i++)
 	{
 	raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
-	raydium_log("server %02i: %s - %s - %i/%i (%s)",i,name,ip,info,player_count,player_max);
+	raydium_log("server %02i: %s - %s - %i/%i (%s)",i,name,info,player_count,player_max,ip);
 	}		
     }
     

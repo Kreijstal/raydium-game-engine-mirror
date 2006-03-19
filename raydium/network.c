@@ -790,6 +790,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	memcpy(&player_max,buff+dec,sizeof(player_max));
 	dec+=sizeof(player_max);
 
+
 	// true -> search free -> add server
 	slot=-1;
 	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
@@ -953,6 +954,12 @@ return 1;
 
 void raydium_network_server_broadcast_info(char *info)
 {
+if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_SERVER)
+    {
+    raydium_log("network: ERROR: cannot set server broadcast infos: not a server");
+    return 0;
+    }
+
 if(strlen(info)<RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN-1)
     strcpy(raydium_network_beacon+raydium_network_beacon_info_offset,info);
 else
@@ -985,6 +992,7 @@ if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
 #endif
 
     player_max=RAYDIUM_NETWORK_MAX_CLIENTS;
+    player_count=0;
     for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 	if(raydium_network_client[i])
 	    player_count++;
@@ -1235,6 +1243,8 @@ for(cpt=0,i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
 
 if(slot<0)
     return 0;
+
+//	printf(".\n");
 
 strcpy(name,raydium_network_server_list[slot].name);
 strcpy(ip,raydium_network_server_list[slot].ip);
