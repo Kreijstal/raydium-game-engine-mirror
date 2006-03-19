@@ -573,8 +573,10 @@ for(i=0;i<n;i++)
     raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
 
     sprintf(str,"%30s",name);
+    str[30]=0;
     raydium_gui_label_create("*lblCol1s",handle,20,y,str,0,0,0);
     sprintf(str,"%15s",info);
+    str[15]=0;
     raydium_gui_label_create("*lblCol2s",handle,50,y,str,0,0,0);
     sprintf(str,"%15s",ip);
     raydium_gui_label_create("*lblCol3s",handle,70,y,str,0,0,0);
