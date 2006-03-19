@@ -18,6 +18,7 @@ void raydium_php_init(void);
 signed char raydium_network_init(void);
 void raydium_network_internal_dump(void);
 signed char raydium_network_server_create(void);
+void raydium_random_randomize(void);
 
 void raydium_network_only_quit(int sig)
 {
