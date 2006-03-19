@@ -535,7 +535,8 @@ void raydium_network_init_sub(void)
 {
 int i;
 
-if(raydium_network_mode) close(raydium_network_socket);
+if(raydium_network_mode)
+    raydium_network_socket_close(raydium_network_socket);
 raydium_network_uid=-1;
 raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_network_socket=-1;
@@ -749,7 +750,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	char *info;
 	int player_count;
 	int player_max;
-	int slot;
+	int slot=-1;
 
 	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 	dec++; // 1st byte is useless for us (server side flag)
@@ -762,8 +763,10 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 	    if(raydium_network_server_list[i].when!=0)
 		if(raydium_network_server_list[i].id==id)
 		    {
-		    raydium_network_server_list[i].when=now;
-		    return(RAYDIUM_NETWORK_DATA_NONE);
+		    //raydium_network_server_list[i].when=now;
+		    //return(RAYDIUM_NETWORK_DATA_NONE);
+		    slot=i;
+		    break;
 		    }
 
 
@@ -792,10 +795,10 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 
 
 	// true -> search free -> add server
-	slot=-1;
-	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
-	    if(raydium_network_server_list[i].when==0)
-		slot=i;
+	if(slot==-1)
+	    for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+		if(raydium_network_server_list[i].when==0)
+		    slot=i;
 
 	if(slot<0)
 	    {
@@ -1074,6 +1077,11 @@ struct hostent *server_addr;
 int on=1;
 
 // should automaticaly stop discover mode here ...
+if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
+    {
+    raydium_network_socket_close(raydium_network_socket);
+    raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
+    }
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
     {
@@ -1128,6 +1136,7 @@ if (raydium_network_read(&empty,&type,str)!=RAYDIUM_NETWORK_DATA_OK)
     raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
     raydium_log("ERROR ! network: cannot connect to server %s",server);
     perror("System");
+    raydium_network_socket_close(raydium_network_socket);
     return(0);
     }
 
@@ -1144,11 +1153,13 @@ if(type==RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE)
     {
     raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
     raydium_log("ERROR ! network: no more room (server said: %s)",str+RAYDIUM_NETWORK_PACKET_OFFSET);
+    raydium_network_socket_close(raydium_network_socket);
     return(0);
     }
 
 raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_log("ERROR ! network: unknow server message type (%i). abort.",type);
+raydium_network_socket_close(raydium_network_socket);
 return(0);
 }
 
@@ -1315,7 +1326,7 @@ socklen=sizeof(struct sockaddr);
 
 void raydium_network_close(void)
 {
-close(raydium_network_socket);
+raydium_network_socket_close(raydium_network_socket);
 #ifdef WIN32
 WSACleanup();
 #endif
@@ -1424,12 +1435,12 @@ timeout.tv_usec=0;
 if (select(sockfd + 1, NULL, &writable, NULL, &timeout) <= 0 || errno==ENETUNREACH)
     {
     raydium_log("network: cannot contact remote server, no internet connection detected");
-    close(sockfd);
+    raydium_network_socket_close(sockfd);
     return 0; // not writable
     }
     
 //raydium_log("network: internet link is ok");
-close(sockfd);
+raydium_network_socket_close(sockfd);
 return 1; // writable
 }
 
