@@ -452,7 +452,6 @@ raydium_gui_label_create("lblKH60",handle,50,45,"F6 : in-board view",0,0,0);
 
 raydium_gui_label_create("lblKH70",handle,50,35,"... and maybe hidden ones :)",0,0,0);
 
-// tagxf
 raydium_gui_widget_sizes(3,3,16);
 if(raydium_joy)
     {
@@ -507,6 +506,89 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
 }
 
+void btnServerClick(raydium_gui_Object *w)
+{
+char str[RAYDIUM_MAX_NAME_LEN];
+int zone;
+char name[RAYDIUM_MAX_NAME_LEN];
+char ip[RAYDIUM_MAX_NAME_LEN];
+char info[RAYDIUM_MAX_NAME_LEN];
+int player_count;
+int player_max;
+
+zone=raydium_gui_read_widget(w,str);
+if(raydium_network_discover_getserver(zone,name,ip,info,&player_count,&player_max)<=0)
+    return; // hu ?!
+
+raydium_gui_widget_sizes(0,0,0);
+raydium_gui_edit_create("edtServer",w->window,0,0,ip);
+raydium_gui_edit_create("edtPlayerName",w->window,0,0,raydium_network_name_local);
+btnNetworkConnect(NULL);
+}
+
+void btnSearchLAN(raydium_gui_Object *w)
+{
+int i,n;
+int handle;
+float y;
+char str[RAYDIUM_MAX_NAME_LEN];
+
+char name[RAYDIUM_MAX_NAME_LEN];
+char ip[RAYDIUM_MAX_NAME_LEN];
+char info[RAYDIUM_MAX_NAME_LEN];
+int player_count;
+int player_max;
+
+raydium_gui_window_delete_name("menu");
+handle=raydium_gui_window_create("menu",10,25,80,50);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblLanServerSearch",handle,50,92,"- LAN Servers - ",0,0,0);
+
+raydium_gui_widget_sizes(0,0,12);
+
+sprintf(str,"%-30s","Name");
+raydium_gui_label_create("lblCol1",handle,20,85,str,0.4,0,0);
+sprintf(str,"%-15s","Track");
+raydium_gui_label_create("lblCol2",handle,50,85,str,0.4,0,0);
+sprintf(str,"%-15s","Address");
+raydium_gui_label_create("lblCol3",handle,70,85,str,0.4,0,0);
+sprintf(str,"%-15s","Players");
+raydium_gui_label_create("lblCol4",handle,90,85,str,0.4,0,0);
+
+sprintf(str,"%-30s","------------------------------");
+raydium_gui_label_create("lblCol1s",handle,20,83,str,0.4,0,0);
+sprintf(str,"%-15s","---------------");
+raydium_gui_label_create("lblCol2s",handle,50,83,str,0.4,0,0);
+sprintf(str,"%-15s","---------------");
+raydium_gui_label_create("lblCol3s",handle,70,83,str,0.4,0,0);
+sprintf(str,"%-15s","---------------");
+raydium_gui_label_create("lblCol4s",handle,90,83,str,0.4,0,0);
+
+y=80;
+n=raydium_network_discover_numservers();
+
+for(i=0;i<n;i++)
+    {
+    raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
+
+    sprintf(str,"%30s",name);
+    raydium_gui_label_create("*lblCol1s",handle,20,y,str,0,0,0);
+    sprintf(str,"%15s",info);
+    raydium_gui_label_create("*lblCol2s",handle,50,y,str,0,0,0);
+    sprintf(str,"%15s",ip);
+    raydium_gui_label_create("*lblCol3s",handle,70,y,str,0,0,0);
+    sprintf(str,"          %02i/%02i",player_count,player_max);
+    raydium_gui_label_create("*lblCol4s",handle,90,y,str,0,0,0);
+
+    raydium_gui_zone_create("*zone",handle,0,y-2,100,5,i,btnServerClick);
+
+    y-=6;
+    }
+
+raydium_gui_widget_sizes(3,3,12);
+raydium_gui_button_create("btnBackToMain",handle,2,5,"<",btnBackToMainMenu);
+}
 
 // NON-ACTIVATED CODE (child "thread" is never killed)
 void btnCreateServer(raydium_gui_Object *w)
@@ -769,6 +851,8 @@ raydium_gui_edit_create("edtServer",handle,47,55,server);
 
 raydium_gui_widget_sizes(18,5,18);
 raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
+raydium_gui_widget_sizes(18,5,18);
+raydium_gui_button_create("btnSearchLAN",handle,10,35,"Search LAN",btnSearchLAN);
 
 //raydium_gui_widget_sizes(18,5,15);
 //raydium_gui_button_create("btnCreateServ",handle,55,15,"Create server",btnCreateServer);
@@ -1744,25 +1828,19 @@ if(strlen(mni_current)==0)
     //raydium_osd_logo("logoc.tga");
     draw_music_popup();
     raydium_rendering_finish();
-    
-    {
-    int i;
-    int n;
-    char name[RAYDIUM_MAX_NAME_LEN];
-    char ip[RAYDIUM_MAX_NAME_LEN];
-    char info[RAYDIUM_MAX_NAME_LEN];
-    int player_count;
-    int player_max;
 
-    n=raydium_network_discover_numservers();
-    //raydium_log("- %i",n);
-
-    for(i=0;i<n;i++)
+    if(raydium_gui_widget_find("lblLanServerSearch",raydium_gui_window_find("menu"))>=0)
 	{
-	raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
-	raydium_log("server %02i: %s - %s - %i/%i (%s)",i,name,info,player_count,player_max,ip);
-	}		
-    }
+	static GLfloat timer;
+	timer+=raydium_frame_time;
+
+	if(timer>RAYDIUM_NETWORK_BEACON_DELAY)
+	    {
+	    timer=0;
+	    btnSearchLAN(NULL);
+	    }
+	}
+
     
     return;
     }
