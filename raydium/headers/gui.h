@@ -21,7 +21,7 @@ Complete informations about theme building are readable in this file.
 // Vocabulary
 /**
 This API will allow declaeation of:
-- "widgets" (label, button, edit box, track bar, check box, combo box)
+- "widgets" (label, button, edit box, track bar, check box, combo box, zone)
 - "windows" (containers for widgets)
 
 "Focus" is supported for windows and widgets. The final user will not have
@@ -298,11 +298,12 @@ Unit for position (##px## and ##py##): percents (**window**)
 
 int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, int tag, void *OnClick);
 /**
-This function will create a "zone". A zone will act like a button, but 
-will highlight a rectangular area of the window.
+This function will create a "zone" with ##name## and with ##window## for
+parent. A zone will act like a button, but  will highlight a rectangular area 
+of the window.
 
-This widget will return his ##tag## when you'll read it, and will 
-update ##raydium_gui_button_clicked()## value.
+This widget will return its ##tag## when you'll read it, and will 
+update ##raydium_gui_button_clicked()## value when clicked.
 
 Unit for position/size (##px##, ##py##, ##sx## and ##sy##): percents (**window**)
 **/
