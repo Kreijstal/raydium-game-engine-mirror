@@ -191,7 +191,6 @@ int i;
 char title[RAYDIUM_MAX_NAME_LEN];
 
 raydium_network_only_init(argc,argv);
-raydium_network_server_broadcast("My Server","ManiaDrive",10);
 
 raydium_web_init();
 raydium_web_start("ManiaDrive Server");
