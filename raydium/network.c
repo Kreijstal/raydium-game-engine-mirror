@@ -1011,7 +1011,7 @@ if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
 #else
     sock.sin_family=AF_INET;
     sock.sin_addr.s_addr=htonl(INADDR_BROADCAST);
-    sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+    sock.sin_port=htons(RAYDIUM_NETWORK_BEACON_PORT);
     raydium_network_write((struct sockaddr *)&sock,255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
 #endif
     last=now;
@@ -1186,7 +1186,7 @@ raydium_log("network: discover socket created");
 
 sock.sin_family=AF_INET;
 sock.sin_addr.s_addr=htonl(INADDR_ANY);
-sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+sock.sin_port=htons(RAYDIUM_NETWORK_BEACON_PORT);
 ret=bind(raydium_network_socket,(struct sockaddr *)&sock,sizeof(sock));
 if(ret)
     {
@@ -1526,7 +1526,7 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
     addr = *(struct sockaddr_in *)&ifreq.ifr_addr;
 
     addr.sin_family = AF_INET;
-    addr.sin_port=htons(RAYDIUM_NETWORK_PORT);
+    addr.sin_port=htons(RAYDIUM_NETWORK_BEACON_PORT);
     memcpy( &raydium_network_broadcast_interfaces[raydium_network_broadcast_interface_index],
 	    &addr,sizeof(addr)); // broadcast address
     strcat(msg,name);
