@@ -986,9 +986,8 @@ if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
     int player_count;
     int player_max;
     int dec;
-#ifdef linux
     int i;
-#else
+#ifndef linux
     struct sockaddr_in sock;
 #endif
 
