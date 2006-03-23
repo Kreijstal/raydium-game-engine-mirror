@@ -133,6 +133,11 @@ if [ -d "php" ]; then
     exit 1
 fi
 
+# test bison
+echo "Testing 'bison' ..."
+bison --version > /dev/null 2>&1
+exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
+
 # download
 echo "Downloading latest PHP4 ..."
 wget -O php4-last.tar.gz http://snaps.php.net/php4-STABLE-latest.tar.gz
