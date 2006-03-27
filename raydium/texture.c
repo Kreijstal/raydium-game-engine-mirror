@@ -297,7 +297,7 @@ GLuint res;
 res=raydium_texture_load_internal(filename,filename,0,0,0,0,0);
 if(res<=0)
     {
-    raydium_log("texture: faking '%s' with pink color");
+    raydium_log("texture: faking '%s' with pink color",filename);
     res=raydium_texture_load_internal("rgb(1,0,1)",filename,0,0,0,0,0);
     }
 return res;
