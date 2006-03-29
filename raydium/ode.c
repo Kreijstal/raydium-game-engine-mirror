@@ -3153,7 +3153,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	
 	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
 	    continue;	
-	if(bef && !bef(i))
+	if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && bef && !bef(i))
     	    continue;
 
     	raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
@@ -3164,7 +3164,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    else
     		raydium_object_draw(raydium_ode_element[i].mesh);
 	    }
-	if(aft) aft(i);
+	if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && aft)
+	    aft(i);
 
 	if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)
 	    {
