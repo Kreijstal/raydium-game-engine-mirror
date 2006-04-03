@@ -216,7 +216,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   pfd.cAccumBlueBits=0; 
   pfd.cAccumAlphaBits=0;
   pfd.cDepthBits=32;
-  pfd.cStencilBits=0;
+  pfd.cStencilBits=1;
   pfd.cAuxBuffers=0;
   pfd.iLayerType=PFD_MAIN_PLANE;
   pfd.bReserved=0; 
@@ -266,8 +266,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 //  if (glutReshapeFuncCB)
 //      glutReshapeFuncCB(w, h);
   DescribePixelFormat(currDC, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd); 
-  raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",w,h,pfd.cColorBits,pfd.cDepthBits);
-
+  raydium_log("Found %ix%i with %i bpp color and %i bits zbuffer (stencil is %i)",w,h,pfd.cColorBits,pfd.cDepthBits,pfd.cStencilBits);
 }
 
 
