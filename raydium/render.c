@@ -13,7 +13,6 @@
 void raydium_callback_image(void);
 void raydium_timecall_callback(void);
 
-
 // color is a GLfloat[4] (RGBA)
 void raydium_render_lightmap_color(GLfloat *color)
 {
@@ -117,6 +116,13 @@ else // "standard" textunit
   GLfloat zero[]={0.0,0.0,0.0,0.0};
   GLfloat *rgb;
 
+
+  if(raydium_texture_nolight[tex])
+    {
+    glGetBooleanv(GL_LIGHTING,&raydium_render_internal_light_previous_step);
+    glDisable(GL_LIGHTING);
+    }
+
   glColor4f(1.f,1.f,1.f,1.f);
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_BLENDED)
@@ -157,7 +163,7 @@ else // "standard" textunit
   glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
   }
 
-
+  
   if(raydium_texture_rgb[tex][0]>=0 && raydium_texture_blended[tex]!=RAYDIUM_TEXTURE_PHANTOM)
   {
   if(raydium_render_rgb_force_tag)
@@ -317,6 +323,11 @@ for(tex=1;tex<raydium_texture_index;tex++)
     }
   }
   glEnd();
+  if(raydium_render_internal_light_previous_step==GL_TRUE)
+    {
+    glEnable(GL_LIGHTING);
+    raydium_render_internal_light_previous_step=-1;
+    }
 } // end for "all textures"
 
 raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);

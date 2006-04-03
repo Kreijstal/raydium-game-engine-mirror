@@ -32,6 +32,19 @@ extern void raydium_light_disable (void);
 Obvious.
 **/
 
+extern signed char raydium_light_texture(int texture, signed char enable);
+/**
+Texture ##l## will not use lighting if ##enable## is set to 0. Call this
+function **before** loading any object using this texture, because
+of display lists. Same way, it's not possible to change back this value 
+after the first object drawing without disabling display lists.
+**/
+
+extern signed char raydium_light_texture_name(char *name, signed char enable);
+/**
+Same as above, but using texture ##name##.
+**/
+
 extern GLuint raydium_light_to_GL_light (GLuint l);
 /**
 Probably useless for end user. (internal uses)

@@ -83,6 +83,22 @@ raydium_light_update_position(l);
 
 }
 
+signed char raydium_light_texture(int texture, signed char enable)
+{
+if(texture>=0 && texture<raydium_texture_index)
+    {
+    raydium_texture_nolight[texture]=!enable;
+    return 1;
+    }
+
+raydium_log("light: cannot set 'no light' attribute on texture: invalid name or index");
+return 0;
+}
+
+signed char raydium_light_texture_name(char *name, signed char enable)
+{
+return raydium_light_texture(raydium_texture_find_by_name(name),enable);
+}
 
 
 void raydium_light_move(GLuint l,GLfloat *vect)

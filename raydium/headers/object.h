@@ -25,7 +25,7 @@ object id is valid (in bounds).
 
 extern GLint raydium_object_find_load (char *name);
 /**
-Same as above (##raydium_object_load##), but will try to load object
+Same as above (##raydium_object_load##), but will try to load object.
 **/
 
 extern void raydium_object_reset (GLuint o);
@@ -122,7 +122,7 @@ Internal. Transformed mesh generation.
 extern void raydium_object_anim_frame(int object, int instance, GLfloat frame);
 /**
 Sets current ##frame## for one ##instance## of ##object##. ##frame## is
-automatically bounded and loops.
+automatically bounded and looped.
 Warning, change anim **before** anim's frame.
 **/
 
@@ -166,10 +166,10 @@ extern void raydium_object_anim_automatic_name(char *object, char *anim, GLfloat
 Same as above, but using ##object##'s name and ##anim##'s name.
 **/
 
-// "Ponctually" anims
+// "Punctually" anims
 /**
 When using animations, you're switching for an "anim" to another, and an
-"anim" will loop forever. "Ponctually" support will allow you to set a
+"anim" will loop forever. "Punctually" support will allow you to set a
 default "anim" for an object and to do switch punctually to another "anim",
 and automatically return back to default value when this "anim" is finished,
 usefull for animations like jumps, kick, ...

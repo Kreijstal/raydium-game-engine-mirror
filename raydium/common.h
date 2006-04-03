@@ -333,6 +333,7 @@ __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
 __global signed char	 *raydium_vertex_tag;
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
+__global signed char     raydium_texture_nolight[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
@@ -363,6 +364,7 @@ __global GLfloat raydium_render_rgb_force[4];
 __global GLfloat raydium_render_lightmap_color_value[4];
 __global signed char	 raydium_render_rgb_force_tag;
 __global char	 raydium_render_displaylists_tag;
+__global GLboolean raydium_render_internal_light_previous_step;
 
 __global signed char	 raydium_fog_enabled_tag;
 

@@ -90,7 +90,7 @@ void raydium_camera_rumble(GLfloat amplitude, GLfloat ampl_evo, GLfloat secs);
 /**
 Camera (any type) will rumble for ##secs## seconds, with ##amplitude## (radians).
 This ##amplitude## will be incremented of ##ampl_evo## every second (negative
-values are allowed).
+values are allowed for ##ampl_evo##).
 An ##amplitude## is always positive.
 **/
 
@@ -152,21 +152,21 @@ Next smooth call will be instantaneous.
 
 extern void raydium_camera_smooth_path_to_pos (char *path, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat path_step, GLfloat smooth_step);
 /**
-"Camera on path looking to a point"
-simple ##raydium_camera_smooth## version:
-Give a path name, a "look_at" point (##lx,ly,lz##), a current ##step##, and
-a ##smooth_step## time factor (see ##raydium_camera_smooth## example above).
+"Camera on path looking at a point".
+Simple ##raydium_camera_smooth## version: give a path name, a "look_at" 
+point (##lx,ly,lz##), a current ##step##, anda ##smooth_step## time 
+factor (see ##raydium_camera_smooth## example above).
 **/
 
 extern void raydium_camera_smooth_pos_to_path (GLfloat lx, GLfloat ly, GLfloat lz, char *path, GLfloat path_step, GLfloat smooth_step);
 /**
-"Camera on point looking at a path"
+"Camera on point looking at a path".
 Same style as previous function.
 **/
 
 extern void raydium_camera_smooth_path_to_path (char *path_from, GLfloat path_step_from, char *path_to, GLfloat path_step_to, GLfloat smooth_step);
 /**
-"Camera on a path looking at another path"
+"Camera on a path looking at another path".
 Same style as previous functions.
 **/
 

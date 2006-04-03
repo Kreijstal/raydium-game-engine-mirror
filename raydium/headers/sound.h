@@ -12,7 +12,7 @@ few functions to make your program ouput sounds or music.
 
 On top of this, there are a bunch of functions to modify the sound behavior.
 
-Raydium uses OpenAL and OggVorbis? for its sounds and musics, for a basic 
+Raydium uses OpenAL and OggVorbis for its sounds and musics, for a basic 
 use of our sound API you only need to know one thing: OpenAL uses buffers 
 for its sounds and you need to be able to address the sounds separately.
 For this we use ALuint in our code. Each buffer is associated to a source,

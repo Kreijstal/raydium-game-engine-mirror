@@ -86,6 +86,7 @@ for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
 {
  raydium_texture_name[i][0]=0;
  raydium_texture_blended[i]=0;
+ raydium_texture_nolight[i]=0;
  raydium_texture_islightmap[i]=0;
  raydium_texture_rgb[0][i]=-1.f;
  raydium_texture_rgb[1][i]=-1.f;
@@ -113,6 +114,7 @@ raydium_render_lightmap_color_value[0]=1;
 raydium_render_lightmap_color_value[1]=1;
 raydium_render_lightmap_color_value[2]=1;
 raydium_render_lightmap_color_value[3]=1;
+raydium_render_internal_light_previous_step=-1;
 raydium_vertex_counter=0;
 raydium_projection=RAYDIUM_PROJECTION_PERSPECTIVE;
 raydium_projection_fov=60;
