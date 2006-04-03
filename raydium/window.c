@@ -97,8 +97,13 @@ myglutCreateWindow(tx,ty,rendering,name);
 atexit(raydium_window_close);
 raydium_log("using %s, from %s (version %s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR),glGetString(GL_VERSION));
 raydium_init_engine();
+#ifndef MYGLUT
 raydium_window_tx=tx;
 raydium_window_ty=ty;
+#else
+raydium_window_tx=glutGet(GLUT_WINDOW_WIDTH);
+raydium_window_ty=glutGet(GLUT_WINDOW_HEIGHT);
+#endif
 raydium_mouse_x=tx/2;
 raydium_mouse_y=ty/2;
 }

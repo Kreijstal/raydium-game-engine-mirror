@@ -70,8 +70,9 @@ int currConnect;
 typedef struct PixelFormat
 {
   int num_samples ;
-  int bits_per_pixel ; ;
+  int bits_per_pixel ;
   int z_bits ;
+  int stencil_bits ;
 } PixelFormat;
 
 signed char XineramaAndFullscreenFocusHack=0;
@@ -79,12 +80,13 @@ signed char FullscreenFlag=0;
 
 PixelFormat preferred_pixel_formats [] =
 {
-  /* NumSamples, RGB_bits, Z_bits */
+  /* NumSamples, RGB_bits, Z_bits, Stencil */
 
-  {  0, 24, 24 },  /* Progressively nastier image formats */
-  {  0, 16, 24 },
-  {  0, 16, 16 },
-  { -1, -1, -1 }   /* Magic end marker */
+  {  0, 24, 24,  1 },  /* Progressively nastier image formats */
+  {  0, 16, 24,  1 },
+  {  0, 16, 16,  1 },
+  {  0, 16, 16,  0 },
+  { -1, -1, -1, -1 }   /* Magic end marker */
 } ;
 
 void pwInit ( int x, int y, int w, int h, int multisample,
@@ -212,6 +214,12 @@ void chooseVisual (PixelFormat *pf)
     case 16 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 16 ; break ; 
     case 24 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 24 ; break ;
     case 32 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 32 ; break ;
+  }
+
+  switch ( pf->stencil_bits )
+  {
+    case  1 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 1 ; break ; 
+    case  8 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 8 ; break ; 
   }
 
   if ( pf->num_samples > 0 )
@@ -342,9 +350,6 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   origin [ 1 ] = y ;
   size   [ 0 ] = w ;
   size   [ 1 ] = h ;
-  _glutWindowSize[0]=w;
-  _glutWindowSize[1]=h;
-
 
   for (i = 0 ; preferred_pixel_formats [ i ] . num_samples >= 0 ; i++ )
   {
@@ -472,7 +477,10 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers();
 
-  raydium_log("Found %ix%i with %i bits color buffer and %i bits zbuffer",sizeHints.width,sizeHints.height,pf.bits_per_pixel,pf.z_bits);
+  raydium_log("Found %ix%i with %i bpp color and %i bits zbuffer (stencil is %i)",sizeHints.width,sizeHints.height,pf.bits_per_pixel,pf.z_bits,pf.stencil_bits);
+
+  _glutWindowSize[0]=sizeHints.width;
+  _glutWindowSize[1]=sizeHints.height;
 
   if(FullscreenFlag)
        XGrabKeyboard(currDisplay,currHandle,False,GrabModeAsync,GrabModeAsync,CurrentTime);

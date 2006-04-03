@@ -81,6 +81,10 @@ switch(enu)
     {
     case GLUT_WINDOW_CURSOR:
 	return _glutMouseVisible;
+    case GLUT_WINDOW_WIDTH:
+	return _glutWindowSize[0];
+    case GLUT_WINDOW_HEIGHT:
+	return _glutWindowSize[1];
     default:
 	raydium_log("(my)glutGet: ERROR: unknown 'enu' %i",enu);
     }
