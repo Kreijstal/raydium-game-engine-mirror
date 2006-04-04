@@ -3398,7 +3398,10 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      }
 
 if(names==RAYDIUM_ODE_DRAW_NORMAL)
+    {
+    raydium_hdr_map(); // create HDR map
     raydium_shadow_map_render();
+    }
 }
 
 

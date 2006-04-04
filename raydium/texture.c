@@ -222,7 +222,7 @@ if(!simulate)
  temp[3]=0;								// TEMP !!
  if(!simulate)
  {
-  if(!strcmp("BOX",(char *)temp))					// TEMP !!
+  if(!strcmp("BOX",(char *)temp) || faked)				// TEMP !!
   {									// TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!
@@ -235,6 +235,9 @@ if(!simulate)
  }
 
  filter=raydium_texture_filter;
+
+ if(!strcmp("HDR",(char *)temp))				// TEMP !!
+    raydium_texture_hdr[id]=1;
 
  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
@@ -263,11 +266,12 @@ if(!simulate)
   gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
- raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i)",
+ raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i)",
 	     id,raydium_texture_name[id],
 	     (faked?"FAKED":"loaded"),
 	     tx,ty,bpp,
-	     blended,raydium_texture_islightmap[id]);
+	     blended,raydium_texture_islightmap[id],
+	     raydium_texture_hdr[id]);
  free(data);
 } else /* is rgb color */
 {

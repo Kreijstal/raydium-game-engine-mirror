@@ -12,7 +12,10 @@
 
 void raydium_clear_frame(void)
 {
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+glEnable(GL_STENCIL_TEST); // HDR
+
 raydium_frame_first_camera_pass=1;
 raydium_vertex_counter=0;
 }

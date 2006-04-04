@@ -52,6 +52,11 @@ Obvious
 Test two cases : "Not a Number" and "Infinite"
 **/
 
+#define raydium_trigo_round(a) ((int)((a)>0?((a)+0.5):((a)-0.5)))
+/**
+Will obviously "round" ##a## instead of the default C floor behaviour
+**/
+
 extern void raydium_trigo_rotate (GLfloat * p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat * res);
 /**
 Rotate p (GLfloat * 3) by (rx,ry,rx) angles (degrees).

@@ -20,6 +20,8 @@ void raydium_live_init(void);
 void raydium_video_init(void);
 void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
+void raydium_hdr_init(void);
+void raydium_hdr_texture_reset(void);
 void raydium_web_init(void);
 
 void raydium_init_lights(void)
@@ -78,6 +80,7 @@ raydium_live_init();
 #endif
 raydium_video_init();
 raydium_shadow_init();
+raydium_hdr_init();
 raydium_web_init();
 
 // Must find a way to delete textures from video card's memory, too...
@@ -93,6 +96,9 @@ for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
  raydium_texture_rgb[2][i]=-1.f;
  raydium_texture_rgb[3][i]=1.f;
 }
+
+raydium_hdr_texture_reset();
+
 raydium_vertex_index=0;
 raydium_vertex_offset_triangle=0;
 

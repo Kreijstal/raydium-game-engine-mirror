@@ -49,6 +49,7 @@
 #include "headers/normal.h"
 #include "headers/vertex.h"
 #include "headers/osd.h"
+#include "headers/hdr.h"
 #include "headers/register.h"
 #ifdef PHP_SUPPORT
 #include "headers/php.h"

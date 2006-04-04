@@ -46,6 +46,9 @@
 // draw shadow map (view for main light)
 //#define DEBUG_SHADOW_MAP_VIEW
 
+// draw HDR stencil (press F10)
+//#define DEBUG_HDR_STENCIL
+
 // debug network "tcp style" ACKs
 //#define DEBUG_NETWORK
 

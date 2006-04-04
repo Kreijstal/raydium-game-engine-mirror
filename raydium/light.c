@@ -10,6 +10,8 @@
 #include "headers/light.h"
 #endif 
 
+GLuint raydium_texture_find_by_name(char *name);
+
 void raydium_light_enable(void)
 {
 glEnable(GL_LIGHTING);

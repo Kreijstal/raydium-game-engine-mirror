@@ -12,6 +12,7 @@
 
 void raydium_callback_image(void);
 void raydium_timecall_callback(void);
+void raydium_hdr_block(signed char blocking);
 
 // color is a GLfloat[4] (RGBA)
 void raydium_render_lightmap_color(GLfloat *color)
@@ -163,7 +164,8 @@ else // "standard" textunit
   glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
   }
 
-  
+  raydium_hdr_block(!raydium_texture_hdr[tex]);
+
   if(raydium_texture_rgb[tex][0]>=0 && raydium_texture_blended[tex]!=RAYDIUM_TEXTURE_PHANTOM)
   {
   if(raydium_render_rgb_force_tag)
