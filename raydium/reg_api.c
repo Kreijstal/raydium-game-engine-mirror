@@ -67,6 +67,9 @@ PHP_i_s(raydium_particle_state_restore);
 // shadow.c
 PHP_v_v(raydium_shadow_enable);
 PHP_v_v(raydium_shadow_disable);
+// hdr.c
+PHP_v_v(raydium_hdr_enable);
+PHP_v_v(raydium_hdr_disable);
 // parser.c
 PHP_i_ss(raydium_parser_db_set);
 
@@ -240,6 +243,10 @@ raydium_register_function(C2PHP(raydium_particle_generator_move_name_3f),"raydiu
 // shadow.c
 raydium_register_function(C2PHP(raydium_shadow_enable),"raydium_shadow_enable");
 raydium_register_function(C2PHP(raydium_shadow_disable),"raydium_shadow_disable");
+
+// hdr.c
+raydium_register_function(C2PHP(raydium_hdr_enable),"raydium_hdr_enable");
+raydium_register_function(C2PHP(raydium_hdr_disable),"raydium_hdr_disable");
 
 // gui.c
 raydium_register_function(C2PHP(raydium_gui_theme_load),"raydium_gui_theme_load");

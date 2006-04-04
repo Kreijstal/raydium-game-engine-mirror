@@ -598,6 +598,7 @@ __global float raydium_hdr_eye;
 __global unsigned char *raydium_hdr_mem;
 __global unsigned char *raydium_hdr_mem_hdr;
 __global unsigned char *raydium_hdr_mem_hdr2;
+__global unsigned char *raydium_hdr_mem_hdr3;
 
 __global int    raydium_register_variable_index;
 __global int    raydium_register_function_index;

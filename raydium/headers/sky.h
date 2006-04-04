@@ -23,6 +23,8 @@ extern void raydium_sky_box_cache (void);
 As skybox texture are sometimes large files, you can pre-load skybox
 with this function. If you don't do it, Raydium will load textures 
 during the first frame of your application.
+Calling this function will automatically define sky as a HDR emitter.
+See HDR chapter for more information.
 **/
 
 extern void raydium_sky_box_render (GLfloat x, GLfloat y, GLfloat z);

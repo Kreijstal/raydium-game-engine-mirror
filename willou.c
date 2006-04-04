@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 {
     raydium_init_args(argc,argv);
     
-    // creation de la fenetre et de la scene
+    // window creation
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Willou's test");
     raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
     raydium_projection_near=0.01;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     raydium_light_intensity[0] = 10000000;
     raydium_light_update_all(0);
     
-//    raydium_osd_cursor_set("BOXcursor.tga",4,4);
+    raydium_sky_box_cache();
 
     raydium_window_view_update();
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
     strcpy(model,"a.tri");
     raydium_init_cli_option("model",model);
-    
+
     raydium_callback(&display);
     return(0);
 }

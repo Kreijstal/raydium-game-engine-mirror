@@ -11,7 +11,7 @@
 #endif 
 
 // TODO:
-// add a "global HDR settings" function (eye speed, brightness, ...)
+// add a "global HDR settings" function (eye speed, max_brightness, color, ...)
 
 void raydium_hdr_init(void)
 {
@@ -36,7 +36,7 @@ if(raydium_hdr_texture_id<0)
     raydium_hdr_mem=malloc(raydium_window_tx*raydium_window_ty);
     raydium_hdr_mem_hdr=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE);
     raydium_hdr_mem_hdr2=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE);
-    printf("%i %i\n",raydium_window_tx,raydium_window_ty);
+    raydium_hdr_mem_hdr3=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE*3);
     }
 }
 
@@ -147,7 +147,7 @@ out[((RAYDIUM_HDR_SIZE-1)*RAYDIUM_HDR_SIZE) + (RAYDIUM_HDR_SIZE-1) ]=p/3;
 
 void raydium_hdr_map(void)
 {
-int x,y;
+int x,y,i;
 float fx,fy;
 float incx,incy;
 int offset;
@@ -214,16 +214,24 @@ if(raydium_hdr_eye>0)
     raydium_hdr_blur(raydium_hdr_mem_hdr,raydium_hdr_mem_hdr2);
     }
 
+hdr_exposure=(raydium_hdr_eye>0?raydium_hdr_eye:0); // clamp
+
+
+for(i=0;i<RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE;i++)
+    {
+    raydium_hdr_mem_hdr3[0 + i*3] = raydium_hdr_mem_hdr2[i] * hdr_exposure;
+    raydium_hdr_mem_hdr3[1 + i*3] = raydium_hdr_mem_hdr2[i] * hdr_exposure;
+    raydium_hdr_mem_hdr3[2 + i*3] = raydium_hdr_mem_hdr2[i] * hdr_exposure;
+    }
+
 // ... and we upload to hdr_texture
 glBindTexture(GL_TEXTURE_2D,raydium_hdr_texture_id);
-glTexImage2D(GL_TEXTURE_2D,0,GL_ALPHA,RAYDIUM_HDR_SIZE,RAYDIUM_HDR_SIZE,0,GL_ALPHA,GL_UNSIGNED_BYTE,raydium_hdr_mem_hdr2);
+glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,RAYDIUM_HDR_SIZE,RAYDIUM_HDR_SIZE,0,GL_RGB,GL_UNSIGNED_BYTE,raydium_hdr_mem_hdr3);
 raydium_hdr_generated=1;
 }
 
 void raydium_hdr_map_apply(void)
 {
-float alpha;
-
 if(!raydium_hdr_state)
     return;
 
@@ -257,17 +265,13 @@ glDisable(GL_STENCIL_TEST);
 else
 {
 #endif
-alpha=(raydium_hdr_eye>0?raydium_hdr_eye:0); // clamp
-
 raydium_osd_start();
 glBindTexture(GL_TEXTURE_2D,raydium_hdr_texture_id);
 glEnable(GL_TEXTURE_2D);
 glEnable(GL_BLEND);
 glDepthMask(GL_FALSE);
-glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
-//glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR); 
-//glBlendFunc(GL_DST_COLOR,GL_ONE_MINUS_SRC_ALPHA); //
-glColor4f(1,1,1,alpha);
+glBlendFunc(GL_ONE,GL_ONE); 
+glColor4f(1,1,1,1);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(0,0,0);
@@ -281,8 +285,7 @@ glVertex3f(100,100,0);
 glTexCoord2f(0,1);
 glVertex3f(0,100,0);
 glEnd();
-glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); //
-glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 raydium_rendering_internal_restore_render_state();
 raydium_osd_stop();
 #ifdef DEBUG_HDR_STENCIL

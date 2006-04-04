@@ -19,6 +19,13 @@ raydium_texture_current_set_name("BOXleft.tga");
 raydium_texture_current_set_name("BOXright.tga");
 raydium_texture_current_set_name("BOXbottom.tga");
 raydium_texture_current_set_name("BOXtop.tga");
+
+raydium_hdr_texture_name("BOXfront.tga",1);
+raydium_hdr_texture_name("BOXback.tga",1);
+raydium_hdr_texture_name("BOXleft.tga",1);
+raydium_hdr_texture_name("BOXright.tga",1);
+raydium_hdr_texture_name("BOXbottom.tga",1);
+raydium_hdr_texture_name("BOXtop.tga",1);
 }
 
 
