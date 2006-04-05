@@ -271,6 +271,7 @@ glEnable(GL_TEXTURE_2D);
 glEnable(GL_BLEND);
 glDepthMask(GL_FALSE);
 glBlendFunc(GL_ONE,GL_ONE); 
+//localized hdr "glow" effect
 glColor4f(1,1,1,1);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
@@ -285,6 +286,23 @@ glVertex3f(100,100,0);
 glTexCoord2f(0,1);
 glVertex3f(0,100,0);
 glEnd();
+
+//ambiental hdr "glow" effect
+glColor4f(0.45,0.45,0.45,0.45);
+glBegin(GL_QUADS);
+glTexCoord2f(0,0);
+glVertex3f(-50,-50,0);
+
+glTexCoord2f(1,0);
+glVertex3f(150,-50,0);
+
+glTexCoord2f(1,1);
+glVertex3f(150,150,0);
+
+glTexCoord2f(0,1);
+glVertex3f(-50,150,0);
+glEnd();
+
 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 raydium_rendering_internal_restore_render_state();
 raydium_osd_stop();
