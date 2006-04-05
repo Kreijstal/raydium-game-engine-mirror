@@ -26,6 +26,16 @@ raydium_hdr_generated=0;
 raydium_log("HDR: OK");
 }
 
+void raydium_hdr_internal_window_malloc(void)
+{
+if(!raydium_hdr_state)
+    return;
+
+if(raydium_hdr_mem)
+    free(raydium_hdr_mem);
+raydium_hdr_mem=malloc(raydium_window_tx*raydium_window_ty);
+}
+
 void raydium_hdr_enable(void)
 {
 raydium_hdr_state=1;
@@ -33,7 +43,8 @@ raydium_hdr_state=1;
 if(raydium_hdr_texture_id<0)
     {
     raydium_hdr_texture_id=raydium_texture_load_internal("","hdrmap",1,RAYDIUM_HDR_SIZE,RAYDIUM_HDR_SIZE,3,-1);
-    raydium_hdr_mem=malloc(raydium_window_tx*raydium_window_ty);
+    raydium_hdr_mem=NULL;
+    raydium_hdr_internal_window_malloc();
     raydium_hdr_mem_hdr=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE);
     raydium_hdr_mem_hdr2=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE);
     raydium_hdr_mem_hdr3=malloc(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE*3);

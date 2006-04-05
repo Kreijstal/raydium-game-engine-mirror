@@ -8,6 +8,7 @@ Pseudo - HDR
 void raydium_hdr_init(void);
 void raydium_hdr_enable(void);
 void raydium_hdr_disable(void);
+void raydium_hdr_internal_window_malloc(void);
 void raydium_hdr_block(signed char blocking);
 void raydium_hdr_blur(unsigned char *in, unsigned char *out);
 void raydium_hdr_map(void);

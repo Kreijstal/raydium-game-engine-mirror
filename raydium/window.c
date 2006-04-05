@@ -13,6 +13,7 @@
 // proto
 void raydium_init_engine(void);
 int raydium_init_cli_option(char *option, char *value);
+void raydium_hdr_internal_window_malloc(void);
 
 void raydium_window_close(void)
 {
@@ -135,6 +136,9 @@ gluPerspective(raydium_projection_fov,(GLfloat)Width/(GLfloat)Height,
 
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
+
+// update HDR memory size
+raydium_hdr_internal_window_malloc();
 }
 
 

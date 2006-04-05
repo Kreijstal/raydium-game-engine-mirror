@@ -237,7 +237,10 @@ if(!simulate)
  filter=raydium_texture_filter;
 
  if(!strcmp("HDR",(char *)temp))				// TEMP !!
+    {
     raydium_texture_hdr[id]=1;
+    raydium_texture_nolight[id]=1;
+    }
 
  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
