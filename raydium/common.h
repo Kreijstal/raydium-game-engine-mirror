@@ -253,7 +253,7 @@
 
 #define RAYDIUM_HDR_SIZE			64
 #define RAYDIUM_HDR_PASS			8
-#define RAYDIUM_HDR_EYE_SPEED			0.1f
+#define RAYDIUM_HDR_EYE_SPEED_DEFAULT		0.1f
 
 
 __global int 	 raydium_init_argc;
@@ -595,6 +595,10 @@ __global signed char raydium_hdr_state;
 __global signed char raydium_hdr_generated;
 __global int   raydium_hdr_texture_id;
 __global float raydium_hdr_eye;
+__global float raydium_hdr_eye_speed;
+__global float raydium_hdr_alpha_max;
+__global GLfloat raydium_hdr_color_local[4];
+__global GLfloat raydium_hdr_color_ambient[4];
 __global unsigned char *raydium_hdr_mem;
 __global unsigned char *raydium_hdr_mem_hdr;
 __global unsigned char *raydium_hdr_mem_hdr2;

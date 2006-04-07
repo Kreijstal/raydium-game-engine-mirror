@@ -10,8 +10,44 @@
 #include "headers/hdr.h"
 #endif 
 
-// TODO:
-// add a "global HDR settings" function (eye speed, max_brightness, color, ...)
+void raydium_hdr_settings_color_local(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+raydium_hdr_color_local[0]=r;
+raydium_hdr_color_local[1]=g;
+raydium_hdr_color_local[2]=b;
+raydium_hdr_color_local[3]=a;
+}
+
+void raydium_hdr_settings_color_ambient(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+raydium_hdr_color_ambient[0]=r;
+raydium_hdr_color_ambient[1]=g;
+raydium_hdr_color_ambient[2]=b;
+raydium_hdr_color_ambient[3]=a;
+}
+
+void raydium_hdr_settings_eye(float speed, float alpha_max)
+{
+raydium_hdr_alpha_max=alpha_max;
+raydium_hdr_eye_speed=speed;
+}
+
+void raydium_hdr_settings(GLfloat *color_local, GLfloat *color_ambient, float eye_speed, float alpha_max)
+{
+GLfloat r,g,b,a;
+
+r=color_ambient[0];
+g=color_ambient[1];
+b=color_ambient[2];
+a=color_ambient[3];
+raydium_hdr_settings_color_ambient(r,g,b,a);
+r=color_local[0];
+g=color_local[1];
+b=color_local[2];
+a=color_local[3];
+raydium_hdr_settings_color_local(r,g,b,a);
+raydium_hdr_settings_eye(eye_speed,alpha_max);
+}
 
 void raydium_hdr_init(void)
 {
@@ -23,6 +59,9 @@ raydium_hdr_eye=0;
 raydium_hdr_state=0;
 raydium_hdr_texture_id=-1;
 raydium_hdr_generated=0;
+raydium_hdr_settings_color_local(1,1,1,1);
+raydium_hdr_settings_color_ambient(0.45,0.45,0.45,0.45);
+raydium_hdr_settings_eye(RAYDIUM_HDR_EYE_SPEED_DEFAULT,1);
 raydium_log("HDR: OK");
 }
 
@@ -201,9 +240,9 @@ for(y=0;y<RAYDIUM_HDR_SIZE;y++)
 hdr_exposure=(float)total/(RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE);
 
 // dec intensity using exposure factor
-if(raydium_hdr_eye>0) 
+if(raydium_hdr_eye>0)
     {
-    raydium_hdr_eye-=(hdr_exposure*(RAYDIUM_HDR_EYE_SPEED*raydium_frame_time));
+    raydium_hdr_eye-=(hdr_exposure*(raydium_hdr_eye_speed*raydium_frame_time));
     if(raydium_hdr_eye<=0) 
 	raydium_hdr_eye=-9999; // the eye is now ok
     }
@@ -213,7 +252,7 @@ if(hdr_exposure==0)
     raydium_hdr_eye=0; // be ready for another "flash"
 
 if(hdr_exposure>0 && raydium_hdr_eye==0)
-    raydium_hdr_eye=1;
+    raydium_hdr_eye=raydium_hdr_alpha_max;
 
 //printf("%i/%i (%f)\n",total,RAYDIUM_HDR_SIZE*RAYDIUM_HDR_SIZE,hdr_exposure*100);
 
@@ -283,7 +322,7 @@ glEnable(GL_BLEND);
 glDepthMask(GL_FALSE);
 glBlendFunc(GL_ONE,GL_ONE); 
 //localized hdr "glow" effect
-glColor4f(1,1,1,1);
+glColor4fv(raydium_hdr_color_local);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(0,0,0);
@@ -299,7 +338,7 @@ glVertex3f(0,100,0);
 glEnd();
 
 //ambiental hdr "glow" effect
-glColor4f(0.45,0.45,0.45,0.45);
+glColor4fv(raydium_hdr_color_ambient);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
 glVertex3f(-50,-50,0);
