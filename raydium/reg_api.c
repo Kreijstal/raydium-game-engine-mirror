@@ -72,6 +72,7 @@ PHP_v_v(raydium_hdr_enable);
 PHP_v_v(raydium_hdr_disable);
 // parser.c
 PHP_i_ss(raydium_parser_db_set);
+PHP_i_sss(raydium_parser_db_get);
 
 #ifdef ODE_SUPPORT
 //ode.c
@@ -267,6 +268,7 @@ raydium_register_function(C2PHP(raydium_gui_button_clicked),"raydium_gui_button_
 
 // parser
 raydium_register_function(C2PHP(raydium_parser_db_set),"raydium_parser_db_set");
+raydium_register_function(C2PHP(raydium_parser_db_get),"raydium_parser_db_get");
 
 
 #ifdef ODE_SUPPORT
