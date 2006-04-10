@@ -7,8 +7,13 @@ require_once('./nusoap/nusoap.php');
 // Webservice WSDL URL
 $url = "http://maniadrive.raydium.org/ecrire/tools/maniadrive/WSManiaDrive.php?wsdl";
 
+// set the proxy according to the configuration database
+$proxy = str_pad('', 128);
+raydium_parser_db_get("Generic-Proxy", $proxy, "");
+$proxy=parse_url($proxy);
+
 // Create the client instance
-$client = new soapclient($url,true);
+$client = new soapclient($url, true, $proxy["host"], $proxy["port"]);
 
 // Check for an error
 $err = $client->getError();

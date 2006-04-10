@@ -8,9 +8,9 @@ CC = gcc
 AR = ar
 RANLIB = ranlib
 LOG_FILE = compile.log
-SYSTEM_LIBS =  -lGL -lGLU -lXinerama -lm -ljpeg -lopenal -lalut -lvorbis -lvorbisfile -logg -lresolv -lcrypt -lz
+SYSTEM_LIBS =  -lGL -lGLU -lXinerama -lm -ljpeg -lopenal -lalut -lvorbis -lvorbisfile -logg -lresolv -lcrypt -lz -lcurl
 OTHER_LIBS =  ode/lib/libode.a php/libs/libphp4.a
-INCLUDE_PATH =  -Iode/include/ -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM
+INCLUDE_PATH =  -Iode/include/ -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
 
 CFLAGS=-Wall

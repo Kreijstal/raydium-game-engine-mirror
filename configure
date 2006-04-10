@@ -138,6 +138,11 @@ echo "Testing 'bison' ..."
 bison --version > /dev/null 2>&1
 exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
 
+# test curl
+echo "Testing 'curl' ..."
+which curl > /dev/null 2>&1
+exit_if_error "$?" "curl not found in path. Please install curl to compile PHP"
+
 # download
 echo "Downloading latest PHP4 ..."
 wget -O php4-last.tar.gz http://snaps.php.net/php4-STABLE-latest.tar.gz
@@ -157,7 +162,7 @@ exit_if_error "$?" "Is this script up to date ?"
 # configure
 echo "Configuring ..."
 cd php
-./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib > ../configure.log
+./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl > ../configure.log
 ret=$?
 cd -
 exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"

@@ -1,49 +1,297 @@
 <?
+// set the proxy according to the configuration database
+$proxy = str_pad('', 128);
+raydium_parser_db_get("Generic-Proxy", $proxy, "");
+$GLOBALS['raydium_proxy'] = $proxy;
 
+// returns a newer content for a file (using HTTP repository)
+function update_file($file,$repos,$local,$force)
+{
+  $file=rawurlencode($file);
+  $req="$repos?file=$file&type=getDate";
+  $d=http_download($req);
+  if($d == false)
+    {
+      echo "FAILED: Cannot get date on $file ($repos)";
+      return false;
+    }
+  
+  $ld=@filemtime($local);
+  
+  if($ld>=$d && !$force && $d!=false && $ld!=false)
+    {
+      echo "Local file is the same or newer, aborting. ($repos)";
+      return false;
+    }
+  $req="$repos?file=$file&type=getGzip";
+  $data=http_download($req);
+  // we got nothing
+  if($data===false)
+    {
+      echo "FAILED: Cannot retrieve $file ($repos)";
+      return false;
+    }
+
+  // if we got an error message
+  if(substr($data,0,6)=="FAILED")
+    {
+      // not very safe on a rogue server
+      echo $data." ($repos)";
+      return false;
+    }
+  
+  echo "OK ($repos)";
+  
+  // let's update the file with data
+  $data=gzdecode($data);
+  $fp=@fopen($path.$file,"wb");
+  if(!$fp) die("FAILED: Cannot create output file '$path$file', aborting.");
+  fwrite($fp,$data);
+  fclose($fp);
+  return true;
+}
+
+// Retrieves a file from the internet using HTTP. return the file as a sigle chain
+function http_download($url)
+{
+  $ch = curl_init();
+  if (defined($GLOBALS['raydium_proxy']))
+    curl_setopt ($ch, CURLOPT_PROXY, $GLOBALS['raydium_proxy']);
+  curl_setopt ($ch, CURLOPT_URL, $url);
+  curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
+
+  $result = curl_exec ($ch);
+  if (curl_errno($ch)) 
+    {
+      print "ERROR " . curl_errno($ch) ." : " . curl_error($ch);
+      return false;
+    } 
+  else 
+    {
+      curl_close($ch);
+      return $result;
+    }
+}
+
+// Get repositories from a given (local) file
 function read_repositories_file($repos)
 {
-$ret=@file($repos);
-if(count($ret)==0)
+  $repos_list=@file($repos);
+  if(count($repos_list)==0)
     die("Cannot open $repos");
 
-// may make $ret array "uniq"
-
-return $ret;
+  // let's clean up the list
+  for($i=0;$i<count($repos_list);$i++)
+    {
+      $repos_list[$i]=trim($repos_list[$i]);
+    }
+  $repos_list = array_unique ($repos_list);
+  return $repos_list;
 }
 
+// Get the file list from a given repository
+function list_repos($filter,$size,$repos)
+{
+  $filter=rawurlencode($filter);
+  
+  $req="$repos?file=$filter&type=listRepos";
+  $d=http_download($req);
+  if($d===false) 
+    return false;
+  
+  echo "Listing from '$repos'";
+  return implode("",$d);
+}
 
+// Sets file and path from a full filename
 function filename_cut($filename,&$file,&$path)
 {
-$t=explode("/",$filename);
-$file=$t[count($t)-1];
-$t[count($t)-1]="";
-$path=implode("/",$t);
+  $t=explode("/",$filename);
+  $file=$t[count($t)-1];
+  $t[count($t)-1]="";
+  $path=implode("/",$t);
 }
 
+// Is it a non-empty and non-comment line ?
 function valid_entry($r)
 {
-if($r[0]!='#' && strlen(trim($r))>0)
+  if($r[0]!='#' && strlen(trim($r))>0)
     return true;
-return false;
+  else
+    return false;
 }
 
+// unzip a given input
 function gzdecode($in)
 {
-$tmp="tmp.tmp";
-$fp=fopen($tmp,"wb");
-if(!$fp) return false;
-fwrite($fp,$in);
-fclose($fp);
-
-$fp=gzopen($tmp,"rb");
-if(!$fp) return false;
-while(!gzeof($fp))
+  $tmp="tmp.tmp";
+  $fp=fopen($tmp,"wb");
+  if(!$fp) return false;
+  fwrite($fp,$in);
+  fclose($fp);
+  
+  $fp=gzopen($tmp,"rb");
+  if(!$fp) return false;
+  while(!gzeof($fp))
     {
-    $data.=gzread($fp,128);
+      $data.=gzread($fp,128);
     }
-gzclose($fp);
-unlink($tmp);
-return $data;
+  gzclose($fp);
+  unlink($tmp);
+  return $data;
+}
+
+function ftp_upload($repos,$local,$distant)
+{
+  $url=parse_url($repos);
+
+  $conn_id = ftp_connect($url["host"],$url["port"]);
+  $login_result = ftp_login($conn_id, $url["user"], $url["pass"]);
+  ftp_pasv($conn_id, true);
+  
+  if (ftp_put($conn_id,$url["path"].$distant, $local, FTP_ASCII))
+    {
+      echo "$repos: SUCCESS";
+      ftp_close($conn_id);
+      return true;
+    }
+  else
+    {
+      echo "Failed contacting $repos";
+      ftp_close($conn_id);
+      return false;
+    }
+}
+
+function http_upload($repos,$local,$distant)
+{
+  // creating temporary files is a little crappy, but it works
+
+  $data=@file_get_contents($local);
+  $data=gzencode($data);
+
+  $zfilename = $local . ".gz";
+  $fp=fopen($zfilename,"wb");
+  if(!$fp) 
+    {
+      print "FAILED: Cannot create zipped file $zfilename";
+      return false;
+    }
+  fwrite($fp,$data);
+  fclose($fp);
+
+
+  $url=parse_url($repos);
+  $user=rawurlencode($url["user"]);
+  $pass=rawurlencode($url["pass"]);
+  $path=$url["path"];
+  $host=$url["host"];
+  
+  $post = Array();
+  $post[ 'file' ] = $distant;
+  $post[ 'type' ] = "putGzip";
+  $post[ 'username' ] = $user;
+  $post[ 'password' ] = $pass;
+  $post[ 'data' ] = "@".$zfilename;
+
+  $ch = curl_init();
+  if (defined($GLOBALS['raydium_proxy']))
+    curl_setopt ($ch, CURLOPT_PROXY, $GLOBALS['raydium_proxy']);
+  curl_setopt($ch, CURLOPT_URL, "http://".$host.$path );
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+  curl_setopt($ch, CURLOPT_POST, 1 );
+  // seems no need to tell it enctype='multipart/data' it already knows
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post );
+  $response = curl_exec( $ch ); 
+
+  unlink($zfilename);
+
+  if($response[0]=='+')
+    {
+      return true;
+    }
+  else
+    {
+      echo "HTTP reply: $response";
+      return false;
+    }
+}
+
+// supported files : (depends_xxx style)
+function depends_tri($filename)
+{
+  $fp=fopen($filename,"rt");
+  if($fp==false)
+    {
+      echo "Cannot open $filename";
+    }
+  
+  fgets($fp, 4096); // skip first line (version number)
+  
+  while (!feof($fp)) 
+    {
+      $line = trim(fgets($fp, 4096));
+      $line=explode(" ",$line);
+      $tex=trim($line[count($line)-1]);
+      if(substr($tex,0,4)!="rgb(")
+	{
+	  $tex=trim($tex);
+	  $texs=explode(";",$tex);
+	  if(strlen($texs[0])) $ret[]=$texs[0];
+	  if(strlen($texs[1])) 
+	    {
+	      if(strpos($texs[1],"|")!==false)
+		{
+		  $lm=explode("|",$texs[1]);
+		  $ret[]=$lm[2];
+		}
+	      else
+		$ret[]=$texs[1];
+	    }
+	  $ret=array_values(array_unique($ret));
+	}
+    }
+  fclose($fp);
+  $ret[]=$filename;
+
+  return $ret;
+}
+
+function depends_prt($filename)
+{
+  $f=@file($filename);
+  for($i=0;$i<count($f);$i++)
+    {
+      $line=trim($f[$i]);
+      if($line[0]=='/' && $line[1]=='/') continue;
+    
+      if(strpos($line,"texture") === false) continue;
+
+      echo $line;
+      $t=explode('=',$line);
+      $t=trim($t[1]);
+      $t=str_replace('"',"",$t);
+      $t=str_replace(';',"",$t);
+      $ret[]=$t;
+    }
+
+  $ret[]=$filename;
+  return $ret;
+}
+
+
+function depends_find($filename)
+{
+  $tbl=explode(".",$filename);
+  $ext=trim($tbl[count($tbl)-1]);
+  if($ext=="tri") return depends_tri($filename);
+  if($ext=="prt") return depends_prt($filename);
+
+  // else ..
+  $ret[]=$filename;
+  return $ret;
 }
 
 ?>
