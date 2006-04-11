@@ -140,8 +140,8 @@ exit_if_error "$?" "bison not found in path. Please install bison to compile PHP
 
 # test curl
 echo "Testing 'curl' ..."
-which curl > /dev/null 2>&1
-exit_if_error "$?" "curl not found in path. Please install curl to compile PHP"
+curl-config --version > /dev/null 2>&1
+exit_if_error "$?" "curl-config not found in path. Please install 'curl-devel' to compile PHP"
 
 # download
 echo "Downloading latest PHP4 ..."
