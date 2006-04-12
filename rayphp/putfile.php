@@ -30,11 +30,11 @@ for($j=0;$j<count($deps);$j++)
 
   if(!file_exists($path.$file) || !is_readable($path.$file))
     {
-      echo "Cannot upload '$path$file': file do not exist or invalid rights\n";
+      echo "Cannot upload '$path$file': file do not exist or invalid rights";
       continue;
     }
 
-  echo "Using repositories to upload '$file' file...\n";
+  echo "Using repositories to upload '$file' file...";
   
   // for each repository
   for($i=0;$i<count($repos);$i++)
@@ -69,16 +69,16 @@ for($j=0;$j<count($deps);$j++)
 
 if($status==count($deps))
 {
-  echo "All files uploaded ($status)\n";
+  echo "All files uploaded ($status)";
   return;
 }    
 
 if($status==0)
 {
-  echo "No file uploaded\n";
+  echo "No file uploaded";
   return;
 }    
 
-echo "Only $status/".count($deps)." file(s) uploaded\n";
+echo "Only $status/".count($deps)." file(s) uploaded";
 
 ?>
