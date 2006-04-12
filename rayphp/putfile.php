@@ -10,7 +10,7 @@ require("libfile.php");
 
 $status=0; // sets status to "error", by default
 
-$filename="buggy.tri"; // used when debugging outside of Raydium
+//$filename="buggy.tri"; // used when debugging outside of Raydium
 
 $repos=read_repositories_file("rayphp/repositories.upload");
 
