@@ -14,6 +14,10 @@ For PHP part of these functions, see "rayphp/" directory.
 So far, RayPHP is dedicated to R3S (Raydium Server Side Scripts) access.
 All this is mostly usefull for internal uses, since Raydium provides ##fopen##
 wrappers, thru ##raydium_file_fopen##.
+
+R3S is able to work with HTTP and FTP, and supports proxy using ##raydium.db##
+configuration database. Example : %%Generic-Proxy;http://proxy:3128/%%
+The trailing ##/## (slash) must be present.
 **/
 
 extern int raydium_rayphp_repository_file_get (char *path);
