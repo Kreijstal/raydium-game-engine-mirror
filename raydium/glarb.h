@@ -26,6 +26,7 @@
 #define GL_LIGHT_MODEL_COLOR_CONTROL        0x81F8
 #define GL_SEPARATE_SPECULAR_COLOR          0x81FA
 #define GL_CLAMP_TO_EDGE		    0x812F
+#define GL_COMBINE_RGB_EXT          0x8571 
 
 // You can comment thoses two lines if any problem
 typedef void (APIENTRY * PFNGLACTIVETEXTUREARBPROC) (GLenum texture);
