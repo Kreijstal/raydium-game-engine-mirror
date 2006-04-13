@@ -115,12 +115,8 @@ else
     raydium_ode_ground_set_name("a.tri");
 
     raydium_sky_box_cache();
-    raydium_ode_object_box_add("boite",0,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"fiesta.tri");
-    raydium_ode_element_move_name_3f("boite",15,9,1);
-
-    raydium_hdr_enable();
-    raydium_hdr_settings_color_local(1,0.7,0.1,0.5);
-    raydium_hdr_settings_color_ambient(0.45,0.45,0.45,0.45);
+    raydium_ode_object_box_add("boite",0,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"crate.tri");
+    raydium_ode_element_move_name_3f("boite",10,10,10);
 
     raydium_callback(&display);
     return(0);
