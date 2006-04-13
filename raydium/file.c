@@ -23,7 +23,10 @@ void raydium_file_dirname(char *dest,char *from)
 char *c;
 int n;
 
-c=strrchr(from,'/');
+c=strrchr(from,'/'); // Unix
+if(!c)
+      c=strrchr(from,'\\'); // win32
+
 if(!c)
     {
     strcpy(dest,"./");
