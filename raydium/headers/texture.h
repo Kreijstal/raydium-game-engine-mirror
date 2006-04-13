@@ -13,15 +13,21 @@ texture filters (none, bilinear, trilinear using MipMaps ).
 
 Texture sizes must be a power of two, 8 (alpha mask), 24 (RGB) or 32 (RGBA) bits.
 
-Raydium now supports materials with a simple "rgb(r,g,b)" string 
+Raydium supports simple color materials,  using a "rgb(r,g,b)" string 
 as texture name, where r, g and b are 0 <= x <= 1 (floats).
 With 3 negative values, you will generate a "phantom texture". Phantom textures
 are only drawn into the z-buffer (and not color buffer).
-Texture clamping and multitexturing are supported by Raydium, but not
-documented here for now. If you're interested, have a look at source code, or
-take a look at the Wiki.
+Texture clamping and advanced multitexturing effects are supported by Raydium, 
+but not documented here for now. If you're interested, have a look at source 
+code, or take a look at the Wiki. Tips: "BOX", "ENV", "HDR", ";", "|".
 
-Tips: "BOX_", ";", "|".
+Effective environment mapping (one pass, two texture units) is available using
+a special filename separator for texture field in TRI files : #
+See this example:
+##0.232258 0.225387 -0.149804 0.012198 -0.274925 0.961388 0.731411 0.980236 fiesta_diffuse.tga#ENV_map.tga##
+Environment texture name must start with "ENV" to allow spherical mapping, wich
+is needed for such effect. See also ##RAYDIUM_RENDER_REFLECTION_FACT## in
+file ##common.h## if you want reflection to be more or less visible.
 **/
 
 
@@ -82,7 +88,7 @@ extern void raydium_texture_filter_change (GLuint filter);
 
 Change texture filter. The new filter will apply on all "next" textures,
 but will not change already loaded ones (this was the case in old Raydium
-release), since it may generate strange bugs with dynamic (aka "faked")
+releases), since it may generate strange bugs with dynamic (aka "faked")
 textures, and it was very slow.
 
 %%(c)

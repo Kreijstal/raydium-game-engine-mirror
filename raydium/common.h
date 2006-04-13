@@ -239,6 +239,7 @@
 #define RAYDIUM_OSD_FONT_SIZE_FACTOR		(12.f)
 
 #define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	(50.f)
+#define RAYDIUM_RENDER_REFLECTION_FACT		(0.1f)
 
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
@@ -283,6 +284,7 @@ __global GLuint   raydium_texture_current_main;
 __global GLuint   raydium_texture_current_multi;
 __global GLfloat  raydium_texture_current_multi_u;
 __global GLfloat  raydium_texture_current_multi_v;
+__global GLuint   raydium_texture_current_env;
 __global signed char     raydium_texture_filter;
 __global GLint	  raydium_texture_size_max;
 __global GLint	  raydium_texture_units;
@@ -335,11 +337,13 @@ __global GLuint  *raydium_vertex_texture;
 __global GLuint  *raydium_vertex_texture_multi;
 __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
+__global GLuint  *raydium_vertex_texture_env;
 __global signed char	 *raydium_vertex_tag;
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_nolight[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_hdr[RAYDIUM_MAX_TEXTURES];
+__global signed char     raydium_texture_env[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 

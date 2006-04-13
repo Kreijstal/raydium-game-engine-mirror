@@ -70,7 +70,7 @@ if(texunit_state[tui]==tex)
 
 texunit_state[tui]=tex;
 
-//printf("preparing texunut %i with %s\n",tui,raydium_texture_name[tex]);
+//printf("preparing texunit %i with %s\n",tui,raydium_texture_name[tex]);
 
 // prepare "lightmaps" texture units
 if(tui>0)
@@ -86,13 +86,28 @@ if(tui>0)
  else if(raydium_light_enabled_tag)
 	glEnable(GL_LIGHTING);
 #endif 
+
+ glDisable(GL_TEXTURE_GEN_S);
+ glDisable(GL_TEXTURE_GEN_T);
+ //glDisable(GL_BLEND);
+
  
  if(tex)
  {
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,tex);
 
-  if(raydium_texture_islightmap[tex])
+  if(raydium_texture_env[tex])
+  {
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP); 
+    glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_EXT, 1);
+    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
+    glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_ADD);
+  }
+  else if(raydium_texture_islightmap[tex])
   {
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
     glColor4fv(raydium_render_lightmap_color_value);
@@ -100,6 +115,7 @@ if(tui>0)
   else
   {
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
+    glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
     glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_EXT, 2);
   } 
  } 
@@ -116,7 +132,6 @@ else // "standard" textunit
   GLfloat one[]={0.8f, 0.8f, 0.8f, 1.f};
   GLfloat zero[]={0.0,0.0,0.0,0.0};
   GLfloat *rgb;
-
 
   if(raydium_texture_nolight[tex])
     {
@@ -284,9 +299,16 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	glColor4f(1.f,1.f,1.f,1.f);
 #endif    
 
-    if(raydium_vertex_texture_multi[i])
+    if(raydium_vertex_texture_multi[i] || raydium_vertex_texture_env[i])
     {
-	if(raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
+	if(raydium_vertex_texture_multi[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
+	    {
+	    //glEnd(); // done by "prepare_texture_multi"
+	    glBegin(GL_TRIANGLES);
+	    multi_prepared=1;
+	    }
+
+	if(raydium_vertex_texture_env[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_env[i]))
 	    {
 	    //glEnd(); // done by "prepare_texture_multi"
 	    glBegin(GL_TRIANGLES);

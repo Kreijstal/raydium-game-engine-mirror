@@ -238,19 +238,37 @@ function depends_tri($filename)
       if(substr($tex,0,4)!="rgb(")
 	{
 	  $tex=trim($tex);
-	  $texs=explode(";",$tex);
-	  if(strlen($texs[0])) $ret[]=$texs[0];
-	  if(strlen($texs[1])) 
+	  $ok=false;
+
+	  if(strpos($tex,';') && !$ok) // is multitextured with ";" ?
 	    {
-	      if(strpos($texs[1],"|")!==false)
+	    $ok=true;
+	    $texs=explode(";",$tex);
+	    if(strlen($texs[0])) $ret[]=$texs[0]; // yes, and it's a "detail texture"
+	    if(strlen($texs[1]))  // yes and it's a lightmap
 		{
-		  $lm=explode("|",$texs[1]);
-		  $ret[]=$lm[2];
+	        if(strpos($texs[1],"|")!==false)
+		    {
+		    $lm=explode("|",$texs[1]);
+		    $ret[]=$lm[2];
+		    }
+	        else
+		    $ret[]=$texs[1];
 		}
-	      else
-		$ret[]=$texs[1];
 	    }
-	  $ret=array_values(array_unique($ret));
+
+	  if(strpos($tex,'#') && !$ok) // is an environment map ?
+	    {
+	    $ok=true;
+	    $texs=explode("#",$tex);
+	    $ret[]=$texs[0];
+	    $ret[]=$texs[1];
+	    }
+	    
+	  if(!$ok && strlen($tex))
+	    $ret[]=$tex;
+
+	  $ret=@array_values(array_unique($ret));
 	}
     }
   fclose($fp);

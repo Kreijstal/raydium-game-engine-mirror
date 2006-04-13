@@ -12,7 +12,7 @@ Well, first of all, let me talk about [[Raydium]] goals: this project
 aims to be simple, easy to use, portable, and quite fast.
 
 [[Raydium]] is a C written abstract layer, on top of OpenGL, 
-[[GLU]] and [[GLUT]]: this means you can write an entire 3D 
+and [[GLU]]: this means you can write an entire 3D 
 application without calling any OpenGL function. 
 Want to draw an object ? call the suitable [[Raydium]] function, 
 and all textures and vertices will be loaded, and your object drawn.
@@ -20,19 +20,19 @@ Want to make an explosion ? Same thing: call the right function.
 Note that you can call OpenGL functions anyway, if necessary.
 
 About portability, I can say a few things: [[Raydium]] was initially 
-planned for linux only, but with a "clean" (nearly [[ANSI]]) code,
+planned for Linux only, but with a "clean" (nearly [[ANSI]]) code,
 and, in facts, we have been able to compile Raydium under Visual Studio (Windows)
 and mingw with a very few modifications.
 So you can expect a correct result on any system providing 
-OpenGL (at least 1.2), [[GLU]], [[GLUT]] and a C compiler.
+OpenGL (at least 1.2), [[GLU]] and a C compiler.
 
 As we ([[CQFD Corp]].) needed a library for our own games, demos,
 and... and things like that, and as I was interested by OpenGL,
 I starts to write [[Raydium]].
 
 Raydium is perfect for outdoors spaces, integrating a landscape engine,
-with suitable physic, supports dynamic lighting, fog, blending, water and
-waves, terraforming, and more, but also provides everything for indoor,
+with suitable physic, supports dynamic lighting, fog, blending, water 
+and waves, reflections, and more, but also provides everything for indoor,
 with radiosity lightmaps for example.
 
 Some other advanced features are available : physics, scripting,

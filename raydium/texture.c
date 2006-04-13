@@ -42,7 +42,7 @@ GLuint texsize=0;
 char blended=0,filter=0,cutout=0,simulate=0;
 char rgb;
 GLfloat r,g,b;
-
+signed char reflect=0;
 
 // "as" is duplicated ?
 for(i=0;i<raydium_texture_index;i++)
@@ -60,6 +60,11 @@ if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
 strcpy((char *)temp,filename);
 temp[4]=0;
 if(!strcmp("rgb(",(char *)temp)) rgb=1; else rgb=0;
+
+strcpy((char *)temp,filename);
+temp[3]=0;
+if(!strcmp("ENV",(char *)temp)) reflect=1;
+
 
 if(!rgb && !faked)
 {
@@ -109,6 +114,13 @@ if(!rgb && !faked)
  if(bpp == 1) data[k]=temp[0];
  else // no greyscale
   {
+   if(reflect)
+    {
+    temp[0]*=RAYDIUM_RENDER_REFLECTION_FACT;
+    temp[1]*=RAYDIUM_RENDER_REFLECTION_FACT;
+    temp[2]*=RAYDIUM_RENDER_REFLECTION_FACT;
+    }
+
    data[k]=temp[2];
    data[k+1]=temp[1];
    data[k+2]=temp[0];
@@ -143,7 +155,6 @@ if(raydium_texture_index>RAYDIUM_MAX_TEXTURES)
 
 strcpy(raydium_texture_name[id],as);
 
-//#ifndef WIN32
 if(faked)
     {
     raydium_live_Texture *tex;
@@ -172,7 +183,6 @@ if(faked)
 	return 0; 
 	}
     }
-//#endif
 
 if(!rgb)
 {
@@ -241,6 +251,9 @@ if(!simulate)
     raydium_texture_hdr[id]=1;
     raydium_texture_nolight[id]=1;
     }
+
+ if(reflect)
+    raydium_texture_env[id]=1;
 
  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;

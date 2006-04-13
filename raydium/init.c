@@ -90,6 +90,7 @@ for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
  raydium_texture_name[i][0]=0;
  raydium_texture_blended[i]=0;
  raydium_texture_nolight[i]=0;
+ raydium_texture_env[i]=0;
  raydium_texture_islightmap[i]=0;
  raydium_texture_rgb[0][i]=-1.f;
  raydium_texture_rgb[1][i]=-1.f;
@@ -109,6 +110,7 @@ raydium_texture_current_main=0; // sets an "invalid" current texture
 raydium_texture_current_multi=0; // sets an "invalid" current texture
 raydium_texture_current_multi_u=0;
 raydium_texture_current_multi_v=0;
+raydium_texture_current_env=0; // sets an "invalid" current texture
 raydium_texture_to_replace=0; // No texture to erase.. just load it :)
 raydium_texture_used_memory=0;
 //raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_NONE;
@@ -203,6 +205,7 @@ raydium_vertex_texture=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_texture_multi=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_texture_multi_u=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_texture_multi_v=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
+raydium_vertex_texture_env=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_tag=malloc(RAYDIUM_MAX_VERTICES);
 // must test more than just the last "big" malloc result..
 if(!raydium_vertex_texture) { raydium_log("Out of memory..."); exit(29); }

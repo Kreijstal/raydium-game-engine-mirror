@@ -18,6 +18,7 @@ raydium_vertex_y[raydium_vertex_index]=y;
 raydium_vertex_z[raydium_vertex_index]=z;
 raydium_vertex_texture[raydium_vertex_index]=raydium_texture_current_main;
 raydium_vertex_texture_multi[raydium_vertex_index]=raydium_texture_current_multi;
+raydium_vertex_texture_env[raydium_vertex_index]=raydium_texture_current_env;
 if(raydium_texture_current_multi)
 {
     if(raydium_texture_current_multi_u==-99999 && 
