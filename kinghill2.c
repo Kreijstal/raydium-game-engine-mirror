@@ -9,6 +9,8 @@ void create_car(void);
 GLfloat sun[]={1.0,0.9,0.9,1.0};
 int son_moteur;
 int game_state;
+#define FALL_SOUNDS 3
+int son_fall[FALL_SOUNDS];
 
 //#define DEFAULT_RESPAWN_ONLY
 #define MAX_RESPAWNS		16
@@ -95,6 +97,10 @@ switch(state)
 	break;
     case GAME_OUT:
 	// "tu tombes !"
+    i=raydium_random_i(0,2);
+    raydium_sound_SourcePlay(son_fall[i]);
+    raydium_sound_SetSourcePosCamera(i);
+    
 	i=raydium_network_uid;
 	if(i<0) i=0;
 	scores[i]++;
@@ -526,13 +532,14 @@ int i;
 char world[256];
 
 raydium_init_args(argc,argv);
-raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"King of the Hill 2");
+raydium_window_create(640,480,RAYDIUM_RENDERING_FULLSCREEN,"King of the Hill 2");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;
 raydium_projection_fov=60;
 raydium_window_view_update();
 raydium_light_on(0);
+raydium_shadow_enable();
 memcpy(raydium_light_color[0],sun,raydium_internal_size_vector_float_4);
 raydium_light_intensity[0]=1000000;
  
@@ -559,7 +566,15 @@ else
 raydium_sound_DefaultReferenceDistance=4.f;
 son_moteur=raydium_sound_LoadWav("jeepch.wav");
 create_menu();
- 
+
+son_fall[0]=raydium_sound_LoadWav("tutombes.wav");
+son_fall[1]=raydium_sound_LoadWav("tutombes2.wav");
+son_fall[2]=raydium_sound_LoadWav("tutombes3.wav");
+
+for(i=0;i<FALL_SOUNDS;i++)
+    raydium_sound_SetSourceLoop(son_fall[i],0);
+
+
 // scores init
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
