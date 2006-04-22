@@ -234,10 +234,10 @@ int raydium_php_exec(char *name)
 	}
     }
 #ifdef WIN32
- zend_register_functions(raydium_register_function_list,CG(function_table), MODULE_PERSISTENT,TSRMLS_C);
+ zend_register_functions(NULL, raydium_register_function_list,CG(function_table), MODULE_PERSISTENT,TSRMLS_C);
  php_execute_script(&file_handle,TSRMLS_C);
 #else
- zend_register_functions(raydium_register_function_list,CG(function_table), MODULE_PERSISTENT);
+ zend_register_functions(NULL, raydium_register_function_list,CG(function_table), MODULE_PERSISTENT);
  php_execute_script(&file_handle CLS_CC ELS_CC PLS_CC);
 #endif
 

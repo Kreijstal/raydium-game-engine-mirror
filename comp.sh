@@ -5,7 +5,9 @@
 
 ulimit -c 0
 rm test
-gcc $1 -Wall -o test -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -lvorbis -logg -lvorbisfile -ljpeg -Iphp/ -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz -lcurl
+gcc $1 -Wall -o test -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -lvorbis -logg -lvorbisfile -ljpeg \
+-Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a \
+-lresolv -lcrypt -lz -lcurl -lxml2
 sync
 shift
 ./test "$@"

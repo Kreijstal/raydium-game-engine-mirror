@@ -5,7 +5,13 @@
 
 ulimit -c 0
 rm test
-gcc -g $1 -Wall -o test -Wl,-dynamic-linker=/lib/ld-linux.so.2 -Wl,-Bstatic -L/usr/X11R6/lib/ -lm -lXi -lstdc++ -ljpeg -Iode/include/ ode/lib/libode.a -lXmu -lXinerama -lopenal -lalut -lvorbisfile -lvorbis -logg -Iphp/ -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz -lcurl -Wl,-Bdynamic -lGL -lGLU -lasound -lpthread
+gcc -g $1 -Wall -o test -Wl,-dynamic-linker=/lib/ld-linux.so.2 -Wl,-Bstatic -L/usr/X11R6/lib/ \
+-lm -lXi -lstdc++ -ljpeg \
+-Iraydium/ode/include/ raydium/ode/lib/libode.a \
+-lXmu -lXinerama -lopenal -lalut -lvorbisfile -lvorbis -logg \
+-Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a \
+-lcrypt -lssl -lresolv -lz -lcurl -lxml2 \
+-Wl,-Bdynamic -lGL -lGLU -lasound -lpthread
 sync
 shift
 ./test "$@"

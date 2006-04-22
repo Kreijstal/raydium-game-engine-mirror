@@ -211,11 +211,11 @@ if(raydium_register_function_index+2>=RAYDIUM_MAX_REG_FUNCTION)
 strcpy(str,name);
 raydium_register_function_list[raydium_register_function_index].fname=str;
 raydium_register_function_list[raydium_register_function_index].handler=addr;
-raydium_register_function_list[raydium_register_function_index].func_arg_types=NULL;
+//raydium_register_function_list[raydium_register_function_index].func_arg_types=NULL;
 raydium_register_function_index++;
 raydium_register_function_list[raydium_register_function_index].fname=NULL;
 raydium_register_function_list[raydium_register_function_index].handler=NULL;
-raydium_register_function_list[raydium_register_function_index].func_arg_types=NULL;
+//raydium_register_function_list[raydium_register_function_index].func_arg_types=NULL;
 #else
 raydium_log("register function: ERROR: need PHP support");
 #endif

@@ -12,7 +12,8 @@ if [ "$?" != "0" ]; then
 fi
 
 rm test
-gcc $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so -Iphp/ -Iphp/main/ -Iphp/Zend -Iphp/TSRM -Iode/include/
+gcc $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
+-Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -Iraydium/ode/include/
 sync
 export LD_LIBRARY_PATH=.
 shift

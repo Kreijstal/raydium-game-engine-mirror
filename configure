@@ -8,178 +8,215 @@
 # dependencies if needed. See --help argument.
 
 # build file
-# $1 is file content
-# $2 is gcc's options
+# $1 is the test name, will be put in the log
+# $2 is file content
+# $3 is gcc's options
 test_build()
 {
-echo "$1" > configure.c
-gcc -g configure.c -Wall -o configure.bin $2 2> configure.log
+    echo -ne "* Testing $1..."
 
-if [ "$?" != "0" ]; then
-    echo " build: failed"
-    return 1
-fi
+    echo "   Testing $1"           >> configure.log
+    echo "   ====================" >> configure.log
+    echo "$2" > configure.c
+    gcc -g configure.c -Wall -o configure.bin $3 >> configure.log 2>> configure.log
+    
+    if [ "$?" != "0" ]; then
+	echo " build: failed"
+	rm configure.c
+	return 1
+    fi
+    
+    ./configure.bin >> configure.log
+    ret=$?
+    
+    if [ "$ret" = "0" ]; then
+	echo "OK"
+    fi
+    
+    if [ "$ret" != "0" ]; then
+	echo " run: failed"
+    fi
+    rm configure.c configure.bin
+    return $ret
 
-./configure.bin > configure.log
-ret=$?
-
-if [ "$ret" = "0" ]; then
-    echo " ok"
-fi
-
-if [ "$ret" != "0" ]; then
-    echo " run: failed"
-fi
-
-return $ret
 }
 
-
-# $1 is last returned code
-# $2 is error message
 exit_if_error()
 {
-if [ "$1" != "0" ]; then
-    echo "$2"
-    exit 1
-fi
-return 0
+    if [ $1 != 0 ]; then
+	echo "   $2"
+	exit 1
+    else
+	return 0
+    fi
 }
 
 usage_print()
 {
-echo "Quick configure script for Raydium 3D Game Engine"
-echo "  --help               this text"
-echo "  --install-ode        ODE local auto-install"
-echo "  --install-php        PHP 4 local auto-install"
-echo "  --ode-cvs            Use ODE CVS version"
-echo "  --disable-x          Disable X/GL/GLU test (server)"
-exit 0
+    echo "Quick configure script for Raydium 3D Game Engine"
+    echo "  --help               this text"
+    echo "  --force-ode-install  Force ODE local reinstall"
+    echo "  --force-php-install  Force PHP 5 local reinstall"
+    echo "  --ode-cvs            Use ODE CVS version"
+    echo "  --disable-x          Disable X/GL/GLU test (server)"
+    exit 0
 }
 
 ode_install()
 {
-echo "ODE Auto local installation ..."
-if [ -d "ode" ]; then
-    echo "ODE (partial ?) install detected, abort (ode/). Try removing --ode-install or ode/ directory."
-    exit 1
-fi
+    echo "* Installing ODE..."
+    if [ -d "ode" ]; then
+	echo "   Old ode/ directory detected. removing it..."
+	rm -rf ode
+    fi
+
+    if [ $force_ode == "false" ]; then
+	if [ -e "raydium/ode/lib/libode.a" ]; then
+	    echo "   ODE install detected. If you want to reinstall, add --force-ode-install."
+	    return 0
+	fi
+    else
+	rm -rf raydium/ode
+    fi
 
 # download
-
-if [ $ode_cvs = "true" ]; then
-    echo "Downloading from CVS ..."
-    cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
-    exit_if_error "$?" "No cvs client installed ?"
-    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P ode
-    exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
-else
-    echo "Downloading 'stable CVS' version from Raydium website ..."
-    if [ -f "ode.tar.gz" ]; then
-        rm -f ode.tar.gz
-    fi
-    wget -O ode.tar.gz http://raydium.org/data/stable_mirrors/ode.tar.gz
-    exit_if_error "$?" "Error downloading."
-
+    if [ $ode_cvs = "true" ]; then
+	echo "   Downloading from CVS ..."
+	cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
+	exit_if_error "$?" "No cvs client installed ?"
+	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P raydium/ode
+	exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
+    else
+	echo "   Downloading 'stable CVS' version from Raydium website ..."
+	if [ -f "raydium/ode.tar.gz" ]; then
+	    rm -f raydium/ode.tar.gz
+	fi
+	wget -O raydium/ode.tar.gz http://raydium.org/data/stable_mirrors/ode.tar.gz
+	exit_if_error "$?" "Error downloading."
+	
     # uncompress
-    echo "Uncompressing ..."
-    tar xzf ode.tar.gz
-    exit_if_error "$?" "tar not found, or corrupted archive"
-fi
+	echo "   Uncompressing ..."
+	cd raydium
+	tar xzf ode.tar.gz
+	ret=$?
+	cd - > /dev/null
+	exit_if_error "$ret" "tar not found, or corrupted archive"
+    fi
 
 # configure (step 1)
-echo '
+    echo '
 # Raydium ODE autoconfig
 PLATFORM=unix-gcc
 PRECISION=SINGLE
 BUILD=release
 WINDOWS16=0
 OPCODE_DIRECTORY=OPCODE
-' > ode/config/user-settings
+' > raydium/ode/config/user-settings
 
 # configure (step 2)
-echo "Configuring ... (ignore warnings)"
-cd ode
-make configure > ../configure.log
-ret=$?
-cd -
-exit_if_error "$?" "ODE configuration failed (see configure.log)"
+    echo "   Configuring ..."
+    echo "Configuring ODE" >> configure.log
+    echo "===============" >> configure.log
+    cd raydium/ode
+    make configure 2>>../../configure.log >>../../configure.log
+    ret=$?
+    cd - > /dev/null
+    exit_if_error "$?" "ODE configuration failed (see configure.log)"
 
-echo '
+    echo '
 #ifndef dEpsilon
 #define dEpsilon FLT_EPSILON
 #endif
-' >> ode/include/ode/config.h
+' >> raydium/ode/include/ode/config.h
 
 # build
-echo "Building ... (ignore warnings)"
-cd ode
-make > ../configure.log
-ret=$?
-cd -
-exit_if_error "$?" "ODE Build failed (see configure.log)"
-echo "deleting ode.tar.gz"
-if [ -f "ode.tar.gz" ]; then
-    rm -f ode.tar.gz
-fi
-echo "- ODE seems ready -"
+    echo "   Building ..."
+    echo "Building ODE" >> configure.log
+    echo "============" >> configure.log
+    cd raydium/ode
+    make 2>>../../configure.log >>../../configure.log
+    ret=$?
+    cd - > /dev/null
+    exit_if_error "$?" "ODE Build failed (see configure.log)"
+
+# deleting
+    echo "   Deleting tarball"
+    if [ -f "raydium/ode.tar.gz" ]; then
+	rm -f raydium/ode.tar.gz
+    fi
 }
 
 php_install()
 {
-echo "PHP4 Auto local installation ..."
-if [ -d "php" ]; then
-    echo "PHP (partial ?) install detected, abort (php/). Try removing --instal-php or php/ directory."
-    exit 1
-fi
+    echo "* Installing PHP5 ..."
+    if [ -d "php" ]; then
+	echo "   Old PHP install detected, removing."
+	rm -rf php
+    fi
+
+    if [ $force_php == "false" ]; then
+	if [ -e "raydium/php/libs/libphp5.a" ]; then
+	    echo "   PHP install detected. If you want to reinstall, add --force-php-install."
+	    return 0
+	fi
+    else
+	rm -rf raydium/php
+    fi
 
 # test bison
-echo "Testing 'bison' ..."
-bison --version > /dev/null 2>&1
-exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
+    echo "   Testing 'bison' ..."
+    bison --version > /dev/null 2>&1
+    exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
 
 # test curl
-echo "Testing 'curl' ..."
-curl-config --version > /dev/null 2>&1
-exit_if_error "$?" "curl-config not found in path. Please install 'curl-devel' to compile PHP"
+    echo "   Testing 'curl' ..."
+    curl-config --version > /dev/null 2>&1
+    exit_if_error "$?" "curl-config not found in path. Please install 'curl-devel' to compile PHP"
 
 # download
-echo "Downloading latest PHP4 ..."
-wget -O php4-last.tar.gz http://snaps.php.net/php4-STABLE-latest.tar.gz
-exit_if_error "$?" "wget not found, or network error"
+    echo "   Downloading latest PHP5 ..."
+    wget -O raydium/php5-latest.tar.gz http://snaps.php.net/php5.1-latest.tar.gz
+    exit_if_error "$?" "wget not found, or network error"
 
 # uncompress
-echo "Uncompressing ..."
-tar xzf php4-last.tar.gz
-exit_if_error "$?" "tar not found, or corrupted archive"
+    echo "   Uncompressing ..."
+    cd raydium
+    tar xzf php5-latest.tar.gz
+    ret=$?
+    cd - > /dev/null
+    exit_if_error "$ret" "tar not found, or corrupted archive"
 
 # rename
-php=`ls -dt php4-STABLE-*/`
-echo "Renaming $php to php/ ..."
-mv "$php" "php"
-exit_if_error "$?" "Is this script up to date ?"
+    php=`ls -dt raydium/php5.1*`
+    echo "   Renaming $php to raydium/php/ ..."
+    mv "$php" "raydium/php"
+    exit_if_error "$?" "Is this script up to date ?"
 
 # configure
-echo "Configuring ..."
-cd php
-./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl > ../configure.log
-ret=$?
-cd -
-exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"
+    echo "   Configuring PHP ..."
+    echo "Configuring PHP" >> configure.log
+    echo "===============" >> configure.log
+    cd raydium/php
+    ./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl \
+    --disable-simplexml --disable-xmlreader --disable-xmlwriter --enable-soap \
+    >>../../configure.log 2>>../../configure.log
+    ret=$?
+    cd - > /dev/null
+    exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"
 
 # compile
-echo "Building ... (ignore warnings)"
-cd php
-make > ../configure.log
-ret=$?
-cd -
-exit_if_error "$ret" "PHP building failed, see configure.log"
+    echo "   Building PHP..."
+    echo "Building PHP" >> configure.log
+    echo "============" >> configure.log
+    cd raydium/php
+    make >>../../configure.log 2>>../../configure.log
+    ret=$?
+    cd - > /dev/null
+    exit_if_error "$ret" "PHP build failed, see configure.log"
 
 # deleting
-echo "Deleting tar.gz ..."
-rm -f php4-last.tar.gz
-
-echo "- PHP4 seems ready -"
+    echo "   Deleting tar.gz ..."
+    rm -f raydium/php5-latest.tar.gz
 }
 
 
@@ -187,75 +224,69 @@ echo "- PHP4 seems ready -"
 
 for i in "$@"; do
     if [ $i = "--help" ]; then
-    usage_print
+	usage_print
     fi
 done
 
 ode_cvs="false"
 for i in "$@"; do
     if [ $i = "--ode-cvs" ]; then
-    ode_cvs="true"
+	ode_cvs="true"
     fi
 done
 
-
+disable_x="no"
 for i in "$@"; do
-    if [ $i = "--install-ode" ]; then
-    ode_install
+    if [ $i = "--disable-x" ]; then
+	disable_x="yes"
     fi
 done
 
+force_ode="false"
 for i in "$@"; do
-    if [ $i = "--install-php" ]; then
-    php_install
+    if [ $i = "--force-ode-install" ]; then
+	force_ode="true"
     fi
 done
+
+force_php="false"
+for i in "$@"; do
+    if [ $i = "--force-php-install" ]; then
+	force_php="true"
+    fi
+done
+
+# empty log
+rm configure.log 2>> /dev/null
+
+# Check ODE installation
+ode_install
+
+# Check PHP installation
+php_install
 
 # Test compiler
-echo -n "* GCC :"
 file='int main(void) { return 0; }'
-test_build "$file" ""
+test_build "gcc" "$file" ""
 exit_if_error "$?" "GNU C Compiler (GCC) is missing"
 
 # Test OpenGL
-echo -n "* OpenGL lib :"
-
-file='#include <GL/gl.h>
+file='
+#include <GL/gl.h>
 int main(void) { if(0) glVertex3f(0,0,0); return 0; }'
-test_build "$file" "-L/usr/X11R6/lib/ -lGL"
+test_build "OpenGL" "$file" "-L/usr/X11R6/lib/ -lGL"
 exit_if_error "$?" "You must install opengl-devel package"
 
-
-disable_x="no";
-for i in "$@"; do
-    if [ $i = "--disable-x" ]; then
-    disable_x="yes";
-    fi
-done
-
 # Test GLU
-echo -n "* GLU lib :"
-
 file='#include <GL/gl.h>
 #include <GL/glu.h>
 int main(void) { return 0; }'
-test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
+test_build "GLU" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
 exit_if_error "$?" "You must install glu-devel package"
 
-# Test GLUT
-#echo -n "* GLUT lib :"
-
-#file='#include <GL/glut.h>
-#int main(void) { gluGetString(GLU_VERSION); return 0; }'
-#test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lglut"
-#exit_if_error "$?" "You must install glut-devel package"
-
-
 # Full GL/GLU test, looking for hardware accel
-echo -n "* GL/GLU and hardware support :"
-
 if [ $disable_x = "no" ]; then
-file='
+    file='
 // define a dummy Raydium background for myglut :
 #define RAYDIUM_RENDERING_WINDOW      	    	0
 #define RAYDIUM_RENDERING_FULLSCREEN  	     	1
@@ -280,14 +311,13 @@ if(!strcmp(r,"Mesa GLX Indirect"))
     }
 return 0; }
 '
-test_build "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
-exit_if_error "$?" "Full GL test failed, see configure.log"
+    test_build "GL/GLU hardware support" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
+    exit_if_error "$?" "Full GL test failed, see configure.log"
 else
-echo " DISABLED";
+    echo " DISABLED";
 fi
 
 # OpenAL
-echo -n "* OpenAL :"
 file="
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -305,11 +335,10 @@ dev=alcOpenDevice(initstr);
 sleep(1);
 alcCloseDevice(dev);
 return 0; }"
-test_build "$file" "-lopenal"
+test_build "OpenAL" "$file" "-lopenal"
 exit_if_error "$?" "openal-devel is required. Official CVS may be a good idea"
 
 # OpenAL 1.1
-echo -n "* OpenAL 1.1 and ALut:"
 file="
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -330,15 +359,10 @@ sleep(1);
 #endif
 alcCloseDevice(dev);
 return 0; }"
-test_build "$file" "-lopenal -lalut"
-#exit_if_error "$?" ""
-if [ "$?" != "0" ]; then
-    echo "Cannot find OpenAL 1.1 and ALUT. You can try to remove -lalut from Makefile and/or *comp*sh scripts, but Raydium with OpenAL 1.0 is not supported."
-fi
-
+test_build "OpenAL 1.1 and ALUT" "$file" "-lopenal -lalut"
+exit_if_error "$?" "Cannot find OpenAL 1.1 and ALUT. You can try to remove -lalut from Makefile and/or *comp*sh scripts, but Raydium with OpenAL 1.0 is not supported."
 
 # OGG/Vorbis
-echo -n "* OGG/Vorbis :"
 file='
 #include <stdio.h>
 #include <stdlib.h>
@@ -355,38 +379,10 @@ ov_clear(&vf);
 return(0);
 }'
 # -logg seems useless ...
-test_build "$file" "-lvorbis -lvorbisfile -logg"
+test_build "Ogg/Vorbis" "$file" "-lvorbis -lvorbisfile -logg"
 exit_if_error "$?" "ogg and vorbis devels are required (libogg,libvorbis and libvorbisfile)"
 
-
-# ODE
-echo -n "* ODE (local) :"
-if [ -f "ode/lib/libode.a" ]; then
-    # found (0 = ok)
-    echo " ok"
-    ret=0
-else
-    echo " not found"
-    ret=1
-fi
-exit_if_error "$ret" "ODE is not installed (ODE must be local). Try $0 --install-ode !"
-
-
-# PHP
-echo -n "* PHP 4 (local) :"
-if [ -f "php/libs/libphp4.a" ]; then
-    # found (0 = ok)
-    echo " ok"
-    ret=0
-else
-    echo " not found"
-    ret=1
-fi
-exit_if_error "$ret" "PHP 4 is not installed (PHP must be local). Try $0 --install-php !"
-
-
 # libjpeg
-echo -n "* libjpeg :"
 file='
 #include <stdio.h>
 #include <jpeglib.h>
@@ -406,13 +402,12 @@ jpeg_destroy_decompress(&cinfo);
 return 0;
 }
 '
-test_build "$file" "-ljpeg"
+test_build "libjpeg" "$file" "-ljpeg"
 exit_if_error "$?" "libjpeg-devel not available."
-
-
 
 ##### End of tests
 
+echo
 echo "- Build system seems ready -"
 echo "- Use \"make\" to build Raydium, and try: \"./odyncomp.sh test6.c\""
 echo "- You can also use \"./ocomp.sh test6.c\" for a quick direct test"
