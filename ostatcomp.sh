@@ -10,8 +10,9 @@ gcc -g $1 -Wall -o test -Wl,-dynamic-linker=/lib/ld-linux.so.2 -Wl,-Bstatic -L/u
 -Iraydium/ode/include/ raydium/ode/lib/libode.a \
 -lXmu -lXinerama -lopenal -lalut -lvorbisfile -lvorbis -logg \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a \
--lcrypt -lssl -lresolv -lz -lcurl -lxml2 \
+-lcrypt -lssl -lcrypto -lidn -lresolv -lz -lcurl -lxml2 -lssl -lcrypto -lidn \
 -Wl,-Bdynamic -lGL -lGLU -lasound -lpthread
+# Strange thing above : -lssl -lcrypto must appear twice arround -lcurl ...
 sync
 shift
 ./test "$@"
