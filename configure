@@ -83,7 +83,7 @@ ode_install()
     if [ $ode_cvs = "true" ]; then
 	echo "   Downloading from CVS ..."
 	cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
-	exit_if_error "$?" "No cvs client installed ?"
+	exit_if_error "$?" "No CVS client installed, or network problem"
 	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P raydium/ode
 	exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
     else
