@@ -7,14 +7,14 @@ $list="";
 $nl="";
 
 
-if(!http_test()) // R3S function
+$ok=(integer)http_test(); // R3S function
+if(!$ok)
     {
     // network unavailable, read from disk
     $list=file_get_contents("mania_tracklist.txt")."";
     //var_dump($list);
     die("");
     }
-
 
 $url="http://maniadrive.cqfd-corp.org/score/list.php";
 $file=file($url);

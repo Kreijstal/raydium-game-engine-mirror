@@ -212,11 +212,16 @@ fprintf(fp,"%s;%f\n",track,time);
 fclose(fp);
 }
 
-void get_tracklist(char *list)
+signed char get_tracklist(char *list)
 {
+int ok;
+
 raydium_register_variable(list,RAYDIUM_REGISTER_STR,"list");
+raydium_register_variable(&ok,RAYDIUM_REGISTER_INT,"ok");
 raydium_php_exec("mania_tracklist.php");
 raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
+return ok;
 }
 
 
@@ -721,11 +726,12 @@ int handle;
 char l[RAYDIUM_GUI_DATASIZE];
 char lasttrack[RAYDIUM_MAX_NAME_LEN];
 int ilt;
+signed char net;
 
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 raydium_parser_db_get("ManiaDrive-LastInternetTrack",lasttrack,"");
 
-get_tracklist(l);
+net=get_tracklist(l);
 ilt=raydium_gui_list_id(lasttrack,l);
 if(ilt<0) ilt=0;
 
@@ -751,6 +757,19 @@ raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
 
 raydium_gui_label_create("lblURL1",handle,50,40,"Live scores :",0,0,0);
 raydium_gui_label_create("lblURL2",handle,50,30,"http://maniadrive.raydium.org/",0.7,0,0);
+
+if(!net)
+    {
+    char *msg1="WARNING: Internet connection failed !";
+    char *msg2="Now in offline mode. (set your proxy ?)";
+    handle=raydium_gui_window_create("error",15,45,70,20);
+    raydium_gui_widget_sizes(0,0,18);
+    raydium_gui_label_create("lblError1",handle,50,80,msg1,0,0,0);
+    raydium_gui_label_create("lblError2",handle,50,60,msg2,0,0,0);
+    raydium_gui_widget_sizes(15,5,18);
+    raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
+    }
+
 gui_start();
 }
 
