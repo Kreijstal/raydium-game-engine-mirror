@@ -37,4 +37,10 @@ Will contact R3S servers to get file list, using ##filter## (shell-like
 syntax). Default ##filter## is ##*##.
 **/
 
+extern signed char raydium_rayphp_http_test(void);
+/**
+Test if Internet connection is available using Raydium website.
+(0 means 'not available', 1 means 'OK')
+**/
+
 #endif

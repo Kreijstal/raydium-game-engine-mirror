@@ -1,11 +1,13 @@
 <?
 // this file is used by ManiaDrive to get
 // track list from CQFD Corp website.
+require("rayphp/libfile.php");
 
 $list="";
 $nl="";
 
-if(!raydium_network_internet_test())
+
+if(!http_test()) // R3S function
     {
     // network unavailable, read from disk
     $list=file_get_contents("mania_tracklist.txt")."";

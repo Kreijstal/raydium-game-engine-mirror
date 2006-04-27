@@ -312,4 +312,32 @@ function depends_find($filename)
   return $ret;
 }
 
+/////////////////// Network section
+
+// tests if the website is reacheable.
+function http_test()
+{
+  $url="http://raydium.org/ping.php";
+  $ch = curl_init();
+  if (defined($GLOBALS['raydium_proxy']))
+    curl_setopt ($ch, CURLOPT_PROXY, $GLOBALS['raydium_proxy']);
+
+  curl_setopt ($ch, CURLOPT_URL, $url);
+  curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt ($ch, CURLOPT_TIMEOUT, 3);
+
+  $result = curl_exec ($ch);
+  if (curl_errno($ch))
+  {
+    print "HTTP connection test failed: " . curl_error($ch);
+    return false;
+  }
+  else
+  {
+  curl_close($ch);
+  return true;
+  }
+}
+
 ?>

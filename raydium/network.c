@@ -1355,13 +1355,16 @@ raydium_log("Packets (err): Tx: %i erased or lost, bogus ACK: %i",raydium_networ
 }
 
 
+/*
 // Test internet connection using a root dns server ... shame ? :)
 #define RAYDIUM_NETWORK_INTERNET_TEST_HOST	"198.41.0.4"
 #define RAYDIUM_NETWORK_INTERNET_TEST_PORT	53
 #define RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT	8
+*/
 
 signed char raydium_network_internet_test(void)
 {
+/*
 int sockfd;
 struct sockaddr_in serv_addr;
 struct hostent *server;
@@ -1379,34 +1382,6 @@ serv_addr.sin_family = AF_INET;
 
 memcpy(&(serv_addr.sin_addr.s_addr),server->h_addr,server->h_length);
 serv_addr.sin_port = htons(RAYDIUM_NETWORK_INTERNET_TEST_PORT);
-
-/*
-svlen=sizeof(sv);
-timeout.tv_sec=1;
-timeout.tv_usec=0;
-if (getsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&sv, &svlen) < 0)
-    {
-    raydium_log("network: SO_RCVTIMEO not supported by sytem, cannot detect internet connection");
-    return 1; // default to true
-    }
-
-printf("%i %i\n",sv.tv_sec,sv.tv_usec);
-
-if (setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0)
-    {
-    raydium_log("network: SO_RCVTIMEO not supported by sytem, cannot detect internet connection");
-    return 1; // default to true    
-    }
-*/
-
-/*
-    {
-    perror("connect");
-    raydium_log("network: cannot detect internet connection, strange behavior with connect() ...");
-    close(sockfd);
-    return 0;
-    }
-*/
 
 raydium_network_set_socket_block_internal(sockfd,0);
 
@@ -1439,6 +1414,10 @@ if (select(sockfd + 1, NULL, &writable, NULL, &timeout) <= 0 || errno==ENETUNREA
 //raydium_log("network: internet link is ok");
 raydium_network_socket_close(sockfd);
 return 1; // writable
+*/
+
+// may use a cache system ? (time-limited ? with an arg ?)
+return raydium_rayphp_http_test();
 }
 
 

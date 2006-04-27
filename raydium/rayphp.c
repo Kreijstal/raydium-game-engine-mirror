@@ -120,3 +120,13 @@ free(res);
 return status;
 }
 
+signed char raydium_rayphp_http_test(void)
+{
+int status=0;
+
+raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
+raydium_php_exec("rayphp/httptest.php");
+raydium_register_variable_unregister_last();
+
+return status;
+}

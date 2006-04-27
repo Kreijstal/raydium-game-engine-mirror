@@ -501,7 +501,7 @@ Dumps various stats about network stack to console.
 extern signed char raydium_network_internet_test(void);
 /**
 This function will test if direct internet connection is available,
-using a DNS root server. Use with caution.
+using Raydium webiste. This function supports proxies.
 **/
 
 #ifdef linux
