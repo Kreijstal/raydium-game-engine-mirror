@@ -88,6 +88,7 @@ void music_random(void);
 void leave(void);
 void build_gui_ErrorDownload(void);
 void build_gui_Lan(void);
+void btnBackToMainMenu(raydium_gui_Object *w);
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -350,7 +351,17 @@ raydium_gui_window_delete_name("keyhelp");
 
 void AfterFade(void)
 {
-mni_load(mni_next);
+int handle;
+
+if(!mni_load(mni_next))
+    {
+    handle=raydium_gui_window_create("menu",25,45,50,15);
+    raydium_gui_widget_sizes(0,0,18);
+    raydium_gui_label_create("lblError",handle,50,80,"Error loading track ...",0,0,0);
+    raydium_gui_widget_sizes(15,5,18);
+    raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnBackToMainMenu);
+    raydium_sound_load_music(MUSIC_MENU);
+    }
 mni_next[0]=0;
 }
 
