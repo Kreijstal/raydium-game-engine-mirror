@@ -13,6 +13,12 @@
 // svaria stands for: (char *, ...)
 // Don't forget to register your functions, too ! (see register.c or docs)
 
+#ifndef PHP_WRAPPERS_C
+#define PHP_WRAPPERS_C
+
+// use this macro when registering your functions
+#define C2PHP ZEND_FN
+
 // void f(void)
 #define PHP_v_v(fname)\
 ZEND_FUNCTION(fname)\
@@ -532,3 +538,4 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
 RETURN_LONG(fname(a,b,c,d,e,f,g));\
 }
 
+#endif

@@ -14,9 +14,6 @@
 // Known bug: recursive Ray/PHP calls are fatal (segfault in zend core).
 
 #include "php_wrappers.c"
-// use this macro when registering your functions
-#define C2PHP ZEND_FN
-
 
 // Dirty globals... (needed for WIN32 PHP support)
 #ifdef ZTS

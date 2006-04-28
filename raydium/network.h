@@ -11,20 +11,31 @@
 #define NETWORK_H
 #ifdef RAYDIUM_NETWORK_ONLY
 
+#include "php_wrappers.c"
+
 void raydium_init_args(int argc, char **argv);
 int raydium_rayphp_repository_file_get(char *path);
+signed char raydium_rayphp_http_test(void);
 void raydium_console_init(void);
 void raydium_php_init(void);
 signed char raydium_network_init(void);
 void raydium_network_internal_dump(void);
 signed char raydium_network_server_create(void);
 void raydium_random_randomize(void);
+signed char raydium_parser_db_get(char *key, char *value, char *def);
+void raydium_register_function(void *addr,char *name);
 
 void raydium_network_only_quit(int sig)
 {
 raydium_network_internal_dump();
 exit(0);
 }
+
+#ifdef PHP_SUPPORT
+// do the minimal reg_api job (this should not be done like this ! :/)
+// part 1
+PHP_i_sss(raydium_parser_db_get);
+#endif
 
 void raydium_network_only_init(int argc, char **argv)
 {
@@ -35,6 +46,9 @@ raydium_random_randomize();
 raydium_console_init();
 #ifdef PHP_SUPPORT
 raydium_php_init();
+// do the minimal reg_api job (this should not be done like this ! :/)
+// part 2
+raydium_register_function(C2PHP(raydium_parser_db_get),"raydium_parser_db_get");
 #endif
 raydium_network_init();
 raydium_network_server_create();
