@@ -26,7 +26,7 @@ if [ "$?" != "0" ]; then
 fi
 
 echo "downloading lastest SVN version ..."
-svn checkout svn://cqfd-corp.org/raydium/trunk $directory
+svn checkout svn://raydium.org/raydium/trunk $directory
 
 # build archive
 cd build
