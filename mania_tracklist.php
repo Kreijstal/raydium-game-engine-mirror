@@ -13,11 +13,12 @@ if(!$ok)
     // network unavailable, read from disk
     $list=file_get_contents("mania_tracklist.txt")."";
     //var_dump($list);
-    die("");
+    die("Internet connection unavailable.");
     }
 
 $url="http://maniadrive.cqfd-corp.org/score/list.php";
-$file=file($url);
+$file=http_download($url);
+$file=explode("\n", $file);
 
 foreach($file as $t)
     {

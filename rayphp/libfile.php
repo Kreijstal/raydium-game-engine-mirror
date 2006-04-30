@@ -51,7 +51,7 @@ function update_file($file,$repos,$local,$force)
   return true;
 }
 
-// Retrieves a file from the internet using HTTP. return the file as a sigle chain
+// Retrieves a file from the internet using HTTP. Return the file as a string
 function http_download($url)
 {
   $ch = curl_init();
@@ -65,7 +65,7 @@ function http_download($url)
   $result = curl_exec ($ch);
   if (curl_errno($ch)) 
     {
-      print "ERROR " . curl_errno($ch) ." : " . curl_error($ch);
+      print "ERROR downloading file: " . curl_error($ch);
       return false;
     } 
   else 
