@@ -180,19 +180,19 @@ php_install()
 
 # download
     echo "   Downloading latest PHP5 ..."
-    wget -O raydium/php5-latest.tar.gz http://snaps.php.net/php5.1-latest.tar.gz
+    wget -O raydium/php-latest.tar.gz http://snaps.php.net/php5.2-latest.tar.gz
     exit_if_error "$?" "wget not found, or network error"
 
 # uncompress
     echo "   Uncompressing ..."
     cd raydium
-    tar xzf php5-latest.tar.gz
+    tar xzf php-latest.tar.gz
     ret=$?
     cd - > /dev/null
     exit_if_error "$ret" "tar not found, or corrupted archive"
 
 # rename
-    php=`ls -dt raydium/php5.1*`
+    php=`ls -dt raydium/php5*`
     echo "   Renaming $php to raydium/php/ ..."
     mv "$php" "raydium/php"
     exit_if_error "$?" "Is this script up to date ?"
@@ -221,7 +221,7 @@ php_install()
 
 # deleting
     echo "   Deleting tar.gz ..."
-    rm -f raydium/php5-latest.tar.gz
+    rm -f raydium/php-latest.tar.gz
 }
 
 
