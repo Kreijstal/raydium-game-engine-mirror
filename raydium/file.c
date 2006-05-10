@@ -55,12 +55,53 @@ FILE *raydium_file_fopen(char *file, char *mode)
 FILE *fp;
 int i;
 char found=0;
+char *complete_path;
+char path[] = ".:media:..:../media";
+char *test;
+char *context;
 
 if(!file || !strlen(file))
     return NULL;
 
+//explicit absolute path
+if (file[0] == '/')
+  complete_path = file;
+//explicit relative path
+else if (file[0] == '.')
+{
+   complete_path = malloc(sizeof(char) * (strlen(getcwd(NULL, 0)) + strlen(file) + 2));
+   strcpy(complete_path, getcwd(NULL, 0));
+   strcat(complete_path, "/");
+   strcat(complete_path, file);
+}
+
+//no path given :
+else 
+{
+  test = strtok_r(path, ":", &context);
+  while (test) 
+    {
+      complete_path = malloc(sizeof(char) * (strlen(file) + strlen(test) + 2));
+      strcpy(complete_path, test);
+      strcat(complete_path, "/");
+      strcat(complete_path, file);
+      if (access(complete_path, R_OK) == 0)
+	{
+	  break;
+	} 
+      else
+	{
+	  free(complete_path);
+	}
+      test = strtok_r(NULL, ":", &context);
+    }
+}
+ 
+if (strlen(complete_path) == 0)
+     complete_path=file;
+     
 for(i=0;i<raydium_file_log_fopen_index;i++)
-    if(!strcmp(raydium_file_log_fopen[i],file))
+    if(!strcmp(raydium_file_log_fopen[i],complete_path))
 	{
 	found=1;
 	break;
@@ -70,19 +111,26 @@ if(!found) strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index++],file);
 
 if(strchr(mode,'w') || raydium_init_cli_option("repository-disable",NULL))
     {
-    return fopen(file,mode);
+    return fopen(complete_path,mode);
     }
 
 if( !raydium_init_cli_option("repository-refresh",NULL) && 
     !raydium_init_cli_option("repository-force",NULL) )
 {
- fp=fopen(file,mode);
+ fp=fopen(complete_path,mode);
  if(fp) return fp;
 }
-raydium_rayphp_repository_file_get(file);
-fp=fopen(file,mode);
 
-return fp;
+//if (access("font2.tga", R_OK) == 0)
+//    raydium_osd_printf(2,98,16,0.5,"font2.tga","Loading %s", file);
+if (raydium_rayphp_repository_file_get(complete_path))
+{
+  // caution, complete_path is now garbage, 
+  // let's use file because we dl in "." directory anyways
+  return fopen(file,mode);
+}
+else 
+return NULL;
 #else
 return fopen(file,mode);
 #endif

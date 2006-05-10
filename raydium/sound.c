@@ -67,11 +67,6 @@ void raydium_sound_verify(char *caller)
  if ((error = alGetError()) != AL_NO_ERROR)
  {
   raydium_log("sound: ERROR : %s :%d",caller,error);
-//  raydium_log("sound: Deleting buffers");
-//   alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
-//  raydium_log("sound: Releasing OpenAL");
-//   alutExit();
-//   exit(1);
  }
 }
 
@@ -152,15 +147,32 @@ int raydium_sound_LoadWav(const char *fname)
  fp=raydium_file_fopen((char *)fname,"r");
  if(fp==NULL)
  {
-  raydium_log("sound: ERROR opening file %s",fname);
+  raydium_log("sound: ERROR opening WAV file %s",fname);
   return -1;
-  //exit(1);
  }
+
+ char buffer[1024];
+ char *wav_file = NULL;
+ int wav_size = 0;
+ int grow = 0;
+ while( (grow = fread(buffer, sizeof(char) , 1024, fp)) > 0)
+ {
+    wav_file = realloc(wav_file, wav_size + grow * sizeof(char));
+    memcpy(wav_file + wav_size, buffer, grow * sizeof(char));
+    wav_size += grow * sizeof(char);
+ }  
+ if(!feof(fp))
+ {
+    raydium_log("sound: ERROR reading WAV file %s",fname);
+    return -1;
+ }
+ 
+ raydium_log("sound: Loaded %s, size %i bytes",fname, wav_size);
  fclose(fp);
 
 #ifdef ALUT_API_MAJOR_VERSION_BUT_WIN32
- data=alutLoadMemoryFromFile(fname,&format,&size,&freq);
-     raydium_sound_verify("alutLoadMemoryFromFile");
+ data=alutLoadMemoryFromFileImage(wav_file,wav_size,&format,&size,&freq);
+ raydium_sound_verify("alutLoadMemoryFromFileImage");
 
  if(data)
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
@@ -170,8 +182,8 @@ int raydium_sound_LoadWav(const char *fname)
   free(data);
 
 #else
-  alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
-     raydium_sound_verify("alutLoadWAVFile");
+  alutLoadWAVMemory((ALbyte *)wav_file,&format,&data,&size,&freq,&boolean);
+     raydium_sound_verify("alutLoadWAVMemory");
 
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
      raydium_sound_verify("alBufferData");
