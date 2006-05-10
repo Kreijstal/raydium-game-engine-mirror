@@ -18,9 +18,11 @@ if(!$ok)
 
 $url="http://maniadrive.cqfd-corp.org/score/list.php";
 $file=http_download($url);
+
 $file=explode("\n", $file);
 
 foreach($file as $t)
+    if($t!="")
     {
     $list.=$nl.trim($t);
     $nl="\n";
