@@ -41,6 +41,7 @@ GLfloat temps[]={0,0,0};
 int sound_car;
 int sound_checkpoint;
 int sound_owww;
+int sound_wizz;
 char vue=3;
 GLfloat camx=-20;
 GLfloat camy=50;
@@ -1501,23 +1502,31 @@ switch(id)
 	vect[1]=0;
 	vect[2]=0;
 	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+	raydium_sound_SetSourcePosCamera(sound_wizz);
+	raydium_sound_SourcePlay(sound_wizz);
 	break;
     case TYPE_TURBO_W:
 	vect[0]=-TURBO_POWA;
 	vect[1]=0;
 	vect[2]=0;
 	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+	raydium_sound_SetSourcePosCamera(sound_wizz);
+	raydium_sound_SourcePlay(sound_wizz);
 	break;
     case TYPE_TURBO_N:
 	vect[0]=0;
 	vect[1]=TURBO_POWA;
 	vect[2]=0;
 	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+	raydium_sound_SetSourcePosCamera(sound_wizz);
+	raydium_sound_SourcePlay(sound_wizz);
 	break;
     case TYPE_TURBO_S:
 	vect[0]=0;
 	vect[1]=-TURBO_POWA;
 	vect[2]=0;
+	raydium_sound_SetSourcePosCamera(sound_wizz);
+	raydium_sound_SourcePlay(sound_wizz);
 	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
 	break;
     }
@@ -2202,6 +2211,8 @@ raydium_sound_SetSourceLoop(sound_checkpoint,0);
 sound_owww=raydium_sound_LoadWav("owww.wav");
 raydium_sound_SetSourceLoop(sound_owww,0);
 
+sound_wizz=raydium_sound_LoadWav("wizz.wav");
+raydium_sound_SetSourceLoop(sound_wizz,0);
 
 strcpy(raydium_console_config_texture,"logo_console.tga");
 raydium_sky_box_cache();
