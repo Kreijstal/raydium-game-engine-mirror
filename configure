@@ -169,7 +169,7 @@ php_install()
     exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
 
 # test libcurl
-    echo "   Testing 'lincurl' ..."
+    echo "   Testing 'libcurl' ..."
     curl-config --version > /dev/null 2>&1
     exit_if_error "$?" "curl-config not found in path. Please install 'libcurl-devel' to compile PHP"
 
