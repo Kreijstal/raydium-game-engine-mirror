@@ -123,14 +123,10 @@ if( !raydium_init_cli_option("repository-refresh",NULL) &&
 
 //if (access("font2.tga", R_OK) == 0)
 //    raydium_osd_printf(2,98,16,0.5,"font2.tga","Loading %s", file);
-if (raydium_rayphp_repository_file_get(complete_path))
-{
-  // caution, complete_path is now garbage, 
-  // let's use file because we dl in "." directory anyways
-  return fopen(file,mode);
-}
-else 
-return NULL;
+raydium_rayphp_repository_file_get(complete_path);
+// caution, complete_path is now garbage, 
+// let's use file because we dl in "." directory anyways
+return fopen(file,mode);
 #else
 return fopen(file,mode);
 #endif
