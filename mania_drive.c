@@ -2,7 +2,7 @@
 // http://maniadrive.raydium.org/
 // Needs mania2.static / mania2.exe
 // and mania_server.static / mania_server.exe
-char *version="ManiaDrive 0.96";
+char *version="ManiaDrive 1.01";
 
 // TODO:
 // ... code :
