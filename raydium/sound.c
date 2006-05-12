@@ -132,6 +132,10 @@ int raydium_sound_LoadWav(const char *fname)
  ALfloat freq;
 #endif
 
+char buffer[1024];
+char *wav_file = NULL;
+int wav_size = 0;
+int grow = 0;
 
  if(raydium_sound_top_buffer==RAYDIUM_SOUND_NUM_BUFFERS)
  {
@@ -151,10 +155,6 @@ int raydium_sound_LoadWav(const char *fname)
   return -1;
  }
 
- char buffer[1024];
- char *wav_file = NULL;
- int wav_size = 0;
- int grow = 0;
  while( (grow = fread(buffer, sizeof(char) , 1024, fp)) > 0)
  {
     wav_file = realloc(wav_file, wav_size + grow * sizeof(char));

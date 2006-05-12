@@ -92,12 +92,13 @@ else
       else
 	{
 	  free(complete_path);
+          complete_path=NULL;
 	}
       test = strtok_r(NULL, ":", &context);
     }
 }
  
-if (strlen(complete_path) == 0)
+if (!complete_path || strlen(complete_path) == 0)
      complete_path=file;
      
 for(i=0;i<raydium_file_log_fopen_index;i++)
