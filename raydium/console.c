@@ -228,20 +228,21 @@ if(!treated && raydium_console_gets_callback)
 
 }
 
-// need to secure this one too
 void raydium_console_line_add(char *format, ...)
 {
-char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
-va_start(argptr,format);
-vsprintf(str,format,argptr);
-va_end(argptr);
+int retlen;
 
 raydium_console_line_last++;
 if(raydium_console_line_last>=RAYDIUM_CONSOLE_MAX_LINES)
    raydium_console_line_last=0;
 
-strcpy(raydium_console_lines[raydium_console_line_last],str);
+va_start(argptr,format);
+retlen = vsnprintf(raydium_console_lines[raydium_console_line_last],RAYDIUM_MAX_NAME_LEN - 1,format,argptr);
+va_end(argptr);
+
+if(retlen < 0) retlen = 0;
+raydium_console_lines[raydium_console_line_last][retlen] = '\0';
 }
 
 int raydium_console_history_read(char **hist)

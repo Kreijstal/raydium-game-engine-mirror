@@ -12,18 +12,21 @@
 
 void raydium_console_line_add(char *format, ...);
 
-// need to be secured
 void raydium_log(char *format, ...)
 {
 char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
+int retlen;
 
 
 va_start(argptr,format);
-vsprintf(str,format,argptr);
+retlen = vsnprintf(str,RAYDIUM_MAX_NAME_LEN - 1, format,argptr);
 va_end(argptr);
+
+if(retlen < 0) retlen = 0;
+str[retlen] = '\0';
 
 printf("Raydium: %s\n",str);
 if(raydium_log_file) fprintf(raydium_log_file,"%s\n",str);
-raydium_console_line_add(str);
+raydium_console_line_add("%s", str);
 }
