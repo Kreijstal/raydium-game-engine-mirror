@@ -242,7 +242,7 @@ if(!raydium_network_socket_is_readable(raydium_web_listenfd))
     return;
 
 length = sizeof(cli_addr);
-if((socketfd = accept(raydium_web_listenfd, (struct sockaddr *)&cli_addr, &length)) < 0)
+if((socketfd = accept(raydium_web_listenfd, (struct sockaddr *)&cli_addr, (socklen_t *)&length)) < 0)
     return;
 
 

@@ -17,6 +17,9 @@
 #warning You must use OpenAL 1.1 or greater ! See configure script.
 #endif
 
+#ifndef ALchar
+#define ALchar char
+#endif
 
 // music OGG infos
 
