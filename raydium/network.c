@@ -189,7 +189,9 @@ return 0;
 signed char raydium_network_queue_is_tcpid(int type)
 {
 int i=0;
-for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
+
+if(type >= 0)
+  for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
     if(raydium_network_netcall_type[i]==type && raydium_network_netcall_tcp[i])
 	return 1;
 return 0;
@@ -489,13 +491,14 @@ char tmpbuff[RAYDIUM_NETWORK_PACKET_SIZE];
 int i;
 void (*f)(int, char*);
 
-for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
- if(raydium_network_netcall_type[i]==type)
- {
-    memcpy(tmpbuff,buff,RAYDIUM_NETWORK_PACKET_SIZE);
-    f=raydium_network_netcall_func[i];
-    f(type,tmpbuff);
- }
+if(type >= 0)
+  for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
+   if(raydium_network_netcall_type[i]==type)
+   {
+      memcpy(tmpbuff,buff,RAYDIUM_NETWORK_PACKET_SIZE);
+      f=raydium_network_netcall_func[i];
+      f(type,tmpbuff);
+   }
 }
 
 signed char raydium_network_timeout_check(void)
