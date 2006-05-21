@@ -256,6 +256,10 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   int i_d1, i_d2;
 #endif
 
+  PropMotifWmHints hints  ;
+  Atom prop_t ;
+  Atom prop   ;
+
   displayName=getenv ( "DISPLAY" ) ;
 
   if ( displayName == NULL ) displayName = ":0.0" ;
@@ -446,9 +450,6 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   wmHints.flags = StateHint;
   wmHints.initial_state = NormalState ;
 
-  PropMotifWmHints hints  ;
-  Atom prop_t ;
-  Atom prop   ;
 
   hints . flags = MWM_HINTS_DECORATIONS ;
   hints . decorations = border ? MWM_DECOR_ALL : 0 ;
