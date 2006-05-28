@@ -17,7 +17,7 @@ available (see ##object.c##).
 ##file.c## use .tri mesh files (text), available in 4 versions:
 
 1. version 1: providing normals and uv texture mapping informations.
-2. version 0: providing normals.
+2. version 0: providing uv texture mapping.
 3. version -1: only providing vertices. 
 4. version 2: mesh animation support
 	 
