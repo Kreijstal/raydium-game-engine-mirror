@@ -1,8 +1,6 @@
 // ManiaDrive - CQFD Corp
 // http://maniadrive.raydium.org/
-// Needs mania2.static / mania2.exe
-// and mania_server.static / mania_server.exe
-char *version="ManiaDrive 1.01";
+char *version="ManiaDrive 1.02";
 
 // TODO:
 // ... code :
@@ -18,11 +16,10 @@ char *version="ManiaDrive 1.01";
 
 #define NO_NETWORK_COLLISIONS
 
+
 #ifdef WIN32
-#define MANIA2_BINARY "mania2.exe"
 #define SERVER_BINARY "mania_server.exe"
 #else
-#define MANIA2_BINARY "./mania2.static"
 #define SERVER_BINARY "./mania_server.static"
 #endif
 
@@ -273,7 +270,6 @@ return 0;
 
 int mni_load(char *mni)
 {
-char str[RAYDIUM_MAX_NAME_LEN*2];
 char tri[RAYDIUM_MAX_NAME_LEN];
 GLfloat min[3];
 GLfloat max[3];
@@ -282,10 +278,8 @@ int i,ret;
 if(!mni || !strlen(mni))
     return 0;
 
-// must protect mni from shell
-sprintf(str,"%s --auto %s",MANIA2_BINARY,mni);
-ret=system(str);
-if(ret!=0)
+ret=mni_generate(mni);
+if(ret==0)
     {
     raydium_log("CANNOT GENERATE TRACK FROM MNI FILE '%s'",mni);
 

@@ -1,6 +1,6 @@
 // ManiaDrive Track Editor - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="0.32";
+char *version="0.33";
 char *title="CQFD Corp. Mania2";
 
 // since we play with our own camera and not Raydium's one:
@@ -565,60 +565,9 @@ fclose(fp);
 printf("tri file generated.\n");
 }
 
-void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time)
-{
-char d[4096];
-int i,start,cpt;
-
-strcpy(d,from);
-cpt=0;
-start=0;
-for(i=0;i<=strlen(from);i++)
-    {
-    if(d[i]==';' || d[i]==0 || d[i]=='\r')
-	{
-	d[i]=0;
-	//printf("%i %s\n",cpt,d+start);
-	if(cpt==0)
-	    strcpy(to_name,d+start);
-	if(cpt==1)
-	    strcpy(to_author,d+start);
-	if(cpt==2)
-	    strcpy(to_gold,d+start);	
-	if(cpt==3)
-	    strcpy(to_author_time,d+start);	
-
-	// finalize
-	cpt++;
-	start=i+1;
-	}
-    }
-}
-
 void data_init(void)
 {
 sprintf(tdata,"no name;unknown;0;0");
-}
-
-void dump_data_to(char *filename)
-{
-FILE *fp;
-char d[4][512];
-
-fp=fopen(filename,"wt");
-if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
-
-fprintf(fp,"// generated track data (mania2)\n\n");
-
-extract_data(tdata,d[0],d[1],d[2],d[3]);
-fprintf(fp,"name=\"%s\";\n",d[0]);
-fprintf(fp,"author=\"%s\";\n",d[1]);
-fprintf(fp,"gold_time=%s;\n",d[2]);
-fprintf(fp,"author_time=%s;\n",d[3]);
-
-fprintf(fp,"\n// EOF\n");
-fclose(fp);
-printf("data file generated.\n");
 }
 
 void draw_axes(void)
@@ -944,10 +893,6 @@ fclose(fp);
 
 void export_all(void)
 {
-#define FACT 6
-#define MOVE_X -5
-#define MOVE_Y -3
-#define MOVE_Z -1
 int i;
 int obj;
 char sav[RAYDIUM_MAX_NAME_LEN];
