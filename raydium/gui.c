@@ -1019,7 +1019,6 @@ for(i=0,nitems=0;c->items[i];i++)
 	nitems++;
 nitems++;
 
-
 if(c->current>=0 && c->current<nitems)
 {
 fxy[0]=xy[0];
@@ -1129,11 +1128,10 @@ if(raydium_key_last==1032)
     }
 */
 
-if(c->offset<0)
-    c->offset=0;
 if(c->offset>nitems-RAYDIUM_GUI_COMBO_LIST_HEIGHT)
     c->offset=nitems-RAYDIUM_GUI_COMBO_LIST_HEIGHT;
-
+if(c->offset<0)
+    c->offset=0;
 
 // Apply offset (result's stored in 'i')
 for(i=0,cpt=0;i<strlen(c->items)+1;i++)
