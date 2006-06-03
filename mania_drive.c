@@ -2,13 +2,6 @@
 // http://maniadrive.raydium.org/
 char *version="ManiaDrive 1.02";
 
-// TODO:
-// ... code :
-//
-// ... data :
-// new tracks (mainly for solo mode)
-// new road texture
-
 #include "raydium/index.c"
 
 #include "mania.h"
@@ -27,6 +20,7 @@ char *version="ManiaDrive 1.02";
 #define HISTORY_STATE_FILE	"mania_drive.state"
 
 #define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
+#define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768"
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
@@ -53,6 +47,10 @@ float scroll=-1;
 signed char camera_lag;
 float camera_lag_speed;
 signed char shadow_support;
+signed char windowed_mode;
+char windowed_res[32]; // "%ix%i" format
+signed char windowed_mode_save; // use to display "must restart game" message
+char windowed_res_save[32]; // same
 float music_volume;
 signed joystick_enabled;
 
@@ -87,6 +85,7 @@ void leave(void);
 void build_gui_ErrorDownload(void);
 void build_gui_Lan(void);
 void btnBackToMainMenu(raydium_gui_Object *w);
+void build_gui_NeedRestart(void);
 
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
@@ -459,18 +458,19 @@ raydium_gui_label_create("lblKH30",handle,50,65,"Space : restart track",0,0,0);
 raydium_gui_label_create("lblKH40",handle,50,60,"Backspace : restart LAN clients",0,0,0);
 
 raydium_gui_label_create("lblKH50",handle,50,50,"F3 : default external view",0,0,0);
-raydium_gui_label_create("lblKH60",handle,50,45,"F6 : in-board view",0,0,0);
+raydium_gui_label_create("lblKH60",handle,50,45,"F6 : in-board fixed view",0,0,0);
+raydium_gui_label_create("lblKH65",handle,50,40,"C : switch camera",0,0,0);
 
-raydium_gui_label_create("lblKH70",handle,50,35,"... and maybe hidden ones :)",0,0,0);
+raydium_gui_label_create("lblKH70",handle,50,30,"... and maybe hidden ones :)",0,0,0);
 
 raydium_gui_widget_sizes(3,3,16);
 if(raydium_joy)
     {
-    raydium_gui_check_create("chkJoy",handle,15,22,"joystick/joypad enabled",joystick_enabled);
+    raydium_gui_check_create("chkJoy",handle,15,17," joystick/joypad enabled",joystick_enabled);
     }
 else
     {
-    raydium_gui_label_create("lblKH80",handle,50,25,"(no joystick/joypad found)",0.3,0,0);
+    raydium_gui_label_create("lblKH80",handle,50,20,"(no joystick/joypad found)",0.3,0,0);
     }
 
 raydium_gui_widget_sizes(15,5,18);
@@ -487,6 +487,12 @@ void btnStoryCompletedOk(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("storycompleted");
 }
+
+void btnRestartClick(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("restart");
+}
+
 
 void btnNetworkConnect(raydium_gui_Object *w)
 {
@@ -628,6 +634,8 @@ camera_lag=raydium_gui_read_name("menu","chkCameraLag",str);
 camera_lag_speed=raydium_gui_read_name("menu","trkCameraLag",str);
 raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
 shadow_support=raydium_gui_read_name("menu","chkShadow",str);
+windowed_mode=raydium_gui_read_name("menu","chkWindow",str);
+raydium_gui_read_name("menu","cboWindow",windowed_res);
 music_volume=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
 
 str[1]=0;
@@ -642,6 +650,10 @@ raydium_parser_db_set("Generic-PlayerName",raydium_network_name_local);
 sprintf(str,"%i",shadow_support);
 raydium_parser_db_set("ManiaDrive-ShadowSupport",str);
 
+sprintf(str,"%i",windowed_mode);
+raydium_parser_db_set("ManiaDrive-Windowed",str);
+raydium_parser_db_set("ManiaDrive-WindowedRes",windowed_res);
+
 sprintf(str,"%f",music_volume);
 raydium_parser_db_set("ManiaDrive-MusicVolume",str);
 change_music_volume(music_volume);
@@ -649,6 +661,8 @@ change_music_volume(music_volume);
 
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
+if(windowed_mode!=windowed_mode_save || strcmp(windowed_res,windowed_res_save))
+    build_gui_NeedRestart();
 }
 
 void btnMusicVolTest(raydium_gui_Object *w)
@@ -703,6 +717,19 @@ raydium_gui_label_create("lblError",handle,50,80,"Can't download track from serv
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
 }
+
+void build_gui_NeedRestart(void)
+{
+int handle;
+
+handle=raydium_gui_window_create("restart",25,50,50,20);
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblRestart1",handle,50,80,"You need to restart the game",0,0,0);
+raydium_gui_label_create("lblRestart2",handle,50,60,"to apply window settings",0,0,0);
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnRestartOk",handle,35,15,"OK",btnRestartClick);
+}
+
 
 void build_gui_StoryCompleted(void)
 {
@@ -919,7 +946,13 @@ raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnMusicVolTest",handle,82,41,"test",btnMusicVolTest);
 
 raydium_gui_widget_sizes(4,4,18);
-raydium_gui_check_create("chkShadow",handle,2,20," Shadow support (experimental)",shadow_support);
+raydium_gui_check_create("chkShadow",handle,2,28," Shadow support (experimental)",shadow_support);
+raydium_gui_check_create("chkWindow",handle,2,18," Window mode with",windowed_mode);
+raydium_gui_widget_sizes(17,4,18);
+raydium_gui_combo_create("cboWindow",handle,63,18,RESOLUTION_LIST,raydium_gui_list_id(windowed_res,RESOLUTION_LIST));
+// save this settings
+windowed_mode_save=windowed_mode;
+strcpy(windowed_res_save,windowed_res);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
@@ -1368,6 +1401,8 @@ return strlen(newfile)!=0;
 void music_random(void)
 {
 char var[RAYDIUM_MAX_NAME_LEN];
+if(!music_volume)
+    return;
 music_playlist(var);
 raydium_sound_load_music(var);
 change_music_volume(music_volume);
@@ -1952,6 +1987,14 @@ if(raydium_key_last==1097) { raydium_ode_time_change(0); }
 if(raydium_key_last==1122) { raydium_ode_time_change(10); }
 if(raydium_key_last==1101) { raydium_ode_time_change(100); }
 
+if(raydium_key_last==1000+'c')
+    {
+    if(vue==3)
+	raydium_key_last=6;
+    else
+	raydium_key_last=3;
+    }
+
 if(raydium_key_last==5)
 {
 vue=5;
@@ -1968,12 +2011,13 @@ raydium_projection_fov=60;
 raydium_window_view_update();                                                                 
 }
 
-if(raydium_key_last==3)
+if(raydium_key_last==3 && vue!=3)
 {
 vue=3;
 raydium_projection_near=0.05 ;
 raydium_projection_fov=70;
 raydium_window_view_update();                                                                 
+raydium_camera_path_reset();
 }
 
 if(raydium_key_last==4)
@@ -2152,6 +2196,7 @@ char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 char full_sx[RAYDIUM_MAX_NAME_LEN];
 char full_sy[RAYDIUM_MAX_NAME_LEN];
 int full_sx_i,full_sy_i;
+int mode;
 
 raydium_init_args(argc,argv);
 
@@ -2160,8 +2205,12 @@ raydium_parser_db_get("Generic-WindowSizeY",full_sy,"768");
 sscanf(full_sx,"%i",&full_sx_i);
 sscanf(full_sy,"%i",&full_sy_i);
 
+raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
+windowed_mode=atoi(str);
+raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"800x600");
+mode=(windowed_mode?RAYDIUM_RENDERING_WINDOW:RAYDIUM_RENDERING_FULLSCREEN);
 
-raydium_window_create(full_sx_i,full_sy_i,RAYDIUM_RENDERING_FULLSCREEN,version);
+raydium_window_create(full_sx_i,full_sy_i,mode,version);
 
 raydium_parser_db_set("Generic-WindowSizeX",full_sx);
 raydium_parser_db_set("Generic-WindowSizeY",full_sy);
@@ -2186,7 +2235,6 @@ memcpy(raydium_light_color[1],amb,raydium_internal_size_vector_float_4);
 raydium_light_intensity[1]=10000;
 raydium_light_update_all(1);
 raydium_window_view_update();
-
 
 /*
 if(raydium_init_cli_option("server",server))
