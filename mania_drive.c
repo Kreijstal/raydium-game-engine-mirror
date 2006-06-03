@@ -2193,27 +2193,19 @@ char str[RAYDIUM_MAX_NAME_LEN];
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
-char full_sx[RAYDIUM_MAX_NAME_LEN];
-char full_sy[RAYDIUM_MAX_NAME_LEN];
 int full_sx_i,full_sy_i;
 int mode;
 
 raydium_init_args(argc,argv);
 
-raydium_parser_db_get("Generic-WindowSizeX",full_sx,"1024");
-raydium_parser_db_get("Generic-WindowSizeY",full_sy,"768");
-sscanf(full_sx,"%i",&full_sx_i);
-sscanf(full_sy,"%i",&full_sy_i);
 
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
 windowed_mode=atoi(str);
 raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"800x600");
 mode=(windowed_mode?RAYDIUM_RENDERING_WINDOW:RAYDIUM_RENDERING_FULLSCREEN);
+sscanf(windowed_res,"%ix%i",&full_sx_i,&full_sy_i);
 
 raydium_window_create(full_sx_i,full_sy_i,mode,version);
-
-raydium_parser_db_set("Generic-WindowSizeX",full_sx);
-raydium_parser_db_set("Generic-WindowSizeY",full_sy);
 
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
