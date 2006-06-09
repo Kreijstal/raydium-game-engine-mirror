@@ -56,8 +56,51 @@ if(!raydium_init_cli_option(option,value))
 return 1;
 }
 
+void raydium_init_internal_homedir_find(char *app_name)
+{
+FILE *fp;
+char *str;
 
-void raydium_init_args(int argc, char **argv)
+raydium_homedir[0]=0;
+#ifndef WIN32
+str=getenv("HOME");
+if(!str) // strange session :/
+    {
+    raydium_log("ERROR ! Unable to find HOME variable !");
+    exit(100);
+    }
+#else
+#error Damned ! Someone forgot to write some code :)
+#endif
+
+// right, 'str' is now the absolute home dir of user, let's build Raydium's one
+// if not already given by user
+if(!raydium_init_cli_option("home",raydium_homedir))
+    {
+    sprintf(raydium_homedir,"%s/.%s",str,app_name);
+    }
+
+// is writable ?
+fp=fopen(raydium_file_home_path("flag"),"wt");
+if(!fp)
+    {
+    if(mkdir(raydium_homedir,S_IRUSR|S_IWUSR|S_IRWXU)<0)
+	{
+	raydium_log("ERROR ! Unable to create home dir: '%s'",raydium_homedir);
+	exit(101);
+	}
+    }
+else
+    {
+    fclose(fp);
+    unlink(raydium_file_home_path("flag"));
+    }
+
+raydium_log("using '%s' as home dir",raydium_homedir);
+}
+
+
+void raydium_init_args_name(int argc, char **argv, char *app_name)
 {
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
@@ -67,10 +110,10 @@ raydium_init_argv=malloc(argc*sizeof(char *));
 
 for(i=0;i<argc;i++)
     {
-      raydium_init_argv[i]=malloc(strlen(argv[i])+1);
-      strcpy(raydium_init_argv[i],argv[i]);
+    raydium_init_argv[i]=malloc(strlen(argv[i])+1);
+    strcpy(raydium_init_argv[i],argv[i]);
     }
-raydium_log("Using Raydium %s",raydium_version);
+raydium_log("Raydium 3D Game Engine");
 
 if(raydium_init_cli_option("logfile",logfile))
     {
@@ -79,6 +122,7 @@ if(raydium_init_cli_option("logfile",logfile))
     }
 else raydium_log_file=NULL;
 
+raydium_log("version %s",raydium_version);
 raydium_log("command line args: OK");
 
 #ifndef RAYDIUM_NETWORK_ONLY
@@ -88,4 +132,12 @@ if(!chdir(raydium_init_wd))
 else
     perror("chdir");    
 #endif
+
+// Find user's home directory
+raydium_init_internal_homedir_find(app_name);
+}
+
+void raydium_init_args (int argc, char **argv)
+{
+raydium_init_args_name(argc,argv,RAYDIUM_APP_SHORTNAME);
 }

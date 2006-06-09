@@ -37,6 +37,31 @@ memcpy(dest,from,n+1);
 dest[n+1]=0;
 }
 
+void raydium_file_basename(char *dest,char *from)
+{
+char *c;
+int n;
+
+c=strrchr(from,'/'); // Unix
+if(!c)
+    c=strrchr(from,'\\'); // win32
+      
+if(!c)
+    {
+    strcpy(dest,from);
+    return;
+    }
+n=(c-from+1);
+
+if(n==strlen(from))
+    {
+    dest[0]=0;
+    return;
+    }
+
+strcpy(dest,from+n);
+}
+
 
 void raydium_file_log_fopen_display(void)
 {
@@ -385,4 +410,16 @@ while( (c=fgetc(fp))!=EOF )
 
 fclose(fp);
 return total;
+}
+
+char * raydium_file_home_path(char *file)
+{
+static char path[RAYDIUM_MAX_DIR_LEN];
+sprintf(path,"%s/%s",raydium_homedir,file);
+return path;
+}
+
+void raydium_file_home_path_cpy(char *file, char *dest)
+{
+strcpy(dest,raydium_file_home_path(file));
 }

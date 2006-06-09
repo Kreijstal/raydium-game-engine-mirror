@@ -9,7 +9,7 @@
 
 #define RAYDIUM_MAX_EXTENSIONS		32
 #define RAYDIUM_WEB_BUFSIZE		8096
-#define RAYDIUM_WEB_CLIENT_TEMP 	"temp.delme.file"
+#define RAYDIUM_WEB_CLIENT_TEMP 	raydium_file_home_path("temp.delme.file")
 
 #define RAYDIUM_WEB_ERROR 42
 #define RAYDIUM_WEB_SORRY 43

@@ -66,6 +66,12 @@ to ##dest##.
 No memory allocation will be done by the function.
 **/
 
+extern void raydium_file_basename(char *dest,char *from);
+/**
+Another libc clone, for ##basename## function. Extracts file name from a
+path into ##dest## string.
+**/
+
 extern void raydium_file_log_fopen_display(void);
 /**
 Display (console) all filenames that were opened before the call.
@@ -115,6 +121,21 @@ Loads filename. Again, avoid use of this function.
 extern unsigned long raydium_file_sum_simple(char *filename);
 /**
 This function will generate a very simple checksum on ##filename##.
+**/
+
+extern char * raydium_file_home_path(char *file);
+/**
+This function will return an absolute file path for ##file##. Returned value
+is a pointer to static memory. Do not free this memory and use it before any
+other call to this function, since it will be overwritten.
+Example:
+for ##test.cfg##, this function will return ##/home/me/.raydium/test.cfg##
+See also ##raydium_init_args_name()## if you want to tune this result.
+**/
+
+extern void raydium_file_home_path_cpy(char *file, char *dest);
+/**
+Same as above, but you must provide memory with ##dest##.
 **/
 
 #endif

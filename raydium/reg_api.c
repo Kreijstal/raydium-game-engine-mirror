@@ -17,59 +17,81 @@
 #ifdef PHP_SUPPORT
 
 // Part 1: create PHP wrappers
+
+// file.c
+PHP_v_ss(raydium_file_home_path_cpy);
+
 // light.c
 PHP_v_v(raydium_light_enable)
 PHP_v_v(raydium_light_disable)
 PHP_v_i(raydium_light_on)
 PHP_v_i(raydium_light_off)
 PHP_v_i(raydium_light_switch)
+
 // fog.c
 PHP_v_v(raydium_fog_enable)
 PHP_v_v(raydium_fog_disable)
+
 // background.c
 PHP_v_ffff(raydium_background_color_change)
+
 // sound.c
 PHP_i_s(raydium_sound_load_music)
 PHP_i_if(raydium_sound_SetSourceGain)
+
 // render.c
 PHP_v_v(raydium_rendering_wireframe)
 PHP_v_v(raydium_rendering_normal)
 PHP_v_v(raydium_rendering_displaylists_enable)
 PHP_v_v(raydium_rendering_displaylists_disable)
+
 // window.c
 PHP_v_v(raydium_window_view_update)
 PHP_v_fff(raydium_window_view_perspective);
+
 // console.c
 PHP_v_s(raydium_console_exec_script)
 PHP_v_v(raydium_console_event)
+
 // log.c
 PHP_v_svaria(raydium_log)
+
 // capture.c
 PHP_v_s(raydium_capture_frame)
+
 // key.c
 PHP_i_i(raydium_key_pressed)
+
 // mouse.c
 PHP_i_i(raydium_mouse_button_pressed)
+
 // clear.c
 PHP_v_v(raydium_clear_frame);
+
 // camera.c
 PHP_v_v(raydium_camera_replace);
+
 // object.c
 PHP_v_s(raydium_object_draw_name);
+
 // network.c
 PHP_i_v(raydium_network_internet_test);
+
 // particle2.c
 PHP_i_ss(raydium_particle_generator_load);
 PHP_v_s(raydium_particle_generator_delete_name);
 PHP_v_sfff(raydium_particle_generator_move_name_3f);
 PHP_i_s(raydium_particle_state_dump);
 PHP_i_s(raydium_particle_state_restore);
+
 // shadow.c
 PHP_v_v(raydium_shadow_enable);
 PHP_v_v(raydium_shadow_disable);
+
 // hdr.c
 PHP_v_v(raydium_hdr_enable);
 PHP_v_v(raydium_hdr_disable);
+
 // parser.c
 PHP_i_ss(raydium_parser_db_set);
 PHP_i_sss(raydium_parser_db_get);
@@ -167,6 +189,9 @@ if(done)
     raydium_log("RegAPI: PASSED (already done previously)");
     return;
     }
+
+// file.c
+raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
 
 // light.c
 raydium_register_function(C2PHP(raydium_light_enable),"raydium_light_enable");

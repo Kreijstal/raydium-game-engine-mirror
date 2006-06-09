@@ -34,6 +34,11 @@ Same as above, but allows you to provide a default value (##default##) if
 the ##option## is not found on command line.
 **/
 
+void raydium_init_internal_homedir_find(char *);
+/**
+Internal use.
+**/
+
 extern void raydium_init_args (int argc, char **argv);
 /**
 You must use this function, wich send application arguments to Raydium 
@@ -46,6 +51,13 @@ int main(int argc, char **argv)
 raydium_init_args(argc,argv);
 [...]
 %%
+**/
+
+extern void raydium_init_args_name(int argc, char **argv, char *app_name);
+/**
+Same as above, but with application short name. This string is used to
+build things like runtime configuration directory name (~/.raydium/ by default).
+Use this wrapper if you don't want to share your configuration with Raydium.
 **/
 
 #endif

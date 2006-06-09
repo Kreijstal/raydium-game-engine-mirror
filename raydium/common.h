@@ -121,6 +121,9 @@
 
 #define PI 					(3.1415926535f)
 
+// Our turn, let's define all about Raydium ...
+#define RAYDIUM_APP_SHORTNAME			"raydium"
+
 #define RAYDIUM_MAX_VERTICES  			2000000
 #define RAYDIUM_MAX_TEXTURES    	   	256
 #define RAYDIUM_MAX_LIGHTS         	     	8
@@ -247,8 +250,8 @@
 #define RAYDIUM_CAPTURE_TGA			1
 #define RAYDIUM_CAPTURE_JPG			2
 
-#define RAYDIUM_DB_FILENAME			"raydium.db"
-#define RAYDIUM_DB_TEMP				"raydium.db.temp"
+#define RAYDIUM_DB_FILENAME			raydium_file_home_path("raydium.db")
+#define RAYDIUM_DB_TEMP				raydium_file_home_path("raydium.db.temp")
 #define RAYDIUM_DB_SEPARATOR			';'
 
 #define RAYDIUM_HDR_SIZE			64
@@ -259,6 +262,7 @@
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
+__global char	 raydium_homedir[RAYDIUM_MAX_DIR_LEN];
 
 __global int     raydium_key_last;
 __global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];

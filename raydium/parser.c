@@ -10,6 +10,9 @@
 #include "headers/parser.h"
 #endif
 
+// proto
+char * raydium_file_home_path(char *file);
+
 // Trims string (left and right), removing ' ' and '\n' and ';'
 void raydium_parser_trim(char *org)
 {
@@ -235,8 +238,11 @@ if(fp)
     fclose(fp);
 fclose(out);
 
+// We must use a temporary string (line), since raydium_file_home_path returns
+// a static string so we cant call it twice the same time in rename().
 unlink(RAYDIUM_DB_FILENAME); // since windows's rename is not POSIX
-if(rename(RAYDIUM_DB_TEMP,RAYDIUM_DB_FILENAME)==-1)
+strcpy(line,RAYDIUM_DB_FILENAME);
+if(rename(RAYDIUM_DB_TEMP,line)==-1)
     {
     raydium_log("db: cannot rename new database !");
     perror("rename");

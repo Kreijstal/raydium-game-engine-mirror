@@ -34,7 +34,9 @@ for(i=0;i<RAYDIUM_CONSOLE_MAX_LINES;i++)
 raydium_console_get_string[0]=0;
 raydium_console_get_string_last[0]=0;
 
-raydium_init_cli_option_default("history",raydium_console_history_filename,"raydium_history");
+raydium_init_cli_option_default("history",raydium_console_history_filename,
+				raydium_file_home_path("raydium_history"));
+
 for(i=0;i<RAYDIUM_CONSOLE_MAX_HISTORY;i++)
     raydium_console_history[i][0]=0;
 raydium_console_history_index_current=-1;
@@ -207,7 +209,7 @@ if(raydium_console_get_string_last[0]=='>')
 if(raydium_console_get_string_last[0]!='/' && !treated)
 {
 #ifdef PHP_SUPPORT
-#define TEMPFILE "temp.delme.php"
+#define TEMPFILE raydium_file_home_path("temp.delme.php")
 FILE *fp;
 fp=fopen(TEMPFILE,"wt");
 if(!fp) { raydium_log("console: php call: cannot create %s temporary file",TEMPFILE); return; }
