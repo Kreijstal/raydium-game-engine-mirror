@@ -60,24 +60,32 @@ void raydium_init_internal_homedir_find(char *app_name)
 {
 FILE *fp;
 char *str;
-
+char *str2;
+        
 raydium_homedir[0]=0;
 #ifndef WIN32
 str=getenv("HOME");
+str2="";
 if(!str) // strange session :/
     {
     raydium_log("ERROR ! Unable to find HOME variable !");
     exit(100);
     }
 #else
-#error Damned ! Someone forgot to write some code :)
+str=getenv("HOMEDRIVE");
+str2=getenv("HOMEPATH");
+if(!str || !str2)
+    {
+    raydium_log("ERROR ! Unable to find HOMEDRIVE and HOMEPATH variables !");
+    exit(100);
+    }
 #endif
 
 // right, 'str' is now the absolute home dir of user, let's build Raydium's one
 // if not already given by user
 if(!raydium_init_cli_option("home",raydium_homedir))
     {
-    sprintf(raydium_homedir,"%s/.%s",str,app_name);
+    sprintf(raydium_homedir,"%s%s/.%s",str,str2,app_name);
     }
 
 // is writable ?
