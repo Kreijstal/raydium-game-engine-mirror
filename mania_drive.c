@@ -17,7 +17,7 @@ char *version="ManiaDrive 1.02";
 #endif
 
 #define STORY_FILE		"mania_drive.story"
-#define HISTORY_STATE_FILE	"mania_drive.state"
+#define HISTORY_STATE_FILE	raydium_file_home_path("mania_drive.state")
 
 #define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
 #define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768"
@@ -270,6 +270,7 @@ return 0;
 int mni_load(char *mni)
 {
 char tri[RAYDIUM_MAX_NAME_LEN];
+char base[RAYDIUM_MAX_NAME_LEN];
 GLfloat min[3];
 GLfloat max[3];
 int i,ret;
@@ -287,14 +288,19 @@ if(ret==0)
     
     return 0;
     }
-strcpy(mni_current,mni);
+
 raydium_ode_object_delete_name("WATURE");
-sprintf(tri,"mania_%s.tri",mni);
-rename("mania.tri",tri);
+
+strcpy(mni_current,mni);
+raydium_file_basename(base,mni);
+sprintf(tri,"%s/mania_%s.tri",raydium_homedir,base);
+rename(raydium_file_home_path("mania.tri"),tri);
 raydium_ode_ground_set_name(tri);
 unlink(tri);
-load_boxes("mania.box");
-dat_load("mania.dat");
+
+load_boxes(raydium_file_home_path("mania.box"));
+dat_load(raydium_file_home_path("mania.dat"));
+
 raydium_object_find_minmax(raydium_object_find(tri),min,max);
 track_bottom=min[2];
 
@@ -2196,7 +2202,7 @@ char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 int full_sx_i,full_sy_i;
 int mode;
 
-raydium_init_args(argc,argv);
+raydium_init_args_name(argc,argv,"mania_drive");
 
 
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");

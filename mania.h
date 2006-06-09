@@ -128,7 +128,7 @@ if(!in)
     return 0;
     }
 
-tri=fopen("mania.tri","wt");
+tri=fopen(raydium_file_home_path("mania.tri"),"wt");
 if(!tri)
     {
     raydium_log("mni_gen: unable to create TRI file");
@@ -136,7 +136,7 @@ if(!tri)
     return 0;
     }
 
-box=fopen("mania.box","wt");
+box=fopen(raydium_file_home_path("mania.box"),"wt");
 if(!box)
     {
     raydium_log("mni_gen: unable to create BOX file");
@@ -208,7 +208,7 @@ switch(c)
 	fgets(tdata,4000,in);
 	if(tdata[strlen(tdata)-1]=='\n')
 	    tdata[strlen(tdata)-1]=0;
-	dump_data_to("mania.dat");
+	dump_data_to(raydium_file_home_path("mania.dat"));
 	break;
     default:
 	raydium_log("mni_gen: invalid track file (block type '%c' unknown)",c);

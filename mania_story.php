@@ -45,8 +45,10 @@ return $best;
 
 $story=file("mania_drive.story");
 
-if(file_exists("mania_drive.state"))
-    $scores=file("mania_drive.state");
+$state_file=str_pad('',1000);
+raydium_file_home_path_cpy("mania_drive.state",$state_file);
+if(file_exists($state_file))
+    $scores=file($state_file);
 
 $ret="";
 $col='2';

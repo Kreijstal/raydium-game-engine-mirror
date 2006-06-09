@@ -1,6 +1,6 @@
 // ManiaDrive Track Editor - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="0.33";
+char *version="0.34";
 char *title="CQFD Corp. Mania2";
 
 // since we play with our own camera and not Raydium's one:
@@ -29,7 +29,6 @@ void grid_init_all(void);
 void box_init_all(void);
 void grid_generate_obj(void);
 void data_init(void);
-void export_all(void);
 
 GLfloat modl_zoom=10;
 GLint px=0,py=0;
@@ -38,7 +37,6 @@ GLint curobj=0;
 GLint curbox=0;
 GLint curangle=0;
 int pop_mode=POP_MODE_ELEM;
-char autotag=0;
 signed char view_glue=0;
 
 
@@ -136,11 +134,13 @@ build_gui_menu(NULL);
 void btnTest(raydium_gui_Object *w)
 {
 char str[RAYDIUM_MAX_NAME_LEN*2];
-char *mni="dyn_track.mni";
+char mni[RAYDIUM_MAX_NAME_LEN];
+char *mni_simple="dyn_track.mni";
 int ret;
 
 // must protect mni from shell
-export_all();
+raydium_file_home_path_cpy(mni_simple,mni);
+grid_save(mni);
 sprintf(str,"%s --mni %s",MANIA_BINARY,mni);
 ret=system(str);
 if(ret!=0)
@@ -535,36 +535,6 @@ raydium_object_end[obj]=raydium_vertex_index;
 }
 
 
-void dump_object_to(char *filename, GLint obj)
-{
-FILE *fp;
-//GLuint tex;
-GLuint i;
-char text[256];
-
-fp=fopen(filename,"wt");
-if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
-fprintf(fp,"1\n");
-
- for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
- {
-  if(raydium_vertex_texture_multi[i])
-  sprintf(text,"%s;%s",raydium_texture_name[raydium_vertex_texture[i]],raydium_texture_name[raydium_vertex_texture_multi[i]]);
-  else
-  strcpy(text,raydium_texture_name[raydium_vertex_texture[i]]);
-
-  if(raydium_vertex_texture[i]) 
-  fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
-  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
-  raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
-  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
-  text);
- }
-
-fclose(fp);
-printf("tri file generated.\n");
-}
-
 void data_init(void)
 {
 sprintf(tdata,"no name;unknown;0;0");
@@ -866,63 +836,6 @@ for(i=0;i<MAX_ELEMS;i++)
 grid_generate_obj();
 }
 
-void dump_boxes_to(char *filename, float fact, float mx, float my, float mz)
-{
-FILE *fp;
-int i;
-
-fp=fopen(filename,"wt");
-if(!fp)
-    {
-    raydium_log("cannot open '%s' for writing",filename);
-    return;
-    }
-
-
-for(i=0;i<MAX_ELEMS;i++)
-  if(box[i].state)
-    fprintf(fp,"%f %f %f %f %f %f %i\n",  box[i].x*fact+mx,
-				          box[i].y*fact+my,
-				          box[i].z*fact+mz,
-				          box[i].tx*fact,
-				          box[i].ty*fact,
-				          box[i].tz*fact,
-				          box[i].type);
-fclose(fp);
-}
-
-void export_all(void)
-{
-int i;
-int obj;
-char sav[RAYDIUM_MAX_NAME_LEN];
-
-obj=raydium_object_find("mania.tri");
-
-// resize and move
-for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
- {
- raydium_vertex_x[i]*=FACT;
- raydium_vertex_x[i]+=MOVE_X;
-
- raydium_vertex_y[i]*=FACT;
- raydium_vertex_y[i]+=MOVE_Y;
-
- raydium_vertex_z[i]*=FACT;
- raydium_vertex_z[i]+=MOVE_Z;
- }
-
-raydium_normal_regenerate_all();
-dump_object_to("mania.tri",obj);
-dump_boxes_to("mania.box",FACT,MOVE_X,MOVE_Y,MOVE_Z);
-dump_data_to("mania.dat");
-
-grid_generate_obj();
-strcpy(sav,current_track);
-if(!autotag)
-    grid_save("dyn_track.mni");
-strcpy(current_track,sav);
-}
 
 void mouse_n_keys_event(void)
 {
@@ -941,7 +854,7 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
  if(raydium_key_last==1009)  { curangle+=90; raydium_key_last=0; }
  if(raydium_key_last==1032 && pop_mode==POP_MODE_ELEM)  add();
  if(raydium_key_last==1032 && pop_mode==POP_MODE_BOX)  add_box();
- if(raydium_key_last==2) export_all();
+// if(raydium_key_last==2) export_all();
 
  if(raydium_key_last==101) py++;
  if(raydium_key_last==103) py--;
@@ -1096,7 +1009,6 @@ return 0;
 
 int main(int argc, char **argv)
 {
-char autogen[256];
 char window[256];
 
 sprintf(window,"%s - %s",title,version);
@@ -1104,17 +1016,9 @@ sprintf(window,"%s - %s",title,version);
 data_init();
 current_track[0]=0;
 
-raydium_init_args(argc,argv);
+raydium_init_args_name(argc,argv,"mania_drive");
 
-if(raydium_init_cli_option("auto",autogen))
-    {
-    raydium_window_create(0,0,RAYDIUM_RENDERING_NONE,"");    
-    autotag=1;
-    }
-else
-    {
-    raydium_window_create(700,700,RAYDIUM_RENDERING_WINDOW,window);
-    }
+raydium_window_create(700,700,RAYDIUM_RENDERING_WINDOW,window);
 
 raydium_background_color_change(0,0,0,1);
 raydium_rendering_displaylists_disable();
@@ -1127,20 +1031,10 @@ grid_init_all();
 box_init_all();
 
 // stop here (must be LAST object)
-if(!autotag)
-    {
-    raydium_parser_db_get("Mania2-CurrentTrack",current_track,"");
+raydium_parser_db_get("Mania2-CurrentTrack",current_track,"");
 
-    if(file_exists(current_track))
-	grid_load(current_track);
-    }
-else
-    {
-    if(!grid_load(autogen))
-	return 1;
-    export_all();
-    return 0;
-    }
+if(file_exists(current_track))
+    grid_load(current_track);
 
 raydium_mouse_show();
 raydium_gui_theme_load("theme-raydium2.gui");
