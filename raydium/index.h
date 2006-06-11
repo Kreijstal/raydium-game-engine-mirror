@@ -23,7 +23,7 @@
 #include "headers/main.h"
 
 #ifndef RAYDIUM_NETWORK_ONLY
-#include "myglut/myglut.h"
+#include "headers/myglut.h"
 #include "headers/log.h"
 #include "headers/signal.h"
 #include "headers/trigo.h"

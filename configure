@@ -302,7 +302,7 @@ signed char    raydium_key[256];
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "raydium/myglut/myglut.c"
+#include "raydium/myglut.c"
 int main(int argc, char **argv) { 
 char *r;
 glutInit(&argc,argv);

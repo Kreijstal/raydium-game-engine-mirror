@@ -4,7 +4,7 @@
     License: GPL - GNU General Public License, see "gpl.txt" file.
 */
 
-#include "myglut.h"
+#include "headers/myglut.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>

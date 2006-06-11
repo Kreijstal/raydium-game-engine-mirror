@@ -8,9 +8,9 @@
 #ifndef GLUT_API_VERSION
 
 #ifndef DONT_INCLUDE_HEADERS
-#include "../index.h"
+#include "index.h"
 #else
-#include "myglut.h"
+#include "headers/myglut.h"
 #endif
 
 #ifndef raydium_log
