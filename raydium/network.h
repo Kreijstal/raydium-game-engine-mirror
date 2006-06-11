@@ -54,24 +54,6 @@ raydium_network_init();
 raydium_network_server_create();
 }
 
-
-FILE *raydium_file_fopen(char *file, char *mode)
-{
-FILE *fp;
-
-fp=fopen(file,mode);
-if(fp)
-    return fp;
-
-raydium_rayphp_repository_file_get(file);
-
-fp=fopen(file,mode);
-if(fp)
-    return fp;
-
-return NULL;
-}
-
 void raydium_osd_color_ega(char hexa)
 {
 //

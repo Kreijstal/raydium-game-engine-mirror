@@ -17,7 +17,7 @@ LDFLAGS=
 LINKING_OPTIONS=-Wl,-soname,libraydium.so.0
 AR_OPTIONS=
 
-HEADERS=raydium/headers/background.h raydium/headers/callback.h raydium/headers/camera.h raydium/headers/capture.h raydium/headers/clear.h raydium/headers/console.h raydium/headers/file.h raydium/headers/fog.h raydium/headers/init.h raydium/headers/cli.h raydium/headers/internal.h raydium/headers/joy.h raydium/headers/key.h raydium/headers/land.h raydium/headers/light.h raydium/headers/log.h raydium/headers/main.h raydium/headers/mouse.h raydium/headers/network.h raydium/headers/normal.h raydium/headers/object.h raydium/headers/ode.h raydium/headers/osd.h raydium/headers/parser.h raydium/headers/particle2.h raydium/headers/php.h raydium/headers/profile.h raydium/headers/random.h raydium/headers/rayphp.h raydium/headers/register.h raydium/headers/render.h raydium/headers/signal.h raydium/headers/sky.h raydium/headers/sound.h raydium/headers/texture.h raydium/headers/timecall.h raydium/headers/trigo.h raydium/headers/vertex.h raydium/headers/window.h raydium/headers/reg_api.h raydium/headers/gui.h raydium/headers/live.h raydium/headers/video.h raydium/headers/shadow.h raydium/headers/myglut.h raydium/headers/web.h raydium/headers/hdr.h
+HEADERS=raydium/headers/background.h raydium/headers/callback.h raydium/headers/camera.h raydium/headers/capture.h raydium/headers/clear.h raydium/headers/console.h raydium/headers/file.h raydium/headers/file_tri.h raydium/headers/fog.h raydium/headers/init.h raydium/headers/cli.h raydium/headers/internal.h raydium/headers/joy.h raydium/headers/key.h raydium/headers/land.h raydium/headers/light.h raydium/headers/log.h raydium/headers/main.h raydium/headers/mouse.h raydium/headers/network.h raydium/headers/normal.h raydium/headers/object.h raydium/headers/ode.h raydium/headers/osd.h raydium/headers/parser.h raydium/headers/particle2.h raydium/headers/php.h raydium/headers/profile.h raydium/headers/random.h raydium/headers/rayphp.h raydium/headers/register.h raydium/headers/render.h raydium/headers/signal.h raydium/headers/sky.h raydium/headers/sound.h raydium/headers/texture.h raydium/headers/timecall.h raydium/headers/trigo.h raydium/headers/vertex.h raydium/headers/window.h raydium/headers/reg_api.h raydium/headers/gui.h raydium/headers/live.h raydium/headers/video.h raydium/headers/shadow.h raydium/headers/myglut.h raydium/headers/web.h raydium/headers/hdr.h
 
 OBJECTS      = $(HEADERS:raydium/headers/%.h=raydium/compile/%.o)
 
@@ -67,7 +67,6 @@ clean:
 	rm -r $(COMPILE_DIR)	|| true
 	rm libraydium.so*	|| true
 	rm libraydium.a*	|| true
-	rm compile.log		|| true
 
 ################################################################################
 # All files

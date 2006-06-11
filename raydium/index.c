@@ -67,6 +67,7 @@
 #include "sky.c"
 #include "internal.c"
 #include "file.c"
+#include "file_tri.c"
 #include "camera.c"
 #include "object.c"
 #include "cli.c"
@@ -90,6 +91,7 @@
 #include "parser.c"
 #include "cli.c"
 #include "network.c"
+#include "file.c"
 #include "register.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
