@@ -32,7 +32,7 @@ help:
 	@echo "	make clean	remove compilation objects and libraries"
 
 doc: headers
-	cd raydium/headers && ./raydoc.php >> ../../doc.wiki && cd -
+	cd raydium/headers && ./raydoc.php > ../../doc.wiki && cd -
 
 ################################################################################
 # Create libraries
