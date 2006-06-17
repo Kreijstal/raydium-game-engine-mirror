@@ -152,4 +152,30 @@ void glutIdleFunc(void *func)
 glutIdleFuncCB=func;
 }
 
+//glutExtensionSupported - int (GLUTCALLBACK *func)(const char *name);
+int glutExtensionSupported(const char *name)
+{
+char *ext;
+int i;
+int start=0;
+char curr[128];
+
+ext=(char *)glGetString(GL_EXTENSIONS);
+if(!ext) return 0;
+
+for(i=0;i<=strlen(ext);i++)
+    {
+    if(ext[i]==' ' || ext[i]==0)
+	{
+	strncpy(curr,ext+start,i-start);
+	curr[i-start]=0;
+	//printf("-%s-\n",curr);
+	if(!strcasecmp(curr,name))
+	    return 1;
+	start=i+1;
+	}
+    }
+return 0;
+}
+
 #endif
