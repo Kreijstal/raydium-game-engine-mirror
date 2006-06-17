@@ -143,3 +143,34 @@ void raydium_file_home_path_cpy(char *file, char *dest)
 {
 strcpy(dest,raydium_file_home_path(file));
 }
+
+char *raydium_file_load(char *filename)
+{
+struct stat st;
+FILE *fp;
+char *mem;
+
+if(stat(filename,&st)<0)
+    return NULL;
+
+fp=raydium_file_fopen(filename,"rb");
+if(!fp)
+    return NULL;
+
+mem=malloc(st.st_size);
+if(!mem)
+    {
+    fclose(fp);
+    return NULL;
+    }
+
+if(fread(mem,st.st_size,1,fp)!=1)
+    {
+    fclose(fp);
+    free(mem);
+    return NULL;
+    }
+
+fclose(fp);
+return mem;
+}

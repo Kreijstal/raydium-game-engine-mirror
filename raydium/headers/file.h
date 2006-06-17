@@ -72,4 +72,11 @@ extern void raydium_file_home_path_cpy(char *file, char *dest);
 Same as above, but you must provide memory with ##dest##.
 **/
 
+extern char *raydium_file_load(char *filename);
+/**
+This function loads ##filename## (as a binary file under win32, no matter 
+under Linux) in a string, and returns its address. **You** must free this
+memory when finished.
+**/
+
 #endif
