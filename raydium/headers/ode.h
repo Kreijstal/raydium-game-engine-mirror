@@ -45,6 +45,9 @@ For now, Raydium supports 4 joint types (hinge, hinge2, universal, fixed), and
 you will find more informations with suitable functions documentation, below.
 On a joint, you could setup limits (min and max for all axes) and a maximum
 force before joint breaks, if needed.
+It's now possible to attach a joint to static environnement using the
+constant ##RAYDIUM_ODE_JOINT_FIXED## (do not use this value with "_name" joint
+functions, since they want a string, not a integer constant).
 
 - **Motors:**
 A motor is linked to joints, and may powering an unlimited amount of joints.

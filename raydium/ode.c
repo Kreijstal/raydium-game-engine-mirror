@@ -171,7 +171,11 @@ for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     raydium_ode_init_element(i);
-    
+
+raydium_ode_init_element(RAYDIUM_ODE_MAX_ELEMENTS);
+raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS].state=1;
+strcpy(raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS].name,"! dummy !");
+
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
     raydium_ode_init_joint(i);
 
@@ -213,7 +217,7 @@ return 0;
 
 signed char raydium_ode_element_isvalid(int i)
 {
-if(i>=0 && i<RAYDIUM_ODE_MAX_ELEMENTS &&
+if(i>=0 && i<=RAYDIUM_ODE_MAX_ELEMENTS && /* "<=" is important, see ode.h ! */
    raydium_ode_element[i].state)
     return 1;
 return 0;
@@ -1626,6 +1630,11 @@ if(raydium_ode_joint_find(name)>=0)
     return -1;
     }
 
+if(elem1==RAYDIUM_ODE_JOINT_FIXED)
+    elem1=RAYDIUM_ODE_MAX_ELEMENTS;
+if(elem2==RAYDIUM_ODE_JOINT_FIXED)
+    elem2=RAYDIUM_ODE_MAX_ELEMENTS;
+
 if(!raydium_ode_element_isvalid(elem1) || !raydium_ode_element_isvalid(elem2))
     {
     raydium_log("ODE: Error: Cannot attach hinge2: one element is not valid");
@@ -1681,6 +1690,11 @@ if(raydium_ode_joint_find(name)>=0)
     return -1;
     }
 
+if(elem1==RAYDIUM_ODE_JOINT_FIXED)
+    elem1=RAYDIUM_ODE_MAX_ELEMENTS;
+if(elem2==RAYDIUM_ODE_JOINT_FIXED)
+    elem2=RAYDIUM_ODE_MAX_ELEMENTS;
+
 if(!raydium_ode_element_isvalid(elem1) || !raydium_ode_element_isvalid(elem2))
     {
     raydium_log("ODE: Error: Cannot attach universal: one element is not valid");
@@ -1733,6 +1747,11 @@ if(raydium_ode_joint_find(name)>=0)
     return -1;
     }
 
+if(elem1==RAYDIUM_ODE_JOINT_FIXED)
+    elem1=RAYDIUM_ODE_MAX_ELEMENTS;
+if(elem2==RAYDIUM_ODE_JOINT_FIXED)
+    elem2=RAYDIUM_ODE_MAX_ELEMENTS;
+
 if(!raydium_ode_element_isvalid(elem1) || !raydium_ode_element_isvalid(elem2))
     {
     raydium_log("ODE: Error: Cannot attach hinge: one element is not valid");
@@ -1782,6 +1801,11 @@ if(raydium_ode_joint_find(name)>=0)
     raydium_log("ODE: Cannot add (fixed) joint \"%s\": name already exists",name);
     return -1;
     }
+
+if(elem1==RAYDIUM_ODE_JOINT_FIXED)
+    elem1=RAYDIUM_ODE_MAX_ELEMENTS;
+if(elem2==RAYDIUM_ODE_JOINT_FIXED)
+    elem2=RAYDIUM_ODE_MAX_ELEMENTS;
 
 if(!raydium_ode_element_isvalid(elem1) || !raydium_ode_element_isvalid(elem2))
     {

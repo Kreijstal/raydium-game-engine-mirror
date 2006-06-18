@@ -33,6 +33,7 @@
 #define RAYDIUM_ODE_JOINT_AXE_Y			0,1,0
 #define RAYDIUM_ODE_JOINT_AXE_Z			0,0,1
 #define RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES	RAYDIUM_ODE_JOINT_AXE_Z,RAYDIUM_ODE_JOINT_AXE_Y
+#define RAYDIUM_ODE_JOINT_FIXED			-10
 
 #define RAYDIUM_ODE_MATERIAL_HARD		0.9,0.1
 #define RAYDIUM_ODE_MATERIAL_MEDIUM		0.5,0.5
@@ -236,7 +237,7 @@ typedef struct raydium_ode_network_Explosion
 
 
 raydium_ode_Object    raydium_ode_object[RAYDIUM_ODE_MAX_OBJECTS];
-raydium_ode_Element   raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS];
+raydium_ode_Element   raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS+1]; // the last element is used for "static joint"
 raydium_ode_Joint     raydium_ode_joint[RAYDIUM_ODE_MAX_JOINTS];
 raydium_ode_Motor     raydium_ode_motor[RAYDIUM_ODE_MAX_MOTORS];
 raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS];
