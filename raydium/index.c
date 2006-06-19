@@ -56,6 +56,7 @@
 #include "vertex.c"
 #include "osd.c"
 #include "hdr.c"
+#include "shader.c"
 #include "register.c"
 #ifdef PHP_SUPPORT
 #include "php.c"

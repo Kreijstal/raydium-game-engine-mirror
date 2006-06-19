@@ -22,6 +22,7 @@ void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
 void raydium_hdr_init(void);
 void raydium_hdr_texture_reset(void);
+void raydium_shader_init(void);
 void raydium_web_init(void);
 
 void raydium_init_lights(void)
@@ -81,6 +82,7 @@ raydium_live_init();
 raydium_video_init();
 raydium_shadow_init();
 raydium_hdr_init();
+raydium_shader_init();
 raydium_web_init();
 
 // Must find a way to delete textures from video card's memory, too...
@@ -92,6 +94,7 @@ for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
  raydium_texture_nolight[i]=0;
  raydium_texture_env[i]=0;
  raydium_texture_islightmap[i]=0;
+ raydium_texture_shader[i]=-1;
  raydium_texture_rgb[0][i]=-1.f;
  raydium_texture_rgb[1][i]=-1.f;
  raydium_texture_rgb[2][i]=-1.f;
@@ -175,15 +178,17 @@ raydium_log("Raydium engine reseted to original state");
 
 void raydium_init_engine(void)
 {
+GLenum err;
 #ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 #endif
 
 raydium_signal_install_trap();
-#ifdef WIN32
-// init Win32 OpenGL ARB ext.
-raydium_arb_win32_init();
-#endif
+err=glewInit();
+if(err==GLEW_OK)
+    raydium_log("OpenGL extensions: OK");
+else
+    raydium_log("OpenGL extensions: FAILED");
 raydium_internal_size_vector_float_4=sizeof(GLfloat)*4;
 raydium_log("Platform \"4xfloat\" vector size is: %i byte(s) long",raydium_internal_size_vector_float_4);
 glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);

@@ -39,13 +39,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#define GL_GLEXT_PROTOTYPES
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-//#include <GL/glut.h>
-#ifndef WIN32
-#include <GL/glext.h>
-#endif
 #include <math.h>
 #include <time.h>
 #include <memory.h>
@@ -82,15 +78,6 @@
 
 #include <errno.h>
 #include "config.h"
-
-#ifdef WIN32
-#include "glarb.h"
-#endif
-
-#ifdef GL_VERSION_1_4
-#define glActiveTextureARB glActiveTexture
-#define glMultiTexCoord2fARB glMultiTexCoord2f
-#endif
 
 #ifdef PHP_SUPPORT
 #ifdef WIN32
@@ -141,6 +128,7 @@
 #define RAYDIUM_MAX_VIDEO_DEVICES		4
 #define RAYDIUM_MAX_LIVE_TEXTURES		8
 #define RAYDIUM_MAX_VIDEOS			4
+#define RAYDIUM_MAX_SHADERS			32
 
 #define RAYDIUM_LIGHT_ON           	     	1
 #define RAYDIUM_LIGHT_BLINKING     	     	2
@@ -342,11 +330,13 @@ __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
 __global GLuint  *raydium_vertex_texture_env;
 __global signed char	 *raydium_vertex_tag;
+
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_nolight[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_hdr[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_env[RAYDIUM_MAX_TEXTURES];
+__global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 

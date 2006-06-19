@@ -15,6 +15,7 @@ test_build()
 {
     echo -ne "* Testing $1..."
 
+    echo "" >> configure.log
     echo "   Testing $1"           >> configure.log
     echo "   ====================" >> configure.log
     echo "$2" > configure.c
@@ -308,7 +309,7 @@ char *r;
 glutInit(&argc,argv);
 myglutCreateWindow(320,240,RAYDIUM_RENDERING_WINDOW,"GL test");
 
-r=glGetString(GL_RENDERER);
+r=(char *)glGetString(GL_RENDERER);
 if(!strcmp(r,"Mesa GLX Indirect"))
     {
     fprintf(stderr,"WARNING ! Mesa Software renderer detected !");
@@ -321,6 +322,16 @@ return 0; }
 else
     echo " DISABLED";
 fi
+
+# GLEW ("The OpenGL Extension Wrangler Library")
+file='
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+int main(void) { glewInit(); return 0; }'
+test_build "GLEW" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
+exit_if_error "$?" "You must install libglew devel package"
+
 
 # OpenAL
 file="

@@ -13,6 +13,8 @@
 void raydium_callback_image(void);
 void raydium_timecall_callback(void);
 void raydium_hdr_block(signed char blocking);
+signed char raydium_shader_current(int shader);
+
 
 // color is a GLfloat[4] (RGBA)
 void raydium_render_lightmap_color(GLfloat *color)
@@ -58,7 +60,7 @@ if(first)
 tui=tu-GL_TEXTURE0_ARB;
 
 
-if(tui>=RAYDIUM_RENDER_MAX_TEXUNITS)
+if(tui>=RAYDIUM_RENDER_MAX_TEXUNITS || tui<0)
     {
     raydium_log("render: texture unit %i is invalid (%i max, see RAYDIUM_RENDER_MAX_TEXUNITS",
     tui,RAYDIUM_RENDER_MAX_TEXUNITS);
@@ -139,6 +141,11 @@ else // "standard" textunit
     glDisable(GL_LIGHTING);
     }
 
+  if(raydium_texture_shader[tex]>=0)
+    raydium_shader_current(raydium_texture_shader[tex]);
+  else
+    raydium_shader_current(-1);
+
   glColor4f(1.f,1.f,1.f,1.f);
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_BLENDED)
@@ -180,6 +187,7 @@ else // "standard" textunit
   }
 
   raydium_hdr_block(!raydium_texture_hdr[tex]);
+
 
   if(raydium_texture_rgb[tex][0]>=0 && raydium_texture_blended[tex]!=RAYDIUM_TEXTURE_PHANTOM)
   {
