@@ -246,6 +246,10 @@
 #define RAYDIUM_HDR_PASS			8
 #define RAYDIUM_HDR_EYE_SPEED_DEFAULT		0.1f
 
+#define RAYDIUM_FOG_MODE_LINEAR			GL_LINEAR
+#define RAYDIUM_FOG_MODE_EXP			GL_EXP
+#define RAYDIUM_FOG_MODE_EXP2			GL_EXP2
+
 
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -369,6 +373,10 @@ __global char	 raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 
 __global signed char	 raydium_fog_enabled_tag;
+__global int		 raydium_fog_mode;
+__global float		 raydium_fog_far;
+__global float		 raydium_fog_near;
+__global float		 raydium_fog_density;
 
 __global signed char	raydium_light_enabled_tag;
 __global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];

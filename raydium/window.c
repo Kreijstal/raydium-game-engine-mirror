@@ -146,7 +146,7 @@ raydium_hdr_internal_window_malloc();
 void raydium_window_view_update(void)
 {
 raydium_window_resize_callback(raydium_window_tx,raydium_window_ty);
-raydium_fog_mode();
+raydium_fog_apply();
 }
 
 void raydium_window_view_perspective(GLfloat fov, GLfloat fnear, GLfloat ffar)

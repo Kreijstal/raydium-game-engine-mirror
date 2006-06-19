@@ -156,8 +156,7 @@ for(i=0;i<4;i++)
 raydium_osd_color[i]=1.f;
 
 raydium_background_color_change(1,1,1,1);
-raydium_fog_mode();
-raydium_fog_enable();
+raydium_fog_apply();
 
 glEnable(GL_TEXTURE_2D);
 glEnable(GL_DEPTH_TEST);
