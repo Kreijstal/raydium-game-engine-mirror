@@ -149,8 +149,6 @@ for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
 	glDeleteObjectARB(raydium_shader_shaders[i].vert);
 	glDeleteObjectARB(raydium_shader_shaders[i].frag);
 	glDeleteObjectARB(raydium_shader_shaders[i].prog);
-	free(str_vert);
-	free(str_frag);
 	return -1;
 	}
 
