@@ -48,18 +48,18 @@ float raydium_fog_density_get(void)
 return raydium_fog_density;
 }
 
-void raydium_fog_near_set(GLfloat near)
+void raydium_fog_near_set(GLfloat fnear)
 {
-raydium_fog_near=near;
+raydium_fog_near=fnear;
 }
 
 float raydium_fog_near_get(void)
 {
 return raydium_fog_near;
 }
-void raydium_fog_far_set(GLfloat far)
+void raydium_fog_far_set(GLfloat ffar)
 {
-raydium_fog_far=far;
+raydium_fog_far=ffar;
 }
 
 float raydium_fog_far_get(void)
