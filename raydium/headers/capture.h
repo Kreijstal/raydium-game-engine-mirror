@@ -7,11 +7,17 @@ Capture (2D)
 
 // Quickview
 /**
-Captures are made in TGA format (without RLE compression) and saved into
+Captures are made in TGA (without RLE compression) or JPEG formats and saved into
 the current directory.
-This function may fail (garbage in resulting capture) if frame size if 
+These functions may fail (garbage in resulting capture) if frame size if 
 not "standard", mostly after a window resize.
-A new function is available for JPEG captures.
+
+Also there are "auto" functions that provide a simplest method to make an screen
+capture. So,the following example (put into the ##display()## function), allows jpeg 
+screenshots just pressing F9 key:
+##
+if(raydium_key_last==9)   raydium_capture_frame_jpeg_auto();
+##
 
 Raydium also allow you to capture movies: activate ##DEBUG_MOVIE## option
 in ##raydium/config.h## with the needed framerate, and press F11. Raydium
@@ -48,6 +54,21 @@ saving the hardware color buffer, whatever it contains. Use with caution.
 **/
 
 extern void raydium_capture_frame_jpeg_now(char *filename);
+/**
+Same as above, but using JPEG image format.
+**/
+
+extern void raydium_capture_filename_auto(char *dest,char *format);
+/**
+Internal Use. Generates filenames for new screenshots.
+**/
+
+extern void raydium_capture_frame_auto(void);
+/**
+Capture the current frame giving the resulting file and automatic name.
+**/ 
+
+extern void raydium_capture_frame_jpeg_auto(void);
 /**
 Same as above, but using JPEG image format.
 **/

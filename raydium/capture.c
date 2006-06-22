@@ -74,7 +74,7 @@ fwrite(&cGarbage, sizeof(unsigned char), 1, file);
 
 void raydium_capture_frame_jpeg(char *filename)
 {
-raydium_capture_asked=RAYDIUM_CAPTURE_TGA;
+raydium_capture_asked=RAYDIUM_CAPTURE_JPG;
 strcpy(raydium_capture_filename,filename);
 }
 
@@ -134,24 +134,37 @@ jpeg_destroy_compress(&cinfo);
 free(image_buffer);
 }
 
-
-void raydium_capture_frame_auto(void)
+void raydium_capture_filename_auto(char *dest,char *format)
 {
 static int cpt=0;
-char f[RAYDIUM_MAX_NAME_LEN];
 time_t rawtime;
 struct tm *ptm;
     
 time(&rawtime);
 ptm=gmtime(&rawtime); // localtime() ?
-sprintf(f,"raycap%i-%02i-%02i-%02i%02i%02i-%02i.tga",
+sprintf(dest,"raycap%i-%02i-%02i-%02i%02i%02i-%02i.%s",
 	ptm->tm_year+1900,
 	ptm->tm_mon+1,
 	ptm->tm_mday,
 	ptm->tm_hour,
 	ptm->tm_min,
 	ptm->tm_sec,
-	cpt);
-raydium_capture_frame(f);
+	cpt,
+	format);
 cpt++;
+}
+
+void raydium_capture_frame_auto(void)
+{
+
+char f[RAYDIUM_MAX_NAME_LEN];
+raydium_capture_filename_auto(f,"tga");
+raydium_capture_frame(f);
+}
+
+void raydium_capture_frame_jpeg_auto(void)
+{
+char f[RAYDIUM_MAX_NAME_LEN];
+raydium_capture_filename_auto(f,"jpg");
+raydium_capture_frame_jpeg(f);
 }

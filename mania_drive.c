@@ -2043,7 +2043,8 @@ raydium_projection_fov=70;
 raydium_window_view_update();
 }
 */
-
+//F9 to capture screen in jpg
+if(raydium_key_last==9) raydium_capture_frame_jpeg_auto();
 raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 
 raydium_light_position[0][0]=50;
