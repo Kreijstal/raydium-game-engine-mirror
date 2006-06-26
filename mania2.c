@@ -180,8 +180,8 @@ raydium_gui_label_create("lblTitle",handle,50,93,"Key help for Mania2 Track Edit
 
 y=90;
 raydium_gui_widget_sizes(0,0,14);
-raydium_gui_label_create("lblh0",handle,50,y-=YDEC,"mouse left click : mouve view",0,0,0);
-raydium_gui_label_create("lblh1",handle,50,y-=YDEC,"mouse right click : mouve view (glue)",0,0,0);
+raydium_gui_label_create("lblh0",handle,50,y-=YDEC,"mouse left click : move view",0,0,0);
+raydium_gui_label_create("lblh1",handle,50,y-=YDEC,"mouse right click : move view (glue)",0,0,0);
 raydium_gui_label_create("lblh2",handle,50,y-=YDEC,"+/- : change zoom",0,0,0);
 raydium_gui_label_create("lblh3",handle,50,y-=YDEC,"arrows : move block",0,0,0);
 raydium_gui_label_create("lblh4",handle,50,y-=YDEC,"pageUp/pageDown : change block",0,0,0);
