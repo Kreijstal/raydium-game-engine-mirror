@@ -142,12 +142,12 @@ typedef struct raydium_gui_Theme
     char     font[RAYDIUM_MAX_NAME_LEN];
 } raydium_gui_Theme;
 
-raydium_gui_Theme  raydium_gui_theme_current;
-raydium_gui_Window raydium_gui_windows[RAYDIUM_GUI_MAX_WINDOWS];
-signed char        raydium_gui_visible;
-int                raydium_gui_window_focused;
-signed char	   raydium_gui_oldstate;
-GLfloat		   raydium_gui_widget_sizes_default[3];
-int		   raydium_gui_button_clicked_id;
+__global raydium_gui_Theme  raydium_gui_theme_current;
+__global raydium_gui_Window raydium_gui_windows[RAYDIUM_GUI_MAX_WINDOWS];
+__global signed char        raydium_gui_visible;
+__global int                raydium_gui_window_focused;
+__global signed char	   raydium_gui_oldstate;
+__global GLfloat		   raydium_gui_widget_sizes_default[3];
+__global int		   raydium_gui_button_clicked_id;
 
 #endif

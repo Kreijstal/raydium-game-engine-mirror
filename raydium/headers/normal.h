@@ -13,25 +13,25 @@ You can find some more informations about normals at the top of this guide.
 **/
 
 
-extern void raydium_normal_generate_lastest_triangle (int default_visu);
+__rayapi void raydium_normal_generate_lastest_triangle (int default_visu);
 /**
 Generate normal for the last created triangle (see ##raydium_vertex_index##)
 if ##default_visu## is true ( != 0 ), this function will restore "visu" 
 normals too.
 **/
 
-extern void raydium_normal_restore_all (void);
+__rayapi void raydium_normal_restore_all (void);
 /**
 This function restore visu normals with standard ones (##raydium_vertex_normal_*##)
 **/
 
-extern void raydium_normal_regenerate_all (void);
+__rayapi void raydium_normal_regenerate_all (void);
 /**
 This function will regenerate standard and visu normals for the whole 
 scene (ground, objects, ...).
 **/
 
-extern void raydium_normal_smooth_all (void);
+__rayapi void raydium_normal_smooth_all (void);
 /**
 This function will smooth the whole scene, using adjacent vertices.
 Note this function can take a lot of time.

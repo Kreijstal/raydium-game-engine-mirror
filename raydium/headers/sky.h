@@ -18,7 +18,7 @@ skybox with fog using ##raydium_sky_force## if you really want).
 **/
 
 
-extern void raydium_sky_box_cache (void);
+__rayapi void raydium_sky_box_cache (void);
 /**
 As skybox texture are sometimes large files, you can pre-load skybox
 with this function. If you don't do it, Raydium will load textures 
@@ -27,12 +27,12 @@ Calling this function will automatically define sky as a HDR emitter.
 See HDR chapter for more information.
 **/
 
-extern void raydium_sky_box_render (GLfloat x, GLfloat y, GLfloat z);
+__rayapi void raydium_sky_box_render (GLfloat x, GLfloat y, GLfloat z);
 /**
 Internal use.
 **/
 
-void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z, int detail);
+__rayapi void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z, int detail);
 /**
 Internal use.
 Calculates and draw the sphere. Also rotate it according the angles or orbit.
@@ -51,19 +51,19 @@ If you need to check if the atmosphere is activated or not, use
 and should not used by normal programs.
 **/
 
-void raydium_sky_atmosphere_enable(void);
+__rayapi void raydium_sky_atmosphere_enable(void);
 /**
 turn on the use of atmosphere effects.
 This one and _disable function a program should use, the other 
 ##raydium_sky_atmosphere_## are internal ones.
 **/
 
-void raydium_sky_atmosphere_disable(void);
+__rayapi void raydium_sky_atmosphere_disable(void);
 /**
 turn off the use of atmosphere effects.
 **/
 
-void raydium_sky_atmosphere_render(GLfloat x, GLfloat y, GLfloat z,int detail);
+__rayapi void raydium_sky_atmosphere_render(GLfloat x, GLfloat y, GLfloat z,int detail);
 /**
 Internal use. This internal function draws the atmosphere effects. Right 
 now only draws a rotating sphere with a gradient of color (from black to white).
@@ -71,7 +71,7 @@ In a future, it will draw multiples layers of sky (with and without textures),
 stars, satellites... Maybe rain and snow could be included here also.
 **/
 
-signed char raydium_sky_atmosphere_check(void);
+__rayapi signed char raydium_sky_atmosphere_check(void);
 /**
 This functions only check if the atmosphere features are been used. 
 Returns 1 if they are used, else 0.

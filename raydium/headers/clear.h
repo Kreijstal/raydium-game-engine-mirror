@@ -5,12 +5,12 @@ Frame clearing
 801
 **/
 
-extern void raydium_clear_frame (void);
+__rayapi void raydium_clear_frame (void);
 /**
 You need to call this function every frame to clear all hardware buffers.
 **/
 
-extern void raydium_clear_color_update (void);
+__rayapi void raydium_clear_color_update (void);
 /**
 Will apply background color modification. Probably useless for you.
 **/

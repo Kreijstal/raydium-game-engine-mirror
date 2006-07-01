@@ -13,7 +13,7 @@ scripting engine, creating bindings.
 See RayPHP chapter for more informations anout scripting.
 **/
 
-void raydium_register_api(void);
+__rayapi void raydium_register_api(void);
 /**
 Internal. Will register Raydium API.
 **/

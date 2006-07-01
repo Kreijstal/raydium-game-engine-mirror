@@ -68,8 +68,8 @@ typedef struct raydium_live_Texture
   unsigned char *data_source;
 } raydium_live_Texture;
 
-raydium_live_Device raydium_live_device[RAYDIUM_MAX_VIDEO_DEVICES];
-raydium_live_Texture raydium_live_texture[RAYDIUM_MAX_LIVE_TEXTURES];
+__global raydium_live_Device raydium_live_device[RAYDIUM_MAX_VIDEO_DEVICES];
+__global raydium_live_Texture raydium_live_texture[RAYDIUM_MAX_LIVE_TEXTURES];
 
 // mostly from tvset.c (thanks to vgrabber.c)
 #define READ_VIDEO_PIXEL(buf, format, depth, r, g, b)			\

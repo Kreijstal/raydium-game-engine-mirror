@@ -69,25 +69,25 @@ void (*glutDisplayFuncCB)(void);
 void (*glutIdleFuncCB)(void);
 
 // protos
-void glutInit(int *argc, char **argv);
-int  glutGet(int enu);
-void glutSetCursor(int cursor);
-void glutWarpPointer(int x, int y);
-void glutSwapBuffers(void);
-void glutIgnoreKeyRepeat(int ignore);
-void glutReshapeFunc(void *func);
-void glutKeyboardFunc(void *func);
-void glutSpecialUpFunc(void *func);
-void glutSpecialFunc(void *func);
-void glutMotionFunc(void *func);
-void glutPassiveMotionFunc(void *func);
-void glutMouseFunc(void *func);
-void glutDisplayFunc(void *func);
-void glutIdleFunc(void *func);
-int  glutExtensionSupported(const char *name);
-void glutMainLoop(void);
-void glutWireSphere(GLdouble radius, GLint slices, GLint stacks);
-void myglutCreateWindow(GLuint tx, GLuint ty, signed char rendering, char *name);
+__rayapi void glutInit(int *argc, char **argv);
+__rayapi int  glutGet(int enu);
+__rayapi void glutSetCursor(int cursor);
+__rayapi void glutWarpPointer(int x, int y);
+__rayapi void glutSwapBuffers(void);
+__rayapi void glutIgnoreKeyRepeat(int ignore);
+__rayapi void glutReshapeFunc(void *func);
+__rayapi void glutKeyboardFunc(void *func);
+__rayapi void glutSpecialUpFunc(void *func);
+__rayapi void glutSpecialFunc(void *func);
+__rayapi void glutMotionFunc(void *func);
+__rayapi void glutPassiveMotionFunc(void *func);
+__rayapi void glutMouseFunc(void *func);
+__rayapi void glutDisplayFunc(void *func);
+__rayapi void glutIdleFunc(void *func);
+__rayapi int  glutExtensionSupported(const char *name);
+__rayapi void glutMainLoop(void);
+__rayapi void glutWireSphere(GLdouble radius, GLint slices, GLint stacks);
+__rayapi void myglutCreateWindow(GLuint tx, GLuint ty, signed char rendering, char *name);
 
 
 #endif

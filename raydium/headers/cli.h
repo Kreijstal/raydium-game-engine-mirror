@@ -11,7 +11,7 @@ Here, you'll find a few functions to deal with command line
 interface of Raydium.
 **/
 
-extern int raydium_init_cli_option (char *option, char *value);
+__rayapi int raydium_init_cli_option (char *option, char *value);
 /**
 This function will search command line ##option##.
 If this option is found, the functions stores any argument to ##value## and
@@ -28,18 +28,18 @@ if(raydium_init_cli_option("ground",model))
 %%
 **/
 
-extern int raydium_init_cli_option_default (char *option, char *value, char *default_value);
+__rayapi int raydium_init_cli_option_default (char *option, char *value, char *default_value);
 /**
 Same as above, but allows you to provide a default value (##default##) if
 the ##option## is not found on command line.
 **/
 
-void raydium_init_internal_homedir_find(char *);
+__rayapi void raydium_init_internal_homedir_find(char *);
 /**
 Internal use.
 **/
 
-extern void raydium_init_args (int argc, char **argv);
+__rayapi void raydium_init_args (int argc, char **argv);
 /**
 You must use this function, wich send application arguments to Raydium 
 and external libs (GLUT, OpenAL, ...).
@@ -53,7 +53,7 @@ raydium_init_args(argc,argv);
 %%
 **/
 
-extern void raydium_init_args_name(int argc, char **argv, char *app_name);
+__rayapi void raydium_init_args_name(int argc, char **argv, char *app_name);
 /**
 Same as above, but with application short name. This string is used to
 build things like runtime configuration directory name (~/.raydium/ by default).

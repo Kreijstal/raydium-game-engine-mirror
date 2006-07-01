@@ -31,18 +31,18 @@ file ##common.h## if you want reflection to be more or less visible.
 **/
 
 
-extern signed char raydium_texture_size_is_correct (GLuint size);
+__rayapi signed char raydium_texture_size_is_correct (GLuint size);
 /**
 Returns true if ##size## is a correct texture size, depending of
 hardware capacities and "power of 2" constraint.
 **/
 
-extern GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake);
+__rayapi GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake);
 /**
 Internal use.
 **/
 
-extern GLuint raydium_texture_load (char *filename);
+__rayapi GLuint raydium_texture_load (char *filename);
 /**
 Loads "filename" texture into hardware memory. Function results 
 texture index, but in most cases, you can identify later a texture 
@@ -52,12 +52,12 @@ this value.
 0 is returned if texture loading have failed.
 **/
 
-extern GLuint raydium_texture_load_erase (char *filename, GLuint to_replace);
+__rayapi GLuint raydium_texture_load_erase (char *filename, GLuint to_replace);
 /**
 Same as above, but ##to_replace## texture (index) is erased with ##filename##.
 **/
 
-extern signed char raydium_texture_current_set (GLuint current);
+__rayapi signed char raydium_texture_current_set (GLuint current);
 /**
 Switch active texture to "current" index. Mostly used for runtime object 
 creation:
@@ -66,24 +66,24 @@ add vertices, ... and save all to an objet"
 (see below for vertices management).
 **/
 
-extern signed char raydium_texture_current_set_name (char *name);
+__rayapi signed char raydium_texture_current_set_name (char *name);
 /**
 Same as above, but using texture name. This function will load ##name## 
 if not alread done.
 **/
 
-extern GLuint raydium_texture_find_by_name (char *name);
+__rayapi GLuint raydium_texture_find_by_name (char *name);
 /**
 Returns index for texture "name", and load it if not already done.
 **/
 
-extern GLuint raydium_texture_exists(char *name);
+__rayapi GLuint raydium_texture_exists(char *name);
 /**
 Same as above, but don't load texture if ##name## isn't already loaded and
 then returns -1. Returns texture id otherwise.
 **/
 
-extern void raydium_texture_filter_change (GLuint filter);
+__rayapi void raydium_texture_filter_change (GLuint filter);
 /**
 
 Change texture filter. The new filter will apply on all "next" textures,

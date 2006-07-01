@@ -13,9 +13,9 @@ hidden behind a single function, as shown below.
 **/
 
 #ifndef RAYDIUM_NETWORK_ONLY
-extern void raydium_console_line_add (char *format, ...);
+__rayapi void raydium_console_line_add (char *format, ...);
 #endif
-extern void raydium_log (char *format, ...);
+__rayapi void raydium_log (char *format, ...);
 /**
 This function must be used like "printf", using a format 
 ("%s, %i, %x, ...") and then, suitable variables, 

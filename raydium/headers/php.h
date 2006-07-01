@@ -28,10 +28,10 @@ extern php_core_globals *core_globals;
 extern sapi_globals_struct *sapi_globals;
 extern void ***tsrm_ls;
 #endif
-extern void raydium_php_error (int type, const char *msg, ...);
-extern int raydium_php_uwrite (const char *str, uint str_length TSRMLS_DC);
-extern void raydium_php_init_request (char *filename);
-extern int raydium_php_exec (char *name);
-extern void raydium_php_close (void);
-extern void raydium_php_init (void);
+__rayapi void raydium_php_error (int type, const char *msg, ...);
+__rayapi int raydium_php_uwrite (const char *str, uint str_length TSRMLS_DC);
+__rayapi void raydium_php_init_request (char *filename);
+__rayapi int raydium_php_exec (char *name);
+__rayapi void raydium_php_close (void);
+__rayapi void raydium_php_init (void);
 #endif

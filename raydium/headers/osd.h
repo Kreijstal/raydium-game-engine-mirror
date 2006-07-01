@@ -18,24 +18,24 @@ Most functions will use a percentage system, and origin is at lower-left corner.
 **/
 
 
-extern void raydium_osd_color_change (GLfloat r, GLfloat g, GLfloat b);
+__rayapi void raydium_osd_color_change (GLfloat r, GLfloat g, GLfloat b);
 /**
 This function will change the font color for the next ##raydium_osd_printf*## 
 calls.
 As usual: 0 <= (##r##,##g## and ##b##) <= 1.
 **/
 
-extern void raydium_osd_alpha_change (GLfloat a);
+__rayapi void raydium_osd_alpha_change (GLfloat a);
 /**
 Same as above, but will change font transparency.
 **/
 
-extern void raydium_osd_color_rgba (GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+__rayapi void raydium_osd_color_rgba (GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 /**
 This is a mix of ##raydium_osd_color_change## and ##raydium_osd_alpha_change##.
 **/
 
-extern void raydium_osd_color_ega (char hexa);
+__rayapi void raydium_osd_color_ega (char hexa);
 /**
 This function will change font color with the corresponding 
 ##hexa##decimal code (as a char: '0' to 'F') in the standard EGA palette.
@@ -66,27 +66,27 @@ Here is this palette:
 ""
 **/
 
-extern void raydium_osd_start (void);
+__rayapi void raydium_osd_start (void);
 /**
 Mostly for internal uses. (will configure screen for OSD operations)
 **/
 
-extern void raydium_osd_stop (void);
+__rayapi void raydium_osd_stop (void);
 /**
 Mostly for internal uses. (see above)
 **/
 
-extern void raydium_osd_draw (int tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+__rayapi void raydium_osd_draw (int tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 /**
 Will draw ##tex## texture using (##x1##,##y1##) and (##x2##,##y2##) points.
 **/
 
-extern void raydium_osd_draw_name (char *tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+__rayapi void raydium_osd_draw_name (char *tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 /**
 Same as above, but using texture filename.
 **/
 
-extern void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
+__rayapi void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
 This function is an OpenGL equivalent to the standard "printf" C function.
 
@@ -118,19 +118,19 @@ raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium
 %%
 **/
 
-extern void raydium_osd_printf_3D (GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
+__rayapi void raydium_osd_printf_3D (GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
 Same as above, but you can place your text in your application 3D space, 
 using ##x##, ##y## and ##z## values.
 **/
 
-extern void raydium_osd_logo (char *texture);
+__rayapi void raydium_osd_logo (char *texture);
 /**
 Will draw a logo for the current frame with texture filename.
 For now, you've no control over rotation speed of the logo.
 **/
 
-extern void raydium_osd_cursor_set (char *texture, GLfloat xsize, GLfloat ysize);
+__rayapi void raydium_osd_cursor_set (char *texture, GLfloat xsize, GLfloat ysize);
 /**
 This function will set mouse cursor with texture filename and 
 with (##xsize##,##ysize##) size (percent of screen size).
@@ -143,59 +143,59 @@ raydium_osd_cursor_set("BOXcursor.tga",4,4);
 You can set ##texture## to NULL or empty string to cancel OSD cursor texture.
 **/
 
-extern void raydium_osd_cursor_draw (void);
+__rayapi void raydium_osd_cursor_draw (void);
 /**
 Internal use.
 **/
 
-extern void raydium_osd_internal_vertex (GLfloat x, GLfloat y, GLfloat top);
+__rayapi void raydium_osd_internal_vertex (GLfloat x, GLfloat y, GLfloat top);
 /**
 Internal use.
 **/
 
-extern void raydium_osd_network_stat_draw (GLfloat px, GLfloat py, GLfloat size);
+__rayapi void raydium_osd_network_stat_draw (GLfloat px, GLfloat py, GLfloat size);
 /**
 Will draw network stats (if available) in a box.
 %%(c) raydium_osd_network_stat_draw(5,30,20); %%
 **/
 
-extern void raydium_osd_mask (GLfloat * color4);
+__rayapi void raydium_osd_mask (GLfloat * color4);
 /**
 Will draw a uniform mask using ##color4## (RGBA color) for this frame.
 **/
 
-extern void raydium_osd_mask_texture(int texture,GLfloat alpha);
+__rayapi void raydium_osd_mask_texture(int texture,GLfloat alpha);
 /**
 Will draw a textured mask, with ##alpha## opacity (1 is full opacity).
 **/
 
-extern void raydium_osd_mask_texture_name(char *texture,GLfloat alpha);
+__rayapi void raydium_osd_mask_texture_name(char *texture,GLfloat alpha);
 /**
 Same as above, but resolving texture by name.
 **/
 
-extern void raydium_osd_mask_texture_clip(int texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+__rayapi void raydium_osd_mask_texture_clip(int texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 /**
 Same as ##raydium_osd_mask_texture##, but (x1,y1),(x2,y2) will be used as 
 texture coords, in a [0,100] range.
 **/
 
-extern void raydium_osd_mask_texture_clip_name(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+__rayapi void raydium_osd_mask_texture_clip_name(char *texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 /**
 Same as above, but resolving texture by name.
 **/
 
-extern void raydium_osd_fade_callback (void);
+__rayapi void raydium_osd_fade_callback (void);
 /**
 Internal use.
 **/
 
-extern void raydium_osd_fade_init (void);
+__rayapi void raydium_osd_fade_init (void);
 /**
 Internal use.
 **/
 
-extern void raydium_osd_fade_from (GLfloat * from4, GLfloat * to4, GLfloat time_len, void *OnFadeEnd);
+__rayapi void raydium_osd_fade_from (GLfloat * from4, GLfloat * to4, GLfloat time_len, void *OnFadeEnd);
 /**
 This function will configure a fading mask from ##from4## color to ##to4##.
 This fade will last ##time_len## seconds, and will call ##OnFadeEnd## callback

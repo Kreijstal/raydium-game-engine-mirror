@@ -39,24 +39,24 @@ As you can see, linear mode doesn't use ##Density##; and Exp & Exp2 modes don't
 use near and far values. Remember that.
 **/
 
-extern void raydium_fog_enable (void);
+__rayapi void raydium_fog_enable (void);
 /**
 Obvious
 **/
 
-extern void raydium_fog_disable (void);
+__rayapi void raydium_fog_disable (void);
 /**
 Obvious
 **/
 
-extern void raydium_fog_color_update (void);
+__rayapi void raydium_fog_color_update (void);
 /**
 If you have modified ##raydium_background_color## array, you must 
 call this function, applying the specified color to hardware.
 See also: ##raydium_background_color_change##
 **/
 
-extern void raydium_fog_mode_set (GLuint mode);
+__rayapi void raydium_fog_mode_set (GLuint mode);
 /**
 The fog mode can be change with this function. There are 3 different ways to apply
 the fog:
@@ -71,7 +71,8 @@ mist in the real world.
 Used when the observer is inside a cloud/mist.
 ##IMPORTANT##: EXP2 mode ignores the ##near## and ##far## values, only uses the ##density##.
 **/
-extern int raydium_fog_mode_get(void);
+
+__rayapi int raydium_fog_mode_get(void);
 /**
 Returns an integer with the current mode of the fog. See table below:
 GL_LINEAR	0x2601	9729
@@ -79,41 +80,41 @@ GL_EXP		0x0800	2048
 GL_EXP2		0x0801	2049
 **/
 
-extern void raydium_fog_density_set(GLfloat density);
+__rayapi void raydium_fog_density_set(GLfloat density);
 /**
 Sets the density of the fog.
 Useless if you are using LINEAR mode.
 **/
-extern float raydium_fog_density_get(void);
+__rayapi float raydium_fog_density_get(void);
 /**
 Returns the density of the fog.
 **/
-extern void raydium_fog_near_set(GLfloat near);
+__rayapi void raydium_fog_near_set(GLfloat near);
 /**
 Sets the near point to apply the fog.
 Useless if you are using EXP o EXP2 modes.
 **/
-extern float raydium_fog_near_get(void);
+__rayapi float raydium_fog_near_get(void);
 /**
 Returns de near point of the fog.
 **/
-extern void raydium_fog_far_set(GLfloat far);
+__rayapi void raydium_fog_far_set(GLfloat far);
 /**
 Sets the far point of the fog.
 Useless if you are using EXP o EXP2 modes.
 **/
-extern float raydium_fog_far_get(void);
+__rayapi float raydium_fog_far_get(void);
 /**
 Return the far point of the fog.
 **/
 
-extern void raydium_fog_apply(void);
+__rayapi void raydium_fog_apply(void);
 /**
 Used to apply changes in your setup of fog.
 Also is used to continue a previously stopped fog. See: raydium_fog_wait(void) below.
 **/
 
-void raydium_fog_wait(void);
+__rayapi void raydium_fog_wait(void);
 /**
 With this funciont you can deactivate TEMPORALY the fog, but the internal state
 of the fog in raydium won't change, so when you use raydium_fog_apply, the fog will continue

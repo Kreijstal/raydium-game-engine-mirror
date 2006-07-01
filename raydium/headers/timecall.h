@@ -56,61 +56,61 @@ You may want to look at common.c for interesting defines about timecalls.
 #else
 #define __GETTIMEOFDAY_USEC 1000000
 #endif
-extern void raydium_timecall_raydium (GLfloat step);
+__rayapi void raydium_timecall_raydium (GLfloat step);
 /**
 Internal Raydium callback.
 **/
 
 #ifdef WIN32
-extern float raydium_timecall_internal_w32_detect_modulo(int div);
+__rayapi float raydium_timecall_internal_w32_detect_modulo(int div);
 /**
 Internal, WIN32 only: Returns timer resolution for ##div## divisor.
 **/
 
-extern int raydium_timecall_internal_w32_divmodulo_find(void);
+__rayapi int raydium_timecall_internal_w32_divmodulo_find(void);
 /**
 Internal, WIN32 only: Detects the best timer divisor for the current CPU.
 **/
 
 #endif
-extern unsigned long raydium_timecall_devrtc_clock (void);
+__rayapi unsigned long raydium_timecall_devrtc_clock (void);
 /**
 Internal, Linux only: Reads and return RTC clock.
 **/
 
-extern unsigned long raydium_timecall_clock (void);
+__rayapi unsigned long raydium_timecall_clock (void);
 /**
 Returns current "time".
 **/
 
-extern signed char raydium_timecall_devrtc_rate_change (unsigned long new);
+__rayapi signed char raydium_timecall_devrtc_rate_change (unsigned long new_rate);
 /**
 Internal, Linux only: Modifies RTC clock rate.
 **/
 
-extern void raydium_timecall_devrtc_close (void);
+__rayapi void raydium_timecall_devrtc_close (void);
 /**
 Internal, Linux only: Will close RTC clock.
 **/
 
-extern unsigned long raydium_timecall_devrtc_init (void);
+__rayapi unsigned long raydium_timecall_devrtc_init (void);
 /**
 Internal, Linux only: Will open RTC clock.
 **/
 
-extern int raydium_timecall_detect_frequency (void);
+__rayapi int raydium_timecall_detect_frequency (void);
 /**
 Internal: This function will find the best timer available for current
 platform, and adjust properties to your hardware (rate, divisor, ...).
 **/
 
-extern void raydium_timecall_init (void);
+__rayapi void raydium_timecall_init (void);
 /**
 Internal use.
 **/
 
 
-extern int raydium_timecall_add (void *funct, GLint hz);
+__rayapi int raydium_timecall_add (void *funct, GLint hz);
 /**
 There is two sort of timecalls with Raydium:
 
@@ -132,13 +132,13 @@ A standard timecall will use ##void(void)## function and a positive ##hertz##
 argument, as an elasitc one will use ##void(float)## and negative ##hertz## argument.
 **/
 
-extern void raydium_timecall_freq_change (int callback, GLint hz);
+__rayapi void raydium_timecall_freq_change (int callback, GLint hz);
 /**
 This function changes the ##callback## frequency. See above for possibles
 values of ##hz## (negative and positive values).
 **/
 
-extern void raydium_timecall_callback (void);
+__rayapi void raydium_timecall_callback (void);
 /**
 Internal use (frame fired callback).
 **/

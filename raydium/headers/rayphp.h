@@ -20,24 +20,24 @@ configuration database. Example : %%Generic-Proxy;http://proxy:3128/%%
 The trailing ##/## (slash) must be present.
 **/
 
-extern int raydium_rayphp_repository_file_get (char *path);
+__rayapi int raydium_rayphp_repository_file_get (char *path);
 /**
 Will contact R3S servers for downloading ##path## file.
 **/
 
-extern int raydium_rayphp_repository_file_put (char *path, int depends);
+__rayapi int raydium_rayphp_repository_file_put (char *path, int depends);
 /**
 Will contact R3S servers for uploading ##path## file. Set ##depends## to
 true (1) if you also want to upload dependencies, false (0) otherwise.
 **/
 
-extern int raydium_rayphp_repository_file_list(char *filter);
+__rayapi int raydium_rayphp_repository_file_list(char *filter);
 /**
 Will contact R3S servers to get file list, using ##filter## (shell-like
 syntax). Default ##filter## is ##*##.
 **/
 
-extern signed char raydium_rayphp_http_test(void);
+__rayapi signed char raydium_rayphp_http_test(void);
 /**
 Test if Internet connection is available using Raydium website.
 (0 means 'not available', 1 means 'OK')

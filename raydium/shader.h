@@ -17,7 +17,7 @@ typedef struct raydium_shader_Shader
     GLhandleARB prog;
 } raydium_shader_Shader;
 
-raydium_shader_Shader raydium_shader_shaders[RAYDIUM_MAX_SHADERS];
-signed char raydium_shader_support;
+__global raydium_shader_Shader raydium_shader_shaders[RAYDIUM_MAX_SHADERS];
+__global signed char raydium_shader_support;
 
 #endif

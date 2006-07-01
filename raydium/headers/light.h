@@ -22,17 +22,17 @@ Usage is very easy: no need to create lights, just turn them on.
 See also: LightMaps
 **/
 
-extern void raydium_light_enable (void);
+__rayapi void raydium_light_enable (void);
 /**
 Obvious.
 **/
 
-extern void raydium_light_disable (void);
+__rayapi void raydium_light_disable (void);
 /**
 Obvious.
 **/
 
-extern signed char raydium_light_texture(int texture, signed char enable);
+__rayapi signed char raydium_light_texture(int texture, signed char enable);
 /**
 Texture ##l## will not use lighting if ##enable## is set to 0. Call this
 function **before** loading any object using this texture, because
@@ -40,54 +40,54 @@ of display lists. Same way, it's not possible to change back this value
 after the first object drawing without disabling display lists.
 **/
 
-extern signed char raydium_light_texture_name(char *name, signed char enable);
+__rayapi signed char raydium_light_texture_name(char *name, signed char enable);
 /**
 Same as above, but using texture ##name##.
 **/
 
-extern GLuint raydium_light_to_GL_light (GLuint l);
+__rayapi GLuint raydium_light_to_GL_light (GLuint l);
 /**
 Probably useless for end user. (internal uses)
 **/
 
-extern void raydium_light_on (GLuint l);
+__rayapi void raydium_light_on (GLuint l);
 /**
 Turns ##l## light on ( 0 <= l <= RAYDIUM_MAX_LIGHTS )
 **/
 
-extern void raydium_light_off (GLuint l);
+__rayapi void raydium_light_off (GLuint l);
 /**
 Turns ##l## light off
 **/
 
-extern void raydium_light_switch (GLuint l);
+__rayapi void raydium_light_switch (GLuint l);
 /**
 Will swith ##l## light state (from "on" to "off", for example).
 **/
 
-extern void raydium_light_update_position (GLuint l);
+__rayapi void raydium_light_update_position (GLuint l);
 /**
 Updates ##raydium_light_position[l]## array changes to hardware.
 This function is now used internaly by Raydium,
 so you have no reasons to call it by yourself.
 **/
 
-extern void raydium_light_update_position_all (void);
+__rayapi void raydium_light_update_position_all (void);
 /**
 See above.
 **/
 
-extern void raydium_light_update_intensity (GLuint l);
+__rayapi void raydium_light_update_intensity (GLuint l);
 /**
 See above.
 **/
 
-extern void raydium_light_update_all (GLuint l);
+__rayapi void raydium_light_update_all (GLuint l);
 /**
 See above.
 **/
 
-extern void raydium_light_move (GLuint l, GLfloat * vect);
+__rayapi void raydium_light_move (GLuint l, GLfloat * vect);
 /**
 Moves light to position ##vect## for light ##l## (vect is GLfloat[4]: x,y,z,dummy).
 
@@ -95,34 +95,34 @@ Just move your lights before camera placement, or your changes
 will be applied to the next frame only.
 **/
 
-extern void raydium_light_move_3f(GLuint l,GLfloat px, GLfloat py, GLfloat pz);
+__rayapi void raydium_light_move_3f(GLuint l,GLfloat px, GLfloat py, GLfloat pz);
 /*
 Same as above, but using 3 GLfloat values
 */
 
-extern void raydium_light_conf_7f(GLuint l,GLfloat px, GLfloat py, GLfloat pz, GLfloat intensity, GLfloat r, GLfloat g, GLfloat b);
+__rayapi void raydium_light_conf_7f(GLuint l,GLfloat px, GLfloat py, GLfloat pz, GLfloat intensity, GLfloat r, GLfloat g, GLfloat b);
 /*
 Full settings for light ##l##: position, intensity and color, using GLfloat
 values.
 */
 
-extern void raydium_light_reset (GLuint l);
+__rayapi void raydium_light_reset (GLuint l);
 /**
 This function will restore all defaults for ##l## light.
 **/
 
-extern void raydium_light_blink_internal_update (GLuint l);
+__rayapi void raydium_light_blink_internal_update (GLuint l);
 /**
 Useless for end-user.
 **/
 
-extern void raydium_light_blink_start (GLuint l, int fpc);
+__rayapi void raydium_light_blink_start (GLuint l, int fpc);
 /**
 Makes ##l## light blinking at ##fpc## (frames per cycle) rate.
 This function will use timecalls soon ("fpc" -> "hertz")
 **/
 
-extern void raydium_light_callback (void);
+__rayapi void raydium_light_callback (void);
 /**
 Useless for end-user.
 **/

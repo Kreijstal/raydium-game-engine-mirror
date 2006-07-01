@@ -12,22 +12,22 @@ This section is mostly designed for internal uses, but provides some
 usefull maths functions, mostly for trigonometrical uses.
 **/
 
-extern GLfloat raydium_trigo_cos (GLfloat i);
+__rayapi GLfloat raydium_trigo_cos (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-extern GLfloat raydium_trigo_sin (GLfloat i);
+__rayapi GLfloat raydium_trigo_sin (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-extern GLfloat raydium_trigo_cos_inv (GLfloat i);
+__rayapi GLfloat raydium_trigo_cos_inv (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-extern GLfloat raydium_trigo_sin_inv (GLfloat i);
+__rayapi GLfloat raydium_trigo_sin_inv (GLfloat i);
 /**
 Obvious (degrees)
 **/
@@ -57,23 +57,23 @@ Test two cases : "Not a Number" and "Infinite"
 Will obviously "round" ##a## instead of the default C floor behaviour
 **/
 
-extern void raydium_trigo_rotate (GLfloat * p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat * res);
+__rayapi void raydium_trigo_rotate (GLfloat * p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat * res);
 /**
 Rotate p (GLfloat * 3) by (rx,ry,rx) angles (degrees).
 Result is stored in res (GLfloat * 3)
 **/
 
-extern void raydium_trigo_pos_to_matrix (GLfloat * pos, GLfloat * m);
+__rayapi void raydium_trigo_pos_to_matrix (GLfloat * pos, GLfloat * m);
 /**
 Generates a ODE style matrix (16 Glfloat) from pos (GLfloat * 3)
 **/
 
-extern void raydium_trigo_pos_get_modelview (GLfloat * res);
+__rayapi void raydium_trigo_pos_get_modelview (GLfloat * res);
 /**
 Stores the current OpenGL MODELVIEW matrix in res (16 GLfloat)
 **/
 
-extern int raydium_trigo_pow2_next(int value);
+__rayapi int raydium_trigo_pow2_next(int value);
 /**
 Returns next power of two of ##value##. Ugly.
 **/
@@ -87,47 +87,47 @@ The data type matrix4x4 is really an 16 double array.
 **/
 
 
-double raydium_matrix_determinant(matrix4x4 matrix);
+__rayapi double raydium_matrix_determinant(matrix4x4 matrix);
 /**
 Returns the ##determinant## of the given matrix.
 **/
 
-matrix4x4 raydium_matrix_adjoint(matrix4x4 matrix);
+__rayapi matrix4x4 raydium_matrix_adjoint(matrix4x4 matrix);
 /**
 Returns the ##adjoint matrix## of the given matrix.
 **/
 
-matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2);
+__rayapi matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2);
 /**
 Returns the resulting matrix of the multiplication of 2 matrices.
 Remeber that the multiplication of matrices doesn't have the conmutative 
 property, so is not equal ##matrix1 X matrix2## than ##matrix2 x matrix1##.
 **/
 
-matrix4x4 raydium_matrix_inverse(matrix4x4 matrix);
+__rayapi matrix4x4 raydium_matrix_inverse(matrix4x4 matrix);
 /**
 Returns the inverse matrix of a given matrix.
 **/
 
-double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension);
+__rayapi double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension);
 /**
 internal, don't use.
 **/
 
-matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension);
+__rayapi matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension);
 /**
 internal, don't use.
 **/
-matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension);
+__rayapi matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension);
 /**
 internal, don't use.
 **/
-matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,int dimension);
+__rayapi matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,int dimension);
 /**
 internal, don't use.
 **/
 
-int _raydium_trigo_MatrixInverse(const float *m,float *out);
+__rayapi int _raydium_trigo_MatrixInverse(const float *m,float *out);
 /*
 Our matrix_inverse seems broken. 
 This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)

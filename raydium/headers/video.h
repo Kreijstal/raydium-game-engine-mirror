@@ -29,58 +29,58 @@ You can now build JPGS file:
 ##./mk_jpgs 25 256 256 video.jpgs## (fps, size x, size y, output file)
 **/
 
-void raydium_video_init(void);
+__rayapi void raydium_video_init(void);
 /**
 Internal use.
 **/
 
-signed char raydium_video_isvalid(int i);
+__rayapi signed char raydium_video_isvalid(int i);
 /**
 Internal use, but you can call this function if you want to verify if a
 video id is valid (in bounds and open).
 **/
 
-int raydium_video_find_free(void);
+__rayapi int raydium_video_find_free(void);
 /**
 Internal use.
 Finds a free video slot.
 **/
 
-int raydium_video_find(char *name);
+__rayapi int raydium_video_find(char *name);
 /**
 Resolvs video ##name##, returning suitable texture id (native Raydium texture
 id).
 **/
 
-void raydium_video_jpeg_decompress(FILE *fp,unsigned char *to);
+__rayapi void raydium_video_jpeg_decompress(FILE *fp,unsigned char *to);
 /**
 Internal.
 **/
 
-int raydium_video_open(char *filename, char *as);
+__rayapi int raydium_video_open(char *filename, char *as);
 /**
 This function will open and prepare video ##filename##, and will attach
 this video to a "live texture" (see Live API chapter, if needed).
 **/
 
-void raydium_video_callback_video(int id);
+__rayapi void raydium_video_callback_video(int id);
 /**
 Internal use.
 **/
 
-void raydium_video_callback(void);
+__rayapi void raydium_video_callback(void);
 /**
 Internal use. Frame callback.
 **/
 
-void raydium_video_delete(int id);
+__rayapi void raydium_video_delete(int id);
 /**
 Will delete video ##id##. Warning: this function will not delete
 associated Live texture, so you may open a new video with the same
 texture name, but video size must be the same a the previous one.
 **/
 
-void raydium_video_delete_name(char *name);
+__rayapi void raydium_video_delete_name(char *name);
 /**
 Same as above, using video name.
 **/

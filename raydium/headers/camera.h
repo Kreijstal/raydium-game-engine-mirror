@@ -23,7 +23,7 @@ Some camera functions are provided by physics module, see suitable chapter.
 **/
 
 
-extern void raydium_camera_vectors (GLfloat * res3);
+__rayapi void raydium_camera_vectors (GLfloat * res3);
 /**
 This function will return two vectors (2 * 3 * GLfloat), giving the camera 
 orientation (front vector and up vector). At this day, the up vector is 
@@ -33,28 +33,28 @@ or upside down (and yes, this MUST be corrected :).
 Designed for internal uses, before all.
 **/
 
-extern void raydium_camera_internal_prepare(void);
+__rayapi void raydium_camera_internal_prepare(void);
 /**
 Internal use. (pre)
 **/
 
-extern void raydium_camera_internal (GLfloat x, GLfloat y, GLfloat z);
+__rayapi void raydium_camera_internal (GLfloat x, GLfloat y, GLfloat z);
 /**
 Internal use. (post)
 **/
 
-extern void raydium_camera_place (GLfloat x, GLfloat y, GLfloat z, GLfloat lacet, GLfloat tangage, GLfloat roulis);
+__rayapi void raydium_camera_place (GLfloat x, GLfloat y, GLfloat z, GLfloat lacet, GLfloat tangage, GLfloat roulis);
 /**
 Sets the camera at (x,y,z) position, and using (lacet,tangage,roulis) 
 as rotation angles.
 **/
 
-extern void raydium_camera_look_at (GLfloat x, GLfloat y, GLfloat z, GLfloat x_to, GLfloat y_to, GLfloat z_to);
+__rayapi void raydium_camera_look_at (GLfloat x, GLfloat y, GLfloat z, GLfloat x_to, GLfloat y_to, GLfloat z_to);
 /**
 Sets the camera at (x,y,z) position, and looks at (x_to,y_to,z_to).
 **/
 
-extern void raydium_camera_replace (void);
+__rayapi void raydium_camera_replace (void);
 /**
 You'll need to reset camera position and orientation after each object drawing.
 If this is unclear to you, read the "example" section, below.
@@ -63,7 +63,7 @@ You will need to make your own 3D transformations (GLRotate, GLTranslate,
 ...) to draw your objects, or you can use the following function.
 **/
 
-extern void raydium_camera_replace_go (GLfloat * pos, GLfloat * R);
+__rayapi void raydium_camera_replace_go (GLfloat * pos, GLfloat * R);
 /**
 This function will replace the camera, as ##raydium_camera_replace()##,
 but will place "3D drawing cursor" at position ##pos## (3 GLfloat) with 
@@ -86,7 +86,7 @@ Do you really need it ?
 Steps 4 and 5 can be done with raydium_camera_replace_go().
 **/
 
-void raydium_camera_rumble(GLfloat amplitude, GLfloat ampl_evo, GLfloat secs);
+__rayapi void raydium_camera_rumble(GLfloat amplitude, GLfloat ampl_evo, GLfloat secs);
 /**
 Camera (any type) will rumble for ##secs## seconds, with ##amplitude## (radians).
 This ##amplitude## will be incremented of ##ampl_evo## every second (negative
@@ -94,7 +94,7 @@ values are allowed for ##ampl_evo##).
 An ##amplitude## is always positive.
 **/
 
-extern void raydium_camera_smooth (GLfloat px, GLfloat py, GLfloat pz, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat zoom, GLfloat roll, GLfloat step);
+__rayapi void raydium_camera_smooth (GLfloat px, GLfloat py, GLfloat pz, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat zoom, GLfloat roll, GLfloat step);
 /**
 Smooth style clone of ##raydium_camera_look_at##.
 Roll is given by ##roll## and not global variable ##raydium_camera_look_at_roll##
@@ -105,39 +105,39 @@ this function is the following usage :
 %%(c) raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],70,0,raydium_frame_time*3); %%
 **/
 
-extern void raydium_camera_path_init (int p);
+__rayapi void raydium_camera_path_init (int p);
 /**
 Internal use.
 **/
 
-extern void raydium_camera_path_init_all (void);
+__rayapi void raydium_camera_path_init_all (void);
 /**
 Internal use.
 **/
 
-extern int raydium_camera_path_find (char *name);
+__rayapi int raydium_camera_path_find (char *name);
 /**
 Lookups path's id using filename ##name##.
 This function will not try to load a camera path if it's not found, and
 will return -1.
 **/
 
-extern int raydium_camera_path_load (char *filename);
+__rayapi int raydium_camera_path_load (char *filename);
 /**
 Obvious : use this function to load a camera path.
 **/
 
-extern void raydium_camera_path_draw (int p);
+__rayapi void raydium_camera_path_draw (int p);
 /**
 Draws ##p## camera path, as red lines. This must be done at each frame. 
 **/
 
-extern void raydium_camera_path_draw_name (char *path);
+__rayapi void raydium_camera_path_draw_name (char *path);
 /**
 Same as above, but using camera path's name.
 **/
 
-extern signed char raydium_camera_smooth_path (char *path, GLfloat step, GLfloat * x, GLfloat * y, GLfloat * z, GLfloat * zoom, GLfloat * roll);
+__rayapi signed char raydium_camera_smooth_path (char *path, GLfloat step, GLfloat * x, GLfloat * y, GLfloat * z, GLfloat * zoom, GLfloat * roll);
 /**
 Returns the (##x,y,z##) point of the camera path for step ##step##, using
 provided ##zoom## (FOV) and ##roll## angle.
@@ -145,12 +145,12 @@ It's important to note that ##step## is a float.
 Mostly for internal use.
 **/
 
-extern void raydium_camera_path_reset(void);
+__rayapi void raydium_camera_path_reset(void);
 /**
 Next smooth call will be instantaneous.
 **/
 
-extern void raydium_camera_smooth_path_to_pos (char *path, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat path_step, GLfloat smooth_step);
+__rayapi void raydium_camera_smooth_path_to_pos (char *path, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat path_step, GLfloat smooth_step);
 /**
 "Camera on path looking at a point".
 Simple ##raydium_camera_smooth## version: give a path name, a "look_at" 
@@ -158,13 +158,13 @@ point (##lx,ly,lz##), a current ##step##, anda ##smooth_step## time
 factor (see ##raydium_camera_smooth## example above).
 **/
 
-extern void raydium_camera_smooth_pos_to_path (GLfloat lx, GLfloat ly, GLfloat lz, char *path, GLfloat path_step, GLfloat smooth_step);
+__rayapi void raydium_camera_smooth_pos_to_path (GLfloat lx, GLfloat ly, GLfloat lz, char *path, GLfloat path_step, GLfloat smooth_step);
 /**
 "Camera on point looking at a path".
 Same style as previous function.
 **/
 
-extern void raydium_camera_smooth_path_to_path (char *path_from, GLfloat path_step_from, char *path_to, GLfloat path_step_to, GLfloat smooth_step);
+__rayapi void raydium_camera_smooth_path_to_path (char *path_from, GLfloat path_step_from, char *path_to, GLfloat path_step_to, GLfloat smooth_step);
 /**
 "Camera on a path looking at another path".
 Same style as previous functions.

@@ -50,123 +50,123 @@ physic entities, if needed, as callbacks for a few events (one, for now).
 3D captures, and are not meant to be edited by hand.
 **/
 
-extern void raydium_particle_name_auto (char *prefix, char *dest);
+__rayapi void raydium_particle_name_auto (char *prefix, char *dest);
 /**
 Will generate a unique string using ##prefix##. The string is created using
 space provided by ##dest##.
 You can use this function when building a new generator.
 **/
 
-extern void raydium_particle_init (void);
+__rayapi void raydium_particle_init (void);
 /**
 Internal use.
 **/
 
-extern signed char raydium_particle_generator_isvalid (int g);
+__rayapi signed char raydium_particle_generator_isvalid (int g);
 /**
 Internal use, but you can call this function if you want to verify if a
 generator's id is valid (in bounds, and loaded).
 **/
 
-extern int raydium_particle_generator_find (char *name);
+__rayapi int raydium_particle_generator_find (char *name);
 /**
 Lookups a generator using is name. Returns -1 if ##name## is not found.
 **/
 
-extern int raydium_particle_find_free (void);
+__rayapi int raydium_particle_find_free (void);
 /**
 Finds a free **particle** slot.
 **/
 
-extern void raydium_particle_generator_delete (int gen);
+__rayapi void raydium_particle_generator_delete (int gen);
 /**
 Deletes a generator.
 **/
 
-extern void raydium_particle_generator_delete_name (char *gen);
+__rayapi void raydium_particle_generator_delete_name (char *gen);
 /**
 Same as above, but using generator's name.
 **/
 
-extern void raydium_particle_generator_enable (int gen, signed char enabled);
+__rayapi void raydium_particle_generator_enable (int gen, signed char enabled);
 /**
 Activate a disabled generator (see below).
 **/
 
-extern void raydium_particle_generator_enable_name (char *gen, signed char enable);
+__rayapi void raydium_particle_generator_enable_name (char *gen, signed char enable);
 /**
 Disable a generator (TTL is still decremented).
 **/
 
-extern void raydium_particle_preload (char *filename);
+__rayapi void raydium_particle_preload (char *filename);
 /**
 Loads .prt file and associated textures into suitable caches.
 Call this function if you want to avoid (small) jerks caused by "live"
 loading a generator.
 **/
 
-extern void raydium_particle_generator_load_internal (int generator, FILE * fp, char *filename);
+__rayapi void raydium_particle_generator_load_internal (int generator, FILE * fp, char *filename);
 /**
 Internal use.
 **/
 
-extern int raydium_particle_generator_load (char *filename, char *name);
+__rayapi int raydium_particle_generator_load (char *filename, char *name);
 /**
 Loads generator from ##filename## as ##name##. This ##name## will be used for
 future references to this generator, as the returned interger id.
 **/
 
-extern void raydium_particle_generator_update (int g, GLfloat step);
+__rayapi void raydium_particle_generator_update (int g, GLfloat step);
 /**
 Internal use.
 **/
 
-extern void raydium_particle_update (int part, GLfloat step);
+__rayapi void raydium_particle_update (int part, GLfloat step);
 /**
 Internal use.
 **/
 
-extern void raydium_particle_callback (void);
+__rayapi void raydium_particle_callback (void);
 /**
 Internal use.
 **/
 
-extern int raydium_particle_state_dump(char *filename);
+__rayapi int raydium_particle_state_dump(char *filename);
 /**
 Dumped current particles to ##filename## (.sprt [static particles]).
 **/
 
-extern int raydium_particle_state_restore(char *filename);
+__rayapi int raydium_particle_state_restore(char *filename);
 /**
 Append .sprt ##filename## to current scene.
 **/
 
-extern void raydium_particle_draw (raydium_particle_Particle * p, GLfloat ux, GLfloat uy, GLfloat uz, GLfloat rx, GLfloat ry, GLfloat rz);
+__rayapi void raydium_particle_draw (raydium_particle_Particle * p, GLfloat ux, GLfloat uy, GLfloat uz, GLfloat rx, GLfloat ry, GLfloat rz);
 /**
 Internal use.
 **/
 
-extern void raydium_particle_draw_all (void);
+__rayapi void raydium_particle_draw_all (void);
 /**
 Internal use.
 **/
 
-extern void raydium_particle_generator_move (int gen, GLfloat * pos);
+__rayapi void raydium_particle_generator_move (int gen, GLfloat * pos);
 /**
 Moves ##gen## generator to ##pos## position (3 * GLfloat array).
 **/
 
-extern void raydium_particle_generator_move_name (char *gen, GLfloat * pos);
+__rayapi void raydium_particle_generator_move_name (char *gen, GLfloat * pos);
 /**
 Same as above, but using generator's name.
 **/
 
-extern void raydium_particle_generator_move_name_3f (char *gen, GLfloat x, GLfloat y, GLfloat z);
+__rayapi void raydium_particle_generator_move_name_3f (char *gen, GLfloat x, GLfloat y, GLfloat z);
 /**
 Same as above, using 3 different GLfloat values.
 **/
 
-extern void raydium_particle_generator_particles_OnDelete (int gen, void *OnDelete);
+__rayapi void raydium_particle_generator_particles_OnDelete (int gen, void *OnDelete);
 /**
 Sets a callback for ##gen##, fired when any particle of this generator is
 deleted, providing a easy way to create "cascading" generators.
@@ -175,12 +175,12 @@ The callback must respect the following prototype:
 Do not free the provided particle.
 **/
 
-extern void raydium_particle_generator_particles_OnDelete_name (char *gen, void *OnDelete);
+__rayapi void raydium_particle_generator_particles_OnDelete_name (char *gen, void *OnDelete);
 /**
 Same as above, but using generator's name.
 **/
 
-extern void raydium_particle_scale_all(GLfloat scale);
+__rayapi void raydium_particle_scale_all(GLfloat scale);
 /**
 Will scale all particles with ##scale## factor. Use with caution.
 Default is obviously 1.

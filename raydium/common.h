@@ -19,12 +19,24 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifdef MAIN_H
-#define __global extern
-#endif
-
-#ifdef MAIN_C
-#define __global
+#ifdef RAYDLL
+#   ifdef MAIN_H
+#       define __global __declspec(dllimport)
+#       define __rayapi __declspec(dllimport)
+#   endif
+#   ifdef MAIN_C
+#       define __global __declspec(dllexport)
+#       define __rayapi __declspec(dllexport)
+#   endif
+#else
+#    ifdef MAIN_H
+#       define __global extern
+#       define __rayapi
+#    endif
+#    ifdef MAIN_C
+#       define __global
+#       define __rayapi
+#    endif
 #endif
 
 #ifdef SWIG

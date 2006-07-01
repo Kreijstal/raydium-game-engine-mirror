@@ -72,10 +72,10 @@ typedef struct raydium_particle_Particle
  GLfloat current_rotation;
 } raydium_particle_Particle;
 
-raydium_particle_Generator raydium_particle_generators[RAYDIUM_MAX_GENERATORS];
-raydium_particle_Particle *raydium_particle_particles[RAYDIUM_MAX_PARTICLES];
-GLfloat raydium_particle_time_factor;
-GLfloat raydium_particle_scale_factor;
+__global raydium_particle_Generator raydium_particle_generators[RAYDIUM_MAX_GENERATORS];
+__global raydium_particle_Particle *raydium_particle_particles[RAYDIUM_MAX_PARTICLES];
+__global GLfloat raydium_particle_time_factor;
+__global GLfloat raydium_particle_scale_factor;
 
 // proto
 void raydium_camera_replace(void);

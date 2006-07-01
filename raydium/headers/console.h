@@ -35,55 +35,55 @@ This console provides auto-completion of register functions and variables.
 See the suitable chapter for more information.
 **/
 
-extern void raydium_console_init (void);
+__rayapi void raydium_console_init (void);
 /**
 Internal use.
 **/
 
-extern void raydium_console_history_save (void);
+__rayapi void raydium_console_history_save (void);
 /**
 Internal use (will flush console history to disk).
 You can call it by yourself if needed.
 **/
 
-extern int raydium_console_gets (char *where);
+__rayapi int raydium_console_gets (char *where);
 /**
 **DISABLED**.
 Use ##raydium_console_gets_callback## function pointer instead.
 **/
 
-extern void raydium_console_history_previous (void);
+__rayapi void raydium_console_history_previous (void);
 /**
 Internal use.
 **/
 
-extern void raydium_console_history_next (void);
+__rayapi void raydium_console_history_next (void);
 /**
 Internal use.
 **/
 
-extern void raydium_console_history_add (char *str);
+__rayapi void raydium_console_history_add (char *str);
 /**
 Internal use.
 **/
 
-extern void raydium_console_exec_script (char *file);
+__rayapi void raydium_console_exec_script (char *file);
 /**
 Internal use.
 **/
 
-extern void raydium_console_exec_last_command (void);
+__rayapi void raydium_console_exec_last_command (void);
 /**
 Internal use.
 **/
 
-extern void raydium_console_line_add (char *format, ...);
+__rayapi void raydium_console_line_add (char *format, ...);
 /**
 Mostly reserved for internal use, but unless ##raydium_log##, this function will
 add the provided data only to ingame console, and not to "native" console.
 **/
 
-extern int raydium_console_history_read(char **hist);
+__rayapi int raydium_console_history_read(char **hist);
 /**
 This function will build an history list.
 See this example :
@@ -99,22 +99,22 @@ the end of ##hist## usage (Or copy ##hist## to a safer place).
 **/
 
 
-extern void raydium_console_event (void);
+__rayapi void raydium_console_event (void);
 /**
 Internal use. Will switch console up and down.
 **/
 
-extern void raydium_console_draw (void);
+__rayapi void raydium_console_draw (void);
 /**
 Internal use.
 **/
 
-extern int raydium_console_internal_isalphanumuscore (char c);
+__rayapi int raydium_console_internal_isalphanumuscore (char c);
 /**
 Internal use.
 **/
 
-extern void raydium_console_complete (char *str);
+__rayapi void raydium_console_complete (char *str);
 /**
 Internal use.
 **/

@@ -155,89 +155,89 @@ any other client (or the server) is applying a modification to this "type",
 your local copy is automatically updated.
 **/
 
-extern int raydium_network_propag_find (int type);
+__rayapi int raydium_network_propag_find (int type);
 /**
 Lookups a "propag" by his ##type##. Returns -1 is no propag is found.
 **/
 
-extern void raydium_network_propag_recv (int type, char *buff);
+__rayapi void raydium_network_propag_recv (int type, char *buff);
 /**
 Internal callback for "propag" receiving.
 **/
 
-extern void raydium_network_propag_refresh_id (int i);
+__rayapi void raydium_network_propag_refresh_id (int i);
 /**
 Will refresh a propag by his ##id##.
 **/
 
-extern void raydium_network_propag_refresh (int type);
+__rayapi void raydium_network_propag_refresh (int type);
 /**
 Will refresh a propag by his ##type##.
 **/
 
-extern void raydium_network_propag_refresh_all (void);
+__rayapi void raydium_network_propag_refresh_all (void);
 /**
 Will refresh all propags
 **/
 
-extern int raydium_network_propag_add (int type, void *data, int size);
+__rayapi int raydium_network_propag_add (int type, void *data, int size);
 /**
 This function will "register" a new propag. You need to provide the address
 of your variable/structure (##data##), ans its ##size##. A dedicated ##type##
 is also required (see at the top of this chapter).
 **/
 
-extern void raydium_network_queue_element_init (raydium_network_Tcp * e);
+__rayapi void raydium_network_queue_element_init (raydium_network_Tcp * e);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern unsigned short raydium_network_queue_tcpid_gen (void);
+__rayapi unsigned short raydium_network_queue_tcpid_gen (void);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_queue_tcpid_known_add (int tcpid, int player);
+__rayapi void raydium_network_queue_tcpid_known_add (int tcpid, int player);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern signed char raydium_network_queue_tcpid_known (unsigned short tcpid, unsigned short player);
+__rayapi signed char raydium_network_queue_tcpid_known (unsigned short tcpid, unsigned short player);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern signed char raydium_network_queue_is_tcpid (int type);
+__rayapi signed char raydium_network_queue_is_tcpid (int type);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_queue_element_add (char *packet, struct sockaddr *to);
+__rayapi void raydium_network_queue_element_add (char *packet, struct sockaddr *to);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern unsigned long *raydium_network_internal_find_delay_addr (int player);
+__rayapi unsigned long *raydium_network_internal_find_delay_addr (int player);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_queue_check_time (void);
+__rayapi void raydium_network_queue_check_time (void);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_queue_ack_send (unsigned short tcpid, struct sockaddr *to);
+__rayapi void raydium_network_queue_ack_send (unsigned short tcpid, struct sockaddr *to);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_queue_ack_recv (int type, char *buff);
+__rayapi void raydium_network_queue_ack_recv (int type, char *buff);
 /**
 Internal use. (TCP style packets)
 **/
 
-extern void raydium_network_player_name (char *str);
+__rayapi void raydium_network_player_name (char *str);
 /**
 This function will returns the current player name.
 Raydium will ask the OS for "current logged user", but player name may
@@ -245,9 +245,9 @@ be provided thru ##--name## command line argument.
 **/
 
 // internal hack, no doc provided
-extern signed char raydium_network_set_socket_block_internal(int socket, int block);
+__rayapi signed char raydium_network_set_socket_block_internal(int socket, int block);
 
-extern signed char raydium_network_set_socket_block (int block);
+__rayapi signed char raydium_network_set_socket_block (int block);
 /**
 This function will sets ##block## (true or false) status to the network stack.
 A blocking socket will wait indefinitely an incoming packet. A non blocking one
@@ -255,19 +255,19 @@ will return "no data" instead.
 You've almost no reason to call this function by yourself.
 **/
 
-extern int raydium_network_socket_close(int fd);
+__rayapi int raydium_network_socket_close(int fd);
 /**
 Portable socket closing function. See "man 2 close" or closesocket (win32)
 docs.
 **/
 
-extern signed char raydium_network_socket_is_readable(int fd);
+__rayapi signed char raydium_network_socket_is_readable(int fd);
 /**
 Will return true (1) if there is some data ready on ##fd## socket,
 false (0) otherwise.
 **/
 
-extern signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
+__rayapi signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
 /**
 This function will register a new Network Callback ("netcall").
 With Raydium, you can read the main data stream with 
@@ -284,22 +284,22 @@ If you sets the ##tcp## flag to true (1), your packet will use "TCP style"
 network protocol (see a the top of this chapter).
 **/
 
-extern void raydium_network_netcall_exec (int type, char *buff);
+__rayapi void raydium_network_netcall_exec (int type, char *buff);
 /**
 Internal callback for "netcall" receiving.
 **/
 
-extern signed char raydium_network_timeout_check (void);
+__rayapi signed char raydium_network_timeout_check (void);
 /**
 Internal use.
 **/
 
-extern void raydium_network_init_sub(void);
+__rayapi void raydium_network_init_sub(void);
 /**
 Internal use.
 **/
 
-extern signed char raydium_network_init (void);
+__rayapi signed char raydium_network_init (void);
 /**
 Nothing interesting unless you're creating a console server (using the
 ##RAYDIUM_NETWORK_ONLY## directive), since in this case you must do all
@@ -322,7 +322,7 @@ raydium_network_server_create();
 %%
 **/
 
-extern void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);
+__rayapi void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);
 /**
 Obviously, this function will send data.
 If you're a client, you don't need to determine to field, as the only 
@@ -342,7 +342,7 @@ must be ##RAYDIUM_NETWORK_PACKET_SIZE## long, and can be cleared
 or re-used after this call.
 **/
 
-extern void raydium_network_broadcast (signed char type, char *buff);
+__rayapi void raydium_network_broadcast (signed char type, char *buff);
 /**
 Sends data over network.
 Obviously, from network point of vue, only a server can broadcast 
@@ -357,7 +357,7 @@ This function uses the same arguments as previous one, except ##to## and
 **/
 
 
-extern signed char raydium_network_read (int *id, signed char *type, char *buff);
+__rayapi signed char raydium_network_read (int *id, signed char *type, char *buff);
 /**
 Reads next packet from network (FIFO) stack.
 This function uses the same arguments as previous ones, and returns 
@@ -365,7 +365,7 @@ data availability: ##RAYDIUM_NETWORK_DATA_OK##, ##RAYDIUM_NETWORK_DATA_NONE##
 or ##RAYDIUM_NETWORK_DATA_ERROR##.
 **/
 
-extern signed char raydium_network_read_flushed (int *id, signed char *type, char *buff);
+__rayapi signed char raydium_network_read_flushed (int *id, signed char *type, char *buff);
 /**
 Reads last packet from network stack.
 All previous packets will be ignored, only the newest packet will
@@ -376,7 +376,7 @@ As you may miss some important informations, you can use netcalls
 type, even with flushed reading.
 **/
 
-extern void raydium_network_read_faked(void);
+__rayapi void raydium_network_read_faked(void);
 /**
 Reads from network, but do not care of received data. This is useful for
 listen to internal packets (server "beacon" broadcasts, for example).
@@ -384,7 +384,7 @@ Reading is done thru ##raydium_network_read_flushed##.
 Mostly for internal use.
 **/
 
-signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version);
+__rayapi signed char raydium_network_server_broadcast(char *name, char *app_or_mod, int version);
 /**
 This function will start to broadcast a server to the LAN.
 You must provide a party ##name##, the application or mod name (##app_or_mod##)
@@ -395,19 +395,19 @@ Any client in "discovery mode" with the same ##app_or_mod## and ##version##
 will see this beacon.
 **/
 
-void raydium_network_server_broadcast_info(char *info);
+__rayapi void raydium_network_server_broadcast_info(char *info);
 /**
 Update "information" field of this server (current track or map, for example).
 Size cannot exceed ##RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN##.
 **/
 
 
-void raydium_network_server_broadcast_check(void);
+__rayapi void raydium_network_server_broadcast_check(void);
 /**
 Internal use.
 **/
 
-extern signed char raydium_network_server_create (void);
+__rayapi signed char raydium_network_server_create (void);
 /**
 Will transform you application into a server, accepting new clients 
 instantaneously.
@@ -415,7 +415,7 @@ See also the ##RAYDIUM_NETWORK_ONLY## directive if you want to create console
 servers.
 **/
 
-extern signed char raydium_network_client_connect_to (char *server);
+__rayapi signed char raydium_network_client_connect_to (char *server);
 /**
 This function will try to connect your application to ##server## (hostname or 
 ip address).
@@ -427,7 +427,7 @@ You player number can be found with ##raydium_network_uid## variable,
 as said before.
 **/
 
-signed char raydium_network_client_discover(char *game,int version);
+__rayapi signed char raydium_network_client_discover(char *game,int version);
 /**
 This function will set client in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode.
 While using this mode, a client will search every LAN server with the
@@ -435,7 +435,7 @@ same ##game## (or mod name) and ##version## as itself.
 Then, you can access to this server list using [undocumented yet].
 **/
 
-int raydium_network_discover_numservers(void);
+__rayapi int raydium_network_discover_numservers(void);
 /**
 While the client is in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode, you
 can fetch all "detected" servers in the LAN.
@@ -446,7 +446,7 @@ This function will return :
  and protocol version)
 **/
 
-signed char raydium_network_discover_getserver(int num, char *name, char *ip, char *info, int *player_count, int *player_max);
+__rayapi signed char raydium_network_discover_getserver(int num, char *name, char *ip, char *info, int *player_count, int *player_max);
 /**
 Use this function with the help of ##raydium_network_discover_numservers()##, 
 with something like :
@@ -473,39 +473,39 @@ This function will return :
 %%
 **/
 
-extern void raydium_network_client_disconnect(void);
+__rayapi void raydium_network_client_disconnect(void);
 /**
 This function will disconnect client from server, if connected.
 **/
 
-extern signed char raydium_server_accept_new (struct sockaddr *from, char *name);
+__rayapi signed char raydium_server_accept_new (struct sockaddr *from, char *name);
 /**
 Internal server callback for new clients.
 **/
 
-extern void raydium_network_close (void);
+__rayapi void raydium_network_close (void);
 /**
 Obvious. Raydium will do it for you, anyway.
 **/
 
-extern void raydium_network_internal_server_delays_dump (void);
+__rayapi void raydium_network_internal_server_delays_dump (void);
 /**
 Dumps "TCP Style" timeouts for all clients to console.
 **/
 
-extern void raydium_network_internal_dump (void);
+__rayapi void raydium_network_internal_dump (void);
 /**
 Dumps various stats about network stack to console.
 **/
 
-extern signed char raydium_network_internet_test(void);
+__rayapi signed char raydium_network_internet_test(void);
 /**
 This function will test if direct internet connection is available,
 using Raydium webiste. This function supports proxies.
 **/
 
 #ifdef linux
-extern signed char raydium_network_linux_find_broadcast_interfaces(void);
+__rayapi signed char raydium_network_linux_find_broadcast_interfaces(void);
 /**
 Internal use. Linux only.
 **/

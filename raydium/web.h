@@ -24,16 +24,16 @@ void *handler;
 } raydium_web_Extension;
 
 
-raydium_web_Extension raydium_web_extensions[RAYDIUM_MAX_EXTENSIONS];
-int raydium_web_extension_count;
+__global raydium_web_Extension raydium_web_extensions[RAYDIUM_MAX_EXTENSIONS];
+__global int raydium_web_extension_count;
 
-int raydium_web_listenfd; 
-struct sockaddr_in raydium_web_serv_addr;
-signed char raydium_web_active;
-char raydium_web_title[RAYDIUM_MAX_NAME_LEN];
+__global int raydium_web_listenfd; 
+__global struct sockaddr_in raydium_web_serv_addr;
+__global signed char raydium_web_active;
+__global char raydium_web_title[RAYDIUM_MAX_NAME_LEN];
 
-char *raydium_web_header;
-char *raydium_web_footer;
-char *raydium_web_body_default;
+__global char *raydium_web_header;
+__global char *raydium_web_footer;
+__global char *raydium_web_body_default;
 
 #endif

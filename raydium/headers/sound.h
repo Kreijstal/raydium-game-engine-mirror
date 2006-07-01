@@ -38,60 +38,60 @@ informations about Raydium's interface to OpenAL.
 See specifications here: http://www.openal.org/documentation.html
 **/
 
-extern void raydium_sound_verify (char *caller);
+__rayapi void raydium_sound_verify (char *caller);
 /**
 This functions checks if any error occured during last OpenAL operation.
 You don't have to call this function by yourself, since every function of
 this API will do it.
 **/
 
-extern int raydium_sound_Array3IsValid(ALfloat *a);
+__rayapi int raydium_sound_Array3IsValid(ALfloat *a);
 /**
 Since OpenAL is very sensitive to malformed values, this function is used
 internally to check consistency of provided ALfloat arrays.
 **/
 
-extern void raydium_sound_InitSource (int src);
+__rayapi void raydium_sound_InitSource (int src);
 /**
 Internal use.
 **/
 
-extern int raydium_sound_LoadWav (const char *fname);
+__rayapi int raydium_sound_LoadWav (const char *fname);
 /**
 This function tries to load the ##fname## wav file into a buffer, if 
 successful, it returns the source id, else 0.
 **/
 
-extern int raydium_sound_SourceVerify (int src);
+__rayapi int raydium_sound_SourceVerify (int src);
 /**
 Internal id checks.
 **/
 
-extern int raydium_sound_SetSourceLoop (int src, signed char loop);
+__rayapi int raydium_sound_SetSourceLoop (int src, signed char loop);
 /**
 Modifies the ##loop## property of the ##src## source (loops if loop is non-zero, 
 default value for a source is "true").
 Returns 0 if ok, -1 if error.
 **/
 
-extern int raydium_sound_GetSourcePitch (int src, ALfloat * p);
+__rayapi int raydium_sound_GetSourcePitch (int src, ALfloat * p);
 /**
 Returns current pitch for ##src## source.
 **/
 
-extern int raydium_sound_SetSourcePitch (int src, ALfloat p);
+__rayapi int raydium_sound_SetSourcePitch (int src, ALfloat p);
 /**
 Sets pitch for ##src## source.
 Current OpenAL spec is not clear about pitch's limits. Raydium will 
 clamp values to to ]0,2] interval.
 **/
 
-extern int raydium_sound_GetSourceGain (int src, ALfloat * g);
+__rayapi int raydium_sound_GetSourceGain (int src, ALfloat * g);
 /**
 Returns current gain ("volume") for ##src## source.
 **/
 
-extern int raydium_sound_SetSourceGain (int src, ALfloat g);
+__rayapi int raydium_sound_SetSourceGain (int src, ALfloat g);
 /**
 Sets gain ("volume") for ##src## source.
 Current OpenAL spec is not clear about pitch's limits. Raydium do not allows
@@ -100,124 +100,124 @@ Warning: some OpenAL implementations will provide strange gain curves. More
 work is needed on this issue.
 **/
 
-extern int raydium_sound_SetSourcePos (int src, ALfloat Pos[]);
+__rayapi int raydium_sound_SetSourcePos (int src, ALfloat Pos[]);
 /**
 Sets 3D position of ##src## source.
 ##Pos## is a 3 * ALfloat array.
 **/
 
-extern int raydium_sound_SetSourcePosCamera(int src);
+__rayapi int raydium_sound_SetSourcePosCamera(int src);
 /**
 Sets 3D position of ##src## source on the current camera position.
 **/
 
-extern int raydium_sound_GetSourcePos (int src, ALfloat * Pos[]);
+__rayapi int raydium_sound_GetSourcePos (int src, ALfloat * Pos[]);
 /**
 Returns current 3D position of ##src## source.
 ##Pos## is a 3 * ALfloat array.
 **/
 
-extern int raydium_sound_SetSourceDir (int src, ALfloat Dir[]);
+__rayapi int raydium_sound_SetSourceDir (int src, ALfloat Dir[]);
 /**
 Sets 3D direction of ##src## source.
 ##Dir## is a 3 * ALfloat array.
 **/
 
-extern int raydium_sound_GetSourceDir (int src, ALfloat * Dir[]);
+__rayapi int raydium_sound_GetSourceDir (int src, ALfloat * Dir[]);
 /**
 Returns current 3D direction of ##src## source.
 ##Dir## is a 3 * ALfloat array.
 **/
 
-extern int raydium_sound_SetSourceVel (int src, ALfloat Vel[]);
+__rayapi int raydium_sound_SetSourceVel (int src, ALfloat Vel[]);
 /**
 Sets 3D velocity of ##src## source.
 ##Vel## is a 3 * ALfloat array.
 **/
 
-extern int raydium_sound_GetSourceVel (int src, ALfloat * Vel[]);
+__rayapi int raydium_sound_GetSourceVel (int src, ALfloat * Vel[]);
 /**
 Returns current 3D velocity of ##src## source.
 ##Vel## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_SetListenerPos (ALfloat Pos[]);
+__rayapi void raydium_sound_SetListenerPos (ALfloat Pos[]);
 /**
 Sets 3D position of listener.
 This is done automatically by Raydium, each frame, using camera informations
 ##Pos## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_GetListenerPos (ALfloat * Pos[]);
+__rayapi void raydium_sound_GetListenerPos (ALfloat * Pos[]);
 /**
 Returns current 3D position of listener.
 ##Pos## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_SetListenerOr (ALfloat Or[]);
+__rayapi void raydium_sound_SetListenerOr (ALfloat Or[]);
 /**
 Sets 3D orientation of listener.
 This is done automatically by Raydium, each frame, using camera informations
 ##Or## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_GetListenerOr (ALfloat * Or[]);
+__rayapi void raydium_sound_GetListenerOr (ALfloat * Or[]);
 /**
 Returns current 3D orientation of listener.
 ##Or## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_SetListenerVel (ALfloat Vel[]);
+__rayapi void raydium_sound_SetListenerVel (ALfloat Vel[]);
 /**
 Sets 3D velocity of Listener.
 ##Vel## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_GetListenerVel (ALfloat * Vel[]);
+__rayapi void raydium_sound_GetListenerVel (ALfloat * Vel[]);
 /**
 Returns current 3D velocity of Listener.
 ##Vel## is a 3 * ALfloat array.
 **/
 
-extern void raydium_sound_init (void);
+__rayapi void raydium_sound_init (void);
 /**
 Internal use.
 **/
 
-extern int raydium_sound_SourcePlay (int src);
+__rayapi int raydium_sound_SourcePlay (int src);
 /**
 Plays the ##src## source.
 If ##src## was already in "play" state, the buffer is rewinded.
 Returns 0 if ok, -1 if error.
 **/
 
-extern int raydium_sound_SourceStop (int src);
+__rayapi int raydium_sound_SourceStop (int src);
 /**
 Stops the ##src## source.
 Returns 0 if ok, -1 if error.
 **/
 
-extern int raydium_sound_SourcePause (int src);
+__rayapi int raydium_sound_SourcePause (int src);
 /**
 Will pause the ##src## source.
 Returns 0 if ok, -1 if error.
 **/
 
-extern int raydium_sound_SourceUnpause (int src);
+__rayapi int raydium_sound_SourceUnpause (int src);
 /**
 ##src## will restart playback after being paused.
 Returns 0 if ok, -1 if error.
 **/
 
-extern void raydium_sound_close (void);
+__rayapi void raydium_sound_close (void);
 /**
 Internal use.
 **/
 
-extern int BufferData (ALuint buffer, OggVorbis_File * file, vorbis_info * ogginfo);
-extern void raydium_sound_internal_cleanstreambuffs (void);
-extern int StartMusic (ALuint musicsource, ALuint * buffers, OggVorbis_File * file, vorbis_info * ogginfo);
-extern int raydium_sound_load_music (char *fname);
+__rayapi int BufferData (ALuint buffer, OggVorbis_File * file, vorbis_info * ogginfo);
+__rayapi void raydium_sound_internal_cleanstreambuffs (void);
+__rayapi int StartMusic (ALuint musicsource, ALuint * buffers, OggVorbis_File * file, vorbis_info * ogginfo);
+__rayapi int raydium_sound_load_music (char *fname);
 /**
 Opens fname **OGG** music file and prepairs Raydium for playing it.
 The music will be automatically played after a call to this function.
@@ -237,28 +237,28 @@ char album [RAYDIUM_MAX_NAME_LEN];
 %%
 **/
 
-extern void raydium_sound_music_info_init(void);
+__rayapi void raydium_sound_music_info_init(void);
 /**
 Internal use. Will reset infos.
 **/
 
-extern void raydium_sound_music_info_refresh(void);
+__rayapi void raydium_sound_music_info_refresh(void);
 /**
 Internal use. Will flush infos from disk to ##raydium_sound_music_info##.
 **/
 
 
-extern void raydium_sound_music_callback (void);
+__rayapi void raydium_sound_music_callback (void);
 /**
 Internal use.
 **/
 
-extern void raydium_sound_callback (void);
+__rayapi void raydium_sound_callback (void);
 /**
 Internal use.
 **/
 
-extern void raydium_sound_source_fade(int src, ALfloat len);
+__rayapi void raydium_sound_source_fade(int src, ALfloat len);
 /**
 This function will fade down source ##src## over ##len## seconds.
 Since gain is not linear, you may have to play a bit with ##len## to
@@ -277,7 +277,7 @@ if(explosion) raydium_sound_SourcePlay(sound);
 %%
 **/
 
-extern void raydium_sound_source_fade_to(int src, ALfloat len, char *to);
+__rayapi void raydium_sound_source_fade_to(int src, ALfloat len, char *to);
 /**
 Same as above, but plays ##to## file at the end of the fade.
 Warning: Works only for "music" source (##src## = 0).

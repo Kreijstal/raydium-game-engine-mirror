@@ -14,17 +14,17 @@ gives user display function to Raydium: see below
 **/
 
 
-extern void raydium_callback_image (void);
+__rayapi void raydium_callback_image (void);
 /**
 Internal use.
 **/
 
-extern void raydium_callback_set (void);
+__rayapi void raydium_callback_set (void);
 /**
 Internal use.
 **/
 
-extern void raydium_callback (void (*loop));
+__rayapi void raydium_callback (void (*loop));
 /**
 This function will loop over the provided display function, indefinitely.
 "loop" must be: 

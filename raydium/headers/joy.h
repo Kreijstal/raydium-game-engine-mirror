@@ -43,26 +43,26 @@ extern char effect_tremble_state;
 extern clock_t last_event;
 */
 
-extern void raydium_joy_init_vars (void);
+__rayapi  void raydium_joy_init_vars (void);
 
-extern void raydium_joy_key_emul (void);
+__rayapi  void raydium_joy_key_emul (void);
 /**
 Emulate keyboard (directional pad) with joy, if any.
 **/
 
 #ifndef WIN32
-extern int raydium_joy_process_event (struct js_event e);
+__rayapi  int raydium_joy_process_event (struct js_event e);
 #endif
-extern void raydium_joy_callback (void);
-extern void raydium_joy_ff_autocenter (int perc);
+__rayapi  void raydium_joy_callback (void);
+__rayapi  void raydium_joy_ff_autocenter (int perc);
 /**
 Set Force Feedback autocenter factor.
 **/
 
-extern void raydium_joy_init (void);
-extern void raydium_joy_close (void);
-extern void raydium_joy_ff (void);
-extern void raydium_joy_ff_tremble_set (GLfloat period, GLfloat force);
+__rayapi  void raydium_joy_init (void);
+__rayapi  void raydium_joy_close (void);
+__rayapi  void raydium_joy_ff (void);
+__rayapi  void raydium_joy_ff_tremble_set (GLfloat period, GLfloat force);
 /**
 Send tremble effect to Force Feedback device for a determined period, 
 at a particular force. (no units yet).

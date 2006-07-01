@@ -55,19 +55,19 @@ tool.
 By default, Live API supports up to 4 simultaneous devices.
 **/
 
-signed char raydium_live_video_isvalid(int i);
+__rayapi signed char raydium_live_video_isvalid(int i);
 /**
 Internal use, but you can call this function if you want to verify if a
 live video device id is valid (in bounds, open, and ready to capture).
 **/
 
-int raydium_live_video_find_free(void);
+__rayapi int raydium_live_video_find_free(void);
 /**
 Internal use.
 Finds a free live video device slot.
 **/
 
-int raydium_live_video_open(char *device, int sizex, int sizey);
+__rayapi int raydium_live_video_open(char *device, int sizex, int sizey);
 /**
 This is where you should start. This function opens ##device## (something
 like "/dev/video0"), requesting ##sizex## x ##sizey## resolution.
@@ -80,17 +80,17 @@ method (##read()## or ##mmap()##).
 Returns -1 in case or error, device id otherwise.
 **/
 
-int raydium_live_video_open_auto(void);
+__rayapi int raydium_live_video_open_auto(void);
 /**
 Same as above, but with full autodetection.
 **/
 
-int raydium_live_video_read(raydium_live_Device *dev);
+__rayapi int raydium_live_video_read(raydium_live_Device *dev);
 /**
 Internal V4L read function.
 **/
 
-void raydium_internal_live_video_callback(void);
+__rayapi void raydium_internal_live_video_callback(void);
 /**
 internal frame callback.
 **/
@@ -103,35 +103,35 @@ pointer, the second method is to use a Live Video device (see above) as
 data source.
 **/
 
-void raydium_internal_live_close(void);
+__rayapi void raydium_internal_live_close(void);
 /**
 Internal close function.
 **/
 
-void raydium_live_init(void);
+__rayapi void raydium_live_init(void);
 /**
 Internal init function.
 **/
 
-signed char raydium_live_texture_isvalid(int i);
+__rayapi signed char raydium_live_texture_isvalid(int i);
 /**
 Internal use, but you can call this function if you want to verify if a
 live texture id is valid (in bounds, open, and ready to capture).
 **/
 
-int raydium_live_texture_find_free(void);
+__rayapi int raydium_live_texture_find_free(void);
 /**
 Internal use.
 Finds a free live texture slot.
 **/
 
-int raydium_live_texture_find(int original_texture);
+__rayapi int raydium_live_texture_find(int original_texture);
 /**
 Resolvs ##original_texture## id (native Raydium texture id) to a
 live texture id, if any.
 **/
 
-int raydium_live_texture_create(char *as, unsigned char *data_source, int tx, int ty, int bpp);
+__rayapi int raydium_live_texture_create(char *as, unsigned char *data_source, int tx, int ty, int bpp);
 /**
 Create a new Live Texture with ##as## name. You must provide a ##data_source##
 with RGB or RGBA format, with ##tx## and ##ty## size.
@@ -139,26 +139,26 @@ Possible bpp values are 24 (RGB) and 32 (RGBA).
 Returns the live texture id, or -1 when it fails.
 **/
 
-int raydium_live_texture_video(int device_id, char *as);
+__rayapi int raydium_live_texture_video(int device_id, char *as);
 /**
 This is another way to create a Live Texture, but using a Live Video device
 for data source. Provide texture name (##as##) and Live ##device_id##.
 **/
 
-void raydium_live_texture_refresh(int livetex);
+__rayapi void raydium_live_texture_refresh(int livetex);
 /**
 When your data source have changed, call this function to refresh new
 data to hardware. Obviously, this function is useless for Live Video textures
 since Raydium will automatically refresh data.
 **/
 
-void raydium_live_texture_refresh_name(char *texture);
+__rayapi void raydium_live_texture_refresh_name(char *texture);
 /**
 Same as above, but using ##texture## name.
 **/
 
 
-void raydium_live_texture_refresh_callback_set(int livetex, void *callback);
+__rayapi void raydium_live_texture_refresh_callback_set(int livetex, void *callback);
 /**
 You can create a "OnRefresh" callback for any Live Texture (##livetex## is an
 id to this texture). This is mostly usefull for Live Video texture.
@@ -170,12 +170,12 @@ is not owned by Raydium and may be "read only")
 You must return 1 to confirm data flushing, or 0 to cancel this refresh.
 **/
 
-void raydium_live_texture_refresh_callback_set_name(char *texture, void *callback);
+__rayapi void raydium_live_texture_refresh_callback_set_name(char *texture, void *callback);
 /**
 Same as above, but using ##texture## name.
 **/
 
-void raydium_live_texture_mask(int livetex, GLfloat alpha);
+__rayapi void raydium_live_texture_mask(int livetex, GLfloat alpha);
 /**
 This function will draw a fullscreen mask using ##livetex## Live Texture id and
 ##alpha## opacity (0 means transparent, 1 means fully opaque, allowing any
@@ -183,7 +183,7 @@ intermediate value). Use this function at any place of your rendering
 function AFTER camera call and obviously before ##raydium_rendering_finish##.
 **/
 
-void raydium_live_texture_mask_name(char *texture, GLfloat alpha);
+__rayapi void raydium_live_texture_mask_name(char *texture, GLfloat alpha);
 /**
 Same as above, but using ##texture## name.
 **/

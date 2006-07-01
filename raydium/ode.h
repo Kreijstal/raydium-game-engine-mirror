@@ -62,23 +62,23 @@
 #define RAYDIUM_ODE_DRAW_RAY			3
 #define RAYDIUM_ODE_DRAW_SHADOWERS		4
 
-dWorldID 	raydium_ode_world;
-dSpaceID 	raydium_ode_space;
-dJointGroupID 	raydium_ode_contactgroup;
-int		raydium_ode_ground_mesh;
-GLint		raydium_ode_timecall; // read only (timecall index for ode callback)
-void *		raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
-void *		raydium_ode_StepCallback; // void f(void)
-void *		raydium_ode_ObjectNearCollide; // signed char f(int,int)
-void *		raydium_ode_RayCallback; // signed char f(int,int,dContact*)
-signed char	raydium_ode_network_distant_create;
-signed char	raydium_ode_network_next_local_only;
-signed char	raydium_ode_network_explosion_create;
-int		raydium_ode_network_maxfreq;
-void *		raydium_ode_ExplosionCallback; // void f(signed char,dReal,dReal,dReal *)
-void *		raydium_ode_BeforeElementDrawCallback;
-void *		raydium_ode_AfterElementDrawCallback;
-signed char	raydium_ode_element_delete_LOCK;
+__global dWorldID 	raydium_ode_world;
+__global dSpaceID 	raydium_ode_space;
+__global dJointGroupID 	raydium_ode_contactgroup;
+__global int		raydium_ode_ground_mesh;
+__global GLint		raydium_ode_timecall; // read only (timecall index for ode callback)
+__global void *		raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
+__global void *		raydium_ode_StepCallback; // void f(void)
+__global void *		raydium_ode_ObjectNearCollide; // signed char f(int,int)
+__global void *		raydium_ode_RayCallback; // signed char f(int,int,dContact*)
+__global signed char	raydium_ode_network_distant_create;
+__global signed char	raydium_ode_network_next_local_only;
+__global signed char	raydium_ode_network_explosion_create;
+__global int		raydium_ode_network_maxfreq;
+__global void *		raydium_ode_ExplosionCallback; // void f(signed char,dReal,dReal,dReal *)
+__global void *		raydium_ode_BeforeElementDrawCallback;
+__global void *		raydium_ode_AfterElementDrawCallback;
+__global signed char	raydium_ode_element_delete_LOCK;
 
 typedef struct raydium_ode_Explosion // used for "blowing" explosions
 {
@@ -236,11 +236,11 @@ typedef struct raydium_ode_network_Explosion
 } raydium_ode_network_Explosion;
 
 
-raydium_ode_Object    raydium_ode_object[RAYDIUM_ODE_MAX_OBJECTS];
-raydium_ode_Element   raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS+1]; // the last element is used for "static joint"
-raydium_ode_Joint     raydium_ode_joint[RAYDIUM_ODE_MAX_JOINTS];
-raydium_ode_Motor     raydium_ode_motor[RAYDIUM_ODE_MAX_MOTORS];
-raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS];
+__global raydium_ode_Object    raydium_ode_object[RAYDIUM_ODE_MAX_OBJECTS];
+__global raydium_ode_Element   raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS+1]; // the last element is used for "static joint"
+__global raydium_ode_Joint     raydium_ode_joint[RAYDIUM_ODE_MAX_JOINTS];
+__global raydium_ode_Motor     raydium_ode_motor[RAYDIUM_ODE_MAX_MOTORS];
+__global raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS];
 
 /*
 void raydium_ode_callback(void);

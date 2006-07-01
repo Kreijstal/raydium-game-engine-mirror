@@ -10,12 +10,12 @@ Window management
 Some important functions, used for window creation and managment.
 **/
 
-extern void raydium_window_close (void);
+__rayapi void raydium_window_close (void);
 /**
 This function is called by Raydium, do not use.
 **/
 
-extern void raydium_window_create (GLuint tx, GLuint ty, signed char rendering, char *name);
+__rayapi void raydium_window_create (GLuint tx, GLuint ty, signed char rendering, char *name);
 /**
 You must call this function once in your program, with following arguments:
 
@@ -30,7 +30,7 @@ so use a standard window size (640x480, 800x600, ...) for fullscreen mode.
 Note that user can force fullscreen using ##--fullscreen## on the command line.
 **/
 
-extern void raydium_window_resize_callback (GLsizei Width, GLsizei Height);
+__rayapi void raydium_window_resize_callback (GLsizei Width, GLsizei Height);
 /**
 This function is automaticaly called during a window resize, 
 and resize OpenGL rendering space.
@@ -38,13 +38,13 @@ and resize OpenGL rendering space.
 There is almost no reason to call this function by yourself.
 **/
 
-extern void raydium_window_view_update (void);
+__rayapi void raydium_window_view_update (void);
 /**
 If you've changed 3D window size (clipping: raydium_projection_*),
 apply to hardware with this fonction. 
 **/
 
-extern void raydium_window_view_perspective(GLfloat fov, GLfloat fnear, GLfloat ffar);
+__rayapi void raydium_window_view_perspective(GLfloat fov, GLfloat fnear, GLfloat ffar);
 /**
 All-in-one function: sets all "perspective" variables, and updates.
 **/

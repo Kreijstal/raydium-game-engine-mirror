@@ -19,6 +19,6 @@ typedef struct raydium_video_Video
     int last_decoded;
     } raydium_video_Video;
 
-raydium_video_Video raydium_video_video[RAYDIUM_MAX_VIDEOS];
+__global raydium_video_Video raydium_video_video[RAYDIUM_MAX_VIDEOS];
 
 #endif

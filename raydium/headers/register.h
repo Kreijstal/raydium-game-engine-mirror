@@ -15,21 +15,21 @@ and functions to PHP scripts.
 For more informations, see PHP chapters.
 **/
 
-extern int raydium_register_find_name (char *name);
+__rayapi int raydium_register_find_name (char *name);
 /**
 Lookups a **variable** by ##name##. Search is not possible (yet) for
 registered functions.
 Mostly used internally.
 **/
 
-extern signed char raydium_register_name_isvalid (char *name);
+__rayapi signed char raydium_register_name_isvalid (char *name);
 /**
 Tests ##name##, and returns his viability as a boolean.
 Accepted intervals for variables and functions: [a-z], [A-Z] and '_'
 Numerics are not allowed.
 **/
 
-extern int raydium_register_variable (void *addr, int type, char *name);
+__rayapi int raydium_register_variable (void *addr, int type, char *name);
 /**
 Will register a new variable. You must provide variable's address (##addr##), 
 ##type## and ##name##.
@@ -37,35 +37,35 @@ Current available types are: ##RAYDIUM_REGISTER_INT##, ##RAYDIUM_REGISTER_FLOAT#
 and ##RAYDIUM_REGISTER_STR##.
 **/
 
-extern int raydium_register_variable_const_f(float val, char *name);
+__rayapi int raydium_register_variable_const_f(float val, char *name);
 /**
 Will register a new ##float## constant.
 **/
 
-extern int raydium_register_variable_const_i(int val, char *name);
+__rayapi int raydium_register_variable_const_i(int val, char *name);
 /**
 Will register a new ##int## constant.
 **/
 
-extern void raydium_register_variable_unregister_last (void);
+__rayapi void raydium_register_variable_unregister_last (void);
 /**
 Variable are registered on a stack. As you may want to create "temporary"
 variables (usefull for building script's arguments, for example), this function
 allows you to unregister last registered variable. Multiple calls are possible.
 **/
 
-extern int raydium_register_modifiy (char *var, char *args);
+__rayapi int raydium_register_modifiy (char *var, char *args);
 /**
 Deprecated.
 **/
 
-extern void raydium_register_function (void *addr, char *name);
+__rayapi void raydium_register_function (void *addr, char *name);
 /**
 Will register a function. You only need to provide an address (##addr##)
 and a name.
 **/
 
-extern void raydium_register_dump (void);
+__rayapi void raydium_register_dump (void);
 /**
 Will dump to console all registered variables and functions.
 **/

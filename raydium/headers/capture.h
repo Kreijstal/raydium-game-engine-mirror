@@ -31,44 +31,44 @@ You can also use audio file adding this:
 ## -audiofile audio.mp3 -oac copy## for example.
 **/
 
-extern void raydium_capture_frame(char *filename);
+__rayapi void raydium_capture_frame(char *filename);
 /**
 Capture current frame to ##filename##.
 **/
 
-extern void raydium_capture_frame_auto(void);
+__rayapi void raydium_capture_frame_auto(void);
 /**
 Same as above, but to an auto-generated filename (raycap*).
 **/
 
-extern void raydium_capture_frame_jpeg(char *filename);
+__rayapi void raydium_capture_frame_jpeg(char *filename);
 /**
 Same as ##raydium_capture_frame()## but using JPEG image format.
 See ##raydium/config.h## for quality setting.
 **/
 
-extern void raydium_capture_frame_now(char *filename);
+__rayapi void raydium_capture_frame_now(char *filename);
 /**
 Same as ##raydium_capture_frame()##, but without waiting the end of the frame,
 saving the hardware color buffer, whatever it contains. Use with caution.
 **/
 
-extern void raydium_capture_frame_jpeg_now(char *filename);
+__rayapi void raydium_capture_frame_jpeg_now(char *filename);
 /**
 Same as above, but using JPEG image format.
 **/
 
-extern void raydium_capture_filename_auto(char *dest,char *format);
+__rayapi void raydium_capture_filename_auto(char *dest,char *format);
 /**
 Internal Use. Generates filenames for new screenshots.
 **/
 
-extern void raydium_capture_frame_auto(void);
+__rayapi void raydium_capture_frame_auto(void);
 /**
 Capture the current frame giving the resulting file and automatic name.
 **/ 
 
-extern void raydium_capture_frame_jpeg_auto(void);
+__rayapi void raydium_capture_frame_jpeg_auto(void);
 /**
 Same as above, but using JPEG image format.
 **/

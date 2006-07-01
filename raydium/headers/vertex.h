@@ -14,17 +14,17 @@ call three time the same function to add one triangle.
 **/
 
 
-extern void raydium_vertex_add (GLfloat x, GLfloat y, GLfloat z);
+__rayapi void raydium_vertex_add (GLfloat x, GLfloat y, GLfloat z);
 /**
 Adds a vertex at (##x,y,z##).
 **/
 
-extern void raydium_vertex_uv_add (GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
+__rayapi void raydium_vertex_uv_add (GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
 /**
 Same as above, but providing texture mapping informations with ##u## and ##v##.
 **/
 
-extern void raydium_vertex_uv_normals_add (GLfloat x, GLfloat y, GLfloat z, GLfloat nx, GLfloat ny, GLfloat nz, GLfloat u, GLfloat v);
+__rayapi void raydium_vertex_uv_normals_add (GLfloat x, GLfloat y, GLfloat z, GLfloat nx, GLfloat ny, GLfloat nz, GLfloat u, GLfloat v);
 /**
 Same as above, giving vertex's normal with (##nx,ny,nz##).
 **/

@@ -36,25 +36,25 @@ a few more things to do if you already have a standard server, but since it's
 unsupported for now, you must have a look to existing RayODE Net servers.
 **/
 
-extern int raydium_ode_network_MaxElementsPerPacket (void);
+__rayapi int raydium_ode_network_MaxElementsPerPacket (void);
 /**
 This function will return how many elements may be sent with
 current packet size (see ##common.h##).
 **/
 
-extern int raydium_network_nid_element_find (int nid);
+__rayapi int raydium_network_nid_element_find (int nid);
 /**
 Internal. Find wich element have ##nid##.
 **/
 
-extern void raydium_ode_network_newdel_event (int type, char *buff);
+__rayapi void raydium_ode_network_newdel_event (int type, char *buff);
 /**
 Internal. NEWDEL netcall event.
 NEWDEL is fired when a new element is created or deleted somewhere in the
 network.
 **/
 
-extern void raydium_ode_network_nidwho_event (int type, char *buff);
+__rayapi void raydium_ode_network_nidwho_event (int type, char *buff);
 /**
 Internal. NIDWHO netcall event.
 NIDWHO is sent when someone received some "update" informations about a
@@ -69,111 +69,111 @@ NIDWHO answer will be used by every peer to refresh its own copy of the
 element informations (geometry type, mesh, size and tag).
 **/
 
-extern void raydium_ode_network_explosion_event (int type, char *buff);
+__rayapi void raydium_ode_network_explosion_event (int type, char *buff);
 /**
 Internal explosion netcall event.(##RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL## and
 ##RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW##).
 **/
 
-extern void raydium_ode_network_init (void);
+__rayapi void raydium_ode_network_init (void);
 /**
 Internal. Will initialize all RayODE Net layer and register netcalls.
 **/
 
-extern signed char raydium_ode_network_TimeToSend (void);
+__rayapi signed char raydium_ode_network_TimeToSend (void);
 /**
 Almost internal. Will return 1 (true) if it's time to send a new packet, using
 ##raydium_ode_network_maxfreq## value.
 **/
 
-extern void raydium_ode_network_element_send (short nelems, int *e);
+__rayapi void raydium_ode_network_element_send (short nelems, int *e);
 /**
 Will send all elements of ##e## array to network. You must provide array lenght 
 using ##nelems##.
 To "time to send ?" test is done, you'll probably have to do it yourself.
 **/
 
-extern void raydium_ode_network_element_send_all (void);
+__rayapi void raydium_ode_network_element_send_all (void);
 /**
 Will try to send all elements to network. Warning, packet size may be to
 small to send all elements !..
 **/
 
-extern void raydium_ode_network_element_send_random (int nelems);
+__rayapi void raydium_ode_network_element_send_random (int nelems);
 /**
 Will send randomly chosen elements to network. You must provide how many 
 elements you want with ##nelems##, but RAYDIUM_ODE_NETWORK_OPTIMAL is
 available.
 **/
 
-extern void raydium_ode_network_element_send_iterative (int nelems);
+__rayapi void raydium_ode_network_element_send_iterative (int nelems);
 /**
 Will send elements to network, iteratively chose. You must provide how many 
 elements you want with ##nelems##, but RAYDIUM_ODE_NETWORK_OPTIMAL is
 available.
 **/
 
-extern void raydium_ode_network_nidwho (int nid);
+__rayapi void raydium_ode_network_nidwho (int nid);
 /**
 Internal. Will ask for informations for ##nid## (see above).
 NID sending frequency is now limited, since a lot of overhead was generated
 when new clients were joining a "big" network.
 **/
 
-extern void raydium_ode_network_apply (raydium_ode_network_Event * ev);
+__rayapi void raydium_ode_network_apply (raydium_ode_network_Event * ev);
 /**
 Internal. This callback is fired when new data is received. A lot of things
 are done here (timeouts, dead reckoning, ...)
 **/
 
-extern void raydium_ode_network_read (void);
+__rayapi void raydium_ode_network_read (void);
 /**
 Internal. Reads new packets, if any.
 **/
 
-extern void raydium_ode_network_element_new (int e);
+__rayapi void raydium_ode_network_element_new (int e);
 /**
 Internal. Send a new element to network.
 **/
 
-extern void raydium_ode_network_element_delete (int e);
+__rayapi void raydium_ode_network_element_delete (int e);
 /**
 Internal. Send "delete event" to network, since we're deleting one of "our" elements.
 **/
 
-extern void raydium_ode_network_explosion_send (raydium_ode_network_Explosion * exp);
+__rayapi void raydium_ode_network_explosion_send (raydium_ode_network_Explosion * exp);
 /**
 Internal. Send a new explosion event.
 **/
 
-extern signed char raydium_ode_network_element_isdistant (int elem);
+__rayapi signed char raydium_ode_network_element_isdistant (int elem);
 /**
 Will return true (1) if element ##elem## is "distant", or false (0) if it's
 one of "our" elements.
 **/
 
-extern signed char raydium_ode_network_element_isdistant_name (char *elem);
+__rayapi signed char raydium_ode_network_element_isdistant_name (char *elem);
 /**
 Same as above, but using element's name.
 **/
 
-extern signed char raydium_ode_network_element_distantowner(int elem);
+__rayapi signed char raydium_ode_network_element_distantowner(int elem);
 /**
 Returns UID (peer "user" ID) for the distant element owner. See ##network.c##
 documentation for more informations about UID.
 **/
 
-extern signed char raydium_ode_network_element_distantowner_name(char *elem);
+__rayapi signed char raydium_ode_network_element_distantowner_name(char *elem);
 /**
 Same as above, but using element's name.
 **/
 
-extern void raydium_ode_network_element_trajectory_correct (int elem);
+__rayapi void raydium_ode_network_element_trajectory_correct (int elem);
 /**
 Internal. Applies dead reckoning values to element.
 **/
 
-extern void raydium_ode_network_elment_next_local(void);
+__rayapi void raydium_ode_network_elment_next_local(void);
 /**
 Call this function when you don't want that the next created element is sent
 to network ("local only" element).

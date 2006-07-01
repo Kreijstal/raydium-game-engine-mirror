@@ -58,26 +58,26 @@ with ALL concatened frames.
 
 
 #define DONT_SAVE_DUMMY_TEXTURE
-extern void dump_vertex_to (char *filename);
+__rayapi void dump_vertex_to (char *filename);
 /**
 This function save all scene to filename (.tri file) in version 1.
 Vertice may be sorted.
 Please, try to do not use this function.
 **/
 
-extern void dump_vertex_to_alpha (char *filename);
+__rayapi void dump_vertex_to_alpha (char *filename);
 /**
 Now useless and deprecated.
 **/
 
-extern int raydium_file_set_textures (char *name);
+__rayapi int raydium_file_set_textures (char *name);
 /**
 Internal use.
 This function analyze texture filename, and search for extended multitexturing
 informations (u,v and another texture).
 **/
 
-extern void read_vertex_from (char *filename);
+__rayapi void read_vertex_from (char *filename);
 /**
 Loads filename. Again, avoid use of this function.
 **/

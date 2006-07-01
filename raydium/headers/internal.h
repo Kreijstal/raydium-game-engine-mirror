@@ -6,14 +6,14 @@
 2000
 **/
 
-extern void raydium_internal_dump (void);
+__rayapi  void raydium_internal_dump (void);
 /**
 This function is now systematically called by Raydium at application's exit,
 displaying some informations about loaded textures, objects, registered data,
 network statistics.
 **/
 
-extern void raydium_internal_dump_matrix (int n);
+__rayapi  void raydium_internal_dump_matrix (int n);
 /**
 Dumps matrix to console.
 ##n## values are:
