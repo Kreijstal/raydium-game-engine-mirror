@@ -94,6 +94,11 @@ void raydium_rendering_internal_prepare_texture_render(GLuint tex)
 //
 }
 
+char *raydium_version(void)
+{
+     return raydium_version_string;
+}
+
 
 #endif
 #endif
