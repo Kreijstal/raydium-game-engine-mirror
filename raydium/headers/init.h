@@ -11,6 +11,11 @@ This file is mainly designed for internal uses, but there's anyway
 some interesting functions. 
 **/
 
+__rayapi char *raydium_version(void);
+/**
+Return Raydium Engine version as a static string. Format is "x.yyy".
+**/
+
 __rayapi  void raydium_init_lights (void);
 /**
 Internal use. Must be moved to light.c.

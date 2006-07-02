@@ -11,6 +11,8 @@
 
 #endif 
 
+char *raydium_version(void);
+
 int raydium_init_cli_option(char *option, char *value)
 {
 int i;
@@ -130,7 +132,7 @@ if(raydium_init_cli_option("logfile",logfile))
     }
 else raydium_log_file=NULL;
 
-raydium_log("version %s",raydium_version);
+raydium_log("version %s",raydium_version());
 raydium_log("command line args: OK");
 
 #ifndef RAYDIUM_NETWORK_ONLY

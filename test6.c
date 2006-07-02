@@ -712,7 +712,7 @@ raydium_sound_SetSourcePitch(son,raydium_trigo_abs(speed));
 raydium_ode_element_sound_update_name("buggy_corps",son);
 raydium_ode_element_sound_update_name("buggy_corps",son_paf);
 
-raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version);
+raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version());
 
 {
 char c='2';

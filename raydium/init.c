@@ -25,6 +25,11 @@ void raydium_hdr_texture_reset(void);
 void raydium_shader_init(void);
 void raydium_web_init(void);
 
+char *raydium_version(void)
+{
+     return raydium_version_string;
+}
+
 void raydium_init_lights(void)
 {
 GLuint i;

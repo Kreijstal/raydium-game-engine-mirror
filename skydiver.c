@@ -630,7 +630,7 @@ if(game_part==GAME_PART_SCORE)
 
 raydium_osd_printf(75,95,16,0.5,"font2.tga","^fBest score: ^9% 5i",best_score);
 raydium_osd_printf(2,2,16,0.5,"font2.tga","%s",tips[tip]);
-raydium_osd_printf(2,98,16,0.5,"font2.tga","^f- %3i FPS - NewSkyDiver %s (Raydium %s) - CQFD Corp.",raydium_render_fps,version,raydium_version);
+raydium_osd_printf(2,98,16,0.5,"font2.tga","^f- %3i FPS - NewSkyDiver %s (Raydium %s) - CQFD Corp.",raydium_render_fps,version,raydium_version());
 raydium_osd_logo("logoc.tga");
 raydium_rendering_finish();
 
