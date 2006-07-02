@@ -299,6 +299,8 @@ if [ $disable_x = "no" ]; then
 #define RAYDIUM_RENDERING_NONE  	     	2
 #define DONT_INCLUDE_HEADERS
 #define raydium_log printf
+#define __rayapi
+#define __global
 signed char    raydium_key[256];
 #include <stdio.h>
 #include <stdlib.h>

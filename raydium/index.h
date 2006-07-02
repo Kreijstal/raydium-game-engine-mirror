@@ -20,7 +20,7 @@
 // Include this file if you want to use Makefile and libraydium, for
 // a quick compilation (use odyncomp.sh script, for example)
 
-#include "headers/main.h"
+#include "main.h"
 
 #ifndef RAYDIUM_NETWORK_ONLY
 #include "headers/myglut.h"

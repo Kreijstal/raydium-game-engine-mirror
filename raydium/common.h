@@ -19,7 +19,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifdef RAYDLL
+#ifdef WIN32
+# ifdef RAYDLL
 #   ifdef MAIN_H
 #       define __global __declspec(dllimport)
 #       define __rayapi __declspec(dllimport)
@@ -28,7 +29,12 @@
 #       define __global __declspec(dllexport)
 #       define __rayapi __declspec(dllexport)
 #   endif
-#else
+# endif
+#else // Not under WIN32
+# ifdef LIBRAY
+#    define __global
+#    define __rayapi
+# else
 #    ifdef MAIN_H
 #       define __global extern
 #       define __rayapi
@@ -37,6 +43,7 @@
 #       define __global
 #       define __rayapi
 #    endif
+# endif
 #endif
 
 #ifdef SWIG

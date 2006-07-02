@@ -1,6 +1,3 @@
-#define		HEADER_MAIN
-#include	"../main.h"
-
 /*=
 Introduction to Raydium
 100
