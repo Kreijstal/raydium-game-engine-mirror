@@ -24,7 +24,7 @@ void grid_save(char *filename);
 void build_gui_access(raydium_gui_Object *w);
 void build_gui_menu(raydium_gui_Object *w);
 void grid_generate_obj(void);
-void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time);
+void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time, char *message_file);
 void grid_init_all(void);
 void box_init_all(void);
 void grid_generate_obj(void);
@@ -119,14 +119,15 @@ gui_exit();
 
 void btnMetaOk(raydium_gui_Object *w)
 {
-char d[4][512];
+char d[5][512];
 
 raydium_gui_read_name("menu","edtName",d[0]);
 raydium_gui_read_name("menu","edtAuthor",d[1]);
 raydium_gui_read_name("menu","edtGold",d[2]);
 raydium_gui_read_name("menu","edtAuthorTime",d[3]);
+raydium_gui_read_name("menu","edtMsg",d[4]);
 
-sprintf(tdata,"%s;%s;%s;%s",d[0],d[1],d[2],d[3]);
+sprintf(tdata,"%s;%s;%s;%s;%s",d[0],d[1],d[2],d[3],d[4]);
 build_gui_menu(NULL);
 }
 
@@ -206,9 +207,9 @@ raydium_gui_widget_focus_name("btnOk","menu");
 void build_gui_meta(raydium_gui_Object *w)
 {
 int handle;
-char d[4][512];
+char d[5][512];
 
-extract_data(tdata,d[0],d[1],d[2],d[3]);
+extract_data(tdata,d[0],d[1],d[2],d[3],d[4]);
 
 raydium_gui_window_delete_name("menu");
 handle=raydium_gui_window_create("menu",10,35,80,30);
@@ -222,23 +223,28 @@ raydium_gui_widget_sizes(50,3,14);
 raydium_gui_edit_create("edtName",handle,30,74,d[0]);
 
 raydium_gui_widget_sizes(0,0,14);
-raydium_gui_label_create("lblAuthor",handle,15,60,"Track author",0,0,0);
+raydium_gui_label_create("lblAuthor",handle,15,65,"Track author",0,0,0);
 raydium_gui_widget_sizes(30,3,14);
-raydium_gui_edit_create("edtAuthor",handle,30,54,d[1]);
+raydium_gui_edit_create("edtAuthor",handle,30,59,d[1]);
 
 raydium_gui_widget_sizes(0,0,14);
-raydium_gui_label_create("lblGold",handle,15,40,"Gold time (secs)",0,0,0);
+raydium_gui_label_create("lblGold",handle,15,50,"Gold time (secs)",0,0,0);
 raydium_gui_widget_sizes(20,3,14);
-raydium_gui_edit_create("edtGold",handle,30,34,d[2]);
+raydium_gui_edit_create("edtGold",handle,30,44,d[2]);
 
 raydium_gui_widget_sizes(0,0,14);
-raydium_gui_label_create("lblAuthorTime",handle,15,20,"Author time (secs)",0,0,0);
+raydium_gui_label_create("lblAuthorTime",handle,15,35,"Author time (secs)",0,0,0);
 raydium_gui_widget_sizes(20,3,14);
-raydium_gui_edit_create("edtAuthorTime",handle,30,14,d[3]);
+raydium_gui_edit_create("edtAuthorTime",handle,30,29,d[3]);
+
+raydium_gui_widget_sizes(0,0,14);
+raydium_gui_label_create("lblMsg",handle,15,20,"Message file (opt)",0,0,0);
+raydium_gui_widget_sizes(20,3,14);
+raydium_gui_edit_create("edtMsg",handle,30,14,d[4]);
 
 raydium_gui_widget_sizes(10,3,14);
-raydium_gui_button_create("btnLoad",handle,70,13,"OK",btnMetaOk);
-raydium_gui_button_create("btnCancel",handle,85,13,"cancel",build_gui_menu);
+raydium_gui_button_create("btnLoad",handle,70,14,"OK",btnMetaOk);
+raydium_gui_button_create("btnCancel",handle,85,14,"cancel",build_gui_menu);
 }
 
 void build_gui_load(raydium_gui_Object *w)

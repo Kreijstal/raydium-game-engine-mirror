@@ -54,10 +54,12 @@ Grid grid[MAX_ELEMS];
 Box box[MAX_ELEMS];
 char tdata[4096];
 
-void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time)
+void extract_data(char *from, char *to_name, char *to_author, char *to_gold, char *to_author_time, char *message_file)
 {
 char d[4096];
 int i,start,cpt;
+
+message_file[0]=0;
 
 strcpy(d,from);
 cpt=0;
@@ -73,9 +75,11 @@ for(i=0;i<=strlen(from);i++)
 	if(cpt==1)
 	    strcpy(to_author,d+start);
 	if(cpt==2)
-	    strcpy(to_gold,d+start);	
+	    strcpy(to_gold,d+start);
 	if(cpt==3)
-	    strcpy(to_author_time,d+start);	
+	    strcpy(to_author_time,d+start);
+	if(cpt==4)
+	    strcpy(message_file,d+start);
 
 	// finalize
 	cpt++;
@@ -87,18 +91,19 @@ for(i=0;i<=strlen(from);i++)
 void dump_data_to(char *filename)
 {
 FILE *fp;
-char d[4][512];
+char d[5][512];
 
 fp=fopen(filename,"wt");
 if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
 
 fprintf(fp,"// generated track data (mania2)\n\n");
 
-extract_data(tdata,d[0],d[1],d[2],d[3]);
+extract_data(tdata,d[0],d[1],d[2],d[3],d[4]);
 fprintf(fp,"name=\"%s\";\n",d[0]);
 fprintf(fp,"author=\"%s\";\n",d[1]);
 fprintf(fp,"gold_time=%s;\n",d[2]);
 fprintf(fp,"author_time=%s;\n",d[3]);
+fprintf(fp,"message=\"%s\";\n",d[4]);
 
 fprintf(fp,"\n// EOF\n");
 fclose(fp);

@@ -1,6 +1,6 @@
 // ManiaDrive - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="ManiaDrive 1.02";
+char *version="ManiaDrive 1.02custom";
 
 #include "raydium/index.c"
 
@@ -9,14 +9,14 @@ char *version="ManiaDrive 1.02";
 
 #define NO_NETWORK_COLLISIONS
 
-
 #ifdef WIN32
 #define SERVER_BINARY "mania_server.exe"
 #else
 #define SERVER_BINARY "./mania_server.static"
 #endif
 
-#define STORY_FILE		"mania_drive.story"
+#define STORY_FILE_BEG		"mania_drive.story.beg"
+#define STORY_FILE_PRO		"mania_drive.story.pro"
 #define HISTORY_STATE_FILE	raydium_file_home_path("mania_drive.state")
 
 #define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
@@ -66,6 +66,7 @@ char mni_next[RAYDIUM_MAX_NAME_LEN];
 char message[RAYDIUM_MAX_NAME_LEN];
 signed char mode;
 signed char simple_mni=0;
+signed char congrats=0;
 
 signed char music_popup_inc=-1;
 
@@ -86,7 +87,8 @@ void build_gui_ErrorDownload(void);
 void build_gui_Lan(void);
 void btnBackToMainMenu(raydium_gui_Object *w);
 void build_gui_NeedRestart(void);
-
+void build_gui_Story(void);
+void showMessage(char *file, int id);
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
 #define NET_RESTART	(RAYDIUM_NETWORK_PACKET_BASE+2)
@@ -107,6 +109,7 @@ typedef struct TrackData
     char author[RAYDIUM_MAX_NAME_LEN];
     float gold_time;
     float author_time;
+    char message_file[RAYDIUM_MAX_NAME_LEN];
     } TrackData;
 
 TrackData trackdata;
@@ -322,9 +325,16 @@ partytime=0;
 yourbest=0;
 
 raydium_gui_window_delete_name("menu");
-raydium_gui_hide();
-raydium_osd_cursor_set(NULL,0,0); // hide mouse cursor
-raydium_sound_load_music(NULL);
+
+if(strlen(trackdata.message_file)==0)
+    {
+    raydium_gui_hide();
+    raydium_osd_cursor_set(NULL,0,0); // hide mouse cursor
+    raydium_sound_load_music(NULL);
+    }
+else
+    showMessage(trackdata.message_file,0);
+
 raydium_video_delete_name("video");
 music_random();
 return 1;
@@ -492,6 +502,7 @@ raydium_gui_window_delete_name("error");
 void btnStoryCompletedOk(raydium_gui_Object *w)
 {
 raydium_gui_window_delete_name("storycompleted");
+build_gui_Story();
 }
 
 void btnRestartClick(raydium_gui_Object *w)
@@ -744,7 +755,7 @@ char *str1= "  ^cCongratulations !";
 char *str1s="  ^0Congratulations !";
 char *str2="Story mode is completed !";
 
-handle=raydium_gui_window_create("storycompleted",5,45,50,25);
+handle=raydium_gui_window_create("storycompleted",25,45,50,25);
 raydium_gui_widget_sizes(0,0,28);
 raydium_gui_label_create("lblStoryCompleted1s",handle,50,80,str1s,0,0,0);
 raydium_gui_label_create("lblStoryCompleted1" ,handle,50.3,81,str1,0,0,0);
@@ -812,19 +823,23 @@ if(!net)
 gui_start();
 }
 
-void build_gui_Story(void)
+
+// Return 1 if "filename" story is completed
+signed char build_gui_Story_sub(int handle, char *filename, float x1, float x2, int id)
 {
 char ret[RAYDIUM_GUI_DATASIZE];
+char file[RAYDIUM_MAX_NAME_LEN];
 char part1[RAYDIUM_MAX_NAME_LEN];
 char part2[RAYDIUM_MAX_NAME_LEN];
 char part3[RAYDIUM_MAX_NAME_LEN];
-int handle;
+signed char completed;
 int i,last,len;
 float pos;
-signed char completed;
-FILE *fp,*fp2;
+FILE *fp;
 
-fp=raydium_file_fopen(STORY_FILE,"rt");
+strcpy(file,filename);
+
+fp=raydium_file_fopen(file,"rt");
 if(!fp) 
     {
     raydium_log("ERROR: cannot find story file ! abording ...");
@@ -833,52 +848,75 @@ if(!fp)
 
 while(fscanf(fp,"%s\n",ret)!=EOF )
     {
+    FILE *fp2;
     fp2=raydium_file_fopen(ret,"rt");
     if(fp2) fclose(fp2);
     }
 fclose(fp);
 
-handle=raydium_gui_window_create("menu",48,10,50,80);
-
-raydium_gui_widget_sizes(5,5,25);
-raydium_gui_label_create("lblMode",handle,50,93,"Story Mode",0,0,0);
-
+raydium_register_variable(file,RAYDIUM_REGISTER_STR,"story_file");
 raydium_register_variable(ret,RAYDIUM_REGISTER_STR,"ret");
 raydium_register_variable(&completed,RAYDIUM_REGISTER_SCHAR,"completed");
 raydium_php_exec("mania_story.php");
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
 
-
-pos=85;
+pos=80;
 last=0;
 len=strlen(ret);
 for(i=0;i<len;i++)
     if(ret[i]=='\n' || ret[i]==0)
     {
+    signed char candrive;
     ret[i]=0;
     part1[0]=part2[0]=0;
     raydium_parser_cut(ret+last,part1,part2,';');
     raydium_gui_widget_sizes(10,4,12);
-    raydium_gui_button_create(part1,handle,5,pos,"Drive",(part2[1]!='4'?btnDriveSolo:btnCantDrive));
+    candrive=(part2[1]!='4');
+    raydium_gui_button_create(part1,handle,x1,pos,(candrive?"Drive":"-"),(candrive?btnDriveSolo:btnCantDrive));
 
-    part1[0]='*'; // avoid name collision
+    part1[0]='*'+id; // avoid name collision
     strcpy(part3,part2);
-    part3[1]='0';
-    raydium_gui_widget_sizes(0,0,14);
-    raydium_gui_label_create(part1,handle,65,pos+2.5,part3,0,0,0);
-    part1[0]='+'; // avoid name collision
-    raydium_gui_label_create(part1,handle,65-0.2,pos+2.5+0.2,part2,0,0,0);
+    part3[1]='0'; // change color
+    raydium_gui_widget_sizes(0,0,12);
+    raydium_gui_label_create(part1,handle,x2,pos+2.0,part3,0,0,0);
+    part1[0]='#'+id; // avoid name collision
+    raydium_gui_label_create(part1,handle,x2-0.2,pos+2.0+0.2,part2,0,0,0);
 
     last=i+1;
     pos-=6;
     }
+
+return completed;
+}
+
+void build_gui_Story(void)
+{
+int handle;
+signed char completed;
+
+handle=raydium_gui_window_create("menu",5,5,90,90);
+
+raydium_gui_widget_sizes(0,0,25);
+raydium_gui_label_create("lblMode",handle,55,93,"Story Mode",0,0,0);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblBeg",handle,30,88,"Beginners",0,0.3,0);
+raydium_gui_label_create("lblPro",handle,80,88,"Pro",0.3,0,0);
+
+
+completed=build_gui_Story_sub(handle,STORY_FILE_BEG,2, 33,0);
+completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
+
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
 gui_start();
 
-if(completed)
+if(completed && !congrats)
     {
+    congrats=1;
+    raydium_gui_window_delete_name("menu");
     raydium_log("Completed !");
     build_gui_StoryCompleted();
     }
@@ -1003,6 +1041,113 @@ raydium_gui_window_delete_name("menu");
 build_gui_Options();
 }
 
+void btnMessageOk(raydium_gui_Object *w)
+{
+char part1[RAYDIUM_MAX_NAME_LEN];
+char part2[RAYDIUM_MAX_NAME_LEN];
+int id;
+
+raydium_parser_cut(w->name,part1,part2,';');
+id=atoi(part2);
+showMessage(trackdata.message_file,id);
+}
+
+void showMessage(char *file, int id)
+{
+int handle;
+FILE *fp;
+int count;
+signed char found=0;
+int lines[32]; // start index of each line
+
+int ret;
+char var[RAYDIUM_MAX_NAME_LEN];
+char val_s[RAYDIUM_GUI_DATASIZE];
+float val_f[10];
+int size;
+
+raydium_gui_window_delete_name("menu");
+
+fp=raydium_file_fopen(file,"rt");
+if(fp)
+{
+ count=0;
+
+ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
+    {
+    if(!strcasecmp(var,"en"))
+	{
+        if(ret!=RAYDIUM_PARSER_TYPE_RAWDATA)
+	    {
+	    raydium_log("message is wrong type, must be RAWDATA.");
+	    continue;
+	    }							
+	if(count!=id)
+	    {
+	    count++;
+	    continue;
+	    }
+
+	found=1;
+	break;
+	}
+    }
+ fclose(fp);
+} // fp was ok
+
+
+if(found)
+    {
+    int nlines=0;
+    int i;
+    int start=0;
+    int len;
+    float width;
+    float heigth;
+    int mx;
+    
+    len=strlen(val_s);
+    
+    mx=0;
+    for(i=0;i<len;i++)
+	if(val_s[i]=='\n')
+	    {
+	    val_s[i]=0;
+	    lines[nlines]=start;
+	    if(strlen(val_s+start)>mx)
+		mx=strlen(val_s+start);
+	    start=i+1;
+	    nlines++;
+	    }
+
+    width=mx*1.6;
+    heigth=(nlines+2)*5;
+    
+    if(width<20) width=40;
+    
+    handle=raydium_gui_window_create("menu",((float)100-width)/2,((float)100-heigth)/2,width,heigth);
+    raydium_gui_widget_sizes(0,0,18);
+    for(i=0;i<nlines;i++)
+	{
+	sprintf(var,"lbl%i",i);
+	raydium_gui_label_create(var,handle,50,100-((float)100/(nlines+2))*(i+1),val_s+lines[i],0.2,0,0);
+	}
+
+    // create button here
+    sprintf(var,"btnMessageOk;%i",id+1);
+    raydium_gui_widget_sizes(15,5,18);
+    id=raydium_gui_button_create(var,handle,40,100-((float)100/(nlines+2))*(i+1.5),"OK",btnMessageOk);
+    raydium_gui_widget_focus_name(var,"menu");
+    raydium_gui_show();
+    }
+else
+    {
+    trackdata.message_file[0]=0;
+    raydium_gui_hide();
+    }
+}
+
+
 
 void build_gui_Main(void)
 {
@@ -1104,6 +1249,7 @@ trackdata.name[0]=0;
 trackdata.author[0]=0;
 trackdata.gold_time=0;
 trackdata.author_time=0;
+trackdata.message_file[0]=0;
 
 while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
@@ -1128,6 +1274,17 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 	    continue;
 	    }
 	strcpy(trackdata.author,val_s);
+	done=1;
+	}
+
+    if(!strcasecmp(var,"message"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+	    {
+	    raydium_log("'message' is wrong type");
+	    continue;
+	    }
+	strcpy(trackdata.message_file,val_s);
 	done=1;
 	}
 
@@ -1176,7 +1333,7 @@ if(old>0 && partytime==0) // end of this party
 if(game_state==GAME_GAME)
     timer+=step;
     
-if(game_state==GAME_COUNTDOWN)
+if(game_state==GAME_COUNTDOWN && strlen(trackdata.message_file)==0)
     {
     if(step<1) // wow .. this a a "track loading" lag
 	countdown-=step;
@@ -1185,12 +1342,6 @@ if(game_state==GAME_COUNTDOWN)
 	change_game_state(GAME_GAME);
     }
 }
-
-void ode_step(void)
-{
-//
-}
-
 
 void change_game_state(int type)
 {
@@ -1685,6 +1836,32 @@ return -1;
 }
 
 
+void find_car_meshes(char *body, char *wheel)
+{
+signed char completed=0;
+char file[RAYDIUM_MAX_NAME_LEN];
+
+strcpy(file,STORY_FILE_PRO);
+
+raydium_register_variable(file,RAYDIUM_REGISTER_STR,"story_file");
+raydium_register_variable(&completed,RAYDIUM_REGISTER_SCHAR,"completed");
+raydium_php_exec("mania_story.php");
+raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
+
+if(!completed)
+    {
+    strcpy(body, "clio.tri");
+    strcpy(wheel,"roue5.tri");
+    }
+else
+    {
+    strcpy(body, "clio_sp.tri");
+    strcpy(wheel,"roue6.tri");
+    }
+}
+
+
 void create_car(void)
 {
 #define BREAK_FORCE	0
@@ -1696,8 +1873,12 @@ char dir;
 dReal pos[3];
 dReal rot[3];
 dReal partoffset1[]={-0.6,-0.134,-0.207};
+char body[RAYDIUM_MAX_NAME_LEN];
+char wheel[RAYDIUM_MAX_NAME_LEN];
 
 change_game_state(GAME_COUNTDOWN);
+
+find_car_meshes(body,wheel);
 
 timer=0;
 for(i=0;i<MAX_ELEMS;i++)
@@ -1707,7 +1888,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_object_delete_name("WATURE");
 
   a=raydium_ode_object_create("WATURE");
-    raydium_ode_object_box_add("corps",a,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,TYPE_CAR_BODY,"clio.tri");
+    raydium_ode_object_box_add("corps",a,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,TYPE_CAR_BODY,body);
     raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
 
     raydium_ode_network_next_local_only=1;
@@ -1717,7 +1898,7 @@ for(i=0;i<MAX_ELEMS;i++)
 
 
     raydium_ode_network_next_local_only=1;
-    raydium_ode_object_sphere_add("pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
+    raydium_ode_object_sphere_add("pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,wheel);
     raydium_ode_element_rotfriction_name("pneu_ag",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_ag",0.42,0.253,-0.180);
     raydium_ode_joint_attach_hinge2_name("suspet_ag","corps","pneu_ag",RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES);
@@ -1725,7 +1906,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_suspension_name("suspet_ag",ERP_CFM);
 
     raydium_ode_network_next_local_only=1;
-    raydium_ode_object_sphere_add("pneu_ad",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
+    raydium_ode_object_sphere_add("pneu_ad",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,wheel);
     raydium_ode_element_rotfriction_name("pneu_ad",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_ad",0.42,-0.253,-0.180);
     raydium_ode_joint_attach_hinge2_name("suspet_ad","corps","pneu_ad",RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES);
@@ -1733,7 +1914,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_suspension_name("suspet_ad",ERP_CFM);
 
     raydium_ode_network_next_local_only=1;
-    raydium_ode_object_sphere_add("pneu_rg",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
+    raydium_ode_object_sphere_add("pneu_rg",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,wheel);
     raydium_ode_element_rotfriction_name("pneu_rg",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_rg",-0.444,0.253,-0.180);
     raydium_ode_joint_attach_hinge2_name("suspet_rg","corps","pneu_rg",RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES);
@@ -1742,7 +1923,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_suspension_name("suspet_rg",ERP_CFM);
 
     raydium_ode_network_next_local_only=1;
-    raydium_ode_object_sphere_add("pneu_rd",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,"roue5.tri");
+    raydium_ode_object_sphere_add("pneu_rd",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,TYPE_CAR,wheel);
     raydium_ode_element_rotfriction_name("pneu_rd",ROTFRICTION);
     raydium_ode_element_move_name_3f("pneu_rd",-0.444,-0.253,-0.180);
     raydium_ode_joint_attach_hinge2_name("suspet_rd","corps","pneu_rd",RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES);
@@ -1807,6 +1988,12 @@ raydium_clear_frame();
 raydium_camera_look_at(0.1,0.1,0,0,1,0);
 raydium_osd_draw_name("mania_logo2.tga",0,0,100,100);
 raydium_rendering_finish();
+
+if(raydium_gui_window_find("menu")>=0)
+    {
+    raydium_gui_window_delete_name("menu");
+    raydium_gui_hide();
+    }
 
 if(old==MODE_SOLO)
     build_gui_Story();
@@ -2205,7 +2392,6 @@ int mode;
 
 raydium_init_args_name(argc,argv,"mania_drive");
 
-
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
 windowed_mode=atoi(str);
 raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"800x600");
@@ -2258,7 +2444,6 @@ raydium_sound_SetSourceLoop(sound_wizz,0);
 strcpy(raydium_console_config_texture,"logo_console.tga");
 raydium_sky_box_cache();
 
-
 strcpy(cam,"corps");
 raydium_register_variable(&camx,RAYDIUM_REGISTER_FLOAT,"camx");
 raydium_register_variable(&camy,RAYDIUM_REGISTER_FLOAT,"camy");
@@ -2281,13 +2466,14 @@ sscanf(str,"%f",&music_volume);
 raydium_parser_db_get("ManiaDrive-JoystickEnabled",str,"y");
 joystick_enabled=(str[0]=='y'?1:0);
 
+raydium_gui_theme_load("maniadrive.gui");
+
 if(raydium_init_cli_option("mni",mni_current))
     {
     simple_mni=1;
     mni_load(mni_current);
     }
 
-raydium_gui_theme_load("maniadrive.gui");
 raydium_timecall_add(frame_step,-1);
 change_game_state(GAME_COUNTDOWN);
 message[0]=0;
@@ -2298,7 +2484,7 @@ raydium_sound_music_changed_callback=music_change;
 raydium_ode_AfterElementDrawCallback=draw_element_after;
 raydium_ode_CollideCallback=collide;
 raydium_ode_ObjectNearCollide=nearcall;
-raydium_ode_StepCallback=ode_step;
+//raydium_ode_StepCallback=ode_step;
 object_ground=raydium_ode_object_find("GLOBAL");
 object_boxes=raydium_ode_object_find("BOXES");
 

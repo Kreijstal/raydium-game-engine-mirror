@@ -43,7 +43,7 @@ return $best;
 
 ///////////// main
 
-$story=file("mania_drive.story");
+$story=file($story_file);
 
 $state_file=str_pad('',1000);
 raydium_file_home_path_cpy("mania_drive.state",$state_file);
