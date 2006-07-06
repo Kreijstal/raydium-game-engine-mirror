@@ -11,8 +11,12 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
+if [ -z "$CC" ]; then
+    CC="gcc";
+fi
+
 rm test
-gcc $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
+$CC $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -Iraydium/ode/include/
 sync
 export LD_LIBRARY_PATH=.
