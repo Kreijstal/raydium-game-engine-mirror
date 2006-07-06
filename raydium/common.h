@@ -19,6 +19,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#define RAYDIUM_MAJOR	0
+#define RAYDIUM_MINOR	704
+
 #ifdef WIN32
 # ifdef RAYDLL
 #   ifdef MAIN_H

@@ -94,11 +94,20 @@ void raydium_rendering_internal_prepare_texture_render(GLuint tex)
 //
 }
 
+// duplicated ... should move to another file than init.c
 char *raydium_version(void)
 {
-     return raydium_version_string;
-}
+static char version[RAYDIUM_MAX_NAME_LEN];
+static signed char first=1;
 
+if(first)
+    {
+    first=0;
+    sprintf(version,"%i.%03i",RAYDIUM_MAJOR,RAYDIUM_MINOR);
+    }
+
+return version;
+}
 
 #endif
 #endif

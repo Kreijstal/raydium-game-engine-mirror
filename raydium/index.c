@@ -23,6 +23,10 @@
 // Define "FORCE_LIBRAYDIUM" (-DFORCE_LIBRAYDIUM) if you want to
 // force index.h (see dyncomp.sh).
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DONT_INCLUDE_HEADERS 
 
 #include "main.c"
@@ -102,8 +106,11 @@
 #include "web.c"
 #endif
 
-#else
-// FORCE_LIBRAYDIUM is defined
+#ifdef __cplusplus
+} // close extern "C"
+#endif
+
+#else // FORCE_LIBRAYDIUM is defined
 #include "index.h"
 #endif
 // EOF

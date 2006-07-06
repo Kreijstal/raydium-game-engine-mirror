@@ -27,7 +27,16 @@ void raydium_web_init(void);
 
 char *raydium_version(void)
 {
-     return raydium_version_string;
+static char version[RAYDIUM_MAX_NAME_LEN];
+static signed char first=1;
+
+if(first)
+    {
+    first=0;
+    sprintf(version,"%i.%03i",RAYDIUM_MAJOR,RAYDIUM_MINOR);
+    }
+
+return version;
 }
 
 void raydium_init_lights(void)

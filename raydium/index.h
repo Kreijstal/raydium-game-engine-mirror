@@ -20,6 +20,10 @@
 // Include this file if you want to use Makefile and libraydium, for
 // a quick compilation (use odyncomp.sh script, for example)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "main.h"
 
 #ifndef RAYDIUM_NETWORK_ONLY
@@ -96,3 +100,8 @@ dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #endif
 #include "headers/web.h"
 #endif
+
+#ifdef __cplusplus
+} // close extern "C"
+#endif
+//EOF

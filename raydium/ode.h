@@ -6,6 +6,11 @@
 
 #ifndef RAY_ODE_H
 #define RAY_ODE_H
+
+#ifdef __cplusplus
+// ugly workaround to avoid odemath.h ...
+#define _ODE_ODEMATH_H_
+#endif
 #include "../ode/include/ode/ode.h"
 
 #define RAYDIUM_ODE_MAX_OBJECTS			64

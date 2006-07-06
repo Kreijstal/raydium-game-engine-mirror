@@ -14,6 +14,8 @@ some interesting functions.
 __rayapi char *raydium_version(void);
 /**
 Return Raydium Engine version as a static string. Format is "x.yyy".
+You can also find defines for this, named ##RAYDIUM_MAJOR## (x)
+and ##RAYDIUM_MINOR## (yyy).
 **/
 
 __rayapi  void raydium_init_lights (void);

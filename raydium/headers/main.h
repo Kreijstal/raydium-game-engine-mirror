@@ -21,7 +21,8 @@ planned for Linux only, but with a "clean" (nearly [[ANSI]]) code,
 and, in facts, we have been able to compile Raydium under Visual Studio (Windows)
 and mingw with a very few modifications.
 So you can expect a correct result on any system providing 
-OpenGL (at least 1.2), [[GLU]] and a C compiler.
+OpenGL (at least 1.2), [[GLU]] and a C compiler. Using Raydium as a shared
+library (.so or DLL), you can also use C++ language for you own applications
 
 As we ([[CQFD Corp]].) needed a library for our own games, demos,
 and... and things like that, and as I was interested by OpenGL,
@@ -33,7 +34,7 @@ and waves, reflections, and more, but also provides everything for indoor,
 with radiosity lightmaps for example.
 
 Some other advanced features are available : physics, scripting,
-live video, transparent networking, GUI, ...
+live video, transparent networking, GUI, shaders, ...
 
 This features list will probably grow up during Raydium developpement, see
 Raydium website: http://raydium.org/
