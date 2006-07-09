@@ -96,8 +96,7 @@ raydium_vertex_index=save;
 raydium_log("normal: Normals regenerated.");
 }
 
-
-void raydium_normal_smooth_all(void)
+void raydium_normal_smooth_from_to(GLuint from, GLuint to)
 {
 GLuint i,j;
 GLfloat x,y,z;
@@ -107,17 +106,19 @@ GLfloat sum_z;
 GLuint n;
 GLuint debug_time;
 char *tag; // 1 means "already done", 2 means "used for last normals search"
+GLuint total;
 
+total=to-from;
 
-tag=malloc(RAYDIUM_MAX_VERTICES);
+tag=malloc(total);
 if(!tag) { raydium_log("normal: Not enought memory for normal smoothing, giving up."); return; }
-memset(tag,0,RAYDIUM_MAX_VERTICES);
+memset(tag,0,total);
 
 debug_time=0;
 
-for(i=0;i<raydium_vertex_index;i++)
+for(i=from;i<to;i++)
 {
-if(tag[i]) continue;
+if(tag[i-from]) continue;
 x=raydium_vertex_x[i];
 y=raydium_vertex_y[i];
 z=raydium_vertex_z[i];
@@ -126,7 +127,7 @@ sum_y=0;
 sum_z=0;
 n=0;
 
-for(j=0;j<raydium_vertex_index;j++)
+for(j=from;j<to;j++)
  {
  if(raydium_vertex_x[j]==x && raydium_vertex_y[j]==y && raydium_vertex_z[j]==z)
   { 
@@ -134,27 +135,33 @@ for(j=0;j<raydium_vertex_index;j++)
   sum_y+=raydium_vertex_normal_y[i];
   sum_z+=raydium_vertex_normal_z[i];
   n++;
-  tag[j]=2;  
+  tag[j-from]=2;  
   }
  }
 sum_x/=(GLfloat)n;
 sum_y/=(GLfloat)n;
 sum_z/=(GLfloat)n;
 
-for(j=0;j<raydium_vertex_index;j++)
-if(tag[j]==2)
+for(j=from;j<to;j++)
+if(tag[j-from]==2)
  {
  raydium_vertex_normal_visu_x[j]=sum_x;
  raydium_vertex_normal_visu_y[j]=sum_y;
  raydium_vertex_normal_visu_z[j]=sum_z;
- tag[j]=1;
+ tag[j-from]=1;
  }
 
 
 debug_time++;
-if(debug_time>100) { raydium_log("normal: smoothing: %i/%i",i,raydium_vertex_index); debug_time=0; }
+//if(debug_time>100) { raydium_log("normal: smoothing: %i/%i",i-from,total); debug_time=0; }
 }
 
 free(tag);
 raydium_log("normal: smoothing done.");
+}
+
+
+void raydium_normal_smooth_all(void)
+{
+raydium_normal_smooth_from_to(0,raydium_vertex_index);
 }

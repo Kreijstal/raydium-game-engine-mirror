@@ -37,4 +37,11 @@ This function will smooth the whole scene, using adjacent vertices.
 Note this function can take a lot of time.
 **/
 
+void raydium_normal_smooth_from_to(GLuint from, GLuint to);
+/**
+Same as above, but only from ##from## vertex to ##to## vertex (excluded).
+In other words: will smooth [from;to[
+**/
+
+
 #endif
