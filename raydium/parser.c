@@ -167,7 +167,7 @@ while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
     raydium_parser_trim(line);
     if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
 	{
-	raydium_log("db: ERROR: invalid: '%s'",line);
+	//raydium_log("db: ERROR: invalid: '%s'",line);
 	continue;
 	}
 
@@ -210,14 +210,13 @@ if(!out)
 
 fp=fopen(RAYDIUM_DB_FILENAME,"rt");
 
-
 while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
     {
     raydium_parser_trim(line);
 
     if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
 	{
-	raydium_log("db: ERROR: invalid: '%s'",line);
+	//raydium_log("db: ERROR: invalid: '%s'",line);
 	continue;
 	}
 
