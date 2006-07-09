@@ -16,9 +16,12 @@
 
 #define TYPE_CAR		1
 #define TYPE_CAR_BODY		7
+#define TYPE_CAR_BODY_SP	8
 #define TYPE_BALANCIER		6
 
 #define TURBO_POWA		0.5
+
+#define IS_CAR_BODY(a)		(((a)==TYPE_CAR_BODY) || ((a)==TYPE_CAR_BODY_SP))
 
 typedef struct Grid
     {

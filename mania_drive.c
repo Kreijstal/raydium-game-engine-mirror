@@ -1749,19 +1749,19 @@ if(i1==TYPE_BALANCIER || i2==TYPE_BALANCIER)
     return 0;
 
 #ifdef NO_NETWORK_COLLISIONS
-if( (i1==TYPE_CAR || i1==TYPE_CAR_BODY) && (i2==TYPE_CAR || i2==TYPE_CAR_BODY) )
+if( (i1==TYPE_CAR || IS_CAR_BODY(i1)) && (i2==TYPE_CAR || IS_CAR_BODY(i2) ) )
     return 0;
 #endif
 
 
-if( (i1==TYPE_CAR || i1==TYPE_CAR_BODY) && 
+if( (i1==TYPE_CAR || IS_CAR_BODY(i1)) && 
     is_box(i2) && !raydium_ode_network_element_isdistant(e1))
     {
     col_car_box(e1,e2);
     return 0;
     }
 
-if( (i2==TYPE_CAR|| i2==TYPE_CAR_BODY) &&
+if( (i2==TYPE_CAR|| IS_CAR_BODY(i2)) &&
     is_box(i1) && !raydium_ode_network_element_isdistant(e2))
     {
     col_car_box(e2,e1);
@@ -1787,13 +1787,13 @@ int type;
 dReal *pos;
 
 type=raydium_ode_element_tag_get(elem);
-if(type==TYPE_CAR_BODY && raydium_ode_network_element_isdistant(elem))
+if(IS_CAR_BODY(type) && raydium_ode_network_element_isdistant(elem))
     {
     int player;
     pos=raydium_ode_element_pos_get(elem);
     player=raydium_ode_network_element_distantowner(elem);
     raydium_osd_printf_3D(pos[0],pos[1],pos[2],12,0.5,"font2.tga","^f%s",raydium_network_name[player]);
-    raydium_ode_element[elem].mesh=raydium_object_find_load("clio_wheels.tri");
+    raydium_ode_element[elem].mesh=raydium_object_find_load((type==TYPE_CAR_BODY)?"clio_wheels.tri":"clio_sp_wheels.tri");
     }
 return 1;
 }
@@ -1837,7 +1837,7 @@ return -1;
 }
 
 
-void find_car_meshes(char *body, char *wheel)
+int find_car_meshes(char *body, char *wheel)
 {
 signed char completed=0;
 char file[RAYDIUM_MAX_NAME_LEN];
@@ -1854,11 +1854,13 @@ if(!completed)
     {
     strcpy(body, "clio.tri");
     strcpy(wheel,"roue5.tri");
+    return TYPE_CAR_BODY;
     }
 else
     {
     strcpy(body, "clio_sp.tri");
     strcpy(wheel,"roue6.tri");
+    return TYPE_CAR_BODY_SP;
     }
 }
 
@@ -1876,10 +1878,11 @@ dReal rot[3];
 dReal partoffset1[]={-0.6,-0.134,-0.207};
 char body[RAYDIUM_MAX_NAME_LEN];
 char wheel[RAYDIUM_MAX_NAME_LEN];
+int  body_id;
 
 change_game_state(GAME_COUNTDOWN);
 
-find_car_meshes(body,wheel);
+body_id=find_car_meshes(body,wheel);
 
 timer=0;
 for(i=0;i<MAX_ELEMS;i++)
@@ -1889,7 +1892,7 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_object_delete_name("WATURE");
 
   a=raydium_ode_object_create("WATURE");
-    raydium_ode_object_box_add("corps",a,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,TYPE_CAR_BODY,body);
+    raydium_ode_object_box_add("corps",a,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,body_id,body);
     raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
 
     raydium_ode_network_next_local_only=1;
