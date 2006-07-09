@@ -48,11 +48,11 @@ int len;
 
 len=strlen(str);
 
-for(i=0;i<len;i++)
+for(i=0;i<len+1;i++)
     if(str[i]==separator)
 	break;
 
-if(i==len) return 0; // not found
+if(i==len+1) return 0; // not found
 
 strcpy(part2,str+i+1);
 strcpy(part1,str);
