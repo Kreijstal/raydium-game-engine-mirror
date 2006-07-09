@@ -1792,7 +1792,7 @@ if(IS_CAR_BODY(type) && raydium_ode_network_element_isdistant(elem))
     int player;
     pos=raydium_ode_element_pos_get(elem);
     player=raydium_ode_network_element_distantowner(elem);
-    raydium_osd_printf_3D(pos[0],pos[1],pos[2],12,0.5,"font2.tga","^f%s",raydium_network_name[player]);
+    raydium_osd_printf_3D(pos[0],pos[1],pos[2]+0.2,12,0.5,"font2.tga","^f%s",raydium_network_name[player]);
     raydium_ode_element[elem].mesh=raydium_object_find_load((type==TYPE_CAR_BODY)?"clio_wheels.tri":"clio_sp_wheels.tri");
     }
 return 1;
