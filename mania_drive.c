@@ -1143,6 +1143,7 @@ if(found)
 else
     {
     trackdata.message_file[0]=0;
+    raydium_osd_cursor_set(NULL,0,0); // hide mouse cursor
     raydium_gui_hide();
     }
 }
@@ -1183,7 +1184,7 @@ FILE *fp;
 int j,a;
 char name[32];
 
-fp=raydium_file_fopen(filename,"rt");
+fp=fopen(filename,"rt");
 if(!fp)
     {
     raydium_log("cannot open '%s' for reading",filename);
@@ -1236,7 +1237,7 @@ float val_f[10];
 int size;
 int done;
 
-fp=raydium_file_fopen(filename,"rt");
+fp=fopen(filename,"rt");
 
 if(!fp)
     {
