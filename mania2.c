@@ -141,7 +141,11 @@ int ret;
 
 // must protect mni from shell
 raydium_file_home_path_cpy(mni_simple,mni);
+
+strcpy(str,current_track);
 grid_save(mni);
+strcpy(current_track,str);
+
 sprintf(str,"%s --mni %s",MANIA_BINARY,mni);
 ret=system(str);
 if(ret!=0)
