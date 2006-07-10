@@ -92,7 +92,7 @@ ode_install()
 	if [ -f "raydium/ode.tar.gz" ]; then
 	    rm -f raydium/ode.tar.gz
 	fi
-	wget -O raydium/ode.tar.gz http://raydium.org/data/stable_mirrors/ode.tar.gz
+	wget -O raydium/ode.tar.gz http://freeway.raydium.org/data/stable_mirrors/ode.tar.gz
 	exit_if_error "$?" "Error downloading."
 	
     # uncompress
