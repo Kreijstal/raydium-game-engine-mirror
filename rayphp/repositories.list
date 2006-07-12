@@ -5,6 +5,7 @@
 # http://host.tld/path
 
 # main:
+http://fastrepo.raydium.org/
 http://repository.raydium.org/
 
 # we needs "contrib" servers
