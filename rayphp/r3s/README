@@ -21,3 +21,12 @@ in $data_dir directory:
 # chgrp apache files/
 # chown g+w files/
 (You may have to change "apache" to "httpd", "www-data" or something else).
+
+For security reasons (uploaded PHP scripts), you should deny direct access
+to the "file/" directory with Apache:
+
+<Directory /home/raydium/repository/files>
+    Deny from all
+</Directory>
+
+You can create a .welcome message (one line only) in this directory.
