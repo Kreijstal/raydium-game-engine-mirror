@@ -35,6 +35,7 @@ extern "C" {
 #ifndef RAYDIUM_NETWORK_ONLY
 #include "myglut.c"
 #include "log.c"
+#include "atexit.c"
 #include "signal.c"
 #include "trigo.c"
 #include "random.c"

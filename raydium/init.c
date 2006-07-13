@@ -197,6 +197,7 @@ char autoexec[RAYDIUM_MAX_NAME_LEN];
 #endif
 
 raydium_signal_install_trap();
+raydium_atexit_init();
 err=glewInit();
 if(err==GLEW_OK)
     raydium_log("OpenGL extensions: OK");
@@ -239,13 +240,13 @@ raydium_callback_set();
 raydium_php_init();
 #endif
 
-atexit(raydium_sound_close);
-atexit(raydium_joy_close);
-atexit(raydium_network_close);
-atexit(raydium_internal_dump);
-atexit(raydium_console_history_save);
+raydium_atexit(raydium_sound_close);
+raydium_atexit(raydium_joy_close);
+raydium_atexit(raydium_network_close);
+raydium_atexit(raydium_internal_dump);
+raydium_atexit(raydium_console_history_save);
 #ifndef WIN32
-atexit(raydium_internal_live_close);
+raydium_atexit(raydium_internal_live_close);
 #endif
 raydium_log("atexit functions: OK");
 raydium_init_reset();

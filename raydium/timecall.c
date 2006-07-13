@@ -197,7 +197,7 @@ unsigned long raydium_timecall_devrtc_init(void)
 	    return 0;
     }
 
-atexit(raydium_timecall_devrtc_close);
+raydium_atexit(raydium_timecall_devrtc_close);
 return freq;
 #else
 raydium_log("timecall: FAILED: /dev/rtc only available for Linux");

@@ -303,6 +303,6 @@ path=malloc(strlen(PHP_INI_PATH));
 strcpy(path,PHP_INI_PATH);
 raydium_sapi_module.php_ini_path_override=path;
 sapi_startup(&raydium_sapi_module);
-atexit(raydium_php_close);
+raydium_atexit(raydium_php_close);
 raydium_log("PHP support: OK");
 }

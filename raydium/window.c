@@ -95,7 +95,7 @@ raydium_log("Got %ix%i:%i mode",tx,ty,glutGet(GLUT_WINDOW_DEPTH_SIZE));
 myglutCreateWindow(tx,ty,rendering,name);
 #endif
 
-atexit(raydium_window_close);
+raydium_atexit(raydium_window_close);
 raydium_log("using %s, from %s (version %s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR),glGetString(GL_VERSION));
 raydium_init_engine();
 #ifndef MYGLUT
