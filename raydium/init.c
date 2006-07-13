@@ -197,7 +197,6 @@ char autoexec[RAYDIUM_MAX_NAME_LEN];
 #endif
 
 raydium_signal_install_trap();
-raydium_atexit_init();
 err=glewInit();
 if(err==GLEW_OK)
     raydium_log("OpenGL extensions: OK");

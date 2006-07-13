@@ -145,6 +145,7 @@ else
 
 // Find user's home directory
 raydium_init_internal_homedir_find(app_name);
+raydium_atexit_init();
 }
 
 void raydium_init_args (int argc, char **argv)
