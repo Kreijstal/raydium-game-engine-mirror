@@ -87,6 +87,7 @@ extern "C" {
 dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #include "network.h"
 #include "headers/log.h"
+#include "headers/atexit.h"
 #include "headers/trigo.h"
 #include "headers/random.h"
 #include "headers/timecall.h"

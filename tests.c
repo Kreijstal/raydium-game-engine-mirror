@@ -40,7 +40,7 @@ void broad(int type,char *buff)
 
 void loop(void)
 {
-char type;
+signed char type;
 int id;
 
 if(raydium_network_read_flushed(&id, &type, str)==RAYDIUM_NETWORK_DATA_OK)
@@ -54,10 +54,7 @@ raydium_timecall_callback();
 
 int main(int argc, char **argv)
 {
-setbuf(stdout,NULL);
-signal(SIGINT,quit);
-raydium_network_init(argc,argv);
-raydium_network_server_create();
+raydium_network_only_init(argc,argv);
 
 // Ugly hack, for now...
 raydium_network_netcall_add(broad,RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION,1);

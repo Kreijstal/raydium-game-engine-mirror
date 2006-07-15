@@ -91,6 +91,7 @@ extern "C" {
 
 #include "network.h"
 #include "log.c"
+#include "atexit.c"
 #include "trigo.c"
 #include "random.c"
 #include "timecall.c"
