@@ -146,7 +146,7 @@ strcpy(str,current_track);
 grid_save(mni);
 strcpy(current_track,str);
 
-sprintf(str,"%s --mni %s",MANIA_BINARY,mni);
+sprintf(str,"%s --mni \"%s\"",MANIA_BINARY,mni);
 ret=system(str);
 if(ret!=0)
     {
