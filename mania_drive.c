@@ -907,6 +907,13 @@ raydium_gui_label_create("lblPro",handle,80,88,"Pro",0.3,0,0);
 
 
 completed=build_gui_Story_sub(handle,STORY_FILE_BEG,2, 33,0);
+
+if(completed)
+    {
+    raydium_gui_widget_sizes(0,0,16);
+    raydium_gui_label_create("lblOkBeg",handle,27,40,"Beginners mode completed !",0,0,0);
+    }
+
 completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
 
 raydium_gui_widget_sizes(6,3,14);
