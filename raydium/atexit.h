@@ -12,4 +12,7 @@
 __global void *raydium_atexit_functions[RAYDIUM_MAX_ATEXIT_FUNCTIONS];
 __global int raydium_atexit_index;
 
+// proto
+__rayapi void raydium_log (char *format, ...);
+
 #endif
