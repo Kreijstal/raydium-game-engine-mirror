@@ -34,4 +34,19 @@ __rayapi void raydium_atexit_init(void);
 Internal use.
 **/
 
+// Hack. See cli.h header for more information.
+#ifdef RAYDLL
+#define raydium_init_args(argc,argv)\
+{\
+atexit(raydium_atexit_call);\
+raydium_init_args_hack(argc,argv);\
+}
+
+#define raydium_init_args_name(argc,argv,app_name)\
+{\
+atexit(raydium_atexit_call);\
+raydium_init_args_name_hack(argc,argv,app_name);\
+}
+#endif
+
 #endif

@@ -13,7 +13,12 @@
 
 #include "php_wrappers.c"
 
+#ifndef RAYDLL
 void raydium_init_args(int argc, char **argv);
+#else
+void raydium_init_args_hack(int argc, char **argv);
+#endif
+
 int raydium_rayphp_repository_file_get(char *path);
 signed char raydium_rayphp_http_test(void);
 void raydium_console_init(void);

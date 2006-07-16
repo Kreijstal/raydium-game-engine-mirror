@@ -45,23 +45,3 @@ atexit(raydium_atexit_call);
 #endif
 }
 
-
-#ifdef RAYDLL
-// DLL entry point
-BOOL WINAPI DllMain(HINSTANCE hInstance,DWORD fdwReason,PVOID pvReserved)
-{
-switch (fdwReason)
-    {
-    case DLL_PROCESS_ATTACH:
-	break;
-    case DLL_THREAD_ATTACH:
-	break;
-    case DLL_THREAD_DETACH:
-	break;
-    case DLL_PROCESS_DETACH:
-	raydium_atexit_call();
-    break;
-    }
-return TRUE;
-}
-#endif

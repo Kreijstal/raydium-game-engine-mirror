@@ -110,7 +110,11 @@ raydium_log("using '%s' as home dir",raydium_homedir);
 }
 
 
+#ifndef RAYDLL
 void raydium_init_args_name(int argc, char **argv, char *app_name)
+#else
+void raydium_init_args_name_hack(int argc, char **argv, char *app_name)
+#endif
 {
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
@@ -148,7 +152,14 @@ raydium_init_internal_homedir_find(app_name);
 raydium_atexit_init();
 }
 
+#ifndef RAYDLL
 void raydium_init_args (int argc, char **argv)
 {
 raydium_init_args_name(argc,argv,RAYDIUM_APP_SHORTNAME);
 }
+#else
+void raydium_init_args_hack (int argc, char **argv)
+{
+raydium_init_args_name_hack(argc,argv,RAYDIUM_APP_SHORTNAME);
+}
+#endif
