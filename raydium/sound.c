@@ -623,17 +623,18 @@ ALCcontext* pContext;
    alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
   raydium_log("sound: Releasing OpenAL");
    
-/* Strange ... alutExit seems to do the job under Win32.
+
 #ifdef WIN32
   	//Get active context
 	pContext=alcGetCurrentContext();
 	//Get device for active context
 	pDevice=alcGetContextsDevice(pContext);
 	//Release context(s)
-	alcDestroyContext(pContext);
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(pContext);
 	//Close device
 	alcCloseDevice(pDevice);
-#endif*/
+#endif
   alutExit();
  }
 }
