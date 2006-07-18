@@ -19,7 +19,7 @@ movie creation.
 
 // How to create a movie ?
 /**
-First, compile ##mk_jpgs##: example: ##gcc mk_jpgs -o mk_jpgs## or any other
+First, compile ##mk_jpgs##: example: ##gcc mk_jpgs.c -o mk_jpgs## or any other
 standard build command.
 Then, generate JPEG pictures (using a temporary directory, if possible):
 ##mplayer movie.avi -vo jpeg:quality=50 -vf scale=256:256##, where you may
