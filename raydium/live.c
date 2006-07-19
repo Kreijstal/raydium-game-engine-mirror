@@ -729,6 +729,51 @@ raydium_live_texture_mask(raydium_live_texture_find(raydium_texture_find_by_name
 }
 
 
+// (the current code of this function is quiet a hack ...)
+void raydium_live_texture_draw(int livetex, GLfloat alpha,GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+{
+raydium_live_Texture *tex;
+GLfloat u,v;
+
+if(!raydium_live_texture_isvalid(livetex))
+    {
+    raydium_log("live: cannot draw live mask: wrong name or id");
+    return;
+    }
+
+tex=&raydium_live_texture[livetex];
+
+u=tex->tx/(float)tex->hardware_tx;
+v=tex->ty/(float)tex->hardware_ty;
+
+raydium_osd_start();
+
+raydium_texture_current_set(tex->texture);
+raydium_rendering_internal_prepare_texture_render(tex->texture);
+glColor4fv(raydium_osd_color);
+glBegin(GL_QUADS);
+// x1 y1 x2 y2
+// 0  v  u  0
+glTexCoord2f(0,v);
+glVertex3f(x1,y1,0);
+glTexCoord2f(u,v);
+glVertex3f(x2,y1,0);
+glTexCoord2f(u,0);
+glVertex3f(x2,y2,0);
+glTexCoord2f(0,0);
+glVertex3f(x1,y2,0);
+glEnd();
+raydium_rendering_internal_restore_render_state();
+
+raydium_osd_stop();
+}
+
+
+void raydium_live_texture_draw_name(char *texture, GLfloat alpha,GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+{
+raydium_live_texture_draw(raydium_live_texture_find(raydium_texture_find_by_name(texture)),alpha,x1,y1,x2,y2);
+}
+
 void raydium_live_texture_refresh_callback_set(int livetex, void *callback)
 {
 raydium_live_Texture *tex;

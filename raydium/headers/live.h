@@ -188,5 +188,17 @@ __rayapi void raydium_live_texture_mask_name(char *texture, GLfloat alpha);
 Same as above, but using ##texture## name.
 **/
 
+void raydium_live_texture_draw(int livetex, GLfloat alpha,GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+/**
+This function is a clone of ##raydium_osd_draw()##, dedicated to live textures.
+This function will draw the video ##livetex## on the screen, from (x1,y1) to
+(x2,y2).
+**/
+
+void raydium_live_texture_draw_name(char *texture, GLfloat alpha,GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+/**
+Same as above, but using ##texture## name.
+**/
+
 #endif
 

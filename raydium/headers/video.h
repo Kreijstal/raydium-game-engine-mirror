@@ -48,8 +48,8 @@ Finds a free video slot.
 
 __rayapi int raydium_video_find(char *name);
 /**
-Resolvs video ##name##, returning suitable texture id (native Raydium texture
-id).
+Resolvs video ##name##, returning video id.
+Returns -1 when video is not found.
 **/
 
 __rayapi void raydium_video_jpeg_decompress(FILE *fp,unsigned char *to);
