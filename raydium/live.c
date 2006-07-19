@@ -750,10 +750,10 @@ raydium_osd_start();
 
 raydium_texture_current_set(tex->texture);
 raydium_rendering_internal_prepare_texture_render(tex->texture);
-glColor4fv(raydium_osd_color);
+glColor4f(1,1,1,alpha);
+glEnable(GL_BLEND);
+glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
-// x1 y1 x2 y2
-// 0  v  u  0
 glTexCoord2f(0,v);
 glVertex3f(x1,y1,0);
 glTexCoord2f(u,v);
