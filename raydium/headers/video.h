@@ -96,4 +96,16 @@ __rayapi void raydium_video_loop_name(char *name, signed char loop);
 Same as above, using video name.
 **/
 
+__rayapi signed char raydium_video_isplaying(int id);
+/**
+Returns **1** is video ##id## is playing, **0** if this video is stopped,
+and **-1** if function failed.
+**/
+
+__rayapi signed char raydium_video_isplaying_name(char *name);
+/**
+Same as above, using video name.
+**/
+
+
 #endif

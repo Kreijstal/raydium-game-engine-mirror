@@ -168,6 +168,7 @@ for(i=0;i<raydium_video_video[id].frames_total;i++)
 raydium_video_video[id].start=ftell(raydium_video_video[id].fp);
 raydium_video_video[id].last_decoded=-1;
 raydium_video_video[id].loop=1;
+raydium_video_video[id].playing=1;
 strcpy(raydium_video_video[id].name,filename);
 
 raydium_log("video: %s (%i) as live texture %s (%i), %ix%i %.2f fps (%i frames)",
@@ -183,6 +184,10 @@ return id;
 void raydium_video_callback_video(int id)
 {
 int current;
+
+if(!raydium_video_video[id].playing)
+    return;
+
 raydium_video_video[id].elapsed+=raydium_frame_time;
 
 current=raydium_video_video[id].elapsed*raydium_video_video[id].fps;
@@ -190,8 +195,11 @@ current=raydium_video_video[id].elapsed*raydium_video_video[id].fps;
 if(current>=raydium_video_video[id].frames_total)
     {
     if(!raydium_video_video[id].loop)
+	{
+	raydium_video_video[id].playing=0;
 	return;
-    
+	}
+	
     raydium_video_video[id].elapsed=0;
     current=0;
     }
@@ -252,4 +260,19 @@ raydium_video_video[id].loop=loop;
 void raydium_video_loop_name(char *name, signed char loop)
 {
 raydium_video_loop(raydium_video_find(name),loop);
+}
+
+signed char raydium_video_isplaying(int id)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot get playing state: invalid index or name");
+    return -1;
+    }
+return raydium_video_video[id].playing;
+}
+
+signed char raydium_video_isplaying_name(char *name)
+{
+return raydium_video_isplaying(raydium_video_find(name));
 }
