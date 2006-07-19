@@ -17,6 +17,7 @@ typedef struct raydium_video_Video
     long start;
     long *offsets;
     int last_decoded;
+    signed char loop;
     } raydium_video_Video;
 
 __global raydium_video_Video raydium_video_video[RAYDIUM_MAX_VIDEOS];

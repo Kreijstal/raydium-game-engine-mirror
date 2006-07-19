@@ -167,6 +167,7 @@ for(i=0;i<raydium_video_video[id].frames_total;i++)
 
 raydium_video_video[id].start=ftell(raydium_video_video[id].fp);
 raydium_video_video[id].last_decoded=-1;
+raydium_video_video[id].loop=1;
 strcpy(raydium_video_video[id].name,filename);
 
 raydium_log("video: %s (%i) as live texture %s (%i), %ix%i %.2f fps (%i frames)",
@@ -188,6 +189,9 @@ current=raydium_video_video[id].elapsed*raydium_video_video[id].fps;
 
 if(current>=raydium_video_video[id].frames_total)
     {
+    if(!raydium_video_video[id].loop)
+	return;
+    
     raydium_video_video[id].elapsed=0;
     current=0;
     }
@@ -220,7 +224,7 @@ void raydium_video_delete(int id)
 {
 if(!raydium_video_isvalid(id))
     {
-    raydium_log("video: ERROR: cannot delete video, invalid index");
+    raydium_log("video: ERROR: cannot delete video: invalid index or name");
     return;
     }
 fclose(raydium_video_video[id].fp);
@@ -232,4 +236,20 @@ raydium_video_video[id].state=0;
 void raydium_video_delete_name(char *name)
 {
 raydium_video_delete(raydium_video_find(name));
+}
+
+
+void raydium_video_loop(int id, signed char loop)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot set loop attrib: invalid index or name");
+    return;
+    }
+raydium_video_video[id].loop=loop;
+}
+
+void raydium_video_loop_name(char *name, signed char loop)
+{
+raydium_video_loop(raydium_video_find(name),loop);
 }

@@ -85,4 +85,15 @@ __rayapi void raydium_video_delete_name(char *name);
 Same as above, using video name.
 **/
 
+__rayapi void raydium_video_loop(int id, signed char loop);
+/**
+Sets loop attribute for the video ##id##. By defaults, video loops. Call
+this function with loop=0 to disable this behavior.
+**/
+
+__rayapi void raydium_video_loop_name(char *name, signed char loop);
+/**
+Same as above, using video name.
+**/
+
 #endif
