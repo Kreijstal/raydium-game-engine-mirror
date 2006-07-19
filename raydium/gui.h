@@ -129,6 +129,7 @@ typedef struct raydium_gui_Window
     raydium_gui_Object widgets[RAYDIUM_GUI_MAX_OBJECTS];
     int      focused_widget;
     int	     old_focused;
+    void *   OnDelete;
 } raydium_gui_Window;
 
 

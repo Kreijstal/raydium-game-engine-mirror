@@ -77,6 +77,19 @@ __rayapi int raydium_gui_window_find(char *name);
 Will search ##name## window's numeric id.
 **/
 
+__rayapi void raydium_gui_window_OnDelete(int window, void *OnDelete);
+/**
+This function sets OnDelete callback for ##window## deletion.
+This callback must follow void f(void) prototype. The call is done **before**
+window deletion.
+**/
+
+__rayapi void raydium_gui_window_OnDelete_name(char *window, void *OnDelete);
+/**
+Same as above, but using ##window## name.
+**/
+
+
 __rayapi signed char raydium_gui_widget_isvalid(int i, int window);
 /**
 Mostly internal. Will check if ##i## widget of ##window## is valid.

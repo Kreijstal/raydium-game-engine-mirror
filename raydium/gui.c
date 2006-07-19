@@ -33,6 +33,7 @@ w->pos[0]=w->pos[1]=0;
 w->size[0]=w->size[1]=0;
 w->focused_widget=-1;
 w->old_focused=-1;
+w->OnDelete=NULL;
 
 for(i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
     {
@@ -1514,11 +1515,17 @@ return raydium_gui_visible;
 
 void raydium_gui_window_delete(int window)
 {
+void (*f)(void);
+
 if(!raydium_gui_window_isvalid(window))
     {
     raydium_log("GUI: Error: Cannot delete window: invalid window");
     return;
     }
+
+f=raydium_gui_windows[window].OnDelete;
+if(f)
+    f();
 
 // focus another window
 raydium_gui_window_focused=raydium_gui_windows[window].old_focused;
@@ -1530,6 +1537,22 @@ void raydium_gui_window_delete_name(char *window)
 raydium_gui_window_delete(raydium_gui_window_find(window));
 }
 
+
+void raydium_gui_window_OnDelete(int window, void *OnDelete)
+{
+if(!raydium_gui_window_isvalid(window))
+    {
+    raydium_log("GUI: Error: Cannot set OnDelete: invalid window");
+    return;
+    }
+
+raydium_gui_windows[window].OnDelete=OnDelete;
+}
+
+void raydium_gui_window_OnDelete_name(char *window, void *OnDelete)
+{
+raydium_gui_window_OnDelete(raydium_gui_window_find(window),OnDelete);
+}
 
 void raydium_gui_widget_sizes(GLfloat sizex, GLfloat sizey, GLfloat font_size)
 {
