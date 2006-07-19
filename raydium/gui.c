@@ -62,6 +62,7 @@ raydium_gui_window_focused=-1;
 raydium_gui_oldstate=0;
 raydium_gui_button_clicked_id=-1;
 raydium_gui_widget_sizes(15,5,16);
+raydium_gui_AfterGuiDrawCallback=NULL;
 raydium_gui_theme_init();
 
 // mark all windows's objetcs (widgets to NULL) ...
@@ -1341,6 +1342,7 @@ if(raydium_mouse_click==1)
 void raydium_gui_draw(void)
 {
 int i;
+void (*f)(void);
 
 if(!raydium_gui_visible)
     return;
@@ -1370,6 +1372,10 @@ for(i=0;i<RAYDIUM_GUI_MAX_WINDOWS;i++)
 	}
 
 raydium_osd_color_ega('f');
+
+f=raydium_gui_AfterGuiDrawCallback;
+if(f)
+    f();
 }
 
 

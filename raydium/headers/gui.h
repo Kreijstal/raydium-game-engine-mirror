@@ -20,7 +20,7 @@ Complete informations about theme building are readable in this file.
 
 // Vocabulary
 /**
-This API will allow declaeation of:
+This API will allow declaration of:
 - "widgets" (label, button, edit box, track bar, check box, combo box, zone)
 - "windows" (containers for widgets)
 
@@ -41,6 +41,8 @@ Buttons provides a simple callback, and all other widgets (but label)
 provides an unified "read" function. Window deletion is also possible.
 
 You must set current theme before any of this operations (see below).
+A void(void) callback is available if you want to draw something **over**
+the GUI, named ##raydium_gui_AfterGuiDrawCallback##.
 **/
 
 __rayapi void raydium_gui_window_init(int window);
