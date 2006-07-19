@@ -223,6 +223,8 @@ for($i=0;$i<count($sorted);$i++)
 	    {
 	    if(substr($title,0,7)=="extern ")
 		$title=trim(substr($title,7));
+	    if(substr($title,0,9)=="__rayapi ")
+		$title=trim(substr($title,9));
 	    if($title[strlen($title)-1]==";")
 		$title=substr($title,0,-1);
 	    $title=trim(str_replace("**","* *",$title));
