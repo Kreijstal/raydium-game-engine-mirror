@@ -416,6 +416,32 @@ build_gui_Main();
 scroll=-1;
 }
 
+void after_gui(void)
+{
+const int px=14;
+const int py=13;
+const int size=30;
+static float alpha=1;
+
+if(raydium_video_find("video_beg")>=0)
+    {
+    if(!raydium_video_isplaying_name("video_beg"))
+	alpha-=raydium_frame_time;
+
+    raydium_live_texture_draw_name("video_beg",alpha,px,py,px+size,py+size);	
+    
+    if(alpha<=0)
+	raydium_video_delete_name("video_beg");
+    }
+else
+    alpha=1;
+}
+
+void video_beg_delete(void)
+{
+raydium_video_delete_name("video_beg");
+}
+
 void btnDriveNet(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
@@ -905,13 +931,16 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblBeg",handle,30,88,"Beginners",0,0.3,0);
 raydium_gui_label_create("lblPro",handle,80,88,"Pro",0.3,0,0);
 
-
 completed=build_gui_Story_sub(handle,STORY_FILE_BEG,2, 33,0);
 
 if(completed)
     {
     raydium_gui_widget_sizes(0,0,16);
-    raydium_gui_label_create("lblOkBeg",handle,27,40,"Beginners mode completed !",0,0,0);
+    raydium_video_open("begend.jpgs","video_beg");
+    raydium_video_loop_name("video_beg",0);
+    raydium_gui_AfterGuiDrawCallback=after_gui;    
+    raydium_gui_window_OnDelete_name("menu",video_beg_delete);
+    raydium_gui_label_create("lblOkBeg",handle,27,45,"Beginners mode completed !",0,0,0);
     }
 
 completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
@@ -2024,7 +2053,6 @@ dReal speed,accel;
 dReal direct;
 dReal *tmp;
 dReal *pos;
-
 
 if(scroll>=0)
     {
