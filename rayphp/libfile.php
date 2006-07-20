@@ -44,7 +44,7 @@ function update_file($file,$repos,$local,$force)
   
   // let's update the file with data
   $data=gzdecode($data);
-  $fp=@fopen($path.$file,"wb");
+  $fp=@fopen($local,"wb");
   if(!$fp) die("FAILED: Cannot create output file '$path$file', aborting.");
   fwrite($fp,$data);
   fclose($fp);
