@@ -30,3 +30,4 @@ to the "file/" directory with Apache:
 </Directory>
 
 You can create a .welcome message (one line only) in this directory.
+A .lock file in this directory will lock all upload support for this repository.

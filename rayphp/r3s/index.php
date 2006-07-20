@@ -3,6 +3,9 @@
 // name this file "index.php", and place data in $data_dir directory.
 require("config.inc.php");
 
+if(file_exists(".lock") && $upload_accept)
+    $upload_accept=false;
+
 function GorP($var)
 {
 global $_GET,$_POST;
@@ -19,17 +22,17 @@ return "";
 function _opendir($directory)
 {
 $list=array();
-$dir=opendir($directory);
+$dir=@opendir($directory);
 $i=0;
 
-while($entry=readdir($dir))
+while($entry=@readdir($dir))
     {
     $key=filemtime($directory.'/'.$entry);
     $key.="-$i";
     $list[$key]=$entry;
     $i++;
     }
-closedir($dir);
+@closedir($dir);
 
 krsort($list);
 return $list;
