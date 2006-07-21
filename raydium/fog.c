@@ -99,17 +99,17 @@ void raydium_fog_apply(void)
 			strcpy(info,"error");
 			break;
 		}	
-		raydium_log("Fog activated. Mode: %s; Density: %f; near: %f, far: %f.",info, raydium_fog_density,raydium_fog_near,raydium_fog_far );	
+//		raydium_log("Fog activated. Mode: %s; Density: %f; near: %f, far: %f.",info, raydium_fog_density,raydium_fog_near,raydium_fog_far );	
 	}
 	else
 	{
 		glDisable(GL_FOG);
-		raydium_log("Fog deactivated.");
+//		raydium_log("Fog deactivated.");
 	}
 }
 
 void raydium_fog_wait(void)
 {
 	glDisable(GL_FOG);
-	raydium_log("Fog stopped.");
+//	raydium_log("Fog stopped.");
 }
