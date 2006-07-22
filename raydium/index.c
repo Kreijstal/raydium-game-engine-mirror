@@ -73,6 +73,7 @@ extern "C" {
 #include "sky.c"
 #include "internal.c"
 #include "file.c"
+#include "path.c"
 #include "file_tri.c"
 #include "camera.c"
 #include "object.c"
@@ -99,6 +100,7 @@ extern "C" {
 #include "cli.c"
 #include "network.c"
 #include "file.c"
+#include "path.c"
 #include "register.c"
 #ifdef PHP_SUPPORT
 #include "php.c"

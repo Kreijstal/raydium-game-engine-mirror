@@ -67,6 +67,7 @@ extern "C" {
 #include "headers/sky.h"
 #include "headers/internal.h"
 #include "headers/file.h"
+#include "headers/path.h"
 #include "headers/file_tri.h"
 #include "headers/camera.h"
 #include "headers/object.h"
@@ -95,11 +96,13 @@ dynamic linking is a bad idea. Use static linking instead (ex: comp.sh)"
 #include "headers/cli.h"
 #include "headers/network.h"
 #include "headers/file.h"
+#include "headers/path.h"
 #include "headers/register.h"
 #ifdef PHP_SUPPORT
 #include "headers/rayphp.h"
 #include "headers/php.h"
 #endif
+#include "headers/console.h"
 #include "headers/web.h"
 #endif
 

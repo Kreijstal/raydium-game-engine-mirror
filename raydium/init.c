@@ -228,6 +228,7 @@ raydium_vertex_tag=malloc(RAYDIUM_MAX_VERTICES);
 // must test more than just the last "big" malloc result..
 if(!raydium_vertex_texture) { raydium_log("Out of memory..."); exit(29); }
 raydium_log("vertex arrays memory: OK");
+raydium_path_init(); // do this ASAP, before any file is opened
 raydium_random_randomize();
 raydium_init_key();
 raydium_mouse_init();

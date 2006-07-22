@@ -10,6 +10,10 @@
 #include "headers/file.h"
 #endif 
 
+// proto
+void raydium_path_resolv(char *in, char *out, char mode);
+
+
 // far better than glibc's 'dirname' (and portable)
 void raydium_file_dirname(char *dest,char *from)
 {
@@ -55,6 +59,44 @@ if(n==strlen(from))
 strcpy(dest,from+n);
 }
 
+void raydium_file_ext(char *dest, char *from)
+{
+char name[RAYDIUM_MAX_DIR_LEN];
+char *c;
+
+dest[0]=0;
+
+raydium_file_basename(name,from);
+if( (c=strrchr(name,'.')) )
+    if(c[1]!=0)
+	strcpy(dest,c+1);
+}
+
+
+signed char raydium_file_directory_writable(char *path)
+{
+char file[RAYDIUM_MAX_NAME_LEN];
+FILE *fp;
+
+sprintf(file,"%s/RAYDIUM-WRITE-TEST.delme",path);
+fp=fopen(file,"wb");
+if(!fp)
+    return 0;
+
+fclose(fp);
+unlink(file);
+return 1;
+}
+
+signed char raydium_file_readable(char *filename)
+{
+FILE *fp;
+fp=fopen(filename,"r");
+if(!fp)
+    return 0;
+fclose(fp);
+return 1;
+}
 
 void raydium_file_log_fopen_display(void)
 {
@@ -69,10 +111,10 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 
 FILE *raydium_file_fopen(char *file, char *mode)
 {
-#ifdef PHP_SUPPORT
 FILE *fp;
 int i;
 char found=0;
+char file2[RAYDIUM_MAX_DIR_LEN];
 
 if(!file || !strlen(file))
     return NULL;
@@ -86,24 +128,30 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 
 if(!found) strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index++],file);
 
-if(strchr(mode,'w') || raydium_init_cli_option("repository-disable",NULL))
+// use paths
+raydium_path_resolv(file,file2,mode[0]);
+
+// local mode ?
+if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
     {
-    return fopen(file,mode);
+    return fopen(file2,mode);
+    }
+
+if(strchr(mode,'w'))
+    {
+    return fopen(file2,mode);
     }
 
 if( !raydium_init_cli_option("repository-refresh",NULL) && 
     !raydium_init_cli_option("repository-force",NULL) )
 {
- fp=fopen(file,mode);
+ fp=fopen(file2,mode);
  if(fp) return fp;
 }
-raydium_rayphp_repository_file_get(file);
-fp=fopen(file,mode);
+raydium_rayphp_repository_file_get(file2);
+fp=fopen(file2,mode);
 
 return fp;
-#else
-return fopen(file,mode);
-#endif
 }
 
 

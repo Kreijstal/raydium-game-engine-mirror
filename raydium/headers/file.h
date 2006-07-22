@@ -28,6 +28,22 @@ Another libc clone, for ##basename## function. Extracts file name from a
 path into ##dest## string.
 **/
 
+__rayapi void raydium_file_ext(char *dest, char *from);
+/**
+Return the extension of ##from## filename (can be a complete path), without
+the . (dot), or an empty string if extension is not found.
+**/
+
+__rayapi signed char raydium_file_directory_writable(char *path);
+/**
+Return **1** if ##path## directory is writable, **0** otherwise.
+**/
+
+__rayapi signed char raydium_file_readable(char *filename);
+/**
+Return **1** if ##filename## exists and is readable, **0** otherwise.
+**/
+
 __rayapi void raydium_file_log_fopen_display(void);
 /**
 Display (console) all filenames that were opened before the call.
