@@ -3941,7 +3941,7 @@ char text[256];
 char sprt[256];
 
 
-fp=fopen(filename,"wt");
+fp=raydium_file_fopen(filename,"wt");
 if(!fp)
     {
     raydium_log("ERROR : failed to create 3D capture file '%s'",filename);

@@ -24,7 +24,7 @@ GLuint i;
 char text[256];
 char bl;
 
-fp=fopen(filename,"wt");
+fp=raydium_file_fopen(filename,"wt");
 if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
 
 fprintf(fp,"1\n");
@@ -84,7 +84,7 @@ int bl;
 raydium_log("WARNING: 'dump_vertex_to_alpha' function is deprecated, since regular 'dump_vertex_to' function now sorts alpha textures");
 
 
-fp=fopen(filename,"wt");
+fp=raydium_file_fopen(filename,"wt");
 if(!fp) { printf("cannot write to file \"%s\", fopen() failed\n",filename); return; }
 fprintf(fp,"1\n");
 

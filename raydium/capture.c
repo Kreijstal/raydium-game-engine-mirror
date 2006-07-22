@@ -39,7 +39,7 @@ glReadPixels(0, 0,raydium_window_tx,raydium_window_ty,GL_RGB,GL_UNSIGNED_BYTE,im
 
 
 // open file and check for errors
-file = fopen(filename, "wb");
+file = raydium_file_fopen(filename, "wb");
 if (file == NULL) { raydium_log("Error: capture: cannot open %s for writing",filename); return; }
 
 // write the header
@@ -95,7 +95,7 @@ int size;
 cinfo.err = jpeg_std_error(&jerr);
 jpeg_create_compress(&cinfo);
 
-outfile = fopen(filename, "wb");
+outfile = raydium_file_fopen(filename, "wb");
 if (outfile == NULL) { raydium_log("Error: capture: cannot open %s for writing",filename); return; }
 
 size=raydium_window_tx * raydium_window_ty * 3;

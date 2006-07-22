@@ -362,6 +362,7 @@ int i,sockfd;
 char buffer[RAYDIUM_WEB_BUFSIZE];
 char *data;
 char req[RAYDIUM_MAX_NAME_LEN];
+char complete[RAYDIUM_MAX_NAME_LEN];
 struct sockaddr_in serv_addr;
 struct hostent *hst;
 int chunk;
@@ -456,17 +457,14 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
 fclose(fp);
 raydium_network_socket_close(sockfd);
 
+raydium_path_resolv(filename,complete,'w');
+
 // compare files and rename if not the same
-#ifndef RAYDIUM_NETWORK_ONLY
-if(raydium_file_sum_simple(filename)!=
+if(raydium_file_sum_simple(complete)!=
    raydium_file_sum_simple(RAYDIUM_WEB_CLIENT_TEMP))
-#else
-raydium_log("web: client: warning: no file comparaison function available (since server only)");
-if(1)
-#endif
-    {
-    unlink(filename);
-    if(rename(RAYDIUM_WEB_CLIENT_TEMP,filename)==-1)
+    {    
+    unlink(complete);
+    if(rename(RAYDIUM_WEB_CLIENT_TEMP,complete)==-1)
 	{
 	raydium_log("web: client: cannot rename downloaded file !");
 	perror("rename");

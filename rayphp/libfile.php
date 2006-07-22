@@ -126,7 +126,8 @@ function valid_entry($r)
 // unzip a given input
 function gzdecode($in)
 {
-  $tmp="tmp.tmp";
+  $tmp=str_pad("",256);
+  raydium_file_home_path_cpy("tmp.tmp.gz",$tmp);
   $fp=fopen($tmp,"wb");
   if(!$fp) return false;
   fwrite($fp,$in);

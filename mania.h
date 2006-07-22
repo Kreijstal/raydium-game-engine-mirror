@@ -129,7 +129,7 @@ int rot,flags,type;
 int obj;
 int i;
 
-in=fopen(filename,"rt");
+in=raydium_file_fopen(filename,"rt");
 if(!in)
     {
     raydium_log("mni_gen: unable to open '%s'",filename);

@@ -760,7 +760,7 @@ int i;
 int cpt=0;
 raydium_particle_Particle *p;
 
-fp=fopen(filename,"wt");
+fp=raydium_file_fopen(filename,"wt");
 if(!fp)
     {
     raydium_log("particle: ERROR: cannot create '%s' filename",filename);

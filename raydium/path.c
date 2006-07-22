@@ -6,7 +6,6 @@
 
 // -------------
 // doc
-// must change all "real" fopen to raydium_file_fopen
 // mania_drive ! (current "home" functions, and network [net tracks & lan])
 
 #ifndef DONT_INCLUDE_HEADERS
@@ -218,6 +217,10 @@ if(mode=='r')
 		return;
 		}
 	    }
+
+    // ok, if we're here, the file does not exists at all, let's
+    // prepare R3S job:
+    mode='w';
     }
 
 if(mode=='w')
