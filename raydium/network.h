@@ -29,6 +29,7 @@ signed char raydium_network_server_create(void);
 void raydium_random_randomize(void);
 signed char raydium_parser_db_get(char *key, char *value, char *def);
 void raydium_register_function(void *addr,char *name);
+void raydium_file_home_path_cpy(char *file, char *dest);
 
 void raydium_network_only_quit(int sig)
 {
@@ -40,6 +41,7 @@ exit(0);
 // do the minimal reg_api job (this should not be done like this ! :/)
 // part 1
 PHP_i_sss(raydium_parser_db_get);
+PHP_v_ss(raydium_file_home_path_cpy);
 #endif
 
 void raydium_network_only_init(int argc, char **argv)
@@ -54,6 +56,8 @@ raydium_php_init();
 // do the minimal reg_api job (this should not be done like this ! :/)
 // part 2
 raydium_register_function(C2PHP(raydium_parser_db_get),"raydium_parser_db_get");
+raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
+        
 #endif
 raydium_network_init();
 raydium_network_server_create();
