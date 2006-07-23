@@ -460,8 +460,8 @@ raydium_network_socket_close(sockfd);
 raydium_path_resolv(filename,complete,'w');
 
 // compare files and rename if not the same
-if(raydium_file_sum_simple(complete)!=
-   raydium_file_sum_simple(RAYDIUM_WEB_CLIENT_TEMP))
+if(raydium_file_sum_simple_mode(complete,"rbl")!=
+   raydium_file_sum_simple_mode(RAYDIUM_WEB_CLIENT_TEMP,"rbl"))
     {    
     unlink(complete);
     if(rename(RAYDIUM_WEB_CLIENT_TEMP,complete)==-1)

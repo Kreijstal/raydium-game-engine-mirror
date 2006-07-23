@@ -59,6 +59,9 @@ This function will:
 - Try to download the file from repositories if no local version is found, or
 will try to update the file if asked (##--repository-refresh## or 
 ##repository-force##). See R3S on Raydium's Wiki.
+- You can disable R3S client (for a "local only" file) adding a 'l' 
+in ##mode## ("rl" or "rbl" for example).
+- Use Raydium paths (see suitable chapter)
 **/
 
 #ifdef PHP_SUPPORT
@@ -67,9 +70,16 @@ __rayapi int raydium_rayphp_repository_file_get(char *file);
 #define raydium_php_repository_file_get fopen
 #endif
 
+
 __rayapi unsigned long raydium_file_sum_simple(char *filename);
 /**
 This function will generate a very simple checksum on ##filename##.
+**/
+
+unsigned long raydium_file_sum_simple_mode(char *filename,char *mode);
+/**
+Same as above, but you can pass a fopen ##mode## ("rt", or "rbl" for example).
+See ##raydium_file_fopen()## for more informations about ##mode##.
 **/
 
 __rayapi char * raydium_file_home_path(char *file);

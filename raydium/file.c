@@ -154,15 +154,14 @@ fp=fopen(file2,mode);
 return fp;
 }
 
-
-unsigned long raydium_file_sum_simple(char *filename)
+unsigned long raydium_file_sum_simple_mode(char *filename,char *mode)
 {
 unsigned long total=0;
 unsigned long cpt=0;
 int c;
 FILE *fp;
 
-fp=raydium_file_fopen(filename,"rb");
+fp=raydium_file_fopen(filename,mode);
 if(!fp)
     {
     raydium_log("file simple sum: error: cannot open file '%s'",filename);
@@ -178,6 +177,11 @@ while( (c=fgetc(fp))!=EOF )
 
 fclose(fp);
 return total;
+}
+
+unsigned long raydium_file_sum_simple(char *filename)
+{
+return raydium_file_sum_simple_mode(filename,"rb");
 }
 
 char * raydium_file_home_path(char *file)
