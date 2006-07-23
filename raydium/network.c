@@ -569,11 +569,6 @@ ret = WSAStartup(MAKEWORD(1,1), &WSAData);
 if (ret) { raydium_log("network: FAILED ! (Winsock 2 Error: %i while asking for version 1.1)",ret); return(0); }
 #endif
 
-#ifdef RAYDIUM_NETWORK_ONLY
-// Do all needed inits for network only mode:
-raydium_timecall_init();
-#endif
-
 raydium_network_init_sub();
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)

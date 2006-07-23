@@ -30,6 +30,8 @@ void raydium_random_randomize(void);
 signed char raydium_parser_db_get(char *key, char *value, char *def);
 void raydium_register_function(void *addr,char *name);
 void raydium_file_home_path_cpy(char *file, char *dest);
+void raydium_timecall_init(void);
+
 
 void raydium_network_only_quit(int sig)
 {
@@ -50,6 +52,7 @@ setbuf(stdout,NULL);
 signal(SIGINT,raydium_network_only_quit);
 raydium_init_args(argc,argv);
 raydium_random_randomize();
+raydium_timecall_init();
 raydium_console_init();
 #ifdef PHP_SUPPORT
 raydium_php_init();
