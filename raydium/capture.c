@@ -13,6 +13,9 @@
 // Present capture code was inspired from various web files...
 // Not a pure CQFD Corp. production :)
 
+// proto
+FILE *raydium_file_fopen(char *file, char *mode);
+
 void raydium_capture_frame(char *filename)
 {
 raydium_capture_asked=RAYDIUM_CAPTURE_TGA;
