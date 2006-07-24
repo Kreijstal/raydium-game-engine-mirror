@@ -4,7 +4,7 @@
 Name: 'Raydium Export (.tri format)'
 Blender: 2.36"
 Group: 'Export'
-Tooltip: 'Export to .tri format'
+Tooltip: 'Export to .tri format with normals'
 """
 
 import Blender
@@ -16,7 +16,7 @@ class source:
 
 	def writeFaces(self):
 		scene=Blender.Scene.getCurrent()
-		self.file.write("0\n") #tri version
+		self.file.write("1\n") #tri version
 		
 		for object in scene.getChildren():
 		    objtype=object.getType()
@@ -32,9 +32,9 @@ class source:
 				    if(face.image):
 					u=face.uv[i][0]
 					v=face.uv[i][1]
-					self.file.write("%f %f %f %f %f %s\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],u,v,face.image.name))
+					self.file.write("%f %f %f %f %f %f %f %f %s\n" % (vlist[indx].co[0],vlist[indx].co[1],vlist[indx].co[2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],u,v,face.image.name))
 				    else:   
-					self.file.write("%f %f %f 0 0 rgb(0.5,0.5,0.5)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2]))
+					self.file.write("%f %f %f %f %f %f 0 0 rgb(0.5,0.5,0.5)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2]))
 					
 
 
