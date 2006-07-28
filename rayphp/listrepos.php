@@ -9,7 +9,7 @@
 require("libfile.php");
 
 $status=0; // sets status to "error", by default
-$repos=read_repositories_file("rayphp/repositories.list");
+$repos=read_repositories_file("repositories.list");
 $list="";
 
 for($i=0;$i<count($repos);$i++)

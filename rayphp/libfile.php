@@ -75,20 +75,37 @@ function http_download($url)
     }
 }
 
-// Get repositories from a given (local) file
-function read_repositories_file($repos)
+
+
+function read_repositories_file_internal($repos,&$repos_list)
 {
-  $repos_list=@file($repos);
-  if(count($repos_list)==0)
+  $list=@file($repos);
+  if(count($list)==0)
     die("Cannot open $repos");
 
   // let's clean up the list
-  for($i=0;$i<count($repos_list);$i++)
+  for($i=0;$i<count($list);$i++)
     {
-      $repos_list[$i]=trim($repos_list[$i]);
+      $list[$i]=trim($list[$i]);
     }
-  $repos_list = array_unique ($repos_list);
+  $repos_list = array_unique (array_merge($repos_list,$list));
   return $repos_list;
+}
+
+// Get repositories from a given (local) file
+function read_repositories_file($repos)
+{
+$repos_list=array();
+    
+$tmp=str_pad("",256);
+raydium_file_home_path_cpy($repos,$tmp);
+
+if(file_exists($tmp))
+    read_repositories_file_internal($tmp,$repos_list);
+
+read_repositories_file_internal("rayphp/".$repos,$repos_list);
+
+return $repos_list;
 }
 
 // Get the file list from a given repository

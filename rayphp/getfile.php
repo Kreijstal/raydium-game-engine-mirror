@@ -12,7 +12,7 @@ $status=0;
 
 filename_cut($filename,$file,$path);
 echo "Using repositories to get '$file' file";
-$repos=read_repositories_file("rayphp/repositories.list");
+$repos=read_repositories_file("repositories.list");
 
 // foreach repository
 for($i=0;$i<count($repos);$i++)

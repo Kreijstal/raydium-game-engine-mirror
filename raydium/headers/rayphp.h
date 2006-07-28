@@ -43,4 +43,14 @@ Test if Internet connection is available using Raydium website.
 (0 means 'not available', 1 means 'OK')
 **/
 
+__rayapi signed char raydium_rayphp_repository_defaults(char *def);
+/**
+Gives the default repositories for this applications
+
+This function will create two files, ##repositories.list## and
+##repositories.upload## in game user home directory, if these files
+don't alreay exist, and will fill the files with ##def##.
+This argument is an URL, or a list of URLs (use \n separator). See R3S doc.
+**/
+
 #endif

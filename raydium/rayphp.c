@@ -130,3 +130,36 @@ raydium_register_variable_unregister_last();
 
 return status;
 }
+
+signed char raydium_rayphp_repository_defaults(char *def)
+{
+char *head="# This file was created by the application. You can change\n\
+# whatever you want here (see rayphp/ directory for informations\n\n\
+# Delete this file if you want to restore defaults.\n";
+FILE *fp;
+
+if(!raydium_file_readable(raydium_file_home_path("repositories.list")))
+    {
+    fp=fopen(raydium_file_home_path("repositories.list"),"wt");
+    if(!fp)
+	{
+	raydium_log("rayphp: ERROR: Unable to create default repository (download) file");
+	return 0;
+	}
+    fprintf(fp,"%s\n%s\n",head,def);
+    fclose(fp);
+    }
+
+if(!raydium_file_readable(raydium_file_home_path("repositories.upload")))
+    {
+    fp=fopen(raydium_file_home_path("repositories.upload"),"wt");
+    if(!fp)
+	{
+	raydium_log("rayphp: ERROR: Unable to create default repository (upload) file");
+	return 0;
+	}
+    fprintf(fp,"%s\n%s\n",head,def);
+    fclose(fp);
+    }
+return 1;
+}
