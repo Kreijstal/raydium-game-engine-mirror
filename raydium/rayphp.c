@@ -148,6 +148,7 @@ if(!raydium_file_readable(raydium_file_home_path("repositories.list")))
 	}
     fprintf(fp,"%s\n%s\n",head,def);
     fclose(fp);
+    raydium_log("rayphp: default repository.list created");
     }
 
 if(!raydium_file_readable(raydium_file_home_path("repositories.upload")))
@@ -160,6 +161,7 @@ if(!raydium_file_readable(raydium_file_home_path("repositories.upload")))
 	}
     fprintf(fp,"%s\n%s\n",head,def);
     fclose(fp);
+    raydium_log("rayphp: default repository.upload created");
     }
 return 1;
 }
