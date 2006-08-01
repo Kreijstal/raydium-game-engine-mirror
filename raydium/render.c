@@ -40,7 +40,7 @@ raydium_render_lightmap_color(col);
 }
 
 // let's keep this define here, until full tests
-#define RAYDIUM_RENDER_MAX_TEXUNITS 2
+#define RAYDIUM_RENDER_MAX_TEXUNITS 4
 int raydium_rendering_prepare_texture_unit(GLenum tu,GLuint tex)
 {
 // cache state of each texunit
