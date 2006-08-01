@@ -10,6 +10,9 @@
 #include "headers/rayphp.h"
 #endif 
 
+// proto
+signed char raydium_file_readable(char *filename);
+
 int raydium_rayphp_repository_file_get(char *path)
 {
 int status;
