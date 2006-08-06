@@ -395,10 +395,12 @@ __global char	 raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 
 __global signed char	 raydium_fog_enabled_tag;
-__global int		 raydium_fog_mode;
-__global float		 raydium_fog_far;
-__global float		 raydium_fog_near;
-__global float		 raydium_fog_density;
+__global signed char	 raydium_fog_volumetric_enabled_tag;
+__global int		 raydium_fog_mode_value;
+__global float		 raydium_fog_far_value;
+__global float		 raydium_fog_near_value;
+__global float		 raydium_fog_density_value;
+__global GLfloat *	 raydium_fog_volumetric_array;
 
 __global signed char	raydium_light_enabled_tag;
 __global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];

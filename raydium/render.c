@@ -330,6 +330,12 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
 	glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
 	//printf("%f %f\n",raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
+	if(raydium_fog_volumetric_enabled_tag)
+#ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
+	    glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+#else
+	    glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+#endif
 	glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
 	raydium_vertex_counter++;
 	}
@@ -349,6 +355,12 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	{
 	glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
 	glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
+	if(raydium_fog_volumetric_enabled_tag)
+#ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
+	    glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+#else
+	    glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+#endif
 	glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
 	raydium_vertex_counter++;
 	}

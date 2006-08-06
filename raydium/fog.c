@@ -28,88 +28,98 @@ void raydium_fog_color_update(void)
 glFogfv(GL_FOG_COLOR,raydium_background_color);
 }
 
-void raydium_fog_mode_set(GLuint mode)
+void raydium_fog_mode(GLuint mode)
 {
-raydium_fog_mode=mode;
+raydium_fog_mode_value=mode;
 }
 
-int raydium_fog_mode_get(void)
+void raydium_fog_density(GLfloat density)
 {
-return raydium_fog_mode;
+raydium_fog_density_value=density;
 }
 
-void raydium_fog_density_set(GLfloat density)
+void raydium_fog_near(GLfloat fnear)
 {
-raydium_fog_density=density;
+raydium_fog_near_value=fnear;
 }
 
-float raydium_fog_density_get(void)
+void raydium_fog_far(GLfloat ffar)
 {
-return raydium_fog_density;
+raydium_fog_far_value=ffar;
 }
 
-void raydium_fog_near_set(GLfloat fnear)
-{
-raydium_fog_near=fnear;
-}
-
-float raydium_fog_near_get(void)
-{
-return raydium_fog_near;
-}
-void raydium_fog_far_set(GLfloat ffar)
-{
-raydium_fog_far=ffar;
-}
-
-float raydium_fog_far_get(void)
-{
-return raydium_fog_far;
-}
 void raydium_fog_apply(void)
 {
-	char info[255];
-	if(raydium_fog_enabled_tag)
-	{
-		glEnable(GL_FOG);
-		glFogi(GL_FOG_MODE,raydium_fog_mode);
-		glFogfv(GL_FOG_COLOR,raydium_background_color);
-		glFogf(GL_FOG_DENSITY, raydium_fog_density);
-		glHint(GL_FOG_HINT, GL_FASTEST);
-		if(raydium_fog_far==0)
-		{	
-			raydium_fog_far=raydium_projection_far;
-			raydium_fog_near= raydium_projection_far/4;
-		}		
-		glFogf(GL_FOG_START,raydium_fog_near);
-		glFogf(GL_FOG_END,raydium_fog_far);		
-		glFogi(GL_FOG_MODE,raydium_fog_mode);
-		switch(raydium_fog_mode)
-		{
-			case GL_LINEAR:
-			strcpy(info,"linear");
-			break;
-			case GL_EXP:
-			strcpy(info,"exp");
-			break;
-			case GL_EXP2:
-			strcpy(info,"exp2");
-			break;
-			default:
-			strcpy(info,"error");
-			break;
-		}	
-//		raydium_log("Fog activated. Mode: %s; Density: %f; near: %f, far: %f.",info, raydium_fog_density,raydium_fog_near,raydium_fog_far );	
-	}
-	else
-	{
-		glDisable(GL_FOG);
-//		raydium_log("Fog deactivated.");
-	}
+
+if(raydium_fog_enabled_tag)
+{
+    glEnable(GL_FOG);
+    glFogi(GL_FOG_MODE,raydium_fog_mode_value);
+    raydium_fog_color_update();
+    glFogf(GL_FOG_DENSITY, raydium_fog_density_value);
+    glHint(GL_FOG_HINT, GL_FASTEST);
+
+    if(raydium_fog_far_value==0)
+	{	
+	raydium_fog_far_value=raydium_projection_far;
+	raydium_fog_near_value=raydium_projection_far/4.f;
+	}		
+
+    glFogf(GL_FOG_START,raydium_fog_near_value);
+    glFogf(GL_FOG_END,raydium_fog_far_value);		
+    }
+    else
+    {
+    glDisable(GL_FOG);
+    }
 }
+
 
 void raydium_fog_wait(void)
 {
-	glDisable(GL_FOG);
-//	raydium_log("Fog stopped.");
+glDisable(GL_FOG);
 }
+
+void raydium_fog_init(void)
+{
+raydium_fog_far_value=0;
+raydium_fog_near_value=0;
+raydium_fog_density_value=0;
+raydium_fog_mode_value=RAYDIUM_FOG_MODE_LINEAR;
+raydium_fog_volumetric_enabled_tag=0;
+
+switch(RENDER_VOLUMETRIC_FOG_AXIS)
+    {
+    case 0:
+	raydium_fog_volumetric_array=raydium_vertex_x;
+	break;
+    case 1:
+	raydium_fog_volumetric_array=raydium_vertex_y;
+	break;
+    case 2:
+	raydium_fog_volumetric_array=raydium_vertex_z;
+	break;	
+    default:
+	raydium_log("fog: FAILED: RENDER_VOLUMETRIC_FOG_AXIS is broken !");
+	exit(100);
+    }
+
+raydium_fog_enable();
+raydium_log("fog: OK");
+}
+
+void raydium_fog_volumetric_support(void)
+{
+raydium_fog_volumetric_enabled_tag=1;
+}
+
+void raydium_fog_volumetric_enable(void)
+{
+glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);
+}
+
+void raydium_fog_volumetric_disable(void)
+{
+glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FRAGMENT_DEPTH_EXT);
+}
+

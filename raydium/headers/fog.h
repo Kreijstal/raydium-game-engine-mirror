@@ -56,70 +56,82 @@ call this function, applying the specified color to hardware.
 See also: ##raydium_background_color_change##
 **/
 
-__rayapi void raydium_fog_mode_set (GLuint mode);
+__rayapi void raydium_fog_mode(GLuint mode);
 /**
-The fog mode can be change with this function. There are 3 different ways to apply
-the fog:
-1. RAYDIUM_FOG_MODE_LINEAR - Used by default the fog is directly aplied according
-the distance. Not real world fog, but used to avoid drawing too distant objects.
-The most used in games focussed to lower-spec machines.
-##IMPORTANT##: EXP mode ignores the ##density## value, only uses ##near## and ##far##.
-2. RAYDIUM_FOG_MODE_EXP    - The fog grows exponentially with the distance. Usual
-mist in the real world. 
-##IMPORTANT##: EXP mode ignores the ##near## and ##far## values, only uses the ##density##.
-3. RAYDIUM_FOG_MODE_EXP2   - The fog grows twice exponentially with the distance.
-Used when the observer is inside a cloud/mist.
-##IMPORTANT##: EXP2 mode ignores the ##near## and ##far## values, only uses the ##density##.
+The fog mode can be change with this function. There are 3 different ways 
+to apply the fog:
+
+1. ##RAYDIUM_FOG_MODE_LINEAR## - Used by default, the fog is directly applied 
+according the distance. Not real world fog, but used to avoid drawing 
+too distant objects.
+##IMPORTANT##: EXP mode ignores the ##density## value, 
+only uses ##near## and ##far##.
+
+2. ##RAYDIUM_FOG_MODE_EXP## - The fog grows exponentially with the distance. 
+Usual mist in the real world. 
+##IMPORTANT##: EXP mode ignores the ##near## and ##far## values, 
+only uses the ##density##.
+
+3. ##RAYDIUM_FOG_MODE_EXP2## - The fog grows twice exponentially with the 
+distance. Used when the observer is inside a cloud/mist.
+##IMPORTANT##: EXP2 mode ignores the ##near## and ##far## values, 
+only uses the ##density##.
 **/
 
-__rayapi int raydium_fog_mode_get(void);
-/**
-Returns an integer with the current mode of the fog. See table below:
-GL_LINEAR	0x2601	9729
-GL_EXP		0x0800	2048
-GL_EXP2		0x0801	2049
-**/
-
-__rayapi void raydium_fog_density_set(GLfloat density);
+__rayapi void raydium_fog_density(GLfloat density);
 /**
 Sets the density of the fog.
 Useless if you are using LINEAR mode.
 **/
-__rayapi float raydium_fog_density_get(void);
-/**
-Returns the density of the fog.
-**/
-__rayapi void raydium_fog_near_set(GLfloat near);
+
+__rayapi void raydium_fog_near(GLfloat near);
 /**
 Sets the near point to apply the fog.
-Useless if you are using EXP o EXP2 modes.
+Useless if you are using EXP or EXP2 modes.
 **/
-__rayapi float raydium_fog_near_get(void);
-/**
-Returns de near point of the fog.
-**/
-__rayapi void raydium_fog_far_set(GLfloat far);
+
+__rayapi void raydium_fog_far(GLfloat far);
 /**
 Sets the far point of the fog.
-Useless if you are using EXP o EXP2 modes.
-**/
-__rayapi float raydium_fog_far_get(void);
-/**
-Return the far point of the fog.
+Useless if you are using EXP or EXP2 modes.
 **/
 
 __rayapi void raydium_fog_apply(void);
 /**
 Used to apply changes in your setup of fog.
-Also is used to continue a previously stopped fog. See: raydium_fog_wait(void) below.
+Also is used to continue a previously stopped fog. 
+See: ##raydium_fog_wait()## below.
 **/
 
 __rayapi void raydium_fog_wait(void);
 /**
-With this funciont you can deactivate TEMPORALY the fog, but the internal state
-of the fog in raydium won't change, so when you use raydium_fog_apply, the fog will continue
-like it was before being stoped.
-It's very usefull for certain rendering effects that need to stop the fog temporaly.
+With this function you can deactivate TEMPORALY the fog, but the internal state
+of the fog in Raydium won't change, so when you use raydium_fog_apply, the fog 
+will continue like it was before being stoped.
+It's very usefull for certain rendering effects that need to 
+stop the fog temporaly.
 **/
+
+__rayapi void raydium_fog_volumetric_support(void);
+/**
+With this function, you're saying to Raydium that you want a support
+for volumetric fog in you application. Call this function as soon as possible
+after engine init, since it will change the way Raydium renders objects (think
+about display lists).
+**/
+
+__rayapi void raydium_fog_volumetric_enable(void);
+/**
+When you call this function, fog is no more applied using fragment depth,
+but using ##RENDER_VOLUMETRIC_FOG_AXIS## (see config.h).
+You must have called ##raydium_fog_volumetric_support()## before enabling
+volumetric fog.
+**/
+
+__rayapi void raydium_fog_volumetric_disable(void);
+/**
+Reset fog sytem to default behavior (fragment depth).
+**/
+
 
 #endif

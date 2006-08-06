@@ -17,6 +17,7 @@ void raydium_register_api(void);
 #ifndef WIN32
 void raydium_live_init(void);
 #endif
+void raydium_fog_init(void);
 void raydium_video_init(void);
 void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
@@ -82,6 +83,7 @@ free(raydium_texture_ptr[i]);
 */
 
 raydium_init_lights();
+raydium_fog_init();
 raydium_init_objects();
 raydium_network_init();
 raydium_timecall_init();
@@ -170,7 +172,6 @@ for(i=0;i<4;i++)
 raydium_osd_color[i]=1.f;
 
 raydium_background_color_change(1,1,1,1);
-raydium_fog_apply();
 
 glEnable(GL_TEXTURE_2D);
 glEnable(GL_DEPTH_TEST);
