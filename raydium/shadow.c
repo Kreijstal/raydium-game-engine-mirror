@@ -168,7 +168,7 @@ glLoadIdentity();
 gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
 	  raydium_light_position[raydium_shadow_light][1]*0,
 	  raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
-    
+
 glDisable(GL_LIGHTING);
 glDisable(GL_TEXTURE_2D);
     
@@ -176,12 +176,15 @@ glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1
 
 raydium_shadow_rendering=1;
 glPushMatrix();
-//raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
 #ifdef ODE_SUPPORT 
+//raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
 raydium_ode_draw_all(4);
 #endif
 glPopMatrix();
 raydium_shadow_rendering=0;
+raydium_clear_color_update();
+if(raydium_light_enabled_tag)
+    glEnable(GL_LIGHTING);
 
 #ifdef DEBUG_SHADOW_MAP_VIEW
 glutSwapBuffers();
