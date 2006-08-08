@@ -55,7 +55,8 @@
 // debug ODE Network interface (verbose !)
 //#define DEBUG_ODENET
 
-// movie linear framerate (1/x sec) (starts recording, too)
+// enable movie linear framerate (1/x sec) 
+// press F11 and see movie/ subdir [or create it]
 //#define DEBUG_MOVIE 25
 
 // allow vertex lighting for lightmaps textures
