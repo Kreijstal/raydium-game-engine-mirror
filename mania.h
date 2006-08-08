@@ -124,6 +124,8 @@ char str[RAYDIUM_MAX_NAME_LEN];
 float x,y,z;
 float vx,vy,vz;
 float rvx,rvy,rvz;
+float nx,ny,nz;
+float rnx,rny,rnz;
 float tx,ty,tz;
 int rot,flags,type;
 int obj;
@@ -154,7 +156,7 @@ if(!box)
     }
 
 
-fprintf(tri,"0\n");
+fprintf(tri,"1\n");
 while(1)
 {
 c=fgetc(in);
@@ -193,11 +195,19 @@ switch(c)
 	    vx=raydium_vertex_x[i];
 	    vy=raydium_vertex_y[i];
 	    vz=raydium_vertex_z[i];
+	    nx=raydium_vertex_normal_visu_x[i];
+	    ny=raydium_vertex_normal_visu_y[i];
+	    nz=raydium_vertex_normal_visu_z[i];
 	    vx-=0.5;
 	    vy-=0.5;
+
 	    rvx=vx*raydium_trigo_cos(rot) - vy*raydium_trigo_sin(rot);
 	    rvy=vx*raydium_trigo_sin(rot) + vy*raydium_trigo_cos(rot);
 	    rvz=vz;
+	    rnx=nx*raydium_trigo_cos(rot) - ny*raydium_trigo_sin(rot);
+	    rny=nx*raydium_trigo_sin(rot) + ny*raydium_trigo_cos(rot);
+	    rnz=nz;
+
 	    rvx+=0.5;
 	    rvy+=0.5;
 	    rvx+=x;
@@ -209,7 +219,7 @@ switch(c)
 	    rvx+=MOVE_X;
 	    rvy+=MOVE_Y;
 	    rvz+=MOVE_Z;
-	    fprintf(tri,"%f %f %f %f %f %s\n",rvx,rvy,rvz,raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[raydium_vertex_texture[i]]);
+	    fprintf(tri,"%f %f %f %f %f %f %f %f %s\n",rvx,rvy,rvz,rnx,rny,rnz,raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[raydium_vertex_texture[i]]);
 	    }
 	break;    
     case 'd':
