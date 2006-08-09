@@ -19,14 +19,16 @@
 
 #include "particle2.h"
 
+// proto
+void raydium_ode_internal_particle_genetator_deleted_callback(int gen);
+
+
 void raydium_particle_name_auto(char *prefix, char *dest)
 {
 static int counter;
 sprintf(dest,"%s_particle_%i",prefix,counter);
 counter++;
 }
-
-
 
 void raydium_particle_init(void)
 {
@@ -77,19 +79,14 @@ return -1;
 
 void raydium_particle_generator_delete(int gen)
 {
-int i;
 
 if(!raydium_particle_generator_isvalid(gen))
     {
     raydium_log("particle: cannot delete generator: invalid name or index");
     return;
     }
+raydium_ode_internal_particle_genetator_deleted_callback(gen);
 raydium_particle_generators[gen].state=0;
-
-for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].state &&
-	raydium_ode_element[i].particle==gen)
-	    raydium_ode_element[i].particle=-1;
 }
 
 void raydium_particle_generator_delete_name(char *gen)

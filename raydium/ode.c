@@ -3812,6 +3812,16 @@ raydium_particle_time_factor=perc/100.f;
 raydium_object_anim_time_factor=perc/100.f;
 }
 
+void raydium_ode_internal_particle_genetator_deleted_callback(int gen)
+{
+int i;
+
+for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    if(raydium_ode_element[i].state &&
+	raydium_ode_element[i].particle==gen)
+	    raydium_ode_element[i].particle=-1;
+}
+
 void raydium_ode_element_particle(int elem, char *filename)
 {
 if(!raydium_ode_element_isvalid(elem))
