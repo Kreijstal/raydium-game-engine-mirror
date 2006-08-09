@@ -593,9 +593,16 @@ void myglutGetEvents (void)
             case XK_F11:    result = GLUT_KEY_F11;    break;
             case XK_F12:    result = GLUT_KEY_F12;    break;
 
+	    case XK_KP_Left:
             case XK_Left:   result = GLUT_KEY_LEFT;   break;
+
+	    case XK_KP_Right:
             case XK_Right:  result = GLUT_KEY_RIGHT;  break;
+
+	    case XK_KP_Up:
             case XK_Up:     result = GLUT_KEY_UP;     break;
+
+	    case XK_KP_Down:
             case XK_Down:   result = GLUT_KEY_DOWN;   break;
 
             case XK_KP_Prior:
