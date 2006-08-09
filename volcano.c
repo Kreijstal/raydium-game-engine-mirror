@@ -31,9 +31,16 @@ char *rocks[]={"rock0.tri","rock1.tri","rock2.tri"};
 #define ROCK_TAG	10
 #define WATER_TAG	11
 
+int sound_water,sound_rock;
+float needed_water_volume;
+
 char collide(int e1, int e2, dContact *n)
 {
 int t1,t2;
+int rock,i;
+dReal *vel;
+float speed;
+
 
 t1=raydium_ode_element_tag_get(e1);
 t2=raydium_ode_element_tag_get(e2);
@@ -42,30 +49,34 @@ if( (t1==RAYDIUM_ODE_TAG_GROUND && t2==WATER_TAG) ||
     (t2==RAYDIUM_ODE_TAG_GROUND && t1==WATER_TAG) )
 	return 0;
 
+
+rock=-1;
+if(t1==ROCK_TAG)
+    rock=e1;
+if(t2==ROCK_TAG)
+    rock=e2;
+
+if(rock>=0)
+    {
+    vel=raydium_ode_element_linearvelocity_get(rock);
+    speed=0;
+    for(i=0;i<3;i++)
+	speed+=raydium_trigo_abs(vel[i]);
+    }
+
+
 if(t1==ROCK_TAG || t2==ROCK_TAG)
     {
     char name[255];
 
     if(t1==WATER_TAG || t2==WATER_TAG) // rock vs. water
 	{
-	int rock,i;
-	dReal *vel;
+	int i;
 	dReal op[3];
-	float speed;
 	
 	sprintf(name,"water-%i-%i",e1,e2);
 	if(raydium_particle_generator_find(name)>=0)
 	    return 0;
-
-	if(t1==ROCK_TAG)
-	    rock=e1;
-	else
-	    rock=e2;
-
-	vel=raydium_ode_element_linearvelocity_get(rock);
-	speed=0;
-	for(i=0;i<3;i++)
-	    speed+=raydium_trigo_abs(vel[i]);
 
 	//printf("%f\n",speed);	
 	if(speed>4)
@@ -79,6 +90,13 @@ if(t1==ROCK_TAG || t2==ROCK_TAG)
 	    op[i]=vel[i]*-1;
 	raydium_ode_element_addforce(rock,op);	
 
+	needed_water_volume+=speed/100;
+/*	if(!raydium_sound_IsPlaying(sound_water) && speed>5)
+	    {
+	    raydium_sound_SourcePlay(sound_water);
+	    raydium_sound_SetSourcePos(sound_water,n->geom.pos);
+	    }
+*/
 	return 0;
 	}
     else // ground vs. rock
@@ -90,6 +108,11 @@ if(t1==ROCK_TAG || t2==ROCK_TAG)
 	    return 1;
 	raydium_particle_generator_load("volcano_e_collide.prt",name);
 	raydium_particle_generator_move_name(name,n->geom.pos);
+	if(!raydium_sound_IsPlaying(sound_rock) && speed>5)
+	    {
+	    raydium_sound_SourcePlay(sound_rock);
+	    raydium_sound_SetSourcePos(sound_rock,n->geom.pos);
+	    }
 	}
     }
 
@@ -134,7 +157,9 @@ if(countdown<=0 && raydium_random_i(0,15)==0)
 	countdown=0.3;
 	}
 
+    secs+=raydium_frame_time/2;
     countdown-=raydium_frame_time;
+    needed_water_volume=0;
 
     if(raydium_key_last==5)
         raydium_light_position[0][2]=100;
@@ -143,7 +168,6 @@ if(countdown<=0 && raydium_random_i(0,15)==0)
     if(raydium_key_last==7)
         raydium_light_position[0][2]=300;
     
-    secs+=raydium_frame_time/2;
 
     raydium_clear_frame();
     
@@ -310,6 +334,10 @@ if(raydium_key[GLUT_KEY_F12])
 
 raydium_osd_draw_name("logo_raydium.tga",85,5,95,20);
 raydium_rendering_finish();
+
+if(needed_water_volume>1)
+    needed_water_volume=1;
+raydium_sound_SetSourceGain(sound_water,needed_water_volume);
 }
 
 
@@ -372,6 +400,15 @@ int main(int argc, char **argv)
     raydium_particle_generator_move_name("dust",volcano_center);
     raydium_ode_object_box_add("water",raydium_ode_object_find("GLOBAL"),0,200,200,20,RAYDIUM_ODE_STATIC,WATER_TAG,"");
     raydium_ode_element_move_name_3f("water",0,0,-10);
+
+    raydium_sound_DefaultReferenceDistance=10.f;
+    raydium_sound_load_music("volcano.ogg");
+    sound_water=raydium_sound_LoadWav("splash.wav");
+    sound_rock=raydium_sound_LoadWav("rockbounce1.wav");
+    raydium_sound_SourcePlay(sound_water);
+    raydium_sound_SetSourceGain(sound_water,0);
+    raydium_sound_SetSourceLoop(sound_rock,0);
+    
 
     raydium_callback(&display);
     return(0);
