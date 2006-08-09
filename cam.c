@@ -26,7 +26,7 @@ char model[RAYDIUM_MAX_NAME_LEN];
 
 GLfloat light_color[] = {1.0, 0.9, 0.8, 1.0};
 
-FILE *out;
+FILE *out,*out1;
 
 void display(void)
 {
@@ -79,14 +79,23 @@ if(raydium_key_last==1032)
     {
     GLfloat from[]={1,1,1,1};
     GLfloat to[]={1,1,1,0};
+
+    GLfloat pos[3];
+    GLfloat pos2[3];
+
     fprintf(out,"%f %f %f %f %f\n",cam_pos_z,cam_pos_x,-cam_pos_y,raydium_projection_fov,roll);
-//    raydium_osd_printf(50,50,20,0.5,"font2.tga","^cADDED");
+    
+    pos[0]=10;
+    pos[1]=0;
+    pos[2]=0;
+    raydium_trigo_rotate(pos,0,cam_angle_y,cam_angle_x,pos2);
+    
+    fprintf(out1,"%f %f %f %f %f\n",cam_pos_z+pos2[0],cam_pos_x+pos2[1],-cam_pos_y+pos2[2],raydium_projection_fov,roll);
     raydium_osd_fade_from(from,to,0.2,NULL);
-//    raydium_log("Added a new pos to camera path file");
     }
 
 raydium_osd_logo("logo.tga");
-raydium_osd_printf(2,98,16,0.48,"font2.tga","^fF1/F2: Zoom - F3/F4: Roll - Space: add path point - generates cam.cam file");
+raydium_osd_printf(2,98,16,0.48,"font2.tga","^fF1/F2: Zoom - F3/F4: Roll - Space: add path point - see cam.cam / cam1.cam");
     
 raydium_rendering_finish();
 }
@@ -120,9 +129,16 @@ int main(int argc, char **argv)
     raydium_init_cli_option("model",model);
 
     out=fopen("cam.cam","wt");
+    out1=fopen("cam1.cam","wt");
+
     if(!out)
 	{
 	raydium_log("cannot open cam.cam (w)");
+	return 1;
+	}
+    if(!out1)
+	{
+	raydium_log("cannot open cam1.cam (w)");
 	return 1;
 	}
     raydium_callback(&display);

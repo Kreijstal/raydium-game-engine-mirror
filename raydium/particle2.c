@@ -77,12 +77,19 @@ return -1;
 
 void raydium_particle_generator_delete(int gen)
 {
+int i;
+
 if(!raydium_particle_generator_isvalid(gen))
     {
     raydium_log("particle: cannot delete generator: invalid name or index");
     return;
     }
 raydium_particle_generators[gen].state=0;
+
+for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    if(raydium_ode_element[i].state &&
+	raydium_ode_element[i].particle==gen)
+	    raydium_ode_element[i].particle=-1;
 }
 
 void raydium_particle_generator_delete_name(char *gen)
@@ -679,7 +686,7 @@ if(gen->ttl_generator<=0)
     {
     // we've a OnDelete callback for particles and not for
     // generators ... 'must code it.
-    gen->state=0; // delete generator
+    raydium_particle_generator_delete(gen->id);
     }
 }
 
