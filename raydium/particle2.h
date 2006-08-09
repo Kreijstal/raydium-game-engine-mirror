@@ -10,7 +10,7 @@
 #define PARTICLE2_H
 
 #define RAYDIUM_MAX_PARTICLES	8192
-#define RAYDIUM_MAX_GENERATORS	16
+#define RAYDIUM_MAX_GENERATORS	64
 
 typedef struct raydium_particle_Generator
 {

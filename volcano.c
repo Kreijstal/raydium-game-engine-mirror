@@ -4,6 +4,7 @@
     License: GPL - GNU General Public License, see "gpl.txt" file.
 */
 
+// ** Volcano **
 // Small Raydium demo, mainly featuring shaders (water) and particles. Enjoy !
 
 #include "raydium/index.c"
@@ -320,7 +321,7 @@ int main(int argc, char **argv)
     raydium_init_args(argc,argv);
     
     // window creation
-    raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"willou.c based water shader effect");
+    raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Volcano - Shaders and Particles");
     raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
     raydium_projection_near=0.1;
     raydium_projection_far=400;
