@@ -209,6 +209,12 @@ __rayapi int raydium_sound_SourceUnpause (int src);
 Returns 0 if ok, -1 if error.
 **/
 
+__rayapi signed char raydium_sound_IsPlaying(int src);
+/**
+Returns true (1) if ##src## is playing, false (0) if stopped or invalid.
+**/
+
+
 __rayapi void raydium_sound_close (void);
 /**
 Internal use.

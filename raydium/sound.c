@@ -588,6 +588,23 @@ int raydium_sound_SourcePause(int src)
  return(result);
 }
 
+
+// RETURNS PLAYING STATE
+signed char raydium_sound_IsPlaying(int src)
+{
+ int result;
+ int sourcestate;
+
+ result=raydium_sound_SourceVerify(src);
+
+ if(result!=0)
+    return 0;
+
+ alGetSourcei(raydium_sound_source[src],AL_SOURCE_STATE,&sourcestate);
+ return sourcestate==AL_PLAYING;
+}
+
+
 //UNPAUSE A SOURCE
 int raydium_sound_SourceUnpause(int src)
 {
