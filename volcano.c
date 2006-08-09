@@ -337,7 +337,11 @@ raydium_rendering_finish();
 
 if(needed_water_volume>1)
     needed_water_volume=1;
+#ifdef WIN32
+raydium_sound_SetSourceGain(sound_water,needed_water_volume*5);
+#else
 raydium_sound_SetSourceGain(sound_water,needed_water_volume);
+#endif
 }
 
 
@@ -400,8 +404,11 @@ int main(int argc, char **argv)
     raydium_particle_generator_move_name("dust",volcano_center);
     raydium_ode_object_box_add("water",raydium_ode_object_find("GLOBAL"),0,200,200,20,RAYDIUM_ODE_STATIC,WATER_TAG,"");
     raydium_ode_element_move_name_3f("water",0,0,-10);
-
+#ifdef WIN32
+    raydium_sound_DefaultReferenceDistance=50.f;
+#else
     raydium_sound_DefaultReferenceDistance=10.f;
+#endif
     raydium_sound_load_music("volcano.ogg");
     sound_water=raydium_sound_LoadWav("splash.wav");
     sound_rock=raydium_sound_LoadWav("rockbounce1.wav");
