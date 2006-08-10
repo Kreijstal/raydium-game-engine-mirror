@@ -44,11 +44,20 @@ return -1;
 
 function getVersion()
 {
-$file="../main.c";
+$file="../common.h";
 $f=file($file);
-$l=getTagLine("char *raydium_version",$f);
-$v=explode('"',trim($f[$l]));
-return $v[1];
+$maj=getTagLine("#define RAYDIUM_MAJOR",$f);
+$min=getTagLine("#define RAYDIUM_MINOR",$f);
+
+$maj=str_replace("\t"," ",trim($f[$maj]));
+$min=str_replace("\t"," ",trim($f[$min]));
+
+$maj=explode(" ",$maj);
+$min=explode(" ",$min);
+$maj=$maj[count($maj)-1];
+$min=$min[count($min)-1];
+
+return sprintf("%d.%03d",$maj,$min);
 }
 
 function getMain($filename,$offset)
