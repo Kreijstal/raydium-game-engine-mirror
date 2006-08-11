@@ -95,6 +95,7 @@ function read_repositories_file_internal($repos,&$repos_list)
 // Get repositories from a given (local) file
 function read_repositories_file($repos)
 {
+global $raydium_php_rayphp_path;
 $repos_list=array();
     
 $tmp=str_pad("",256);
@@ -103,7 +104,7 @@ raydium_file_home_path_cpy($repos,$tmp);
 if(file_exists($tmp))
     read_repositories_file_internal($tmp,$repos_list);
 
-read_repositories_file_internal("rayphp/".$repos,$repos_list);
+read_repositories_file_internal($raydium_php_rayphp_path."/".$repos,$repos_list);
 
 return $repos_list;
 }

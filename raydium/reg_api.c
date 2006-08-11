@@ -371,6 +371,9 @@ raydium_register_function(C2PHP(raydium_ode_network_element_send_iterative),"ray
 raydium_register_function(C2PHP(raydium_ode_network_element_send_random),"raydium_ode_element_send_random");
 #endif
 
+// php.c
+raydium_register_variable(raydium_php_rayphp_path,RAYDIUM_REGISTER_STR,"raydium_php_rayphp_path");
+
 
 raydium_log("RegAPI: OK");
 done=1;

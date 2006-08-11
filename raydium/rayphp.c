@@ -13,6 +13,19 @@
 // proto
 signed char raydium_file_readable(char *filename);
 
+
+void raydium_php_rayphp_path_change(char *path)
+{
+strcpy(raydium_php_rayphp_path,path);
+}
+
+char *raydium_php_internal_rayphp_path(char *file)
+{
+static char ret[RAYDIUM_MAX_NAME_LEN*2];
+sprintf(ret,"%s/%s",raydium_php_rayphp_path,file);
+return ret;
+}
+
 int raydium_rayphp_repository_file_get(char *path)
 {
 int status;
@@ -33,7 +46,7 @@ raydium_register_variable(file,RAYDIUM_REGISTER_STR,"filename");
 raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
 raydium_register_variable(&force,RAYDIUM_REGISTER_INT,"force");
 
-raydium_php_exec("rayphp/getfile.php");
+raydium_php_exec(raydium_php_internal_rayphp_path("getfile.php"));
 
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
@@ -56,7 +69,7 @@ raydium_register_variable(file,RAYDIUM_REGISTER_STR,"filename");
 raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
 raydium_register_variable(&depends,RAYDIUM_REGISTER_INT,"depends");
 
-raydium_php_exec("rayphp/putfile.php");
+raydium_php_exec(raydium_php_internal_rayphp_path("putfile.php"));
 
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
@@ -90,7 +103,7 @@ raydium_register_variable(res,RAYDIUM_REGISTER_STR,"list");
 raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
 raydium_register_variable(&maxsize,RAYDIUM_REGISTER_INT,"size");
 
-raydium_php_exec("rayphp/listrepos.php");
+raydium_php_exec(raydium_php_internal_rayphp_path("listrepos.php"));
 
 raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
@@ -128,7 +141,7 @@ signed char raydium_rayphp_http_test(void)
 int status=0;
 
 raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
-raydium_php_exec("rayphp/httptest.php");
+raydium_php_exec(raydium_php_internal_rayphp_path("httptest.php"));
 raydium_register_variable_unregister_last();
 
 return status;

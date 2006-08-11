@@ -20,6 +20,14 @@ configuration database. Example : %%Generic-Proxy;http://proxy:3128/%%
 The trailing ##/## (slash) must be present.
 **/
 
+__rayapi void raydium_php_rayphp_path_change(char *path);
+/**
+By default, Raydium search for a "rayphp/" subdirectory in the application
+directory. It's possible to change this using a --rayphp command line
+switch, or using this function. You must call the function as soon as possible,
+before any use of RayPHP.
+**/
+
 __rayapi int raydium_rayphp_repository_file_get (char *path);
 /**
 Will contact R3S servers for downloading ##path## file.

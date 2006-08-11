@@ -114,17 +114,16 @@ SG(server_context) = NULL;
 int raydium_php_exec(char *name)  
 {
     FILE *fp;
-    char prefix[32];
+    char suffix[32];
     zval *vars[RAYDIUM_MAX_REG_VARIABLES]; 
     zend_file_handle file_handle;
     zend_llist global_vars;
     int i,nvars;
 
 
-    // Do not use rayphp auto-downloading for rayphp/* files ! :)
-    strncpy(prefix,name,7);
-    prefix[7]=0;
-    if(strcasecmp(prefix,"rayphp/"))
+    // Do not use rayphp auto-downloading for *.php files
+    raydium_file_ext(suffix,name);
+    if(strcasecmp(suffix,"php"))
     {
 	fp=raydium_file_fopen(name,"rb");
 	if(!fp)
@@ -304,5 +303,6 @@ strcpy(path,PHP_INI_PATH);
 raydium_sapi_module.php_ini_path_override=path;
 sapi_startup(&raydium_sapi_module);
 raydium_atexit(raydium_php_close);
+raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,"rayphp");
 raydium_log("PHP support: OK");
 }
