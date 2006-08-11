@@ -729,6 +729,17 @@ Experimental code. Unimplemented, yet.
 Symmetric function, see ##raydium_ode_element_fix##.
 **/
 
+__rayapi void raydium_ode_element_mass(int elem, dReal mass);
+/**
+Change ##mass## the the ##elem## element. Obviously, you can't change the
+mass of static element.
+**/
+
+__rayapi void raydium_ode_element_mass_name(char *elem, dReal mass);
+/**
+Same as above, but using element's name.
+**/
+
 __rayapi void raydium_ode_element_move (int elem, dReal * pos);
 /**
 This function will move element ##elem## to ##pos##.

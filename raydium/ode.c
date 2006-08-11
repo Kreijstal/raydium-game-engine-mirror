@@ -1292,6 +1292,45 @@ for(i=0;i<RAYDIUM_ODE_ELEMENT_MAX_FIXING;i++)
 raydium_ode_element_delete(e,1);
 }
 
+
+void raydium_ode_element_mass(int elem, dReal mass)
+{
+dMass m;
+
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: Cannot change mass of element: invalid index or name");
+    return;
+    }
+
+if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
+    {
+    raydium_log("ODE: Error: Cannot change mass of a static element");
+    return;
+    }
+
+if(dGeomGetClass(raydium_ode_element[elem].geom)==dBoxClass)
+    {    
+    dMassSetSphere(&m,1,dGeomSphereGetRadius(raydium_ode_element[elem].geom));
+    }
+else
+    {
+    dVector3 size;
+    dGeomBoxGetLengths(raydium_ode_element[elem].geom,size);
+    dMassSetBox(&m,1,size[0],size[1],size[2]);
+    }
+
+dMassAdjust(&m,mass);
+dBodySetMass(raydium_ode_element[elem].body,&m);
+}
+
+
+void raydium_ode_element_mass_name(char *elem, dReal mass)
+{
+raydium_ode_element_mass(raydium_ode_element_find(elem),mass);
+}
+
+
 void raydium_ode_element_move(int elem, dReal *pos)
 {
 if(!raydium_ode_element_isvalid(elem))
