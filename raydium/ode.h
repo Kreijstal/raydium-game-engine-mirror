@@ -66,6 +66,7 @@
 #define RAYDIUM_ODE_DRAW_AABB			2
 #define RAYDIUM_ODE_DRAW_RAY			3
 #define RAYDIUM_ODE_DRAW_SHADOWERS		4
+#define RAYDIUM_ODE_DRAW_NORMAL_NO_POST		5
 
 __global dWorldID 	raydium_ode_world;
 __global dSpaceID 	raydium_ode_space;

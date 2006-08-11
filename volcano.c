@@ -196,7 +196,7 @@ raydium_light_update_position_all();
 
 glEnable(GL_CLIP_PLANE0);
 glClipPlane(GL_CLIP_PLANE0, plane_reflection);
-raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL_NO_POST);
 raydium_light_position[0][0]=a;
 raydium_light_position[0][1]=b;
 raydium_light_position[0][2]=c;
@@ -228,7 +228,7 @@ raydium_fog_volumetric_enable();
 
 //glEnable(GL_CLIP_PLANE0);
 //glClipPlane(GL_CLIP_PLANE0, plane_refraction);
-raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL_NO_POST);
 //glDisable(GL_CLIP_PLANE0);
 glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("refraction"));
 glCopyTexSubImage2D(GL_TEXTURE_2D,0, 0,0, 0,0, water_textures_size, water_textures_size);

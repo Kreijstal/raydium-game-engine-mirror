@@ -3172,7 +3172,9 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
      {
 	
-     if(names==RAYDIUM_ODE_DRAW_NORMAL || names==RAYDIUM_ODE_DRAW_SHADOWERS)
+     if(names==RAYDIUM_ODE_DRAW_NORMAL || 
+        names==RAYDIUM_ODE_DRAW_SHADOWERS ||
+	names==RAYDIUM_ODE_DRAW_NORMAL_NO_POST)
         {
 	
 	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
@@ -3421,7 +3423,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	}
      }
 
-if(names==RAYDIUM_ODE_DRAW_NORMAL)
+if(names==RAYDIUM_ODE_DRAW_NORMAL) // but not RAYDIUM_ODE_DRAW_NORMAL_NO_POST
     {
     raydium_hdr_map(); // create HDR map
     raydium_shadow_map_render();
