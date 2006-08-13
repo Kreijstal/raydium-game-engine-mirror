@@ -24,6 +24,9 @@ sapi_globals_struct *sapi_globals;
 void ***tsrm_ls;
 #endif
 
+// proto
+void raydium_file_ext(char *dest, char *from);
+
 static int sapi_raydium_send_headers(sapi_headers_struct *sapi_headers TSRMLS_DC)
 {
 return SAPI_HEADER_SENT_SUCCESSFULLY;

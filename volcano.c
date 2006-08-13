@@ -353,7 +353,7 @@ int main(int argc, char **argv)
     raydium_init_args(argc,argv);
     
     // window creation
-    raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Volcano - Shaders and Particles");
+    raydium_window_create(512,384,RAYDIUM_RENDERING_FULLSCREEN,"Volcano - Shaders and Particles");
     raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
     raydium_projection_near=0.1;
     raydium_projection_far=400;
