@@ -160,9 +160,19 @@ __rayapi int raydium_gui_button_read(int window, int widget, char *str);
 Internal use. Button read accessor (dummy).
 **/
 
+__rayapi int raydium_gui_button_write(int window, int widget, char *str);
+/**
+Internal use. Button write accessor.
+**/
+
 __rayapi int raydium_gui_label_read(int window, int widget, char *str);
 /**
 Internal use. Label read accessor (dummy).
+**/
+
+__rayapi int raydium_gui_label_write(int window, int widget, char *str);
+/**
+Internal use. Label write accessor.
 **/
 
 __rayapi int raydium_gui_track_read(int window, int widget, char *str);
@@ -170,9 +180,19 @@ __rayapi int raydium_gui_track_read(int window, int widget, char *str);
 Internal use. Track read accessor.
 **/
 
+__rayapi int raydium_gui_track_write(int window, int widget, int value);
+/**
+Internal use. Track write accessor.
+**/
+
 __rayapi int raydium_gui_edit_read(int window, int widget, char *str);
 /**
 Internal use. Edit read accessor.
+**/
+
+__rayapi int raydium_gui_edit_write(int window, int widget, char *str);
+/**
+Internal use. Edit write accessor.
 **/
 
 __rayapi int raydium_gui_check_read(int window, int widget, char *str);
@@ -180,9 +200,19 @@ __rayapi int raydium_gui_check_read(int window, int widget, char *str);
 Internal use. Check read accessor.
 **/
 
+__rayapi int raydium_gui_check_write(int window, int widget, int value);
+/**
+Internal use. Check write accessor.
+**/
+
 __rayapi int raydium_gui_combo_read(int window, int widget, char *str);
 /**
 Internal use. Combo read accessor.
+**/
+
+__rayapi int raydium_gui_combo_write(int window, int widget, int value);
+/**
+Internal use. Combo write accessor.
 **/
 
 __rayapi int raydium_gui_zone_read(int window, int widget, char *str);
@@ -349,6 +379,25 @@ __rayapi int raydium_gui_read_widget(raydium_gui_Object *w, char *str);
 /**
 Same as ##raydium_gui_read()##, but using a ##raydium_gui_Object## pointer.
 Useful for button callbacks, for example.
+**/
+
+__rayapi signed char raydium_gui_write(int window, int widget, char *str, int value);
+/**
+With this function, you can change the value of a ##widget## on a ##window##.
+- With buttons, you must use ##str## to change caption.
+- With labels, you must use ##str## to change caption.
+- With tracks, you must use ##value## to change the current value.
+- With edits, you must use ##str## to change text.
+- With cheks, you must use ##value##: ##1## means "checked", ##0## "unchecked".
+- With combos, you must use ##value## as an ID to change wich entry is selected.
+
+Returns 1 when all is OK, 0 when it fails and -1 when nothing was changed.
+**/
+
+__rayapi int raydium_gui_write_name(char *window, char *widget, char *str, int value);
+/**
+Same as above, but ##window## and ##widget## are resolved thru names, and
+not numeric id.
 **/
 
 __rayapi int raydium_gui_button_clicked(void);

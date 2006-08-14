@@ -1396,6 +1396,22 @@ str[0]=0;
 return 0;
 }
 
+int raydium_gui_button_write(int window, int widget, char *str)
+{
+raydium_gui_Button *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+strcpy(w->caption,str);
+return 1;
+}
+
+
 int raydium_gui_label_read(int window, int widget, char *str)
 {
 if(!raydium_gui_widget_isvalid(widget,window))
@@ -1407,6 +1423,22 @@ if(!raydium_gui_widget_isvalid(widget,window))
 str[0]=0;
 return 0;
 }
+
+int raydium_gui_label_write(int window, int widget, char *str)
+{
+raydium_gui_Label *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+strcpy(w->caption,str);
+return 1;
+}
+
 
 int raydium_gui_track_read(int window, int widget, char *str)
 {
@@ -1426,6 +1458,25 @@ sprintf(str,"%i|%f|%i|%i",t->current,
 return t->current;
 }
 
+int raydium_gui_track_write(int window, int widget, int value)
+{
+raydium_gui_Track *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+
+if(value<w->min || value>w->max)
+    return 0;
+
+w->current=value;
+return 1;
+}
+
 int raydium_gui_edit_read(int window, int widget, char *str)
 {
 raydium_gui_Edit *e;
@@ -1439,6 +1490,22 @@ e=raydium_gui_windows[window].widgets[widget].widget;
 strcpy(str,e->text);
 return strlen(e->text);
 }
+
+int raydium_gui_edit_write(int window, int widget, char *str)
+{
+raydium_gui_Edit *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+strcpy(w->text,str);
+return 1;
+}
+
 
 int raydium_gui_check_read(int window, int widget, char *str)
 {
@@ -1454,6 +1521,22 @@ sprintf(str,"%s",(c->checked?"true":"false"));
 return c->checked;
 }
 
+int raydium_gui_check_write(int window, int widget, int value)
+{
+raydium_gui_Check *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+
+w->checked=(value?1:0);
+return 1;
+}
+
 int raydium_gui_combo_read(int window, int widget, char *str)
 {
 raydium_gui_Combo *c;
@@ -1466,6 +1549,21 @@ if(!raydium_gui_widget_isvalid(widget,window))
 c=raydium_gui_windows[window].widgets[widget].widget;
 strcpy(str,c->current_str);
 return c->current;
+}
+
+int raydium_gui_combo_write(int window, int widget, int value)
+{
+raydium_gui_Combo *w;
+
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+w=raydium_gui_windows[window].widgets[widget].widget;
+w->current=value;
+return 1;
 }
 
 int raydium_gui_zone_read(int window, int widget, char *str)
@@ -2281,7 +2379,7 @@ int raydium_gui_read(int window, int widget, char *str)
     else 
 	raydium_log("gui: error: cannot read widget value: invalid name or index");
 
-return 0;    
+return 0;
 }
 
 int raydium_gui_read_name(char *window, char *widget, char *str)
@@ -2300,6 +2398,44 @@ if(!w)
     }
 return raydium_gui_read(w->window,w->id,str);
 }
+
+
+signed char raydium_gui_write(int window, int widget, char *str, int value)
+{
+if(!raydium_gui_widget_isvalid(widget,window))
+    {
+    raydium_log("gui: error: cannot write widget value: invalid name or index");
+    return 0;
+    }
+
+switch(raydium_gui_windows[window].widgets[widget].type)
+{
+case RAYDIUM_GUI_BUTTON:
+    return raydium_gui_button_write(window,widget,str);
+case RAYDIUM_GUI_LABEL:
+    return raydium_gui_label_write(window,widget,str);
+case RAYDIUM_GUI_TRACK:
+    return raydium_gui_track_write(window,widget,value);
+case RAYDIUM_GUI_EDIT:
+    return raydium_gui_edit_write(window,widget,str);
+case RAYDIUM_GUI_CHECK:
+    return raydium_gui_check_write(window,widget,value);
+case RAYDIUM_GUI_COMBO:
+    return raydium_gui_combo_write(window,widget,value);
+//case RAYDIUM_GUI_ZONE:
+    // ...
+}
+
+return -1; // nothing was done
+}
+
+int raydium_gui_write_name(char *window, char *widget, char *str, int value)
+{
+int w;
+w=raydium_gui_window_find(window);
+return raydium_gui_write(w,raydium_gui_widget_find(widget,w),str,value);
+}
+
 
 int raydium_gui_button_clicked(void)
 {
