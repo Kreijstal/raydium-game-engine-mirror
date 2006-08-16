@@ -202,9 +202,14 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
 	raydium_joy_init_vars();
 #ifndef WIN32
-	raydium_init_cli_option_default("joydev",name,"/dev/js0");
-	    
-	raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
+	if(raydium_init_cli_option_default("joydev",name,"/dev/js0"))	    
+	    raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
+	else
+	{
+	raydium_joy=open("/dev/js0",O_RDONLY|O_NONBLOCK);
+	if(raydium_joy==-1)
+	    raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
+	}
 
 	raydium_init_cli_option_default("evdev",name,"/dev/input/event0");
 	    
@@ -217,13 +222,12 @@ int autocenter=5;         /* default value. between 0 and 100 */
 	
 	if(raydium_joy==-1)
 	{
-		raydium_log("joy: FAILED\n\t ERROR opening /dev/js0");
+		raydium_log("joy: FAILED (cannot open /dev/js0 and /dev/input/js0)");
 		raydium_joy=0;
 	}
 	else
 	{
-		raydium_log("joy: OK\n\t Cool, we have a joystick");
-		//raydium_joy=1;
+		raydium_log("joy: OK (found)");
 	}
 
 	if(raydium_joy)
