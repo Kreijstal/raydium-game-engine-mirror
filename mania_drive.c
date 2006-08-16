@@ -89,6 +89,8 @@ void btnBackToMainMenu(raydium_gui_Object *w);
 void build_gui_NeedRestart(void);
 void build_gui_Story(void);
 void showMessage(char *file, int id);
+void build_gui_Solo(void);
+
 
 #define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
 #define NET_RESTART	(RAYDIUM_NETWORK_PACKET_BASE+2)
@@ -464,6 +466,18 @@ mode=MODE_SOLO;
 }
 
 
+void btnOtherTracksSolo(raydium_gui_Object *w)
+{
+char track[RAYDIUM_MAX_NAME_LEN];
+
+raydium_gui_read_name("menu","cboTrack",track);
+raydium_parser_db_set("ManiaDrive-LastSoloTrack",track);
+
+drive(track);
+mode=MODE_SOLO;
+}
+
+
 void btnBackToMainMenu(raydium_gui_Object *w)
 {
 change_music_volume(music_volume);
@@ -724,6 +738,12 @@ raydium_gui_window_delete_name("menu");
 credits_start();
 }
 
+void btnSoloTracks(raydium_gui_Object *w)
+{
+raydium_gui_window_delete_name("menu");
+build_gui_Solo();
+}
+
 void gui_menu_BestTime(raydium_gui_Object *w)
 {
 char track[RAYDIUM_MAX_NAME_LEN];
@@ -849,6 +869,45 @@ if(!net)
 gui_start();
 }
 
+void build_gui_Solo(void)
+{
+int handle;
+char l[RAYDIUM_GUI_DATASIZE];
+char lasttrack[RAYDIUM_MAX_NAME_LEN];
+int ilt;
+
+handle=raydium_gui_window_create("menu",48,10,50,40);
+
+raydium_parser_db_get("ManiaDrive-LastSoloTrack",lasttrack,"");
+
+raydium_register_variable(l,RAYDIUM_REGISTER_STR,"list");
+raydium_php_exec("mania_localtracks.php");
+raydium_register_variable_unregister_last();
+
+ilt=raydium_gui_list_id(lasttrack,l);
+if(ilt<0) ilt=0;
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblMode",handle,50,90,"- Other Tracks -",0,0,0);
+
+raydium_gui_widget_sizes(0,0,16);
+raydium_gui_label_create("lbl1",handle,50,75,"Here, you can play offline with:",0.7,0,0);
+raydium_gui_label_create("lbl2",handle,50,65,"- User tracks",0.7,0,0);
+raydium_gui_label_create("lbl3",handle,50,55,"- Downloaded internet tracks",0.7,0,0);
+
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblTrack",handle,24,35,"Track :",0,0,0);
+raydium_gui_widget_sizes(25,4,18);
+raydium_gui_combo_create("cboTrack",handle,37,30,l,ilt);
+
+raydium_gui_widget_sizes(15,5,18);
+raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnOtherTracksSolo);
+
+raydium_gui_widget_sizes(6,3,14);
+raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+
+gui_start();
+}
 
 // Return 1 if "filename" story is completed
 signed char build_gui_Story_sub(int handle, char *filename, float x1, float x2, int id)
@@ -947,6 +1006,9 @@ completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
+raydium_gui_widget_sizes(20,4,18);
+raydium_gui_button_create("btnSolo",handle,40,3,"Other tracks",btnSoloTracks);
+
 gui_start();
 
 if(completed && !congrats)
