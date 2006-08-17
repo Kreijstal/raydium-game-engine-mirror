@@ -1,6 +1,6 @@
 // ManiaDrive Track Editor - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="0.34";
+char *version="0.40";
 char *title="CQFD Corp. Mania2";
 
 // since we play with our own camera and not Raydium's one:
