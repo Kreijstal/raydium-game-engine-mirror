@@ -19,9 +19,10 @@
 
 #include "particle2.h"
 
+#ifdef ODE_SUPPORT
 // proto
 void raydium_ode_internal_particle_genetator_deleted_callback(int gen);
-
+#endif
 
 void raydium_particle_name_auto(char *prefix, char *dest)
 {
@@ -85,7 +86,9 @@ if(!raydium_particle_generator_isvalid(gen))
     raydium_log("particle: cannot delete generator: invalid name or index");
     return;
     }
+#ifdef ODE_SUPPORT
 raydium_ode_internal_particle_genetator_deleted_callback(gen);
+#endif
 raydium_particle_generators[gen].state=0;
 }
 

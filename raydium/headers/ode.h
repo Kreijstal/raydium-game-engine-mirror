@@ -1492,6 +1492,11 @@ __rayapi void raydium_ode_element_particle_point_name (char *elem, char *filenam
 Same as above, using element's name.
 **/
 
+void raydium_ode_internal_particle_genetator_deleted_callback(int gen);
+/**
+Internal callback.
+**/
+
 __rayapi void raydium_camera_smooth_path_to_element (char *path, int element, GLfloat path_step, GLfloat smooth_step);
 /**
 This function is a clone of ##raydium_camera_smooth_path_to_pos## dedicated to
