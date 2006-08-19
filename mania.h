@@ -155,6 +155,7 @@ if(!box)
     return 0;
     }
 
+unlink(raydium_file_home_path("mania.dat"));
 
 fprintf(tri,"1\n");
 while(1)
