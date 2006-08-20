@@ -20,7 +20,7 @@
 */
 
 #define RAYDIUM_MAJOR	0
-#define RAYDIUM_MINOR	704
+#define RAYDIUM_MINOR	705
 
 #ifdef WIN32
 # ifdef RAYDLL

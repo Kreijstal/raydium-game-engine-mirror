@@ -1,6 +1,6 @@
 // ManiaDrive - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="ManiaDrive 1.1custom";
+char *version="ManiaDrive 1.2custom";
 
 #include "raydium/index.c"
 
