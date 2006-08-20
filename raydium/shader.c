@@ -60,6 +60,10 @@ void raydium_shader_infolog(GLhandleARB shader)
 {
 char log[4096];
 int len;
+
+if(!raydium_shader_support)
+    return;
+
 glGetInfoLogARB(shader,4096,&len,log);
 raydium_log("==== Shader Log ====");
 raydium_log("%s",log);
@@ -72,6 +76,10 @@ int i;
 int ret;
 char *str_vert;
 char *str_frag;
+
+
+if(!raydium_shader_support)
+    return -1;
 
 if(raydium_shader_find(name)>=0)
     {
@@ -167,6 +175,9 @@ int raydium_shader_variable(int shader, char *name)
 {
 int ret;
 
+if(!raydium_shader_support)
+    return -1;
+
 if(!raydium_shader_isvalid(shader))
     {
     raydium_log("shader: cannot get variable: Invalid shader index or name");
@@ -184,6 +195,9 @@ return ret;
 
 signed char raydium_shader_var_i(int var_id, int value)
 {
+if(!raydium_shader_support)
+    return 0;
+
 glUniform1iARB(var_id,value);
 return 1;
 }
@@ -193,6 +207,9 @@ signed char raydium_shader_var_i_name(char *shader, char *variable, int value)
 signed char ret;
 GLhandleARB curr;
 int sid;
+
+if(!raydium_shader_support)
+    return 0;
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
@@ -204,6 +221,9 @@ return ret;
 
 signed char raydium_shader_var_f(int var_id, float value)
 {
+if(!raydium_shader_support)
+    return 0;
+
 glUniform1fARB(var_id,value);
 return 1;
 }
@@ -213,6 +233,9 @@ signed char raydium_shader_var_f_name(char *shader, char *variable, float value)
 signed char ret;
 GLhandleARB curr;
 int sid;
+
+if(!raydium_shader_support)
+    return 0;
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
@@ -224,6 +247,9 @@ return ret;
 
 signed char raydium_shader_var_2f(int var_id, float value1, float value2)
 {
+if(!raydium_shader_support)
+    return 0;
+
 glUniform2fARB(var_id,value1,value2);
 return 1;
 }
@@ -233,6 +259,9 @@ signed char raydium_shader_var_2f_name(char *shader, char *variable, float value
 signed char ret;
 GLhandleARB curr;
 int sid;
+
+if(!raydium_shader_support)
+    return 0;
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
@@ -244,6 +273,9 @@ return ret;
 
 signed char raydium_shader_var_3f(int var_id, float value1, float value2, float value3)
 {
+if(!raydium_shader_support)
+    return 0;
+
 glUniform3fARB(var_id,value1,value2,value3);
 return 1;
 }
@@ -253,6 +285,9 @@ signed char raydium_shader_var_3f_name(char *shader, char *variable, float value
 signed char ret;
 GLhandleARB curr;
 int sid;
+
+if(!raydium_shader_support)
+    return 0;
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
@@ -264,6 +299,9 @@ return ret;
 
 signed char raydium_shader_var_4f(int var_id, float value1, float value2, float value3, float value4)
 {
+if(!raydium_shader_support)
+    return 0;
+
 glUniform4fARB(var_id,value1,value2,value3,value4);
 return 1;
 }
@@ -273,6 +311,9 @@ signed char raydium_shader_var_4f_name(char *shader, char *variable, float value
 signed char ret;
 GLhandleARB curr;
 int sid;
+
+if(!raydium_shader_support)
+    return 0;
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
@@ -286,6 +327,9 @@ return ret;
 // -1 = off
 signed char raydium_shader_current(int shader)
 {
+if(!raydium_shader_support)
+    return 0;
+
 if(shader==-1)
     {
     glUseProgramObjectARB(0);
