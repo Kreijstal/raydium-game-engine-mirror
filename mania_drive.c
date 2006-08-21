@@ -1413,6 +1413,7 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 	raydium_log("invalid statement '%s'",var);
 
     }
+fclose(fp);
 }
 
 
