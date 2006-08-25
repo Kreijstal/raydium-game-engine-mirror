@@ -36,7 +36,7 @@ search_here($data_dir);
 $off=file("mania_drive.story.beg");
 $off=array_merge($off,file("mania_drive.story.pro"));
 
-var_dump($tracks);
+//var_dump($tracks);
 
 array_walk($off,'trim_value');
 $tracks=array_diff($tracks,$off);
