@@ -1309,7 +1309,7 @@ if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
     return;
     }
 
-if(dGeomGetClass(raydium_ode_element[elem].geom)==dBoxClass)
+if(dGeomGetClass(raydium_ode_element[elem].geom)==dSphereClass)
     {    
     dMassSetSphere(&m,1,dGeomSphereGetRadius(raydium_ode_element[elem].geom));
     }
@@ -3362,10 +3362,11 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	    
 	        }
 	    else
-		//if(dGeomGetClass(raydium_ode_element[i].geom)==dSphereClass)
+		if(dGeomGetClass(raydium_ode_element[i].geom)==dSphereClass)
 		{
 	        glutWireSphere(dGeomSphereGetRadius(raydium_ode_element[i].geom),10,10);
 	        }
+	    // else TriMesh ...
 		
 	
 	    p=dGeomGetPosition(raydium_ode_element[i].geom);
