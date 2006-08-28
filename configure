@@ -58,7 +58,7 @@ usage_print()
     echo "  --help               this text"
     echo "  --force-ode-install  Force ODE local reinstall"
     echo "  --force-php-install  Force PHP 5 local reinstall"
-    echo "  --ode-cvs            Use ODE CVS version"
+#    echo "  --ode-cvs            Use ODE CVS version"
     echo "  --disable-x          Disable X/GL/GLU test (server)"
     exit 0
 }
@@ -82,18 +82,20 @@ ode_install()
 
 # download
     if [ $ode_cvs = "true" ]; then
+	# DEPRECATED !!! (removed from help)
 	echo "   Downloading from CVS ..."
 	cvs -d:pserver:anonymous:@cvs.sourceforge.net:/cvsroot/opende login
 	exit_if_error "$?" "No CVS client installed, or network problem"
 	cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/opende co -r UNSTABLE -P raydium/ode
 	exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
     else
-	echo "   Downloading 'stable CVS' version from Raydium website ..."
-	if [ -f "raydium/ode.tar.gz" ]; then
-	    rm -f raydium/ode.tar.gz
+	if [ ! -f "raydium/ode.tar.gz" ]; then
+	    echo "   Downloading 'stable CVS' version from Raydium website ..."
+	    wget -O raydium/ode.tar.gz http://freeway.raydium.org/data/stable_mirrors/ode.tar.gz
+	    exit_if_error "$?" "Error downloading."
+	else
+	    echo "   Using previously downloaded file. Remove raydium/ode.tar.gz before launching configure, if needed"
 	fi
-	wget -O raydium/ode.tar.gz http://freeway.raydium.org/data/stable_mirrors/ode.tar.gz
-	exit_if_error "$?" "Error downloading."
 	
     # uncompress
 	echo "   Uncompressing ..."
@@ -169,6 +171,11 @@ php_install()
     bison --version > /dev/null 2>&1
     exit_if_error "$?" "bison not found in path. Please install bison to compile PHP"
 
+# test lex
+    echo "   Testing 'lex' ..."
+    lex --version > /dev/null 2>&1
+    exit_if_error "$?" "lex not found in path. Please install lex/flex to compile PHP"
+
 # test libcurl
     echo "   Testing 'libcurl' ..."
     curl-config --version > /dev/null 2>&1
@@ -180,9 +187,13 @@ php_install()
     exit_if_error "$?" "xml2-config not found in path. Please install 'libxml2-devel' to compile PHP"
 
 # download
-    echo "   Downloading latest PHP5 ..."
-    wget -O raydium/php-latest.tar.gz http://snaps.php.net/php5.2-latest.tar.gz
-    exit_if_error "$?" "wget not found, or network error"
+    if [ ! -f raydium/php-latest.tar.gz ]; then
+	echo "   Downloading latest PHP5 ..."
+	wget -O raydium/php-latest.tar.gz http://snaps.php.net/php5.2-latest.tar.gz
+	exit_if_error "$?" "wget not found, or network error"
+    else
+	echo "   Using previously downloaded file. Remove raydium/php-latest.tar.gz before launching configure, if needed"
+    fi
 
 # uncompress
     echo "   Uncompressing ..."
@@ -191,6 +202,11 @@ php_install()
     ret=$?
     cd - > /dev/null
     exit_if_error "$ret" "tar not found, or corrupted archive"
+
+# delete previous extraction dir, if any
+    if [ -d raydium/php ]; then
+	rm -rf raydium/php
+    fi
 
 # rename
     php=`ls -dt raydium/php5*`
