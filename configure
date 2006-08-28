@@ -100,6 +100,9 @@ ode_install()
     # uncompress
 	echo "   Uncompressing ..."
 	cd raydium
+	if [ -d "ode" ]; then
+	    rm -rf ode
+        fi
 	tar xzf ode.tar.gz
 	ret=$?
 	cd - > /dev/null
