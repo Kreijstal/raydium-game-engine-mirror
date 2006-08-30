@@ -4,10 +4,6 @@
     License: GPL - GNU General Public License, see "gpl.txt" file.
 */
 
-// -------------
-// doc
-// mania_drive ! (current "home" functions, and network [net tracks & lan])
-
 #ifndef DONT_INCLUDE_HEADERS
 #include "index.h"
 #else
