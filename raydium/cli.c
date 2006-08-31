@@ -63,6 +63,9 @@ void raydium_init_internal_homedir_find(char *app_name)
 FILE *fp;
 char *str;
 char *str2;
+#ifdef WIN32
+char *empty="";
+#endif
         
 raydium_homedir[0]=0;
 #ifndef WIN32
@@ -78,8 +81,13 @@ str=getenv("HOMEDRIVE");
 str2=getenv("HOMEPATH");
 if(!str || !str2)
     {
-    raydium_log("ERROR ! Unable to find HOMEDRIVE and HOMEPATH variables !");
-    exit(100);
+    str=empty;
+    str2=getenv("windir");
+        if(!str2)
+            {
+            raydium_log("ERROR ! Unable to find HOMEDRIVE/HOMEPATH/windir variables !");
+            exit(100);
+            }
     }
 #endif
 
@@ -141,7 +149,7 @@ raydium_log("command line args: OK");
 
 #ifndef RAYDIUM_NETWORK_ONLY
 raydium_file_dirname(raydium_init_wd,raydium_init_argv[0]);
-if(!chdir(raydium_init_wd))
+if(chdir(raydium_init_wd)!=-1)
     raydium_log("chdir to '%s': OK",raydium_init_wd);
 else
     perror("chdir");    
