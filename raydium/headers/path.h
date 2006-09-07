@@ -67,11 +67,11 @@ __rayapi signed char raydium_path_string_from(char *str);
 Reset all registrations (only current directory stays) and replace it with the
 provided formated string. Here it is an example for such string:
 
-%%/home/xfennec/.myapp/data:./media/textures/*.tga:./media/fonts/*.tga:
-./media/shaders/*.vert:./media/shaders/*.frag:./media/meshes/*.tri:
-./media/themes/*.gui:./media/particles/*.prt:./media/cars/*.car:
-./media/cams/*.cam:./media%%
-(do not include line feeds)
+%%/home/xfennec/.myapp/data:./media/textures/X.tga:./media/fonts/X.tga:
+./media/shaders/X.vert:./media/shaders/X.frag:./media/meshes/X.tri:
+./media/themes/X.gui:./media/particles/X.prt:./media/cars/X.car:
+./media/cams/X.cam:./media%%
+(do not include line feeds and replace 'X' by '*')
 
 This string is based an the example at the top of this chapter.
 **/
