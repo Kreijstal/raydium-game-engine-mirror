@@ -126,6 +126,7 @@ int raydium_sound_LoadWav(const char *fname)
  ALenum format;
  ALvoid *data;
  FILE *fp;
+ char translated[RAYDIUM_MAX_NAME_LEN];
 
 #ifndef WIN32
 #ifdef ALUT_API_MAJOR_VERSION
@@ -161,19 +162,24 @@ int raydium_sound_LoadWav(const char *fname)
  }
  fclose(fp);
 
+raydium_path_resolv((char *)fname,translated,'r');
+
 #ifdef ALUT_API_MAJOR_VERSION_BUT_WIN32
- data=alutLoadMemoryFromFile(fname,&format,&size,&freq);
+ data=alutLoadMemoryFromFile(translated,&format,&size,&freq);
      raydium_sound_verify("alutLoadMemoryFromFile");
 
- if(data)
+ if(!data)
+    {
+    raydium_log("sound: SHOULD NEVER HAPPEND !");
+    return -1;
+    }
+
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
      raydium_sound_verify("alBufferData");
 
- if(data)
   free(data);
-
 #else
-  alutLoadWAVFile((ALbyte *)fname,&format,&data,&size,&freq,&boolean);
+  alutLoadWAVFile((ALbyte *)translated,&format,&data,&size,&freq,&boolean);
      raydium_sound_verify("alutLoadWAVFile");
 
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
@@ -185,7 +191,7 @@ int raydium_sound_LoadWav(const char *fname)
 
  raydium_sound_top_buffer++;
  raydium_sound_InitSource(snum);
-  return(snum);
+ return(snum);
 }
 
 
