@@ -214,6 +214,17 @@ __rayapi void raydium_ode_init (void);
 Will initialize all RayODE interface. Never call this function by yourself.
 **/
 
+__rayapi void raydium_ode_gravity(dReal *vect);
+/**
+Change world gravity using ##vect##, a 3 floats arrays.
+Default value is {0,0,-1}.
+**/
+
+__rayapi void raydium_ode_gravity_3f(dReal gx, dReal gy, dReal gz);
+/**
+Same as above, using 3 float values.
+**/
+
 __rayapi signed char raydium_ode_object_isvalid (int i);
 /**
 Will return 0 (false) if object ##i## is not valid (free slot or out of bounds)

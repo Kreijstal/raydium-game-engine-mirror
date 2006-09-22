@@ -206,6 +206,19 @@ raydium_log("physics: ODE Net: %i element(s)/packet",raydium_ode_network_MaxElem
 raydium_log("physics: OK");
 }
 
+void raydium_ode_gravity(dReal *vect)
+{
+dWorldSetGravity(raydium_ode_world,vect[0],vect[1],vect[2]);
+}
+
+void raydium_ode_gravity_3f(dReal gx, dReal gy, dReal gz)
+{
+dReal vect[3];
+vect[0]=gx;
+vect[1]=gy;
+vect[2]=gz;
+raydium_ode_gravity(vect);
+}
 
 signed char raydium_ode_object_isvalid(int i)
 {
