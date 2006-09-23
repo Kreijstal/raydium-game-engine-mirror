@@ -10,6 +10,9 @@
 #include "headers/sound.h"
 #endif
 
+// proto
+void raydium_path_resolv(char *in, char *out, char mode);
+
 // There's way too much "#ifdef" in this file, but eh ... OpenAL becomes
 // complex when you comes to portability ...
 
