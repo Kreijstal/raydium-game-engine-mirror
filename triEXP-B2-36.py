@@ -7,7 +7,11 @@ Group: 'Export'
 Tooltip: 'Export to .tri format with normals'
 """
 
+#import rpdb2;
+#rpdb2.start_embedded_debugger("test",True)
+
 import Blender
+
 from Blender import NMesh
 
 class source:
@@ -33,8 +37,8 @@ class source:
 					u=face.uv[i][0]
 					v=face.uv[i][1]
 					self.file.write("%f %f %f %f %f %f %f %f %s\n" % (vlist[indx].co[0],vlist[indx].co[1],vlist[indx].co[2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],u,v,face.image.name))
-				    else:   
-					self.file.write("%f %f %f %f %f %f 0 0 rgb(0.5,0.5,0.5)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2]))
+				    else:
+					self.file.write("%f %f %f %f %f %f 0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
 					
 
 
@@ -66,4 +70,5 @@ def fs_callback(filename):
 	obj.close
 	print "Exported to %s. Textures must be .tga, uncompressed, origin NOT at lower-left.\n" % (filename)
 
+#fs_callback("tt.tri")
 Blender.Window.FileSelector(fs_callback, "Export Raydium Tri")
