@@ -8,7 +8,7 @@
 #include "index.h"
 #else
 #include "headers/ode.h"
-#endif 
+#endif
 
 // TODO:
 // load object from file
@@ -86,7 +86,7 @@ void raydium_ode_init_joint(int i)
 raydium_ode_joint[i].id=i;
 raydium_ode_joint[i].name[0]=0;
 raydium_ode_joint[i].state=0;
-raydium_ode_joint[i].mesh=-1;	    
+raydium_ode_joint[i].mesh=-1;
 raydium_ode_joint[i].joint=NULL;
 //raydium_ode_joint[i].hinge2correct=0;
 raydium_ode_joint[i].breakableforce=0;
@@ -300,7 +300,7 @@ for(i=1;i<TriCount;i++)
 	{
 	max_index=i;
 	max_val=tmp;
-	}    
+	}
     }
 
 //printf("%i %s %i %i\n",TriCount,e->name,TriIndices[0],TriIndices[1]);
@@ -609,7 +609,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add force to a static element");
     return;
     }
-		
+
 dBodyAddForce(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
 }
 
@@ -639,7 +639,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add torque to a static element");
     return;
     }
-		
+
 dBodyAddTorque(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
 }
 
@@ -956,7 +956,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
 //	dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
-     }  
+     }
      else raydium_ode_element[i].body=0;
 
      raydium_ode_element[i].geom=dCreateSphere(0,radius);
@@ -1029,7 +1029,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
 //	dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
-     } 
+     }
      else raydium_ode_element[i].body=0;
 
      raydium_ode_element[i].geom=dCreateBox(0,tx,ty,tz);
@@ -1169,7 +1169,7 @@ if(raydium_ode_element_find(name)>=0)
 if(nelems<1)
     {
     raydium_log("ODE: Error: Must fix at least one element");
-    return -1;    
+    return -1;
     }
 
 for(i=0;i<nelems;i++)
@@ -1197,7 +1197,7 @@ for(i=1;i<nelems;i++)
 
 // 2 - create new element (using AABB from elements)
 dGeomGetAABB(raydium_ode_element[elem[0]].geom,aabbR);
-    
+
 for(i=1;i<nelems;i++)
     {
     dGeomGetAABB(raydium_ode_element[elem[i]].geom,aabb);
@@ -1323,7 +1323,7 @@ if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
     }
 
 if(dGeomGetClass(raydium_ode_element[elem].geom)==dSphereClass)
-    {    
+    {
     dMassSetSphere(&m,1,dGeomSphereGetRadius(raydium_ode_element[elem].geom));
     }
 else
@@ -1697,7 +1697,7 @@ if( raydium_ode_element[elem1].state==RAYDIUM_ODE_STATIC ||
     raydium_ode_element[elem2].state==RAYDIUM_ODE_STATIC )
     {
     raydium_log("ODE: Error: Cannot attach a static element");
-    return -1;    
+    return -1;
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
@@ -1757,7 +1757,7 @@ if( raydium_ode_element[elem1].state==RAYDIUM_ODE_STATIC ||
     raydium_ode_element[elem2].state==RAYDIUM_ODE_STATIC )
     {
     raydium_log("ODE: Error: Cannot attach a static element");
-    return -1;    
+    return -1;
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
@@ -1814,7 +1814,7 @@ if( raydium_ode_element[elem1].state==RAYDIUM_ODE_STATIC ||
     raydium_ode_element[elem2].state==RAYDIUM_ODE_STATIC )
     {
     raydium_log("ODE: Error: Cannot attach a static element");
-    return -1;    
+    return -1;
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
@@ -1869,7 +1869,7 @@ if( raydium_ode_element[elem1].state==RAYDIUM_ODE_STATIC ||
     raydium_ode_element[elem2].state==RAYDIUM_ODE_STATIC )
     {
     raydium_log("ODE: Error: Cannot attach a static element");
-    return -1;    
+    return -1;
     }
 
 //raydium_log("ODE: Warning: fixed joint slows down physics !");
@@ -2011,7 +2011,7 @@ if(!raydium_ode_joint_isvalid(j))
 // may crash if joint is disconnected at one of his ends !
 elem1=dBodyGetData(dJointGetBody(raydium_ode_joint[j].joint,0));
 elem2=dBodyGetData(dJointGetBody(raydium_ode_joint[j].joint,1));
-    
+
 *e1=elem1->id;
 *e2=elem2->id;
 }
@@ -2033,7 +2033,7 @@ if(raydium_ode_motor_isvalid(j))
     // test if element is attached:
     if(raydium_ode_motor[j].rocket_element<0)
 	return;
-	
+
     speed=raydium_ode_motor[j].speed;
     if(raydium_ode_motor[j].rocket_playermovement &&
        !raydium_ode_element[raydium_ode_motor[j].rocket_element]._touched )
@@ -2048,7 +2048,7 @@ if(raydium_ode_motor_isvalid(j))
 			     raydium_ode_motor[j].rocket_position[1],
 			     raydium_ode_motor[j].rocket_position[2]);
     return;
-    }        
+    }
     // if motor is anything else than a rocket:
     for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
 	if(raydium_ode_motor[j].joints[i]>=0)
@@ -2059,7 +2059,7 @@ if(raydium_ode_motor_isvalid(j))
 	int fmax;
 	int type;
 	char cancel=0;
-	
+
 	switch(raydium_ode_motor[j].joints_axe[i])
 	    {
 	    case 0:
@@ -2078,9 +2078,9 @@ if(raydium_ode_motor_isvalid(j))
 		cancel=1;
 		raydium_log("ODE: Motor: Invalid axe for this joint (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
 	    }
-	
+
 	type=dJointGetType(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
-    	    
+
 	switch(type)
 	    {
 	    case dJointTypeHinge2:
@@ -2100,35 +2100,35 @@ if(raydium_ode_motor_isvalid(j))
 		cancel=1;
 		raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
 	    }
-	    
-	
+
+
 	if(cancel) continue; // previous tests failed
-	
+
 	if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ENGINE)
 		{
 		dReal speed;
 		dReal force;
 		speed=raydium_ode_motor[j].speed*raydium_ode_motor[j].gears[raydium_ode_motor[j].gear];
-		
+
 		if(raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]==0.0)
 		    force=0;
 		else
 		    force=raydium_ode_motor[j].force*(1/raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]);
-		
+
 //		force=raydium_ode_motor[j].force;
 //		raydium_log("speed=%f force=%f",speed,force);
 		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,speed);
 		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,force);
 		}
-		
+
 	if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
 	    {
 		dReal v;
 		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,raydium_ode_motor[j].force);
-		v = raydium_ode_motor[j].angle - 
+		v = raydium_ode_motor[j].angle -
 		    GetAngle(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
 		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,v*10);
-	    }	    	
+	    }
 	}
     return;
     }
@@ -2272,17 +2272,17 @@ dReal c;
 if(raydium_ode_element_isvalid(e))
     {
     matrix=(dReal *)dGeomGetRotation(raydium_ode_element[e].geom);
-    
+
     if(matrix[2] < 1-epsilon && matrix[2] > -1+epsilon)
     {
 	*ry=-asin(matrix[2]);
 	c=cos(*ry);
 	*rx= atan2(matrix[6]/c,matrix[10]/c);
 	*rz= atan2(matrix[1]/c,matrix[0]/c);
-    } 
-    else 
-    {       
-	*rz=0;   
+    }
+    else
+    {
+	*rz=0;
 	*ry=-atan2(matrix[2],0);
 	*rx= atan2(-matrix[9],matrix[5]);
     }
@@ -2309,20 +2309,20 @@ dReal c;
 if(raydium_ode_element_isvalid(e))
     {
     matrix=(dReal *)dGeomGetRotation(raydium_ode_element[e].geom);
-    
+
     if(matrix[8] < 1-epsilon && matrix[8] > -1+epsilon)
     {
 	*ry=-asin(matrix[8]);
 	c=cos(*ry);
 	*rx= atan2(matrix[9]/c,matrix[10]/c);
 	*rz= atan2(matrix[4]/c,matrix[0]/c);
-    }       
-    else    
-    {       
-	*rz=0;   
+    }
+    else
+    {
+	*rz=0;
 	*ry=-atan2(matrix[8],0);
 	*rx= atan2(-matrix[6],matrix[5]);
-    }       
+    }
 
     // rad to deg
     //(*rx)*=180/PI;
@@ -2363,7 +2363,7 @@ void raydium_ode_element_RelPointPos(int e, dReal px, dReal py, dReal pz, dReal 
 if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot get RelPointPos: invalid index or name");
-    return;    
+    return;
     }
 
 if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
@@ -2394,7 +2394,7 @@ if(raydium_ode_motor_find(name)>=0)
 if(!raydium_ode_object_isvalid(obj))
     {
     raydium_log("ODE: Cannot add motor \"%s\": parent object is invalid",name);
-    return -1;    
+    return -1;
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
@@ -2402,7 +2402,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
      {
      strcpy(raydium_ode_motor[i].name,name);
      raydium_ode_motor[i].state=type;
-     raydium_ode_motor[i].object=obj;     
+     raydium_ode_motor[i].object=obj;
      return i;
      }
 raydium_log("ODE: No more motor slots ! aborting \"%s\" creation",name);
@@ -2422,17 +2422,17 @@ if(raydium_ode_motor_isvalid(motor) && raydium_ode_joint_isvalid(joint))
     // may crash if joint is disconnected at one of its ends !
     elem1=dBodyGetData(dJointGetBody(raydium_ode_joint[joint].joint,0));
     elem2=dBodyGetData(dJointGetBody(raydium_ode_joint[joint].joint,1));
-    
+
     e1=elem1->id;
     e2=elem2->id;
-    
+
     if(raydium_ode_motor[motor].object!=raydium_ode_element[e1].object &&
        raydium_ode_motor[motor].object!=raydium_ode_element[e2].object )
         {
 	raydium_log("ODE: Cannot attach motor: joint must be attached to at least one element from motor's object");
 	return;
-	}	
-    
+	}
+
     for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
 	if(raydium_ode_motor[motor].joints[i]<0)
 	    {
@@ -2475,7 +2475,7 @@ for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
 	velf+=sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]);
 	n++;
 	}
-if(n) 
+if(n)
     {
     velf/=n;
     if(gears) velf*=(1/raydium_trigo_abs(raydium_ode_motor[m].gears[raydium_ode_motor[m].gear]));
@@ -2503,7 +2503,7 @@ if(raydium_ode_motor[m].state!=RAYDIUM_ODE_MOTOR_ROCKET)
     raydium_log("ODE: Error: Cannot set rocket element: motor is not a rocket");
     return;
     }
-    
+
 raydium_ode_motor[m].rocket_element=element;
 raydium_ode_motor[m].rocket_position[0]=x;
 raydium_ode_motor[m].rocket_position[1]=y;
@@ -2652,7 +2652,7 @@ if(raydium_ode_element_delete_LOCK)
 // verify element state after user callback (element may be already deleted ! :)
 // note : this test is bad.. an new element may have taken the free slot ...
 // in facts, a user must not delete an element during his own OnDelete callback
-if(!raydium_ode_element_isvalid(e)) 
+if(!raydium_ode_element_isvalid(e))
     return 1; // delete is successfull thru user callback
 
 
@@ -2673,10 +2673,10 @@ if(deletejoints && raydium_ode_element[e].state!=RAYDIUM_ODE_STATIC)
 	    {
 	    j=dJointGetData(dBodyGetJoint(raydium_ode_element[e].body,i));
 	    if(j)
-		to_delete[i]=j->id; 
-	    else 
+		to_delete[i]=j->id;
+	    else
 		to_delete[i]=-1;
-	    }    
+	    }
 	// ... and delete joints
 	for(i=0;i<n_joints;i++)
 	  if(to_delete[i]>=0)
@@ -2740,8 +2740,8 @@ if(obj == raydium_ode_object_find("GLOBAL"))
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
     if(raydium_ode_motor[i].state &&
        raydium_ode_motor[i].object==obj)
-	raydium_ode_motor_delete(i);	
-    
+	raydium_ode_motor_delete(i);
+
 // Wow... group indices are unstable while deleting group's bodies !
 //for(i=0;i<dGeomGroupGetNumGeoms(raydium_ode_object[obj].group);i++)
 //    {
@@ -2801,7 +2801,7 @@ for(i=0;i<dBodyGetNumJoints(raydium_ode_element[element].body);i++)
 	e2=dJointGetBody(j->joint,1);
 	if(e1==raydium_ode_element[element].body) e1=0;
 	if(e2==raydium_ode_element[element].body) e2=0;
-	dJointAttach(j->joint,e1,e2);	
+	dJointAttach(j->joint,e1,e2);
 	}
     }
 // Well well well.. donno if dGeomGroupAdd removes body from previous
@@ -2971,23 +2971,23 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	dReal len;
 	dReal force;
 	elp=(dReal *)dGeomGetPosition(raydium_ode_element[i].geom);
-	
+
 	//raydium_log("Blow: %s",raydium_ode_element[i].name);
-	
+
 	// explosion to element vector
 	vect[0]=elp[0]-pos[0];
 	vect[1]=elp[1]-pos[1];
 	vect[2]=elp[2]-pos[2];
 	// distance from explosion
 	len=sqrt(vect[0]*vect[0] + vect[1]*vect[1] + vect[2]*vect[2]);
-	
+
 	if(len==0.f) continue;
 //	raydium_log("dist from core: %f (radius=%f)",len,radius);
 	// normalize vector
 	vect[0]/=len;
 	vect[1]/=len;
 	vect[2]/=len;
-	
+
 	if(len>radius) continue;
 	force = ((radius*radius) - (len*len)) / (radius * radius) * max_force;
 //	raydium_log("resulting force: %f (max force at core=%f)",force,max_force);
@@ -3075,7 +3075,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
      raydium_ode_explosion[i].config_propag=propag;
      raydium_ode_explosion[i].radius=0;
      memcpy(raydium_ode_explosion[i].position,pos,sizeof(dReal)*3);
-     
+
      f=raydium_ode_ExplosionCallback;
      if(f)
 	f(RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL,final_radius,propag,pos);
@@ -3218,19 +3218,19 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
       raydium_osd_printf_3D(res1[0],res1[1],res1[2],12,0.6,"font2.tga","<%s>",raydium_ode_joint[i].name);
      }
     }
-     
+
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
      {
-	
-     if(names==RAYDIUM_ODE_DRAW_NORMAL || 
+
+     if(names==RAYDIUM_ODE_DRAW_NORMAL ||
         names==RAYDIUM_ODE_DRAW_SHADOWERS ||
 	names==RAYDIUM_ODE_DRAW_NORMAL_NO_POST)
         {
-	
+
 	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
-	    continue;	
+	    continue;
 	if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && bef && !bef(i))
     	    continue;
 
@@ -3263,7 +3263,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	     dBodyGetRelPointPos(body,
 				raydium_ode_element[i].particle_offset[0],
 				raydium_ode_element[i].particle_offset[1],
-				raydium_ode_element[i].particle_offset[2],	    
+				raydium_ode_element[i].particle_offset[2],
 				res);
 	     dBodyDestroy(body);
 	    }
@@ -3273,14 +3273,14 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	     dBodyGetRelPointPos(raydium_ode_element[i].body,
 				raydium_ode_element[i].particle_offset[0],
 				raydium_ode_element[i].particle_offset[1],
-				raydium_ode_element[i].particle_offset[2],	    
-				res);	    
+				raydium_ode_element[i].particle_offset[2],
+				res);
 	    }
-	    
+
 	    raydium_particle_generator_move(
 		raydium_ode_element[i].particle,res);
 	    }
-	   
+
 	for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
 	  if(raydium_ode_element[i].fixed_elements[j])
 	    {
@@ -3318,7 +3318,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         {
 	const dReal *p;
 
-	
+
 	if(names==RAYDIUM_ODE_DRAW_DEBUG) // draw shape
 	    {
 	    raydium_rendering_internal_prepare_texture_render(0); // !!!
@@ -3354,7 +3354,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 		glVertex3f (-lx,-ly,-lz);
 		glVertex3f (-lx,-ly,lz);
 		glEnd();
-	    
+
     	        // top face
 	        glBegin (GL_TRIANGLE_FAN);
 	        glNormal3f (0,0,1);
@@ -3372,7 +3372,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	        glVertex3f (lx,ly,-lz);
 	        glVertex3f (lx,-ly,-lz);
 	        glEnd();
-	        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	    
+	        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	        }
 	    else
 		if(dGeomGetClass(raydium_ode_element[i].geom)==dSphereClass)
@@ -3380,24 +3380,24 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	        glutWireSphere(dGeomSphereGetRadius(raydium_ode_element[i].geom),10,10);
 	        }
 	    // else TriMesh ...
-		
-	
+
+
 	    p=dGeomGetPosition(raydium_ode_element[i].geom);
 	    if(raydium_ode_element[i]._touched)
 		raydium_osd_color_ega('c');
 	    else
 		raydium_osd_color_ega('f');
-		
+
 	    if(raydium_ode_element[i]._avoidedcol)
 		raydium_osd_color_ega('d');
-	
+
 	    if(!dGeomIsEnabled(raydium_ode_element[i].geom))
 		raydium_osd_color_ega('a');
 
 	    if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
 		!dBodyIsEnabled(raydium_ode_element[i].body) )
 		    raydium_osd_color_ega('0');
-	
+
 	    raydium_osd_printf_3D(p[0],p[1],p[2],12,0.6,"font2.tga","%i %s (%s) @ %i",i,raydium_ode_element[i].name,raydium_ode_object[raydium_ode_element[i].object].name,raydium_ode_element[i].distant_owner);
 	    }
 
@@ -3431,7 +3431,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    glVertex3f (aabb[0],aabb[2],aabb[4]);
 	    glVertex3f (aabb[0],aabb[2],aabb[5]);
 	    glEnd();
-	    
+
     	    // top face
 	    glBegin (GL_TRIANGLE_FAN);
 	    glNormal3f (0,0,1);
@@ -3451,7 +3451,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    glEnd();
 	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	    }
-	    
+
 	    if(names==RAYDIUM_ODE_DRAW_RAY)
 	    {
 	        if(raydium_ode_element[i].ray.state)
@@ -3462,9 +3462,11 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 		raydium_rendering_internal_prepare_texture_render(0); // !!!
     		raydium_texture_current_set_name("rgb(1,0,0)");
 		raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-		
-		dGeomRayGet(raydium_ode_element[i].ray.geom,start,dir);
-		len=dGeomRayGetLength(raydium_ode_element[i].ray.geom);
+        dGeomRayGet(raydium_ode_element[i].ray.geom,start,dir);
+
+        if ((len=raydium_ode_element[i].ray.min_dist)==0)  // Draw ray to first contact point if exist
+            len=dGeomRayGetLength(raydium_ode_element[i].ray.geom);
+
 		raydium_camera_replace();
 		glBegin(GL_LINES);
 		//printf("%f %f %f | %f %f %f\n",start[0],start[1],start[2],dir[0],dir[1],dir[2]);
@@ -3504,7 +3506,7 @@ f=raydium_ode_CollideCallback;
 r=raydium_ode_RayCallback;
 
 
-if(dGeomIsSpace (o1) || dGeomIsSpace (o2)) 
+if(dGeomIsSpace (o1) || dGeomIsSpace (o2))
     {
     raydium_ode_Object *oo1, *oo2;
     signed char (*g)(int,int);
@@ -3541,14 +3543,14 @@ e2=dGeomGetData(o2);
   n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
   if(n>=N-1)
     raydium_log("ODE: WARNING ! Not enought contact points available ! (%i max)",N);
-  if (n > 0) 
+  if (n > 0)
   {
-  
-    for (i=0; i<n; i++) 
-	{	
+
+    for (i=0; i<n; i++)
+	{
 	e1=dGeomGetData(contact[i].geom.g1);
 	e2=dGeomGetData(contact[i].geom.g2);
-	
+
 	if(e1==NULL || e2==NULL)
 	    continue; // Deleted, or not one of our elements
 
@@ -3573,7 +3575,7 @@ e2=dGeomGetData(o2);
 		e2->_avoidedcol=1;
 		continue; // avoid collision ! (where are moving from this object)
 		}
-	
+
 	erp=cfm=slip=0;
 
 	if(e1)
@@ -3583,7 +3585,7 @@ e2=dGeomGetData(o2);
 	    slip=e1->slip;
 	    count=1;
 	    }
-	    
+
 	if(e2)
 	    {
 	    erp+=e2->erp;
@@ -3591,21 +3593,21 @@ e2=dGeomGetData(o2);
 	    slip+=e2->slip;
 	    count++;
 	    }
-	    
+
 	if(count)
 	    {
 	    erp/=count;
 	    cfm/=count;
 	    slip/=count;
 	    }
-	    
+
 	contact[i].surface.mode = dContactSlip1 | dContactSlip2 |
 	dContactSoftERP | dContactSoftCFM | dContactApprox1;
 	contact[i].surface.mu = dInfinity;
 
 	contact[i].surface.slip1 = slip;
 	contact[i].surface.slip2 = slip;
-	
+
 	contact[i].surface.soft_erp = erp;
 	contact[i].surface.soft_cfm = cfm;
 
@@ -3623,7 +3625,7 @@ e2=dGeomGetData(o2);
 		if(!r(id1,id2,&contact[i])) continue;
 		}
 
-	    if(e1 && e2 && 
+	    if(e1 && e2 &&
 	    (e1->ray.min_dist > contact[i].geom.depth || e1->ray.min_dist==0) )
 		{
 		e1->ray.min_dist=contact[i].geom.depth;
@@ -3652,7 +3654,7 @@ e2=dGeomGetData(o2);
 		if(!r(id1,id2,&contact[i])) continue;
 		}
 
-	    if(e1 && e2 && 
+	    if(e1 && e2 &&
 	    (e2->ray.min_dist > contact[i].geom.depth || e2->ray.min_dist==0) )
 		{
 		e2->ray.min_dist=contact[i].geom.depth;
@@ -3668,7 +3670,7 @@ e2=dGeomGetData(o2);
 		}
 	    continue;
 	    }
-		
+
 	// raydium_ode_CollideCallback
 	if(f)
 	    {
@@ -3735,7 +3737,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    torqueinv[2]=torque[2]*-raydium_ode_element[i].rotfriction;
 	    dBodyAddTorque(raydium_ode_element[i].body,torqueinv[0],torqueinv[1],torqueinv[2]);
 	    }
-	
+
 	if(raydium_ode_element[i].ray.state)
 	    {
 	    // update ray position and direction
@@ -3768,7 +3770,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
 	 {
 	 // 2 - increment radius
 	 raydium_ode_explosion[i].radius+=raydium_ode_explosion[i].config_propag;
-	 
+
 	 // 3 - delete previous element if exists
 	 if(raydium_ode_explosion[i].element>=0)
 	    raydium_ode_element_delete(raydium_ode_explosion[i].element,0);
@@ -3814,20 +3816,20 @@ dWorldStep(raydium_ode_world,RAYDIUM_ODE_TIMESTEP);
 dJointGroupEmpty (raydium_ode_contactgroup);
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].state  && 
+    if(raydium_ode_element[i].state  &&
        raydium_ode_element[i].marked_as_deleted)
 	    raydium_ode_element_delete(i,1);
-    	    
+
 
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].state  	    && 
+    if(raydium_ode_element[i].state  	    &&
        raydium_ode_element[i]._movesfrom>=0 &&
        !raydium_ode_element[i]._avoidedcol  )
     	    raydium_ode_element[i]._movesfrom=-1;
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].state   && 
+    if(raydium_ode_element[i].state   &&
        raydium_ode_element[i].isplayer )
         {
 	dMatrix3 R;
@@ -3843,7 +3845,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         if(raydium_ode_element[i].ttl==0)
 	    raydium_ode_element_delete(i,1);
 	else
-    	    raydium_ode_element[i].ttl--;	
+    	    raydium_ode_element[i].ttl--;
 	}
 
 
@@ -3993,7 +3995,7 @@ raydium_camera_smooth_element_to_path_offset(raydium_ode_element_find(element),0
 
 
 // This function is provided "for fun" only. Not all effects are dumped:
-// Missing : shadows, forced colors, before/after callbacks, 
+// Missing : shadows, forced colors, before/after callbacks,
 // fixed elements, ...
 // Some code is pasted from file.c (and this is BAD ! :)
 
@@ -4018,7 +4020,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state && raydium_ode_element[i].mesh>=0)
      {
         int end;
-	
+
         dBodyID body;
 	dReal *pos;
 	dQuaternion rot;
@@ -4028,13 +4030,13 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	dBodySetPosition(body,pos[0],pos[1],pos[2]);
 	dBodySetQuaternion(body,rot);
 	k=raydium_ode_element[i].mesh;
-	
+
 	// should prepare "ode" instance here, too ...
 	if(raydium_object_anims[k]>0)
 	    end=raydium_object_start[k]+raydium_object_anim_len[k];
 	else
 	    end=raydium_object_end[k];
-	
+
 	for(j=raydium_object_start[k];j<end;j++)
 	{
 	  if(raydium_vertex_texture_multi[j])
@@ -4046,19 +4048,19 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	    }
 	else
 	    strcpy(text,raydium_texture_name[raydium_vertex_texture[j]]);
-													       
+
 	dBodyGetRelPointPos(body,
                         	raydium_vertex_x[j],
                         	raydium_vertex_y[j],
                         	raydium_vertex_z[j],
                         	res);
-				
+
 	dBodyVectorToWorld(body,
 				raydium_vertex_normal_visu_x[j],
 				raydium_vertex_normal_visu_y[j],
 				raydium_vertex_normal_visu_z[j],
 				norm);
-	
+
 	fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
 					res[0],
 					res[1],
@@ -4101,7 +4103,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
 	    if(raydium_ode_element[k].state)
 		if(raydium_ode_element[k].geom==g)
 		    break;
-	
+
 	if(k==RAYDIUM_ODE_MAX_ELEMENTS)
 	    {
 	    cpt++;
