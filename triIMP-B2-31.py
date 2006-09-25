@@ -6,6 +6,8 @@ blender: 2.31
 Group: 'Import'
 Tooltip: 'Import a .tri'
 """
+#import rpdb2;
+#rpdb2.start_embedded_debugger("test",True)
 
 try:
   import nt
@@ -60,30 +62,53 @@ class source:
 		    words = line.split()
 		    if len(words) == 1:
 			if float(words[0]) != 1.0:
-			    print "ERROR ! must be a .tri version 1 ! use raydium_modler."
+			    print "ERROR ! must be a .tri version 1 ! use raydium_modler/ Trying to read."
+			    version = 0
+			else:
+			     print "Fichier version 1 Ok!"
+			     version = 1
 		    else:
-			vx = float(words[0])
-			vy = float(words[1])
-			vz = float(words[2])
-			nx = float(words[3])
-			ny = float(words[4])
-			nz = float(words[5])
-			bu[n] = float(words[6])
-			bv[n] = float(words[7])
-			vert=Blender.NMesh.Vert(vx,vy,vz)
-			bvert[n]=vert
-                	mesh.verts.append(vert)
-			n = n + 1
-
+		         if version==1:
+        			vx = float(words[0])
+        			vy = float(words[1])
+        			vz = float(words[2])
+        			nx = float(words[3])
+        			ny = float(words[4])
+        			nz = float(words[5])
+        			bu[n] = float(words[6])
+        			bv[n] = float(words[7])
+        			vert=Blender.NMesh.Vert(vx,vy,vz)
+        			bvert[n]=vert
+                        	mesh.verts.append(vert)
+        			n = n + 1
+        			texname=words[8]
+        		 if version==0:
+        			vx = float(words[0])
+        			vy = float(words[1])
+        			vz = float(words[2])
+        			bu[n] = float(words[3])
+        			bv[n] = float(words[4])
+        			vert=Blender.NMesh.Vert(vx,vy,vz)
+        			bvert[n]=vert
+                        	mesh.verts.append(vert)
+        			n = n + 1
+                                texname=words[5]
+#        		 print texname
 		    if n == 3:
 			textured = 1
-			if words[8][0:4] == "rgb(":
-			    textured = 0
-			    #print "Raydium rgb() material found.. ignoring !"
-			#else:
-			    #print "textured face"
+			if texname[0:4] == "rgb(":
+                            temp=texname[4:-1].split(")")
+                            texname=temp[0]
+                            print texname
+                            textured = 0
+                            couls=texname.split(",")
+                            r= float(couls[0])*255
+                            g= float(couls[1])*255
+                            b= float(couls[2])*255
+
 			bface = Blender.NMesh.Face()
 			#bface.mode |= Blender.NMesh.FaceModes['TWOSIDE']
+
 			if textured == 1:
     			    bface.mode |= Blender.NMesh.FaceModes['TEX']
 			bface.materialIndex=0
@@ -93,19 +118,32 @@ class source:
 			bface.uv.append( (bu[0], bv[0]) )
 			bface.uv.append( (bu[1], bv[1]) )
 			bface.uv.append( (bu[2], bv[2]) )
+
+			if textured ==0:
+              		   bface.mode &= ~Blender.NMesh.FaceModes['TEX']
+                           for n in range(3):
+                             col =NMesh.Col()
+                             col.r=int(r)
+                             col.g=int(g)
+                             col.b=int(b)
+                             col.a=255
+                             bface.col.append(col)
+
 			if textured == 1:
 			    found = -1
+			    filename = texname.split(";")
+			    texname=filename[0]
 			    for t in range(len(textures)):
-				if textures[t] == words[8]:
+				if textures[t] == texname:
 				    found = textures_index[t]
-			
+
 			    if found == -1:
-				print "texture (%s)is not cached yet: loading" % (words[8])
-				if fileExists(words[8]) == 0:
-				    print "Cannot access to %s" % (words[8])
-				    sys.exit(3)
-				found = Blender.Image.Load(words[8])
-				textures.append(words[8])
+				print "texture (%s)is not cached yet: loading" % (texname)
+				if fileExists(texname) == 0:
+				    print "Cannot access to %s" % (texname)
+				    #sys.exit(3)
+				found = Blender.Image.Load(texname)
+				textures.append(texname)
 				textures_index.append(found)
 			    
 			    bface.image = found
@@ -122,6 +160,7 @@ class source:
 			self.file.close()
 
 def importTRI(filename):
+    if filename.find('.tri', -4) <= 0: filename += '.tri'
     obj=source(filename)
     obj.readFaces()
     obj.close
@@ -129,6 +168,6 @@ def importTRI(filename):
 
 def filesel_callback(filename):
   test = importTRI(filename)
-  
+
 Blender.Window.FileSelector(filesel_callback, "Import TRI")
-  
+#importTRI("exported v0.tri")
