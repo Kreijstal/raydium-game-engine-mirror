@@ -3464,7 +3464,10 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 		raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 		
 		dGeomRayGet(raydium_ode_element[i].ray.geom,start,dir);
-		len=dGeomRayGetLength(raydium_ode_element[i].ray.geom);
+		
+        if ((len=raydium_ode_element[i].ray.min_dist)==0)  // Draw ray to first contact point if exist
+            len=dGeomRayGetLength(raydium_ode_element[i].ray.geom);
+
 		raydium_camera_replace();
 		glBegin(GL_LINES);
 		//printf("%f %f %f | %f %f %f\n",start[0],start[1],start[2],dir[0],dir[1],dir[2]);
