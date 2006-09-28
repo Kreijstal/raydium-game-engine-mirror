@@ -1247,6 +1247,16 @@ __rayapi dReal raydium_ode_motor_speed_get_name (char *name, int gears);
 same as above, but using motor's name.
 **/
 
+__rayapi dReal raydium_ode_motor_angle_get(int m, int axe);
+/**
+Will return current motor angle on ##axe## axe. Avaible only for angular motor.
+**/
+
+__rayapi dReal raydium_ode_motor_angle_get_name(char *name, int axe);
+/** 
+same as above, but using motor's name.
+**/
+
 __rayapi void raydium_ode_motor_rocket_set (int m, int element, dReal x, dReal y, dReal z);
 /**
 This function will configure rocket motor ##m## on ##element## at position
