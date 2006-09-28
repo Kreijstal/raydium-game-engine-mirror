@@ -2489,6 +2489,54 @@ dReal raydium_ode_motor_speed_get_name(char *name, int gears)
 return raydium_ode_motor_speed_get(raydium_ode_motor_find(name),gears);
 }
 
+dReal raydium_ode_motor_angle_get(int m, int axe)
+{
+dReal (*GetAngle)(dJointID);
+
+if(!raydium_ode_motor_isvalid(m))
+    {
+    raydium_log("ODE: Error: Cannot get motor speed: invalid name or index");
+    return 0;
+    }
+
+if(raydium_ode_motor[m].joints[axe]<0)
+    {
+            raydium_log("ODE: Error invalid axe");
+            return 0;
+    }
+
+if(raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ROCKET)
+    return raydium_ode_motor[m].angle; // Not really sure
+
+/*
+	body=dJointGetBody(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,raydium_ode_motor[m].joints_axe[axe]);
+	dJointGetAMotorAngle (raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,);
+*/
+  
+	switch(dJointGetType(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint))
+	    {
+	    case dJointTypeHinge2:
+		GetAngle=dJointGetHinge2Angle1;
+		if(raydium_ode_motor[m].joints_axe[axe]!=0 && raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ANGULAR)
+		    {
+		    raydium_log("ODE: Only axe Hinge2 axe 0 is supported with angular motors (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
+		    return 0;
+		    }
+		break;
+	    case dJointTypeHinge:
+		GetAngle=dJointGetHingeAngle;
+		break;
+	    default:
+		raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
+		return;
+	    }
+    return GetAngle(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint);
+}
+
+dReal raydium_ode_motor_angle_get_name(char *name, int axe)
+{
+return raydium_ode_motor_angle_get(raydium_ode_motor_find(name),axe);
+}
 
 void raydium_ode_motor_rocket_set(int m, int element, dReal x, dReal y, dReal z)
 {
