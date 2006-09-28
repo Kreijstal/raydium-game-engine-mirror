@@ -236,6 +236,7 @@ raydium_mouse_init();
 raydium_joy_init(); // and not init_joy, since defined in joy.c, not init.c
 raydium_sound=0;
 raydium_sound_init();
+raydium_viewport_init();
 raydium_callback_set();
 #ifdef PHP_SUPPORT
 raydium_php_init();

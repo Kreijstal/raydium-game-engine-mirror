@@ -170,4 +170,44 @@ __rayapi void raydium_camera_smooth_path_to_path (char *path_from, GLfloat path_
 Same style as previous functions.
 **/
 
+__rayapi void raydium_viewport_init(void);
+/**
+Init of raydium_viewport array to support up to ##RAYDIUM_VIEWPORT_MAX## viewport
+**/
+
+__rayapi void raydium_viewport_create (char * name,int tx,int ty);
+/**
+Create a texture for saving viewport display
+Texture size ##tx## and ##ty## must be related with final displayed viewport size.
+**/
+
+__rayapi void raydium_viewport_enable(char * name);
+/**
+Direct all render operations to dedicated viewport.
+Advanced camera feature as sound/rumble are desactivated during viewport render.
+**/ 
+
+__rayapi void raydium_viewport_save(void);
+/**
+Copy viewport rendering to texture buffer.
+Render operations return to normal state, with normal camera behavior.
+**/
+
+__rayapi void raydium_viewport_define(GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey);
+/**
+Define viewport size for current rendering.
+Use of ## raydium_viewport_define## desable all sound/rumble function of the camera
+This function are reserved for the main camera of the scene.
+**/
+
+__rayapi void raydium_viewport_draw(char * name, GLfloat tx,GLfloat ty,GLfloat sx,GLfloat sy);
+/**
+Draw contents of ##name## viewport to screen
+##tx##,##ty## are lower left corner in screen percents.
+##sx##,##sy## are size in screen percents.
+**/
 #endif
+
+
+
+

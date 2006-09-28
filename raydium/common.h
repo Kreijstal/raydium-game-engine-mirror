@@ -152,6 +152,8 @@
 #define RAYDIUM_MAX_VIDEOS			4
 #define RAYDIUM_MAX_SHADERS			32
 
+#define RAYDIUM_VIEWPORT_MAX 4
+
 #define RAYDIUM_LIGHT_ON           	     	1
 #define RAYDIUM_LIGHT_BLINKING     	     	2
 #define RAYDIUM_LIGHT_OFF         	    	-1
@@ -441,8 +443,20 @@ typedef struct raydium_camera_Path
     GLfloat roll[RAYDIUM_MAX_CAMERA_PATH_STEPS];
     int steps;
     } raydium_camera_Path;
+    
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
 __global signed char raydium_camera_path_reset_flag;
+
+typedef struct raydium_Viewport
+{
+    char    name[RAYDIUM_MAX_NAME_LEN];
+    int     tx;
+    int     ty;
+} raydium_Viewport ;
+
+__global raydium_Viewport raydium_viewport[RAYDIUM_VIEWPORT_MAX];
+__global int raydium_viewport_nb;
+__global int raydium_viewport_use;
 
 __global int 	raydium_network_socket;
 __global int 	raydium_network_uid;

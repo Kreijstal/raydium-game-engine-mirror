@@ -18,6 +18,7 @@ glEnable(GL_STENCIL_TEST); // HDR
 
 raydium_frame_first_camera_pass=1;
 raydium_vertex_counter=0;
+raydium_viewport_use=-1;
 }
 
 void raydium_clear_color_update(void)

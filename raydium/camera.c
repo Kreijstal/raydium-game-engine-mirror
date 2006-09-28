@@ -60,6 +60,9 @@ GLfloat x,y,z;
 
 glLoadIdentity();
 
+
+if (raydium_viewport_use!=-1)
+    return;
 if(raydium_camera_rumble_remaining>0)
     {
     x=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
@@ -91,7 +94,7 @@ if(raydium_frame_first_camera_pass)
     pos[0]=x;
     pos[1]=y;
     pos[2]=z;
-    if(raydium_sound) 
+    if(raydium_sound && raydium_viewport_use==-1) 
 	{
 	raydium_camera_vectors(or); // get vectors
 	raydium_sound_SetListenerPos(pos);
@@ -202,6 +205,8 @@ memcpy(raydium_camera_cursor_place,pos,3*sizeof(GLfloat));
 
 void raydium_camera_rumble(GLfloat amplitude, GLfloat ampl_evo, GLfloat secs)
 {
+    if (raydium_viewport_use!=-1)
+        return;
 raydium_camera_rumble_amplitude=amplitude;
 raydium_camera_rumble_evolution=ampl_evo;
 raydium_camera_rumble_remaining=secs;
@@ -225,6 +230,8 @@ static GLfloat ozoom=90;
 static GLfloat oroll=0;
 
 //raydium_log("camera smooth (asked): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",px,py,pz,lx,ly,lz,zoom,step);
+if (raydium_viewport_use!=-1)
+    return;
     
 if(step<=0 || // wow.. smells inf, do a instantaneous step. (and don't place cam)
    raydium_camera_path_reset_flag)
@@ -461,3 +468,74 @@ if(raydium_camera_smooth_path(path_to,path_step_to,&tx,&ty,&tz,&tzoom,&troll)==-
 
 raydium_camera_smooth(fx,fy,fz, ty,-tz,tx,fzoom,froll,smooth_step);
 }
+
+void raydium_viewport_init(void)
+{
+int i;
+    raydium_viewport_nb=0;
+    raydium_viewport_use=-1;
+}
+
+void raydium_viewport_create (char * name,int tx,int ty){
+int i;    
+    if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX){
+        for(i=0;i<raydium_viewport_nb;i++)
+            if(!strcmp(name,raydium_viewport[i].name)){
+                raydium_log ("Viewport %s already exist",name);
+                return;
+            }
+
+        if(raydium_texture_load_internal("",name,1,tx,ty,4,-1)){
+            strcpy(raydium_viewport[raydium_viewport_nb].name,name);
+            raydium_viewport[raydium_viewport_nb].tx=tx;
+            raydium_viewport[raydium_viewport_nb].ty=ty;
+            raydium_viewport_nb++;
+        }
+    }
+}
+
+void raydium_viewport_enable(char * name)
+{
+int i;
+
+    if (raydium_viewport_use!=-1){
+        raydium_log ("An other viewport is already enabled");
+        return;
+    }
+    for(i=0;i<raydium_viewport_nb;i++)
+       if(!strcmp(name,raydium_viewport[i].name)){
+            glViewport(0,0, raydium_viewport[i].tx,raydium_viewport[i].ty);
+            raydium_viewport_use=i;
+            return;
+       }
+    raydium_log("Viewport %s not found.",name);
+}
+
+void raydium_viewport_save(void)
+{
+    if (raydium_viewport_use==-1){
+        raydium_log("No viewport enabled.");
+        return;
+    }
+    glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name(raydium_viewport[raydium_viewport_use].name));
+    glCopyTexSubImage2D(GL_TEXTURE_2D,0, 0,0, 0,0, raydium_viewport[raydium_viewport_use].tx, raydium_viewport[raydium_viewport_use].ty);
+    raydium_rendering_internal_restore_render_state();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_STENCIL_TEST); // HDR
+    raydium_frame_first_camera_pass=1;
+    raydium_camera_pushed=0;
+    raydium_viewport_use=-1;
+    glViewport(0,0, raydium_window_tx, raydium_window_ty);
+}
+void raydium_viewport_draw(char * name, GLfloat tx,GLfloat ty,GLfloat sx,GLfloat sy)
+{
+int i;
+
+    for(i=0;i<raydium_viewport_nb;i++)
+       if(!strcmp(name,raydium_viewport[i].name)){
+            raydium_osd_draw_name(name,tx,ty,tx+sx,ty+sy);
+            return;
+       }
+    raydium_log("Viewport %s not found.",name);
+}
+
