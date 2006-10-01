@@ -172,13 +172,15 @@ Same style as previous functions.
 
 __rayapi void raydium_viewport_init(void);
 /**
-Init of raydium_viewport array to support up to ##RAYDIUM_VIEWPORT_MAX## viewport
+Init of raydium_viewport array to support up to 
+##RAYDIUM_VIEWPORT_MAX## viewport
 **/
 
 __rayapi void raydium_viewport_create (char * name,int tx,int ty);
 /**
 Create a texture for saving viewport display
-Texture size ##tx## and ##ty## must be related with final displayed viewport size.
+Texture size ##tx## and ##ty## must be related with final displayed 
+viewport size.
 **/
 
 __rayapi void raydium_viewport_enable(char * name);
@@ -196,7 +198,8 @@ Render operations return to normal state, with normal camera behavior.
 __rayapi void raydium_viewport_define(GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey);
 /**
 Define viewport size for current rendering.
-Use of ## raydium_viewport_define## desable all sound/rumble function of the camera
+Use of ## raydium_viewport_define## desable all sound/rumble function 
+of the camera
 This function are reserved for the main camera of the scene.
 **/
 
@@ -207,7 +210,4 @@ Draw contents of ##name## viewport to screen
 ##sx##,##sy## are size in screen percents.
 **/
 #endif
-
-
-
 

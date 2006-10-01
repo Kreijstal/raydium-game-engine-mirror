@@ -152,7 +152,7 @@
 #define RAYDIUM_MAX_VIDEOS			4
 #define RAYDIUM_MAX_SHADERS			32
 
-#define RAYDIUM_VIEWPORT_MAX 4
+#define RAYDIUM_VIEWPORT_MAX 			4
 
 #define RAYDIUM_LIGHT_ON           	     	1
 #define RAYDIUM_LIGHT_BLINKING     	     	2
