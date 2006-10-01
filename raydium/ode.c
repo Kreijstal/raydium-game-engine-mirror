@@ -2528,7 +2528,7 @@ if(raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ROCKET)
 		break;
 	    default:
 		raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
-		return;
+		return 0;
 	    }
     return GetAngle(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint);
 }
