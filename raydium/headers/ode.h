@@ -719,6 +719,18 @@ __rayapi signed char raydium_ode_element_ray_get_name(char *element, raydium_ode
 Same as above, but using element's name.
 **/
 
+__rayapi signed char raydium_ode_element_ray_set_length(int element, dReal length);
+/**
+Change ray length to choose range detection length
+**/
+
+
+__rayapi signed char raydium_ode_element_ray_set_length_name(char *element, dReal length);
+/**
+Same as above, but using element's name.
+**/
+
+
 __rayapi int raydium_ode_element_fix (char *name, int *elem, int nelems, signed char keepgeoms);
 /**
 Experimental code.
