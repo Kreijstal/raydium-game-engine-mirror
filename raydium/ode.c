@@ -1083,6 +1083,34 @@ e->ray.rel_dir[2]=dirz;
 return 1;
 }
 
+signed char raydium_ode_element_ray_set_length(int element,dReal length)
+{
+raydium_ode_Element *e;
+
+    if(!raydium_ode_element_isvalid(element))
+        {
+        raydium_log("ODE: Error: Cannot change ray length: element is not valid");
+        return 0;
+        }
+        
+    e=&raydium_ode_element[element];
+    if(!e->ray.state)
+    {
+       raydium_log("ODE: Error: this element has no ray attached");
+       return 0;
+    }
+    dGeomRaySetLength(e->ray.geom,length);
+    return 1;
+    
+
+}
+
+signed char raydium_ode_element_ray_set_length_name(char *element, dReal length)
+{
+return raydium_ode_element_ray_set_length(raydium_ode_element_find(element),length);
+}
+
+
 signed char raydium_ode_element_ray_attach_name(char *element, dReal length, dReal dirx, dReal diry, dReal dirz)
 {
 return raydium_ode_element_ray_attach(raydium_ode_element_find(element),length,dirx,diry,dirz);
