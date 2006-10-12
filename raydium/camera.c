@@ -532,7 +532,10 @@ void raydium_viewport_save(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_STENCIL_TEST); // HDR
     raydium_frame_first_camera_pass=1;
-    raydium_camera_pushed=0;
+    if (raydium_camera_pushed){
+        glPopMatrix();
+        raydium_camera_pushed=0;
+    }
     raydium_viewport_use=-1;
     glViewport(0,0, raydium_window_tx, raydium_window_ty);
 }
