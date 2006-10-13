@@ -2109,13 +2109,27 @@ if(old==MODE_MULTI)
 }
 
 
-
 void display(void)
 {
+//FPS LIMITER variables
+static unsigned long time_previous;
+unsigned long curr_time;
+float max_fps;
+//other variables
 dReal speed,accel;
 dReal direct;
 dReal *tmp;
 dReal *pos;
+
+// *** FPS LIMITER ***
+// How can this be used as a function?
+// Needs to be cleaned and "raydiumified"
+curr_time=raydium_timecall_clock();
+// 90 is the desired frames per second. 1.5 is an experimental offset.
+max_fps=1000000/(90.0-1.5);
+// check if a new frame is needed now
+if((curr_time-time_previous) < max_fps) return;
+
 
 if(scroll>=0)
     {
@@ -2479,6 +2493,7 @@ draw_music_popup();
 raydium_rendering_finish();
 
 raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
+time_previous=curr_time;
 }
 
 int main(int argc, char **argv)
