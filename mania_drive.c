@@ -1006,8 +1006,9 @@ completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
-raydium_gui_widget_sizes(20,4,18);
-raydium_gui_button_create("btnSolo",handle,40,3,"Other tracks",btnSoloTracks);
+//"Other Tracks" button passed to the main menu
+//raydium_gui_widget_sizes(20,4,18);
+//raydium_gui_button_create("btnSolo",handle,40,3,"Other tracks",btnSoloTracks);
 
 gui_start();
 
@@ -1261,7 +1262,8 @@ raydium_gui_widget_sizes(25,4,18);
 raydium_gui_button_create("btnModeStory",handle,25,70,"Story",btnModeStory);
 raydium_gui_button_create("btnModeNetTracks",handle,25,55,"Internet Tracks",btnModeNetTracks);
 raydium_gui_button_create("btnModeLAN",handle,25,40,"LAN Multiplayer",btnModeLan);
-raydium_gui_button_create("btnOptions",handle,25,25,"Options",btnOptions);
+raydium_gui_button_create("btnSolo",handle,25,25,gettext("Other tracks"),btnSoloTracks);
+raydium_gui_button_create("btnOptions",handle,25,10,"Options",btnOptions);
 
 raydium_gui_widget_sizes(6,3,14);
 raydium_gui_button_create("btnBackToMain",handle,3,5,"Quit",btnQuit);
