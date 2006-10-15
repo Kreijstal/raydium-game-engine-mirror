@@ -129,6 +129,7 @@ pid_t server_pid=0;
 #define MODE_SOLO	1
 #define MODE_NET	2
 #define MODE_MULTI	3
+#define MODE_OTHERS	4
 
 #define SHADOW_OFFSET	0.3
 
@@ -474,7 +475,7 @@ raydium_gui_read_name("menu","cboTrack",track);
 raydium_parser_db_set("ManiaDrive-LastSoloTrack",track);
 
 drive(track);
-mode=MODE_SOLO;
+mode=MODE_OTHERS;
 }
 
 
@@ -2108,6 +2109,9 @@ if(old==MODE_NET)
 else
 if(old==MODE_MULTI)
     build_gui_Lan();
+else
+if(old==MODE_OTHERS)
+    build_gui_Solo();
 }
 
 
