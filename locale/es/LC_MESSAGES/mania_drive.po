@@ -1,0 +1,347 @@
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2006 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# vicente carro fernandez <vicente@localhost.localdomain>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-10-14 13:52+0200\n"
+"PO-Revision-Date: 2006-10-14 11:44+0200\n"
+"Last-Translator: vicente carro fernandez <vicente@localhost.localdomain>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: mania_drive_i18n.c:494
+msgid "You can't drive here yet !"
+msgstr "Todavia no puedes correr aqui!"
+
+#: mania_drive_i18n.c:510
+msgid "- Controls Help -"
+msgstr "- Ayuda de Controles -"
+
+#: mania_drive_i18n.c:513
+msgid "Key Up : accelerate"
+msgstr "Arriba: acelerar"
+
+#: mania_drive_i18n.c:514
+msgid "Key Down : brake / reverse"
+msgstr "Abajo: frenar/marcha atras"
+
+#: mania_drive_i18n.c:516
+msgid "Space : restart track"
+msgstr "Espacio: Repetir pista"
+
+#: mania_drive_i18n.c:517
+msgid "Backspace : restart LAN clients"
+msgstr "Retroceso: reiniciar clientes LAN"
+
+#: mania_drive_i18n.c:519
+msgid "F3 : default external view"
+msgstr "F3: camara externa"
+
+#: mania_drive_i18n.c:520
+msgid "F6 : in-board fixed view"
+msgstr "F6: camara superior"
+
+#: mania_drive_i18n.c:521
+msgid "C : switch camera"
+msgstr "c: cambia camaras"
+
+#: mania_drive_i18n.c:523
+msgid "... and maybe hidden ones :)"
+msgstr "... y algunas teclas secretas :)"
+
+#: mania_drive_i18n.c:528
+msgid " joystick/joypad enabled"
+msgstr " activado joystick/joypad"
+
+#: mania_drive_i18n.c:532
+msgid "(no joystick/joypad found)"
+msgstr "(no se encontro joystick/joypad)"
+
+#: mania_drive_i18n.c:536 mania_drive_i18n.c:575 mania_drive_i18n.c:815
+msgid "OK"
+msgstr "Vale"
+
+#: mania_drive_i18n.c:573
+msgid "Cannot connect to server ..."
+msgstr "No pudo conectar al servidor"
+
+#: mania_drive_i18n.c:583
+msgid "Please, wait ..."
+msgstr "Por favor espera..."
+
+#: mania_drive_i18n.c:623
+msgid "- LAN Servers - "
+msgstr "- Servidores LAN -"
+
+#: mania_drive_i18n.c:627
+msgid "Name"
+msgstr "Nombre"
+
+#: mania_drive_i18n.c:629
+msgid "Track"
+msgstr "Pista"
+
+#: mania_drive_i18n.c:631
+msgid "Address"
+msgstr "Direccion IP"
+
+#: mania_drive_i18n.c:633
+msgid "Players"
+msgstr "Jugadores"
+
+#: mania_drive_i18n.c:766
+#, c-format
+msgid "%s, with %i:%02i:%02i:%03i"
+msgstr "%s, en %i:%02i:%02i:%03i"
+
+#: mania_drive_i18n.c:782
+msgid "Can't download track from server !"
+msgstr "No puede bajar pista del servidor!"
+
+#: mania_drive_i18n.c:793
+msgid "You need to restart the game"
+msgstr "Necesitas reiniciar el juego"
+
+#: mania_drive_i18n.c:794
+msgid "to apply window settings"
+msgstr "para aplicar esta configuracion"
+
+#: mania_drive_i18n.c:803
+msgid "  ^cCongratulations !"
+msgstr "  ^cFelicidades"
+
+#: mania_drive_i18n.c:804
+msgid "  ^0Congratulations !"
+msgstr "  ^0Felicidades"
+
+#: mania_drive_i18n.c:805
+msgid "Story mode is completed !"
+msgstr "Modo historia Completo !"
+
+#: mania_drive_i18n.c:816
+msgid "Credits !"
+msgstr "Creditos!"
+
+#: mania_drive_i18n.c:839 mania_drive_i18n.c:1042 mania_drive_i18n.c:1073
+msgid "Player Name :"
+msgstr "   Tu Nombre:"
+
+#: mania_drive_i18n.c:844 mania_drive_i18n.c:902
+msgid "Track :"
+msgstr "Pista :"
+
+#: mania_drive_i18n.c:849
+msgid "Get best time"
+msgstr "Ver records"
+
+#: mania_drive_i18n.c:852 mania_drive_i18n.c:907
+msgid "Drive !"
+msgstr "Correr!"
+
+#: mania_drive_i18n.c:855 mania_drive_i18n.c:910 mania_drive_i18n.c:1011
+#: mania_drive_i18n.c:1060 mania_drive_i18n.c:1103
+msgid "<"
+msgstr "<"
+
+#: mania_drive_i18n.c:857
+msgid "Live scores :"
+msgstr "Puntuaciones:"
+
+#: mania_drive_i18n.c:858
+msgid "http://maniadrive.raydium.org/"
+msgstr "http://maniadrive.raydium.org/"
+
+#: mania_drive_i18n.c:862
+msgid "WARNING: Internet connection failed !"
+msgstr "ERROR: Fallo la conexion a internet"
+
+#: mania_drive_i18n.c:863
+msgid "Now in offline mode. (set your proxy ?)"
+msgstr "Ahora en modo offline. (sera tu proxy?)"
+
+#: mania_drive_i18n.c:894
+msgid "- Other Tracks -"
+msgstr "- Otras pistas -"
+
+#: mania_drive_i18n.c:897
+msgid "Here, you can play offline with:"
+msgstr "Aqui puedes jugar offline con:"
+
+#: mania_drive_i18n.c:898
+msgid "- User tracks"
+msgstr "- Pistas de usuario"
+
+#: mania_drive_i18n.c:899
+msgid "- Downloaded internet tracks"
+msgstr "- Pistas descargadas de internet"
+
+#: mania_drive_i18n.c:965
+msgid "Drive"
+msgstr "Correr"
+
+#: mania_drive_i18n.c:965
+msgid "-"
+msgstr "-"
+
+#: mania_drive_i18n.c:990
+msgid "Story Mode"
+msgstr "Modo historia"
+
+#: mania_drive_i18n.c:993
+msgid "Beginners"
+msgstr "Tutoriales"
+
+#: mania_drive_i18n.c:994
+msgid "Pro"
+msgstr "Profesional"
+
+#: mania_drive_i18n.c:1005
+msgid "Beginners mode completed !"
+msgstr "Tutoriales Completos !"
+
+#: mania_drive_i18n.c:1013
+msgid "Other tracks"
+msgstr "Otras pistas"
+
+#: mania_drive_i18n.c:1040
+msgid "- Network Game - "
+msgstr "- Elige modo de juego -"
+
+#: mania_drive_i18n.c:1047
+msgid "Server :"
+msgstr "Servidor"
+
+#: mania_drive_i18n.c:1052
+msgid "Connect"
+msgstr "Conecta"
+
+#: mania_drive_i18n.c:1054
+msgid "Search LAN"
+msgstr "Buscar LAN"
+
+#: mania_drive_i18n.c:1078
+msgid " Camera lagging support"
+msgstr " Inercia de camara"
+
+#: mania_drive_i18n.c:1081
+msgid "Camera's speed :"
+msgstr " Velocidad camara:"
+
+#: mania_drive_i18n.c:1087
+msgid "Music volume :"
+msgstr "Volumen:"
+
+#: mania_drive_i18n.c:1091
+msgid "test"
+msgstr "probar"
+
+#: mania_drive_i18n.c:1094
+msgid " Shadow support (experimental)"
+msgstr " Sombras (experimental)"
+
+#: mania_drive_i18n.c:1095
+msgid " Window mode with"
+msgstr " Modo ventana a"
+
+#: mania_drive_i18n.c:1106
+msgid "Apply"
+msgstr "Aplicar"
+
+#: mania_drive_i18n.c:1110
+msgid "Controls"
+msgstr "Controles"
+
+#: mania_drive_i18n.c:1261
+msgid "- Select Game Mode - "
+msgstr "- Elige modo de juego -"
+
+#: mania_drive_i18n.c:1264
+msgid "Story"
+msgstr "Modo historia"
+
+#: mania_drive_i18n.c:1265
+msgid "Internet Tracks"
+msgstr "Pistas Internet"
+
+#: mania_drive_i18n.c:1266
+msgid "LAN Multiplayer"
+msgstr "Multijugador"
+
+#: mania_drive_i18n.c:1267
+msgid "Options"
+msgstr "Opciones"
+
+#: mania_drive_i18n.c:1270
+msgid "Quit"
+msgstr "Salir"
+
+#: mania_drive_i18n.c:1489
+msgid "Impressive ! Quicker than the author !"
+msgstr "Impresionante! Mejor que el autor!"
+
+#: mania_drive_i18n.c:1491
+msgid "Right ! You got it."
+msgstr " Si! Lo has conseguido!"
+
+#: mania_drive_i18n.c:1499
+msgid "- Try again (press space key) -"
+msgstr "- Intentalo de nuevo (pulsa espacio) -"
+
+#: mania_drive_i18n.c:1508
+#, c-format
+msgid "Your place: %i"
+msgstr "Posicion: %i"
+
+#: mania_drive_i18n.c:1510
+#, c-format
+msgid "(unofficial track or connection failure)"
+msgstr "(pista no oficial o fallo de conexion)"
+
+#: mania_drive_i18n.c:1558
+msgid "   lap time:"
+msgstr " tiempo:"
+
+#: mania_drive_i18n.c:1566
+msgid " party time:"
+msgstr " tiempo juego:"
+
+#: mania_drive_i18n.c:1578
+msgid "  your best:"
+msgstr " tu mejor:"
+
+#: mania_drive_i18n.c:1586
+msgid "  gold time:"
+msgstr " tiempo oro:"
+
+#: mania_drive_i18n.c:1610
+msgid "     record:"
+msgstr "     record:"
+
+#: mania_drive_i18n.c:1644
+msgid "^0Game over !"
+msgstr "^0Fin del juego"
+
+#: mania_drive_i18n.c:1645
+msgid "^cGame over !"
+msgstr "^cFin del juego"
+
+#: mania_drive_i18n.c:2480
+msgid "checkpoints:"
+msgstr "metas:"
+
+#: mania_drive_i18n.c:2489
+#, c-format
+msgid "^0Ready ? Start in %i seconds"
+msgstr "^0Listo? Empiezas en %i"
+
+#: mania_drive_i18n.c:2490
+#, c-format
+msgid "^cReady ? Start in ^f%i^c seconds"
+msgstr "^cListo? Empiezas en %i"
