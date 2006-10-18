@@ -1263,7 +1263,7 @@ raydium_gui_widget_sizes(25,4,18);
 raydium_gui_button_create("btnModeStory",handle,25,70,"Story",btnModeStory);
 raydium_gui_button_create("btnModeNetTracks",handle,25,55,"Internet Tracks",btnModeNetTracks);
 raydium_gui_button_create("btnModeLAN",handle,25,40,"LAN Multiplayer",btnModeLan);
-raydium_gui_button_create("btnSolo",handle,25,25,gettext("Other tracks"),btnSoloTracks);
+raydium_gui_button_create("btnSolo",handle,25,25,"Other tracks",btnSoloTracks);
 raydium_gui_button_create("btnOptions",handle,25,10,"Options",btnOptions);
 
 raydium_gui_widget_sizes(6,3,14);
