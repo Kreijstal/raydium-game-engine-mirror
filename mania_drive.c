@@ -2132,7 +2132,7 @@ dReal *pos;
 // Needs to be cleaned and "raydiumified"
 curr_time=raydium_timecall_clock();
 // 90 is the desired frames per second. 1.5 is an experimental offset.
-max_fps=1000000/(90.0-1.5);
+max_fps=raydium_timecall_clocks_per_sec/(90.0-1.5);
 // check if a new frame is needed now
 if((curr_time-time_previous) < max_fps) return;
 
