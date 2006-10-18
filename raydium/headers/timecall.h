@@ -81,6 +81,8 @@ Internal, Linux only: Reads and return RTC clock.
 __rayapi unsigned long raydium_timecall_clock (void);
 /**
 Returns current "time".
+The variable ##raydium_timecall_clocks_per_sec## contains the number
+of clock "ticks" per second, and may help you here.
 **/
 
 __rayapi signed char raydium_timecall_devrtc_rate_change (unsigned long new_rate);
