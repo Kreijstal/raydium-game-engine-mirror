@@ -28,7 +28,11 @@ key%=65536;
 // key below esc :
 // 178 (ex: fr), 176 (ex: us), 186 (ex: spa)
 if(key==178 || key==176 || key==186) raydium_console_event();
-if(key==126) raydium_capture_frame_auto(); // glut@w32 won't return this key...
+#ifndef WIN32
+if(key==126) raydium_capture_frame_auto();
+#else
+if(key==222) raydium_capture_frame_auto();
+#endif
 
 if(raydium_console_pos && ( (key>=32 && key<127) 
 		       || key==8 
