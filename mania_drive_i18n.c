@@ -1155,6 +1155,21 @@ id=atoi(part2);
 showMessage(trackdata.message_file,id);
 }
 
+char *findMessageLang(char *file)
+{
+static char lang[128];
+
+// Here, we must resolv the "short" locale (example 'fr') from LC_MESSAGE
+// one (example fr_FR). It seems that it's always the two first chars.
+/*... setlocale(LC_MESSAGES,"") ... */
+
+// Then, we must search the 'file' to see if any message is using our
+// short locale, and fallback to 'en' if not...
+
+strcpy(lang,"en");
+return lang;
+}
+
 void showMessage(char *file, int id)
 {
 int handle;
@@ -1168,17 +1183,18 @@ char var[RAYDIUM_MAX_NAME_LEN];
 char val_s[RAYDIUM_GUI_DATASIZE];
 float val_f[10];
 int size;
+char lang[128];
 
 raydium_gui_window_delete_name("menu");
 fp=raydium_file_fopen(file,"rt");
 if(fp)
 {
  count=0;
+ strcpy(lang,findMessageLang(file));
 
  while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
-    //if(!strcasecmp(var,"en"))
-    if(!strcasecmp(var,setlocale(LC_MESSAGES,"")))
+    if(!strcasecmp(var,lang))
 	{
         if(ret!=RAYDIUM_PARSER_TYPE_RAWDATA)
 	    {
