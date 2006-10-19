@@ -469,8 +469,9 @@ void raydium_rendering_displaylists_disable(void)
 raydium_render_displaylists_tag=0;
 }
 
-float raydium_render_fps_limit(float maxfps)
+void raydium_render_fps_limit(float maxfps)
 {
-   if(maxfps>1.0) raydium_render_max_fps=maxfps;
-   return raydium_render_max_fps;
+   if(maxfps<0)
+    maxfps=0;
+   raydium_render_max_fps=maxfps;
 }

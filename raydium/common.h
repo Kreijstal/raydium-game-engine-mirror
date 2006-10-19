@@ -397,6 +397,8 @@ __global char	 raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 __global float   raydium_render_max_fps;
 
+__global void (*raydium_callback_loop)(void); // for glutMainLoop wrapper
+
 __global signed char	 raydium_fog_enabled_tag;
 __global signed char	 raydium_fog_volumetric_enabled_tag;
 __global int		 raydium_fog_mode_value;

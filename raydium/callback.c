@@ -72,6 +72,27 @@ glutPassiveMotionFunc((void *)raydium_mouse_move_callback);
 glutMouseFunc((void *)raydium_mouse_click_callback);
 }
 
+void raydium_callback_internal_loop_wrapper(void)
+{
+//FPS LIMITER variables
+static unsigned long time_previous;
+unsigned long curr_time;
+float max_fps;
+
+if(raydium_render_max_fps!=0)
+    {
+    curr_time=raydium_timecall_clock();
+    // 2 is an experimental offset
+    max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps-2);
+
+    if((curr_time-time_previous) < max_fps)
+	return;
+
+    time_previous=curr_time;
+    }
+
+raydium_callback_loop();
+}
 
 void raydium_callback(void (*loop) )
 {
@@ -81,7 +102,8 @@ char autoexec[RAYDIUM_MAX_NAME_LEN];
 if(raydium_init_cli_option("autoexec2",autoexec))
     raydium_php_exec(autoexec);
 #endif
-glutDisplayFunc(loop);
-glutIdleFunc(loop);
+raydium_callback_loop=loop;
+glutDisplayFunc(raydium_callback_internal_loop_wrapper);
+glutIdleFunc(raydium_callback_internal_loop_wrapper);
 glutMainLoop();
 }

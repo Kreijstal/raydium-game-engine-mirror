@@ -50,29 +50,14 @@ switch(rendering)
 //glutMainLoop
 void glutMainLoop(void)
 {
-//FPS LIMITER variables
-static unsigned long raydium_time_previous;
-unsigned long raydium_curr_time;
-float raydium_min_time_per_frame;
-
 //#ifdef WIN32
     // since windows is firing WM_SIZE too quickly ...
     if(glutReshapeFuncCB)
         glutReshapeFuncCB(_glutWindowSize[0],_glutWindowSize[1]);
 //#endif
 do{
-    raydium_curr_time=raydium_timecall_clock();
-    // rayddium_max_fps is the desired frames per second.
-    // we calculated the minimum time per frame with the desired max_fps. 4 is an experimental offset
-    raydium_min_time_per_frame=raydium_timecall_clocks_per_sec/(raydium_render_max_fps-4);
-    // check if a new frame is needed now
-    if((raydium_curr_time-raydium_time_previous) > raydium_min_time_per_frame)
-        {
-	//it's time to process the next frame	
-        glutIdleFuncCB();
-        myglutGetEvents();
-	raydium_time_previous=raydium_curr_time;
-        }
+    glutIdleFuncCB();
+    myglutGetEvents();
   }while(1);
 }
 
