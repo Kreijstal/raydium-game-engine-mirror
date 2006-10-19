@@ -142,6 +142,7 @@ raydium_render_lightmap_color_value[1]=1;
 raydium_render_lightmap_color_value[2]=1;
 raydium_render_lightmap_color_value[3]=1;
 raydium_render_internal_light_previous_step=-1;
+raydium_render_max_fps=300;
 raydium_vertex_counter=0;
 raydium_projection=RAYDIUM_PROJECTION_PERSPECTIVE;
 raydium_projection_fov=60;

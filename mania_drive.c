@@ -2117,25 +2117,11 @@ if(old==MODE_OTHERS)
 
 void display(void)
 {
-//FPS LIMITER variables
-static unsigned long time_previous;
-unsigned long curr_time;
-float max_fps;
 //other variables
 dReal speed,accel;
 dReal direct;
 dReal *tmp;
 dReal *pos;
-
-// *** FPS LIMITER ***
-// How can this be used as a function?
-// Needs to be cleaned and "raydiumified"
-curr_time=raydium_timecall_clock();
-// 90 is the desired frames per second. 1.5 is an experimental offset.
-max_fps=raydium_timecall_clocks_per_sec/(90.0-1.5);
-// check if a new frame is needed now
-if((curr_time-time_previous) < max_fps) return;
-
 
 if(scroll>=0)
     {
@@ -2309,6 +2295,9 @@ if(raydium_key_last==1000+'c')
     else
 	raydium_key_last=3;
     }
+// l key  to limit the game at 90 frames per second
+// maybe this should be an option into the options menu of the game
+if(raydium_key_last==1000+'l') { raydium_render_fps_limit(90);}
 
 if(raydium_key_last==5)
 {
@@ -2499,7 +2488,7 @@ draw_music_popup();
 raydium_rendering_finish();
 
 raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
-time_previous=curr_time;
+
 }
 
 int main(int argc, char **argv)

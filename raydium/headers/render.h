@@ -105,4 +105,16 @@ __rayapi void raydium_rendering_displaylists_enable(void);
 Enable display lists usage. default state.
 **/
 
+__rayapi float raydium_render_fps_limit(float maxfps);
+/**
+Sometimes is wanted to reduce the consumtion of cpu cicles by our application. 
+In this situations we can use a technique for delay each frame of the game until
+a desired framerate. In that way the residual frames won't be processed and a "lot"
+of cpu cicles will be saved.
+Also can be used to increase the stability in certains systems.
+This function changes the maximum number of frames per second. Default is 300, 
+in fact is like if no fps limit would be activated. Also it returns the maximum
+ number of frames per second.
+**/
+
 #endif
