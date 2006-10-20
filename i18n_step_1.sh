@@ -1,6 +1,7 @@
 #!/bin/sh
 GAME=mania_drive
-GAMEFILE=mania_drive_i18n.c
+#GAMEFILE=mania_drive_i18n.c
+GAMEFILE=mania_drive.c
 mkdir locale
 mkdir locale/es
 mkdir locale/es/LC_MESSAGES

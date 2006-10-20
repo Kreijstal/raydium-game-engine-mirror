@@ -1,6 +1,7 @@
 #!/bin/sh
 GAME=mania_drive
-GAMEFILE=mania_drive_i18n.c
+#GAMEFILE=mania_drive_i18n.c
+GAMEFILE=mania_drive.c
 echo -e "\n---Generating new POT file of the file: $GAMEFILE\n"
 xgettext -d $GAME -o tmp.pot $GAMEFILE
 echo -e "\n--- Updating spanish version...\n"

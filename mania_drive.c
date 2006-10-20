@@ -4,6 +4,9 @@ char *version="ManiaDrive 1.2custom";
 
 #include "raydium/index.c"
 
+#include <libintl.h> 
+#include <locale.h>
+
 #include "mania.h"
 #include "mania_creds.h"
 
@@ -20,7 +23,7 @@ char *version="ManiaDrive 1.2custom";
 #define HISTORY_STATE_FILE	raydium_file_home_path("mania_drive.state")
 
 #define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
-#define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768"
+#define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768\n1152x864"
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
@@ -489,7 +492,7 @@ build_gui_Main();
 void btnCantDrive(raydium_gui_Object *w)
 {
 int handle;
-char *str="You can't drive here yet !";
+char *str=gettext("You can't drive here yet !");
 
 handle=raydium_gui_window_create("cantdrive",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
@@ -505,33 +508,33 @@ int handle;
 handle=raydium_gui_window_create("keyhelp",5,45,50,50);
 
 raydium_gui_widget_sizes(5,5,25);
-raydium_gui_label_create("lblTitle",handle,50,90,"- Controls Help -",0.7,0,0);
+raydium_gui_label_create("lblTitle",handle,50,90,gettext("- Controls Help -"),0.7,0,0);
 
 raydium_gui_widget_sizes(0,0,16);
-raydium_gui_label_create("lblKH10",handle,50,80,"Key Up : accelerate",0,0,0);
-raydium_gui_label_create("lblKH20",handle,50,75,"Key Down : brake / reverse",0,0,0);
+raydium_gui_label_create("lblKH10",handle,50,80,gettext("Key Up : accelerate"),0,0,0);
+raydium_gui_label_create("lblKH20",handle,50,75,gettext("Key Down : brake / reverse"),0,0,0);
 
-raydium_gui_label_create("lblKH30",handle,50,65,"Space : restart track",0,0,0);
-raydium_gui_label_create("lblKH40",handle,50,60,"Backspace : restart LAN clients",0,0,0);
+raydium_gui_label_create("lblKH30",handle,50,65,gettext("Space : restart track"),0,0,0);
+raydium_gui_label_create("lblKH40",handle,50,60,gettext("Backspace : restart LAN clients"),0,0,0);
 
-raydium_gui_label_create("lblKH50",handle,50,50,"F3 : default external view",0,0,0);
-raydium_gui_label_create("lblKH60",handle,50,45,"F6 : in-board fixed view",0,0,0);
-raydium_gui_label_create("lblKH65",handle,50,40,"C : switch camera",0,0,0);
+raydium_gui_label_create("lblKH50",handle,50,50,gettext("F3 : default external view"),0,0,0);
+raydium_gui_label_create("lblKH60",handle,50,45,gettext("F6 : in-board fixed view"),0,0,0);
+raydium_gui_label_create("lblKH65",handle,50,40,gettext("C : switch camera"),0,0,0);
 
-raydium_gui_label_create("lblKH70",handle,50,30,"... and maybe hidden ones :)",0,0,0);
+raydium_gui_label_create("lblKH70",handle,50,30,gettext("... and maybe hidden ones :)"),0,0,0);
 
 raydium_gui_widget_sizes(3,3,16);
 if(raydium_joy)
     {
-    raydium_gui_check_create("chkJoy",handle,15,17," joystick/joypad enabled",joystick_enabled);
+    raydium_gui_check_create("chkJoy",handle,15,17,gettext(" joystick/joypad enabled"),joystick_enabled);
     }
 else
     {
-    raydium_gui_label_create("lblKH80",handle,50,20,"(no joystick/joypad found)",0.3,0,0);
+    raydium_gui_label_create("lblKH80",handle,50,20,gettext("(no joystick/joypad found)"),0.3,0,0);
     }
 
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnCantDriveOk",handle,35,5,"OK",btnKeyHelpOk);
+raydium_gui_button_create("btnCantDriveOk",handle,35,5,gettext("OK"),btnKeyHelpOk);
 }
 
 
@@ -568,9 +571,9 @@ if(!raydium_network_client_connect_to(server))
     {
     handle=raydium_gui_window_create("error",25,45,50,15);
     raydium_gui_widget_sizes(0,0,18);
-    raydium_gui_label_create("lblError",handle,50,80,"Cannot connect to server ...",0,0,0);
+    raydium_gui_label_create("lblError",handle,50,80,gettext("Cannot connect to server ..."),0,0,0);
     raydium_gui_widget_sizes(15,5,18);
-    raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
+    raydium_gui_button_create("btnErrorOk",handle,35,15,gettext("OK"),btnErrorOkClick);
     return;
     }
 
@@ -578,7 +581,7 @@ mode=MODE_MULTI;
 raydium_gui_window_delete_name("menu");
 handle=raydium_gui_window_create("menu",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblInfo",handle,50,50,"Please, wait ...",0,0,0);
+raydium_gui_label_create("lblInfo",handle,50,50,gettext("Please, wait ..."),0,0,0);
 }
 
 void btnServerClick(raydium_gui_Object *w)
@@ -618,17 +621,17 @@ raydium_gui_window_delete_name("menu");
 handle=raydium_gui_window_create("menu",10,25,80,50);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblLanServerSearch",handle,50,92,"- LAN Servers - ",0,0,0);
+raydium_gui_label_create("lblLanServerSearch",handle,50,92,gettext("- LAN Servers - "),0,0,0);
 
 raydium_gui_widget_sizes(0,0,12);
 
-sprintf(str,"%-30s","Name");
+sprintf(str,"%-30s",gettext("Name"));
 raydium_gui_label_create("lblCol1",handle,20,85,str,0.4,0,0);
-sprintf(str,"%-15s","Track");
+sprintf(str,"%-15s",gettext("Track"));
 raydium_gui_label_create("lblCol2",handle,50,85,str,0.4,0,0);
-sprintf(str,"%-15s","Address");
+sprintf(str,"%-15s",gettext("Address"));
 raydium_gui_label_create("lblCol3",handle,70,85,str,0.4,0,0);
-sprintf(str,"%-15s","Players");
+sprintf(str,"%-15s",gettext("Players"));
 raydium_gui_label_create("lblCol4",handle,90,85,str,0.4,0,0);
 
 sprintf(str,"%-30s","------------------------------");
@@ -761,7 +764,7 @@ strcat(track,".mni");
 t=get_score(track,p);
 hms(t,&h,&m,&s,&ms);
 
-sprintf(str,"%s, with %i:%02i:%02i:%03i",p,h,m,s,ms);
+sprintf(str,gettext("%s, with %i:%02i:%02i:%03i"),p,h,m,s,ms);
 
 handle=raydium_gui_window_create("besttime",25,45,50,15);
 raydium_gui_widget_sizes(0,0,18);
@@ -777,7 +780,7 @@ int handle;
 
 handle=raydium_gui_window_create("error",25,45,60,15);
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblError",handle,50,80,"Can't download track from server !",0,0,0);
+raydium_gui_label_create("lblError",handle,50,80,gettext("Can't download track from server !"),0,0,0);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnErrorOk",handle,35,15,"OK",btnErrorOkClick);
 }
@@ -788,8 +791,8 @@ int handle;
 
 handle=raydium_gui_window_create("restart",25,50,50,20);
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblRestart1",handle,50,80,"You need to restart the game",0,0,0);
-raydium_gui_label_create("lblRestart2",handle,50,60,"to apply window settings",0,0,0);
+raydium_gui_label_create("lblRestart1",handle,50,80,gettext("You need to restart the game"),0,0,0);
+raydium_gui_label_create("lblRestart2",handle,50,60,gettext("to apply window settings"),0,0,0);
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnRestartOk",handle,35,15,"OK",btnRestartClick);
 }
@@ -798,9 +801,9 @@ raydium_gui_button_create("btnRestartOk",handle,35,15,"OK",btnRestartClick);
 void build_gui_StoryCompleted(void)
 {
 int handle;
-char *str1= "  ^cCongratulations !";
-char *str1s="  ^0Congratulations !";
-char *str2="Story mode is completed !";
+char *str1= gettext("  ^cCongratulations !");
+char *str1s=gettext("  ^0Congratulations !");
+char *str2=gettext("Story mode is completed !");
 
 handle=raydium_gui_window_create("storycompleted",25,45,50,25);
 raydium_gui_widget_sizes(0,0,28);
@@ -810,8 +813,8 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblStoryCompleted2",handle,50,50,str2,0,0,0);
 
 raydium_gui_widget_sizes(18,5,18);
-raydium_gui_button_create("btnStoryCompletedOk",handle,15,15,"OK",btnStoryCompletedOk);
-raydium_gui_button_create("btnCredits",handle,55,15,"Credits !",btnCredits);
+raydium_gui_button_create("btnStoryCompletedOk",handle,15,15,gettext("OK"),btnStoryCompletedOk);
+raydium_gui_button_create("btnCredits",handle,55,15,gettext("Credits !"),btnCredits);
 
 raydium_gui_widget_focus_name("btnStoryCompletedOk","storycompleted");
 }
@@ -834,31 +837,31 @@ if(ilt<0) ilt=0;
 
 handle=raydium_gui_window_create("menu",48,10,50,40);
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblPlayerName",handle,25,90,"Player Name :",0,0,0);
+raydium_gui_label_create("lblPlayerName",handle,25,90,gettext("Player Name :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtPlayerName",handle,47,85,raydium_network_name_local);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblTrack",handle,34,75,"Track :",0,0,0);
+raydium_gui_label_create("lblTrack",handle,34,75,gettext("Track :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_combo_create("cboTrack",handle,47,70,l,ilt);
 
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_button_create("btnBestTime",handle,47,55,"Get best time",gui_menu_BestTime);
+raydium_gui_button_create("btnBestTime",handle,47,55,gettext("Get best time"),gui_menu_BestTime);
 
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnDriveNet);
+raydium_gui_button_create("btnDrive",handle,35,5,gettext("Drive !"),btnDriveNet);
 
 raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+raydium_gui_button_create("btnBackToMain",handle,5,5,gettext("<"),btnBackToMainMenu);
 
-raydium_gui_label_create("lblURL1",handle,50,40,"Live scores :",0,0,0);
-raydium_gui_label_create("lblURL2",handle,50,30,"http://maniadrive.raydium.org/",0.7,0,0);
+raydium_gui_label_create("lblURL1",handle,50,40,gettext("Live scores :"),0,0,0);
+raydium_gui_label_create("lblURL2",handle,50,30,gettext("http://maniadrive.raydium.org/"),0.7,0,0);
 
 if(!net)
     {
-    char *msg1="WARNING: Internet connection failed !";
-    char *msg2="Now in offline mode. (set your proxy ?)";
+    char *msg1=gettext("WARNING: Internet connection failed !");
+    char *msg2=gettext("Now in offline mode. (set your proxy ?)");
     handle=raydium_gui_window_create("error",15,45,70,20);
     raydium_gui_widget_sizes(0,0,18);
     raydium_gui_label_create("lblError1",handle,50,80,msg1,0,0,0);
@@ -889,23 +892,23 @@ ilt=raydium_gui_list_id(lasttrack,l);
 if(ilt<0) ilt=0;
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblMode",handle,50,90,"- Other Tracks -",0,0,0);
+raydium_gui_label_create("lblMode",handle,50,90,gettext("- Other Tracks -"),0,0,0);
 
 raydium_gui_widget_sizes(0,0,16);
-raydium_gui_label_create("lbl1",handle,50,75,"Here, you can play offline with:",0.7,0,0);
-raydium_gui_label_create("lbl2",handle,50,65,"- User tracks",0.7,0,0);
-raydium_gui_label_create("lbl3",handle,50,55,"- Downloaded internet tracks",0.7,0,0);
+raydium_gui_label_create("lbl1",handle,50,75,gettext("Here, you can play offline with:"),0.7,0,0);
+raydium_gui_label_create("lbl2",handle,50,65,gettext("- User tracks"),0.7,0,0);
+raydium_gui_label_create("lbl3",handle,50,55,gettext("- Downloaded internet tracks"),0.7,0,0);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblTrack",handle,24,35,"Track :",0,0,0);
+raydium_gui_label_create("lblTrack",handle,24,35,gettext("Track :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_combo_create("cboTrack",handle,37,30,l,ilt);
 
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnDrive",handle,35,5,"Drive !",btnOtherTracksSolo);
+raydium_gui_button_create("btnDrive",handle,35,5,gettext("Drive !"),btnOtherTracksSolo);
 
 raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+raydium_gui_button_create("btnBackToMain",handle,5,5,gettext("<"),btnBackToMainMenu);
 
 gui_start();
 }
@@ -960,7 +963,7 @@ for(i=0;i<len;i++)
     raydium_parser_cut(ret+last,part1,part2,';');
     raydium_gui_widget_sizes(10,4,12);
     candrive=(part2[1]!='4');
-    raydium_gui_button_create(part1,handle,x1,pos,(candrive?"Drive":"-"),(candrive?btnDriveSolo:btnCantDrive));
+    raydium_gui_button_create(part1,handle,x1,pos,(candrive?gettext("Drive"):gettext("-")),(candrive?btnDriveSolo:btnCantDrive));
 
     part1[0]='*'+id; // avoid name collision
     strcpy(part3,part2);
@@ -985,11 +988,11 @@ signed char completed;
 handle=raydium_gui_window_create("menu",5,5,90,90);
 
 raydium_gui_widget_sizes(0,0,25);
-raydium_gui_label_create("lblMode",handle,55,93,"Story Mode",0,0,0);
+raydium_gui_label_create("lblMode",handle,55,93,gettext("Story Mode"),0,0,0);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblBeg",handle,30,88,"Beginners",0,0.3,0);
-raydium_gui_label_create("lblPro",handle,80,88,"Pro",0.3,0,0);
+raydium_gui_label_create("lblBeg",handle,30,88,gettext("Beginners"),0,0.3,0);
+raydium_gui_label_create("lblPro",handle,80,88,gettext("Pro"),0.3,0,0);
 
 completed=build_gui_Story_sub(handle,STORY_FILE_BEG,2, 33,0);
 
@@ -1000,16 +1003,16 @@ if(completed)
     raydium_video_loop_name("video_beg",0);
     raydium_gui_AfterGuiDrawCallback=after_gui;    
     raydium_gui_window_OnDelete_name("menu",video_beg_delete);
-    raydium_gui_label_create("lblOkBeg",handle,27,45,"Beginners mode completed !",0,0,0);
+    raydium_gui_label_create("lblOkBeg",handle,27,45,gettext("Beginners mode completed !"),0,0,0);
     }
 
 completed=build_gui_Story_sub(handle,STORY_FILE_PRO,52,83,1);
 
 raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,5,3,"<",btnBackToMainMenu);
+raydium_gui_button_create("btnBackToMain",handle,5,3,gettext("<"),btnBackToMainMenu);
 //"Other Tracks" button passed to the main menu
 //raydium_gui_widget_sizes(20,4,18);
-//raydium_gui_button_create("btnSolo",handle,40,3,"Other tracks",btnSoloTracks);
+//raydium_gui_button_create("btnSolo",handle,40,3,gettext("Other tracks"),btnSoloTracks);
 
 gui_start();
 
@@ -1036,27 +1039,27 @@ raydium_network_client_discover("ManiaDrive",10);
 handle=raydium_gui_window_create("menu",48,10,50,40);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblMode",handle,50,90,"- Network Game - ",0,0,0);
+raydium_gui_label_create("lblMode",handle,50,90,gettext("- Network Game - "),0,0,0);
 
-raydium_gui_label_create("lblPlayerName",handle,25,75,"Player Name :",0,0,0);
+raydium_gui_label_create("lblPlayerName",handle,25,75,gettext("Player Name :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtPlayerName",handle,47,70,raydium_network_name_local);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblServer",handle,32.5,60,"Server :",0,0,0);
+raydium_gui_label_create("lblServer",handle,32.5,60,gettext("Server :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtServer",handle,47,55,server);
 
 raydium_gui_widget_sizes(18,5,18);
-raydium_gui_button_create("btnMulti",handle,55,35,"Connect",btnNetworkConnect);
+raydium_gui_button_create("btnMulti",handle,55,35,gettext("Connect"),btnNetworkConnect);
 raydium_gui_widget_sizes(18,5,18);
-raydium_gui_button_create("btnSearchLAN",handle,10,35,"Search LAN",btnSearchLAN);
+raydium_gui_button_create("btnSearchLAN",handle,10,35,gettext("Search LAN"),btnSearchLAN);
 
 //raydium_gui_widget_sizes(18,5,15);
 //raydium_gui_button_create("btnCreateServ",handle,55,15,"Create server",btnCreateServer);
 
 raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+raydium_gui_button_create("btnBackToMain",handle,5,5,gettext("<"),btnBackToMainMenu);
 gui_start();
 }
 
@@ -1069,29 +1072,29 @@ raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 handle=raydium_gui_window_create("menu",48,10,50,60);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblPlayerName",handle,25,90,"Player Name :",0,0,0);
+raydium_gui_label_create("lblPlayerName",handle,25,90,gettext("Player Name :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtPlayerName",handle,47,87,raydium_network_name_local);
 
 raydium_gui_widget_sizes(4,4,18);
-raydium_gui_check_create("chkCameraLag",handle,10,70," Camera lagging support",camera_lag);
+raydium_gui_check_create("chkCameraLag",handle,10,70,gettext(" Camera lagging support"),camera_lag);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblCamLagFact",handle,30,64,"Camera's speed :",0,0,0);
+raydium_gui_label_create("lblCamLagFact",handle,30,64,gettext("Camera's speed :"),0,0,0);
 raydium_gui_widget_sizes(20,2,0);
 raydium_gui_track_create("trkCameraLag",handle,56,62, 2,10,camera_lag_speed);
 
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblMusicVol",handle,25,44,"Music volume :",0,0,0);
+raydium_gui_label_create("lblMusicVol",handle,25,44,gettext("Music volume :"),0,0,0);
 raydium_gui_widget_sizes(15,2,0);
 raydium_gui_track_create("trkMusicVol",handle,48,42, 0,100,music_volume*100);
-raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnMusicVolTest",handle,82,41,"test",btnMusicVolTest);
+raydium_gui_widget_sizes(9,3,14);
+raydium_gui_button_create("btnMusicVolTest",handle,81,41,gettext("test"),btnMusicVolTest);
 
 raydium_gui_widget_sizes(4,4,18);
-raydium_gui_check_create("chkShadow",handle,2,28," Shadow support (experimental)",shadow_support);
-raydium_gui_check_create("chkWindow",handle,2,18," Window mode with",windowed_mode);
+raydium_gui_check_create("chkShadow",handle,2,28,gettext(" Shadow support (experimental)"),shadow_support);
+raydium_gui_check_create("chkWindow",handle,2,18,gettext(" Window mode with"),windowed_mode);
 raydium_gui_widget_sizes(17,4,18);
 raydium_gui_combo_create("cboWindow",handle,63,18,RESOLUTION_LIST,raydium_gui_list_id(windowed_res,RESOLUTION_LIST));
 // save this settings
@@ -1099,14 +1102,14 @@ windowed_mode_save=windowed_mode;
 strcpy(windowed_res_save,windowed_res);
 
 raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,5,5,"<",btnBackToMainMenu);
+raydium_gui_button_create("btnBackToMain",handle,5,5,gettext("<"),btnBackToMainMenu);
 
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnApply",handle,30,5,"Apply",btnApplyOptions);
+raydium_gui_button_create("btnApply",handle,30,5,gettext("Apply"),btnApplyOptions);
 
 
 raydium_gui_widget_sizes(15,5,18);
-raydium_gui_button_create("btnKeyHelp",handle,65,5,"Controls",btnKeyHelp);
+raydium_gui_button_create("btnKeyHelp",handle,65,5,gettext("Controls"),btnKeyHelp);
 
 
 gui_start();
@@ -1152,6 +1155,21 @@ id=atoi(part2);
 showMessage(trackdata.message_file,id);
 }
 
+char *findMessageLang(char *file)
+{
+static char lang[128];
+
+// Here, we must resolv the "short" locale (example 'fr') from LC_MESSAGE
+// one (example fr_FR). It seems that it's always the two first chars.
+/*... setlocale(LC_MESSAGES,"") ... */
+
+// Then, we must search the 'file' to see if any message is using our
+// short locale, and fallback to 'en' if not...
+
+strcpy(lang,"en");
+return lang;
+}
+
 void showMessage(char *file, int id)
 {
 int handle;
@@ -1165,17 +1183,18 @@ char var[RAYDIUM_MAX_NAME_LEN];
 char val_s[RAYDIUM_GUI_DATASIZE];
 float val_f[10];
 int size;
+char lang[128];
 
 raydium_gui_window_delete_name("menu");
-
 fp=raydium_file_fopen(file,"rt");
 if(fp)
 {
  count=0;
+ strcpy(lang,findMessageLang(file));
 
  while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
-    if(!strcasecmp(var,"en"))
+    if(!strcasecmp(var,lang))
 	{
         if(ret!=RAYDIUM_PARSER_TYPE_RAWDATA)
 	    {
@@ -1257,17 +1276,17 @@ int handle;
 handle=raydium_gui_window_create("menu",48,10,50,40);
 
 raydium_gui_widget_sizes(0,0,18);
-raydium_gui_label_create("lblMode",handle,50,90,"- Select Game Mode - ",0,0,0);
+raydium_gui_label_create("lblMode",handle,50,90,gettext("- Select Game Mode - "),0,0,0);
 
-raydium_gui_widget_sizes(25,4,18);
-raydium_gui_button_create("btnModeStory",handle,25,70,"Story",btnModeStory);
-raydium_gui_button_create("btnModeNetTracks",handle,25,55,"Internet Tracks",btnModeNetTracks);
-raydium_gui_button_create("btnModeLAN",handle,25,40,"LAN Multiplayer",btnModeLan);
-raydium_gui_button_create("btnSolo",handle,25,25,"Other tracks",btnSoloTracks);
-raydium_gui_button_create("btnOptions",handle,25,10,"Options",btnOptions);
+raydium_gui_widget_sizes(27,4,18);
+raydium_gui_button_create("btnModeStory",handle,25,70,gettext("Story"),btnModeStory);
+raydium_gui_button_create("btnModeNetTracks",handle,25,55,gettext("Internet Tracks"),btnModeNetTracks);
+raydium_gui_button_create("btnModeLAN",handle,25,40,gettext("LAN Multiplayer"),btnModeLan);
+raydium_gui_button_create("btnSolo",handle,25,25,gettext("Other tracks"),btnSoloTracks);
+raydium_gui_button_create("btnOptions",handle,25,10,gettext("Options"),btnOptions);
 
-raydium_gui_widget_sizes(6,3,14);
-raydium_gui_button_create("btnBackToMain",handle,3,5,"Quit",btnQuit);
+raydium_gui_widget_sizes(8,3,14);
+raydium_gui_button_create("btnBackToMain",handle,4,5,gettext("Quit"),btnQuit);
 gui_start();
 }
 
@@ -1486,9 +1505,9 @@ if(type==GAME_END)
 	    {
 	    // win
 	    if(timer<trackdata.author_time)
-		strcpy(message,"Impressive ! Quicker than the author !");
+		strcpy(message,gettext("Impressive ! Quicker than the author !"));
 	    else
-		strcpy(message,"Right ! You got it.");
+		strcpy(message,gettext("Right ! You got it."));
 	    
 	    // (add score to local database)
 	    post_score_local(mni_current,timer);
@@ -1496,7 +1515,7 @@ if(type==GAME_END)
 	else
 	    {
 	    // try again
-	    strcpy(message,"- Try again (press space key) -");
+	    strcpy(message,gettext("- Try again (press space key) -"));
 	    }
 	}
 
@@ -1505,9 +1524,9 @@ if(type==GAME_END)
 	int p;
 	p=post_score(mni_current,raydium_network_name_local,score);
 	if(p)
-	    sprintf(message,"Your place: %i",p);
+	    sprintf(message,gettext("Your place: %i"),p);
 	else
-	    sprintf(message,"(unofficial track or connection failure)");
+	    sprintf(message,gettext("(unofficial track or connection failure)"));
 	
 	}
     }
@@ -1555,7 +1574,7 @@ int h2,m2,s2,ms2;
 
 hms(timer,&h,&m,&s,&ms);
 raydium_osd_color_change(0.89,0.85,0.66);
-raydium_osd_printf(55,4,12,0.5,"font-impact.tga","   lap time:");
+raydium_osd_printf(55,4,12,0.5,"font-impact.tga",gettext("   lap time:"));
 raydium_osd_printf(68,4,12,0.7,"font-lcdmono.tga","%i:%02i:%02i:%03i",h,m,s,ms);
 
 
@@ -1563,7 +1582,7 @@ if(mode==MODE_MULTI)
     {
     hms(partytime,&h2,&m2,&s2,&ms2);
     raydium_osd_color_change(0.89,0.85,0.66);
-    raydium_osd_printf(10,4,12,0.5,"font-impact.tga"," party time:");
+    raydium_osd_printf(10,4,12,0.5,"font-impact.tga",gettext(" party time:"));
     raydium_osd_printf(23,4,12,0.7,"font-lcdmono.tga","^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }
 else
@@ -1575,7 +1594,7 @@ else
 	
     hms(yourbest,&h2,&m2,&s2,&ms2);
     raydium_osd_color_change(0.89,0.85,0.66);
-    raydium_osd_printf(20-off,4,12,0.5,"font-impact.tga","  your best:");
+    raydium_osd_printf(20-off,4,12,0.5,"font-impact.tga",gettext("  your best:"));
     raydium_osd_printf(33-off,4,12,0.7,"font-lcdmono.tga","^f%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }
 
@@ -1583,7 +1602,7 @@ if(mode==MODE_SOLO)
     {
     hms(trackdata.gold_time,&h2,&m2,&s2,&ms2);
     raydium_osd_color_change(0.89,0.85,0.66);
-    raydium_osd_printf(20,7,12,0.5,"font-impact.tga","  gold time:");
+    raydium_osd_printf(20,7,12,0.5,"font-impact.tga",gettext("  gold time:"));
     raydium_osd_printf(33,7,12,0.7,"font-lcdmono.tga","^e%i:%02i:%02i:%03i",h2,m2,s2,ms2);
     }    
 }
@@ -1607,7 +1626,7 @@ if(track_score.time>=0)
     {
     hms(track_score.time,&h,&m,&s,&ms);
     raydium_osd_color_change(0.89,0.85,0.66);
-    raydium_osd_printf(10,7,12,0.5,"font-impact.tga","     record:");
+    raydium_osd_printf(10,7,12,0.5,"font-impact.tga",gettext("     record:"));
     raydium_osd_printf(23,7,12,0.7,"font-lcdmono.tga","^e%i:%02i:%02i:%03i",h,m,s,ms);
     raydium_osd_printf(39,7,12,0.5,"font-impact.tga","^f- %s",track_score.player);
     }
@@ -1641,8 +1660,8 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
 
 if(game_state==GAME_SCORE)
     {
-    raydium_osd_printf(35+SHADOW_OFFSET,30-SHADOW_OFFSET,40,0.5,"font-impact.tga","^0Game over !");
-    raydium_osd_printf(35,30,40,0.5,"font-impact.tga","^cGame over !");
+    raydium_osd_printf(35+SHADOW_OFFSET,30-SHADOW_OFFSET,40,0.5,"font-impact.tga",gettext("^0Game over !"));
+    raydium_osd_printf(35,30,40,0.5,"font-impact.tga",gettext("^cGame over !"));
     }
 
 }
@@ -2469,7 +2488,7 @@ raydium_osd_printf(2,4,12,0.5,"font2.tga","^f%f %f %f",rx*180/PI,ry*180/PI,rz*18
 	    n++;
 	}
 	raydium_osd_color_change(0.89,0.85,0.66);
-	raydium_osd_printf(55,7,12,0.5,"font-impact.tga","checkpoints:");
+	raydium_osd_printf(55,7,12,0.5,"font-impact.tga",gettext("checkpoints:"));
 	raydium_osd_printf(68,7,12,0.7,"font-lcdmono.tga","%02i/%02i",n,total);
     }
 
@@ -2478,8 +2497,8 @@ draw_best_score();
 
 if(countdown>0)
     {
-    raydium_osd_printf(10+SHADOW_OFFSET,50-SHADOW_OFFSET,40,0.5,"font-impact.tga","^0Ready ? Start in %i seconds",(int)countdown+1);
-    raydium_osd_printf(10,50,40,0.5,"font-impact.tga","^cReady ? Start in ^f%i^c seconds",(int)countdown+1);
+    raydium_osd_printf(10+SHADOW_OFFSET,50-SHADOW_OFFSET,40,0.5,"font-impact.tga",gettext("^0Ready ? Start in %i seconds"),(int)countdown+1);
+    raydium_osd_printf(10,50,40,0.5,"font-impact.tga",gettext("^cReady ? Start in ^f%i^c seconds"),(int)countdown+1);
     }
 raydium_osd_color_ega('f');
 //raydium_osd_logo("logoc.tga");
@@ -2488,7 +2507,6 @@ draw_music_popup();
 raydium_rendering_finish();
 
 raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
-
 }
 
 int main(int argc, char **argv)
@@ -2503,6 +2521,17 @@ int full_sx_i,full_sy_i;
 int mode;
 
 raydium_init_args_name(argc,argv,"mania_drive");
+
+//initializing the internationalization
+//WARNING: never use the next line. Let here for advise 
+//setlocale (LC_ALL, "");
+//TODO:
+//This stuff should be in a new function 
+//like raydium_enable_i18n("mania_drive","locale")
+setlocale (LC_CTYPE, "");
+setlocale (LC_MESSAGES, "");
+bindtextdomain ("mania_drive", "locale");
+textdomain ("mania_drive");
 
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
 windowed_mode=atoi(str);
