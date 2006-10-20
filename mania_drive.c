@@ -1161,7 +1161,7 @@ static char lang[128];
 
 // Here, we must resolv the "short" locale (example 'fr') from LC_MESSAGE
 // one (example fr_FR). It seems that it's always the two first chars.
-/*... setlocale(LC_MESSAGES,"") ... */
+/*... setlocale(LC_MESSAGES,NULL) ... */
 
 // Then, we must search the 'file' to see if any message is using our
 // short locale, and fallback to 'en' if not...
@@ -2528,6 +2528,18 @@ raydium_init_args_name(argc,argv,"mania_drive");
 //TODO:
 //This stuff should be in a new function 
 //like raydium_enable_i18n("mania_drive","locale")
+
+#ifdef WIN32
+{
+// Isn't all this UGLY ? :)
+char locale[64];
+char lang[128];
+GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME,locale,64);
+sprintf(lang,"LANG=%s",locale);
+putenv(lang);
+}
+#endif
+        
 setlocale (LC_CTYPE, "");
 setlocale (LC_MESSAGES, "");
 bindtextdomain ("mania_drive", "locale");
