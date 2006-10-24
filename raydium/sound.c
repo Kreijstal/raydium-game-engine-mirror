@@ -171,11 +171,13 @@ raydium_path_resolv((char *)fname,translated,'r');
  data=alutLoadMemoryFromFile(translated,&format,&size,&freq);
      raydium_sound_verify("alutLoadMemoryFromFile");
 
+/* // it happends ;) (when sound car device's not available)
  if(!data)
     {
     raydium_log("sound: SHOULD NEVER HAPPEND !");
     return -1;
     }
+*/
 
  alBufferData(raydium_sound_buffer[snum],format,data,size,freq);
      raydium_sound_verify("alBufferData");

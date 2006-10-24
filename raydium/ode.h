@@ -18,10 +18,10 @@
 #define RAYDIUM_ODE_MAX_JOINTS			256
 #define RAYDIUM_ODE_MAX_MOTORS			64
 #define RAYDIUM_ODE_MAX_EXPLOSIONS		32
+#define RAYDIUM_ODE_MAX_RAYS			4	// per element ...
 #define	RAYDIUM_ODE_MOTOR_MAX_JOINTS		10
 #define	RAYDIUM_ODE_MOTOR_MAX_GEARS		10
 #define	RAYDIUM_ODE_ELEMENT_MAX_FIXING		10
-
 
 #define RAYDIUM_ODE_PHYSICS_FREQ		400
 #define	RAYDIUM_ODE_TIMESTEP			(0.006f)
@@ -162,6 +162,7 @@ typedef struct raydium_ode_Ray
     dGeomID geom;
     //signed char visible; // use "drawing debug" to display the ray
     dReal   rel_dir[3];
+    dReal   rel_pos[3];
     // farest contact
     dReal   max_dist;
     int     max_elem;
@@ -209,7 +210,7 @@ typedef struct raydium_ode_Element
     unsigned long net_last_interval;
     int		  ground_texture;
     signed char	  marked_as_deleted;
-    raydium_ode_Ray ray;
+    raydium_ode_Ray ray[RAYDIUM_ODE_MAX_RAYS];
 } raydium_ode_Element;
 
 

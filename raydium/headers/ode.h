@@ -643,7 +643,7 @@ Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning
 
 __rayapi signed char raydium_ode_element_ray_attach(int element, dReal length, dReal dirx, dReal diry, dReal dirz);
 /**
-This function will attach a ray to ##element##. This may be used as a
+This function will attach a new ray to ##element##. This may be used as a
 sensor, "hitscan" line, intersection test, ...
 Then you can get from this ray things like distance between the start
 of the ray (element's center) and the first "touched" element. You will also 
@@ -654,9 +654,7 @@ Do not try to retrieve informations until next frame.
 You must provide ray's length (the ray won't detect "things" over that point),
 and direction vector (relative to element).
 
-Since you can't set more than one ray per element, there's no problem with
-calling this function twice or more, it will simply override previous settings
-for length and direction.
+You can set up to ##RAYDIUM_ODE_MAX_RAYS## rays per element.
 
 Warning, ray are linked to GLOBAL object, so they will detect EVERY element,
 even if owned by the same object ! (only ##element## is never reported).
@@ -670,6 +668,8 @@ you can use ##raydium_ode_RayCallback##. This callback is following the
 same prototype as ##raydium_ode_CollideCallback## (see at the top of
 this chapter). Return 0 if you don't want this "contact" for ray informations,
 or 1 if you want normal behaviour.
+
+This functions returns the ray id for this element of -1 when it fails.
 **/
 
 __rayapi signed char raydium_ode_element_ray_attach_name(char *element, dReal length, dReal dirx, dReal diry, dReal dirz);
@@ -677,18 +677,18 @@ __rayapi signed char raydium_ode_element_ray_attach_name(char *element, dReal le
 Same as above, but using element's name.
 **/
 
-__rayapi signed char raydium_ode_element_ray_delete(int element);
+__rayapi signed char raydium_ode_element_ray_delete(int element, int ray_id);
 /**
-Delete ray from ##element##. No more ray "reports" will be available after
-this call.
+Delete ray ##ray_id## from ##element##. No more ray "reports" will be available 
+after this call.
 **/
 
-__rayapi signed char raydium_ode_element_ray_delete_name(char *element);
+__rayapi signed char raydium_ode_element_ray_delete_name(char *element, int ray_id);
 /**
 Same as above, but using element's name.
 **/
 
-__rayapi signed char raydium_ode_element_ray_get(int element, raydium_ode_Ray *result);
+__rayapi signed char raydium_ode_element_ray_get(int element, int ray_id, raydium_ode_Ray *result);
 /**
 This function allows you to retrieve informations about ray.
 
@@ -699,6 +699,7 @@ typedef struct raydium_ode_Ray
 {
     signed char state; // is this ray active ?
     dReal   rel_dir[3];
+    dReal   rel_pos[3];
     // farest contact
     dReal   max_dist;
     int     max_elem;   // touched element, -1 if no element was touched
@@ -710,26 +711,40 @@ typedef struct raydium_ode_Ray
 } raydium_ode_Ray;						
 %%
 
-Obviously, this function won't allocate any memory, you must provided a
-valid pointer.
+Obviously, this function won't allocate any memory, you must provide a
+valid pointer to a ##raydium_ode_Ray## struct.
 **/
 
-__rayapi signed char raydium_ode_element_ray_get_name(char *element, raydium_ode_Ray *result);
+__rayapi signed char raydium_ode_element_ray_get_name(char *element, int ray_id, raydium_ode_Ray *result);
 /**
 Same as above, but using element's name.
 **/
 
-__rayapi signed char raydium_ode_element_ray_set_length(int element, dReal length);
+__rayapi signed char raydium_ode_element_ray_set_length(int element, int ray_id, dReal length);
 /**
-Change ray length to choose range detection length
+Change ray length to choose range detection length.
 **/
 
 
-__rayapi signed char raydium_ode_element_ray_set_length_name(char *element, dReal length);
+__rayapi signed char raydium_ode_element_ray_set_length_name(char *element, int ray_id, dReal length);
 /**
 Same as above, but using element's name.
 **/
 
+__rayapi signed char raydium_ode_element_ray_pos(int element, int ray_id, dReal *pos);
+/**
+Moves ##ray_id## ray of ##element## to relative ##pos##.
+**/
+
+__rayapi signed char raydium_ode_element_ray_pos_name(char *element, int ray_id, dReal *pos);
+/**
+Same as above, but using element's name.
+**/
+
+__rayapi signed char raydium_ode_element_ray_pos_name_3f(char *element, int ray_id, dReal px, dReal py, dReal pz);
+/**
+Same as above, but using 3 float values.
+**/
 
 __rayapi int raydium_ode_element_fix (char *name, int *elem, int nelems, signed char keepgeoms);
 /**
