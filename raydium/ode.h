@@ -68,6 +68,10 @@
 #define RAYDIUM_ODE_DRAW_SHADOWERS		4
 #define RAYDIUM_ODE_DRAW_NORMAL_NO_POST		5
 
+#define RAYDIUM_ODE_RAY_CONTACT_IGNORE		0
+#define RAYDIUM_ODE_RAY_CONTACT_REPORT		1
+#define RAYDIUM_ODE_RAY_CONTACT_CREATE		2
+
 __global dWorldID 	raydium_ode_world;
 __global dSpaceID 	raydium_ode_space;
 __global dJointGroupID 	raydium_ode_contactgroup;

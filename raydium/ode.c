@@ -3626,6 +3626,7 @@ return -1; // == coredump in the caller ;)
 void raydium_ode_near_callback(void *data, dGeomID o1, dGeomID o2)
 {
 int i,n;
+char gencontact;
 // dirty, but...
 #define N 400
 static  dContact contact[N];
@@ -3749,11 +3750,14 @@ e2=dGeomGetData(o2);
 	contact[i].surface.soft_cfm = cfm;
 
 
-
+	gencontact=0;
+	
 	if(dGeomGetClass(contact[i].geom.g1)==dRayClass)
 	    {
 	    // raydium_ode_RayCallback (1)
 	    ray_id=raydium_ode_internal_ray_geom_resolv(e1,contact[i].geom.g1);
+	    if(e1)
+		contact[i].geom.g1=raydium_ode_element[e1->id].geom;
 	    
 	    if(r)
 		{
@@ -3761,7 +3765,8 @@ e2=dGeomGetData(o2);
 		id1=id2=-1;
 		if(e1) id1=e1->id;
 		if(e2) id2=e2->id;
-		if(!r(id1,id2,&contact[i])) continue;
+		gencontact=r(id1,id2,&contact[i]);
+		if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
 		}
 
 	    if(e1 && e2 && 
@@ -3778,13 +3783,16 @@ e2=dGeomGetData(o2);
 		e1->ray[ray_id].max_elem=e2->id;
 		memcpy(e1->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
 		}
-	    continue;
+	    if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
+		continue;
 	    }
 
 	if(dGeomGetClass(contact[i].geom.g2)==dRayClass)
 	    {
 	    // raydium_ode_RayCallback (2)
 	    ray_id=raydium_ode_internal_ray_geom_resolv(e2,contact[i].geom.g2);
+	    if(e2)
+		contact[i].geom.g2=raydium_ode_element[e2->id].geom;
 
 	    if(r)
 		{
@@ -3792,7 +3800,8 @@ e2=dGeomGetData(o2);
 		id1=id2=-1;
 		if(e1) id1=e1->id;
 		if(e2) id2=e2->id;
-		if(!r(id1,id2,&contact[i])) continue;
+		gencontact=r(id1,id2,&contact[i]);
+		if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
 		}
 
 	    if(e1 && e2 && 
@@ -3809,7 +3818,8 @@ e2=dGeomGetData(o2);
 		e2->ray[ray_id].max_elem=e1->id;
 		memcpy(e2->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
 		}
-	    continue;
+	    if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
+		continue;
 	    }
 		
 	// raydium_ode_CollideCallback

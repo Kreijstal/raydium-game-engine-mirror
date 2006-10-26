@@ -8,7 +8,7 @@
     CQFD Corp.
 */
 
-char *version="version 0.6.16";
+char *version="version 0.6.17";
 
 #include "raydium/index.c"
 
@@ -311,8 +311,7 @@ raydium_ode_object_delete_name("BUGGY");
     raydium_ode_motor_attach_name("buggy_direction","buggy_suspet_ad",0);
     raydium_ode_motor_power_max_name("buggy_direction",0.2);
 
-    raydium_ode_element_ray_attach(raydium_ode_element_find("buggy_corps"),10,1,0,0);
-//    raydium_ode_element_ray_attach(raydium_ode_element_find("buggy_corps"),2,-1,0,0);
+    raydium_ode_element_ray_attach_name("buggy_corps",10,1,0,0);
     raydium_ode_element_ray_pos_name_3f("buggy_corps",0,0.2,0,0.225);
     {
     //dReal pos[3]={2,2,2};

@@ -156,7 +156,7 @@ default rendering state (see ##raydium_rendering_rgb_normal##).
 
 - ##raydium_ode_RayCallback##
 See ray related functions, below. This callback is used to filter
-elements during a ray launch.
+elements and create contacts during a ray launch.
 **/
 
 
@@ -659,14 +659,17 @@ You can set up to ##RAYDIUM_ODE_MAX_RAYS## rays per element.
 Warning, ray are linked to GLOBAL object, so they will detect EVERY element,
 even if owned by the same object ! (only ##element## is never reported).
 
-For now, a ray will never generate contact point for touched object, you
-must consider them as "phantom" elements, only looking at the current world
-without modifying it. If you need this feature, ask for it ;)
-
 If you want to filter wich elements are used to generate rays'informations,
 you can use ##raydium_ode_RayCallback##. This callback is following the
 same prototype as ##raydium_ode_CollideCallback## (see at the top of
-this chapter). Return 0 if you don't want this "contact" for ray informations,
+this chapter). In this callback, you can use 3 different return values:
+- ##RAYDIUM_ODE_RAY_CONTACT_IGNORE## if you don't want this "contact" for 
+ray informations,
+- ##RAYDIUM_ODE_RAY_CONTACT_REPORT## if you want to report the contact: it will
+update informations for ##raydium_ode_element_ray_get()##.
+- ##RAYDIUM_ODE_RAY_CONTACT_CREATE## will report the contact, and collide !
+
+Return 0 if you don't want this "contact" for ray informations,
 or 1 if you want normal behaviour.
 
 This functions returns the ray id for this element of -1 when it fails.
