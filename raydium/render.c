@@ -59,10 +59,10 @@ if(first)
 tui=tu-GL_TEXTURE0_ARB;
 
 
-if(tui>=min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units) || tui<0)
+if(tui>=raydium_trigo_min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units) || tui<0)
     {
     raydium_log("render: texture unit %i is invalid (%i max, see RAYDIUM_RENDER_MAX_TEXUNITS or hardware specs)",
-    tui,min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units));
+    tui,raydium_trigo_min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units));
     return 0;
     }
 
