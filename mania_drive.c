@@ -1996,7 +1996,7 @@ float x,y,z;
 char dir;
 dReal pos[3];
 dReal rot[3];
-dReal partoffset1[]={-0.6,-0.134,-0.207};
+dReal partoffset1[]={-0.6,0.134,-0.207};
 char body[RAYDIUM_MAX_NAME_LEN];
 char wheel[RAYDIUM_MAX_NAME_LEN];
 int  body_id;
