@@ -20,7 +20,7 @@
 */
 
 #define RAYDIUM_MAJOR	0
-#define RAYDIUM_MINOR	705
+#define RAYDIUM_MINOR	706
 
 #ifdef WIN32
 # ifdef RAYDLL
@@ -254,6 +254,7 @@
 
 #define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	(50.f)
 #define RAYDIUM_RENDER_REFLECTION_FACT		(0.1f)
+#define RAYDIUM_RENDER_MAX_TEXUNITS             4
 
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
@@ -303,7 +304,7 @@ __global GLuint   raydium_texture_current_main;
 __global GLuint   raydium_texture_current_multi;
 __global GLfloat  raydium_texture_current_multi_u;
 __global GLfloat  raydium_texture_current_multi_v;
-__global GLuint   raydium_texture_current_env;
+__global GLuint   raydium_texture_current_env[RAYDIUM_RENDER_MAX_TEXUNITS-1]; // do not count first texunit
 __global signed char     raydium_texture_filter;
 __global GLint	  raydium_texture_size_max;
 __global GLint	  raydium_texture_units;
@@ -356,7 +357,7 @@ __global GLuint  *raydium_vertex_texture;
 __global GLuint  *raydium_vertex_texture_multi;
 __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
-__global GLuint  *raydium_vertex_texture_env;
+__global GLuint  *raydium_vertex_texture_env[RAYDIUM_RENDER_MAX_TEXUNITS];
 __global signed char	 *raydium_vertex_tag;
 
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];

@@ -122,20 +122,49 @@ char *sep;
 char *sep2=NULL;
 char *sep_env;
 char texname[RAYDIUM_MAX_NAME_LEN];
+int i;
 
 sep = strchr(name,MULTI_SEP);
 sep_env = strchr(name,ENVMAP_SEP);
 if(sep) sep2 = strchr(sep+1,MULTI_UVSEP);
 
+for(i=0;i<(RAYDIUM_RENDER_MAX_TEXUNITS-1);i++)
+        raydium_texture_current_env[i]=0;
+
 if(sep_env)
 {
-  raydium_texture_current_multi=0;
-  raydium_texture_current_env=raydium_texture_find_by_name(sep_env+1);
-  *sep_env=0;
-  raydium_texture_current_set_name(name);
-  *sep_env=ENVMAP_SEP;
+  int count=0;
+  char todo[RAYDIUM_MAX_NAME_LEN];
+  char part1[RAYDIUM_MAX_NAME_LEN];
+  char part2[RAYDIUM_MAX_NAME_LEN];
+
+  for(i=0;name[i];i++)
+        if(name[i]==ENVMAP_SEP)
+           count++;
+        
+  if(count>=RAYDIUM_RENDER_MAX_TEXUNITS)
+        {
+        raydium_log("ERROR: file_tri: this file request %i texunits, only %i are available here",count+1,RAYDIUM_RENDER_MAX_TEXUNITS);
+        return 0;
+        }
+
+  count=0;
+  strcpy(todo,name);
+
+  raydium_parser_cut(todo,part1,part2,'#');
+  raydium_texture_current_set_name(part1); // main texture
+  strcpy(todo,part2);
+
+  while(raydium_parser_cut(todo,part1,part2,'#'))
+        {
+        raydium_texture_current_env[count++]=raydium_texture_find_by_name(part1);
+        strcpy(todo,part2);          
+        }
+  raydium_texture_current_env[count++]=raydium_texture_find_by_name(part2);
+  
   return 3;
 }
+
 
 
 // 2 textures + 1 uv
@@ -144,7 +173,6 @@ if(sep && sep2)
   sscanf(sep+1,"%f|%f|%s\n", &raydium_texture_current_multi_u,
 			    &raydium_texture_current_multi_v,
 			    texname);
-  raydium_texture_current_env=0;
   raydium_texture_current_multi=raydium_texture_find_by_name(texname);
   *sep=0;
   raydium_texture_current_set_name(name);
@@ -156,7 +184,6 @@ if(sep && sep2)
 // 2 textures, but 0 uv
 if(sep && !sep2)
 {
-  raydium_texture_current_env=0;
   raydium_texture_current_multi=raydium_texture_find_by_name(sep+1);
   *sep=0;
   raydium_texture_current_set_name(name);
@@ -169,7 +196,6 @@ if(sep && !sep2)
 // 1 texture and 0 uv
 if(!sep && !sep2)
 { 
-  raydium_texture_current_env=0;
   raydium_texture_current_multi=0;
   raydium_texture_current_set_name(name);
   return 0;

@@ -28,6 +28,9 @@ See this example:
 Environment texture name must start with "ENV" to allow spherical mapping, wich
 is needed for such effect. See also ##RAYDIUM_RENDER_REFLECTION_FACT## in
 file ##common.h## if you want reflection to be more or less visible.
+
+This separator can also be used for shaders, to load multiple textures in the
+hardware (up to RAYDIUM_RENDER_MAX_TEXUNITS on the same line of the tri file).
 **/
 
 

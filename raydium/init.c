@@ -129,7 +129,8 @@ raydium_texture_current_main=0; // sets an "invalid" current texture
 raydium_texture_current_multi=0; // sets an "invalid" current texture
 raydium_texture_current_multi_u=0;
 raydium_texture_current_multi_v=0;
-raydium_texture_current_env=0; // sets an "invalid" current texture
+for(i=0;i<(RAYDIUM_RENDER_MAX_TEXUNITS-1);i++)
+        raydium_texture_current_env[i]=0; // sets an "invalid" current texture
 raydium_texture_to_replace=0; // No texture to erase.. just load it :)
 raydium_texture_used_memory=0;
 //raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_NONE;
@@ -194,6 +195,7 @@ raydium_log("Raydium engine reseted to original state");
 void raydium_init_engine(void)
 {
 GLenum err;
+int i;
 #ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 #endif
@@ -209,7 +211,7 @@ raydium_log("Platform \"4xfloat\" vector size is: %i byte(s) long",raydium_inter
 glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);
 raydium_log("OpenGL implementation maximum texture size: %ix%i",raydium_texture_size_max,raydium_texture_size_max);
 glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &raydium_texture_units);
-raydium_log("OpenGL hardware providing %i texture unit(s)",raydium_texture_units);
+raydium_log("OpenGL hardware providing %i texture unit(s), Raydium deals with %i",raydium_texture_units,RAYDIUM_RENDER_MAX_TEXUNITS);
 raydium_vertex_x=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_y=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_z=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
@@ -225,7 +227,8 @@ raydium_vertex_texture=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_texture_multi=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_texture_multi_u=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_texture_multi_v=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
-raydium_vertex_texture_env=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
+for(i=0;i<(RAYDIUM_RENDER_MAX_TEXUNITS-1);i++)
+        raydium_vertex_texture_env[i]=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLuint));
 raydium_vertex_tag=malloc(RAYDIUM_MAX_VERTICES);
 // must test more than just the last "big" malloc result..
 if(!raydium_vertex_texture) { raydium_log("Out of memory..."); exit(29); }

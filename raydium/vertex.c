@@ -12,13 +12,16 @@
 
 void raydium_vertex_add(GLfloat x, GLfloat y, GLfloat z/*, GLfloat nx, GLfloat ny, GLfloat nz*/)
 {
-
+int i;
 raydium_vertex_x[raydium_vertex_index]=x;
 raydium_vertex_y[raydium_vertex_index]=y;
 raydium_vertex_z[raydium_vertex_index]=z;
 raydium_vertex_texture[raydium_vertex_index]=raydium_texture_current_main;
 raydium_vertex_texture_multi[raydium_vertex_index]=raydium_texture_current_multi;
-raydium_vertex_texture_env[raydium_vertex_index]=raydium_texture_current_env;
+
+for(i=0;i<(RAYDIUM_RENDER_MAX_TEXUNITS-1);i++)
+        raydium_vertex_texture_env[i][raydium_vertex_index]=raydium_texture_current_env[i];
+
 if(raydium_texture_current_multi)
 {
     if(raydium_texture_current_multi_u==-99999 && 

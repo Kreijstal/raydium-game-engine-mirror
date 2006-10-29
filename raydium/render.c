@@ -40,7 +40,6 @@ raydium_render_lightmap_color(col);
 }
 
 // let's keep this define here, until full tests
-#define RAYDIUM_RENDER_MAX_TEXUNITS 4
 int raydium_rendering_prepare_texture_unit(GLenum tu,GLuint tex)
 {
 // cache state of each texunit
@@ -60,10 +59,10 @@ if(first)
 tui=tu-GL_TEXTURE0_ARB;
 
 
-if(tui>=RAYDIUM_RENDER_MAX_TEXUNITS || tui<0)
+if(tui>=min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units) || tui<0)
     {
-    raydium_log("render: texture unit %i is invalid (%i max, see RAYDIUM_RENDER_MAX_TEXUNITS",
-    tui,RAYDIUM_RENDER_MAX_TEXUNITS);
+    raydium_log("render: texture unit %i is invalid (%i max, see RAYDIUM_RENDER_MAX_TEXUNITS or hardware specs)",
+    tui,min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units));
     return 0;
     }
 
@@ -270,6 +269,7 @@ void raydium_rendering_from_to(GLuint from, GLuint to)
 {
 GLuint tex,i,j;
 int multi_prepared=0;
+signed char env=0;
 
 if(raydium_shadow_rendering)
     {
@@ -281,8 +281,9 @@ for(tex=1;tex<raydium_texture_index;tex++)
 {
   // prepare first texture unit
   raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,tex);
-  // ... and reset next one
-  raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
+  // ... and reset next ones
+  for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
 
   glBegin(GL_TRIANGLES);
   
@@ -307,7 +308,14 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	glColor4f(1.f,1.f,1.f,1.f);
 #endif    
 
-    if(raydium_vertex_texture_multi[i] || raydium_vertex_texture_env[i])
+    for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
+            if(raydium_vertex_texture_env[j][i])
+                {
+                env=1;
+                break;
+                }
+    
+    if(env || raydium_vertex_texture_multi[i])
     {
 	if(raydium_vertex_texture_multi[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
 	    {
@@ -316,9 +324,11 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	    multi_prepared=1;
 	    }
 
-	if(raydium_vertex_texture_env[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_env[i]))
+	if(env)
 	    {
-	    //glEnd(); // done by "prepare_texture_multi"
+            for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
+                raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,raydium_vertex_texture_env[j][i]);
+            //glEnd(); // done by "prepare_texture_multi"
 	    glBegin(GL_TRIANGLES);
 	    multi_prepared=1;
 	    }
@@ -345,7 +355,8 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	// cancel previous multitexturing settings
 	if(multi_prepared)
 	    {
-	    raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
+            for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
+	        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
 	    multi_prepared=0;
 	    glBegin(GL_TRIANGLES);
 	    }
@@ -374,7 +385,8 @@ for(tex=1;tex<raydium_texture_index;tex++)
     }
 } // end for "all textures"
 
-raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,0);
+for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
 }
 
 
