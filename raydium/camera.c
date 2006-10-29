@@ -546,6 +546,7 @@ int i;
 
     for(i=0;i<raydium_viewport_nb;i++)
        if(!strcmp(name,raydium_viewport[i].name)){
+            raydium_osd_color_ega('f');
             raydium_osd_draw_name(name,tx,ty,tx+sx,ty+sy);
             return;
        }
