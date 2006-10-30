@@ -3757,7 +3757,10 @@ e2=dGeomGetData(o2);
 	    // raydium_ode_RayCallback (1)
 	    ray_id=raydium_ode_internal_ray_geom_resolv(e1,contact[i].geom.g1);
 	    if(e1)
+		{
 		contact[i].geom.g1=raydium_ode_element[e1->id].geom;
+		e1->_last_touched_ray=ray_id;
+		}
 	    
 	    if(r)
 		{
@@ -3792,7 +3795,10 @@ e2=dGeomGetData(o2);
 	    // raydium_ode_RayCallback (2)
 	    ray_id=raydium_ode_internal_ray_geom_resolv(e2,contact[i].geom.g2);
 	    if(e2)
+		{
 		contact[i].geom.g2=raydium_ode_element[e2->id].geom;
+		e2->_last_touched_ray=ray_id;
+		}
 
 	    if(r)
 		{
@@ -3800,7 +3806,7 @@ e2=dGeomGetData(o2);
 		id1=id2=-1;
 		if(e1) id1=e1->id;
 		if(e2) id2=e2->id;
-		gencontact=r(id1,id2,&contact[i]);
+		gencontact=r(id2,id1,&contact[i]);
 		if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
 		}
 

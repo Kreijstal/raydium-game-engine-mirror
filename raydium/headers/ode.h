@@ -670,7 +670,8 @@ update informations for ##raydium_ode_element_ray_get()##.
 - ##RAYDIUM_ODE_RAY_CONTACT_CREATE## will report the contact, and collide !
 
 Return 0 if you don't want this "contact" for ray informations,
-or 1 if you want normal behaviour.
+or 1 if you want normal behaviour. The first element in this callback is always
+the one with the ray.
 
 This functions returns the ray id for this element of -1 when it fails.
 **/

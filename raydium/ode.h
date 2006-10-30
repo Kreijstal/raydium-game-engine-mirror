@@ -187,6 +187,7 @@ typedef struct raydium_ode_Element
     signed char    _touched;	// touched during very last timestep
     signed char    _movesfrom;	// is leaving this object to "object" member
     signed char    _avoidedcol;	// is any collision was avoided because of this move ?
+    int		   _last_touched_ray; // hack for raydium_ode_RayCallback
     signed char    isplayer;	// is this element an FPS player ? ("standing elem")
     dReal   playerangle; // FPS player angle
     dReal   slip;	// slipping factor
