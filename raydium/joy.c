@@ -202,7 +202,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
 	raydium_joy_init_vars();
 #ifndef WIN32
-	if(raydium_init_cli_option_default("joydev",name,"/dev/js0"))	    
+	if(raydium_init_cli_option("joydev",name))
 	    raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
 	else
 	{
