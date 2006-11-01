@@ -22,6 +22,12 @@ GLfloat sun[]={1.0,0.9,0.5,1.0};
 #define CAR_SUSP_ERP	0.01	
 #define CAR_SUSP_CFM	0.1  // more = less reactive susp
 
+#define TYPE_CAR_BODY	7
+#define TYPE_BALANCIER  6
+
+#define BODY_DENS	0.2
+#define BALANCIER_DENS	0.8
+
 char ray_callback(int e1, int e2, dContact *n)
 {
 GLfloat org[]={1,0,0};
@@ -73,6 +79,18 @@ n->geom.depth=(RAY_LEN-n->geom.depth);
 return RAYDIUM_ODE_RAY_CONTACT_CREATE;
 }
 
+char collide(int e1, int e2, dContact *c)
+{
+int i1,i2;
+i1=raydium_ode_element_tag_get(e1);
+i2=raydium_ode_element_tag_get(e2);
+
+if(i1==TYPE_BALANCIER || i2==TYPE_BALANCIER)
+    return 0;
+
+return 1;
+}
+
 
 void create_car(void)
 {
@@ -85,9 +103,14 @@ int a;
 raydium_ode_object_delete_name("WATURE");
                                                                                                                             
 a=raydium_ode_object_create("WATURE");
-raydium_ode_object_box_add("corps",a,1,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,0,"clio.tri");
+raydium_ode_object_box_add("corps",a,BODY_DENS,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,TYPE_CAR_BODY,"clio.tri");
 raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
 
+raydium_ode_network_next_local_only=1;
+raydium_ode_object_box_add("balancier",a,BALANCIER_DENS,0.1,0.1,0.1,RAYDIUM_ODE_STANDARD,TYPE_BALANCIER,""); // crate.tri
+raydium_ode_element_move_name_3f("balancier",0,0,-0.5);
+raydium_ode_joint_attach_fixed_name("balanfixed","corps","balancier");
+		
 raydium_ode_element_ray_attach_name("corps",RAY_LEN,0,0,-1);
 raydium_ode_element_ray_pos_name_3f("corps",0,0.42,0.253,CAR_BASE_HEIGHT);
 
@@ -186,6 +209,7 @@ raydium_shadow_enable();
 raydium_ode_ground_set_name("cocorobix.tri");
 create_car();
 raydium_ode_RayCallback=ray_callback;
+raydium_ode_CollideCallback=collide;
 raydium_ode_time_change(0);
 
 raydium_callback(&display);
