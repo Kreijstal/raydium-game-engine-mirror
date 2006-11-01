@@ -13,7 +13,7 @@ GLfloat cam_pos_x = 0;
 GLfloat cam_pos_y = 0;
 GLfloat cam_pos_z = 0;
 
-GLfloat speed = 0.1;
+GLfloat speed = 0.01;
 GLint sensibilite = 3;
 
 GLint lacet = 0;

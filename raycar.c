@@ -11,12 +11,16 @@
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 
 #define RAY_LEN		0.1
-#define MOTOR_SPEED	10
+#define MOTOR_SPEED	4	// max
 #define CAR_BASE_HEIGHT -0.2
-#define CAR_WHEEL_ANGLE 30 // ... degrees 
+#define CAR_WHEEL_ANGLE 10	// degrees 
 
-#define CAR_MU		0.9
-#define CAR_MU2		0.0001
+#define CAR_MU_REAR1	0.9
+#define CAR_MU_REAR2	3
+
+#define CAR_MU_FRONT1	0.0001	// rolling friction ?
+#define CAR_MU_FRONT2	2
+
 #define CAR_SLIP_LONGI	0.1
 
 #define CAR_SUSP_ERP	0.01	
@@ -48,20 +52,21 @@ contact[i].surface.soft_cfm = cfm;
 
 n->surface.mode &= ~dContactSlip1; // remove slip1
 n->surface.mode |= dContactFDir1;
+n->surface.mode |= dContactMu2;    
 n->surface.slip2 = CAR_SLIP_LONGI;
-n->surface.mu = CAR_MU;
 
 
 if(raydium_ode_element[e1]._last_touched_ray<=1) // is a front wheel ?
     {
     wheel_rotation=raydium_joy_x*CAR_WHEEL_ANGLE;
-    n->surface.mode |= dContactMu2;    
-    n->surface.mu2 = n->surface.mu;
-    n->surface.mu = CAR_MU2;
+    n->surface.mu = CAR_MU_FRONT1;
+    n->surface.mu2 = CAR_MU_FRONT2;
     }
 else // rear wheel (where engine works)
     {
     wheel_rotation=0;
+    n->surface.mu = CAR_MU_REAR1;
+    n->surface.mu2 = CAR_MU_REAR2;
     n->surface.mode |= dContactMotion1;
     n->surface.motion1 = raydium_joy_y*MOTOR_SPEED; 
     }
@@ -129,7 +134,7 @@ raydium_ode_object_move_name_3f("WATURE",0,0,2);
 
 void display(void)
 {
-dReal *pos; 
+dReal *pos,*vel; 
 
 raydium_joy_key_emul();
  
@@ -137,7 +142,7 @@ raydium_joy_key_emul();
 if(raydium_key_last==1032) create_car();
  
 if(raydium_key_last==1097) raydium_ode_time_change(0);
-if(raydium_key_last==1122) raydium_ode_time_change(10);
+if(raydium_key_last==1122) raydium_ode_time_change(50);
 if(raydium_key_last==1101) raydium_ode_time_change(100);
 
 if(raydium_key_last==1027) exit(0);
@@ -146,6 +151,7 @@ if(raydium_key_last==1027) exit(0);
 raydium_clear_frame();
 
 pos=raydium_ode_element_pos_get_name("corps");
+vel=raydium_ode_element_linearvelocity_get_name("corps");
 
 if(raydium_key[GLUT_KEY_F1])
     raydium_camera_look_at(1,1,-0.4,pos[1],-pos[2],pos[0]);
@@ -177,6 +183,10 @@ else
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_DEBUG);
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
+
+raydium_osd_printf(10,10,12,0.7,"font-lcdmono.tga","gas = % 3.2f",raydium_joy_y*MOTOR_SPEED);
+raydium_osd_printf(10,6,12,0.7,"font-lcdmono.tga","steering = % 3.2f",raydium_joy_x*CAR_WHEEL_ANGLE);
+raydium_osd_printf(10,2,12,0.7,"font-lcdmono.tga","vel = % 3.2f",sqrt(vel[0]*vel[0]+vel[1]*vel[1]+vel[2]*vel[2]));
 
 raydium_rendering_finish();
 }
