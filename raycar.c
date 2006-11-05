@@ -11,17 +11,21 @@
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 
 #define RAY_LEN		0.1
-#define MOTOR_SPEED	4	// max
+#define MOTOR_SPEED	5	// max
 #define CAR_BASE_HEIGHT -0.2
-#define CAR_WHEEL_ANGLE 10	// degrees 
+#define CAR_WHEEL_ANGLE 20	// degrees 
 
-#define CAR_MU_REAR1	0.9
+#define CAR_MU_REAR1	3
 #define CAR_MU_REAR2	3
 
 #define CAR_MU_FRONT1	0.0001	// rolling friction ?
 #define CAR_MU_FRONT2	2
 
-#define CAR_SLIP_LONGI	0.1
+#define CAR_SLIP_FRONT1	0
+#define CAR_SLIP_FRONT2	0.3
+
+#define CAR_SLIP_REAR1	10
+#define CAR_SLIP_REAR2	0.3
 
 #define CAR_SUSP_ERP	0.01	
 #define CAR_SUSP_CFM	0.1  // more = less reactive susp
@@ -50,21 +54,24 @@ contact[i].surface.soft_erp = erp;
 contact[i].surface.soft_cfm = cfm;
 */
 
-n->surface.mode &= ~dContactSlip1; // remove slip1
+//n->surface.mode &= ~dContactSlip1; // remove slip1
 n->surface.mode |= dContactFDir1;
 n->surface.mode |= dContactMu2;    
-n->surface.slip2 = CAR_SLIP_LONGI;
 
 
 if(raydium_ode_element[e1]._last_touched_ray<=1) // is a front wheel ?
     {
     wheel_rotation=raydium_joy_x*CAR_WHEEL_ANGLE;
+    n->surface.slip1 = CAR_SLIP_FRONT1;
+    n->surface.slip2 = CAR_SLIP_FRONT2;
     n->surface.mu = CAR_MU_FRONT1;
     n->surface.mu2 = CAR_MU_FRONT2;
     }
 else // rear wheel (where engine works)
     {
     wheel_rotation=0;
+    n->surface.slip1 = CAR_SLIP_REAR1;
+    n->surface.slip2 = CAR_SLIP_REAR2;
     n->surface.mu = CAR_MU_REAR1;
     n->surface.mu2 = CAR_MU_REAR2;
     n->surface.mode |= dContactMotion1;
@@ -216,6 +223,7 @@ raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 raydium_fog_disable();
 raydium_shadow_enable();
 
+//raydium_ode_ground_set_name("a1.tri");
 raydium_ode_ground_set_name("cocorobix.tri");
 create_car();
 raydium_ode_RayCallback=ray_callback;
