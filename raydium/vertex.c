@@ -80,6 +80,7 @@ raydium_vertex_index++;
  {
   if(raydium_internal_vertex_next_extras<2) raydium_normal_generate_lastest_triangle(1);
   else raydium_normal_generate_lastest_triangle(0);
+  raydium_normal_generate_lastest_tangent();
   raydium_vertex_offset_triangle=0;
  }
 

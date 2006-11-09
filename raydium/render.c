@@ -333,6 +333,17 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	    multi_prepared=1;
 	    }
 
+	// shader with "tangent" attribute active ?
+	if(raydium_shader_support && raydium_shader_active>=0 &&
+	   raydium_shader_shaders[raydium_shader_active].attrib_tangent!=-1)
+	    {
+	     glVertexAttrib3fARB(raydium_shader_shaders[raydium_shader_active].attrib_tangent,
+			    raydium_vertex_tangent_x[i],
+			    raydium_vertex_tangent_y[i],
+			    raydium_vertex_tangent_z[i]);
+	     //printf("%f %f %f\n",raydium_vertex_tangent_x[i],raydium_vertex_tangent_y[i],raydium_vertex_tangent_z[i]);
+	    }
+
 	// THIS CODE IS DUPLICATED FOR SPEED REASON (1)
 	for(j=0;j<3;j++)
 	{

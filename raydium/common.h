@@ -348,6 +348,9 @@ __global GLfloat *raydium_vertex_z;
 __global GLfloat *raydium_vertex_normal_x;
 __global GLfloat *raydium_vertex_normal_y;
 __global GLfloat *raydium_vertex_normal_z;
+__global GLfloat *raydium_vertex_tangent_x;
+__global GLfloat *raydium_vertex_tangent_y;
+__global GLfloat *raydium_vertex_tangent_z;
 __global GLfloat *raydium_vertex_normal_visu_x; //
 __global GLfloat *raydium_vertex_normal_visu_y; // used for smoothing
 __global GLfloat *raydium_vertex_normal_visu_z; //

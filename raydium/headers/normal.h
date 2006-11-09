@@ -15,10 +15,16 @@ You can find some more informations about normals at the top of this guide.
 
 __rayapi void raydium_normal_generate_lastest_triangle (int default_visu);
 /**
-Generate normal for the last created triangle (see ##raydium_vertex_index##)
+Generate normals for the last created triangle (see ##raydium_vertex_index##)
 if ##default_visu## is true ( != 0 ), this function will restore "visu" 
 normals too.
 **/
+
+__rayapi void raydium_normal_generate_lastest_tangent(void);
+/**
+Generate tangents for the last created triangle. Internal use.
+**/
+
 
 __rayapi void raydium_normal_restore_all (void);
 /**

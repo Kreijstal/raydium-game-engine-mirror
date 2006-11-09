@@ -28,6 +28,8 @@ for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
     raydium_shader_shaders[i].id=i;
     }
 
+raydium_shader_active=-1;
+
 if(raydium_shader_support)
     raydium_log("shaders: OK");
 else
@@ -76,7 +78,7 @@ int i;
 int ret;
 char *str_vert;
 char *str_frag;
-
+GLhandleARB curr;
 
 if(!raydium_shader_support)
     return -1;
@@ -160,10 +162,18 @@ for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
 	return -1;
 	}
 
+    curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+    glUseProgramObjectARB(raydium_shader_shaders[i].prog);
+    raydium_shader_shaders[i].attrib_tangent=glGetAttribLocationARB(
+					     raydium_shader_shaders[i].prog,
+					     RAYDIUM_SHADER_TANGENT_ATTRIB_NAME);
+    glUseProgramObjectARB(curr);
 
     raydium_shader_shaders[i].state=1;
     strcpy(raydium_shader_shaders[i].name,name);
-    raydium_log("shader: shader %i (%s) loaded (%s,%s)",i,name,file_vert,file_frag);
+    raydium_log("shader: shader %i (%s) loaded (%s,%s%s)",
+		i,name,file_vert,file_frag,
+		((raydium_shader_shaders[i].attrib_tangent==-1)?"":",tangent"));
     return i;
     }
 
@@ -329,6 +339,8 @@ signed char raydium_shader_current(int shader)
 {
 if(!raydium_shader_support)
     return 0;
+
+raydium_shader_active=shader;
 
 if(shader==-1)
     {

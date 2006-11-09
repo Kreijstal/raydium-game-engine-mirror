@@ -77,7 +77,7 @@ raydium_sky_box_cache();
 
 raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
 
-raydium_ode_ground_set_name("crate_bump.tri");
+raydium_ode_ground_set_name("crate_parabump.tri");
 obj=raydium_ode_object_find("GLOBAL");
 raydium_ode_object_box_add("coch",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"coch2.tri");
 raydium_ode_object_sphere_add("light",obj,0.01,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"ballon.tri");
@@ -97,8 +97,17 @@ raydium_shader_var_i_name("shader2","normalMap",1);
 raydium_shader_var_4f_name("shader2","specular",0.3,0.3,0.3,1);
 raydium_shader_var_f_name("shader2","shininess",40);
 
+raydium_shader_load("shader3","parabump.vert","parabump.frag");
+raydium_shader_var_i_name("shader3","Normal",0);
+raydium_shader_var_i_name("shader3","Base_Height",1);
+raydium_shader_var_f_name("shader3","u_invRad",0.03);
+raydium_shader_var_2f_name("shader3","cBumpSize",0.042,-0.050);
+raydium_shader_var_i_name("shader3","base_tex",2);
+
 raydium_shader_attach_texture_name("shader1","rgb(0.94,0.7,0.85)");
 raydium_shader_attach_texture_name("shader2","crate_cmap.tga");
+raydium_shader_attach_texture_name("shader3","wallNormalMap.tga");
+
 
 raydium_shadow_enable();
 
