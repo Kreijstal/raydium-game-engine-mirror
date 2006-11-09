@@ -276,12 +276,12 @@ function depends_tri($filename)
 		}
 	    }
 
-	  if(strpos($tex,'#') && !$ok) // is an environment map ?
+	  if(strpos($tex,'#') && !$ok) // is an environment map ? (or texture slots for shaders)
 	    {
 	    $ok=true;
 	    $texs=explode("#",$tex);
-	    $ret[]=$texs[0];
-	    $ret[]=$texs[1];
+	    for($z=0;$z<count($texs);$z++)
+		$ret[]=$texs[$z];
 	    }
 	    
 	  if(!$ok && strlen($tex))
