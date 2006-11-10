@@ -22,7 +22,7 @@ Hides mouse cursor.
 Shows mouse cursor.
 **/
 
-#define raydium_mouse_move(x,y) glutWarpPointer((x),(y))
+__rayapi void raydium_mouse_move(int x, int y);
 /**
 Moves cursor to (##x##,##y##) position (in pixel).
 Example if you want to move cursor at window's center: 

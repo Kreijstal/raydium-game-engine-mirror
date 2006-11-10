@@ -13,8 +13,13 @@
 /*
 #define raydium_mouse_hide() glutSetCursor(GLUT_CURSOR_NONE);
 #define raydium_mouse_show() glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
-#define raydium_mouse_move(x,y) glutWarpPointer(x,y)
 */
+
+void raydium_mouse_move(int x, int y)
+{
+if(raydium_mouse_x!=x || raydium_mouse_y!=y)
+    glutWarpPointer(x,y);
+}
 
 signed char raydium_mouse_isvisible(void)
 {
