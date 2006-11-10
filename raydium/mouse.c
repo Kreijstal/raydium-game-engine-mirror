@@ -17,8 +17,12 @@
 
 void raydium_mouse_move(int x, int y)
 {
-if(raydium_mouse_x!=x || raydium_mouse_y!=y)
+static signed char first=1;
+if(raydium_mouse_x!=x || raydium_mouse_y!=y || first)
+    {
     glutWarpPointer(x,y);
+    first=0;
+    }
 }
 
 signed char raydium_mouse_isvisible(void)
