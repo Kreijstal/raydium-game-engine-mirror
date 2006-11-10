@@ -156,4 +156,9 @@ __rayapi signed char raydium_shader_attach_texture_name(char *shader, char *text
 Same as above, but using shader's name and texture's name.
 **/
 
+__rayapi void raydium_shader_internal_triangle_attributes(int i);
+/**
+Internal. Per triangle "callback" from render.c for shader attributes.
+**/
+
 #endif
