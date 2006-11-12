@@ -218,7 +218,9 @@ if(!rgb)
 
 
  raydium_texture_used_memory+=texsize;
- if(raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && !faked)
+ if( (raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR ||
+      raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_ANISO) 
+     && !faked)
     raydium_texture_used_memory+=(texsize/3); // mipmaps
 
 if(!simulate)
@@ -258,6 +260,9 @@ if(!simulate)
  if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && blended)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
 
+ if(filter==RAYDIUM_TEXTURE_FILTER_ANISO && blended)
+    filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
+
  if(faked)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
  
@@ -279,6 +284,14 @@ if(!simulate)
   {
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
+  gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
+  }
+
+  if(filter==RAYDIUM_TEXTURE_FILTER_ANISO && !simulate)
+  {
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, raydium_texture_filter_aniso_levels); // + anisotropy
   gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
@@ -390,6 +403,7 @@ if(raydium_init_cli_option("filter",force))
     if(!strcmp(force,"none")) filter=RAYDIUM_TEXTURE_FILTER_NONE;
     if(!strcmp(force,"bilinear")) filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
     if(!strcmp(force,"trilinear")) filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
+    if(!strcmp(force,"aniso")) filter=RAYDIUM_TEXTURE_FILTER_ANISO;
     }
 
 raydium_texture_filter=filter;

@@ -196,9 +196,12 @@ void raydium_init_engine(void)
 {
 GLenum err;
 int i;
+GLfloat aniso_hard;
+GLfloat aniso_user;
 #ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 #endif
+char str[RAYDIUM_MAX_NAME_LEN];
 
 raydium_signal_install_trap();
 err=glewInit();
@@ -212,6 +215,13 @@ glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);
 raydium_log("OpenGL implementation maximum texture size: %ix%i",raydium_texture_size_max,raydium_texture_size_max);
 glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &raydium_texture_units);
 raydium_log("OpenGL hardware providing %i texture unit(s), Raydium deals with %i",raydium_texture_units,RAYDIUM_RENDER_MAX_TEXUNITS);
+glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso_hard);
+if(raydium_init_cli_option("max-aniso",str))
+    aniso_user=atof(str);
+else
+    aniso_user=999;
+raydium_texture_filter_aniso_levels=raydium_trigo_min(aniso_user,aniso_hard);
+raydium_log("OpenGL anisotropy max level is %.2f",raydium_texture_filter_aniso_levels);
 raydium_vertex_x=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_y=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_z=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));

@@ -161,6 +161,7 @@
 #define RAYDIUM_TEXTURE_FILTER_NONE	     	0
 #define RAYDIUM_TEXTURE_FILTER_BILINEAR	     	1
 #define RAYDIUM_TEXTURE_FILTER_TRILINEAR     	2
+#define RAYDIUM_TEXTURE_FILTER_ANISO     	3
 
 #define RAYDIUM_TEXTURE_BLEND_NONE		0
 #define RAYDIUM_TEXTURE_BLEND_BLENDED		1
@@ -308,6 +309,7 @@ __global GLuint   raydium_texture_current_env[RAYDIUM_RENDER_MAX_TEXUNITS-1]; //
 __global signed char     raydium_texture_filter;
 __global GLint	  raydium_texture_size_max;
 __global GLint	  raydium_texture_units;
+__global GLfloat  raydium_texture_filter_aniso_levels;
 __global GLuint   raydium_internal_size_vector_float_4;
 __global GLuint   raydium_texture_to_replace;
 __global GLfloat  raydium_texture_used_memory;
