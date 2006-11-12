@@ -198,6 +198,10 @@ wich is the current one.
 The next variable, ##raydium_texture_filter##, is very important. You can
 assign ##RAYDIUM_TEXTURE_FILTER_NONE## (default), ##RAYDIUM_TEXTURE_FILTER_BILINEAR##
 or ##RAYDIUM_TEXTURE_FILTER_TRILINEAR## (recommended).
+Raydium now support anisotropic filtering with ##RAYDIUM_TEXTURE_FILTER_ANISO##.
+Do not change the variable yourself, use the ##raydium_texture_filter_change()##
+function instead, it allows the user to override your setting from the
+command line (--filer option).
     
 Using no texture filter can gives you higher framerate on old 3D hardware,
 but this is quite ugly.
