@@ -230,7 +230,7 @@ if(visu==2)
     
     if(j>RAYDIUM_MAX_OBJECT_ANIMS)
 	{
-	raydium_log("object: too much anims for this fime ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
+	raydium_log("object: too much anims for this file ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
 	j=RAYDIUM_MAX_OBJECT_ANIMS; // will no work ;) (fixme)
 	}
     
