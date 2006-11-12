@@ -178,6 +178,12 @@ PHP_i_siffsi(raydium_gui_combo_create);
 PHP_i_sss(raydium_gui_read_name);
 PHP_i_v(raydium_gui_button_clicked);
 
+// shader.c
+PHP_v_ssi(raydium_shader_var_i_name);
+PHP_v_ssf(raydium_shader_var_f_name);
+PHP_v_ssff(raydium_shader_var_2f_name);
+PHP_v_ssfff(raydium_shader_var_3f_name);
+PHP_v_ssffff(raydium_shader_var_4f_name);
 
 // Part 2: register functions
 void raydium_register_api(void)
@@ -373,6 +379,13 @@ raydium_register_function(C2PHP(raydium_ode_network_element_send_random),"raydiu
 
 // php.c
 raydium_register_variable(raydium_php_rayphp_path,RAYDIUM_REGISTER_STR,"raydium_php_rayphp_path");
+
+// shader.c
+raydium_register_function(C2PHP(raydium_shader_var_i_name),"raydium_shader_var_i_name");
+raydium_register_function(C2PHP(raydium_shader_var_f_name),"raydium_shader_var_f_name");
+raydium_register_function(C2PHP(raydium_shader_var_2f_name),"raydium_shader_var_2f_name");
+raydium_register_function(C2PHP(raydium_shader_var_3f_name),"raydium_shader_var_3f_name");
+raydium_register_function(C2PHP(raydium_shader_var_4f_name),"raydium_shader_var_4f_name");
 
 
 raydium_log("RegAPI: OK");

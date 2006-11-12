@@ -433,8 +433,23 @@ char *b;\
 long s_len2;\
 double c;\
 if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
-  "ssd", &a, &s_len1, &b, &s_len2, &b, &c) == FAILURE)  return;\
+  "ssd", &a, &s_len1, &b, &s_len2, &c) == FAILURE)  return;\
 fname(a,b,c);\
+}
+
+
+// void f(char *, char *, float, float)
+#define PHP_v_ssff(fname)\
+ZEND_FUNCTION(fname)\
+{\
+char *a;\
+long s_len1;\
+char *b;\
+long s_len2;\
+double c,d;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "ssdd", &a, &s_len1, &b, &s_len2, &c, &d) == FAILURE)  return;\
+fname(a,b,c,d);\
 }
 
 // void f(char *, char *, float, float, float)
@@ -449,6 +464,20 @@ double c,d,e;\
 if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
   "ssddd", &a, &s_len1, &b, &s_len2, &c, &d, &e) == FAILURE)  return;\
 fname(a,b,c,d,e);\
+}
+
+// void f(char *, char *, float, float, float, float)
+#define PHP_v_ssffff(fname)\
+ZEND_FUNCTION(fname)\
+{\
+char *a;\
+long s_len1;\
+char *b;\
+long s_len2;\
+double c,d,e,f;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "ssdddd", &a, &s_len1, &b, &s_len2, &c, &d, &e, &f) == FAILURE)  return;\
+fname(a,b,c,d,e,f);\
 }
 
 
