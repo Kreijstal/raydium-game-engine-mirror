@@ -153,7 +153,7 @@ raydium_vertex_index=save;
 raydium_log("normal: Normals regenerated.");
 }
 
-void raydium_normal_smooth_from_to(GLuint from, GLuint to)
+void raydium_normal_internal_smooth_generic(char *type,GLuint from, GLuint to,GLfloat *in_x, GLfloat *in_y, GLfloat *in_z,GLfloat *out_x, GLfloat *out_y, GLfloat *out_z)
 {
 GLuint i,j;
 GLfloat x,y,z,l;
@@ -161,13 +161,13 @@ GLfloat sum_x;
 GLfloat sum_y;
 GLfloat sum_z;
 GLuint debug_time;
-char *tag; // 1 means "already done", 2 means "used for last normals search"
+char *tag; // 1 means "already done", 2 means "used for last search"
 GLuint total;
 
 total=to-from;
 
 tag=malloc(total);
-if(!tag) { raydium_log("normal: Not enought memory for normal smoothing, giving up."); return; }
+if(!tag) { raydium_log("normal: Not enought memory for %s smoothing, giving up.",type); return; }
 memset(tag,0,total);
 
 debug_time=0;
@@ -186,9 +186,9 @@ for(j=from;j<to;j++)
  {
  if(raydium_vertex_x[j]==x && raydium_vertex_y[j]==y && raydium_vertex_z[j]==z)
   { 
-  sum_x+=raydium_vertex_normal_x[i];
-  sum_y+=raydium_vertex_normal_y[i];
-  sum_z+=raydium_vertex_normal_z[i];
+  sum_x+=in_x[i];
+  sum_y+=in_y[i];
+  sum_z+=in_z[i];
   tag[j-from]=2;  
   }
  }
@@ -200,19 +200,24 @@ sum_z/=l;
 for(j=from;j<to;j++)
 if(tag[j-from]==2)
  {
- raydium_vertex_normal_visu_x[j]=sum_x;
- raydium_vertex_normal_visu_y[j]=sum_y;
- raydium_vertex_normal_visu_z[j]=sum_z;
+ out_x[j]=sum_x;
+ out_y[j]=sum_y;
+ out_z[j]=sum_z;
  tag[j-from]=1;
  }
-
 
 debug_time++;
 //if(debug_time>100) { raydium_log("normal: smoothing: %i/%i",i-from,total); debug_time=0; }
 }
 
 free(tag);
-raydium_log("normal: smoothing done.");
+raydium_log("normal: %s smoothing done.",type);
+}
+
+void raydium_normal_smooth_from_to(GLuint from, GLuint to)
+{
+raydium_normal_internal_smooth_generic("normal",from,to,raydium_vertex_normal_x,raydium_vertex_normal_y,raydium_vertex_normal_z,
+                                        raydium_vertex_normal_visu_x,raydium_vertex_normal_visu_y,raydium_vertex_normal_visu_z);
 }
 
 
@@ -220,3 +225,15 @@ void raydium_normal_smooth_all(void)
 {
 raydium_normal_smooth_from_to(0,raydium_vertex_index);
 }
+
+void raydium_normal_tangent_smooth_from_to(GLuint from, GLuint to)
+{
+raydium_normal_internal_smooth_generic("normal",from,to,raydium_vertex_tangent_x,raydium_vertex_tangent_y,raydium_vertex_tangent_z,
+                                       raydium_vertex_tangent_x,raydium_vertex_tangent_y,raydium_vertex_tangent_z);
+}
+
+void raydium_normal_tangent_smooth_all(void)
+{
+raydium_normal_tangent_smooth_from_to(0,raydium_vertex_index);
+}
+
