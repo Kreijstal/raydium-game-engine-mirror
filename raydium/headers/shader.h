@@ -26,6 +26,12 @@ suffix **are only able to deal with current shader !**.
 
 You can use the global variable ##raydium_shader_support## to detect if
 current hardware supports GLSL or not (1=OK 0=no shader support).
+
+Raydium automatically feeds the "vec3 tangent" attribute if the shader 
+requests it (you only have to declare this attribute), with a 
+per vertex value. From this, it's easy to generate the binormal
+vector in the shader, using a simple cross product:
+%%vec3 binormal = cross(tangent, gl_Normal);%%
 **/
 
 
