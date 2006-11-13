@@ -156,11 +156,10 @@ raydium_log("normal: Normals regenerated.");
 void raydium_normal_smooth_from_to(GLuint from, GLuint to)
 {
 GLuint i,j;
-GLfloat x,y,z;
+GLfloat x,y,z,l;
 GLfloat sum_x;
 GLfloat sum_y;
 GLfloat sum_z;
-GLuint n;
 GLuint debug_time;
 char *tag; // 1 means "already done", 2 means "used for last normals search"
 GLuint total;
@@ -182,7 +181,6 @@ z=raydium_vertex_z[i];
 sum_x=0;
 sum_y=0;
 sum_z=0;
-n=0;
 
 for(j=from;j<to;j++)
  {
@@ -191,13 +189,13 @@ for(j=from;j<to;j++)
   sum_x+=raydium_vertex_normal_x[i];
   sum_y+=raydium_vertex_normal_y[i];
   sum_z+=raydium_vertex_normal_z[i];
-  n++;
   tag[j-from]=2;  
   }
  }
-sum_x/=(GLfloat)n;
-sum_y/=(GLfloat)n;
-sum_z/=(GLfloat)n;
+l=sqrt(sum_x*sum_x + sum_y*sum_y + sum_z*sum_z);
+sum_x/=l;
+sum_y/=l;
+sum_z/=l;
 
 for(j=from;j<to;j++)
 if(tag[j-from]==2)
