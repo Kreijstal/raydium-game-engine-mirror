@@ -14,7 +14,7 @@ void raydium_callback_image(void);
 void raydium_timecall_callback(void);
 void raydium_hdr_block(signed char blocking);
 signed char raydium_shader_current(int shader);
-void raydium_shader_internal_triangle_attributes(int i);
+void raydium_shader_internal_vertex_attributes(int i);
 
 // color is a GLfloat[4] (RGBA)
 void raydium_render_lightmap_color(GLfloat *color)
@@ -333,12 +333,11 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	    multi_prepared=1;
 	    }
 
-	raydium_shader_internal_triangle_attributes(i);
-	
-	// THIS CODE IS DUPLICATED FOR SPEED REASON (1)
+	// THIS CODE IS DUPLICATED FOR SPEED REASON (1) (but not vertex attributes !)
 	for(j=0;j<3;j++)
 	{
 	glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
+	raydium_shader_internal_vertex_attributes(i+j);
 	glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
 	glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
 	//printf("%f %f\n",raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
@@ -363,7 +362,7 @@ for(tex=1;tex<raydium_texture_index;tex++)
 	    glBegin(GL_TRIANGLES);
 	    }
 
-	// THIS CODE IS DUPLICATED FOR SPEED REASON (2)
+	// THIS CODE IS DUPLICATED FOR SPEED REASON (2) (but not vertex attributes !)
 	for(j=0;j<3;j++)
 	{
 	glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);

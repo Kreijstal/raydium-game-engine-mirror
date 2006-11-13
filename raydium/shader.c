@@ -385,7 +385,7 @@ return raydium_shader_attach_texture(raydium_shader_find(shader),
 				     raydium_texture_find_by_name(texture));
 }
 
-void raydium_shader_internal_triangle_attributes(int i)
+void raydium_shader_internal_vertex_attributes(int i)
 {
 // shader with "tangent" attribute active ?
 if(raydium_shader_support && raydium_shader_active>=0 &&
