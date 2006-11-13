@@ -59,7 +59,7 @@ __rayapi void raydium_normal_tangent_smooth_all (void);
 Same as ##raydium_normal_smooth_all()##, but for tangent vectors.
 **/
 
-__rayapi void raydium_normal_smooth_tangent_from_to(GLuint from, GLuint to);
+__rayapi void raydium_normal_tangent_smooth_from_to(GLuint from, GLuint to);
 /**
 Same as ##raydium_normal_smooth_from_to()##, but for tangent vectors.
 **/
