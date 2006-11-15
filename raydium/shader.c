@@ -31,7 +31,7 @@ for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
 raydium_shader_active=-1;
 
 if(raydium_shader_support)
-    raydium_log("shaders: OK");
+    raydium_log("shaders: OK (version %s)",glGetString(GL_SHADING_LANGUAGE_VERSION));
 else
     raydium_log("shaders: FAILED (GLSL 1.0 not found)");
 }
