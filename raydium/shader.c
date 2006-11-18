@@ -20,7 +20,9 @@ int i;
 
 raydium_shader_support=
     (glutExtensionSupported("GL_ARB_shader_objects") &&
-     glutExtensionSupported("GL_ARB_shading_language_100") );
+     glutExtensionSupported("GL_ARB_shading_language_100") &&
+     glutExtensionSupported("GL_ARB_fragment_shader") &&
+     glutExtensionSupported("GL_ARB_vertex_shader") );
 
 for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
     {
