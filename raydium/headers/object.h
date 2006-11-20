@@ -83,6 +83,20 @@ __rayapi void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloa
 Returns "centering" factors for ##obj##. A centered object will return (0,0,0).
 **/
 
+__rayapi signed char raydium_object_tangent_smooth(GLuint obj);
+/**
+This function is a small helper for ##raydium_normal_tangent_smooth_from_to()##,
+which will smooth all tangent informations for the object, since some shaders
+needs it (Normal Mapping for example).
+
+See suitable chapters for more information.
+**/
+
+__rayapi signed char raydium_object_tangent_smooth_name(char *obj);
+/**
+Same as above, using object's name.
+**/
+
 __rayapi void raydium_object_callback(void);
 /**
 Internal (frame callback).

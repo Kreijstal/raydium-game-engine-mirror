@@ -34,7 +34,7 @@ cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
     
 cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
 cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
-    
+
 if(raydium_key_last==1027)
     exit(0);
 
@@ -79,7 +79,20 @@ raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
 
 raydium_ode_ground_set_name("crate_parabump.tri");
 obj=raydium_ode_object_find("GLOBAL");
+
 raydium_ode_object_box_add("coch",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"coch2.tri");
+raydium_ode_element_move_name_3f("coch",0,0.2,-0.1);
+
+raydium_ode_object_box_add("head",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead.tri");
+raydium_ode_element_move_name_3f("head",0.3,-0.2,-0.25);
+raydium_object_tangent_smooth_name("derhead.tri");
+
+raydium_ode_object_box_add("headsmooth",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead_smooth.tri");
+raydium_ode_element_move_name_3f("headsmooth",0,-0.2,-0.25);
+
+raydium_ode_object_box_add("headflat",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead_flat.tri");
+raydium_ode_element_move_name_3f("headflat",-0.3,-0.2,-0.25);
+
 raydium_ode_object_sphere_add("light",obj,0.01,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"ballon.tri");
 raydium_ode_element_move_name_3f("light",0,0,0.25);
 raydium_ode_joint_attach_universal("chand",RAYDIUM_ODE_JOINT_FIXED,raydium_ode_element_find("light"),0,0,0.5, 1,0,0, 0,1,0);
@@ -92,8 +105,8 @@ raydium_shader_var_3f_name("shader1","DiffuseColor",0.35,0,0.25);
 raydium_shader_var_3f_name("shader1","PhongColor",0.94,0.7,0.85);
 
 raydium_shader_load("shader2","bump.vert","bump.frag");
-raydium_shader_var_i_name("shader2","colorMap",0);
-raydium_shader_var_i_name("shader2","normalMap",1);
+raydium_shader_var_i_name("shader2","normalMap",0);
+raydium_shader_var_i_name("shader2","colorMap",1);
 raydium_shader_var_4f_name("shader2","specular",0.3,0.3,0.3,1);
 raydium_shader_var_f_name("shader2","shininess",40);
 
@@ -105,9 +118,9 @@ raydium_shader_var_2f_name("shader3","cBumpSize",0.042,-0.050);
 raydium_shader_var_i_name("shader3","base_tex",2);
 
 raydium_shader_attach_texture_name("shader1","rgb(0.94,0.7,0.85)");
-raydium_shader_attach_texture_name("shader2","crate_cmap.tga");
+raydium_shader_attach_texture_name("shader2","crate_nmap.tga");
+raydium_shader_attach_texture_name("shader2","derhead_normal.tga");
 raydium_shader_attach_texture_name("shader3","wallNormalMap.tga");
-
 
 raydium_shadow_enable();
 

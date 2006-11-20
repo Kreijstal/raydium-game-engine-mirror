@@ -316,6 +316,21 @@ raydium_object_find_minmax(obj,min,max);
 }
 
 
+signed char raydium_object_tangent_smooth(GLuint obj)
+{
+if(!raydium_object_isvalid(obj))
+    {
+    raydium_log("object: smooth tangent: ERROR: invalid object name or id");
+    return 0;
+    }
+raydium_normal_tangent_smooth_from_to(raydium_object_start[obj],raydium_object_end[obj]);
+return 1;
+}
+
+signed char raydium_object_tangent_smooth_name(char *obj)
+{
+return raydium_object_tangent_smooth(raydium_object_find(obj));
+}
 
 //////////////////////////////////////////////////////////
 // Animation support starts here
