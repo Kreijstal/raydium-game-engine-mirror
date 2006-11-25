@@ -222,6 +222,21 @@ else
     aniso_user=999;
 raydium_texture_filter_aniso_levels=raydium_trigo_min(aniso_user,aniso_hard);
 raydium_log("OpenGL anisotropy max level is %.2f",raydium_texture_filter_aniso_levels);
+
+if(raydium_init_cli_option("compress",NULL))
+    raydium_texture_compression_enabled=1;
+else
+    raydium_texture_compression_enabled=0;
+
+raydium_texture_compression_available=glutExtensionSupported("GL_ARB_texture_compression");
+if(raydium_texture_compression_available)
+    {
+    glHint(GL_TEXTURE_COMPRESSION_HINT_ARB, GL_NICEST);
+    raydium_log("OpenGL texture compression available");
+    }
+else
+    raydium_texture_compression_enabled=0;
+
 raydium_vertex_x=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_y=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));
 raydium_vertex_z=malloc(RAYDIUM_MAX_VERTICES*sizeof(GLfloat));

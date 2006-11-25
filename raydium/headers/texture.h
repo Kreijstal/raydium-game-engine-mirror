@@ -99,4 +99,11 @@ textures, and it was very slow.
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_BILINEAR)%%
 **/
 
+__rayapi void raydium_texture_compression(signed char enable);
+/**
+This function allows Raydium to compress textures if hardware supports this
+feature. You can also use the "--compress" command line switch.
+The default is ##0## ("no").
+**/
+
 #endif

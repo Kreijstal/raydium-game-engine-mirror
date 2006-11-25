@@ -307,6 +307,8 @@ __global GLfloat  raydium_texture_current_multi_u;
 __global GLfloat  raydium_texture_current_multi_v;
 __global GLuint   raydium_texture_current_env[RAYDIUM_RENDER_MAX_TEXUNITS-1]; // do not count first texunit
 __global signed char     raydium_texture_filter;
+__global signed char     raydium_texture_compression_available;
+__global signed char     raydium_texture_compression_enabled;
 __global GLint	  raydium_texture_size_max;
 __global GLint	  raydium_texture_units;
 __global GLfloat  raydium_texture_filter_aniso_levels;

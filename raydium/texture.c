@@ -43,6 +43,8 @@ char blended=0,filter=0,cutout=0,simulate=0;
 char rgb;
 GLfloat r,g,b;
 signed char reflect=0;
+GLint compressed=0;
+char comp_str[128];
 
 // "as" is duplicated ?
 for(i=0;i<raydium_texture_index;i++)
@@ -206,6 +208,14 @@ if(!rgb)
     GLbppi=GL_RGBA8;
     }
 
+ if(raydium_texture_compression_enabled && !faked)
+    {
+    if(GLbppi==GL_RGBA8)
+	GLbppi=GL_COMPRESSED_RGBA;
+    if(GLbppi==GL_ALPHA8)
+	GLbppi=GL_COMPRESSED_ALPHA;
+    }
+
  raydium_texture_blended[id]=0;
  if(blended)
     raydium_texture_blended[id]=1;
@@ -295,12 +305,28 @@ if(!simulate)
   gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
- raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i)",
+  if(raydium_texture_compression_enabled)
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_ARB, &compressed);
+
+  if(compressed)
+    {
+    GLint size;
+    float level;
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB, &size);
+    level=(float)texsize/size;
+    raydium_texture_used_memory-=texsize;
+    raydium_texture_used_memory+=size; // should take care of mipmaps too !
+    sprintf(comp_str," compression ratio: %.2f",level);
+    }
+  else
+    strcpy(comp_str,"");
+
+ raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i)%s",
 	     id,raydium_texture_name[id],
 	     (faked?"FAKED":"loaded"),
 	     tx,ty,bpp,
 	     blended,raydium_texture_islightmap[id],
-	     raydium_texture_hdr[id]);
+	     raydium_texture_hdr[id],comp_str);
  free(data);
 } else /* is rgb color */
 {
@@ -414,3 +440,9 @@ raydium_texture_filter=filter;
 
 }
 
+
+void raydium_texture_compression(signed char enable)
+{
+if(raydium_texture_compression_available)
+    raydium_texture_compression_enabled=(enable?1:0);
+}
