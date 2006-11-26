@@ -83,10 +83,17 @@ if(raydium_render_max_fps!=0)
     {
     curr_time=raydium_timecall_clock();
     // 2 is an experimental offset
-    max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps-2);
+    max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps+2);
 
     if((curr_time-time_previous) < max_fps)
+	{
+#ifndef WIN32
+	usleep(1);
+#else
+	Sleep(1);
+#endif
 	return;
+	}
 
     time_previous=curr_time;
     }

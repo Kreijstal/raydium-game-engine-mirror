@@ -399,9 +399,9 @@ raydium_rendering_from_to(0,raydium_vertex_index);
 void raydium_rendering_finish(void)
 {
 static int fps=0;
-static clock_t last=0;
+static unsigned long last=0;
 fps++;
-if(!last) last=clock();
+if(!last) last=raydium_timecall_clock();
 
 raydium_callback_image();
 glFlush();
@@ -439,9 +439,9 @@ raydium_key_last=0;
 raydium_mouse_click=0;
 raydium_camera_pushed=0; 
 glPopMatrix();
-if(clock() > last + CLOCKS_PER_SEC)
+if(raydium_timecall_clock() > last + raydium_timecall_clocks_per_sec)
     {
-    last=clock();
+    last=raydium_timecall_clock();
     raydium_render_fps=fps;
     fps=0;
     }

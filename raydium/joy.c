@@ -41,7 +41,7 @@ int raydium_joy_event_handle;
 struct ff_effect effect_tremble;
 #endif
 char effect_tremble_state=0;
-clock_t last_event;
+unsigned long last_event;
 
 
 void raydium_joy_init_vars(void)
@@ -216,7 +216,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 	raydium_joy_event_handle = open(name, O_RDWR);
 	if(raydium_joy_event_handle==-1) 
 	  raydium_log("%s: cannot open (rw), no Force Feedback.",name);
-	last_event=clock();
+	last_event=raydium_timecall_clock();
 
 	raydium_joy_ff_autocenter(autocenter);
 	
@@ -334,7 +334,7 @@ void raydium_joy_ff_tremble_set(GLfloat period, GLfloat force)
 struct input_event play;
 struct input_event stop;
 
-if (clock() < last_event + CLOCKS_PER_SEC/10)
+if (raydium_timecall_clock() < last_event + raydium_timecall_clocks_per_sec/10)
 return;
 
 
@@ -364,7 +364,7 @@ play.value = 1;
 write(raydium_joy_event_handle, (const void*) &play, sizeof(play));
 //perror("ff: play tremble");
 effect_tremble_state=1;
-last_event=clock();
+last_event=raydium_timecall_clock();
 //printf("ff event refreshed\n");
 #endif
 }
