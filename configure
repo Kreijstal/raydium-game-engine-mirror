@@ -143,7 +143,7 @@ OPCODE_DIRECTORY=OPCODE
     make 2>>../../configure.log >>../../configure.log
     ret=$?
     cd - > /dev/null
-    exit_if_error "$?" "ODE Build failed (see configure.log)"
+    exit_if_error "$ret" "ODE Build failed (see configure.log)"
 
 # deleting
     echo "   Deleting tarball"
