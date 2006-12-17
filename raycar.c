@@ -7,6 +7,7 @@
 // This is an experimental test for a "ray car".
 
 #include "raydium/index.c"
+#include "mania.h"
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 
@@ -195,12 +196,22 @@ raydium_osd_printf(10,10,12,0.7,"font-lcdmono.tga","gas = % 3.2f",raydium_joy_y*
 raydium_osd_printf(10,6,12,0.7,"font-lcdmono.tga","steering = % 3.2f",raydium_joy_x*CAR_WHEEL_ANGLE);
 raydium_osd_printf(10,2,12,0.7,"font-lcdmono.tga","vel = % 3.2f",sqrt(vel[0]*vel[0]+vel[1]*vel[1]+vel[2]*vel[2]));
 
+raydium_osd_printf(2,98,14,0.7,"font2.tga","A = time 0%%");
+raydium_osd_printf(2,96,14,0.7,"font2.tga","Z = time 10%%");
+raydium_osd_printf(2,94,14,0.7,"font2.tga","E = time 100%%");
+raydium_osd_printf(2,92,14,0.7,"font2.tga","space = reset car");
+raydium_osd_printf(2,90,14,0.7,"font2.tga","F1 = external view");
+
 raydium_rendering_finish();
 }
 
 
 int main(int argc, char **argv)
 {
+char mni[RAYDIUM_MAX_NAME_LEN];
+char base[RAYDIUM_MAX_NAME_LEN];
+char tri[RAYDIUM_MAX_NAME_LEN];
+
 raydium_init_args(argc,argv);
 raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Ray driven car");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
@@ -223,8 +234,33 @@ raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 raydium_fog_disable();
 raydium_shadow_enable();
 
-//raydium_ode_ground_set_name("a1.tri");
-raydium_ode_ground_set_name("cocorobix.tri");
+if(!raydium_init_cli_option("mni",mni))
+    {
+    raydium_log("");
+    raydium_log("");
+    raydium_log("---");
+    raydium_log("RayCar physics test app for ManiaDrive MNI tracks");
+    raydium_log("Usage: %s --mni track.mni",argv[0]);
+    raydium_log("---");
+    raydium_log("");
+    raydium_log("");
+    exit(1);
+    }
+
+if(!mni_generate(mni))
+    {
+    raydium_log("track generation failed");
+    exit(1);
+    }
+
+// ... code from ManiaDrive ...
+raydium_file_basename(base,mni);
+sprintf(tri,"%s/mania_%s.tri",raydium_homedir,base);
+rename(raydium_file_home_path("mania.tri"),tri);
+raydium_ode_ground_set_name(tri);
+unlink(tri);
+// .
+
 create_car();
 raydium_ode_RayCallback=ray_callback;
 raydium_ode_CollideCallback=collide;
