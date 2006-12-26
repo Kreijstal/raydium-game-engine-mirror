@@ -273,7 +273,7 @@ if(!simulate)
  if(filter==RAYDIUM_TEXTURE_FILTER_ANISO && blended)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
 
- if(faked)
+ if(faked && filter!=RAYDIUM_TEXTURE_FILTER_NONE)
     filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
  
   if(filter==RAYDIUM_TEXTURE_FILTER_NONE && !simulate)
