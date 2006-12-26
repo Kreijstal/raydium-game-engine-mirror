@@ -46,7 +46,7 @@ __rayapi signed char raydium_random_proba (GLfloat proba);
 /**
 Returns true or false (0 or 1) depending of "proba" factor.
 ##proba## must be: 0 <= proba <=1
-ex: 50% = 0.5
+ex: 90% = 0.9 (this will "very probably" return true)
 **/
 
 #endif
