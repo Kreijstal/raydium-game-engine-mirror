@@ -195,14 +195,6 @@ Copy viewport rendering to texture buffer.
 Render operations return to normal state, with normal camera behavior.
 **/
 
-__rayapi void raydium_viewport_define(GLfloat px, GLfloat py, GLfloat sizex, GLfloat sizey);
-/**
-Define viewport size for current rendering.
-Use of ## raydium_viewport_define## desable all sound/rumble function 
-of the camera
-This function are reserved for the main camera of the scene.
-**/
-
 __rayapi void raydium_viewport_draw(char * name, GLfloat tx,GLfloat ty,GLfloat sx,GLfloat sy);
 /**
 Draw contents of ##name## viewport to screen

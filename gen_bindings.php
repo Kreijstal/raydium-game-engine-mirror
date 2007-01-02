@@ -35,6 +35,8 @@ if($fpi===false)
 fwrite($fpi,"%module raydium\n%{\n#include \"../index.c\"\n%}\n");
 //fwrite($fpi,"%module raydium\n%{\n#define NO_PHP_SUPPORT\n#include \"../index.c\"\n%}\n");
 // type mappings (may not do it like this, but eh ...)
+fwrite($fpi,"#define __rayapi\n");
+fwrite($fpi,"%typedef unsigned int GLuint;\n");
 fwrite($fpi,"%typedef unsigned int GLuint;\n");
 fwrite($fpi,"%typedef unsigned int ALuint;\n");
 fwrite($fpi,"%typedef unsigned int GLsizei;\n");
@@ -232,7 +234,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -Iode/include/ -L/usr/X11R6/lib/ -lGL -lGLU -lm -ljpeg -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -I/usr/include/python2.4/  -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz -lXinerama -lalut";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.4/ -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg -Iraydium/ode/include/ raydium/ode/lib/libode.a -lvorbis -lvorbisfile -logg -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a -lresolv -lcrypt -lz -lcurl -lxml2 -lGLEW";
 echo "\n\n";
 echo "You may need to adapt python devel lib path\n";
 }
