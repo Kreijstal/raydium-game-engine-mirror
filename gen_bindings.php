@@ -43,6 +43,7 @@ fwrite($fpi,"%typedef unsigned int GLsizei;\n");
 fwrite($fpi,"%typedef int GLint;\n");
 fwrite($fpi,"%typedef int ALint;\n");
 fwrite($fpi,"%typedef float GLfloat;\n");
+fwrite($fpi,"%typedef double GLdouble;\n");
 fwrite($fpi,"%typedef float ALfloat;\n");
 fwrite($fpi,"%typedef float dReal;\n");
 fwrite($fpi,"%module raydium\n%{\n#include \"../common.h\"\n%}\n\n%include \"../common.h\"\n");
