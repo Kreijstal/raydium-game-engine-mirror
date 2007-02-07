@@ -85,6 +85,7 @@ __rayapi void glutMouseFunc(void *func);
 __rayapi void glutDisplayFunc(void *func);
 __rayapi void glutIdleFunc(void *func);
 __rayapi int  glutExtensionSupported(const char *name);
+__rayapi void glutManualLoop(void);
 __rayapi void glutMainLoop(void);
 __rayapi void glutWireSphere(GLdouble radius, GLint slices, GLint stacks);
 __rayapi void myglutCreateWindow(GLuint tx, GLuint ty, signed char rendering, char *name);

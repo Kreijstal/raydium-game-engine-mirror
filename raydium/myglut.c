@@ -47,18 +47,29 @@ switch(rendering)
     }
 }
 
+void glutManualLoop(void)
+{
+static signed char first=1;
+
+// here since windows is firing WM_SIZE too quickly ...
+if(first && glutReshapeFuncCB)
+    {
+    glutReshapeFuncCB(_glutWindowSize[0],_glutWindowSize[1]);
+    first=0;
+    }
+
+if(glutIdleFuncCB)
+    glutIdleFuncCB();
+
+myglutGetEvents();
+}
+
 //glutMainLoop
 void glutMainLoop(void)
 {
-//#ifdef WIN32
-    // since windows is firing WM_SIZE too quickly ...
-    if(glutReshapeFuncCB)
-        glutReshapeFuncCB(_glutWindowSize[0],_glutWindowSize[1]);
-//#endif
-do{
-    glutIdleFuncCB();
-    myglutGetEvents();
-  }while(1);
+do{ 
+ glutManualLoop(); 
+ }while(1);
 }
 
 // glutWireSphere
