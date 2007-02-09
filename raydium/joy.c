@@ -9,6 +9,9 @@
 #else
 #include "headers/joy.h"
 #endif 
+#ifdef WIN32
+#include <mmsystem.h>
+#endif
 
 // proto
 int raydium_init_cli_option_default(char *option, char *value, char *default_value);
@@ -39,6 +42,8 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 int raydium_joy_event_handle;
 #ifndef WIN32
 struct ff_effect effect_tremble;
+#else
+int raydium_joy_win_id;
 #endif
 char effect_tremble_state=0;
 unsigned long last_event;
@@ -169,9 +174,38 @@ void raydium_joy_callback(void)
 	{
             raydium_joy_process_event (e);
 	    //raydium_log("joy_DEBUG number:%d, value:%d",e.number,e.value);
-        }
+    }
 #else
-raydium_joy_init_vars();
+    {
+        JOYINFOEX ActualPos;
+        int i;
+        unsigned int mask=1;
+        
+        if(!raydium_joy) { raydium_joy_init_vars(); return; }
+        
+        ActualPos.dwFlags = JOY_RETURNALL;
+        joyGetPosEx(raydium_joy_win_id,&ActualPos);
+        raydium_joy_x=ActualPos.dwXpos/(float)32768-1;
+        raydium_joy_y=ActualPos.dwYpos/(float)32768-1;
+        raydium_joy_z=ActualPos.dwZpos/(float)32768-1;
+        
+        for (i=0;i<RAYDIUM_JOY_MAX_BUTTONS;i++)
+        {
+            if (ActualPos.dwButtons & mask)
+            {
+                raydium_joy_click=i+1;
+                raydium_joy_button[i]=1;
+                
+            }
+            else
+                raydium_joy_button[i]=0;
+                
+            mask=mask<<1;
+        }
+//        raydium_log("Joy x=%f,y=%f,z=%f",raydium_joy_x,raydium_joy_y,raydium_joy_z);
+    }
+	    
+//raydium_joy_init_vars();
 #endif
 }
 
@@ -216,7 +250,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 	raydium_joy_event_handle = open(name, O_RDWR);
 	if(raydium_joy_event_handle==-1) 
 	  raydium_log("%s: cannot open (rw), no Force Feedback.",name);
-	last_event=raydium_timecall_clock();
+	last_event=clock();
 
 	raydium_joy_ff_autocenter(autocenter);
 	
@@ -264,7 +298,43 @@ int autocenter=5;         /* default value. between 0 and 100 */
 		}
 	}
 #else
-    raydium_log("joy: FAILED\n\t No Joy support under Win32 yet");
+    {
+        int i;
+        JOYINFO structtmp;
+
+        raydium_init_cli_option_default("joydev",name,"0");
+
+        raydium_joy_win_id=atoi(name);
+
+        if (joyGetPos(raydium_joy_win_id,&structtmp) == JOYERR_NOERROR)
+          raydium_joy=1;
+        else
+        {
+            raydium_joy=0;
+            raydium_log ("Joystick %d not connected");
+            return;
+        }
+            
+        raydium_joy_ff_autocenter(autocenter);
+        raydium_log("joy: OK (found %d)",raydium_joy_win_id);
+
+        if(raydium_joy)
+        {
+            JOYCAPS InfoCaps;
+        
+            if (joyGetDevCaps(raydium_joy_win_id, &InfoCaps, sizeof(JOYCAPS)) == JOYERR_NOERROR)
+            {
+                raydium_log("Joystick: %s", InfoCaps.szPname);	    
+
+                raydium_joy_n_axes=InfoCaps.wNumAxes;
+                raydium_log("This joystick has %d axes",raydium_joy_n_axes);
+                
+
+                raydium_joy_n_buttons=InfoCaps.wNumButtons;
+                raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
+             }
+        }
+    }
 #endif
 }
 
