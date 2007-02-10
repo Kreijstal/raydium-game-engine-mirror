@@ -70,7 +70,7 @@ Generates a ODE style matrix (16 Glfloat) from pos (GLfloat * 3)
 
 __rayapi void raydium_trigo_pos_get_modelview (GLfloat * res);
 /**
-Stores the current OpenGL MODELVIEW matrix in res (16 GLfloat)
+Stores the translation part of the current OpenGL MODELVIEW matrix in res (3 GLfloat)
 **/
 
 __rayapi int raydium_trigo_pow2_next(int value);
