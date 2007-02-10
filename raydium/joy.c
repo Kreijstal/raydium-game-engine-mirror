@@ -10,6 +10,7 @@
 #include "headers/joy.h"
 #endif 
 #ifdef WIN32
+// Need to add winmm lib to windows dll build
 #include <mmsystem.h>
 #endif
 
