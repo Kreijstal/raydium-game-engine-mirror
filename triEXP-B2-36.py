@@ -39,7 +39,7 @@ class source:
 					self.file.write("%f %f %f %f %f %f %f %f %s\n" % (vlist[indx].co[0],vlist[indx].co[1],vlist[indx].co[2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],u,v,face.image.name))
 				    else:
 						if(len(face.col)==0):
-							self.file.write("%f %f %f %f %f %f 0 0 rgb(1,1,0)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2]))
+							self.file.write("%f %f %f %f %f %f 0 0 rgb(0.6,0.6,0.6)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2]))
 						else:
 							self.file.write("%f %f %f %f %f %f 0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
 					
