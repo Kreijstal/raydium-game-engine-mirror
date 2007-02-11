@@ -296,6 +296,7 @@ __global GLfloat raydium_joy_x;
 __global GLfloat raydium_joy_y;
 __global GLfloat raydium_joy_z;
 __global int     raydium_joy;
+__global char    raydium_joy_name[RAYDIUM_MAX_NAME_LEN];
 __global char    raydium_joy_n_axes;     // read only
 __global char    raydium_joy_n_buttons;  // read only
 

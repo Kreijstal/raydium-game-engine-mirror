@@ -55,6 +55,7 @@ void raydium_joy_init_vars(void)
 memset(raydium_joy_button,0,RAYDIUM_JOY_MAX_BUTTONS);
 raydium_joy_x=raydium_joy_y=raydium_joy_z=0.f;
 raydium_joy_click=0;
+strcpy(raydium_joy_name,"(none)");
 }
 
 
@@ -169,32 +170,45 @@ void raydium_joy_callback(void)
  struct js_event e;			//structure for storing an event
  
 	if(!raydium_joy) { raydium_joy_init_vars(); return; }
+        raydium_joy_click=0;
 
-	raydium_joy_click=0;	
 	while (read (raydium_joy, &e, sizeof(struct js_event)) > 0)
 	{
             raydium_joy_process_event (e);
 	    //raydium_log("joy_DEBUG number:%d, value:%d",e.number,e.value);
-    }
+        }
 #else
-    {
         JOYINFOEX ActualPos;
         int i;
         unsigned int mask=1;
+        static DWORD dwButtons=0; // saves buttons state between calls
         
         if(!raydium_joy) { raydium_joy_init_vars(); return; }
+        raydium_joy_click=0;
         
+        memset(&ActualPos,0,sizeof(JOYINFOEX));
+        ActualPos.dwSize = sizeof(JOYINFOEX);
         ActualPos.dwFlags = JOY_RETURNALL;
+
         joyGetPosEx(raydium_joy_win_id,&ActualPos);
-        raydium_joy_x=ActualPos.dwXpos/(float)32768-1;
-        raydium_joy_y=ActualPos.dwYpos/(float)32768-1;
-        raydium_joy_z=ActualPos.dwZpos/(float)32768-1;
+        raydium_joy_x=(ActualPos.dwXpos/(float)32768-1);
+        raydium_joy_y=(ActualPos.dwYpos/(float)32768-1)*-1;
+        raydium_joy_z=(ActualPos.dwZpos/(float)32768-1)*-1;
+        
+        // "raw" values
+        raydium_joy_axis[0]=ActualPos.dwXpos/(float)32768-1;
+        raydium_joy_axis[1]=ActualPos.dwYpos/(float)32768-1;
+        raydium_joy_axis[2]=ActualPos.dwZpos/(float)32768-1;
+        raydium_joy_axis[3]=ActualPos.dwRpos/(float)32768-1;
+        raydium_joy_axis[4]=ActualPos.dwUpos/(float)32768-1;
+        raydium_joy_axis[4]=ActualPos.dwVpos/(float)32768-1;
         
         for (i=0;i<RAYDIUM_JOY_MAX_BUTTONS;i++)
         {
             if (ActualPos.dwButtons & mask)
             {
-                raydium_joy_click=i+1;
+                if(!(dwButtons & mask))
+                        raydium_joy_click=i+1;
                 raydium_joy_button[i]=1;
                 
             }
@@ -203,11 +217,9 @@ void raydium_joy_callback(void)
                 
             mask=mask<<1;
         }
-//        raydium_log("Joy x=%f,y=%f,z=%f",raydium_joy_x,raydium_joy_y,raydium_joy_z);
-    }
-	    
-//raydium_joy_init_vars();
+        dwButtons = ActualPos.dwButtons;
 #endif
+//raydium_log("Joy x=%f,y=%f,z=%f",raydium_joy_x,raydium_joy_y,raydium_joy_z);
 }
 
 void raydium_joy_ff_autocenter(int perc)
@@ -251,7 +263,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 	raydium_joy_event_handle = open(name, O_RDWR);
 	if(raydium_joy_event_handle==-1) 
 	  raydium_log("%s: cannot open (rw), no Force Feedback.",name);
-	last_event=clock();
+	last_event=raydium_timecall_clock();
 
 	raydium_joy_ff_autocenter(autocenter);
 	
@@ -276,6 +288,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 		else
 		{
 		    	raydium_log("Joystick driver's signature: %s",name);
+                        strcpy(raydium_joy_name,name);
 		}
 
 		ret=ioctl (raydium_joy,JSIOCGAXES,&raydium_joy_n_axes);
@@ -325,7 +338,8 @@ int autocenter=5;         /* default value. between 0 and 100 */
         
             if (joyGetDevCaps(raydium_joy_win_id, &InfoCaps, sizeof(JOYCAPS)) == JOYERR_NOERROR)
             {
-                raydium_log("Joystick: %s", InfoCaps.szPname);	    
+                raydium_log("Joystick: %s", InfoCaps.szPname);
+                strcpy(raydium_joy_name,InfoCaps.szPname);
 
                 raydium_joy_n_axes=InfoCaps.wNumAxes;
                 raydium_log("This joystick has %d axes",raydium_joy_n_axes);
