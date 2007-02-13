@@ -325,7 +325,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
         else
         {
             raydium_joy=0;
-            raydium_log ("Joystick %d not connected");
+            raydium_log ("Joystick %d not connected",raydium_joy_win_id);
             return;
         }
             
