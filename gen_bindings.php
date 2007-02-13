@@ -8,10 +8,14 @@
 // Raydium building scripts (ex: php/sapi/cli/php gen_bindings.php)
 
 // Warning, this is an experimental and mostly unsupported feature, only
-// usable with Python, for now.
+// usable with Python and Java, for now.
 // Feedback's welcome.
 // See output in raydium/swig directory and use compile wrapper using provided
 // instruction, with a previously "./configured" Raydium engine.
+
+// Generating bindings under win32 can be a bit complex ... Check Raydium
+// website, you may find some "ready-to-use" binaries. Contact us on the
+// forum otherwise.
 
 $nobindings="//!NOBINDINGS";
 
