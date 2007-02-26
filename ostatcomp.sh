@@ -11,7 +11,7 @@ rm test
 gcc -g $1 -Wall -o test \
 -Wl,-dynamic-linker=/lib/ld-linux.so.2 -Wl,-Bstatic -L/usr/X11R6/lib/ \
 -lm -lXi -lstdc++ -ljpeg \
--Iraydium/ode/include/ raydium/ode/lib/libode.a \
+-Iraydium/ode/include/ raydium/ode/ode/src/libode.a \
 -lGLEW -lXmu -lXinerama -lopenal -lalut -lvorbisfile -lvorbis -logg \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a \
 -lcrypt -lssl -lcrypto -lidn -lresolv -lz -lcurl -lxml2 -lssl -lcrypto -lidn \

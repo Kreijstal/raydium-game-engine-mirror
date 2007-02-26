@@ -72,7 +72,7 @@ ode_install()
     fi
 
     if [ $force_ode == "false" ]; then
-	if [ -e "raydium/ode/lib/libode.a" ]; then
+	if [ -e "raydium/ode/ode/src/libode.a" ]; then
 	    echo "   ODE install detected. If you want to reinstall, add --force-ode-install."
 	    return 0
 	fi
@@ -90,8 +90,8 @@ ode_install()
 	exit_if_error "$?" "CVS server error ? Try manual install (http://ode.org)"
     else
 	if [ ! -f "raydium/ode.tar.gz" ]; then
-	    echo "   Downloading 'stable CVS' version from Raydium website ..."
-	    wget -O raydium/ode.tar.gz http://freeway.raydium.org/data/stable_mirrors/ode.tar.gz
+	    echo "   Downloading 'certified' version from Raydium website ..."
+	    wget -O raydium/ode.tar.gz http://freeway.raydium.org/data/stable_mirrors/ode-0.7.tar.gz
 	    exit_if_error "$?" "Error downloading."
 	else
 	    echo "   Using previously downloaded file. Remove raydium/ode.tar.gz before launching configure, if needed"
@@ -109,31 +109,18 @@ ode_install()
 	exit_if_error "$ret" "tar not found, or corrupted archive"
     fi
 
-# configure (step 1)
-    echo '
-# Raydium ODE autoconfig
-PLATFORM=unix-gcc
-PRECISION=SINGLE
-BUILD=release
-WINDOWS16=0
-OPCODE_DIRECTORY=OPCODE
-' > raydium/ode/config/user-settings
-
-# configure (step 2)
+# configure
     echo "   Configuring ..."
     echo "Configuring ODE" >> configure.log
     echo "===============" >> configure.log
     cd raydium/ode
-    make configure 2>>../../configure.log >>../../configure.log
+    ./configure 2>>../../configure.log >>../../configure.log
     ret=$?
     cd - > /dev/null
     exit_if_error "$?" "ODE configuration failed (see configure.log)"
 
-    echo '
-#ifndef dEpsilon
-#define dEpsilon FLT_EPSILON
-#endif
-' >> raydium/ode/include/ode/config.h
+# small patch
+    sed -i 's/\(.*define.*HAVE_STDLIB_H.*\)/#ifndef HAVE_STDLIB_H\n\1\n#endif/' raydium/ode/include/ode/config.h
 
 # build
     echo "   Building ..."
@@ -367,7 +354,7 @@ file="
 #include <unistd.h>
 int main(int argc, char **argv) {
 ALCdevice *dev;
-const ALubyte *initstr=(const ALubyte *) \"'( ( devices '( native null ) ) )\";
+const ALbyte *initstr=(const ALbyte *) \"'( ( devices '( native null ) ) )\";
 dev=alcOpenDevice(initstr);
 sleep(1);
 alcCloseDevice(dev);
@@ -388,7 +375,7 @@ file="
 #include <unistd.h>
 int main(int argc, char **argv) {
 ALCdevice *dev;
-const ALubyte *initstr=(const ALubyte *) \"'( ( devices '( native null ) ) )\";
+const ALbyte *initstr=(const ALbyte *) \"'( ( devices '( native null ) ) )\";
 dev=alcOpenDevice(initstr);
 sleep(1);
 #ifndef ALUT_API_MAJOR_VERSION
@@ -430,9 +417,7 @@ int main(void)
 {
 struct jpeg_decompress_struct cinfo;
 struct jpeg_error_mgr jerr;
-JSAMPARRAY buffer;
-int row_stride;
-long count;
+//JSAMPARRAY buffer;
 
 cinfo.err=jpeg_std_error(&jerr);
 jpeg_create_decompress(&cinfo);
