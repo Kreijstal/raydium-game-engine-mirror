@@ -118,9 +118,9 @@ function list_repos($filter,$size,$repos)
   $d=http_download($req);
   if($d===false) 
     return false;
-  
+
   echo "Listing from '$repos'";
-  return implode("",$d);
+  return $d;
 }
 
 // Sets file and path from a full filename
