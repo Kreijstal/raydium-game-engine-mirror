@@ -15,9 +15,18 @@ if [ -z "$CC" ]; then
     CC="gcc";
 fi
 
+if [ -n "$AR_PATH" ]; then
+    if [ ! -d "$AR_PATH" ]; then
+	echo "Unable to find ARToolKit (AR_PATH env)"
+	exit 1
+    fi
+    AR_PATH_INCLUDE="-I $AR_PATH/include"
+    AR_PATH_LIBS="$AR_PATH/lib/libAR.a"
+fi
+
 rm test
 $CC $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
--Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -Iraydium/ode/include/
+-Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS
 sync
 export LD_LIBRARY_PATH=.
 shift
