@@ -50,6 +50,7 @@ This function will cut ##str## in two parts (##part1## and ##part2##) on
 ##separator##. No memory allocation will be done by this functions.
 First occurence of ##separator## is used (left cut).
 Return true (##i##+1) if ##str## was cut, where ##i## is the separator position.
+Return false (##0##) otherwise (and then ##part1## is a copy of ##str##).
 **/
 
 __rayapi void raydium_parser_replace (char *str, char what, char with);
