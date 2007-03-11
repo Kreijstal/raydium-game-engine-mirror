@@ -144,7 +144,7 @@ if(val_s[0]=='{') // is a float array
 	(*size)++;
 	strcpy(val_s,next);
 	}
-    val_f[*size]=atof(next);
+    val_f[*size]=atof(val_s);
     (*size)++;
     val_s[0]=0;
     return RAYDIUM_PARSER_TYPE_FLOAT;    
