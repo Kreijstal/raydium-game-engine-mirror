@@ -1,6 +1,6 @@
 // ManiaDrive - CQFD Corp
 // http://maniadrive.raydium.org/
-char *version="ManiaDrive 1.2custom";
+char *version="ManiaDrive 1.3custom";
 
 #include "raydium/index.c"
 
@@ -25,12 +25,16 @@ char *version="ManiaDrive 1.2custom";
 #define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
 #define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768\n1152x864"
 
+#define MAX_PROPS	100
+
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
 GLfloat tmp2[]={1.0,1.0,1.0,1.0};
 GLfloat zero[]={0.0,0.0,0.0,0.0};
 
 GLfloat temps[]={0,0,0};
+
+int props[MAX_PROPS];
 
 int sound_car;
 int sound_checkpoint;
@@ -115,6 +119,7 @@ typedef struct TrackData
     float gold_time;
     float author_time;
     char message_file[RAYDIUM_MAX_NAME_LEN];
+    char ent_file[RAYDIUM_MAX_NAME_LEN];
     } TrackData;
 
 TrackData trackdata;
@@ -135,6 +140,52 @@ pid_t server_pid=0;
 #define MODE_OTHERS	4
 
 #define SHADOW_OFFSET	0.3
+
+
+void delete_props(void)
+{
+int i;
+for(i=0;i<MAX_PROPS;i++)
+    if(props[i]>=0)
+	raydium_ode_element_delete(props[i],1);
+}
+
+void create_props(char *filename)
+{
+FILE *fp;
+int v;
+dReal p[3],r[3];
+char ent[128];
+char p1[128];
+char p2[128];
+int id;
+int i;
+
+fp=raydium_file_fopen(filename,"rt");
+if(!fp)
+    {
+    raydium_log("ERROR: Cannot create props for this track !");
+    return;
+    }
+
+fscanf(fp,"%i\n",&v);
+while(fscanf(fp,"%f %f %f %f %f %f %s\n",&p[0],&p[1],&p[2],&r[0],&r[1],&r[2],ent)!=EOF)
+    {
+    raydium_parser_cut(ent,p1,p2,'.');
+    strcat(p1,".tri");
+    id=raydium_ode_object_box_add(ent,raydium_ode_object_find("GLOBAL"),0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,p1);
+    raydium_ode_element_move(id,p);
+    raydium_ode_element_rotate(id,r);
+    for(i=0;i<MAX_PROPS;i++)
+	if(props[i]==-1)
+	    {
+	    props[i]=id;
+	    break;
+	    }
+    }
+
+fclose(fp);
+}
 
 
 void change_music_volume(float vol)
@@ -324,6 +375,10 @@ if(shadow_support)
     raydium_shadow_enable();
 else
     raydium_shadow_disable();
+
+delete_props(); // delete all old props
+if(mode!=MODE_MULTI)
+    create_props(trackdata.ent_file);
 
 create_car();
 
@@ -1371,6 +1426,7 @@ trackdata.author[0]=0;
 trackdata.gold_time=0;
 trackdata.author_time=0;
 trackdata.message_file[0]=0;
+trackdata.ent_file[0]=0;
 
 while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
@@ -1406,6 +1462,17 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 	    continue;
 	    }
 	strcpy(trackdata.message_file,val_s);
+	done=1;
+	}
+
+    if(!strcasecmp(var,"ent"))
+	{
+	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+	    {
+	    raydium_log("'ent' is wrong type");
+	    continue;
+	    }
+	strcpy(trackdata.ent_file,val_s);
 	done=1;
 	}
 
@@ -2620,6 +2687,9 @@ raydium_parser_db_get("ManiaDrive-JoystickEnabled",str,"y");
 joystick_enabled=(str[0]=='y'?1:0);
 
 raydium_gui_theme_load("maniadrive.gui");
+
+for(i=0;i<MAX_PROPS;i++)
+    props[i]=-1;
 
 if(raydium_init_cli_option("mni",mni_current))
     {
