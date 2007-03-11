@@ -50,13 +50,14 @@ len=strlen(str);
 
 for(i=0;i<len+1;i++)
     if(str[i]==separator)
-	{
-	strcpy(part1,str);
-	part2[0]=0;
 	break;
-	}
 
-if(i==len+1) return 0; // not found
+if(i==len+1) 
+    {
+    strcpy(part1,str);
+    part2[0]=0;
+    return 0; // not found
+    }
 
 strcpy(part2,str+i+1);
 strcpy(part1,str);
