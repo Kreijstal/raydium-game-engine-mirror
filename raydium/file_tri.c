@@ -160,7 +160,7 @@ if(sep_env)
         raydium_texture_current_env[count++]=raydium_texture_find_by_name(part1);
         strcpy(todo,part2);          
         }
-  raydium_texture_current_env[count++]=raydium_texture_find_by_name(part2);
+  raydium_texture_current_env[count++]=raydium_texture_find_by_name(todo);
   
   return 3;
 }
