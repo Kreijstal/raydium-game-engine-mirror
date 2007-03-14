@@ -271,12 +271,6 @@ done
 # empty log
 rm configure.log 2>> /dev/null
 
-# Check ODE installation
-ode_install
-
-# Check PHP installation
-php_install
-
 # Test compiler
 file='int main(void) { return 0; }'
 test_build "gcc" "$file" ""
@@ -340,6 +334,11 @@ int main(void) { glewInit(); return 0; }'
 test_build "GLEW" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
 exit_if_error "$?" "You must install libglew devel package"
 
+# Check ODE installation
+ode_install
+
+# Check PHP installation
+php_install
 
 # OpenAL
 file="

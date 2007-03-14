@@ -83,6 +83,13 @@ obj=raydium_ode_object_find("GLOBAL");
 raydium_ode_object_box_add("coch",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"coch2.tri");
 raydium_ode_element_move_name_3f("coch",0,0.2,-0.1);
 
+raydium_ode_object_box_add("car",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"forester.tri");
+raydium_ode_element_move_name_3f("car",0,0.7,-0.1);
+raydium_object_tangent_smooth_name("forester.tri");
+
+raydium_ode_object_box_add("car2",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"forester_uni.tri");
+raydium_ode_element_move_name_3f("car2",0.2,0.7,-0.1);
+
 raydium_ode_object_box_add("head",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead.tri");
 raydium_ode_element_move_name_3f("head",0.3,-0.2,-0.25);
 raydium_object_tangent_smooth_name("derhead.tri");
@@ -120,6 +127,7 @@ raydium_shader_var_i_name("shader3","base_tex",2);
 raydium_shader_attach_texture_name("shader1","rgb(0.94,0.7,0.85)");
 raydium_shader_attach_texture_name("shader2","crate_nmap.tga");
 raydium_shader_attach_texture_name("shader2","derhead_normal.tga");
+raydium_shader_attach_texture_name("shader2","forester_normal.tga");
 raydium_shader_attach_texture_name("shader3","wallNormalMap.tga");
 
 raydium_shadow_enable();
