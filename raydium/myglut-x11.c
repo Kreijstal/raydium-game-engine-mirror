@@ -574,7 +574,7 @@ void myglutGetEvents (void)
         result = -1 ;
 
         if( len > 0 )
-          result = asciiCode[ 0 ] ;
+	  result = keySym;
         else
         {
 	special=1;
