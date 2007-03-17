@@ -328,6 +328,7 @@ ar_camera_stop();
 
 raydium_osd_printf(2,4,20,0.5,"font2.tga","%f",scale);
 
+raydium_ode_network_element_send_iterative(RAYDIUM_ODE_NETWORK_OPTIMAL);
 raydium_rendering_finish();
 }
 
