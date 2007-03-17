@@ -227,7 +227,7 @@ int a;
 raydium_ode_object_delete_name("WATURE");
  
 a=raydium_ode_object_create("WATURE");
-raydium_ode_object_box_add("corps",a,1,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,0,"clio_shadow.tri");
+raydium_ode_object_box_add("corps",a,1,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,0,"clio.tri");
 raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
  
 raydium_ode_object_sphere_add("pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"roue5.tri");
@@ -290,6 +290,20 @@ if(raydium_key_last==1027) exit(0);
 if(raydium_key[GLUT_KEY_F1]) scale++;
 if(raydium_key[GLUT_KEY_F2]) scale--;
 
+if(raydium_key_last==1000+'c') 
+    {
+    char dummy[128];
+    raydium_ode_name_auto("caisse",dummy);
+    raydium_ode_object_box_add(dummy,raydium_ode_object_find("GLOBAL"),1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"crate.tri");
+    raydium_ode_element_move_name_3f(dummy,0,0,2);
+    }
+				
+if(raydium_key_last==1032) 
+    {
+    raydium_ode_object_delete_name("WATURE");
+    create_car();
+    }
+
 
 raydium_clear_frame();
 
@@ -323,6 +337,7 @@ int main(int argc, char **argv)
 int device;
 ARParam  wparam;
 FILE *fp;
+char server[128];
 
 raydium_init_args(argc,argv);
 raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Augmented Reality - libAR test");
@@ -377,6 +392,12 @@ device=raydium_live_video_open(RAYDIUM_LIVE_DEVICE_AUTO,CAMERA_RES_X,CAMERA_RES_
 raydium_live_texture_video(device,"webcam.tga");
 //raydium_video_open("s80.jpgs","webcam.tga");
 raydium_live_texture_refresh_callback_set_name("webcam.tga",data_callback);
+
+raydium_shadow_enable();
+
+if(raydium_init_cli_option("server",server))
+     if(!raydium_network_client_connect_to(server)) 
+        exit(1);
 
 raydium_ode_ground_set_name("area.tri");
 create_car();
