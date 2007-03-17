@@ -275,7 +275,7 @@ raydium_ode_object_move_name_3f("WATURE",0,0,1);
 void display(void)
 {
 float speed,direct;
-static float scale=100;
+static float scale=50;
  
 raydium_joy_key_emul();
  
