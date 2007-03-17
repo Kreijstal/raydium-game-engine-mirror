@@ -1586,7 +1586,7 @@ if(type==GAME_END)
 	    }
 	}
 
-    if(mode!=MODE_SOLO)
+    if(mode!=MODE_SOLO && mode!=MODE_MULTI)
 	{
 	int p;
 	p=post_score(mni_current,raydium_network_name_local,score);
