@@ -150,6 +150,7 @@ PHP_i_i(raydium_ode_object_delete);
 PHP_i_s(raydium_ode_object_delete_name);
 PHP_i_s(raydium_ode_object_find);
 PHP_v_sfff(raydium_ode_object_move_name_3f);
+PHP_v_sfff(raydium_ode_object_rotate_name_3f);
 PHP_i_siffiis(raydium_ode_object_sphere_add);
 PHP_v_f(raydium_ode_time_change);
 PHP_i_s(raydium_ode_capture_3d);
@@ -356,6 +357,7 @@ raydium_register_function(C2PHP(raydium_ode_object_delete),"raydium_ode_object_d
 raydium_register_function(C2PHP(raydium_ode_object_delete_name),"raydium_ode_object_delete_name");
 raydium_register_function(C2PHP(raydium_ode_object_find),"raydium_ode_object_find");
 raydium_register_function(C2PHP(raydium_ode_object_move_name_3f),"raydium_ode_object_move_name_3f");
+raydium_register_function(C2PHP(raydium_ode_object_rotate_name_3f),"raydium_ode_object_rotate_name_3f");
 raydium_register_function(C2PHP(raydium_ode_object_sphere_add),"raydium_ode_object_sphere_add");
 raydium_register_function(C2PHP(raydium_ode_time_change),"raydium_ode_time_change");
 raydium_register_function(C2PHP(raydium_ode_capture_3d),"raydium_ode_capture_3d");
