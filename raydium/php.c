@@ -42,6 +42,12 @@ static int php_dummy(sapi_module_struct *sapi_module)
 return SUCCESS;
 }
 
+static void sapi_raydium_register_variables(zval *track_vars_array TSRMLS_DC)
+{
+// Here for future reference:
+//php_register_variable("NAME", "value", vars_array TSRMLS_CC);
+} 
+
 void raydium_php_error(int type, const char *msg, ...)
 {
 raydium_log("^cERROR type %i",type);
@@ -84,11 +90,11 @@ static sapi_module_struct raydium_sapi_module =
 
 	NULL,                		/* read POST data */
 	NULL,             		/* read Cookies */
-	NULL,
 
-	NULL,				/* register server variables */
+	sapi_raydium_register_variables,/* register server variables */
 	NULL,              		/* Log message */
 
+	NULL,				/* Get Request Time */
 	NULL,				/* Block interruptions */
 	NULL,				/* Unblock interruptions */
 
