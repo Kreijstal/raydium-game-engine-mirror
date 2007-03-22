@@ -19,10 +19,18 @@ class source:
 		self.file=open(filename,"w")
 
 	def writeFaces(self):
-		scene=Blender.Scene.getCurrent()
+		scene=Blender.Scene.GetCurrent()
 		self.file.write("1\n") #tri version
 		
-		for object in scene.getChildren():
+		objects = Blender.Object.GetSelected()
+
+		if len(objects) == 0:
+		    print "-- Exporting all objects"
+		    objects = scene.getChildren()
+		else:
+		    print "-- Exporting only selected objects"
+
+		for object in objects:
 		    objtype=object.getType()
 		    if objtype == "Mesh":
 			print "ok, it's a mesh"
