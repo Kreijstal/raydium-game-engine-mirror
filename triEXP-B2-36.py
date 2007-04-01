@@ -2,9 +2,9 @@
 
 """
 Name: 'Raydium Export (.tri format)'
-Blender: 2.36"
+Blender: 2.43"
 Group: 'Export'
-Tooltip: 'Export to .tri format with normals'
+Tooltip: 'Export to .tri format'
 """
 
 #import rpdb2;
@@ -34,39 +34,42 @@ class source:
 		    objtype=object.getType()
 		    if objtype == "Mesh":
 			print "ok, it's a mesh"
-			mesh=object.getData()
-			vlist=mesh.verts
+			mesh=object.getData(mesh=1) # let's get a Mesh, not a NMesh (faster, thin)
 			for face in mesh.faces:
 				if len(face)!=3:
 				    print "ERROR: NOT A TRIANGLE ONLY MESH ! (select all vertices and use CTRL+T)"
 		                for i in range(3): #triangles only ! (CTRL+T)
-		                    indx=vlist.index(face[i])
-				    if(face.image):
+		                    #indx=face.vlist.index(face[i])
+				    indx=face.v[i].index
+				    if(mesh.faceUV and face.image):
 					u=face.uv[i][0]
 					v=face.uv[i][1]
-					self.file.write("%f %f %f %f %f %f %f %f %s\n" % (vlist[indx].co[0],vlist[indx].co[1],vlist[indx].co[2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],u,v,face.image.name))
+					layers=mesh.getUVLayerNames()
+					texture=Blender.sys.basename(face.image.filename)
+					but=texture
+					cpt=0 # layers counter
+					if(len(layers)>1):
+					    org=mesh.activeUVLayer
+					    texture=texture+';'
+					    # loop on layers and append uv and name to a string
+					    for layer in layers:
+						mesh.activeUVLayer=layer
+						uu=face.uv[i][0]
+						vv=face.uv[i][1]
+						t=Blender.sys.basename(face.image.filename)
+						if(t!=but):
+						    if(cpt>0):
+							texture=texture+'|'
+						    cpt=cpt+1
+						    texture=texture+str(uu)+'|'+str(vv)+'|'+t
+					    mesh.activeUVLayer=org
+					self.file.write("%f %f %f %f %f %f %f %f %s\n" % (mesh.verts[indx].co[0],mesh.verts[indx].co[1],mesh.verts[indx].co[2],mesh.verts[indx].no[0],mesh.verts[indx].no[1],mesh.verts[indx].no[2],u,v,texture))
 				    else:
-						if(len(face.col)==0):
-							self.file.write("%f %f %f %f %f %f 0 0 rgb(0.6,0.6,0.6)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2]))
+						if(mesh.vertexColors and len(face.col)>0):
+							self.file.write("%f %f %f %f %f %f 0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (mesh.verts[indx].co[0],mesh.verts[indx].co[1],mesh.verts[indx].co[2],mesh.verts[indx].no[0],mesh.verts[indx].no[1],mesh.verts[indx].no[2],face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
 						else:
-							self.file.write("%f %f %f %f %f %f 0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (vlist[indx][0],vlist[indx][1],vlist[indx][2],vlist[indx].no[0],vlist[indx].no[1],vlist[indx].no[2],face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
+							self.file.write("%f %f %f %f %f %f 0 0 rgb(0.6,0.6,0.6)\n" % (mesh.verts[indx].co[0],mesh.verts[indx].co[1],mesh.verts[indx].co[2],mesh.verts[indx].no[0],mesh.verts[indx].no[1],mesh.verts[indx].no[2]))
 					
-# get the face normals
-#			self.file.write("GLfloat normals[%d][3] = {\n" % len(mesh.normals) )
-#			for normal in mesh.normals:
-#				self.file.write("{ %ff, %ff, %ff },\n" % (normal[0],normal[1],normal[2]))
-#			self.file.write("};\n\n")
-
-# get the mesh colors
-#			if mesh.colors:
-#				self.file.write("char OBJ_HAVE_COLORS=1;\n")
-#				self.file.write("GLfloat colors[%d][3] = {\n" % len(mesh.colors) )
-#				for color in mesh.colors:
-#					self.file.write("{ %ff, %ff, %ff },\n" % (color[0],color[1],color[2]))
-#				self.file.write("};\n\n")
-#			else:
-#				self.file.write("char OBJ_HAVE_COLORS=0;\nGLfloat *colors;\n")
-
 
 	def close(self):
 			self.file.flush()
