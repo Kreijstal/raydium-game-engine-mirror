@@ -19,6 +19,7 @@ class source:
 		self.file=open(filename,"w")
 
 	def writeFaces(self):
+		Blender.Window.EditMode(0)
 		scene=Blender.Scene.GetCurrent()
 		self.file.write("1\n") #tri version
 		
