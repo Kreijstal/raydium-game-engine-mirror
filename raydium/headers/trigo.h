@@ -32,7 +32,7 @@ __rayapi GLfloat raydium_trigo_sin_inv (GLfloat i);
 Obvious (degrees)
 **/
 
-#define raydium_trigo_abs(a) ( (a) < (0) ? (-a) : (a) )
+#define raydium_trigo_abs(a) ( (a) < (0) ? (-(a)) : (a) )
 /**
 Obvious
 **/

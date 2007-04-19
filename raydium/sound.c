@@ -12,6 +12,7 @@
 
 // proto
 void raydium_path_resolv(char *in, char *out, char mode);
+float raydium_video_sound_callback(void);
 
 // There's way too much "#ifdef" in this file, but eh ... OpenAL becomes
 // complex when you comes to portability ...
@@ -171,7 +172,7 @@ raydium_path_resolv((char *)fname,translated,'r');
  data=alutLoadMemoryFromFile(translated,&format,&size,&freq);
      raydium_sound_verify("alutLoadMemoryFromFile");
 
-/* // it happends ;) (when sound car device's not available)
+/* // it happends ;) (when sound card device's not available)
  if(!data)
     {
     raydium_log("sound: SHOULD NEVER HAPPEND !");
@@ -674,6 +675,24 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
   int stream;
   int amt;
   ALint format;
+  float videopos;
+
+  // video sync, if needed
+  videopos=raydium_video_sound_callback();
+  if(videopos!=0)
+    {
+    double now;
+
+    videopos+=((float)SOUNDDATASIZE/2/2/44100); // buffer length
+
+    now=ov_time_tell(file);
+    //printf("now=%f video=%f diff=%f\n",now,videopos,now-videopos);
+    if(raydium_trigo_abs(now-videopos)>RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD)
+	{
+	ov_time_seek_lap(file,videopos);
+	//printf("adjusting A/V sync...\n");
+	}
+    }
 
   while(count<SOUNDDATASIZE)
   {
@@ -682,7 +701,6 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
           0,2,1,&stream);
     if(amt<=0)
     {
-//      if(amt<0)fprintf(stderr,"ov_read error: ");
       raydium_log("sound: ov_read error");
       break;
     }
@@ -833,7 +851,7 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
     nprocessed--;
     }
  alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
- } 
+ }
 
  //restart playing if needed
  alGetSourcei(raydium_sound_source[0],AL_SOURCE_STATE,&sourcestate);

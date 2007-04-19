@@ -24,19 +24,23 @@ raydium_rendering_finish();
 int main(int argc, char **argv)
 {
 char video[RAYDIUM_MAX_NAME_LEN];
+char sound[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_args(argc,argv);
 
 if(!raydium_init_cli_option("file",video))
     {
-    printf("******* Usage: jpgs_play --file file.jpgs\n");
+    printf("******* Usage: jpgs_play --file file.jpgs [--sound file.ogg]\n");
     exit(0);
     }
+
+sound[0]=0;
+raydium_init_cli_option("sound",sound);
 
 raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"JPGS movie player");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 
-if(raydium_video_open(video,"video") < 0)
+if(raydium_video_open_with_sound(video,"video",sound) < 0)
     {
     printf("******* Unable to open '%s'\n",video);
     exit(0);

@@ -22,5 +22,6 @@ typedef struct raydium_video_Video
     } raydium_video_Video;
 
 __global raydium_video_Video raydium_video_video[RAYDIUM_MAX_VIDEOS];
+__global int raydium_video_current_with_sound;
 
 #endif

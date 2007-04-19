@@ -17,6 +17,8 @@ void raydium_video_init(void)
 {
 int i;
 
+raydium_video_current_with_sound=-1;
+
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     {
     raydium_video_video[i].state=0;
@@ -90,8 +92,7 @@ jpeg_finish_decompress(&cinfo);
 jpeg_destroy_decompress(&cinfo);
 }
 
-
-int raydium_video_open(char *filename, char *as)
+int raydium_video_open_with_sound(char *filename, char *as, char *ogg)
 {
 int id;
 char head[100];
@@ -177,7 +178,21 @@ raydium_video_video[id].sizex,raydium_video_video[id].sizey,
 raydium_video_video[id].fps,
 raydium_video_video[id].frames_total);
 
+if(ogg!=NULL && strlen(ogg)>0)
+    {
+    if(raydium_sound_load_music(ogg)<0)
+	raydium_log("cannot sync '%s' audio to video '%s'",ogg,as);
+    else
+	raydium_video_current_with_sound=id;
+    }
+
 return id;
+}
+
+
+int raydium_video_open(char *filename, char *as)
+{
+return raydium_video_open_with_sound(filename,as,NULL);
 }
 
 
@@ -196,6 +211,8 @@ if(current>=raydium_video_video[id].frames_total)
     {
     if(!raydium_video_video[id].loop)
 	{
+	if(raydium_video_current_with_sound==id)
+	    raydium_video_current_with_sound=-1;
 	raydium_video_video[id].playing=0;
 	return;
 	}
@@ -226,6 +243,15 @@ for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
 	{
 	raydium_video_callback_video(i);
 	}
+}
+
+
+float raydium_video_sound_callback(void)
+{
+if(raydium_video_current_with_sound<0)
+    return 0; // There's no video with sound right now
+
+return raydium_video_video[raydium_video_current_with_sound].elapsed;
 }
 
 void raydium_video_delete(int id)
