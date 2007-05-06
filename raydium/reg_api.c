@@ -44,6 +44,7 @@ PHP_v_v(raydium_rendering_wireframe)
 PHP_v_v(raydium_rendering_normal)
 PHP_v_v(raydium_rendering_displaylists_enable)
 PHP_v_v(raydium_rendering_displaylists_disable)
+PHP_v_ffff(raydium_render_lightmap_color_4f)
 
 // window.c
 PHP_v_v(raydium_window_view_update)
@@ -223,6 +224,7 @@ raydium_register_function(C2PHP(raydium_rendering_wireframe),"raydium_rendering_
 raydium_register_function(C2PHP(raydium_rendering_normal),"raydium_rendering_normal");
 raydium_register_function(C2PHP(raydium_rendering_displaylists_enable),"raydium_rendering_displaylists_enable");
 raydium_register_function(C2PHP(raydium_rendering_displaylists_disable),"raydium_rendering_displaylists_disable");
+raydium_register_function(C2PHP(raydium_render_lightmap_color_4f),"raydium_render_lightmap_color_4f");
 raydium_register_variable(&raydium_render_fps,RAYDIUM_REGISTER_INT,"raydium_render_fps");
 
 // window.c / projection

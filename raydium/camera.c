@@ -116,6 +116,10 @@ if(raydium_frame_first_camera_pass)
     //raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
     raydium_frame_first_camera_pass=0;
     raydium_light_update_position_all();
+    
+    glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
+    glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
+    glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
     }
 
 if(!raydium_camera_pushed)

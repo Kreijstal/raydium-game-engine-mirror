@@ -440,11 +440,14 @@ __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
 __global signed char	 raydium_camera_pushed;
-__global GLfloat raydium_camera_cursor_place[3];
-__global GLfloat raydium_camera_look_at_roll;
-__global GLfloat raydium_camera_rumble_amplitude;
-__global GLfloat raydium_camera_rumble_evolution;
-__global GLfloat raydium_camera_rumble_remaining;
+__global GLfloat  raydium_camera_cursor_place[3];
+__global GLfloat  raydium_camera_look_at_roll;
+__global GLfloat  raydium_camera_rumble_amplitude;
+__global GLfloat  raydium_camera_rumble_evolution;
+__global GLfloat  raydium_camera_rumble_remaining;
+__global GLdouble raydium_camera_gl_modelview[16];
+__global GLdouble raydium_camera_gl_projection[16];
+__global GLint	  raydium_camera_gl_viewport[4];
 
 typedef struct raydium_camera_Path
     {
