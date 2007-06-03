@@ -16,7 +16,11 @@
 #include <linux/types.h>
 #include <linux/videodev.h>
 #include <sys/mman.h>
+#else
+#include <vfw.h>
+#include "rayvfw.h" // Extra define for vfw missing in standart ming headers
 #endif
+
 
 #define RAYDIUM_LIVE_DEVICE_DEFAULT	"/dev/video0"
 #define RAYDIUM_LIVE_SIZEX_DEFAULT	352
@@ -42,6 +46,23 @@ typedef struct raydium_live_Device
   // for mmap captures
   struct video_mbuf gb_buffers;
   struct video_mmap gb_buf;
+  
+#else
+    HWND	hWnd_WC;
+    HDC		hDC_WC;
+    CAPDRIVERCAPS capdriver_caps;
+    CAPTUREPARMS capture_param;
+    CAPSTATUS  capture_status;
+    BITMAPINFO capture_video_format;
+
+    struct video_window  // Linux structure to keep source compatable
+    {
+        unsigned int   width,height;          
+    }win;
+    struct video_picture
+    {
+        unsigned int depth;
+    }vpic;
 #endif
 
   unsigned char *buffer;  // capture buffer

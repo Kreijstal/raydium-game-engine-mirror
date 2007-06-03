@@ -14,6 +14,7 @@
 
 
 
+
 // YUV420P to RGB code (next 2 functions) from:
 // Peopletracking with an omnicamera
 // Daniel Hammarin & Mihajlo Miladinovic
@@ -133,10 +134,31 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
 return -1;
 }
 
+// Windows call back, called after each frame, work only for one source
+// Don't have solution for multiple source
+// Work with 24bpp images.
+#ifdef WIN32
+LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
+{
+    int i;		
+    BYTE * pin , * pout;
+    pin = lpVHdr->lpData;
+    pin +=raydium_live_device[0].win.width*raydium_live_device[0].win.height*(raydium_live_device[0].vpic.depth/8);
+    pout = raydium_live_device[0].buffer2;
+    for (i=0;i<raydium_live_device[0].win.width*raydium_live_device[0].win.height;i++)
+    {       
+        pin-=3;
+        *pout++=*(pin+2);
+        *pout++=*(pin+1);
+        *pout++=*(pin+0);
+    }
+    return 0;
+}  
+#endif
 
 int raydium_live_video_open(char *device, int sizex, int sizey)
 {
-#ifndef WIN32
+
 char *default_device=RAYDIUM_LIVE_DEVICE_DEFAULT;
 int id;
 int capture_style = RAYDIUM_LIVE_FREE;
@@ -144,6 +166,7 @@ char palette[128];
 raydium_live_Device *dev;
 char force_read=0;
 char cli_device[RAYDIUM_MAX_NAME_LEN];
+int bmisize;
 
 
 strcpy(palette,"(none)");
@@ -163,6 +186,7 @@ if(id<0)
 
 dev=&raydium_live_device[id];
 
+#ifndef WIN32
 dev->fd=open(device, O_RDWR);
 
 if (dev->fd<0)
@@ -171,8 +195,46 @@ if (dev->fd<0)
     raydium_log("live: ERROR: cannot open device '%s'",device);
     return -1;
     }
+#else
+    {
+        HWND hWnd;
+        HDC hDC;
+        char webcam_name_list[RAYDIUM_MAX_NAME_LEN];
+        char webcam_drv_list[RAYDIUM_MAX_NAME_LEN];
+        int i;
+        
+        
+        hWnd = GetDesktopWindow();
+        hDC = GetDC(hWnd);
+        
+        if (device)
+            id = atoi(device);
+        else
+            id = 0;
+    
+        //Capture Frame create
+        dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0);	
+   
+        if(!capDriverConnect(dev->hWnd_WC, id)) // Todo: Change 0 to what ever to have the good cam
+        {
+            raydium_log("Error creating capture context");
+            return -1;
+        }
+     
+        capGetDriverDescription (id, webcam_name_list, sizeof(webcam_name_list), webcam_drv_list,sizeof(webcam_drv_list));
+        raydium_log ("Found WebCam: %d %s",id,webcam_name_list);
+        strcpy(dev->name,webcam_name_list);
+    
+    // Perhaps needed config dialog.
+    //   capDlgVideoDisplay( dev->hWnd_WC );
+    //	capDlgVideoFormat ( dev->hWnd_WC );
+    //	capDlgVideoSource ( dev->hWnd_WC );
+        dev->hDC_WC = GetDC(dev->hWnd_WC);
+    }
 
+#endif
 
+#ifndef WIN32
 if (ioctl(dev->fd, VIDIOCGCAP, &dev->cap) < 0) 
     {
     perror("VIDIOGCAP");
@@ -180,8 +242,17 @@ if (ioctl(dev->fd, VIDIOCGCAP, &dev->cap) < 0)
     close(dev->fd);
     return -1;
   }
+#else // Get driver capability
+if (!capDriverGetCaps (dev->hWnd_WC,&dev->capdriver_caps,sizeof(CAPDRIVERCAPS))){
+    raydium_log("live: ERROR: not a capDriverGetCaps Failed device '%s'",device);
+    capDriverDisconnect(dev->hWnd_WC);
+    DestroyWindow(dev->hWnd_WC);
+    return -1;
+}
 
+#endif
 
+#ifndef WIN32
 if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0) 
     {
     perror("VIDIOCGWIN");
@@ -189,7 +260,16 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     close(dev->fd);
     return -1;
     }
+#else // Get capture params
+if (!capCaptureGetSetup(dev->hWnd_WC,&dev->capture_param,sizeof(CAPTUREPARMS))){
+    raydium_log("live: ERROR: not a CaptureSetup Failed device '%s'",device);
+    capDriverDisconnect(dev->hWnd_WC);
+    DestroyWindow(dev->hWnd_WC);
+    return -1;
+}
+#endif
 
+#ifndef WIN32
 if (ioctl(dev->fd, VIDIOCGPICT, &dev->vpic) < 0) 
     {
     perror("VIDIOCGPICT");
@@ -197,16 +277,47 @@ if (ioctl(dev->fd, VIDIOCGPICT, &dev->vpic) < 0)
     close(dev->fd);
     return -1;
     }
+#else // Get capture status
+if (!capGetStatus(dev->hWnd_WC,&dev->capture_status,sizeof(CAPSTATUS))){
+    raydium_log("live: ERROR: not a capGetStatus Failed device '%s'",device);
+    capDriverDisconnect(dev->hWnd_WC);
+    DestroyWindow(dev->hWnd_WC);
+    return -1;
+    }
+// Get image info
+capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO));
+/*
+if (!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO))){
+    raydium_log("live: ERROR: not a capGetVideoFormat Failed device '%s'",device);
+    capDriverDisconnect(dev->hWnd_WC);
+    DestroyWindow(dev->hWnd_WC);
+    return -1;
+    }    
+*/    
+#endif
 
+#ifndef WIN32
 raydium_log("live: device '%s' (%s)",dev->cap.name,device);
+#else
+raydium_log("live: device '%s' (%s)",dev->name,device);
+#endif
 
+#ifndef WIN32
 raydium_log("live: min %ix%i, max %ix%i, default %ix%i",
 dev->cap.minwidth,dev->cap.minheight,
 dev->cap.maxwidth,dev->cap.maxheight,
 dev->win.width,dev->win.height);
+#else
+raydium_log("live: Drv default image size %ix%i, Image %ix%i, default %ix%i",
+dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight,
+dev->capture_video_format.bmiHeader.biWidth,dev->capture_video_format.bmiHeader.biHeight,
+dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight);
+#endif
 
+#ifndef WIN32
 dev->win.x=0;
 dev->win.y=0;
+#endif
 
 if(sizex<0 || sizey<0)
     {
@@ -214,8 +325,13 @@ if(sizex<0 || sizey<0)
     char sx[RAYDIUM_MAX_NAME_LEN];
     char sy[RAYDIUM_MAX_NAME_LEN];
 
+#ifndef WIN32
     dev->win.width=RAYDIUM_LIVE_SIZEX_DEFAULT;
     dev->win.height=RAYDIUM_LIVE_SIZEY_DEFAULT;
+#else
+    dev->win.width=dev->capture_status.uiImageWidth;
+    dev->win.height=dev->capture_status.uiImageHeight;
+#endif
 
     if(raydium_init_cli_option("video-size",s))
 	{
@@ -236,12 +352,15 @@ else
     dev->win.width=sizex;
     dev->win.height=sizey;
     }
-
+    
+#ifndef WIN32
 dev->win.flags=0;
 dev->win.clips=NULL;
 dev->win.clipcount=0;
 dev->win.chromakey=0;
+#endif 
 
+#ifndef WIN32
 if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0) 
     {
     perror("VIDIOCSWIN");
@@ -250,7 +369,7 @@ if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0)
     return -1;
     }
 
-// read back
+// read back    
 if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0) 
     {
     perror("VIDIOCGWIN");
@@ -259,7 +378,30 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     return -1;
     }
 
+    
+#else
+    dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
+    dev->capture_video_format.bmiHeader.biHeight = dev->win.height; 
+    dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
+    dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
+    dev->capture_video_format.bmiHeader.biPlanes = 1;
+    if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
+    {
+        raydium_log("live: ERROR: not a capSetVideoFormat Failed device '%s'",device);
+        capDriverDisconnect(dev->hWnd_WC);
+        DestroyWindow(dev->hWnd_WC);
+        return -1;
+    }
+    capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO));
 
+    dev->capture_param.fYield =TRUE;
+    dev->capture_param.fAbortLeftMouse=FALSE;
+    dev->capture_param.fAbortRightMouse=FALSE;
+    capCaptureSetSetup(dev->hWnd_WC,&dev->capture_param,sizeof(CAPTUREPARMS));
+    dev->capture_style=RAYDIUM_LIVE_CAPTURE_READ;
+#endif
+
+#ifndef WIN32
 if (dev->cap.type & VID_TYPE_MONOCHROME) 
     {
     dev->vpic.depth=8;
@@ -312,16 +454,31 @@ else
 	    }
 	}
     }
+#else
+    dev->vpic.depth=dev->capture_video_format.bmiHeader.biBitCount;
+#endif
 
+#ifndef WIN32
+#warning depth/8  ??
+dev->buffer2  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // Why not vpic.depth/8 ????
+#else
+dev->buffer2  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
+#endif
 
-dev->buffer2  = malloc(dev->win.width * dev->win.height * dev->vpic.depth);
 if (!dev->buffer2) 
     {
     raydium_log("live: ERROR: buffer2: out of memory (!?)");
+#ifndef WIN32
     close(dev->fd);
     return -1;
+#else
+    capDriverDisconnect(dev->hWnd_WC);
+    DestroyWindow(dev->hWnd_WC);
+    return -1;
     }
+#endif
 
+#ifndef WIN32
 do // just to allow break in this if :)
 { 
 if(dev->cap.type & VID_TYPE_CAPTURE)
@@ -369,7 +526,7 @@ if( (!(dev->cap.type & VID_TYPE_CAPTURE)) || force_read )
     {
     capture_style=RAYDIUM_LIVE_CAPTURE_READ;
   
-    dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth);
+    dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // /8 no ?
     if (!dev->buffer) 
 	{
 	raydium_log("live: ERROR: buffer2: out of memory (!?)");
@@ -388,8 +545,18 @@ strcpy(dev->name,device);
 raydium_log("live: video init for this device is ok");
 return id;
 #else
-raydium_log("live: Live API is not supported under win32 yet");
-return -1;
+    {
+ 
+
+	capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);	
+//	capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
+/*	capPreviewRate(dev->hWnd_WC,100);
+	capPreview(dev->hWnd_WC,TRUE);*/
+    capCaptureSequenceNoFile(dev->hWnd_WC);
+
+    }
+raydium_log("live: First attempt to support on Win32");
+return id;
 #endif
 }
 
@@ -468,9 +635,9 @@ else
 	}
     }
 
-
-return 1;
 #endif
+return 1;
+
 }
 
 
@@ -492,13 +659,17 @@ void raydium_internal_live_close(void)
 int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
+
+#ifndef WIN32
  if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
  {
-#ifndef WIN32
     munmap(raydium_live_device[i].buffer, raydium_live_device[i].gb_buffers.size);
     close(raydium_live_device[i].fd);
+ }
+#else
+    capDriverDisconnect(raydium_live_device[i].hWnd_WC);
+    DestroyWindow(raydium_live_device[i].hWnd_WC);
 #endif
- }    
 }
 
 void raydium_live_init(void)
@@ -556,7 +727,7 @@ return -1;
 
 int raydium_live_texture_video(int device_id, char *as)
 {
-#ifndef WIN32
+//#ifndef WIN32
 int id;
 raydium_live_Device *dev;
 raydium_live_Texture *tex;
@@ -597,10 +768,10 @@ tex->data_source=dev->buffer2;
 tex->state=1;
 raydium_log("live: %s linked to %s (live)",dev->name,as);
 return id;
-#else
+/*#else
 raydium_log("live: Live API is not supported under win32 yet");
 return -1;
-#endif
+#endif*/
 }
 
 

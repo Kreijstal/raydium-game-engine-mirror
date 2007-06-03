@@ -50,9 +50,9 @@ raydium_ode_network_read();
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
     raydium_network_read_faked();
 
-#ifndef WIN32
+//#ifndef WIN32
 raydium_internal_live_video_callback();
-#endif
+//#endif
 raydium_video_callback();
 raydium_web_callback();
 raydium_object_callback();

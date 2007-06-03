@@ -127,14 +127,17 @@ int max;
 int where;
 GLfloat wherex,wherey;
 
-max=-99;
+max=200;
 where=-1;
-
+bpp = bpp/8;
 for(y=0;y<ty;y++)
   for(x=0;x<tx;x++)
     {
     i=y*tx+x;
-    j=(data[i*3]*3)-data[i*3+1]-data[i*3+2];
+
+    j=(data[i*bpp]*3)-data[i*bpp+1]-data[i*bpp+2];
+
+
     if(j>max)
 	{
 	max=j;
@@ -144,12 +147,12 @@ for(y=0;y<ty;y++)
 	}
     }
 
-if(where>=0 && max>350)
+if(where>=0)
     {
     printf("max = %i\n",max);
-    data[where*3]=0;
-    data[where*3+1]=255;
-    data[where*3+2]=0;
+    data[where*bpp]=0;
+    data[where*bpp+1]=255;
+    data[where*bpp+2]=0;
     update_drawing(wherex,wherey);
     }
 
@@ -201,7 +204,7 @@ int main(int argc, char **argv)
 int device;
 
 raydium_init_args(argc,argv);
-raydium_window_create(512,384,RAYDIUM_RENDERING_WINDOW,"Particles test");
+raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"LiveApi test");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;
