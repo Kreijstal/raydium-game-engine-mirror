@@ -166,8 +166,9 @@ char palette[128];
 raydium_live_Device *dev;
 char force_read=0;
 char cli_device[RAYDIUM_MAX_NAME_LEN];
+#ifdef WIN32
 int bmisize;
-
+#endif
 
 strcpy(palette,"(none)");
 
@@ -459,8 +460,7 @@ else
 #endif
 
 #ifndef WIN32
-#warning depth/8  ??
-dev->buffer2  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // Why not vpic.depth/8 ????
+dev->buffer2  = malloc(dev->win.width * dev->win.height * dev->vpic.depth/8);
 #else
 dev->buffer2  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
 #endif
@@ -475,8 +475,8 @@ if (!dev->buffer2)
     capDriverDisconnect(dev->hWnd_WC);
     DestroyWindow(dev->hWnd_WC);
     return -1;
-    }
 #endif
+    }
 
 #ifndef WIN32
 do // just to allow break in this if :)
