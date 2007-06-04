@@ -142,8 +142,8 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
 {
     int i;		
     BYTE * pin , * pout;
-    pin = lpVHdr->lpData;
     raydium_live_Device *dev;
+    pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
     pin +=dev->win.width*dev->win.height*(dev->vpic.depth/8);
     pout = dev->buffer2;
