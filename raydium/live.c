@@ -143,9 +143,11 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
     int i;		
     BYTE * pin , * pout;
     pin = lpVHdr->lpData;
-    pin +=raydium_live_device[0].win.width*raydium_live_device[0].win.height*(raydium_live_device[0].vpic.depth/8);
-    pout = raydium_live_device[0].buffer2;
-    for (i=0;i<raydium_live_device[0].win.width*raydium_live_device[0].win.height;i++)
+    raydium_live_Device *dev;
+    dev = (raydium_live_Device *) capGetUserData(hWnd);
+    pin +=dev->win.width*dev->win.height*(dev->vpic.depth/8);
+    pout = dev->buffer2;
+    for (i=0;i<dev->win.width*dev->win.height;i++)
     {       
         pin-=3;
         *pout++=*(pin+2);
@@ -386,14 +388,21 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
     dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
     dev->capture_video_format.bmiHeader.biPlanes = 1;
+    
     if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
     {
         raydium_log("live: ERROR: not a capSetVideoFormat Failed device '%s'",device);
+        raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
+        capDlgVideoFormat ( dev->hWnd_WC );
+    }
+    
+    if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
+    {
+        raydium_log("Impossible to have correct format, live api not avaible");
         capDriverDisconnect(dev->hWnd_WC);
         DestroyWindow(dev->hWnd_WC);
-        return -1;
-    }
-    capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO));
+        return -1;        
+    }  
 
     dev->capture_param.fYield =TRUE;
     dev->capture_param.fAbortLeftMouse=FALSE;
@@ -548,6 +557,7 @@ return id;
     {
  
 
+    capSetUserData(dev->hWnd_WC,dev);
 	capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);	
 //	capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
 /*	capPreviewRate(dev->hWnd_WC,100);
