@@ -51,6 +51,9 @@ dReal cam_angle_h=0;
 dReal cam_angle_v=90;
 float scroll=-1;
 
+dReal cam_pos[3]={0,0,0};
+
+signed char camera_alternate; 
 signed char camera_lag;
 float camera_lag_speed;
 signed char shadow_support;
@@ -746,6 +749,7 @@ void btnApplyOptions(raydium_gui_Object *w)
 {
 char str[RAYDIUM_MAX_NAME_LEN];
 
+camera_alternate=raydium_gui_read_name("menu","chkCameraAlternate",str);
 camera_lag=raydium_gui_read_name("menu","chkCameraLag",str);
 camera_lag_speed=raydium_gui_read_name("menu","trkCameraLag",str);
 raydium_gui_read_name("menu","edtPlayerName",raydium_network_name_local);
@@ -753,6 +757,10 @@ shadow_support=raydium_gui_read_name("menu","chkShadow",str);
 windowed_mode=raydium_gui_read_name("menu","chkWindow",str);
 raydium_gui_read_name("menu","cboWindow",windowed_res);
 music_volume=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
+
+str[1]=0;
+str[0]=(camera_alternate?'y':'n');
+raydium_parser_db_set("ManiaDrive-CameraAlternateActive",str);
 
 str[1]=0;
 str[0]=(camera_lag?'y':'n');
@@ -1130,6 +1138,9 @@ raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblPlayerName",handle,25,90,gettext("Player Name :"),0,0,0);
 raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtPlayerName",handle,47,87,raydium_network_name_local);
+
+raydium_gui_widget_sizes(4,4,18);
+raydium_gui_check_create("chkCameraAlternate",handle,10,77," Alternate camera behavior",camera_alternate); 
 
 raydium_gui_widget_sizes(4,4,18);
 raydium_gui_check_create("chkCameraLag",handle,10,70,gettext(" Camera lagging support"),camera_lag);
@@ -2453,6 +2464,8 @@ if(vue==3)
     dReal mpos[3];
     dReal *vel;
     dReal cam[3];
+	dReal dist_vector[3];
+    dReal car_to_cam_distance; 
     // get element position
     pos=raydium_ode_element_pos_get_name("corps");
     vel=raydium_ode_element_linearvelocity_get_name("corps");
@@ -2467,6 +2480,24 @@ if(vue==3)
     mpos[1]=pos[1]+vel[1];
     mpos[2]=pos[2]+vel[2];
     
+    // calculate the alternate camera position
+    dist_vector[0] = cam_pos[0]-pos[0];
+    dist_vector[1] = cam_pos[1]-pos[1];
+    dist_vector[2] = cam_pos[2]-pos[2];
+    // find the distance from car to camera
+    car_to_cam_distance = sqrt(dist_vector[0]*dist_vector[0] + dist_vector[1]*dist_vector[1] + dist_vector[2]*dist_vector[2]);
+    // determine new camera position by scaling down the distance vector to be exactly 1 unit long,
+    // and then using that vector as an offset from the car's position
+    cam_pos[0] = pos[0] + (dist_vector[0]/car_to_cam_distance);
+    cam_pos[1] = pos[1] + (dist_vector[1]/car_to_cam_distance);
+    cam_pos[2] = pos[2] + (dist_vector[2]/car_to_cam_distance);
+    
+    if(camera_alternate) {
+       cam[0] = cam_pos[0];
+       cam[1] = cam_pos[1];
+       cam[2] = cam_pos[2] + 0.4; // correct z pos (always at top of the car, for example)
+    }
+
     // standard smooth lookat camera
     if(camera_lag)
       raydium_camera_smooth(cam[0],cam[1],cam[2],mpos[1],-mpos[2],mpos[0],
@@ -2581,6 +2612,7 @@ int main(int argc, char **argv)
 //char server[RAYDIUM_MAX_NAME_LEN];
 int i;
 char str[RAYDIUM_MAX_NAME_LEN];
+char altCamActive[RAYDIUM_MAX_NAME_LEN]; 
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
@@ -2672,6 +2704,9 @@ raydium_register_variable(&cam,RAYDIUM_REGISTER_STR,"cam");
 raydium_register_variable(&vue,RAYDIUM_REGISTER_INT,"vue");
 
 // read options
+raydium_parser_db_get("ManiaDrive-CameraAlternateActive",altCamActive,"y");
+camera_alternate=(altCamActive[0]=='y'?1:0);
+
 raydium_parser_db_get("ManiaDrive-CameraLagActive",lagActive,"y");
 raydium_parser_db_get("ManiaDrive-CameraSpeed",lagSpeed,"5.0");
 camera_lag=(lagActive[0]=='y'?1:0);
