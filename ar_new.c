@@ -28,16 +28,25 @@ GLfloat camz=0;
 
 #define PLAYER_MODEL	"sasc2.tri"
 
-
+#ifndef WIN32
 #define CAMERA_RES_X	320
 #define CAMERA_RES_Y	240
+
+#define camera "camera_para.dat"
+
+#else
+#define CAMERA_RES_X	640
+#define CAMERA_RES_Y	480
+
+#define camera "dvx.dat"
+#endif
 
 char            *vconf = "";
 int             xsize, ysize;
 int             thresh = 100;
 int             count = 0;
 
-char           *cparam_name    = "camera_para.dat";
+char           *cparam_name    = camera;
 ARParam         cparam;
 
 char           *patt_name      = "patt.hiro";
@@ -186,6 +195,8 @@ int data_callback(unsigned char *data, int tx, int ty, int bpp)
 	raydium_log("no marker available %i",raydium_random_i(0,10));
         return 1;
     }
+    else
+        raydium_log("Marker %f",marker_info[k].cf);
 
 //    arGetTransMat(&marker_info[k], patt_center, patt_width, patt_trans);
     arGetTransMatCont(&marker_info[k], patt_trans,patt_center, patt_width, patt_trans);
