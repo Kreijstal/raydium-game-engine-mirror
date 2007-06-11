@@ -140,19 +140,25 @@ return -1;
 #ifdef WIN32
 LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
 {
-    int i;		
+    int i,j;		
     BYTE * pin , * pout;
     raydium_live_Device *dev;
     pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
+    
     pin +=dev->win.width*dev->win.height*(dev->vpic.depth/8);
     pout = dev->buffer2;
-    for (i=0;i<dev->win.width*dev->win.height;i++)
-    {       
-        pin-=3;
-        *pout++=*(pin+2);
-        *pout++=*(pin+1);
-        *pout++=*(pin+0);
+    for (i=0;i<dev->win.height;i++)
+    {
+        pin-=dev->win.width*3;
+        for (j=0;j<dev->win.width;j++)
+        {    
+            *pout++=*(pin+2);   
+            *pout++=*(pin+1);
+            *pout++=*(pin+0);
+            pin+=3;
+        }
+        pin-=dev->win.width*3;
     }
     return 0;
 }  
