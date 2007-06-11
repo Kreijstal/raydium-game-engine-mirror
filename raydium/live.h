@@ -54,6 +54,9 @@ typedef struct raydium_live_Device
     CAPTUREPARMS capture_param;
     CAPSTATUS  capture_status;
     BITMAPINFO capture_video_format;
+    BITMAPINFO capture_video_format_original;
+    
+    HIC    compressor;
 
     struct video_window  // Linux structure to keep source compatable
     {

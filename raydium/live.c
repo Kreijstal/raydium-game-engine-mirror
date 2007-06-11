@@ -143,9 +143,16 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
     int i,j;		
     BYTE * pin , * pout;
     raydium_live_Device *dev;
+    BITMAPINFO * bmi_in, * bmi_out;
     pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
     
+    bmi_in = &dev->capture_video_format_original;
+    ICDecompressBegin( dev->compressor, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format_original, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format);
+    ICDecompress( dev->compressor,ICDECOMPRESS_HURRYUP,(LPBITMAPINFOHEADER) &dev->capture_video_format_original, lpVHdr->lpData, (LPBITMAPINFOHEADER)  &dev->capture_video_format, dev->buffer);
+    ICDecompressEnd( dev->compressor );
+    
+    pin = dev->buffer;
     pin +=dev->win.width*dev->win.height*(dev->vpic.depth/8);
     pout = dev->buffer2;
     for (i=0;i<dev->win.height;i++)
@@ -294,7 +301,7 @@ if (!capGetStatus(dev->hWnd_WC,&dev->capture_status,sizeof(CAPSTATUS))){
     return -1;
     }
 // Get image info
-capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO));
+capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO));
 /*
 if (!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO))){
     raydium_log("live: ERROR: not a capGetVideoFormat Failed device '%s'",device);
@@ -319,7 +326,7 @@ dev->win.width,dev->win.height);
 #else
 raydium_log("live: Drv default image size %ix%i, Image %ix%i, default %ix%i",
 dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight,
-dev->capture_video_format.bmiHeader.biWidth,dev->capture_video_format.bmiHeader.biHeight,
+dev->capture_video_format_original.bmiHeader.biWidth,dev->capture_video_format_original.bmiHeader.biHeight,
 dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight);
 #endif
 
@@ -389,6 +396,9 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
 
     
 #else
+
+// Try to set good frame format.
+// First direct try with hardware drive
     dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
     dev->capture_video_format.bmiHeader.biHeight = dev->win.height; 
     dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
@@ -397,18 +407,33 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     
     if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
     {
-        raydium_log("live: ERROR: not a capSetVideoFormat Failed device '%s'",device);
-        raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
-        capDlgVideoFormat ( dev->hWnd_WC );
+        raydium_log("live: ERROR: not a capSetVideoFormat to RGB 24bpp Failed device '%s'",device);
+ /*       raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
+        capDlgVideoFormat ( dev->hWnd_WC );*/
     }
     
-    if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
+    if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO)))
     {
         raydium_log("Impossible to have correct format, live api not avaible");
         capDriverDisconnect(dev->hWnd_WC);
         DestroyWindow(dev->hWnd_WC);
         return -1;        
     }  
+// Try to find correct decompressor
+
+    dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
+    dev->capture_video_format.bmiHeader.biHeight = dev->win.height; 
+    dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
+    dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
+    dev->capture_video_format.bmiHeader.biPlanes = 1;
+    dev->capture_video_format.bmiHeader.biClrImportant =0;
+    dev->capture_video_format.bmiHeader.biClrUsed=0;
+    dev->capture_video_format.bmiHeader.biCompression = BI_RGB;
+    
+    dev->compressor=NULL;
+    dev->compressor = ICLocate(ICTYPE_VIDEO, NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
+    if (dev->compressor)
+        raydium_log("Live: Found correct decompressor, can process frames");
 
     dev->capture_param.fYield =TRUE;
     dev->capture_param.fAbortLeftMouse=FALSE;
@@ -477,6 +502,7 @@ else
 #ifndef WIN32
 dev->buffer2  = malloc(dev->win.width * dev->win.height * dev->vpic.depth/8);
 #else
+dev->buffer  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
 dev->buffer2  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
 #endif
 
