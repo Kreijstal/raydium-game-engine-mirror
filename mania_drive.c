@@ -62,6 +62,7 @@ char windowed_res[32]; // "%ix%i" format
 signed char windowed_mode_save; // use to display "must restart game" message
 char windowed_res_save[32]; // same
 float music_volume;
+float engine_volume;
 signed joystick_enabled;
 
 int object_ground,object_boxes;
@@ -194,6 +195,11 @@ fclose(fp);
 void change_music_volume(float vol)
 {
 raydium_sound_SetSourceGain(0,vol);
+}
+
+void change_engine_volume(float vol)
+{
+raydium_sound_SetSourceGain(sound_car,vol*0.1);
 }
 
 float get_score(char *track,char *player)
@@ -542,6 +548,8 @@ mode=MODE_OTHERS;
 
 void btnBackToMainMenu(raydium_gui_Object *w)
 {
+raydium_sound_SourceStop(sound_car);
+change_engine_volume(engine_volume);
 change_music_volume(music_volume);
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
@@ -757,6 +765,7 @@ shadow_support=raydium_gui_read_name("menu","chkShadow",str);
 windowed_mode=raydium_gui_read_name("menu","chkWindow",str);
 raydium_gui_read_name("menu","cboWindow",windowed_res);
 music_volume=raydium_gui_read_name("menu","trkMusicVol",str)/100.f;
+engine_volume=raydium_gui_read_name("menu","trkEngineVol",str)/100.f;
 
 str[1]=0;
 str[0]=(camera_alternate?'y':'n');
@@ -782,11 +791,28 @@ sprintf(str,"%f",music_volume);
 raydium_parser_db_set("ManiaDrive-MusicVolume",str);
 change_music_volume(music_volume);
 
+sprintf(str,"%f",engine_volume);
+raydium_parser_db_set("ManiaDrive-EngineVolume",str);
+change_engine_volume(engine_volume);
+raydium_sound_SourceStop(sound_car);
 
 raydium_gui_window_delete_name("menu");
 build_gui_Main();
 if(windowed_mode!=windowed_mode_save || strcmp(windowed_res,windowed_res_save))
     build_gui_NeedRestart();
+}
+
+void btnEngineVolTest(raydium_gui_Object *w)
+{
+float v;
+ALfloat pos[3] = {0.f, 1.f, 0.f};
+char str[RAYDIUM_MAX_NAME_LEN];
+
+v=raydium_gui_read_name("menu","trkEngineVol",str)/100.f;
+change_engine_volume(v);
+raydium_sound_SetSourcePitch(sound_car,1.5);
+raydium_sound_SetSourcePos(sound_car, pos);
+raydium_sound_SourcePlay(sound_car);
 }
 
 void btnMusicVolTest(raydium_gui_Object *w)
@@ -1150,6 +1176,12 @@ raydium_gui_label_create("lblCamLagFact",handle,30,64,gettext("Camera's speed :"
 raydium_gui_widget_sizes(20,2,0);
 raydium_gui_track_create("trkCameraLag",handle,56,62, 2,10,camera_lag_speed);
 
+raydium_gui_widget_sizes(0,0,18);
+raydium_gui_label_create("lblEngineVol",handle,25,54,gettext("Engine volume :"),0,0,0);
+raydium_gui_widget_sizes(15,2,0);
+raydium_gui_track_create("trkEngineVol",handle,48,52, 0,100,engine_volume*100);
+raydium_gui_widget_sizes(9,3,14);
+raydium_gui_button_create("btnEngineVolTest",handle,81,51,gettext("test"),btnEngineVolTest);
 
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblMusicVol",handle,25,44,gettext("Music volume :"),0,0,0);
@@ -2717,6 +2749,10 @@ shadow_support=atoi(str);
 
 raydium_parser_db_get("ManiaDrive-MusicVolume",str,"1.0");
 sscanf(str,"%f",&music_volume);
+
+raydium_parser_db_get("ManiaDrive-EngineVolume",str,"1.0");
+sscanf(str,"%f",&engine_volume);
+change_engine_volume(engine_volume);
 
 raydium_parser_db_get("ManiaDrive-JoystickEnabled",str,"y");
 joystick_enabled=(str[0]=='y'?1:0);
