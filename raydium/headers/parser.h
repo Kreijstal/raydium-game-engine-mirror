@@ -18,7 +18,7 @@ variable_s="string value";
 variable_f=10.5;
 
 // float array
-variable_a={1,2,10.5,};
+variable_a={1,2,10.5};
 
 // raw data
 variable_r=[

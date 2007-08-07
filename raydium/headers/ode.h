@@ -1498,9 +1498,7 @@ Internal frame callback.
 __rayapi void raydium_ode_time_change (GLfloat perc);
 /**
 This function will change RayODE timecall frequency, allowing slow motion
-effects, for example. This function will automatically adjust particle
-engine time base.
-##perc## is the percentage of the normal time base.
+effects, for example, where ##perc## is the percentage of the normal time base.
 Since this function obviously do not change physics accuracy, be careful 
 with ##perc## > 100, wich will generate a big load for the CPU.
 This function also change particles and mesh animations time.
