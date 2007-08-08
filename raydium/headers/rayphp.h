@@ -52,7 +52,7 @@ Test if Internet connection is available using Raydium website.
 
 __rayapi signed char raydium_rayphp_repository_defaults(char *def);
 /**
-Gives the default repositories for this applications
+Gives the default repositories for this application.
 
 This function will create two files, ##repositories.list## and
 ##repositories.upload## in game user home directory, if these files

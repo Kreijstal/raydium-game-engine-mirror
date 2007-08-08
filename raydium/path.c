@@ -221,7 +221,7 @@ if(mode=='r')
 
 if(mode=='w')
     {
-    if(raydium_file_directory_writable("."))
+    if(raydium_file_directory_writable(".") && raydium_path_write_local_dir_allowed)
 	return;
 
     sprintf(out,"%s/%s",raydium_path_write_current,in);
@@ -252,6 +252,7 @@ signed char ok;
 
 raydium_path_reset();
 raydium_atexit(raydium_path_dump);
+raydium_path_write_local_dir_allowed=1;
 
 if(raydium_init_cli_option("path",path))
     raydium_path_string_from(path);
@@ -290,3 +291,7 @@ else
     raydium_log("ERROR: path: unable to find a writable path. Try using --write-path");
 }
 
+void raydium_path_write_local_deny(signed char deny)
+{
+raydium_path_write_local_dir_allowed=(deny?0:1);
+}

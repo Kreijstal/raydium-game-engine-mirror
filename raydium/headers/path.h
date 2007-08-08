@@ -97,6 +97,14 @@ Reset all registrations.
 You should probably better use ##raydium_path_string_from()##.
 **/
 
+__rayapi void raydium_path_write_local_deny(signed char deny);
+/**
+By default, Raydium always tries to write in the local directory (binary's directory,
+in other words), and if it's not possible, did it in the registered writing
+directory. Using this function (with deny=1) will force Raydium to use the second
+option each time. Then Raydium will never write to local directory.
+**/
+
 __rayapi void raydium_path_init(void);
 /**
 Internal.

@@ -23,5 +23,6 @@ signed char mode;
 
 raydium_path_Path raydium_path_paths[RAYDIUM_MAX_PATHS];
 char raydium_path_write_current[RAYDIUM_MAX_DIR_LEN];
+signed char raydium_path_write_local_dir_allowed;
 
 #endif
