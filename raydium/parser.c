@@ -123,8 +123,36 @@ if(val_s[0]=='[') // is raw data (RAYDIUM_MAX_NAME_LEN limit !)
 
 if(val_s[0]=='"') // is a string
     {
-    raydium_parser_replace(val_s,'"',' ');    
-    raydium_parser_trim(val_s);
+    int i,p1=-1,p2=-1;
+    char temp[RAYDIUM_MAX_NAME_LEN];
+
+    strcpy(temp,val_s);
+
+    // search both double quotes (string must not contains dq, then !)
+    for(i=0;i<strlen(temp);i++)
+	if(temp[i]=='"')
+	    {
+	    p1=i;
+	    break;
+	    }
+
+    for(i=p1+1;i<strlen(temp);i++)
+	if(temp[i]=='"')
+	    {
+	    p2=i;
+	    break;
+	    }
+
+    if(p1==-1 || p2==-1)
+	{
+	raydium_log("ERROR: parser: invalid value for string '%s'",var);
+	val_s[0]=0;
+	*size=0;
+	return RAYDIUM_PARSER_TYPE_STRING;
+	}
+
+    temp[p2]=0;
+    strcpy(val_s,temp+p1+1);
     *size=strlen(val_s);
     return RAYDIUM_PARSER_TYPE_STRING;
     }

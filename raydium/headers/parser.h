@@ -29,7 +29,7 @@ xxxxxxxx
 xxxxxxxx
 ];
 %%
-Semi-colon are purely esthetic.
+Semi-colon are purely esthetic, and you can put comments almost where you want.
 **/
 
 __rayapi void raydium_parser_trim (char *org);
@@ -64,6 +64,7 @@ Reads a new data line in ##fp##.
 ##var## will contain variable name. You'll find associated value in ##val_s##
 if it's a string, or ##val_f## if it's a float (or a float array). In this last
 case, ##size## will return the number of elements if the array.
+Watch out for buffer overflows with float arrays !
 %%(c)
 FILE *fp;
 int ret;
