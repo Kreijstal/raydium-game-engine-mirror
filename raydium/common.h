@@ -448,6 +448,8 @@ __global GLfloat  raydium_camera_rumble_remaining;
 __global GLdouble raydium_camera_gl_modelview[16];
 __global GLdouble raydium_camera_gl_projection[16];
 __global GLint	  raydium_camera_gl_viewport[4];
+__global GLfloat  raydium_camera_freemove_sensibility;
+__global GLfloat  raydium_camera_freemove_speed;
 
 typedef struct raydium_camera_Path
     {

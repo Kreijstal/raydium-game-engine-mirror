@@ -159,6 +159,9 @@ raydium_camera_path_reset_flag=1;
 raydium_camera_rumble_amplitude=0;
 raydium_camera_rumble_evolution=0;
 raydium_camera_rumble_remaining=0;
+//INITIALIZING freemove global variables
+raydium_camera_freemove_speed = 0.1;
+raydium_camera_freemove_sensibility = 1;
 raydium_window_view_update();
 raydium_internal_vertex_next_extras=0;
 raydium_sky_force=0;
