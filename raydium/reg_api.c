@@ -261,6 +261,8 @@ raydium_register_function(C2PHP(raydium_clear_frame),"raydium_clear_frame");
 
 // camera.c
 raydium_register_function(C2PHP(raydium_camera_replace),"raydium_camera_replace");
+raydium_register_variable(&raydium_camera_freemove_speed,RAYDIUM_REGISTER_FLOAT,"raydium_camera_freemove_speed");
+raydium_register_variable(&raydium_camera_freemove_sensibility,RAYDIUM_REGISTER_FLOAT,"raydium_camera_freemove_sensibility");
 
 // object.c
 raydium_register_function(C2PHP(raydium_object_draw_name),"raydium_object_draw_name");
