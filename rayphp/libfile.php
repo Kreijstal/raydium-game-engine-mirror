@@ -81,7 +81,10 @@ function read_repositories_file_internal($repos,&$repos_list)
 {
   $list=@file($repos);
   if(count($list)==0)
-    die("Cannot open $repos");
+    {
+    echo "Cannot open repository file: $repos";
+    return $repos_list;
+    }
 
   // let's clean up the list
   for($i=0;$i<count($list);$i++)
@@ -245,6 +248,7 @@ function depends_tri($filename)
   if($fp==false)
     {
       echo "Cannot open $filename";
+      return array();
     }
   
   fgets($fp, 4096); // skip first line (version number)
