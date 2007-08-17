@@ -204,12 +204,15 @@ Draw contents of ##name## viewport to screen
 
 __rayapi void raydium_camera_freemove(void);
 /**
-SPECIAL FUNCTION NOT RECOMMENDED FOR SERIOUS CODE.
-Function focused for fast demos, tech demos, general testing, and for getting a "Wooow!!" from friends :)
-This function is a fast & easy way(maybe a bad way) to create a working camera that can move with keys and joystick and that can be rotated with the mouse, like a usual camera in a First Person Shooter(FPS) game. 
-Its sources could be also interesting as example of implementation of this kind of camera but, insist, IS NOT A GOOD WAY of do things.
-It doesn't needs parameters, it takes data directly from the raydium internals. This is good, cause it quit you a lot of work, but also is bad, cause don't allows you to manage or alter that input(easily).
-Only two hacks are allowed: You can modify the global variables ##raydium_camera_freemove_sensibility## and ##raydium_camera_freemove_speed##, mouse sensibility (1 default) and movement speed(0.1 default) respectively.
+This function is a fast & easy way to create a working camera that can move 
+with keys and can be rotated with the mouse, like a usual camera in a 
+First Person Shooter(FPS) game.
+Its sources could be also interesting as an example of implementation of this
+kind of camera, since this function can be a bit limited if you want to do
+complex things.
+You can modify the global variables ##raydium_camera_freemove_sensibility## 
+and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and 
+movement speed (0.1 default) respectively.
 **/
 
 #endif

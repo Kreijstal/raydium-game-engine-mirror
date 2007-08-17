@@ -559,8 +559,9 @@ int i;
 
 void raydium_camera_freemove()
 {
+    float dir_x, dir_y;
+
     //declaring ans setting variables. Statics, to store the values betwen calls
-    //Is this C89 compliant? :|
     static GLfloat rffp_cam_angle_x = 0;
     static GLfloat rffp_cam_angle_y = 90;
     static GLfloat rffp_cam_pos_x = 0;
@@ -569,17 +570,21 @@ void raydium_camera_freemove()
     static GLint   rffp_delta_x=0;
     static GLint   rffp_delta_y=0;
 
-    //Xfennec don't like this :) 
-    raydium_joy_key_emul();
+    dir_x=0;
+    dir_y=0;
+    if(raydium_key[GLUT_KEY_DOWN]) dir_y=-1;
+    if(raydium_key[GLUT_KEY_UP]) dir_y=1;
+    if(raydium_key[GLUT_KEY_LEFT]) dir_x=-1;
+    if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+
 
     //calculating the position (x,y,z) of the camera
-    rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*raydium_joy_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-    rffp_cam_pos_x += (raydium_trigo_cos(rffp_cam_angle_x+90)*raydium_joy_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-    rffp_cam_pos_y += (raydium_trigo_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*raydium_joy_y);
+    rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
+    rffp_cam_pos_x += (raydium_trigo_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
+    rffp_cam_pos_y += (raydium_trigo_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
 
-    rffp_cam_pos_x -= (raydium_trigo_cos(rffp_cam_angle_x)*raydium_joy_x*raydium_camera_freemove_speed);
-    rffp_cam_pos_z -= (raydium_trigo_sin(rffp_cam_angle_x)*raydium_joy_x*raydium_camera_freemove_speed);
-    //raydium_joy_key_emul();
+    rffp_cam_pos_x -= (raydium_trigo_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+    rffp_cam_pos_z -= (raydium_trigo_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
     //looking where the mouse points
     rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
@@ -591,12 +596,8 @@ void raydium_camera_freemove()
     //putting the mouse in the middle of the screen, the read the next data of the mouse correctly
     raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
 
-    //Xfennec don't like this either :) 
-    //raydium_clear_frame();
 
     //moving the camera
     raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,0);
-    //appliyng camera
-    raydium_camera_replace();
 }
 
