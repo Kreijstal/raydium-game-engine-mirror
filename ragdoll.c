@@ -8,18 +8,6 @@
 
 #include "raydium/index.c"
 
-GLfloat cam_angle_x = 0;
-GLfloat cam_angle_y = 90;
-
-GLfloat cam_pos_x = 0;
-GLfloat cam_pos_y = 0;
-GLfloat cam_pos_z = 0;
-
-GLfloat speed = 0.1;
-GLint sensibilite = 3;
-
-GLint lacet = 0;
-
 GLfloat light_color[] = {1.0, 0.9, 0.8, 1.0};
 GLfloat  *back_color=light_color;
 
@@ -117,19 +105,10 @@ int a;
 void display(void)
 {
     
-    int delta_x, delta_y;
     raydium_joy_key_emul();
 
-    cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-    cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-    cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
-    
-    cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
-    cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
-    
     if(raydium_key_last==1027)
 	exit(0);
-
 
 // won't work until you disable display lists
     if(raydium_key_last==3)
@@ -167,15 +146,6 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
 
 }
     
-    delta_x = raydium_mouse_x - (raydium_window_tx/2);
-    cam_angle_x += (delta_x*sensibilite*0.1f); 
-
-    delta_y = raydium_mouse_y - (raydium_window_ty/2);
-    cam_angle_y += (delta_y*sensibilite*0.1f); 
-
-    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
-    
-
 
     raydium_light_position[0][0]=50;
     raydium_light_position[0][1]=150;
@@ -184,10 +154,7 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
     
     raydium_clear_frame();
     
-    raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
-
-    raydium_camera_replace();
-    
+    raydium_camera_freemove();
     
     raydium_ode_draw_all(0);
 
@@ -220,9 +187,8 @@ int main(int argc, char **argv)
 //    raydium_osd_cursor_set("BOXcursor.tga",4,4);
 
     raydium_window_view_update();
+    raydium_shadow_enable();
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);
-
-    raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
 
     raydium_ode_ground_set_name("cocorobix.tri");    
     raydium_callback(&display);

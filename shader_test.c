@@ -6,34 +6,14 @@
 
 #include "raydium/index.c"
 
-GLfloat cam_angle_x = 0;
-GLfloat cam_angle_y = 90;
-
-GLfloat cam_pos_x = 0;
-GLfloat cam_pos_y = 0;
-GLfloat cam_pos_z = 0;
-
-GLfloat speed = 0.01;
-GLint sensibilite = 3;
-
-GLint lacet = 0;
-
 dReal *lpos;
 
 void display(void)
 {
-int delta_x, delta_y;
 raydium_joy_key_emul();
 
 lpos=raydium_ode_element_pos_get_name("light");
 raydium_light_move_3f(0,lpos[0],lpos[1],lpos[2]);
-
-cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
-    
-cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
-cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
 
 if(raydium_key_last==1027)
     exit(0);
@@ -41,16 +21,8 @@ if(raydium_key_last==1027)
 if(raydium_key[GLUT_KEY_F1]) { raydium_projection_fov/=(1.04); raydium_window_view_update(); }
 if(raydium_key[GLUT_KEY_F2]) { raydium_projection_fov*=(1.04); raydium_window_view_update(); }
 
-delta_x = raydium_mouse_x - (raydium_window_tx/2);
-cam_angle_x += (delta_x*sensibilite*0.1f); 
-
-delta_y = raydium_mouse_y - (raydium_window_ty/2);
-cam_angle_y += (delta_y*sensibilite*0.1f); 
-
-raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
-
 raydium_clear_frame();
-raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
+raydium_camera_freemove();
 raydium_ode_draw_all(0);
 raydium_rendering_finish();
 }
@@ -75,7 +47,7 @@ raydium_background_color_change(1,0.9,0.7,1);
 
 raydium_sky_box_cache();
 
-raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
+raydium_camera_freemove_speed=0.01;
 
 raydium_ode_ground_set_name("crate_parabump.tri");
 obj=raydium_ode_object_find("GLOBAL");
@@ -107,8 +79,8 @@ raydium_shader_var_3f_name("shader1","PhongColor",0.94,0.7,0.85);
 raydium_shader_load("shader2","bump.vert","bump.frag");
 raydium_shader_var_i_name("shader2","normalMap",0);
 raydium_shader_var_i_name("shader2","colorMap",1);
-raydium_shader_var_4f_name("shader2","specular",0.3,0.3,0.3,1);
-raydium_shader_var_f_name("shader2","shininess",40);
+raydium_shader_var_4f_name("shader2","specular",0.1,0.1,0.1,1);
+raydium_shader_var_f_name("shader2","shininess",30);
 
 raydium_shader_load("shader3","parabump.vert","parabump.frag");
 raydium_shader_var_i_name("shader3","Normal",0);
