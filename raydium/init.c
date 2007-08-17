@@ -299,5 +299,165 @@ if(raydium_init_cli_option("autoexec",autoexec))
 #endif
 }
 
+//Still needs a check of void parameters. 
+//Ie. it should returns error when certain parameters are not given in the conf file.
+int raydium_init_load(char *filename)
+{   
+    FILE *fp;
+    int ret;
+    char var[255],val_s[255];
+    float val_f[255];
+    int size;
+    int tmp_width,tmp_height,tmp_windowtype,tmp_filter,tmp_fog,tmp_lighting;
+    float tmp_light0[8],tmp_background[4],tmp_fov,tmp_far,tmp_near;
+    char tmp_title[255];
+    
+    //flags
+    int flag_width,flag_height,flag_title,flag_windowtype,flag_filter,flag_fov,flag_near,flag_far,flag_fog,flag_lighting,flag_light0,flag_background;
+       
+     //initializing flags  
+     flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=0;   
+     //opening the config file   
+    fp=raydium_file_fopen(filename,"rt");
+    if(fp)
+    {    
+        raydium_log("Reading configuration file...");
+        while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
+        {        
+            if(strcmp(var,"width")==0)
+                {
+                    tmp_width=atoi(val_s);
+                    raydium_log("Width of the Window: %d",tmp_width);
+                    flag_width=1;
+                }
+            if(strcmp(var,"height")==0)
+                {
+                    tmp_height=atoi(val_s);
+                    raydium_log("Height of the window: %d",tmp_height);
+                    flag_height=1;
+                }
+            if(strcmp(var,"windowtype")==0)
+            {
+                raydium_parser_trim(val_s);
+                if(strcmp(val_s,"fullscreen")==0) tmp_windowtype=RAYDIUM_RENDERING_FULLSCREEN;
+                    else tmp_windowtype=RAYDIUM_RENDERING_WINDOW;
+                raydium_log("Window type: %s",(tmp_windowtype)?"RAYDIUM_RENDERING_FULLSCREEN":"RAYDIUM_RENDERING_WINDOW");
+                flag_windowtype=1;
+            }
+            if(strcmp(var,"title")==0)
+            {
+                raydium_parser_trim(val_s);
+                strcpy(tmp_title,val_s);
+                raydium_log("Window title: \"%s\"",tmp_title);
+                flag_title=1;
+            } 
+            if(strcmp(var,"filter")==0)
+            {
+                raydium_parser_trim(val_s);
+                if(strcmp(val_s,"trilinear")==0)tmp_filter=2;
+                if(strcmp(val_s,"bilinear")==0)tmp_filter=1;
+                if(strcmp(val_s,"none")==0)tmp_filter=0;
+                if(strcmp(val_s,"aniso")==0)tmp_filter=3;
+                raydium_log("Texture filtering type: %d",tmp_filter);
+                flag_filter=1;            
+            }
+            if(strcmp(var,"fov")==0)
+            {
+                tmp_fov=atof(val_s);
+                raydium_log("FOV: %f",tmp_fov);          
+                flag_fov=1;            
+            }
+            if(strcmp(var,"near")==0)
+            {
+                raydium_parser_trim(val_s);
+                tmp_near=atof(val_s);
+                //tmp_near=val_f;
+                raydium_log("Near plane: %f",tmp_near);          
+                flag_near=1;            
+            }
+            if(strcmp(var,"far")==0)
+            {        	
+                raydium_parser_trim(val_s);
+                tmp_far=atof(val_s);
+                raydium_log("Far plane: %f",tmp_far);          
+                flag_far=1;            
+            }
+            if(strcmp(var,"fog")==0)
+            {
+            	raydium_parser_trim(val_s);
+                tmp_fog=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
+                raydium_log("Fog: %s",(tmp_fog?"enable":"disable"));          
+                flag_fog=1;            
+            }
+            if(strcmp(var,"lighting")==0)
+            {
+            	raydium_parser_trim(val_s);
+                tmp_lighting=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
+                raydium_log("Lighting: %s",(tmp_lighting?"enable":"disable"));          
+                flag_lighting=1;            
+            }
+            if(strcmp(var,"light0")==0)
+            {
+            	raydium_parser_trim(val_s);
+                sscanf(val_s, "%f,%f,%f,%f,%f,%f,%f,%f", &tmp_light0[0], &tmp_light0[1],&tmp_light0[2],&tmp_light0[3],&tmp_light0[4],&tmp_light0[5],&tmp_light0[6],&tmp_light0[7]);
+                raydium_log("Light number 0 values: %f,%f,%f,%f,%f,%f,%f,%f",tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]);          
+                flag_light0=1;            
+            }
+             if(strcmp(var,"background")==0)
+            {
+            	raydium_parser_trim(val_s);
+                sscanf( val_s, "%f,%f,%f,%f", &tmp_background[0], &tmp_background[1],&tmp_background[2],&tmp_background[3]);
+                raydium_log("Background colors: %f,%f,%f,%f,%f,%f,%f,%f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
+                flag_background=1;            
+            }
+        }
+            
+        //Here, we process all the data achieved and make the raydium calls        
+        
+        if(flag_width && flag_height && flag_windowtype && flag_title)
+            {
+                raydium_window_create(tmp_width,tmp_height,tmp_windowtype,tmp_title);
+            }
+        if(flag_filter)
+            {
+                raydium_texture_filter_change(tmp_filter);
+            }
+    	if (flag_fov && flag_near && flag_far)
+        {
+        	raydium_window_view_perspective(tmp_fov,tmp_near,tmp_far); // fov 60 + near and far planes
+        }          
+        if(flag_fog)
+        {
+        	if(tmp_fog)raydium_fog_enable(); else raydium_fog_disable(); 
+        }
+        if(flag_lighting)
+        {
+        	if(tmp_lighting)raydium_light_enable(); else raydium_light_disable(); 
+        }
+        if(flag_light0 && flag_lighting && tmp_lighting)
+        {
+        	raydium_light_on(0);
+    		raydium_light_conf_7f(tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]); 	
+        }
+        if(flag_background)
+        {
+        	raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);    	
+        }
+        
+        //This should be configurable???
+        raydium_sky_box_cache();  
+        
+        //ending load of configuration  
+        raydium_log("Configuration from conf file finished.");
+        return 1;
+    }
+    else
+    {
+        //we can not load the configuration. ERROR
+        raydium_log("ERROR loading configuration file.");
+        return 0;
+    }
+}
+
 
 
