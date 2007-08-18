@@ -1729,7 +1729,7 @@ switch(type)
 	f=dJointSetHinge2Param;
 	break;
     case dJointTypeHinge:
-	f=dJointSetHingeParam;
+	f=dJointSetHingeParam; // must check, maybe it just works for hinge2 !
 	break;
     default: raydium_log("ODE: ERROR: suspension: joint type not supported!");
     }
@@ -2166,6 +2166,13 @@ if(raydium_ode_motor_isvalid(j))
 	    case dJointTypeHinge:
 		SetParam=dJointSetHingeParam;
 		GetAngle=dJointGetHingeAngle;
+		break;
+	    case dJointTypeUniversal:
+		SetParam=dJointSetUniversalParam;
+		if(raydium_ode_motor[j].joints_axe[i]==0)
+		    GetAngle=dJointGetUniversalAngle1;
+		else
+		    GetAngle=dJointGetUniversalAngle2;
 		break;
 	    default:
 		cancel=1;
