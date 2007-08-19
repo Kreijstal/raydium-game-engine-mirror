@@ -409,6 +409,8 @@ raydium_rendering_internal_restore_render_state();
 //glutPostRedisplay();
 
 #ifdef DEBUG_MOVIE
+raydium_timecall_debug_movie++;
+
 if(raydium_key[GLUT_KEY_F11])
 {
 char name[128];

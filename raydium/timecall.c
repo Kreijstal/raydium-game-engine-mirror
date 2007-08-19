@@ -97,6 +97,12 @@ return 0;
 unsigned long raydium_timecall_clock(void)
 {
 struct timeval tv;
+
+#ifdef DEBUG_MOVIE
+    return (float)(raydium_timecall_debug_movie*100);
+#endif
+
+
 if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
  {
  #ifdef WIN32
@@ -250,6 +256,15 @@ return (int)max;
 void raydium_timecall_init(void)
 {
 int i;
+
+#ifdef DEBUG_MOVIE
+raydium_timecall_method=RAYDIUM_TIMECALL_METHOD_CLOCK;
+raydium_timecall_debug_movie=0;
+raydium_timecall_clocks_per_sec=2500;
+raydium_timecall_max_frequency=2500;
+raydium_log("timecall: USING 'MOVIE' TIME ! (%.2f FPS)",(float)DEBUG_MOVIE);
+#else
+
 unsigned long tmp;
 #ifdef WIN32
 LARGE_INTEGER t;
@@ -297,6 +312,7 @@ raydium_log("timecall: Using /dev/rtc method");
 raydium_timecall_clocks_per_sec=raydium_timecall_max_frequency;
 //raydium_timecall_method_test();
 }
+#endif
 
 raydium_timecall_index=0;
 for(i=0;i<RAYDIUM_MAX_TIMECALLS;i++)
@@ -387,10 +403,6 @@ for(i=0;i<raydium_timecall_index;i++)
     //raydium_log("current phase overload for timecall %i: %i (total interval = %i",i,phase,raydium_timecall_interval[i]);
     raydium_timecall_next[i]=now+raydium_timecall_interval[i]-phase;
 
-#ifdef DEBUG_MOVIE
-    steps=(float)raydium_timecall_interval[i]/((float)raydium_timecall_interval[i]*(1/(float)DEBUG_MOVIE));
-#endif
-
     if(steps>1000) { // DEBUG ! need to calculate this value
 		    steps=100;
 		    raydium_log("WARNING: timecall's too long");
@@ -408,10 +420,6 @@ for(i=0;i<raydium_timecall_index;i++)
      ff=raydium_timecall_funct[i];
      raydium_timecall_next[i]=raydium_timecall_clock();
      //raydium_log("debug: soft call: step factor: %.2f",stepsf);
-
-#ifdef DEBUG_MOVIE
-    stepsf=((float)raydium_timecall_interval[i]*(1/(float)DEBUG_MOVIE))/(float)raydium_timecall_interval[i];
-#endif
 
      ff(stepsf);
     }

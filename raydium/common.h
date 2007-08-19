@@ -634,7 +634,7 @@ __global int	 raydium_console_history_index_current; // user
 __global char    raydium_console_history_filename[RAYDIUM_MAX_NAME_LEN];
 
 __global int		raydium_timecall_index;
-__global signed char          	raydium_timecall_method;
+__global signed char	raydium_timecall_method;
 __global unsigned long 	raydium_timecall_max_frequency;
 __global unsigned long 	raydium_timecall_clocks_per_sec;
 __global int           	raydium_timecall_devrtc_handle;
@@ -644,6 +644,7 @@ __global GLint 		raydium_timecall_soft_call[RAYDIUM_MAX_TIMECALLS];
 __global clock_t 	raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
 __global clock_t 	raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
 __global int            raydium_timecall_w32_divmodulo;
+__global unsigned long 	raydium_timecall_debug_movie;
 
 __global signed char raydium_shadow_tag;
 __global signed char raydium_shadow_rendering;
