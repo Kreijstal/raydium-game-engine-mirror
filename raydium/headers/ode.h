@@ -940,6 +940,11 @@ CFM means "Constraint Force Mixing".
 Changing ERP and CFM values will change joint energy absorption and restitution.
 
 For more informations, see ODE documentation, chapters 3.7 and 3.8.
+
+Notice: Consider this function as advanced.
+
+Warning: On a universal joint, this function will change ERP and CFM for
+limits, and not for the joint itself ! (experimental feature)
 **/
 
 __rayapi void raydium_ode_joint_suspension_name (char *j, dReal erp, dReal cfm);

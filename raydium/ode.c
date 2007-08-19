@@ -1731,6 +1731,13 @@ switch(type)
     case dJointTypeHinge:
 	f=dJointSetHingeParam; // must check, maybe it just works for hinge2 !
 	break;
+    case dJointTypeUniversal:
+	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP,erp);
+	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM,cfm);
+	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP2,erp);
+	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM2,cfm);
+	return;
+	break;
     default: raydium_log("ODE: ERROR: suspension: joint type not supported!");
     }
 f(raydium_ode_joint[j].joint,dParamSuspensionERP,erp);
@@ -1996,6 +2003,7 @@ if(raydium_ode_joint_isvalid(j))
     dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamLoStop2,lo2);
     dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamHiStop2,hi2);
     dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamLoStop2,lo2);
+    
     return;
     }
 raydium_log("ODE: Error: cannot set joint limits: invalid index or name");
