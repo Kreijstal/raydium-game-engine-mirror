@@ -1063,12 +1063,12 @@ if(!raydium_ode_element_isvalid(element))
     return -1;
     }
 
-if(raydium_ode_element[element].state!=RAYDIUM_ODE_STANDARD)
+/*if(raydium_ode_element[element].state!=RAYDIUM_ODE_STANDARD)
     {
     raydium_log("ODE: Error: Cannot attach ray to non standard elements");
     return -1;
     }
-
+*/
 e=&raydium_ode_element[element];
 
 for(i=0;i<RAYDIUM_ODE_MAX_RAYS;i++)
@@ -3690,8 +3690,8 @@ e2=dGeomGetData(o2);
   // I think we must provide a "pre-filter" callback, since the user
   // may need this contact infos
 
-  if(e1->state==RAYDIUM_ODE_STATIC && e2->state==RAYDIUM_ODE_STATIC)
-    return;
+// if(e1->state==RAYDIUM_ODE_STATIC && e2->state==RAYDIUM_ODE_STATIC)
+//    return;
 
   n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
   if(n>=N-1)
@@ -3913,29 +3913,58 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 	for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
 	  if(raydium_ode_element[i].ray[j].state)
 	    {
-	    // update ray position and direction
-	    dReal pos[3];
-	    dReal dir[3];
-	    raydium_ode_Ray *r;
+	        if (raydium_ode_element[i].body)
+	        {
+                // update ray position and direction
+                dReal pos[3];
+                dReal dir[3];
+                raydium_ode_Ray *r;
 
-	    r=&raydium_ode_element[i].ray[j];
-	    dBodyVectorToWorld(raydium_ode_element[i].body,
-			r->rel_dir[0],
-			r->rel_dir[1],
-			r->rel_dir[2],
-			dir);
-	    //printf("set : %f %f %f\n",dir[0],dir[1],dir[2]);
-//	    pos=(dReal *)dBodyGetPosition(raydium_ode_element[i].body);
-	    dBodyGetRelPointPos(raydium_ode_element[i].body,
-			r->rel_pos[0],
-			r->rel_pos[1],
-			r->rel_pos[2],
-			pos);
+                r=&raydium_ode_element[i].ray[j];
+                dBodyVectorToWorld(raydium_ode_element[i].body,
+                    r->rel_dir[0],
+                    r->rel_dir[1],
+                    r->rel_dir[2],
+                    dir);
+                //printf("set : %f %f %f\n",dir[0],dir[1],dir[2]);
+        //	    pos=(dReal *)dBodyGetPosition(raydium_ode_element[i].body);
+                dBodyGetRelPointPos(raydium_ode_element[i].body,
+                    r->rel_pos[0],
+                    r->rel_pos[1],
+                    r->rel_pos[2],
+                    pos);
 
-	    dGeomRaySet(r->geom,pos[0],pos[1],pos[2],dir[0],dir[1],dir[2]);
-	    r->max_dist=0;
-	    r->min_dist=0;
-	    r->max_elem=r->min_elem=-1;
+                dGeomRaySet(r->geom,pos[0],pos[1],pos[2],dir[0],dir[1],dir[2]);
+                r->max_dist=0;
+                r->min_dist=0;
+                r->max_elem=r->min_elem=-1;
+	        }
+	        else //element don't have body
+	        {
+	            dReal * pos;
+	            dReal * dir;
+	            dReal ndir[3],npos[3];
+                raydium_ode_Ray *r;
+                
+                r=&raydium_ode_element[i].ray[j];
+                // Get pos vector and rot matrix of element.
+                pos = dGeomGetPosition(raydium_ode_element[i].geom);                
+                dir = dGeomGetRotation(raydium_ode_element[i].geom);
+                // Compute relative dir to element orientation
+                ndir[0]=dir[0]*r->rel_dir[0] + dir[1]*r->rel_dir[1] + dir[2]*r->rel_dir[2];
+                ndir[1]=dir[4]*r->rel_dir[0] + dir[5]*r->rel_dir[1] + dir[6]*r->rel_dir[2];
+                ndir[2]=dir[8]*r->rel_dir[0] + dir[9]*r->rel_dir[1] + dir[10]*r->rel_dir[2];
+                // Compute relative start point based on element orientation
+                npos[0]=dir[0]*r->rel_pos[0] + dir[1]*r->rel_pos[1] + dir[2]*r->rel_pos[2];
+                npos[1]=dir[4]*r->rel_pos[0] + dir[5]*r->rel_pos[1] + dir[6]*r->rel_pos[2];
+                npos[2]=dir[8]*r->rel_pos[0] + dir[9]*r->rel_pos[1] + dir[10]*r->rel_pos[2];
+                // Update ray parameter
+                //npos[0]=npos[1]=npos[2]=0;
+                dGeomRaySet(r->geom,pos[0]+npos[0],pos[1]+npos[1],pos[2]+npos[2],ndir[0],ndir[1],ndir[2]);
+                r->max_dist=0;
+                r->min_dist=0;
+                r->max_elem=r->min_elem=-1;
+	        }
 	    }
 	}
 
