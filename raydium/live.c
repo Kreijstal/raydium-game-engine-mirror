@@ -431,7 +431,7 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     dev->capture_video_format.bmiHeader.biCompression = BI_RGB;
     
     dev->compressor=NULL;
-    dev->compressor = ICLocate(ICTYPE_VIDEO, NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
+    dev->compressor = ICLocate(ICTYPE_VIDEO, (DWORD) NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
     if (dev->compressor)
         raydium_log("Live: Found correct decompressor, can process frames");
 
