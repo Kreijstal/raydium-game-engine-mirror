@@ -202,7 +202,7 @@ Draw contents of ##name## viewport to screen
 ##sx##,##sy## are size in screen percents.
 **/
 
-__rayapi void raydium_camera_freemove(void);
+__rayapi void raydium_camera_freemove(int move);
 /**
 This function is a fast & easy way to create a working camera that can move 
 with keys and can be rotated with the mouse, like a usual camera in a 
@@ -213,6 +213,8 @@ complex things.
 You can modify the global variables ##raydium_camera_freemove_sensibility## 
 and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and 
 movement speed (0.1 default) respectively.
+If ##move## is zero, camera is only placed and fixed.
+Else camera position and orientation are updated with Mouse/Keyboard
 **/
 
 #endif

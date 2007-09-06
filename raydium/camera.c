@@ -557,7 +557,7 @@ int i;
     raydium_log("Viewport %s not found.",name);
 }
 
-void raydium_camera_freemove()
+void raydium_camera_freemove(int move)
 {
     float dir_x, dir_y;
 
@@ -570,33 +570,34 @@ void raydium_camera_freemove()
     static GLint   rffp_delta_x=0;
     static GLint   rffp_delta_y=0;
 
-    dir_x=0;
-    dir_y=0;
-    if(raydium_key[GLUT_KEY_DOWN]) dir_y=-1;
-    if(raydium_key[GLUT_KEY_UP]) dir_y=1;
-    if(raydium_key[GLUT_KEY_LEFT]) dir_x=-1;
-    if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+    if (move){
+        dir_x=0;
+        dir_y=0;
+        if(raydium_key[GLUT_KEY_DOWN]) dir_y=-1;
+        if(raydium_key[GLUT_KEY_UP]) dir_y=1;
+        if(raydium_key[GLUT_KEY_LEFT]) dir_x=-1;
+        if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
 
 
-    //calculating the position (x,y,z) of the camera
-    rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-    rffp_cam_pos_x += (raydium_trigo_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-    rffp_cam_pos_y += (raydium_trigo_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
+        //calculating the position (x,y,z) of the camera
+        rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_x += (raydium_trigo_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_y += (raydium_trigo_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
 
-    rffp_cam_pos_x -= (raydium_trigo_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
-    rffp_cam_pos_z -= (raydium_trigo_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        rffp_cam_pos_x -= (raydium_trigo_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        rffp_cam_pos_z -= (raydium_trigo_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
-    //looking where the mouse points
-    rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
-    rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f); 
+        //looking where the mouse points
+        rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
+        rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f); 
 
-    rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
-    rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f); 
+        rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
+        rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f); 
 
-    //putting the mouse in the middle of the screen, the read the next data of the mouse correctly
-    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
+        //putting the mouse in the middle of the screen, the read the next data of the mouse correctly
+        raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
 
-
+    }
     //moving the camera
     raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,0);
 }

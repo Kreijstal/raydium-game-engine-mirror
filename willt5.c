@@ -40,7 +40,7 @@ void display(void)
     
     raydium_clear_frame();
 
-    raydium_camera_freemove();
+    raydium_camera_freemove(1);
     
     raydium_ode_draw_all(0);
     if(draw_debug>0)

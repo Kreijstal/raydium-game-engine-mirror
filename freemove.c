@@ -16,7 +16,7 @@ void display(void)
 //clear the screen
 raydium_clear_frame();
 //call the "magic" function to manage the camera
-raydium_camera_freemove();
+raydium_camera_freemove(1);
 //if ESC key pressed -> we exit
 if(raydium_key_last==1027)
     exit(0);

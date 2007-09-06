@@ -223,7 +223,7 @@ loop();
 #ifndef WIN32
 usleep(1); // MUST disable this with real servers
 #else
-sleep(0);
+Sleep(0);
 #endif
 //printf(".\n");
 }while(1);

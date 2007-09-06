@@ -61,7 +61,7 @@ raydium_clear_frame();
 
 //raydium_ode_element_camera_inboard_name("train_train",0,1,0,-3,0,-0.5);
 //raydium_ode_element_camera_inboard_name("train_train",0,0.3,-0.3,-3,0,-0.5);
-raydium_camera_freemove();
+raydium_camera_freemove(1);
 raydium_object_draw_name("rail_world_background.tri");
     
 raydium_ode_draw_all(0);

@@ -10,7 +10,7 @@ void display(void)
 {
     if(raydium_key_last==1027)
         exit(0);           
-    raydium_camera_freemove();
+    raydium_camera_freemove(1);
     raydium_clear_frame();
     /* [ draw here ] */ raydium_ode_draw_all(0);
     raydium_rendering_finish();
