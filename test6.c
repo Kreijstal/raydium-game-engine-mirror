@@ -401,7 +401,7 @@ if( (raydium_key_last==1119 || raydium_joy_click==5) && gear>0)
 
 }
 
-if(vue==8 && life>0)
+if(vue==8 && life>0 && 0)
 {
 static dReal angle=0;
 speed=raydium_joy_x;
@@ -596,7 +596,13 @@ raydium_projection_near=0.05;
 raydium_projection_fov=70;
 raydium_window_view_update();
 }
-
+if(raydium_key_last==9)
+{
+vue=9;
+raydium_projection_near=0.05;
+raydium_projection_fov=70;
+raydium_window_view_update();
+}
 
 if(raydium_key_last==3)
 {
@@ -610,7 +616,7 @@ raydium_window_view_update();
 //    raydium_ode_element_moveto_name("buggy_pneu_ag","GLOBAL",1);
 
 
-if(mouse_grab==1)
+if(mouse_grab==1 && vue!=9)
 {
  float delta_x;
  float delta_y;
@@ -668,9 +674,10 @@ if(vue==5) raydium_camera_look_at(camx,camy,camz,tmp[1],-tmp[2],tmp[0]);
 if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-0.15,0,0.1,2,0,0);
 if(vue==4) raydium_ode_element_camera_inboard_name("buggy_corps",0,0.35,-0.2,2,0,-0.2);
 if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_trigo_sin(cam_angle_v),0,raydium_trigo_cos(cam_angle_v));
-//if(vue==8) raydium_ode_element_camera_inboard_name("tank_tour",0,0,0.1, 1,0,0);
+if(vue==8) raydium_camera_freemove(1);
 if(vue==3) raydium_ode_element_camera_inboard_name(cam,0,0,0.1, 1,0,0);
-//if(vue==8) raydium_ode_element_camera_inboard_name("helico",-1,0,1,1,0,0);
+if(vue==9) raydium_camera_freemove(0);
+
 
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
@@ -713,6 +720,21 @@ raydium_ode_element_sound_update_name("buggy_corps",son);
 raydium_ode_element_sound_update_name("buggy_corps",son_paf);
 
 raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version());
+if(vue==9 || vue==8) {
+    dReal pos[3];
+    dReal dist;
+    int id;
+    
+    id = raydium_ode_mouse_pick(100,pos,&dist);
+    raydium_osd_printf((100.0f*raydium_mouse_x)/raydium_window_tx,100-(100.0f*raydium_mouse_y)/raydium_window_ty,16,0.5,"font2.tga","+ %d %.3f %.3f %.3f %.3f",id,pos[0],pos[1],pos[2],dist);
+    if (raydium_mouse_button[0] && id>0){
+        if (raydium_ode_element[id].state == RAYDIUM_ODE_STANDARD){
+            pos[1]=pos[0]=0;
+            pos[2]=5;
+            raydium_ode_element_addforce(id,pos);
+        }
+    }
+}
 
 {
 char c='2';

@@ -1611,5 +1611,11 @@ but is not managed by RayODE.
 This function will print object with orphans and return total orphan count.
 **/
 
+__rayapi int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth);
+/**
+Mouse picking function. Return raydium_element pointed by mouse on the screen.
+##dist## is maximal detection distance (range).
+##pos## Global 3D position of pointed point. ##depth## distance from poitn of view.
+**/
 #include "ode_net.h"
 #endif

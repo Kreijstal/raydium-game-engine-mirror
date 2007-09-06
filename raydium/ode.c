@@ -4294,4 +4294,106 @@ return cpt;
 }
 
 
+int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
+{
+    GLint viewport[4];
+	GLdouble modelview[16],projection[16],dX, dY, dZ;
+    int id;
+    dReal min_dist;	
+	dGeomID ray;
+	dContact pt;
+	signed char (*f)(int,int, dContact *);
+	
+	f=raydium_ode_CollideCallback;
+	
+    // Get mouse pointed coordinate
+	gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
+
+	//Create Ray	
+	ray =  dCreateRay (raydium_ode_object[raydium_ode_object_find("GLOBAL")].group,dist);
+	// Set ray origin and dist
+	dGeomRaySet (ray, raydium_camera_x, raydium_camera_y,raydium_camera_z,dX-raydium_camera_x, dY-raydium_camera_y, dZ-raydium_camera_z);
+//	dGeomRaySetClosestHit(ray, true);
+	
+	id=-1;
+	min_dist=dist;
+	
+	{
+	    // Private callback for ray picking only
+	    void dNearPickback (void *data, dGeomID o1, dGeomID o2)
+        {
+            #define N 400
+            static  dContact contact[N];
+            int i,n;
+            
+            // Recurse into space
+            if(dGeomIsSpace (o1) || dGeomIsSpace (o2)) 
+            {
+                raydium_ode_Object *oo1, *oo2;
+                signed char (*g)(int,int);
+                oo1=dGeomGetData(o1);
+                oo2=dGeomGetData(o2);
+                g=raydium_ode_ObjectNearCollide;
+                if(g && !g(oo1->id,oo2->id)) return;
+                dSpaceCollide2 (o1,o2,data,&dNearPickback);
+                return;
+            }
+            
+            
+            if (o1==ray || o2==ray) {
+                raydium_ode_Element *e1,*e2;
+                
+                //Should never exist, but in case of swap o2 ray, o1 object
+                if (o2!=ray){
+                    o1=o2;
+                    o2=ray;
+                }
+            
+                e1=dGeomGetData(o1);
+                
+                n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
+                
+                for (i=0; i<n; i++) {
+                    
+                    if(f)
+                    {
+                        int id1;
+                        id1=-1;
+                        if(e1) id1=e1->id;
+                        // Can't test between two object since ray not wrapped to a raydium_element
+                        if(!f(id1,id1,&contact[i])) continue;
+                    }
+
+                    if (contact[i].geom.g1==ray)
+                        if (contact[i].geom.depth<min_dist){
+                            min_dist=contact[i].geom.depth;
+                                memcpy(&pt,&contact[i],sizeof(dContact));
+                            id = e2->id;
+                        }
+                    
+                    if (contact[i].geom.g2==ray)
+                        if (contact[i].geom.depth<min_dist){
+                            min_dist=contact[i].geom.depth;
+                            memcpy(&pt,&contact[i],sizeof(dContact));
+                            id = e1->id;
+                        }
+                }
+            }
+        }
+        
+        dSpaceCollide2((dGeomID) raydium_ode_space,ray,(void *) NULL,&dNearPickback);
+	}
+	
+	dGeomDestroy(ray);
+	
+	pos[0]=pt.geom.pos[0];
+	pos[1]=pt.geom.pos[1];
+	pos[2]=pt.geom.pos[2];
+	*depth = pt.geom.depth;
+
+    return id;
+    
+}
+
+
 #include "ode_net.c"
