@@ -3948,8 +3948,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 
                 r=&raydium_ode_element[i].ray[j];
                 // Get pos vector and rot matrix of element.
-                pos = dGeomGetPosition(raydium_ode_element[i].geom);                
-                dir = dGeomGetRotation(raydium_ode_element[i].geom);
+                pos = (dReal *) dGeomGetPosition(raydium_ode_element[i].geom);                
+                dir = (dReal *) dGeomGetRotation(raydium_ode_element[i].geom);
                 // Compute relative dir to element orientation
                 ndir[0]=dir[0]*r->rel_dir[0] + dir[1]*r->rel_dir[1] + dir[2]*r->rel_dir[2];
                 ndir[1]=dir[4]*r->rel_dir[0] + dir[5]*r->rel_dir[1] + dir[6]*r->rel_dir[2];
