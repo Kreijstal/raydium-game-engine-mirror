@@ -4325,31 +4325,30 @@ return cpt;
 
 int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
 {
-    GLint viewport[4];
-	GLdouble modelview[16],projection[16],dX, dY, dZ;
+    GLdouble dX, dY, dZ;
     int id;
     dReal min_dist;	
-	dGeomID ray;
-	dContact pt;
-	signed char (*f)(int,int, dContact *);
+    dGeomID ray;
+    dContact pt;
+    signed char (*f)(int,int, dContact *);
 	
-	f=raydium_ode_CollideCallback;
+    f=raydium_ode_CollideCallback;
 	
     // Get mouse pointed coordinate
-	gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
+    gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
 
-	//Create Ray	
-	ray =  dCreateRay (raydium_ode_object[raydium_ode_object_find("GLOBAL")].group,dist);
-	// Set ray origin and dist
-	dGeomRaySet (ray, raydium_camera_x, raydium_camera_y,raydium_camera_z,dX-raydium_camera_x, dY-raydium_camera_y, dZ-raydium_camera_z);
-//	dGeomRaySetClosestHit(ray, true);
+    //Create Ray	
+    ray =  dCreateRay (raydium_ode_object[raydium_ode_object_find("GLOBAL")].group,dist);
+    // Set ray origin and dist
+    dGeomRaySet (ray, raydium_camera_x, raydium_camera_y,raydium_camera_z,dX-raydium_camera_x, dY-raydium_camera_y, dZ-raydium_camera_z);
+    //dGeomRaySetClosestHit(ray, true);
 	
-	id=-1;
-	min_dist=dist;
-	
-	{
-	    // Private callback for ray picking only
-	    void dNearPickback (void *data, dGeomID o1, dGeomID o2)
+    id=-1;
+    min_dist=dist;
+
+    {
+    // Private callback for ray picking only
+    void dNearPickback (void *data, dGeomID o1, dGeomID o2)
         {
             #define N 400
             static  dContact contact[N];
@@ -4410,15 +4409,15 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
             }
         }
         
-        dSpaceCollide2((dGeomID) raydium_ode_space,ray,(void *) NULL,&dNearPickback);
-	}
+	dSpaceCollide2((dGeomID) raydium_ode_space,ray,(void *) NULL,&dNearPickback);
+    }
 	
-	dGeomDestroy(ray);
+    dGeomDestroy(ray);
 	
-	pos[0]=pt.geom.pos[0];
-	pos[1]=pt.geom.pos[1];
-	pos[2]=pt.geom.pos[2];
-	*depth = pt.geom.depth;
+    pos[0]=pt.geom.pos[0];
+    pos[1]=pt.geom.pos[1];
+    pos[2]=pt.geom.pos[2];
+    *depth = pt.geom.depth;
 
     return id;
     
