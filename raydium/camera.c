@@ -570,7 +570,7 @@ void raydium_camera_freemove(int move)
     static GLint   rffp_delta_x=0;
     static GLint   rffp_delta_y=0;
 
-    if (move){
+    if (move==RAYDIUM_CAMERA_FREEMOVE_NORMAL){
         dir_x=0;
         dir_y=0;
         if(raydium_key[GLUT_KEY_DOWN]) dir_y=-1;

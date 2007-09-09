@@ -22,7 +22,7 @@ if(raydium_key[GLUT_KEY_F1]) { raydium_projection_fov/=(1.04); raydium_window_vi
 if(raydium_key[GLUT_KEY_F2]) { raydium_projection_fov*=(1.04); raydium_window_view_update(); }
 
 raydium_clear_frame();
-raydium_camera_freemove(1);
+raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 raydium_ode_draw_all(0);
 raydium_rendering_finish();
 }

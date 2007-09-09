@@ -1,6 +1,10 @@
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
+#define RAYDIUM_CAMERA_FREEMOVE_FIXED 0
+#define RAYDIUM_CAMERA_FREEMOVE_NORMAL 1
+
+
 /*=
 Camera
 2200
@@ -213,8 +217,8 @@ complex things.
 You can modify the global variables ##raydium_camera_freemove_sensibility## 
 and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and 
 movement speed (0.1 default) respectively.
-If ##move## is zero, camera is only placed and fixed.
-Else camera position and orientation are updated with Mouse/Keyboard
+If ##move## is ##RAYDIUM_CAMERA_FREEMOVE_FIXED##, camera is only placed and fixed.
+Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and orientation are updated with Mouse/Keyboard.
 **/
 
 #endif

@@ -154,7 +154,7 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
     
     raydium_clear_frame();
     
-    raydium_camera_freemove(1);
+    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
     
     raydium_ode_draw_all(0);
 

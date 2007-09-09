@@ -40,7 +40,7 @@ void display(void)
     
     raydium_clear_frame();
     
-    raydium_camera_freemove(1);
+    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
     
     raydium_object_draw_name(model);
 
