@@ -3690,8 +3690,8 @@ e2=dGeomGetData(o2);
   // I think we must provide a "pre-filter" callback, since the user
   // may need this contact infos
 
-// if(e1->state==RAYDIUM_ODE_STATIC && e2->state==RAYDIUM_ODE_STATIC)
-//    return;
+ if(e1->state==RAYDIUM_ODE_STATIC && e2->state==RAYDIUM_ODE_STATIC)
+    return;
 
   n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
   if(n>=N-1)
