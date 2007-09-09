@@ -307,7 +307,7 @@ if(raydium_key_last==1000+'c')
     raydium_ode_name_auto("caisse",dummy);
     raydium_ode_object_box_add(dummy,raydium_ode_object_find("GLOBAL"),1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"crate.tri");
     raydium_ode_element_move_name_3f(dummy,0,0,2);
-    raydium_ode_element_ttl_set_name(dummy,RAYDIUM_ODE_PHYSICS_FREQ*60);
+    raydium_ode_element_ttl_set_name(dummy,raydium_ode_physics_freq*60);
     }
 				
 if(raydium_key_last==1032) 

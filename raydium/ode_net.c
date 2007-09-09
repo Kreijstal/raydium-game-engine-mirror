@@ -345,7 +345,7 @@ else
 
 // we must modify "netvel" to force reconciliation
 pos=raydium_ode_element_pos_get(elem);
-factor=((raydium_ode_element[elem].net_last_interval/(float)raydium_timecall_clocks_per_sec)*(float)RAYDIUM_ODE_PHYSICS_FREQ)*RAYDIUM_ODE_TIMESTEP;
+factor=((raydium_ode_element[elem].net_last_interval/(float)raydium_timecall_clocks_per_sec)*(float)raydium_ode_physics_freq)*raydium_ode_timestep;
 #ifdef DEBUG_ODENET
 raydium_log("ODE 1 sec factor : %f",factor);
 #endif
@@ -584,8 +584,8 @@ e=&raydium_ode_element[elem];
 cur=raydium_ode_element_pos_get(elem);
 memcpy(pos,cur,sizeof(dReal)*3);
 for(i=0;i<3;i++)
-	pos[i]+=(e->netvel[i]*RAYDIUM_ODE_TIMESTEP);
-//	pos[i]+=(e->netvel[i]/RAYDIUM_ODE_PHYSICS_FREQ);
+	pos[i]+=(e->netvel[i]*raydium_ode_timestep);
+//	pos[i]+=(e->netvel[i]/raydium_ode_physics_freq);
 
 //printf("cur = %f %f %f | next = %f %f %f (%f %f %f)\n",cur[0],cur[1],cur[2],pos[0],pos[1],pos[2],e->netvel[0],e->netvel[1],e->netvel[2]);
 

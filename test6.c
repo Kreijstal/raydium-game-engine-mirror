@@ -207,7 +207,7 @@ if(raydium_mouse_button[1] && cpt>BULLET_RATE)
     raydium_ode_element_data_set_name(name,&is_bullet);
     raydium_ode_element_gravity_name(name,0);
 //    raydium_ode_element_OnDelete_name(name,rocket_delete);
-    raydium_ode_element_ttl_set_name(name,RAYDIUM_ODE_PHYSICS_FREQ*5); // 5 seconds
+    raydium_ode_element_ttl_set_name(name,raydium_ode_physics_freq*5); // 5 seconds
 //    raydium_sound_SourcePlay(son_rl);
 //    raydium_ode_element_sound_update_name("player",son_rl);
 //    reload_time=RELOAD_TIME;
@@ -423,7 +423,7 @@ if(raydium_mouse_click==1 && reload_time<0)
     raydium_ode_element_data_set_name(name,&is_explosive_tag);
 //    raydium_ode_element_gravity_name(name,0);
     raydium_ode_element_OnDelete_name(name,rocket_delete);
-    raydium_ode_element_ttl_set_name(name,RAYDIUM_ODE_PHYSICS_FREQ*10); // 10 seconds
+    raydium_ode_element_ttl_set_name(name,raydium_ode_physics_freq*10); // 10 seconds
     raydium_sound_SourcePlay(son_rl);
     raydium_ode_element_sound_update_name("tank_tour",son_rl);
     reload_time=RELOAD_TIME;
@@ -502,7 +502,7 @@ if(raydium_mouse_click==1 && reload_time<0)
     raydium_ode_element_data_set_name(name,&is_explosive_tag);
     raydium_ode_element_gravity_name(name,0);
     raydium_ode_element_OnDelete_name(name,rocket_delete);
-    raydium_ode_element_ttl_set_name(name,RAYDIUM_ODE_PHYSICS_FREQ*10); // 10 seconds
+    raydium_ode_element_ttl_set_name(name,raydium_ode_physics_freq*10); // 10 seconds
     raydium_ode_element_particle_name(name,"smoke.prt");
     raydium_sound_SourcePlay(son_rl);
     raydium_ode_element_sound_update_name("player",son_rl);

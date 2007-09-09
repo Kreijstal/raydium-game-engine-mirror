@@ -187,7 +187,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
     raydium_ode_init_explosion(i);
 
 #ifndef ODE_MANUAL_CALLBACK
-raydium_ode_timecall=raydium_timecall_add(&raydium_ode_callback,RAYDIUM_ODE_PHYSICS_FREQ);
+raydium_ode_timecall=raydium_timecall_add(&raydium_ode_callback,raydium_ode_physics_freq);
 #endif
 
 #ifdef ODE_QUICKSTEP
@@ -4014,9 +4014,9 @@ raydium_ode_element_delete_LOCK=0;
 
 //raydium_profile_start();
 #ifdef ODE_QUICKSTEP
-dWorldQuickStep(raydium_ode_world,RAYDIUM_ODE_TIMESTEP);
+dWorldQuickStep(raydium_ode_world,raydium_ode_timestep);
 #else
-dWorldStep(raydium_ode_world,RAYDIUM_ODE_TIMESTEP);
+dWorldStep(raydium_ode_world,raydium_ode_timestep);
 #endif
 //raydium_profile_end("world stepping");
 
@@ -4072,7 +4072,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
 
 void raydium_ode_time_change(GLfloat perc)
 {
-raydium_timecall_freq_change(raydium_ode_timecall,(RAYDIUM_ODE_PHYSICS_FREQ*perc)/100.f);
+raydium_timecall_freq_change(raydium_ode_timecall,(raydium_ode_physics_freq*perc)/100.f);
 raydium_particle_time_factor=perc/100.f;
 raydium_object_anim_time_factor=perc/100.f;
 }
@@ -4423,5 +4423,19 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
     
 }
 
+void raydium_ode_set_physics_freq(GLfloat freq){
+    raydium_ode_physics_freq = freq;
+}
 
+GLfloat raydium_ode_get_physics_freq(){
+    return raydium_ode_physics_freq;
+}
+
+void raydium_ode_set_timestep(GLfloat tstep){
+    raydium_ode_timestep=tstep;
+}
+
+GLfloat raydium_ode_get_timestep(){
+    return raydium_ode_timestep;
+}
 #include "ode_net.c"

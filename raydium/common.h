@@ -451,6 +451,9 @@ __global GLint	  raydium_camera_gl_viewport[4];
 __global GLfloat  raydium_camera_freemove_sensibility;
 __global GLfloat  raydium_camera_freemove_speed;
 
+__global GLfloat  raydium_ode_timestep;
+__global GLfloat  raydium_ode_physics_freq;
+
 typedef struct raydium_camera_Path
     {
     char    name[RAYDIUM_MAX_NAME_LEN];

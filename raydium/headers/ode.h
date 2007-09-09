@@ -163,8 +163,8 @@ elements and create contacts during a ray launch.
 // Miscallenous
 /**
 By default, ODE is called 400 times per second, allowing **very** accurate
-physics. You may change this in ##ode.h## with ##RAYDIUM_ODE_PHYSICS_FREQ## and
-##RAYDIUM_ODE_TIMESTEP##, but most ERP and CFM values must be changed in your
+physics. You may change this using ##raydium_ode_set_physics_freq##, 
+but most ERP and CFM values must be changed in your
 applications. ODE use a lot of cache mechanisms, so 400 Hz is a reasonable value.
 
 Please note RayODE interface is using ##dReal## ODE type for variables. 
@@ -174,6 +174,28 @@ Raydium provides some other functions for advanced uses, and you can
 access directly to ODE API for very experienced users.
 
 See also the ODE documentation: http://opende.sourceforge.net/ode-latest-userguide.html
+**/
+
+
+__rayapi void raydium_ode_set_physics_freq (GLfloat freq);
+/**
+You can use ##raydium_ode_set_physics_freq## to change the frequence of physical engine call. 400Hz is default.
+This will change physical behaviour.
+**/
+__rayapi GLfloat raydium_ode_get_physics_freq();
+/**
+Return the actual value of physical engine calling frequency.
+**/
+
+__rayapi void raydium_ode_set_timestep(GLfloat tstep);
+/**
+Set physical engine time step (which is 0.006f by default).
+This value is related to ##raydium_ode_physics_freq##.
+**/
+
+__rayapi GLfloat raydium_ode_get_timestep();
+/**
+Return physical engine iteration timestep.
 **/
 
 __rayapi void raydium_ode_name_auto (char *prefix, char *dest);
@@ -518,7 +540,7 @@ delete this element when TTL expires.
 - a ##ttl## value of -1 will disable TTL.
 
 example: %%(c)
-raydium_ode_element_ttl_set(elem,RAYDIUM_ODE_PHYSICS_FREQ*5); // 5 seconds
+raydium_ode_element_ttl_set(elem,raydium_ode_physics_freq*5); // 5 seconds
 %%
 **/
 
