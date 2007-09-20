@@ -2038,6 +2038,22 @@ if(raydium_ode_joint_isvalid(j))
 raydium_log("ODE: Error: cannot block: invalid index or name");
 }
 
+void raydium_ode_joint_hinge2_limits_name(char *j, dReal lo, dReal hi)
+{
+return raydium_ode_joint_hinge2_limits(raydium_ode_joint_find(j),lo,hi);
+}
+
+void raydium_ode_joint_hinge2_limits(int j, dReal lo, dReal hi)
+{
+    if(raydium_ode_joint_isvalid(j))
+        {
+        dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,lo);
+        dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,hi);
+        dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,lo); // ODE "feature" :)
+        return;
+        }
+    raydium_log("ODE: Error: cannot set joint limits: invalid index or name");    
+}
 
 
 void raydium_ode_joint_hinge2_block_name(char *name, signed char block)

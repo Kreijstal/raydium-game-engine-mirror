@@ -1095,6 +1095,16 @@ __rayapi void raydium_ode_joint_hinge2_block_name (char *name, signed char block
 Same as above, but using joint's name.
 **/
 
+__rayapi void raydium_ode_joint_hinge2_limits (int j, dReal lo, dReal hi);
+/**
+Sets low (##lo##) and high (##hi##) limits for hinge2 (aka suspet) joint ##j##.
+**/
+
+__rayapi void raydium_ode_joint_hinge2_limits_name (char *j, dReal lo, dReal hi);
+/**
+Same as above, but using joint's name.
+**/
+
 __rayapi void raydium_ode_joint_delete_callback (int j, void (*f) (int));
 /**
 Since joints may break (see ##raydium_ode_joint_break_force##), it may be
