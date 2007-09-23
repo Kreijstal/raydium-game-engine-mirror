@@ -578,6 +578,8 @@ void raydium_camera_freemove(int move)
         if(raydium_key[GLUT_KEY_LEFT]) dir_x=-1;
         if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
 
+	dir_x*=(raydium_frame_time*60);
+	dir_y*=(raydium_frame_time*60);
 
         //calculating the position (x,y,z) of the camera
         rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
