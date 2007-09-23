@@ -177,27 +177,6 @@ See also the ODE documentation: http://opende.sourceforge.net/ode-latest-usergui
 **/
 
 
-__rayapi void raydium_ode_set_physics_freq (GLfloat freq);
-/**
-You can use ##raydium_ode_set_physics_freq## to change the frequence of physical engine call. 400Hz is default.
-This will change physical behaviour.
-**/
-__rayapi GLfloat raydium_ode_get_physics_freq();
-/**
-Return the actual value of physical engine calling frequency.
-**/
-
-__rayapi void raydium_ode_set_timestep(GLfloat tstep);
-/**
-Set physical engine time step (which is 0.006f by default).
-This value is related to ##raydium_ode_physics_freq##.
-**/
-
-__rayapi GLfloat raydium_ode_get_timestep();
-/**
-Return physical engine iteration timestep.
-**/
-
 __rayapi void raydium_ode_name_auto (char *prefix, char *dest);
 /**
 This function will generate a single name, using ##prefix##. The generated
@@ -1649,5 +1628,29 @@ Mouse picking function. Return raydium_element pointed by mouse on the screen.
 ##dist## is maximal detection distance (range).
 ##pos## Global 3D position of pointed point. ##depth## distance from poitn of view.
 **/
+
+__rayapi void raydium_ode_set_physics_freq (GLfloat freq);
+/**
+You can use ##raydium_ode_set_physics_freq## to change the frequence of physical engine call. 400Hz is default.
+This will change physical behaviour.
+**/
+
+__rayapi GLfloat raydium_ode_get_physics_freq(void);
+/**
+Return the actual value of physical engine calling frequency.
+**/
+
+__rayapi void raydium_ode_set_timestep(GLfloat tstep);
+/**
+Set physical engine time step (which is 0.006f by default).
+This value is related to ##raydium_ode_physics_freq##.
+**/
+
+__rayapi GLfloat raydium_ode_get_timestep(void);
+/**
+Return physical engine iteration timestep.
+**/
+
+
 #include "ode_net.h"
 #endif

@@ -4439,19 +4439,24 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
     
 }
 
-void raydium_ode_set_physics_freq(GLfloat freq){
-    raydium_ode_physics_freq = freq;
+void raydium_ode_set_physics_freq(GLfloat freq)
+{
+raydium_ode_physics_freq = freq;
 }
 
-GLfloat raydium_ode_get_physics_freq(){
-    return raydium_ode_physics_freq;
+GLfloat raydium_ode_get_physics_freq(void)
+{
+return raydium_ode_physics_freq;
 }
 
-void raydium_ode_set_timestep(GLfloat tstep){
-    raydium_ode_timestep=tstep;
+void raydium_ode_set_timestep(GLfloat tstep)
+{
+raydium_ode_timestep=tstep;
 }
 
-GLfloat raydium_ode_get_timestep(){
-    return raydium_ode_timestep;
+GLfloat raydium_ode_get_timestep(void)
+{
+return raydium_ode_timestep;
 }
+
 #include "ode_net.c"

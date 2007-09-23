@@ -151,7 +151,7 @@ if(countdown<=0 && raydium_random_i(0,15)==0)
 	raydium_ode_element_addtorque_name_3f(name,x,y,z);
 
 	raydium_ode_element_particle_name(name,"volcano_e_fire.prt");
-	raydium_ode_element_ttl_set_name(name,raydium_ode_physics_freq*25);
+	raydium_ode_element_ttl_set_name(name,raydium_ode_get_physics_freq()*25);
 
 	raydium_camera_rumble(0.3,-0.1,3);
 	countdown=0.3;
