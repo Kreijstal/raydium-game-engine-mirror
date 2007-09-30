@@ -72,6 +72,11 @@
 #define RAYDIUM_ODE_RAY_CONTACT_REPORT		1
 #define RAYDIUM_ODE_RAY_CONTACT_CREATE		2
 
+#define RAYDIUM_ODE_RECORD_RATE_DEFAULT		30
+#define RAYDIUM_ODE_RECORD_NEWBOX		1
+#define RAYDIUM_ODE_RECORD_NEWSPHERE		2
+#define RAYDIUM_ODE_RECORD_DEL			3
+
 __global dWorldID 	raydium_ode_world;
 __global dSpaceID 	raydium_ode_space;
 __global dJointGroupID 	raydium_ode_contactgroup;
@@ -253,6 +258,22 @@ __global raydium_ode_Element   raydium_ode_element[RAYDIUM_ODE_MAX_ELEMENTS+1]; 
 __global raydium_ode_Joint     raydium_ode_joint[RAYDIUM_ODE_MAX_JOINTS];
 __global raydium_ode_Motor     raydium_ode_motor[RAYDIUM_ODE_MAX_MOTORS];
 __global raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS];
+
+
+// replays recording
+__global FILE *raydium_ode_record_fp;
+__global int raydium_ode_record_rate;
+__global int raydium_ode_record_countdown;
+
+// replays reading (separate vars so we can play and record at the same time)
+__global FILE *raydium_ode_record_play_fp;
+__global int raydium_ode_record_play_rate;
+__global GLfloat raydium_ode_record_play_factor;
+__global int raydium_ode_record_play_countdown;
+__global int raydium_ode_record_play_world;
+__global char raydium_ode_record_play_ground[RAYDIUM_MAX_NAME_LEN];
+__global int raydium_ode_record_element_mappings[RAYDIUM_ODE_MAX_ELEMENTS];
+
 
 /*
 void raydium_ode_callback(void);

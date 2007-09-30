@@ -228,3 +228,35 @@ if(fread(mem,len,1,fp)!=1)
 fclose(fp);
 return mem;
 }
+
+int raydium_file_binary_fgets(char *dest, int max, FILE *stream)
+{
+int c;
+int i;
+
+i=0;
+do {
+    c=fgetc(stream);
+
+    if(c==EOF)
+	{
+	dest[i]=0;
+	break;
+	}
+
+    dest[i]=c;
+
+    if(c==0)
+	break;
+
+    i++;
+    if(i>=(max-1))
+	{
+	dest[i]=0;
+	break;
+	}
+    } while(1);
+
+return i;
+}
+

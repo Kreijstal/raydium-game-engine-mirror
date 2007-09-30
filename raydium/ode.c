@@ -167,6 +167,9 @@ raydium_ode_network_next_local_only=0;
 raydium_ode_network_explosion_create=0;
 raydium_ode_element_delete_LOCK=0;
 
+raydium_ode_record_fp=NULL;
+raydium_ode_record_play_fp=NULL;
+
 for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
     raydium_ode_init_object(i);
 
@@ -972,6 +975,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      if(!raydium_ode_network_next_local_only)
         raydium_ode_network_element_new(i);
      raydium_ode_network_next_local_only=0;
+     raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWSPHERE,i,&radius,mesh);
      return i;
      }
 raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
@@ -983,6 +987,7 @@ int raydium_ode_object_box_add(char *name, int group, dReal mass, dReal tx, dRea
 {
 int i;
 dMass m;
+dReal sizes[3];
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1045,6 +1050,10 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      if(!raydium_ode_network_next_local_only)
         raydium_ode_network_element_new(i);
      raydium_ode_network_next_local_only=0;
+     sizes[0]=tx;
+     sizes[1]=ty;
+     sizes[2]=tz;
+     raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
      return i;
      }
 raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
@@ -2807,6 +2816,7 @@ if(!raydium_ode_element_isvalid(e))
 
 
 raydium_ode_network_element_delete(e);
+raydium_ode_capture_internal_delete(e);
 
 if(deletejoints && raydium_ode_element[e].state!=RAYDIUM_ODE_STATIC)
     {
@@ -4083,7 +4093,63 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
     if(raydium_ode_joint[i].state)
 	raydium_ode_joint_break(i);
+	
+if(raydium_ode_record_play_fp)
+  {
+  if(raydium_ode_record_play_countdown<=0)
+    {
+    raydium_ode_record_play_countdown=(raydium_ode_physics_freq/raydium_ode_record_play_rate)-raydium_ode_record_play_countdown;
+    raydium_ode_capture_internal_read();
+    }
+  else
+    raydium_ode_record_play_countdown--;
+  }
+    
 
+if(raydium_ode_record_fp)
+  {
+  if(raydium_ode_record_countdown<=0)
+    {
+    unsigned short count=100; // < 100 are for special events (create/del)
+    int ground_elem_id;
+
+    ground_elem_id=raydium_ode_element_find("ground");
+    raydium_ode_record_countdown=(raydium_ode_physics_freq/raydium_ode_record_rate)-raydium_ode_record_countdown;
+
+    // It may be an good idea to find a quicker way to do this ... :)
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+	if(raydium_ode_element[i].state && 
+	   raydium_ode_element[i].id!=ground_elem_id)
+	    count++;
+
+    fwrite(&count,sizeof(count),1,raydium_ode_record_fp);
+
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+	if(raydium_ode_element[i].state && 
+	   raydium_ode_element[i].id!=ground_elem_id)
+	    {
+	    unsigned short id;
+	    dReal *p;
+	    dReal pos[3];
+	    dReal q[4];
+	    
+	    id=raydium_ode_element[i].id;
+	    fwrite(&id,sizeof(id),1,raydium_ode_record_fp);
+	    
+	    // no idea why I must make a local copy ... :/
+	    p=raydium_ode_element_pos_get(i);
+	    pos[0]=p[0];
+	    pos[1]=p[1];
+	    pos[2]=p[2];
+	    fwrite(&pos,sizeof(dReal),3,raydium_ode_record_fp);
+
+	    raydium_ode_element_rotq_get(i,q);
+	    fwrite(&q,sizeof(dReal),4,raydium_ode_record_fp);  	    
+	    }
+    }
+  else
+    raydium_ode_record_countdown--;
+  }
 }
 
 void raydium_ode_time_change(GLfloat perc)
@@ -4441,7 +4507,8 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
 
 void raydium_ode_set_physics_freq(GLfloat freq)
 {
-raydium_ode_physics_freq = freq;
+raydium_ode_physics_freq=freq;
+raydium_timecall_freq_change(raydium_ode_timecall,raydium_ode_physics_freq);
 }
 
 GLfloat raydium_ode_get_physics_freq(void)
@@ -4457,6 +4524,256 @@ raydium_ode_timestep=tstep;
 GLfloat raydium_ode_get_timestep(void)
 {
 return raydium_ode_timestep;
+}
+
+
+void raydium_ode_capture_internal_create(int type, int id, dReal *sizes, char *mesh)
+{
+unsigned short event;
+unsigned short short_id;
+
+if(!raydium_ode_record_fp)
+    return;
+
+event=type;
+short_id=id;
+
+fwrite(&event,sizeof(event),1,raydium_ode_record_fp);
+if(type==RAYDIUM_ODE_RECORD_NEWBOX)
+    fwrite(&sizes,sizeof(dReal),3,raydium_ode_record_fp);
+if(type==RAYDIUM_ODE_RECORD_NEWSPHERE)
+    fwrite(&sizes,sizeof(dReal),1,raydium_ode_record_fp);
+
+fwrite(&short_id,sizeof(short_id),1,raydium_ode_record_fp);
+fputs(mesh,raydium_ode_record_fp);
+fputc(0,raydium_ode_record_fp);
+}
+
+void raydium_ode_capture_internal_create_all(void)
+{
+int i;
+int type;
+int ctype;
+dReal sizes[3];
+
+if(!raydium_ode_record_fp)
+    return;
+
+for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    if(raydium_ode_element[i].state)
+	{
+	ctype=-1;
+	type=dGeomGetClass(raydium_ode_element[i].geom);
+	if(type==dSphereClass)
+	    {
+	    sizes[0]=dGeomSphereGetRadius(raydium_ode_element[i].geom);
+	    ctype=RAYDIUM_ODE_RECORD_NEWSPHERE;
+	    }
+	if(type==dBoxClass)	
+	    {
+	    dGeomBoxGetLengths(raydium_ode_element[i].geom,sizes);
+	    ctype=RAYDIUM_ODE_RECORD_NEWBOX;
+	    }
+	
+	if(ctype!=-1)
+	    raydium_ode_capture_internal_create(ctype,i,sizes,raydium_object_name[raydium_ode_element[i].mesh]);
+	}		       
+}
+
+
+void raydium_ode_capture_internal_delete(int id)
+{
+unsigned short event;
+unsigned short short_id;
+
+if(!raydium_ode_record_fp)
+    return;
+
+event=RAYDIUM_ODE_RECORD_DEL;
+short_id=id;
+fwrite(&event,sizeof(event),1,raydium_ode_record_fp);
+fwrite(&short_id,sizeof(short_id),1,raydium_ode_record_fp);
+}
+
+// options ? (particles, sound, ...)
+void raydium_ode_capture_record(char *rrp_filename)
+{
+unsigned char version=1;
+
+if(raydium_ode_record_fp)
+    {
+    raydium_log("ERROR: cannot record replay: already recording ...");
+    return;
+    }
+
+raydium_ode_record_fp=raydium_file_fopen(rrp_filename,"wb");
+if(!raydium_ode_record_fp)
+    {
+    raydium_log("ERROR: cannot record replay: unable to create '%'",rrp_filename);
+    return;
+    }
+
+raydium_ode_record_countdown=0;
+raydium_ode_record_rate=RAYDIUM_ODE_RECORD_RATE_DEFAULT;
+fwrite(&version,sizeof(version),1,raydium_ode_record_fp);
+fwrite(&raydium_ode_record_rate,sizeof(int),1,raydium_ode_record_fp);
+fputs(raydium_object_name[raydium_ode_ground_mesh],raydium_ode_record_fp);
+fputc(0,raydium_ode_record_fp);
+raydium_ode_capture_internal_create_all();
+}
+
+void raydium_ode_capture_record_stop(void)
+{
+// should we display some nice stats here ? (ex: replay length and size)
+if(raydium_ode_record_fp)
+    {
+    fclose(raydium_ode_record_fp);
+    raydium_ode_record_fp=NULL;
+    }
+}
+
+void raydium_ode_capture_play(char *rrp_filename, signed char change_ground)
+{
+unsigned char version;
+
+if(raydium_ode_record_play_fp)
+    {
+    raydium_log("ERROR: cannot play record: already playing ...");
+    return;
+    }
+
+raydium_ode_record_play_ground[0]=0;
+raydium_ode_record_play_fp=raydium_file_fopen(rrp_filename,"rb");
+if(!raydium_ode_record_play_fp)
+    {
+    raydium_log("ERROR: cannot play replay: unable to open '%'",rrp_filename);
+    return;
+    }
+
+fread(&version,sizeof(version),1,raydium_ode_record_play_fp);
+if(version!=1)
+    {
+    raydium_log("ERROR: cannot play replay: unknown version '%i'",version);
+    fclose(raydium_ode_record_play_fp);
+    raydium_ode_record_play_fp=NULL;
+    return;
+    }
+
+fread(&raydium_ode_record_play_rate,sizeof(int),1,raydium_ode_record_play_fp);
+raydium_file_binary_fgets(raydium_ode_record_play_ground,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+raydium_ode_record_play_factor=1;
+raydium_ode_record_play_countdown=0;
+
+// create a space for our objects
+raydium_ode_record_play_world=raydium_ode_object_create("RECORD");
+if(raydium_ode_record_play_world==-1)
+    {
+    raydium_log("ERROR: cannot play replay: unable to create world");
+    fclose(raydium_ode_record_play_fp);
+    raydium_ode_record_play_fp=NULL;
+    return;
+    }
+raydium_log("ODE: replay: playing '%s' (%i Hz accuracy)",rrp_filename,raydium_ode_record_play_rate);
+raydium_ode_ground_set_name(raydium_ode_record_play_ground);
+}
+
+void raydium_ode_capture_stop(void)
+{
+if(raydium_ode_record_play_fp)
+    {
+    fclose(raydium_ode_record_play_fp);
+    raydium_ode_record_play_fp=NULL;
+    raydium_log("ODE: replay: end of replay");
+    }
+}
+
+void raydium_ode_capture_seek(double time)
+{
+
+}
+
+void raydium_ode_capture_speed(GLfloat factor)
+{
+
+}
+
+
+void raydium_ode_capture_internal_read(void)
+{
+unsigned short event;
+unsigned short short_id;
+int newid;
+int i;
+dReal sizes[3];
+char name[RAYDIUM_MAX_NAME_LEN];
+char autoname[RAYDIUM_MAX_NAME_LEN];
+dReal pos[3];
+dReal rot[4];
+
+if(!raydium_ode_record_play_fp)
+    return;
+
+fread(&event,sizeof(event),1,raydium_ode_record_play_fp);
+if(feof(raydium_ode_record_play_fp))
+    {
+//    raydium_log("a");
+    raydium_ode_capture_stop();
+    return;
+    }
+
+//raydium_log("%i %i",event,i);
+
+// special event ?
+if(event<100)
+    {
+    switch(event)
+	{
+	case RAYDIUM_ODE_RECORD_DEL:
+	    fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+	    raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
+	    break;
+	case RAYDIUM_ODE_RECORD_NEWBOX:
+	    fread(&sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
+	    fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+	    raydium_ode_name_auto("REPLAY-B",autoname);
+	    newid=raydium_ode_object_box_add(
+		autoname,raydium_ode_record_play_world,
+		1,sizes[0],sizes[1],sizes[2],RAYDIUM_ODE_STATIC,0,name);
+	    raydium_ode_record_element_mappings[short_id]=newid;
+	    break;
+	case RAYDIUM_ODE_RECORD_NEWSPHERE:
+	    fread(&sizes,sizeof(dReal),1,raydium_ode_record_play_fp);
+	    fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+	    raydium_ode_name_auto("REPLAY-S",autoname);
+	    newid=raydium_ode_object_sphere_add(
+		autoname,raydium_ode_record_play_world,
+		1,sizes[0],RAYDIUM_ODE_STATIC,0,name);
+	    raydium_ode_record_element_mappings[short_id]=newid;
+	    break;	
+	default:
+	    raydium_log("ERROR: record playback: unknown event type (%i) !",event);
+	    exit(100);
+	    break;
+	}
+    // let's find a normal event
+    raydium_ode_capture_internal_read();
+    }
+else // normal event (moves)
+    {
+    event-=100; // elements in this step
+    for(i=0;i<event;i++)
+	{
+	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+	fread(&pos,sizeof(dReal),3,raydium_ode_record_play_fp);
+	fread(&rot,sizeof(dReal),4,raydium_ode_record_play_fp);
+	newid=raydium_ode_record_element_mappings[short_id];
+	raydium_ode_element_move(newid,pos);
+	raydium_ode_element_rotateq(newid,rot);
+	}
+    }
+
 }
 
 #include "ode_net.c"

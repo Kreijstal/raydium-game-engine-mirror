@@ -105,4 +105,13 @@ under Linux) in a string, and returns its address. **You** must free this
 memory when finished.
 **/
 
+__rayapi int raydium_file_binary_fgets(char *dest, int max, FILE *stream);
+/**
+Binary version of LIBC's fgets. Read a maximum of ##max## bytes from
+##stream##, including terminating 0 character, to ##dest## buffer, and stops 
+at the first 0 found or at EOF.
+No memory allocation is done, and string is always terminated by a 0.
+Returns the length of the readed string (without terminating 0).
+**/
+
 #endif

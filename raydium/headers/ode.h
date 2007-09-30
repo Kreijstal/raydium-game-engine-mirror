@@ -1651,6 +1651,63 @@ __rayapi GLfloat raydium_ode_get_timestep(void);
 Return physical engine iteration timestep.
 **/
 
+__rayapi void raydium_ode_capture_internal_create(int type, int id, dReal *sizes, char *mesh);
+/**
+Internal. Add entity creation to the replay.
+**/
+
+__rayapi void raydium_ode_capture_internal_create_all(void);
+/**
+Internal. Add all entities to the replay.
+**/
+
+__rayapi void raydium_ode_capture_internal_delete(int id);
+/**
+Internal. Add entity deletion to the replay.
+**/
+
+__rayapi void raydium_ode_capture_record(char *rrp_filename);
+/**
+Records to a RRP file all ODE events to create a replay.
+Recording is done at ##RAYDIUM_ODE_RECORD_RATE_DEFAULT## rate.
+You can play another RRP file while recording.
+
+WARNING: experimental feature ! API may change a lot !
+**/
+
+__rayapi void raydium_ode_capture_record_stop(void);
+/**
+Stops the recording. Not absolutely needed to get a valid record.
+**/
+
+__rayapi void raydium_ode_capture_play(char *rrp_filename, signed char change_ground);
+/**
+This function will play ##rrp_filename## file, and default speed.
+If ##change_ground## is true (1), this function will set/change the
+current RayODE ground (like raydium_ode_ground_set_name()) with the one
+used in the replay file.
+You can start recording during a replay, if you want.
+**/
+
+__rayapi void raydium_ode_capture_stop(void);
+/**
+Stops the replay.
+**/
+
+__rayapi void raydium_ode_capture_seek(double time);
+/**
+Upcoming...
+**/
+
+__rayapi void raydium_ode_capture_speed(GLfloat factor);
+/**
+Upcoming...
+**/
+
+__rayapi void raydium_ode_capture_internal_read(void);
+/**
+Internal. Reads one "timestep" from the replay file.
+**/
 
 #include "ode_net.h"
 #endif

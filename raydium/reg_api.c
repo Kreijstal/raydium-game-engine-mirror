@@ -155,6 +155,10 @@ PHP_v_sfff(raydium_ode_object_rotate_name_3f);
 PHP_i_siffiis(raydium_ode_object_sphere_add);
 PHP_v_f(raydium_ode_time_change);
 PHP_i_s(raydium_ode_capture_3d);
+PHP_v_s(raydium_ode_capture_record);
+PHP_v_v(raydium_ode_capture_record_stop);
+PHP_v_si(raydium_ode_capture_play);
+PHP_v_v(raydium_ode_capture_stop);
 
 // ode_net.c
 PHP_i_i(raydium_ode_network_element_isdistant);
@@ -365,6 +369,10 @@ raydium_register_function(C2PHP(raydium_ode_object_rotate_name_3f),"raydium_ode_
 raydium_register_function(C2PHP(raydium_ode_object_sphere_add),"raydium_ode_object_sphere_add");
 raydium_register_function(C2PHP(raydium_ode_time_change),"raydium_ode_time_change");
 raydium_register_function(C2PHP(raydium_ode_capture_3d),"raydium_ode_capture_3d");
+raydium_register_function(C2PHP(raydium_ode_capture_record),"raydium_ode_capture_record");
+raydium_register_function(C2PHP(raydium_ode_capture_record_stop),"raydium_ode_capture_record_stop");
+raydium_register_function(C2PHP(raydium_ode_capture_play),"raydium_ode_capture_play");
+raydium_register_function(C2PHP(raydium_ode_capture_stop),"raydium_ode_capture_stop");
 raydium_register_variable_const_i(RAYDIUM_ODE_AUTODETECT,"RAYDIUM_ODE_AUTODETECT");
 raydium_register_variable_const_i(RAYDIUM_ODE_STANDARD,"RAYDIUM_ODE_STANDARD");
 raydium_register_variable_const_i(RAYDIUM_ODE_STATIC,"RAYDIUM_ODE_STATIC");
