@@ -4674,7 +4674,9 @@ if(raydium_ode_record_play_world==-1)
     return;
     }
 raydium_log("ODE: replay: playing '%s' (%i Hz accuracy)",rrp_filename,raydium_ode_record_play_rate);
-raydium_ode_ground_set_name(raydium_ode_record_play_ground);
+
+if(change_ground)
+    raydium_ode_ground_set_name(raydium_ode_record_play_ground);
 }
 
 void raydium_ode_capture_stop(void)
