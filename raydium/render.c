@@ -160,7 +160,7 @@ else // "standard" textunit
   {
   glEnable(GL_BLEND);
   glDepthMask(GL_TRUE);
-  glAlphaFunc(GL_GREATER,0.50);
+  glAlphaFunc(GL_GREATER,0.78);
   glEnable (GL_ALPHA_TEST);
 //  glDisable(GL_FOG);
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
