@@ -866,6 +866,11 @@ Obviously, every element of object will be moved.
 Warning: arbitrary moves may lead to unwanted behaviours.
 **/
 
+__rayapi void raydium_ode_object_move_3f (int obj, dReal x, dReal y, dReal z);
+/**
+Same as above, but using 3 dReal values.
+**/
+
 __rayapi void raydium_ode_object_move_name (char *name, dReal * pos);
 /**
 Same as above, but using object's name.

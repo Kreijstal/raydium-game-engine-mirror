@@ -1622,6 +1622,15 @@ for(i=1;i<n;i++)
 
 }
 
+void raydium_ode_object_move_3f(int obj, float x, float y, float z)
+{
+    dReal pos[3];
+    pos[0]=x;
+    pos[1]=y;
+    pos[2]=z;
+    raydium_ode_object_move(obj,pos);  
+}
+
 void raydium_ode_object_move_name(char *name, dReal *pos)
 {
 raydium_ode_object_move(raydium_ode_object_find(name),pos);
