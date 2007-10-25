@@ -20,6 +20,10 @@
 #include <X11/extensions/Xinerama.h>
 #endif
 
+#ifdef HAVE_DPMS
+#include <X11/extensions/dpms.h>
+#endif
+
 #ifdef HAVE_MOTIF
 #include <X11/Xm/MwmUtil.h>
 #else
@@ -251,6 +255,8 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   XWMHints             wmHints ;
   unsigned int            mask ;
   PixelFormat               pf ;
+
+  int interval, prefer_blank, allow_exp, timeout;
   
 #ifdef HAVE_XINERAMA
   int i_d1, i_d2;
@@ -486,6 +492,14 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   if(FullscreenFlag)
        XGrabKeyboard(currDisplay,currHandle,False,GrabModeAsync,GrabModeAsync,CurrentTime);
 //     XSetInputFocus(currDisplay,currHandle,RevertToNone,CurrentTime);
+
+  // Disable screensaver (should we save SS state and set it back on exit ?)
+#ifdef HAVE_DPMS
+  DPMSDisable(currDisplay);
+#endif
+  XGetScreenSaver(currDisplay, &timeout, &interval, &prefer_blank, &allow_exp);
+    if (timeout)
+	XSetScreenSaver(currDisplay, 0, interval, prefer_blank, allow_exp);
 }
 
 
