@@ -13,6 +13,7 @@ Tooltip: 'Export to .tri format'
 import Blender
 
 from Blender import NMesh
+from Blender.sys import *
 
 class source:
 	def __init__(self,filename):
@@ -84,4 +85,5 @@ def fs_callback(filename):
 	print "Exported to %s. Textures must be .tga, uncompressed, origin NOT at lower-left.\n" % (filename)
 
 #fs_callback("tt.tri")
-Blender.Window.FileSelector(fs_callback, "Export Raydium Tri")
+nfile = makename (ext = '.tri')
+Blender.Window.FileSelector(fs_callback, "Export Raydium Tri", nfile)
