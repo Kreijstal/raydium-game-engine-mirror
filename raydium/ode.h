@@ -75,7 +75,8 @@
 #define RAYDIUM_ODE_RECORD_RATE_DEFAULT		30
 #define RAYDIUM_ODE_RECORD_NEWBOX		1
 #define RAYDIUM_ODE_RECORD_NEWSPHERE		2
-#define RAYDIUM_ODE_RECORD_DEL			3
+#define RAYDIUM_ODE_RECORD_DELBOX		3
+#define RAYDIUM_ODE_RECORD_DELSPHERE		4
 
 __global dWorldID 	raydium_ode_world;
 __global dSpaceID 	raydium_ode_space;
@@ -221,6 +222,7 @@ typedef struct raydium_ode_Element
     int		  ground_texture;
     signed char	  marked_as_deleted;
     raydium_ode_Ray ray[RAYDIUM_ODE_MAX_RAYS];
+    signed char   recorded; // is currently recorded
 } raydium_ode_Element;
 
 
@@ -266,14 +268,23 @@ __global int raydium_ode_record_rate;
 __global int raydium_ode_record_countdown;
 
 // replays reading (separate vars so we can play and record at the same time)
+
+typedef struct raydium_ode_record_play_Index {
+    unsigned int fpos;
+    unsigned int index;
+} raydium_ode_record_play_Index;
+
 __global FILE *raydium_ode_record_play_fp;
 __global int raydium_ode_record_play_rate;
 __global GLfloat raydium_ode_record_play_factor;
-__global int raydium_ode_record_play_countdown;
+__global GLfloat raydium_ode_record_play_current;
 __global int raydium_ode_record_play_world;
 __global char raydium_ode_record_play_ground[RAYDIUM_MAX_NAME_LEN];
 __global int raydium_ode_record_element_mappings[RAYDIUM_ODE_MAX_ELEMENTS];
-
+__global unsigned int *raydium_ode_record_index_moves;
+__global raydium_ode_record_play_Index *raydium_ode_record_index_forward;
+__global raydium_ode_record_play_Index *raydium_ode_record_index_backward;
+__global unsigned int raydium_ode_record_index_size;
 
 /*
 void raydium_ode_callback(void);

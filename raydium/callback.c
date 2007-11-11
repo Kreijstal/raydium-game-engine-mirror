@@ -19,6 +19,7 @@ int  raydium_php_exec(char *);
 #endif
 #ifdef ODE_SUPPORT
 void raydium_ode_network_read(void);
+void raydium_ode_capture_play_callback(void);
 #endif
 void raydium_network_read_faked(void);
 void raydium_video_callback(void);
@@ -45,6 +46,7 @@ raydium_sound_callback();
 #ifdef ODE_SUPPORT
 // 0hz ODE callback workaround
 raydium_ode_network_read();
+raydium_ode_capture_play_callback();
 #endif
 
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)

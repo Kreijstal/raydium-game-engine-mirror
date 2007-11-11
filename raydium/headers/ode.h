@@ -1656,6 +1656,7 @@ __rayapi GLfloat raydium_ode_get_timestep(void);
 Return physical engine iteration timestep.
 **/
 
+
 __rayapi void raydium_ode_capture_internal_create(int type, int id, dReal *sizes, char *mesh);
 /**
 Internal. Add entity creation to the replay.
@@ -1677,12 +1678,17 @@ Records to a RRP file all ODE events to create a replay.
 Recording is done at ##RAYDIUM_ODE_RECORD_RATE_DEFAULT## rate.
 You can play another RRP file while recording.
 
-WARNING: experimental feature ! API may change a lot !
+WARNING: experimental feature ! API may change.
 **/
 
 __rayapi void raydium_ode_capture_record_stop(void);
 /**
-Stops the recording. Not absolutely needed to get a valid record.
+Stops the recording. Not needed to get a valid record.
+**/
+
+__rayapi void raydium_ode_capture_play_internal_index_build(void);
+/**
+Internal. Builds index, needed for RRP playing.
 **/
 
 __rayapi void raydium_ode_capture_play(char *rrp_filename, signed char change_ground);
@@ -1699,19 +1705,43 @@ __rayapi void raydium_ode_capture_stop(void);
 Stops the replay.
 **/
 
-__rayapi void raydium_ode_capture_seek(double time);
+__rayapi signed char raydium_ode_capture_seek(double time);
 /**
-Upcoming...
+This function will seek into the replay to jump at ##time## seconds.
+The CPU cost of this function is proportional to the size of the jump
+from the current position to ##time##.
+Returns false (0) on failure (ex:##time## out of range)
+**/
+
+__rayapi signed char raydium_ode_capture_seek_rel(double time);
+/**
+Same as above, but using a relative ##time##.
+Example: ##raydium_ode_capture_seek_rel(-2.5)## will rewind the replay of
+two and half a second from the current time.
 **/
 
 __rayapi void raydium_ode_capture_speed(GLfloat factor);
 /**
-Upcoming...
+Change the speed of the capture replay. The default factor is ##1##, and a value
+of ##2## will play the record twice the normal speed, for example.
+**You can use negative values** to play the record backwards.
+The value ##0## will pause the replay.
 **/
 
-__rayapi void raydium_ode_capture_internal_read(void);
+__rayapi void raydium_ode_capture_internal_read_event(signed char sense);
 /**
-Internal. Reads one "timestep" from the replay file.
+Internal. Reads "special" events at the current file position (sense=1 means
+forward and sens=-1 means backward)
+**/
+
+__rayapi void raydium_ode_capture_internal_read_move(void);
+/**
+Internal. Reads a "move" event at the current file position.
+**/
+
+__rayapi void raydium_ode_capture_play_callback(void);
+/**
+Internal frame callback for capture playing.
 **/
 
 #include "ode_net.h"
