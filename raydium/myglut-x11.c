@@ -139,7 +139,7 @@ void glutSetCursor(int cursor)
 int currCursor;
 Pixmap pix ;
 char   blank_cursor[16*16];
-XColor bcol = { 0 } ;
+XColor bcol ;
 
 switch(cursor)
     {

@@ -109,7 +109,7 @@ int raydium_network_propag_add(int type, void *data, int size)
 {
 int i;
 
-if(size>(RAYDIUM_NETWORK_PACKET_SIZE-RAYDIUM_NETWORK_PACKET_OFFSET-RAYDIUM_NETWORK_PROPAG_HEAD))
+if(size>(int)(RAYDIUM_NETWORK_PACKET_SIZE-RAYDIUM_NETWORK_PACKET_OFFSET-RAYDIUM_NETWORK_PROPAG_HEAD))
     {
     raydium_log("network: ERROR: propag' packet is too big for current network size");
     return -1;
@@ -696,7 +696,7 @@ raydium_network_server_broadcast_check();
 // search for outdated server slots (should isolate this in a function ?)
 for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
     if(raydium_network_server_list[i].when!=0)
-	if(raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
+	if((time_t)raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
 	    raydium_network_server_list[i].when=0;
 
 len=sizeof(struct sockaddr);

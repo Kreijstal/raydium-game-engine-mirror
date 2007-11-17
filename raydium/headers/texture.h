@@ -80,7 +80,7 @@ __rayapi GLuint raydium_texture_find_by_name (char *name);
 Returns index for texture "name", and load it if not already done.
 **/
 
-__rayapi GLuint raydium_texture_exists(char *name);
+__rayapi GLint raydium_texture_exists(char *name);
 /**
 Same as above, but don't load texture if ##name## isn't already loaded and
 then returns -1. Returns texture id otherwise.

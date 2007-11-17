@@ -288,8 +288,8 @@ __global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
 __global signed char    raydium_key_trace; // change this from ingame console !
 __global signed char    raydium_mouse_click;
 __global signed char    raydium_mouse_button[3];
-__global GLuint  raydium_mouse_x;
-__global GLuint  raydium_mouse_y;
+__global GLint  raydium_mouse_x;
+__global GLint  raydium_mouse_y;
 __global signed char    raydium_joy_button[RAYDIUM_JOY_MAX_BUTTONS];
 __global GLfloat 	raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS];
 __global signed char	raydium_joy_click;
@@ -378,7 +378,7 @@ __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 
-__global GLuint	raydium_object_index;
+__global GLint	raydium_object_index;
 __global GLuint	raydium_object_start[RAYDIUM_MAX_OBJECTS];
 __global GLuint	raydium_object_end[RAYDIUM_MAX_OBJECTS];
 __global char	raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];

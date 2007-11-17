@@ -666,7 +666,7 @@ if(dev->vpic.palette==VIDEO_PALETTE_YUV420P)
 else
     {
     // RGB style
-    int i,j;
+    unsigned int i,j;
     int r,g,b;
     for (i = j = 0; i < dev->win.width * dev->win.height; i++) 
 	{
@@ -856,7 +856,8 @@ raydium_live_texture_refresh(raydium_live_texture_find(raydium_texture_find_by_n
 
 int raydium_live_texture_create(char *as, unsigned char *data_source, int tx, int ty, int bpp)
 {
-int id,i;
+int id;
+unsigned int i;
 raydium_live_Texture *tex;
 
 id=raydium_live_texture_find_free();

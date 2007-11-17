@@ -836,7 +836,7 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
  alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
  while(nprocessed)
  {
-  static int last;
+  static ALuint last;
      alSourceUnqueueBuffers(raydium_sound_source[0],1,&buffer);
         //printf("%i, buff = %i\n",nprocessed,buffer);
   if(buffer==last)

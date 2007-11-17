@@ -326,7 +326,7 @@ return 1;
 
 void raydium_ode_ground_set_name(char *name)
 {
-int i,j,k;
+unsigned int i,j,k;
 int obj,size;
 
 static dTriMeshDataID Data;
@@ -4891,7 +4891,7 @@ static double old_time=-1;
 static int old_step=-1;
 int origin;
 signed char sense;
-unsigned int step;
+int step;
 
 if(!raydium_ode_record_play_fp)
     return 0;
@@ -4916,7 +4916,7 @@ step=time*raydium_ode_record_play_rate;
 if(old_step==step)
     return 1; // must do WAY better ! (smoothing)
 
-if(step<0 || step>=raydium_ode_record_index_size)
+if(step<0 || step>=(int)raydium_ode_record_index_size)
     {
 //    raydium_log("ODE: replay: error: seeking out of range");
     return 0;
@@ -4931,7 +4931,7 @@ if(origin<0)
 if(sense==1)
     {
     // going forward ...
-    while(raydium_ode_record_index_forward[origin].index<=step && raydium_ode_record_index_forward[origin].fpos!=0)
+    while((int)raydium_ode_record_index_forward[origin].index<=step && raydium_ode_record_index_forward[origin].fpos!=0)
 	{
 //	raydium_log("reading f... (at %i)",raydium_ode_record_index_forward[origin].fpos);
 	fseek(raydium_ode_record_play_fp,raydium_ode_record_index_forward[origin].fpos,SEEK_SET);

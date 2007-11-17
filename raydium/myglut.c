@@ -174,7 +174,7 @@ char curr[128];
 ext=(char *)glGetString(GL_EXTENSIONS);
 if(!ext) return 0;
 
-for(i=0;i<=strlen(ext);i++)
+for(i=0;i<=(int)strlen(ext);i++)
     {
     if(ext[i]==' ' || ext[i]==0)
 	{

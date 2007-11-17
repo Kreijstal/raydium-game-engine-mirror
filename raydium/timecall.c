@@ -396,7 +396,7 @@ for(i=0;i<raydium_timecall_index;i++)
  {
  now=raydium_timecall_clock();
 
-   if(!raydium_timecall_soft_call[i] && now>=raydium_timecall_next[i] && raydium_timecall_interval[i])
+   if(!raydium_timecall_soft_call[i] && (time_t)now>=raydium_timecall_next[i] && raydium_timecall_interval[i])
     {
     steps=((now-raydium_timecall_next[i])/raydium_timecall_interval[i])+1;
     phase=(now-raydium_timecall_next[i])-((steps-1)*raydium_timecall_interval[i]);

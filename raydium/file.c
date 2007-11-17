@@ -50,7 +50,7 @@ if(!c)
     }
 n=(c-from+1);
 
-if(n==strlen(from))
+if(n==(int)strlen(from))
     {
     dest[0]=0;
     return;

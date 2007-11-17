@@ -27,7 +27,7 @@ if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
 // must be a power of 2 and <= to raydium_texture_size_max
 if(size==1) return 1;
 for(i=2;i<=raydium_texture_size_max;i*=2)
-    if(i==size) return 1;
+    if(i==(int)size) return 1;
 return 0;
 }
 
@@ -391,11 +391,11 @@ if(!flag) ret=raydium_texture_load(name);
 return ret;
 }
 
-GLuint raydium_texture_exists(char *name)
+GLint raydium_texture_exists(char *name)
 {
 int i;
 
-for(i=0;i<raydium_texture_index;i++)
+for(i=0;i<(int)raydium_texture_index;i++)
 if(!strcmp(raydium_texture_name[i],name))
     return i;
 

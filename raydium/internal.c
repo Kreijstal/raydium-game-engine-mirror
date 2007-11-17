@@ -16,6 +16,7 @@ void raydium_network_internal_dump(void);
 void raydium_internal_dump(void)
 {
 GLuint i,j,a;
+int si;
 
 if(raydium_init_cli_option("regs",NULL))
     raydium_register_dump();
@@ -32,10 +33,10 @@ for(i=0;i<raydium_texture_index;i++)
 raydium_log("Estimated total: %.2f MB used for textures.",raydium_texture_used_memory/1024.f/1024.f);
 
 raydium_log("Using %i object(s):",raydium_object_index);
-for(i=0;i<raydium_object_index;i++)
+for(si=0;si<raydium_object_index;si++)
     {
-    a=raydium_object_end[i]-raydium_object_start[i];
-    raydium_log("Object num %i: %i vertex(s) - loaded as \"%s\"",i,a,raydium_object_name[i]);
+    a=raydium_object_end[si]-raydium_object_start[si];
+    raydium_log("Object num %i: %i vertex(s) - loaded as \"%s\"",si,a,raydium_object_name[i]);
     }
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)

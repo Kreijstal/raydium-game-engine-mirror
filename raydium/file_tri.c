@@ -210,6 +210,7 @@ void read_vertex_from(char *filename)
 {
 GLfloat x,y,z,nx,ny,nz,u,v;
 int i,ii;
+unsigned int ui;
 GLuint save;
 GLint visu;
 FILE *fp;
@@ -260,7 +261,7 @@ if(visu==2)
 	}
 
     // build "current transformed model" space
-    for(i=0;i<raydium_object_anim_len[raydium_object_index];i++)
+    for(ui=0;ui<raydium_object_anim_len[raydium_object_index];ui++)
 	{
 	raydium_vertex_add(0,0,0);
 	raydium_vertex_texture[raydium_vertex_index-1]=0;

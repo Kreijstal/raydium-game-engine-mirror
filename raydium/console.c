@@ -460,7 +460,7 @@ if(n_candidates==RAYDIUM_CONSOLE_MAX_COMPLETION)
 // root: find shortest candidate
 candidate_min_len=RAYDIUM_MAX_NAME_LEN+1;
 for(i=0;i<n_candidates;i++)
-  if(strlen(candidates[i])<candidate_min_len)
+  if((int)strlen(candidates[i])<candidate_min_len)
     candidate_min_len=strlen(candidates[i]);
 
 // root: find common chars

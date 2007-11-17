@@ -1136,7 +1136,7 @@ if(c->offset<0)
     c->offset=0;
 
 // Apply offset (result's stored in 'i')
-for(i=0,cpt=0;i<strlen(c->items)+1;i++)
+for(i=0,cpt=0;i<(int)strlen(c->items)+1;i++)
     {
     if(cpt==c->offset)
 	break;
@@ -1147,7 +1147,7 @@ for(i=0,cpt=0;i<strlen(c->items)+1;i++)
 // foreach element
     start=i;
     cpt=0;
-    for(;i<strlen(c->items)+1;i++)
+    for(;i<(int)strlen(c->items)+1;i++)
 	if(c->items[i]==RAYDIUM_GUI_ITEM_SEPARATOR || !c->items[i])
 	    {
 	    end=i;

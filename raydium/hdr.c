@@ -363,7 +363,7 @@ raydium_osd_stop();
 
 signed char raydium_hdr_texture(int texture, signed char hdr)
 {
-if(texture>=0 && texture<raydium_texture_index)
+if(texture>=0 && texture<(int)raydium_texture_index)
     {
     raydium_texture_hdr[texture]=hdr;
     return 1;

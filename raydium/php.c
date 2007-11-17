@@ -93,12 +93,41 @@ static sapi_module_struct raydium_sapi_module =
 
 	sapi_raydium_register_variables,/* register server variables */
 	NULL,              		/* Log message */
-
 	NULL,				/* Get Request Time */
+	
+	NULL,				/* INI Path (changed later) */
+
 	NULL,				/* Block interruptions */
 	NULL,				/* Unblock interruptions */
 
-	STANDARD_SAPI_MODULE_PROPERTIES
+// 243:         void (*default_post_reader)(TSRMLS_D);
+	NULL,
+// 244:         void (*treat_data)(int arg, char *str, zval *destArray TSRMLS_DC);
+	NULL,
+// 245:         char *executable_location;
+	NULL,
+// 246: 
+// 247:         int php_ini_ignore;
+	0,
+// 248: 
+// 249:         int (*get_fd)(int *fd TSRMLS_DC);
+	NULL,
+// 250: 
+// 251:         int (*force_http_10)(TSRMLS_D);
+	NULL,
+// 252: 
+// 253:         int (*get_target_uid)(uid_t * TSRMLS_DC);
+	NULL,
+// 254:         int (*get_target_gid)(gid_t * TSRMLS_DC);
+	NULL,
+// 255: 
+// 256:         unsigned int (*input_filter)(int arg, char *var, char **val, unsigned int val_len, unsigned int *new_val_len TSRMLS_DC);
+	NULL,
+// 257:         
+// 258:         void (*ini_defaults)(HashTable *configuration_hash);
+	NULL,
+// 259:         int phpinfo_as_text;
+	1
 };
 
 
@@ -306,7 +335,7 @@ core_globals = ts_resource(core_globals_id);
 sapi_globals = ts_resource(sapi_globals_id);
 tsrm_ls = ts_resource(0);
 #endif
-raydium_sapi_module.phpinfo_as_text=1;
+//raydium_sapi_module.phpinfo_as_text=1;
 path=malloc(strlen(PHP_INI_PATH));
 strcpy(path,PHP_INI_PATH);
 raydium_sapi_module.php_ini_path_override=path;

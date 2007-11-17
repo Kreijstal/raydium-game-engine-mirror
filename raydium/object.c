@@ -360,7 +360,7 @@ return -1;
 // during normal operation
 void raydium_object_anim_generate_internal(int object, int instance)
 {
-int i;
+unsigned int i;
 GLfloat factor;
 int anim_frames;
 int frame_a,frame_b;

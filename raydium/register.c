@@ -26,7 +26,7 @@ return -1;
 signed char raydium_register_name_isvalid(char *name)
 {
 int i;
-for(i=0;i<strlen(name);i++)
+for(i=0;i<(int)strlen(name);i++)
     if(! ((name[i]>='a' && name[i]<='z') || 
           (name[i]>='A' && name[i]<='Z') ||
            name[i]=='_') )

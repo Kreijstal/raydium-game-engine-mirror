@@ -20,7 +20,7 @@ int i;
 char temp[RAYDIUM_MAX_NAME_LEN];
 strcpy(temp,org);
 
-for(i=0;i<strlen(temp);i++)
+for(i=0;i<(int)strlen(temp);i++)
     if(temp[i]!=' ')
 	break;
 strcpy(org,temp+i); // heading spaces: ok
@@ -129,14 +129,14 @@ if(val_s[0]=='"') // is a string
     strcpy(temp,val_s);
 
     // search both double quotes (string must not contains dq, then !)
-    for(i=0;i<strlen(temp);i++)
+    for(i=0;i<(int)strlen(temp);i++)
 	if(temp[i]=='"')
 	    {
 	    p1=i;
 	    break;
 	    }
 
-    for(i=p1+1;i<strlen(temp);i++)
+    for(i=p1+1;i<(int)strlen(temp);i++)
 	if(temp[i]=='"')
 	    {
 	    p2=i;
