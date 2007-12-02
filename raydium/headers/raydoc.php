@@ -213,7 +213,13 @@ for($i=0;$i<count($sorted);$i++)
 	if($title[0]=="/")
 	    {
 	    $type=1;
+	    $com_type=$title[1];
 	    $title=trim(substr($title,2));
+	    if($com_type=='*')
+		{
+		$title=str_replace( "*/", "", $title);
+		$title=trim($title);
+		}
 	    }
 
 	if($title[0]=="#")
