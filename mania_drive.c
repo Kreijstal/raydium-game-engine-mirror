@@ -1799,6 +1799,7 @@ change_music_volume(music_volume);
 
 void music_change(void)
 {
+change_music_volume(music_volume);
 music_popup_inc=1;
 }
 
