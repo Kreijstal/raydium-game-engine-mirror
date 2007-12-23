@@ -81,6 +81,7 @@ raydium_ode_element[i].marked_as_deleted=0;
 for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
     raydium_ode_element[i].ray[j].state=0;
 raydium_ode_element[i].recorded=0;
+raydium_ode_element[i].replayed=0;
 }
 
 void raydium_ode_init_joint(int i)
@@ -4780,14 +4781,14 @@ for(i=raydium_ode_record_index_size-1;;i--)
     else
 	last_event=raydium_ode_record_index_forward[i];
 
-    // can't to it with the 'for', 'cause i is unsigned (so >=0 is always true)
+    // can't do it with the 'for', 'cause i is unsigned (so >=0 is always true)
     if(i==0)
 	break;
     }
 
 
 // debug purpose: writes indexes to "debug.idx"
-{
+/*{
 FILE *fp;
 fp=fopen("debug.idx","wt");
 fprintf(fp,"# step: previous_event next_event\n");
@@ -4802,7 +4803,7 @@ for(i=0;i<raydium_ode_record_index_size;i++)
     raydium_ode_record_index_forward[i].index
     );
 fclose(fp);
-}
+}*/
 
 // let's be kind: replace the cursor where we found it (almost useless for 
 // replay reading itself, but it helps debuging somehow)
@@ -4871,7 +4872,7 @@ fseek(raydium_ode_record_play_fp,raydium_ode_record_index_backward[0].fpos,SEEK_
 raydium_ode_capture_internal_read_event(1);
 // seek : first move fpos
 fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[0],SEEK_SET);
-raydium_ode_capture_internal_read_move();
+raydium_ode_capture_internal_read_move(-1);
 }
 
 void raydium_ode_capture_stop(void)
@@ -4884,6 +4885,26 @@ if(raydium_ode_record_play_fp)
     raydium_log("ODE: replay: end of replay");
     }
 }
+
+void raydium_ode_capture_internal_move_all(float diff)
+{
+int i,j;
+dReal pos[3];
+
+for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    if(raydium_ode_element[i].state &&
+	raydium_ode_element[i].replayed)
+	{
+	for(j=0;j<3;j++)
+	    pos[j]=raydium_ode_element[i].capture_pos1[j]+
+		    (raydium_ode_element[i].capture_pos2[j] -
+		     raydium_ode_element[i].capture_pos1[j])*diff;
+
+	raydium_ode_element_move(i,pos);
+	raydium_ode_element_rotateq(i,raydium_ode_element[i].capture_rot);
+	}
+}
+
 
 signed char raydium_ode_capture_seek(double time)
 {
@@ -4913,8 +4934,9 @@ old_time=time;
 step=time*raydium_ode_record_play_rate;
 //raydium_log("debug: step=%i",step);
 
-if(old_step==step)
-    return 1; // must do WAY better ! (smoothing)
+// if we're in the same step, let's use "cache" of the last read for this step
+if(old_step!=step)
+{
 
 if(step<0 || step>=(int)raydium_ode_record_index_size)
     {
@@ -4953,10 +4975,37 @@ else
 	}
     }
 
-// then jump to the correct move
+// then jump to the correct move ...
 fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[step],SEEK_SET);
-// and read it !
-raydium_ode_capture_internal_read_move();
+
+// ... and read it ...
+if(sense==1)
+    {
+    // read move events (two of them)
+    if(step+1!=(int)raydium_ode_record_index_forward[step].index) // if next event is not a special one ...
+	{
+	raydium_ode_capture_internal_read_move(0);
+	raydium_ode_capture_internal_read_move(1);
+	}	
+    else
+	raydium_ode_capture_internal_read_move(-1);
+    }
+else
+    {
+
+    if(step-1!=(int)raydium_ode_record_index_backward[step].index) // if previous event is not a special one ...
+	{
+	raydium_ode_capture_internal_read_move(0);
+	raydium_ode_capture_internal_read_move(1);
+	}
+    else
+	raydium_ode_capture_internal_read_move(-1);    
+    }
+} // end of "cache"
+
+raydium_ode_capture_internal_move_all(time*raydium_ode_record_play_rate-step);
+
+
 return 1;
 }
 
@@ -5049,6 +5098,7 @@ if(event<100)
 	      autoname,raydium_ode_record_play_world,
 	      1,sizes[0],sizes[1],sizes[2],RAYDIUM_ODE_STATIC,0,name);
 	raydium_ode_record_element_mappings[short_id]=newid;
+	raydium_ode_element[newid].replayed=1;
 	if(sense==1)
 	    raydium_ode_capture_internal_read_event(sense);
 	ok=1;
@@ -5066,6 +5116,7 @@ if(event<100)
 	      autoname,raydium_ode_record_play_world,
 	      1,sizes[0],RAYDIUM_ODE_STATIC,0,name);
 	raydium_ode_record_element_mappings[short_id]=newid;
+	raydium_ode_element[newid].replayed=1;
 	if(sense==1)
 	    raydium_ode_capture_internal_read_event(sense);
 	ok=1;
@@ -5085,7 +5136,7 @@ else // "moves" event (moves)
 }
 
 
-void raydium_ode_capture_internal_read_move(void)
+void raydium_ode_capture_internal_read_move(signed char pass)
 {
 unsigned short event;
 unsigned short short_id;
@@ -5118,8 +5169,22 @@ else // normal event (moves)
 	fread(&pos,sizeof(dReal),3,raydium_ode_record_play_fp);
 	fread(&rot,sizeof(dReal),4,raydium_ode_record_play_fp);
 	newid=raydium_ode_record_element_mappings[short_id];
-	raydium_ode_element_move(newid,pos);
-	raydium_ode_element_rotateq(newid,rot);
+	if(pass==0 || pass==-1)
+	    {
+	    //TODOXF: clean this ... and deal with rotations !
+	    raydium_ode_element[newid].capture_pos1[0]=pos[0];
+	    raydium_ode_element[newid].capture_pos1[1]=pos[1];
+	    raydium_ode_element[newid].capture_pos1[2]=pos[2];
+	    memcpy(raydium_ode_element[newid].capture_rot,rot,sizeof(dReal)*4);
+	    }
+	if(pass==1 || pass==-1)
+	    {
+	    //TODOXF: clean this ... and deal with rotations !
+	    raydium_ode_element[newid].capture_pos2[0]=pos[0];
+	    raydium_ode_element[newid].capture_pos2[1]=pos[1];
+	    raydium_ode_element[newid].capture_pos2[2]=pos[2];
+	    memcpy(raydium_ode_element[newid].capture_rot,rot,sizeof(dReal)*4);
+	    }
 	}
     }
 }

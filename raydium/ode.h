@@ -223,6 +223,10 @@ typedef struct raydium_ode_Element
     signed char	  marked_as_deleted;
     raydium_ode_Ray ray[RAYDIUM_ODE_MAX_RAYS];
     signed char   recorded; // is currently recorded
+    signed char   replayed; // is currently "replayed"
+    dReal	capture_pos1[3];
+    dReal	capture_pos2[3];
+    dReal	capture_rot[4];
 } raydium_ode_Element;
 
 

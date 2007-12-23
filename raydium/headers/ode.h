@@ -1734,7 +1734,7 @@ Internal. Reads "special" events at the current file position (sense=1 means
 forward and sens=-1 means backward)
 **/
 
-__rayapi void raydium_ode_capture_internal_read_move(void);
+__rayapi void raydium_ode_capture_internal_read_move(signed char pass);
 /**
 Internal. Reads a "move" event at the current file position.
 **/
