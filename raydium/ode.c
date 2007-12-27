@@ -4978,32 +4978,12 @@ else
 	}
     }
 
-// then jump to the correct move ...
+// You may have a look to revision 591, there was a big bunch of code here ...
 fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[step],SEEK_SET);
+raydium_ode_capture_internal_read_move(0);
+fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[step+1],SEEK_SET);
+raydium_ode_capture_internal_read_move(1);
 
-// ... and read it ...
-if(sense==1)
-    {
-    // read move events (two of them)
-    if(step+1!=(int)raydium_ode_record_index_forward[step].index) // if next event is not a special one ...
-	{
-	raydium_ode_capture_internal_read_move(0);
-	raydium_ode_capture_internal_read_move(1);
-	}	
-    else
-	raydium_ode_capture_internal_read_move(-1);
-    }
-else
-    {
-
-    if(step-1!=(int)raydium_ode_record_index_backward[step].index) // if previous event is not a special one ...
-	{
-	raydium_ode_capture_internal_read_move(0);
-	raydium_ode_capture_internal_read_move(1);
-	}
-    else
-	raydium_ode_capture_internal_read_move(-1);    
-    }
 } // end of "cache"
 
 raydium_ode_capture_internal_move_all(time*raydium_ode_record_play_rate-step);
