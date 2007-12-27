@@ -226,7 +226,8 @@ typedef struct raydium_ode_Element
     signed char   replayed; // is currently "replayed"
     dReal	capture_pos1[3];
     dReal	capture_pos2[3];
-    dReal	capture_rot[4];
+    dReal	capture_rot1[4];
+    dReal	capture_rot2[4];
 } raydium_ode_Element;
 
 

@@ -320,3 +320,48 @@ int _raydium_trigo_MatrixInverse(const float *m,float *out) {
     out[15] = 1.0;
     return 1;
 }
+
+void raydium_trigo_quaternion_normalize(float *quat)
+{
+float magnitude;
+    
+magnitude = sqrt((quat[0] * quat[0]) + (quat[1] * quat[1]) + (quat[2] * quat[2]) + (quat[3] * quat[3]));
+quat[0] /= magnitude;
+quat[1] /= magnitude;
+quat[2] /= magnitude;
+quat[3] /= magnitude;
+}
+
+#define SLERP_TO_LERP_SWITCH_THRESHOLD 0.01f
+void raydium_trigo_quaternion_slerp(float *start, float *end, float alpha,float *result)
+{
+float startWeight, endWeight, difference;
+     
+difference = ((start[0] * end[0]) + (start[1] * end[1]) + (start[2] * end[2]) + (start[3] * end[3]));
+
+if ((1.0f - fabs(difference)) > SLERP_TO_LERP_SWITCH_THRESHOLD) 
+    {
+    float theta, oneOverSinTheta;
+	       
+    theta = acos(fabs(difference));
+    oneOverSinTheta = (1.0f / sin(theta));
+    startWeight = (sin(theta * (1.0f - alpha)) * oneOverSinTheta);
+    endWeight = (sin(theta * alpha) * oneOverSinTheta);
+
+    if (difference < 0.0f) 
+	{
+	startWeight = -startWeight;
+	}
+    } 
+else 
+    {
+    startWeight = (1.0f - alpha);
+    endWeight = alpha;
+    }
+
+result[0] = ((start[0] * startWeight) + (end[0] * endWeight));
+result[1] = ((start[1] * startWeight) + (end[1] * endWeight));
+result[2] = ((start[2] * startWeight) + (end[2] * endWeight));
+result[3] = ((start[3] * startWeight) + (end[3] * endWeight));
+raydium_trigo_quaternion_normalize(result);
+}

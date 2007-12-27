@@ -4890,6 +4890,7 @@ void raydium_ode_capture_internal_move_all(float diff)
 {
 int i,j;
 dReal pos[3];
+float result[4];
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state &&
@@ -4900,8 +4901,10 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 		    (raydium_ode_element[i].capture_pos2[j] -
 		     raydium_ode_element[i].capture_pos1[j])*diff;
 
+	raydium_trigo_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
+
 	raydium_ode_element_move(i,pos);
-	raydium_ode_element_rotateq(i,raydium_ode_element[i].capture_rot);
+	raydium_ode_element_rotateq(i,result);
 	}
 }
 
@@ -5175,7 +5178,7 @@ else // normal event (moves)
 	    raydium_ode_element[newid].capture_pos1[0]=pos[0];
 	    raydium_ode_element[newid].capture_pos1[1]=pos[1];
 	    raydium_ode_element[newid].capture_pos1[2]=pos[2];
-	    memcpy(raydium_ode_element[newid].capture_rot,rot,sizeof(dReal)*4);
+	    memcpy(raydium_ode_element[newid].capture_rot1,rot,sizeof(dReal)*4);
 	    }
 	if(pass==1 || pass==-1)
 	    {
@@ -5183,7 +5186,7 @@ else // normal event (moves)
 	    raydium_ode_element[newid].capture_pos2[0]=pos[0];
 	    raydium_ode_element[newid].capture_pos2[1]=pos[1];
 	    raydium_ode_element[newid].capture_pos2[2]=pos[2];
-	    memcpy(raydium_ode_element[newid].capture_rot,rot,sizeof(dReal)*4);
+	    memcpy(raydium_ode_element[newid].capture_rot2,rot,sizeof(dReal)*4);
 	    }
 	}
     }

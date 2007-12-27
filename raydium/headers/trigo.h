@@ -128,10 +128,22 @@ internal, don't use.
 **/
 
 __rayapi int _raydium_trigo_MatrixInverse(const float *m,float *out);
-/*
+/**
 Our matrix_inverse seems broken. 
 This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
 This code is not native
-*/
+**/
+
+__rayapi void raydium_trigo_quaternion_normalize(float *quat);
+/**
+Normalize ##quat## quaternion. I suppose such code is already available
+in ODE.
+**/
+
+__rayapi void raydium_trigo_quaternion_slerp(float *start, float *end, float alpha,float *result);
+/**
+Spherical Linear Interpolation of quaternions, from ##start## to ##end## 
+with alpha [0,1] as interpolation point.
+**/
 
 #endif
