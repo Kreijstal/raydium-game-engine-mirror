@@ -7,7 +7,7 @@
 #include "headers/myglut.h"
 
 #include <windows.h>
-#include <gl/glaux.h>
+//#include <gl/glaux.h>
 
 static HINSTANCE       currInstance;
 static HWND            currWnd;
@@ -119,8 +119,8 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   int size   [2] = { 640, 480 };
   PIXELFORMATDESCRIPTOR pfd;
 
-  
-  
+
+
   currInstance = GetModuleHandleA( NULL ) ;
   /* Register the window class */
   wc.style         = CS_OWNDC | CS_VREDRAW | CS_HREDRAW ;
@@ -147,7 +147,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 
   if ( x == -1 ) x = (GetSystemMetrics( SM_CXSCREEN ) / 2) - (w/2) ;
   if ( y == -1 ) y = (GetSystemMetrics( SM_CYSCREEN ) / 2) - (h/2);
-  
+
   origin [ 0 ] = x ;
   origin [ 1 ] = y ;
   size   [ 0 ] = w ;
@@ -202,29 +202,29 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   pfd.dwFlags=PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
   pfd.iPixelType=PFD_TYPE_RGBA;
   pfd.cColorBits=24;
-  pfd.cRedBits=0; 
-  pfd.cRedShift=0; 
-  pfd.cGreenBits=0; 
-  pfd.cGreenShift=0; 
-  pfd.cBlueBits=0; 
+  pfd.cRedBits=0;
+  pfd.cRedShift=0;
+  pfd.cGreenBits=0;
+  pfd.cGreenShift=0;
+  pfd.cBlueBits=0;
   pfd.cBlueShift=0;
-  pfd.cAlphaBits=0; 
-  pfd.cAlphaShift=0; 
-  pfd.cAccumBits=0; 
-  pfd.cAccumRedBits=0; 
-  pfd.cAccumGreenBits=0; 
-  pfd.cAccumBlueBits=0; 
+  pfd.cAlphaBits=0;
+  pfd.cAlphaShift=0;
+  pfd.cAccumBits=0;
+  pfd.cAccumRedBits=0;
+  pfd.cAccumGreenBits=0;
+  pfd.cAccumBlueBits=0;
   pfd.cAccumAlphaBits=0;
   pfd.cDepthBits=32;
   pfd.cStencilBits=1;
   pfd.cAuxBuffers=0;
   pfd.iLayerType=PFD_MAIN_PLANE;
-  pfd.bReserved=0; 
-  pfd.dwLayerMask=0; 
-  pfd.dwVisibleMask=0; 
-  pfd.dwDamageMask=0; 
+  pfd.bReserved=0;
+  pfd.dwLayerMask=0;
+  pfd.dwVisibleMask=0;
+  pfd.dwDamageMask=0;
 
-  
+
   /* Get best available match of pixel format for DC */
   iPixelFormat = ChoosePixelFormat ( currDC, &pfd ) ;
   if ( iPixelFormat == 0 )
@@ -256,16 +256,16 @@ void pwInit ( int x, int y, int w, int h, int multisample,
     raydium_log("(my)glut: ERROR: Unable to open a suitable window");
     exit ( 1 ) ;
   }
-  
+
 
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers () ;
   glClear ( GL_COLOR_BUFFER_BIT ) ;
   glutSwapBuffers () ;
-  
+
 //  if (glutReshapeFuncCB)
 //      glutReshapeFuncCB(w, h);
-  DescribePixelFormat(currDC, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd); 
+  DescribePixelFormat(currDC, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
   raydium_log("Found %ix%i with %i bpp color and %i bits zbuffer (stencil is %i)",w,h,pfd.cColorBits,pfd.cDepthBits,pfd.cStencilBits);
 }
 
@@ -327,19 +327,19 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
     case WM_MOUSEWHEEL:
     if ( ( short ) HIWORD( wParam ) > 0 )
     {
-    if ( glutPassiveMotionFuncCB )    
+    if ( glutPassiveMotionFuncCB )
         (*glutMouseFuncCB) ( 3, GLUT_DOWN, lastx, lasty ) ;
-    if ( glutPassiveMotionFuncCB )    
+    if ( glutPassiveMotionFuncCB )
         (*glutMouseFuncCB) ( 3, GLUT_UP, lastx, lasty ) ;
     }
     else
     {
-    if ( glutPassiveMotionFuncCB )    
+    if ( glutPassiveMotionFuncCB )
         (*glutMouseFuncCB) ( 4, GLUT_DOWN, lastx, lasty ) ;
-    if ( glutPassiveMotionFuncCB )    
+    if ( glutPassiveMotionFuncCB )
         (*glutMouseFuncCB) ( 4, GLUT_UP, lastx, lasty ) ;
     }
-      
+
     case WM_KEYDOWN:
       // If the key is already down, we are on auto-repeat.  Break if the autorepeat is disabled.
       if ( ( updown == GLUT_DOWN ) && ( (int)wParam == old_key ) )
@@ -417,15 +417,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	    // special up
 	    if(special && updown==GLUT_UP && glutSpecialUpFuncCB && !repeating)
 		glutSpecialUpFuncCB(key,lastx,lasty);
-        
+
         // normal
 	    if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
 		glutKeyboardFuncCB(key,lastx,lasty);
 
-        
+
         /*if(!special && repeating && glutKeyboardFuncCB)
         glutKeyboardFuncCB(key,lastx,lasty);*/
-        
+
         //(*kbCB) ( key, updown, lastx, lasty ) ;
         }
       break;
@@ -434,7 +434,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
       size[0] = LOWORD(lParam) ;
       size[1] = HIWORD(lParam) ;
       _glutWindowSize[0]=size[0];
-      _glutWindowSize[1]=size[1];    
+      _glutWindowSize[1]=size[1];
       if (glutReshapeFuncCB)
     	    glutReshapeFuncCB(size[0], size[1]);
       break;
