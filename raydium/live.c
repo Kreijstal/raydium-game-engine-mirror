@@ -242,7 +242,7 @@ if (dev->fd<0)
         strcpy(dev->name,webcam_name_list);
     
     // Perhaps needed config dialog.
-    //   capDlgVideoDisplay( dev->hWnd_WC );
+    //    capDlgVideoDisplay( dev->hWnd_WC );
     //	capDlgVideoFormat ( dev->hWnd_WC );
     //	capDlgVideoSource ( dev->hWnd_WC );
         dev->hDC_WC = GetDC(dev->hWnd_WC);
@@ -404,12 +404,13 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
     dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
     dev->capture_video_format.bmiHeader.biPlanes = 1;
+    dev->capture_video_format.bmiHeader.biSize = sizeof(BITMAPINFO);
     
     if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
     {
         raydium_log("live: ERROR: not a capSetVideoFormat to RGB 24bpp Failed device '%s'",device);
- /*       raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
-        capDlgVideoFormat ( dev->hWnd_WC );*/
+        raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
+        capDlgVideoFormat ( dev->hWnd_WC );
     }
     
     if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO)))
