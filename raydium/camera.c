@@ -561,7 +561,7 @@ void raydium_camera_freemove(int move)
 {
     float dir_x, dir_y;
 
-    //declaring ans setting variables. Statics, to store the values betwen calls
+    //declaring and setting variables. Statics, to store the values betwen calls
     static GLfloat rffp_cam_angle_x = 0;
     static GLfloat rffp_cam_angle_y = 90;
     static GLfloat rffp_cam_pos_x = 0;
