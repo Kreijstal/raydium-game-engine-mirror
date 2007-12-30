@@ -8,6 +8,11 @@
 
 #include "raydium/index.c"
 
+signed char attached=0; // is camera attached to something ?
+int attached_id; // if yes, which element is it ?
+dReal attached_pos[3]; // and where the camera is ? (relative to this element)
+dReal attached_lookat[3]; // and what are we looking at ? (relative, too)
+
 
 void display(void)
 {
@@ -31,11 +36,54 @@ else if(raydium_key[GLUT_KEY_F3])
     raydium_ode_capture_speed(-0.1);
 else
     raydium_ode_capture_speed( (float)playing );
+
+
+if(raydium_mouse_click==1)
+  {
+  if(!attached)
+    {
+    int id;
+    dReal pos[3];
+    dReal cam[3];
+    dReal dist;
+
+    id = raydium_ode_mouse_pick(100,pos,&dist);
+    
+    if(id>=0)
+	{
+	// attached_pos (camera pos to element's space)
+	cam[0]=raydium_camera_x;
+	cam[1]=raydium_camera_y;
+	cam[2]=raydium_camera_z;
+	raydium_ode_element_world2rel(id,cam,attached_pos);
+	// attached_lookat (impact pos to element's space)
+	raydium_ode_element_world2rel(id,pos,attached_lookat);
+	attached_id=id;
+	attached=1;
+	}    
+    }
+  else // is alread attached
+    {
+    attached=0;
+    }
+  }
+
+if(attached && !raydium_ode_element_isvalid(attached_id))
+    attached=0;
     
 raydium_clear_frame();
-raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
+
+if(!attached)
+    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
+else
+    raydium_ode_element_camera_inboard(attached_id,
+		    attached_pos[0],attached_pos[1],attached_pos[2],
+		    attached_lookat[0],attached_lookat[1],attached_lookat[2]);
+    
+
 raydium_ode_draw_all(0);
 raydium_osd_printf(2,98,18,0.5,"font2.tga","^CSPACE^F: start/stop  ^CF1/F2^F: -10x/10x  ^CF3/F4^F: -0.1x/0.1x");
+raydium_osd_printf(2,94,18,0.5,"font2.tga","^CLeft Click^F: Attach/detach camera to targeted element");
 raydium_rendering_finish();
 }
 
