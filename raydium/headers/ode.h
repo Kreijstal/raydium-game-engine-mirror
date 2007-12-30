@@ -528,6 +528,40 @@ __rayapi void raydium_ode_element_ttl_set_name (char *e, int ttl);
 Same as above, but using element's name.
 **/
 
+__rayapi signed char raydium_ode_element_rel2world(int element,dReal *rel,dReal *world);
+/**
+Utility function that take a point on a ##element## (##rel## is a dReal[3]) and
+return  that point's position or velocity in world coordinates (##world## is 
+a dReal[3] too).
+
+No memory allocation is done here.
+
+This function can be used on normal and static elements.
+Note: This is a "Raydium clone" of dBodyGetRelPointPos.
+**/
+
+__rayapi signed char raydium_ode_element_world2rel(int element,dReal *world,dReal *rel);
+/**
+Inverse of ##raydium_ode_element_rel2world.## Input (##world##) is in world
+coordinates and ouput (##rel##) is in ##element##'s relative space.
+
+No memory allocation is done here.
+
+This function can be used on normal and static elements.
+Note: This is a "Raydium clone" of dBodyGetPosRelPoint.
+**/
+
+__rayapi signed char raydium_ode_element_vect2world(int element,dReal *vect,dReal *world);
+/**
+Given a vector expressed in the ##element## coordinate system (dReal[3]), 
+rotate it to the world coordinate system (##world##, dReal[3]).
+
+No memory allocation is done here.
+
+This function can be used on normal and static elements.
+Note: This is a "Raydium clone" of dBodyVectorToWorld.
+**/
+
 __rayapi signed char raydium_ode_element_aabb_get (int element, dReal * aabb);
 /**
 AABB means Axis-Aligned Bounding Box. This function will return element's

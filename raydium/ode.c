@@ -802,6 +802,110 @@ raydium_ode_element_ttl_set(raydium_ode_element_find(e),ttl);
 }
 
 
+signed char raydium_ode_element_rel2world(int element,dReal *rel,dReal *world)
+{
+dBodyID body;
+
+if(!raydium_ode_element_isvalid(element))
+    {
+    raydium_log("ODE: Error: Cannot rel2world: element is not valid");
+    return 0;
+    }
+
+if(raydium_ode_element[element].state==RAYDIUM_ODE_STANDARD)
+    {
+    dBodyGetRelPointPos(raydium_ode_element[element].body,rel[0],rel[1],rel[2],world);
+    }
+else // ... body is STATIC
+    {
+    dReal *pos;
+    dReal rot[4];
+
+    pos=(dReal *)dGeomGetPosition(raydium_ode_element[element].geom);
+    dGeomGetQuaternion(raydium_ode_element[element].geom,rot);
+
+    body=dBodyCreate(raydium_ode_world); // fake temporary body
+    dBodySetPosition(body,pos[0],pos[1],pos[2]);
+    dBodySetQuaternion(body,rot);
+    
+    dBodyGetRelPointPos(body,rel[0],rel[1],rel[2],world);
+
+    dBodyDestroy(body);
+    }
+
+return 1;
+}
+
+
+signed char raydium_ode_element_world2rel(int element,dReal *world,dReal *rel)
+{
+dBodyID body;
+
+if(!raydium_ode_element_isvalid(element))
+    {
+    raydium_log("ODE: Error: Cannot rel2world: element is not valid");
+    return 0;
+    }
+
+if(raydium_ode_element[element].state==RAYDIUM_ODE_STANDARD)
+    {
+    dBodyGetPosRelPoint(raydium_ode_element[element].body,world[0],world[1],world[2],rel);
+    }
+else // ... body is STATIC
+    {
+    dReal *pos;
+    dReal rot[4];
+
+    pos=(dReal *)dGeomGetPosition(raydium_ode_element[element].geom);
+    dGeomGetQuaternion(raydium_ode_element[element].geom,rot);
+
+    body=dBodyCreate(raydium_ode_world); // fake temporary body
+    dBodySetPosition(body,pos[0],pos[1],pos[2]);
+    dBodySetQuaternion(body,rot);
+    
+    dBodyGetPosRelPoint(body,world[0],world[1],world[2],rel);
+
+    dBodyDestroy(body);
+    }
+
+return 1;
+}
+
+signed char raydium_ode_element_vect2world(int element,dReal *vect,dReal *world)
+{
+dBodyID body;
+
+if(!raydium_ode_element_isvalid(element))
+    {
+    raydium_log("ODE: Error: Cannot rel2world: element is not valid");
+    return 0;
+    }
+
+if(raydium_ode_element[element].state==RAYDIUM_ODE_STANDARD)
+    {
+    dBodyVectorToWorld(raydium_ode_element[element].body,vect[0],vect[1],vect[2],world);
+    }
+else // ... body is STATIC
+    {
+    dReal *pos;
+    dReal rot[4];
+
+    pos=(dReal *)dGeomGetPosition(raydium_ode_element[element].geom);
+    dGeomGetQuaternion(raydium_ode_element[element].geom,rot);
+
+    body=dBodyCreate(raydium_ode_world); // fake temporary body
+    dBodySetPosition(body,pos[0],pos[1],pos[2]);
+    dBodySetQuaternion(body,rot);
+    
+    dBodyVectorToWorld(body,vect[0],vect[1],vect[2],world);
+
+    dBodyDestroy(body);
+    }
+
+return 1;
+}
+
+
 // aabb is dReal[6]
 signed char raydium_ode_element_aabb_get(int element, dReal *aabb)
 {
@@ -1192,6 +1296,7 @@ dGeomDestroy(e->ray[ray_id].geom);
 e->ray[ray_id].state=0;
 return 1;
 }
+
 
 signed char raydium_ode_element_ray_delete_name(char *element, int ray_id)
 {
