@@ -1519,6 +1519,7 @@ __rayapi void raydium_ode_element_camera_inboard (int e, dReal px, dReal py, dRe
 RayODE to camera API bridge.
 Sets the camera on element ##e## at relative position (##px##,##py##,##pz##),
 and looking at (##lookx##,##looky##,##lookz##) relative point.
+Works with normal and static elements.
 **/
 
 __rayapi void raydium_ode_element_camera_inboard_name (char *name, dReal px, dReal py, dReal pz, dReal lookx, dReal looky, dReal lookz);

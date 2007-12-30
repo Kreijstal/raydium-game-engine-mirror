@@ -3374,24 +3374,30 @@ return -1;
 void raydium_ode_element_camera_inboard(int e, dReal px, dReal py, dReal pz, dReal lookx, dReal looky, dReal lookz)
 {
 dBodyID body;
-dVector3 face,up,cam;
+dVector3 point,face,up,cam;
 if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot set camera on element: invalid name or index");
     return;
     }
 
-if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
-    {
-    raydium_log("ODE: Error: cannot put camera on a static element");
-    return;
-    }
-//glLoadIdentity();
 raydium_camera_internal_prepare();
-body=raydium_ode_element[e].body;
-dBodyGetRelPointPos(body,px,py,pz,cam);
-dBodyGetRelPointPos(body,lookx,looky,lookz,face);
-dBodyVectorToWorld (body,0,0,1,up);
+
+point[0]=px;
+point[1]=py;
+point[2]=pz;
+raydium_ode_element_rel2world(e,point,cam);
+
+point[0]=lookx;
+point[1]=looky;
+point[2]=lookz;
+raydium_ode_element_rel2world(e,point,face);
+
+point[0]=0;
+point[1]=0;
+point[2]=1;
+raydium_ode_element_vect2world(e,point,up);
+
 gluLookAt(cam[0],cam[1],cam[2],face[0],face[1],face[2],up[0],up[1],up[2]);
 raydium_camera_internal(cam[0], cam[1], cam[2]);
 }
