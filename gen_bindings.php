@@ -17,7 +17,11 @@
 // website, you may find some "ready-to-use" binaries. Contact us on the
 // forum otherwise.
 
+// raycomp: standard compilation flags for Raydium. See ocomp.sh.
+$raycomp="-L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg -Iraydium/ode/include/ raydium/ode/ode/src/libode.a -lvorbis -lvorbisfile -logg -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a -lresolv -lcrypt -lz -lcurl -lxml2 -lGLEW";
 $nobindings="//!NOBINDINGS";
+
+
 
 //////////// functions
 
@@ -104,6 +108,7 @@ echo "\n";
 // Will use interface file to generate Perl5 wrappers, using SWIG
 function swig_wrappers_perl()
 {
+global $raycomp;
 if(chdir("raydium/swig")===false)
     die("not in Raydium's root dir, cannot find swig dir\n");
 
@@ -115,14 +120,14 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Perl5:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/raydium.so -Iode/include/ -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM -I/usr/lib/perl5/5.8.3/i386-linux-thread-multi/CORE/ -D_REENTRANT -D_GNU_SOURCE -DTHREADS_HAVE_PIDS -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/include/gdbm  -L/usr/X11R6/lib/ -lGL -lglut -lGLU -lm -lopenal -Iode/include/ ode/lib/libode.a -lvorbis -lvorbisfile -logg -Iphp/ -Iphp/include -Iphp/main/ -Iphp/Zend -Iphp/TSRM php/libs/libphp4.a -lresolv -lcrypt -lz";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/raydium.so -I/usr/lib/perl5/5.8.3/i386-linux-thread-multi/CORE/ -D_REENTRANT -D_GNU_SOURCE -DTHREADS_HAVE_PIDS -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/include/gdbm $raycomp";
 echo "\n";
 }
 
 // Will use interface file to generate Python wrappers, using SWIG
 function swig_wrappers_python()
 {
-
+global $raycomp;
 $argvmap=<<<EOHC
 
 %include exception.i
@@ -239,7 +244,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.4/ -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg -Iraydium/ode/include/ raydium/ode/lib/libode.a -lvorbis -lvorbisfile -logg -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a -lresolv -lcrypt -lz -lcurl -lxml2 -lGLEW";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.4/ $raycomp";
 echo "\n\n";
 echo "You may need to adapt python devel lib path\n";
 }
@@ -247,7 +252,7 @@ echo "You may need to adapt python devel lib path\n";
 
 function swig_wrappers_java()
 {
-
+global $raycomp;
 $maps=<<<EOS
 
 %javaconst(1);
@@ -319,19 +324,23 @@ if($ret!=0)
 
 
 chdir("../..");
-echo "Java source code generated, you must now compile it:\n";
-echo "# cd raydium/swig\n";
-echo "# javac org/raydium/*.java\n";
-echo "# rm -f org/raydium/*.java\n";
-echo "# jar cf raydium.jar\n";
-echo "# cd ../..\n";
-echo "\n";
+echo "--------------------------------------------------\n";
 echo "You must now compile the native Raydium lib.\n";
 echo "Compile example (see ocomp.sh for up to date gcc args) for Java:\n";
-echo "gcc -g -Wall -shared raydium/swig/org/raydium/raydium_wrap.c -o raydium/swig/libraydium.so  -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg -Iraydium/ode/include/ raydium/ode/lib/libode.a -lvorbis -lvorbisfile -logg -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a -lresolv -lcrypt -lz -lcurl -lxml2 -lGLEW -I/opt/java_ee_sdk-5_02/jdk/include/ -I/opt/java_ee_sdk-5_02/jdk/include/linux";
+echo "gcc -g -Wall -shared raydium/swig/org/raydium/raydium_wrap.c -o raydium/swig/libraydium.so -I/opt/java_ee_sdk-5_02/jdk/include/ -I/opt/java_ee_sdk-5_02/jdk/include/linux $raycomp";
 echo "\n\n";
 echo "You must probably change the two endings Java include paths (-I...) in this command line.\n";
-echo "(Unix users: do not forget LD_LIBRARY_PATH at runtime ...)\n";
+echo "\n";
+echo "You must also compile Java source code:\n";
+echo "# cd raydium/swig\n";
+echo "# javac org/raydium/*.java org/raydium/*.c\n";
+echo "# jar cf raydium.jar org\n";
+echo "\n";
+echo "To test all this:\n";
+echo "# javac Test.java\n";
+echo "# export LD_LIBRARY_PATH=.\n";
+echo "# java Test\n";
+echo "\n";
 }
 
 ///////////// "main"

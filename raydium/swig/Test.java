@@ -124,6 +124,7 @@ public static void main(String p[])
     raydium.raydium_light_conf_7f(0,50,150,200,1000000,1,0.9f,0.5f);
     raydium.raydium_background_color_change(1,0.9f,0.5f,1);
     raydium.raydium_fog_disable();
+    raydium.raydium_shadow_enable();
     raydium.raydium_ode_ground_set_name("cocorobix.tri");
     new Car();
     new Display().renderLoop();

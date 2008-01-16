@@ -97,6 +97,7 @@ raydium.raydium_light_on(0);
 raydium.raydium_light_conf_7f(0,50,150,200,1000000,1,0.9,0.5)
 raydium.raydium_background_color_change(1,0.9,0.5,1)
 raydium.raydium_fog_disable();
+raydium.raydium_shadow_enable();
 raydium.raydium_ode_ground_set_name("cocorobix.tri");
 create_car();
 

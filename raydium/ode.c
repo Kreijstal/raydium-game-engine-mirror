@@ -3373,7 +3373,7 @@ return -1;
 
 void raydium_ode_element_camera_inboard(int e, dReal px, dReal py, dReal pz, dReal lookx, dReal looky, dReal lookz)
 {
-dBodyID body;
+//dBodyID body;
 dVector3 point,face,up,cam;
 if(!raydium_ode_element_isvalid(e))
     {
