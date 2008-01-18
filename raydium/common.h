@@ -32,9 +32,12 @@
 #       define __global __declspec(dllexport)
 #       define __rayapi __declspec(dllexport)
 #   endif
+# else
+#    define __global
+#    define __rayapi
 # endif
 #else // Not under WIN32
-# ifdef LIBRAY
+# ifdef LIBRAY // (See Makefile)
 #    define __global
 #    define __rayapi
 # else
