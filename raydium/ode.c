@@ -5092,7 +5092,7 @@ else
 // You may have a look to revision 591, there was a big bunch of code here ...
 fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[step],SEEK_SET);
 raydium_ode_capture_internal_read_move(0);
-if(step+1<raydium_ode_record_index_size)
+if((unsigned int)step+1<raydium_ode_record_index_size)
     {
     fseek(raydium_ode_record_play_fp,raydium_ode_record_index_moves[step+1],SEEK_SET);
     raydium_ode_capture_internal_read_move(1);
