@@ -78,7 +78,7 @@ Value is an integer.
 __rayapi signed char raydium_shader_var_i_name(char *shader, char *variable, int value);
 /**
 Same as above, but using shader's name and variable's name. This function is
-able to change the ##variable##'s ##value## even is the ##shader## is not
+able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 
@@ -92,7 +92,7 @@ Value is a float.
 __rayapi signed char raydium_shader_var_f_name(char *shader, char *variable, float value);
 /**
 Same as above, but using shader's name and variable's name. This function is
-able to change the ##variable##'s ##value## even is the ##shader## is not
+able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 
@@ -106,7 +106,7 @@ Value is an "array" of 2 floats (vec2).
 __rayapi signed char raydium_shader_var_2f_name(char *shader, char *variable, float value1, float value2);
 /**
 Same as above, but using shader's name and variable's name. This function is
-able to change the ##variable##'s ##value## even is the ##shader## is not
+able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 
@@ -120,7 +120,7 @@ Value is an "array" of 3 floats (vec3).
 __rayapi signed char raydium_shader_var_3f_name(char *shader, char *variable, float value1, float value2, float value3);
 /**
 Same as above, but using shader's name and variable's name. This function is
-able to change the ##variable##'s ##value## even is the ##shader## is not
+able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 
@@ -134,7 +134,7 @@ Value is an "array" of 4 floats (vec4).
 __rayapi signed char raydium_shader_var_4f_name(char *shader, char *variable, float value1, float value2, float value3, float value4);
 /**
 Same as above, but using shader's name and variable's name. This function is
-able to change the ##variable##'s ##value## even is the ##shader## is not
+able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 

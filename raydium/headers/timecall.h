@@ -21,7 +21,7 @@ at the desired rate.
 // Constraints
 /**
 There is an important risk with timecalls: infinite loops.
-If a callback is long, it may take more CPU time than he would, as in this
+If a callback is long, it may take more CPU time than ig should, as in this
 very simple example:
 
 foo() is a function, taking 200 ms for his own execution. If you ask for 

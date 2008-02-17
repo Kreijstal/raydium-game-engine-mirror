@@ -30,7 +30,7 @@ change quality factor and output size. Use "hardware friendly" sizes (64,
 128,256,...) !
 You can now build JPGS file:
 ##./mk_jpgs 25 256 256 video.jpgs## (fps, size x, size y, output file)
-If you wan to extract the audio, use this:
+If you want to extract the audio, use this:
 ##mplayer -vc nul -vo null -ao pcm:file=audio.dump movie.avi##
 ##oggenc audio.dump##
 **/
@@ -42,7 +42,7 @@ Internal use.
 
 __rayapi signed char raydium_video_isvalid(int i);
 /**
-Internal use, but you can call this function if you want to verify if a
+Internal use, but you can call this function if you want to check if a
 video id is valid (in bounds and open).
 **/
 

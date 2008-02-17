@@ -193,6 +193,7 @@ if(mode=='r')
     char ext[RAYDIUM_MAX_NAME_LEN];
     int i;
 
+    // Just thinking ... should'nt we check "." after all other paths ?
     if(raydium_file_readable(in))
 	return;
 

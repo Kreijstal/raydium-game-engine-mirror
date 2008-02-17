@@ -15,15 +15,15 @@ When the file is open for writing, Raydium will check if the current working
 directory is writable. If this is not the case, Raydium will try to write the
 file in the user home directory (~/.appname/data/), and will create it if
 needed.
-For reading, Raydium will also use the current directory first, and then will
-search in a list of directories of your choice. The user home directory is
-registered by default in this list.
+For reading, Raydium will also use the current directory **first**, and then
+will search in a list of directories of your choice (see example below). 
+The user home directory is registered by default in this list.
 
 If the '/' character is present in the requested filename, the path system
 is disabled and regular fopen() behavior is used.
 **/
 
-// Example
+// Example of directory registering:
 /**
 %%(c)
 raydium_path_ext("./media/textures/","tga");
@@ -99,10 +99,10 @@ You should probably better use ##raydium_path_string_from()##.
 
 __rayapi void raydium_path_write_local_deny(signed char deny);
 /**
-By default, Raydium always tries to write in the local directory (binary's directory,
-in other words), and if it's not possible, did it in the registered writing
-directory. Using this function (with deny=1) will force Raydium to use the second
-option each time. Then Raydium will never write to local directory.
+By default, Raydium always tries to write in the local directory (binary's 
+directory, in other words), and if it's not possible, did it in the registered
+writing directory. Using this function (with deny=1) will force Raydium to use 
+the second option each time. Then Raydium will never write to local directory.
 **/
 
 __rayapi void raydium_path_init(void);
