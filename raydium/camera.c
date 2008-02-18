@@ -556,14 +556,6 @@ int i;
        }
     raydium_log("Viewport %s not found.",name);
 }
-    //need tests and documentation
-    void raydium_camera_freemove_get_3f_pos(GLfloat posx, GLfloat posy, GLfloat posz)
-{
-    posx=rffp_cam_pos_x;
-    posy=rffp_cam_pos_y;
-    posz=rffp_cam_pos_z;
-    
-}
 
 void raydium_camera_freemove(int move)
 {
