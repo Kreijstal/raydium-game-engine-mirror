@@ -471,6 +471,7 @@ typedef struct raydium_camera_Path
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
 __global signed char raydium_camera_path_reset_flag;
 
+
 typedef struct raydium_Viewport
 {
     char    name[RAYDIUM_MAX_NAME_LEN];
@@ -593,6 +594,8 @@ __global GLfloat raydium_osd_logo_angle;
 __global GLuint  raydium_osd_cursor_texture;
 __global GLfloat raydium_osd_cursor_xsize;
 __global GLfloat raydium_osd_cursor_ysize;
+__global GLfloat raydium_osd_cursor_xoffset;
+__global GLfloat raydium_osd_cursor_yoffset;
 __global GLfloat raydium_osd_color[4];
 #ifdef MAIN_C
 __global GLfloat raydium_osd_ega[]=

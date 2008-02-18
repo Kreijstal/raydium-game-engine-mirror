@@ -143,6 +143,13 @@ raydium_osd_cursor_set("BOXcursor.tga",4,4);
 You can set ##texture## to NULL or empty string to cancel OSD cursor texture.
 **/
 
+__rayapi void raydium_osd_cursor_offset(GLfloat xoffset, GLfloat yoffset);
+/**
+This function allows to offset the cursor. Used with non-regular cursor
+textures. The units are percentage of the screen.
+**/
+
+
 __rayapi void raydium_osd_cursor_draw (void);
 /**
 Internal use.

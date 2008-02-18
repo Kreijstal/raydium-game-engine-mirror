@@ -235,14 +235,20 @@ raydium_osd_cursor_xsize=xsize;
 raydium_osd_cursor_ysize=ysize;
 }
 
+void raydium_osd_cursor_offset(GLfloat xoffset, GLfloat yoffset)
+{
+raydium_osd_cursor_xoffset=xoffset;
+raydium_osd_cursor_yoffset=yoffset;	
+}
+
 void raydium_osd_cursor_draw(void)
 {
 if(!raydium_osd_cursor_texture || !raydium_window_tx) return;
 
 raydium_osd_start();
 
-glTranslatef(((GLfloat)raydium_mouse_x/raydium_window_tx)*100.f,
-((GLfloat)(raydium_window_ty-raydium_mouse_y)/raydium_window_ty)*100.f,0);
+glTranslatef((((((GLfloat)raydium_mouse_x)/raydium_window_tx))*100.f) +raydium_osd_cursor_xoffset,
+((((GLfloat)(raydium_window_ty-raydium_mouse_y)/raydium_window_ty))*100.f) +raydium_osd_cursor_yoffset,0);
 
 raydium_texture_current_set(raydium_osd_cursor_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
