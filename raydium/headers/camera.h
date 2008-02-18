@@ -206,6 +206,11 @@ Draw contents of ##name## viewport to screen
 ##sx##,##sy## are size in screen percents.
 **/
 
+__rayapi void raydium_camera_freemove_get_3f_pos(GLfloat posx, GLfloat posy, GLfloat posz);
+/** 
+Experimental do not use
+**/
+
 __rayapi void raydium_camera_freemove(int move);
 /**
 This function is a fast & easy way to create a working camera that can move 
