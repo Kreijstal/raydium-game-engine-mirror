@@ -65,6 +65,7 @@ int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)
  return SUCCESS;
 }
 
+// Ref: main/SAPI.h in PHP source tree
 static sapi_module_struct raydium_sapi_module = 
 {
 	"RayHandler",                   /* name */
@@ -127,7 +128,8 @@ static sapi_module_struct raydium_sapi_module =
 // 258:         void (*ini_defaults)(HashTable *configuration_hash);
 	NULL,
 // 259:         int phpinfo_as_text;
-	1
+	1,
+	NULL	/* char *ini_entries; */
 };
 
 
