@@ -343,6 +343,20 @@ strcpy(path,PHP_INI_PATH);
 raydium_sapi_module.php_ini_path_override=path;
 sapi_startup(&raydium_sapi_module);
 raydium_atexit(raydium_php_close);
-raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,"rayphp");
+
+raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,"");
+
+if (!strlen(raydium_php_rayphp_path)){
+    DIR * rphp;
+    
+    rphp=opendir("../raydium/rayphp");
+    if (rphp){
+        closedir(rphp);
+        strcpy(raydium_php_rayphp_path,"../raydium/rayphp");
+    }
+}
+if (!strlen(raydium_php_rayphp_path)) // Restore old behavior rayphp as default.
+        strcpy(raydium_php_rayphp_path,"rayphp");
+raydium_log("PHP R3S Scripts: %s",raydium_php_rayphp_path);
 raydium_log("PHP support: OK");
 }
