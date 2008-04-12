@@ -34,7 +34,16 @@ search_here($data_dir);
 
 // let's clean things, now
 $off=file("mania_drive.story.beg");
-$off=array_merge($off,file("mania_drive.story.pro"));
+if ($off==false){
+    raydium_file_home_path_cpy("data/mania_drive.story.beg",$data_dir);
+    $off=file($data_dir);
+}
+$off2=file("mania_drive.story.pro");
+if ($off2==false){
+    raydium_file_home_path_cpy("data/mania_drive.story.pro",$data_dir);
+    $off2=file($data_dir);
+}
+$off=array_merge($off,$off2);
 
 //var_dump($tracks);
 
