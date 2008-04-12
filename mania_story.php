@@ -11,6 +11,15 @@ $scores=array();
 function get_data($mni)
 {
 $a=file($mni);
+if ($a==FALSE){
+    $smni=str_pad('',1000);
+    raydium_file_home_path_cpy("data/".$mni,$smni);
+}
+$a=file($smni);
+if ($a==FALSE){
+echo "Track ".$nmi." Not Found\n"; 
+return array("$mni","unknown","0","0");
+}
 for($i=0;$i<count($a);$i++)
     {
     $l=$a[$i];
@@ -42,7 +51,6 @@ return $best;
 }
 
 ///////////// main
-
 $story=file($story_file);
 
 $state_file=str_pad('',1000);
