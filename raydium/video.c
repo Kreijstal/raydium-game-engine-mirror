@@ -306,12 +306,16 @@ return raydium_video_isplaying(raydium_video_find(name));
 
 void raydium_video_fps_change(int id, float fps)
 {
+float ratio;
 if(!raydium_video_isvalid(id))
     {
     raydium_log("video: ERROR: cannot change FPS: invalid index or name");
     return;
     }
+
+ratio=raydium_video_video[id].fps/fps;
 raydium_video_video[id].fps=fps;
+raydium_video_video[id].elapsed*=ratio;
 }
 
 void raydium_video_fps_change_name(char *name, float fps)
