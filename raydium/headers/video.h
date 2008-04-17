@@ -127,4 +127,16 @@ __rayapi signed char raydium_video_isplaying_name(char *name);
 Same as above, using video name.
 **/
 
+__rayapi void raydium_video_fps_change(int id, float fps);
+/**
+This function will change the play rate of video ##id## to ##fps## frames
+per second.
+**/
+
+__rayapi void raydium_video_fps_change_name(char *name, float fps);
+/**
+Same as above, using video name.
+**/
+
+
 #endif

@@ -302,3 +302,20 @@ signed char raydium_video_isplaying_name(char *name)
 {
 return raydium_video_isplaying(raydium_video_find(name));
 }
+
+
+void raydium_video_fps_change(int id, float fps)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot change FPS: invalid index or name");
+    return;
+    }
+raydium_video_video[id].fps=fps;
+}
+
+void raydium_video_fps_change_name(char *name, float fps)
+{
+raydium_video_fps_change(raydium_video_find(name),fps);
+}
+
