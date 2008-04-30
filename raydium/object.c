@@ -125,6 +125,23 @@ else
 raydium_object_draw(raydium_object_load(name));
 }
 
+void raydium_object_translate(GLuint obj,GLfloat tx,GLfloat ty,GLfloat tz)
+{
+ GLuint i;
+
+if(!raydium_object_isvalid(obj))
+    {
+    raydium_log("object: deform: ERROR: id or name is invalid");
+    return;
+    }
+
+for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
+    {
+    raydium_vertex_x[i]-=tx;
+    raydium_vertex_y[i]-=ty;
+    raydium_vertex_z[i]-=tz;
+    }   
+}
 
 void raydium_object_deform(GLuint obj,GLfloat ampl)
 {
@@ -298,7 +315,16 @@ for(i=start+1;i<end;i++)
 *ty=(max[1]-min[1]);
 *tz=(max[2]-min[2]);*/
 }
+void raydium_object_find_center(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
+{
+GLfloat min[3];
+GLfloat max[3];
 
+raydium_object_find_minmax(obj,min,max);
+*tx=(max[0]-((max[0]-min[0])/2));
+*ty=(max[1]-((max[1]-min[1])/2));
+*tz=(max[2]-((max[2]-min[2])/2));
+}
 
 void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
 {

@@ -50,6 +50,10 @@ Same as above, but you only have to provide object's ##name## (".tri file").
 If this object was not already loaded, this function will do it for you.
 **/
 
+__rayapi void raydium_object_translate(GLuint obj,GLfloat tx,GLfloat ty,GLfloat tz);
+/**
+Modify object center 
+**/
 __rayapi void raydium_object_deform (GLuint obj, GLfloat ampl);
 /**
 Early devel state. Useless as is.
