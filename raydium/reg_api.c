@@ -128,6 +128,7 @@ PHP_v_si(raydium_ode_element_ttl_set_name);
 PHP_v_s(raydium_ode_ground_set_name);
 PHP_i_sssffffff(raydium_ode_joint_attach_hinge_name);
 PHP_i_sssffffff(raydium_ode_joint_attach_hinge2_name);
+PHP_i_sii(raydium_ode_joint_attach_fixed);
 PHP_v_sf(raydium_ode_joint_break_force_name);
 PHP_v_sff(raydium_ode_joint_hinge_limits_name);
 PHP_v_si(raydium_ode_joint_hinge2_block_name);
@@ -342,6 +343,7 @@ raydium_register_function(C2PHP(raydium_ode_element_ttl_set_name),"raydium_ode_e
 raydium_register_function(C2PHP(raydium_ode_ground_set_name),"raydium_ode_ground_set_name");
 raydium_register_function(C2PHP(raydium_ode_joint_attach_hinge_name),"raydium_ode_joint_attach_hinge_name");
 raydium_register_function(C2PHP(raydium_ode_joint_attach_hinge2_name),"raydium_ode_joint_attach_hinge2_name");
+raydium_register_function(C2PHP(raydium_ode_joint_attach_fixed),"raydium_ode_joint_attach_fixed");
 raydium_register_function(C2PHP(raydium_ode_joint_break_force_name),"raydium_ode_joint_break_force_name");
 raydium_register_function(C2PHP(raydium_ode_joint_hinge_limits_name),"raydium_ode_joint_hinge_limits_name");
 raydium_register_function(C2PHP(raydium_ode_joint_hinge2_block_name),"raydium_ode_joint_hinge2_block_name");
@@ -383,7 +385,7 @@ raydium_register_variable_const_i(RAYDIUM_ODE_MOTOR_ROCKET,"RAYDIUM_ODE_MOTOR_RO
 raydium_register_variable_const_f(RAYDIUM_ODE_SLIP_ICE,"RAYDIUM_ODE_SLIP_ICE");
 raydium_register_variable_const_f(RAYDIUM_ODE_SLIP_PLAYER,"RAYDIUM_ODE_SLIP_PLAYER");
 raydium_register_variable_const_f(RAYDIUM_ODE_SLIP_NORMAL,"RAYDIUM_ODE_SLIP_NORMAL");
-
+raydium_register_variable_const_f(RAYDIUM_ODE_JOINT_FIXED,"RAYDIUM_ODE_JOINT_FIXED");
 // ode_net.c
 raydium_register_function(C2PHP(raydium_ode_network_element_isdistant),"raydium_ode_network_element_isdistant");
 raydium_register_function(C2PHP(raydium_ode_network_element_send_all),"raydium_ode_netword_element_send_all");
