@@ -255,6 +255,17 @@ int autocenter=5;         /* default value. between 0 and 100 */
     if(raydium_joy==-1)
 	    raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
 	}
+	
+    if(raydium_joy==-1)
+	{
+		raydium_log("joy: FAILED (cannot open %s)",name);
+		raydium_joy=0;
+	}
+	else
+	{
+		raydium_log("joy: OK (found)");
+	}
+	
 	raydium_init_cli_option_default("evdev",name,"/dev/input/event0");
 	    
 	raydium_joy_event_handle = open(name, O_RDWR);
@@ -264,15 +275,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
 	raydium_joy_ff_autocenter(autocenter);
 	
-	if(raydium_joy==-1)
-	{
-		raydium_log("joy: FAILED (cannot open /dev/js0 and /dev/input/js0)");
-		raydium_joy=0;
-	}
-	else
-	{
-		raydium_log("joy: OK (found)");
-	}
+
 
 	if(raydium_joy)
 	{
