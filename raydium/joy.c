@@ -253,6 +253,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
     raydium_init_cli_option_default("joydev",name,"/dev/js0");
     raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
     if(raydium_joy==-1)
+    {
 	    raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
 	}
 	
