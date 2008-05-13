@@ -3,6 +3,18 @@
 # Small and ugly "dynamic compiler" for Raydium apps, with ODE
 # Use "./odyncomp.sh test6.c" for example.
 
+# When you need special dependencies (should work, but not supported !)
+# you may define following env vars:
+
+# AR_PATH
+#	for AR Toolkit (http://artoolkit.sourceforge.net/)
+
+# LIBWII_INCLUDES
+#	for libcwiimote (http://libwiimote.sourceforge.net)
+
+# ODYNCOMP_FLAGS
+#	for anything else you may need ...
+
 ulimit -c 0
 make
 
@@ -38,7 +50,7 @@ fi
 rm test
 $CC $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM \
--Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS
+-Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS $ODYNCOMP_FLAGS
 sync
 export LD_LIBRARY_PATH=.
 shift
