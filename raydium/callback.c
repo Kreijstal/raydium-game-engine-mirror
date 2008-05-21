@@ -103,8 +103,7 @@ if(raydium_render_max_fps!=0)
 raydium_callback_loop();
 }
 
-void raydium_callback(void (*loop) )
-{
+void raydium_set_display_callback(void (*loop)){
 #ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 
@@ -113,6 +112,15 @@ if(raydium_init_cli_option("autoexec2",autoexec))
 #endif
 raydium_callback_loop=loop;
 glutDisplayFunc(raydium_callback_internal_loop_wrapper);
-glutIdleFunc(raydium_callback_internal_loop_wrapper);
+glutIdleFunc(raydium_callback_internal_loop_wrapper);    
+}
+
+void raydium_loop(void){
+    glutManualLoop();
+}
+
+void raydium_callback(void (*loop) )
+{
+raydium_set_display_callback(loop);
 glutMainLoop();
 }
