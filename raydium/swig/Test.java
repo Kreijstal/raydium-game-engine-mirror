@@ -90,7 +90,7 @@ class Display {
  
 	raydium.raydium_rendering_finish();
 
-	raydium.glutManualLoop();
+	raydium.raydium_loop();
 	}
 
     public void renderLoop()

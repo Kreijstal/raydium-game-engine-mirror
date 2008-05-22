@@ -333,7 +333,7 @@ echo "You must probably change the two endings Java include paths (-I...) in thi
 echo "\n";
 echo "You must also compile Java source code:\n";
 echo "# cd raydium/swig\n";
-echo "# javac org/raydium/*.java org/raydium/*.c\n";
+echo "# javac org/raydium/*.java\n";
 echo "# jar cf raydium.jar org\n";
 echo "\n";
 echo "To test all this:\n";
