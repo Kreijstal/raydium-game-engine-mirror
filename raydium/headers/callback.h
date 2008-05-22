@@ -31,7 +31,7 @@ This function will loop over the provided display function, indefinitely.
 %%(c) void loop(void) %%
 **/
 
-__rayapi void raydium_set_display_callback(void (*fdisplay));
+__rayapi void raydium_callback_display_set(void (*fdisplay));
 /**
 This function will install display callback but don't enter in an infinite loop.
 fdisplay is user display function.
@@ -43,6 +43,6 @@ __rayapi void raydium_loop(void);
 /**
 Run raydium once. This function needs to be called periodically.
 This function return after loop completion.
-It is usefull to integrate raydium loop in an other program.
+It is usefull to integrate raydium loop in another program.
 **/
 #endif

@@ -103,7 +103,7 @@ if(raydium_render_max_fps!=0)
 raydium_callback_loop();
 }
 
-void raydium_set_display_callback(void (*loop)){
+void raydium_callback_display_set(void (*loop)){
 #ifdef PHP_SUPPORT
 char autoexec[RAYDIUM_MAX_NAME_LEN];
 
@@ -121,6 +121,6 @@ void raydium_loop(void){
 
 void raydium_callback(void (*loop) )
 {
-raydium_set_display_callback(loop);
+raydium_callback_display_set(loop);
 glutMainLoop();
 }
