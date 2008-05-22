@@ -320,8 +320,12 @@ int raydium_init_load(char *filename)
        
      //initializing flags  
      flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=0;   
+    
+
+    // Needed here as accessing file
+    raydium_path_init();
      //opening the config file   
-    fp=raydium_file_fopen(filename,"rt");
+    fp=raydium_file_fopen(filename,"rtl"); // As php isn't initialised need to work on local
     if(fp)
     {    
         raydium_log("Reading configuration file...");
@@ -403,14 +407,14 @@ int raydium_init_load(char *filename)
             {
             	raydium_parser_trim(val_s);
                 sscanf(val_s, "%f,%f,%f,%f,%f,%f,%f,%f", &tmp_light0[0], &tmp_light0[1],&tmp_light0[2],&tmp_light0[3],&tmp_light0[4],&tmp_light0[5],&tmp_light0[6],&tmp_light0[7]);
-                raydium_log("Light number 0 values: %f,%f,%f,%f,%f,%f,%f,%f",tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]);          
+                raydium_log("Light number 0 values: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]);          
                 flag_light0=1;            
             }
              if(strcmp(var,"background")==0)
             {
             	raydium_parser_trim(val_s);
                 sscanf( val_s, "%f,%f,%f,%f", &tmp_background[0], &tmp_background[1],&tmp_background[2],&tmp_background[3]);
-                raydium_log("Background colors: %f,%f,%f,%f,%f,%f,%f,%f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
+                raydium_log("Background colors: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
                 flag_background=1;            
             }
         }
@@ -458,21 +462,47 @@ int raydium_init_load(char *filename)
     {
         //we can not load the configuration. ERROR
         raydium_log("ERROR loading configuration file.");
-        raydium_log("Loading a default fail-safe configuration.");
-        //raydium_init_args(argc,argv);
-        raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"My app");
+        if (filename!=NULL){
+            fp=raydium_file_fopen(filename,"w");
+            if (fp){
+                raydium_log("Generating default configuration file %s",filename);
+                fprintf (fp,"%s","\
+width=800                               #window width (default:  800)\n\
+height=600                              #window height (default:  600)\n\
+windowtype=\"window\"                     #window style: window or fullscreen (default: window )\n\
+title=\"Raydium Application\"             #title of the window,application (default:  Raydium application 0.1)\n\
+filter=\"aniso\"                          #texture filter: none, bilinear, trilinear, aniso (default:  trilinear)\n\
+fov=60                                  #view angle, ie fov (default:  60)\n\
+near=0.001                              #distance to the nearets object(plane) draw   (default:  0.001)\n\
+far=2500                                #distance to the further   object(plane) draw (default:  2500)\n\
+fog=\"off\"                                #fog: on/enable or off/disable (default:  off)\n\
+lighting=\"on\"                           #lighting: on/enable or off/disable (default: on )\n\
+light0=0,50,150,200,1000000,1,0.9,0.7   #light 0 parameters (default:  0,50,150,200,1000000,1,0.9,0.7)\n\
+background=1,0.9,0.7,1                  #background color (default:  1,0.9,0.7,1)\n\
+");
+            }
+            fclose(fp);
+            raydium_init_load(filename);
+            return 1;
+        }
+        if (filename==NULL || fp==NULL){
+            raydium_log("Loading a default fail-safe configuration.");
+            //raydium_init_args(argc,argv);
+            raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"My app");
 
-        raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
-        raydium_window_view_perspective(60,0.01,2500); // fov 60 + near and far planes
+            raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
+            raydium_window_view_perspective(60,0.01,2500); // fov 60 + near and far planes
 
-        raydium_fog_disable();    
-        raydium_light_enable();
-        raydium_light_on(0);
+            raydium_fog_disable();    
+            raydium_light_enable();
+            raydium_light_on(0);
 
-        raydium_light_conf_7f(0,50,150,200,1000000,1,0.9,0.7); // id, pos, intensity and color (RGB)
-        raydium_background_color_change(1,0.9,0.7,1);
+            raydium_light_conf_7f(0,50,150,200,1000000,1,0.9,0.7); // id, pos, intensity and color (RGB)
+            raydium_background_color_change(1,0.9,0.7,1);
 
-        raydium_sky_box_cache();
+            raydium_sky_box_cache();
+        }
+        if (fp) fclose(fp);
         return 0;
     }
 }
