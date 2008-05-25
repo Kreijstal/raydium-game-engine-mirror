@@ -316,10 +316,10 @@ int raydium_init_load(char *filename)
     char tmp_title[255];
     
     //flags
-    int flag_width,flag_height,flag_title,flag_windowtype,flag_filter,flag_fov,flag_near,flag_far,flag_fog,flag_lighting,flag_light0,flag_background;
+    int flag_width,flag_height,flag_title,flag_windowtype,flag_filter,flag_fov,flag_near,flag_far,flag_fog,flag_lighting,flag_light0,flag_background,flag_paths;
        
      //initializing flags  
-     flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=0;   
+     flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=flag_paths=0;   
     
 
     // Needed here as accessing file
@@ -417,6 +417,16 @@ int raydium_init_load(char *filename)
                 raydium_log("Background colors: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
                 flag_background=1;            
             }
+            //symple way to allow new paths
+            if(strcmp(var,"paths")==0)
+            {
+            	raydium_parser_trim(val_s);
+            	if(strcmp(val_s,"foldered")==0)
+            	{
+            		raydium_log("Foldered paths");
+            		flag_paths=1;
+				}
+			}
         }
             
         //Here, we process all the data achieved and make the raydium calls        
@@ -450,8 +460,26 @@ int raydium_init_load(char *filename)
         {
         	raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);    	
         }
-        
-        //This should be configurable???
+        if(flag_paths)
+        {
+        	if(flag_paths==1)
+        	{
+				raydium_path_ext("./data/textures/","tga");
+				raydium_path_ext("./data/fonts/","tga");
+				raydium_path_ext("./data/shaders/","vert");
+				raydium_path_ext("./data/shaders/","frag");
+				raydium_path_ext("./data/meshes/","tri");
+				raydium_path_ext("./data/themes/","gui");
+				raydium_path_ext("./data/particles/","prt");
+				//raydium_path_ext("./data/cars/","car");
+				raydium_path_ext("./data/cams/","cam");
+				raydium_path_ext("./data/sprites/","sprite");
+				//raydium_path_ext("./data/levels/","goals");
+				//raydium_path_ext("./data/levels/","terrain");
+			}
+		}
+        //This should be configurable??? I guess it should be .
+        //This must be placed after paths processing: Textures involved.
         raydium_sky_box_cache();  
         
         //ending load of configuration  

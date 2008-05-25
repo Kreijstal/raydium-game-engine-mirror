@@ -49,8 +49,10 @@ huge memory leaks.
 
 __rayapi int raydium_init_load(char *filename);
 /**
-This function is used to load a configuration file,##filename## ,and then it will do automatically all the process of initialization of the aplication.
-The config file must have the pattern "variable=value", one variable per line. It allow comments.
+This function is used to load a configuration file,##filename## ,and then it 
+will do automatically all the process of initialization of the aplication.
+The config file must have the pattern "variable=value", one variable per line. 
+It allow comments.
 An example(templante in fact) config file could be this one:
 ##
 
@@ -70,7 +72,8 @@ light0=0,50,150,200,1000000,1,0.9,0.7 			#light 0 parameters (default:  0,50,150
 background=1,0.9,0.7,1 							#background color (default:  1,0.9,0.7,1)
 sky="normal" 									#sky method: none, normal, sphere (default:  normal) (NOT USED YET)
 ##
-It returns 1 if the load process ends correctly, or 0 is something crash in the middle.
+It returns 1 if the load process ends correctly, or 0 is something crash in the 
+middle.
 
 **/
 
