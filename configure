@@ -11,15 +11,22 @@
 # $1 is the test name, will be put in the log
 # $2 is file content
 # $3 is gcc's options
+# $4 is compiler (default: gcc)
 test_build()
 {
+    if [ -z "$4" ]; then
+	comp="gcc"
+    else
+	comp="$4"
+    fi
+
     echo -ne "* Testing $1..."
 
     echo "" >> configure.log
-    echo "   Testing $1"           >> configure.log
+    echo "   Testing $1 ($comp)"   >> configure.log
     echo "   ====================" >> configure.log
     echo "$2" > configure.c
-    gcc -g configure.c -Wall -o configure.bin $3 >> configure.log 2>> configure.log
+    $comp -g configure.c -Wall -o configure.bin $3 >> configure.log 2>> configure.log
     
     if [ "$?" != "0" ]; then
 	echo " build: failed"
@@ -271,7 +278,7 @@ done
 # empty log
 rm configure.log 2>> /dev/null
 
-# Test compiler
+# Test C compiler
 file='int main(void) { return 0; }'
 test_build "gcc" "$file" ""
 exit_if_error "$?" "GNU C Compiler (GCC) is missing"
@@ -289,6 +296,13 @@ file='#include <GL/gl.h>
 int main(void) { return 0; }'
 test_build "GLU" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
 exit_if_error "$?" "You must install glu-devel package"
+
+# Test Xinerama
+file='#include <X11/Xlib.h>
+#include <X11/extensions/Xinerama.h>
+int main(void) { return 0; }'
+test_build "Xinerama" "$file" "-L/usr/X11R6/lib/ -lXinerama"
+exit_if_error "$?" "You must install libxinerama-devel package"
 
 # Full GL/GLU test, looking for hardware accel
 if [ $disable_x = "no" ]; then
@@ -314,8 +328,8 @@ myglutCreateWindow(320,240,RAYDIUM_RENDERING_WINDOW,"GL test");
 r=(char *)glGetString(GL_RENDERER);
 if(!strcmp(r,"Mesa GLX Indirect"))
     {
-    fprintf(stderr,"WARNING ! Mesa Software renderer detected !");
-    fprintf(stdout,"WARNING ! Mesa Software renderer detected !");
+    fprintf(stderr,"WARNING ! Indirect rendering detected !");
+    fprintf(stdout,"WARNING ! Indirect rendering detected !");
     }
 return 0; }
 '
@@ -333,6 +347,11 @@ file='
 int main(void) { glewInit(); return 0; }'
 test_build "GLEW" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
 exit_if_error "$?" "You must install libglew devel package"
+
+# Test C++ compiler
+file='int main(void) { return 0; }'
+test_build "g++" "$file" "" "g++"
+exit_if_error "$?" "GNU C++ Compiler (G++) is missing"
 
 # Check ODE installation
 ode_install
