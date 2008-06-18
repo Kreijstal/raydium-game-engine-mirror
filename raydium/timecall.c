@@ -341,7 +341,7 @@ else
 raydium_timecall_soft_call[callback]=(hz<0);
 raydium_timecall_next[callback]=raydium_timecall_clock();
 
-if(abs(hz)>raydium_timecall_max_frequency && hz>0)
+if(abs(hz)>abs(raydium_timecall_max_frequency) && hz>0)
  raydium_log("timecall: WARNING ! this callback refresh rate (%i Hz) is probably too high for this system clock (detected at %i Hz)",hz,raydium_timecall_max_frequency);
 
 if(hz>0)
