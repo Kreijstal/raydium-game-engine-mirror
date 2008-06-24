@@ -311,15 +311,15 @@ int raydium_init_load(char *filename)
     char var[255],val_s[255];
     float val_f[255];
     int size;
-    int tmp_width,tmp_height,tmp_windowtype,tmp_filter,tmp_fog,tmp_lighting;
+    int tmp_width,tmp_height,tmp_windowtype,tmp_filter,tmp_fog,tmp_lighting,tmp_hdr,tmp_sky;
     float tmp_light0[8],tmp_background[4],tmp_fov,tmp_far,tmp_near;
     char tmp_title[255];
     
     //flags
-    int flag_width,flag_height,flag_title,flag_windowtype,flag_filter,flag_fov,flag_near,flag_far,flag_fog,flag_lighting,flag_light0,flag_background,flag_paths;
+    int flag_width,flag_height,flag_title,flag_windowtype,flag_filter,flag_fov,flag_near,flag_far,flag_fog,flag_lighting,flag_light0,flag_background,flag_paths,flag_hdr,flag_sky;
        
      //initializing flags  
-     flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=flag_paths=0;   
+     flag_width=flag_height=flag_title=flag_windowtype=flag_filter=flag_fov=flag_near=flag_far=flag_fog=flag_lighting=flag_light0=flag_background=flag_paths=flag_hdr=flag_sky=0;   
     
 
     // Needed here as accessing file
@@ -414,7 +414,7 @@ int raydium_init_load(char *filename)
             {
             	raydium_parser_trim(val_s);
                 sscanf( val_s, "%f,%f,%f,%f", &tmp_background[0], &tmp_background[1],&tmp_background[2],&tmp_background[3]);
-                raydium_log("Background colors: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
+                raydium_log("Background colors: %.2f,%.2f,%.2f,%.2f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
                 flag_background=1;            
             }
             //symple way to allow new paths
@@ -427,39 +427,76 @@ int raydium_init_load(char *filename)
             		flag_paths=1;
 				}
 			}
+            //HDR effect
+            if(strcmp(var,"hdr")==0)
+            {
+            	raydium_parser_trim(val_s);
+                tmp_hdr=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
+                raydium_log("HDR: %s",(tmp_hdr?"enable":"disable"));          
+                flag_hdr=1;            
+            }
+            //sky type
+            if(strcmp(var,"sky")==0)
+            {
+            	raydium_parser_trim(val_s);
+                tmp_sky=((strcmp(val_s,"box")==0))?1:0;
+                raydium_log("Sky type: %s",(tmp_sky?"box":"dynamic"));          
+                flag_sky=1;            
+            }
         }
             
         //Here, we process all the data achieved and make the raydium calls        
-        
+        //window_create
         if(flag_width && flag_height && flag_windowtype && flag_title)
             {
                 raydium_window_create(tmp_width,tmp_height,tmp_windowtype,tmp_title);
             }
+        //texture_filter
         if(flag_filter)
             {
                 raydium_texture_filter_change(tmp_filter);
             }
+        //view_perspective
     	if (flag_fov && flag_near && flag_far)
         {
         	raydium_window_view_perspective(tmp_fov,tmp_near,tmp_far); // fov 60 + near and far planes
-        }          
+        }
+        //fog  
         if(flag_fog)
         {
-        	if(tmp_fog)raydium_fog_enable(); else raydium_fog_disable(); 
+        	if(tmp_fog)
+                raydium_fog_enable();
+            else 
+                raydium_fog_disable(); 
         }
+        //light
         if(flag_lighting)
         {
-        	if(tmp_lighting)raydium_light_enable(); else raydium_light_disable(); 
+        	if(tmp_lighting)
+                raydium_light_enable();
+            else
+                raydium_light_disable(); 
         }
         if(flag_light0 && flag_lighting && tmp_lighting)
         {
         	raydium_light_on(0);
     		raydium_light_conf_7f(tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]); 	
         }
+        //background
         if(flag_background)
         {
         	raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);    	
         }
+        //sky type
+        if(flag_sky)
+        {
+            if(tmp_sky)
+                raydium_sky_box_cache();
+            else
+                raydium_sky_atmosphere_enable();
+        }
+        //This must be placed after paths processing: Textures involved.
+        
         if(flag_paths)
         {
         	if(flag_paths==1)
@@ -474,13 +511,19 @@ int raydium_init_load(char *filename)
 				//raydium_path_ext("./data/cars/","car");
 				raydium_path_ext("./data/cams/","cam");
 				raydium_path_ext("./data/sprites/","sprite");
+				raydium_path_ext("./","tga");
 				//raydium_path_ext("./data/levels/","goals");
 				//raydium_path_ext("./data/levels/","terrain");
 			}
 		}
-        //This should be configurable??? I guess it should be .
-        //This must be placed after paths processing: Textures involved.
-        raydium_sky_box_cache();  
+    
+        if(flag_hdr && tmp_hdr)
+        {
+            raydium_hdr_init();
+            raydium_hdr_enable();
+        }
+        
+        
         
         //ending load of configuration  
         raydium_log("Configuration from conf file finished.");
@@ -495,6 +538,7 @@ int raydium_init_load(char *filename)
             if (fp){
                 raydium_log("Generating default configuration file %s",filename);
                 fprintf (fp,"%s","\
+#Automatidally generated default config file. You can custom it.\n\
 width=800                               #window width (default:  800)\n\
 height=600                              #window height (default:  600)\n\
 windowtype=\"window\"                     #window style: window or fullscreen (default: window )\n\
@@ -507,6 +551,9 @@ fog=\"off\"                                #fog: on/enable or off/disable (defau
 lighting=\"on\"                           #lighting: on/enable or off/disable (default: on )\n\
 light0=0,50,150,200,1000000,1,0.9,0.7   #light 0 parameters (default:  0,50,150,200,1000000,1,0.9,0.7)\n\
 background=1,0.9,0.7,1                  #background color (default:  1,0.9,0.7,1)\n\
+hdr=\"off\"                             #Fake HDR effect(default:off)\n\
+paths=\"foldered\"                      #data can be foldered into \"data\" folders and its subfolders: \"foldered\" or anything else. (default:\"foldered\")\n\
+sky=\"box\"                             #Sky type: \"box\" or \"dynamic\" \n\
 ");
             }
             fclose(fp);
