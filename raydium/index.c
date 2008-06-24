@@ -63,6 +63,7 @@ extern "C" {
 #include "hdr.c"
 #include "shader.c"
 #include "register.c"
+#include "sprites.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
 #include "rayphp.c"

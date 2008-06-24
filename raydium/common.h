@@ -280,6 +280,10 @@
 #define RAYDIUM_FOG_MODE_EXP			GL_EXP
 #define RAYDIUM_FOG_MODE_EXP2			GL_EXP2
 
+#define RAYDIUM_MAX_SPRITES	64
+#define RAYDIUM_MAX_FRAMES_PER_SPRITE	256
+#define RAYDIUM_SPRITE_DEBUG 1
+#define RAYDIUM_SPRITE_MAX_GROUPS	64
 
 __global int 	 raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -562,6 +566,29 @@ __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 __global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
+__global float	spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
+__global int	raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
+//__global int	raydium_current_sprite=-1;
+__global int	raydium_current_sprite;
+__global float	raydium_sprite_size[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_used[RAYDIUM_MAX_SPRITES];
+__global float	raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
+__global int	raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+__global float	raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
+__global float	raydium_sprite_time[RAYDIUM_MAX_SPRITES];
+__global float	raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_total_frames[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_group_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+__global int	raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
+__global float	raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
+__global int	raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
+__global int	raydium_sprite_type[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_status[RAYDIUM_MAX_SPRITES];
+__global char	raydium_sprite_name[RAYDIUM_MAX_SPRITES][80];
+
 #ifdef linux
 #define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX	8
 __global int raydium_network_broadcast_interface_index;
@@ -692,6 +719,9 @@ __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 __global FILE *raydium_log_file;
 __global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global int raydium_file_log_fopen_index;
+
+
+
 
 typedef struct matrix4x4
 {
