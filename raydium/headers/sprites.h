@@ -5,7 +5,6 @@
 */
 #ifndef _SPRITES_H
 #define _SPRITES_H
-#include "../sprites.h"
 /*=
 Sprites (viewer axis aligned 2D billboards)
 2900
