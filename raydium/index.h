@@ -57,7 +57,6 @@ extern "C" {
 #include "headers/hdr.h"
 #include "headers/shader.h"
 #include "headers/register.h"
-#include "headers/sprites.h"
 #ifdef PHP_SUPPORT
 #include "headers/php.h"
 #include "headers/rayphp.h"
@@ -82,6 +81,7 @@ extern "C" {
 #include "headers/video.h"
 #include "headers/web.h"
 #include "headers/reg_api.h"
+#include "headers/sprites.h"
 
 #else
 
