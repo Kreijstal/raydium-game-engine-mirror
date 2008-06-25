@@ -63,7 +63,6 @@ extern "C" {
 #include "hdr.c"
 #include "shader.c"
 #include "register.c"
-#include "sprites.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
 #include "rayphp.c"
@@ -84,6 +83,7 @@ extern "C" {
 #ifdef ODE_SUPPORT
 #include "ode.c"
 #endif
+#include "sprites.c"
 #include "live.c"
 #include "video.c"
 #include "web.c"
