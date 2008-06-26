@@ -62,7 +62,7 @@ raydium_clear_frame();
 //raydium_ode_element_camera_inboard_name("train_train",0,1,0,-3,0,-0.5);
 //raydium_ode_element_camera_inboard_name("train_train",0,0.3,-0.3,-3,0,-0.5);
 raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
-raydium_object_draw_name("rail_world_background.tri");
+//raydium_object_draw_name("rail_world_background.tri");
     
 raydium_ode_draw_all(0);
 if(raydium_key[GLUT_KEY_F1])
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
     raydium_window_view_update();
 
-    raydium_ode_ground_set_name("rail_world.tri");
+    raydium_ode_ground_set_name("rail_world_full.tri");
     raydium_register_variable(&force,RAYDIUM_REGISTER_FLOAT,"force");
 
     // preload tri files and textures
@@ -106,7 +106,11 @@ int main(int argc, char **argv)
     raydium_object_find_load("train_bw.tri");
     raydium_object_find_load("wagon.tri");
     raydium_object_find_load("train_a.tri");
+
     raydium_php_exec("train.php");
+
+    raydium_shadow_enable();
+
     raydium_callback(&display);
     return(0);
 }

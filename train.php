@@ -80,11 +80,11 @@ raydium_ode_object_delete_name("TRAIN");
 echo "train building...";
 $train=create_train();
 $previous="train_train";
-for($i=1;$i<=2;$i++)
+for($i=1;$i<=8;$i++)
     {
     $previous=create_wagon($train,$i,$previous);
     }
-$force=0.1;
+$force=1;
 
 echo "train Ok.";
 raydium_ode_object_move_name_3f("TRAIN",2,0,0.3);
