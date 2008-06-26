@@ -282,7 +282,7 @@
 
 #define RAYDIUM_MAX_SPRITES	64
 #define RAYDIUM_MAX_FRAMES_PER_SPRITE	256
-#define RAYDIUM_SPRITE_DEBUG 1
+#define RAYDIUM_SPRITE_DEBUG 0
 #define RAYDIUM_SPRITE_MAX_GROUPS	64
 
 __global int 	 raydium_init_argc;
