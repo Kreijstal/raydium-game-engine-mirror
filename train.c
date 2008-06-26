@@ -67,7 +67,12 @@ raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 raydium_ode_draw_all(0);
 if(raydium_key[GLUT_KEY_F1])
     raydium_ode_draw_all(1);
-
+//keys explanation on OSD
+raydium_osd_color_rgba(1,1,1,1);
+raydium_osd_printf(3,83,16,0.5,"font2.tga","Use keys 'a','z','e' to change the time callback");
+raydium_osd_printf(3,87,16,0.5,"font2.tga","Use keys 'HOME','END' to move the train");
+raydium_osd_printf(3,91,16,0.5,"font2.tga","Use key 'F1' to show debug ODE collision boxes");
+raydium_osd_printf(3,95,16,0.5,"font2.tga","Use cursors and mouse to move the camera");
 raydium_osd_logo("logo.tga");
     
 raydium_rendering_finish();
