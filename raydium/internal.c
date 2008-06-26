@@ -36,7 +36,7 @@ raydium_log("Using %i object(s):",raydium_object_index);
 for(si=0;si<raydium_object_index;si++)
     {
     a=raydium_object_end[si]-raydium_object_start[si];
-    raydium_log("Object num %i: %i vertex(s) - loaded as \"%s\"",si,a,raydium_object_name[i]);
+    raydium_log("Object num %i: %i vertex(s) - loaded as \"%s\"",si,a,raydium_object_name[si]);
     }
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
