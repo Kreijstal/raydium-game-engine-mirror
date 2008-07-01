@@ -19,7 +19,7 @@ See configuration file, and place data in $data_dir directory.
 Please, note that Apache (or any other HTTP server) must have write rights
 in $data_dir directory:
 # chgrp apache files/
-# chown g+w files/
+# chmod g+w files/
 (You may have to change "apache" to "httpd", "www-data" or something else).
 
 For security reasons (uploaded PHP scripts), you should deny direct access
