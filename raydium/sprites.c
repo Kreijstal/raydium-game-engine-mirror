@@ -242,7 +242,7 @@ of the new sprite.
 		raydium_sprite_collision_box_id[sid]=raydium_ode_object_create(cadena);
 		//create the ODE element
 		sprintf(cadena,"raydium_sprite_box_%d",sid);
-		raydium_ode_object_box_add(cadena,raydium_sprite_collision_box_id[sid],1,raydium_sprite_collision_box[sid][0],raydium_sprite_collision_box[sid][1],raydium_sprite_collision_box[sid][2], RAYDIUM_ODE_STANDARD,etiqueta,"");
+		raydium_sprite_collision_element_id[sid]=raydium_ode_object_box_add(cadena,raydium_sprite_collision_box_id[sid],1,raydium_sprite_collision_box[sid][0],raydium_sprite_collision_box[sid][1],raydium_sprite_collision_box[sid][2], RAYDIUM_ODE_STANDARD,etiqueta,"");
         //raydium_ode_object_cylinder_add(cadena,raydium_sprite_collision_box_id[sid],1,3,6, RAYDIUM_ODE_STATIC, 0,"");
         raydium_ode_element_move_name_3f(cadena,raydium_sprite_pos[sid][0],raydium_sprite_pos[sid][1],raydium_sprite_pos[sid][2]);
 		//listing the textures and coordinates
@@ -548,6 +548,17 @@ float *raydium_sprite_get_pos(int number)
 		return (float *) raydium_sprite_pos[number];
 	else
 		return NULL;
+}
+
+int raydium_sprite_get_id_from_element(int element)
+{
+	int a;
+	for(a=0;a<raydium_current_sprite;a++)
+	{
+		if(raydium_sprite_collision_element_id[a]==element)
+		return a;
+	}
+	return -1;
 }
 
 //function to change the type of one sprite

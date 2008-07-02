@@ -584,6 +584,7 @@ __global int	raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
 __global int	raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
 __global float	raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
 __global int	raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
+__global int	raydium_sprite_collision_element_id[RAYDIUM_MAX_SPRITES];
 __global int	raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
 __global int	raydium_sprite_type[RAYDIUM_MAX_SPRITES];
 __global int	raydium_sprite_status[RAYDIUM_MAX_SPRITES];

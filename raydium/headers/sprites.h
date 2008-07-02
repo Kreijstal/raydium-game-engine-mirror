@@ -127,6 +127,11 @@ Returns a 3float array with the position (universe coordinates) of a
 frame
 **/
 
+__rayapi int raydium_sprite_get_id_from_element(int element);
+/**
+Returns the id of an sprite from the element id given.
+**/
+
 //function to change the type of one sprite
 __rayapi int raydium_sprite_set_type(int id,int value);
 /**
