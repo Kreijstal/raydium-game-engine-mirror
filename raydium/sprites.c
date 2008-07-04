@@ -102,6 +102,18 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
     */
 }
 
+void raydium_sprite_dump_info(int id)
+{
+	int a;
+	raydium_log("SPRITE DUMP: %d",id);
+	for(a=0;a<raydium_sprite_total_frames[id];a++)
+	{
+		raydium_log("\nframe %d:\n   group: %d\n   jump to: %d\n",
+		a,
+		raydium_sprite_group_frame[id][a],
+		raydium_sprite_group_jump[id][raydium_sprite_group_frame[id][a]]);
+	}
+}
 
 //Load an sprite (filename.sprite) preloading its textures.
 //TODO:it should check if the sprite file is already loaded and if it's true
@@ -132,7 +144,7 @@ of the new sprite.
     for(group=0;group<RAYDIUM_SPRITE_MAX_GROUPS;group++)
     {
         raydium_sprite_group_start_frame[sid][group]=   -1;
-        raydium_sprite_group_jump[sid][group]       =   -2;
+        raydium_sprite_group_jump[sid][group]       =   -1;
         
     }
     raydium_sprite_size[sid]=1;
@@ -225,13 +237,13 @@ of the new sprite.
 		raydium_sprite_pos[sid][2]=0;
 		
 		//adding an standard frametime for the sprite
-		raydium_sprite_time[sid]=30;
+		raydium_sprite_time[sid]=20;
 		
 		//initializing the sprite at its first frame
 		raydium_sprite_current_frame[sid]=0;
 		
 		//storing the total number of frames
-		raydium_sprite_total_frames[sid]=i;
+		raydium_sprite_total_frames[sid]=i-1;
 		
 		//initializing the current group
 		raydium_sprite_group_current[sid]=1;
@@ -252,7 +264,7 @@ of the new sprite.
 			for(tmp=0;tmp<i;tmp++)
 			{
 				raydium_log("Frame %d use texture ID %d",tmp,raydium_sprite_textureid[sid][tmp]);
-				raydium_log("It's coordinates are: %f %f %f %f %f %f %f",raydium_sprite_coords[sid][tmp][0],raydium_sprite_coords[sid][tmp][1],raydium_sprite_coords[sid][tmp][2],raydium_sprite_coords[sid][tmp][3]);
+				raydium_log("It's coordinates are: %f %f %f %f ",raydium_sprite_coords[sid][tmp][0],raydium_sprite_coords[sid][tmp][1],raydium_sprite_coords[sid][tmp][2],raydium_sprite_coords[sid][tmp][3]);
 			}
 			for(group=0;group<RAYDIUM_SPRITE_MAX_GROUPS;group++)
 			{
@@ -362,6 +374,8 @@ void raydium_sprite_display(int id)
 {
 	raydium_camera_replace();
     int grp;
+    int lastone=0;
+    
     grp = raydium_sprite_group_current[id];
     sprite_render_frame(raydium_sprite_pos[id][0],raydium_sprite_pos[id][1],raydium_sprite_pos[id][2],id,raydium_sprite_current_frame[id],1,1);
     //adding the frametime to the loop...Hmmm, not sure about this...
@@ -369,46 +383,83 @@ void raydium_sprite_display(int id)
     //Is it time to draw a new frame?
     if(raydium_sprite_timer[id]>=raydium_sprite_time[id])
     {
+    	
         //erase the counter
         raydium_sprite_timer[id]=0;
-        
-        //Check if the next frame and the current one have the same group ID
-        if(raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]+1]==raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]])
+        raydium_sprite_stopped[id]=0;
+        //if this is the last frame of the sprite...
+		if (raydium_sprite_total_frames[id]==raydium_sprite_current_frame[id]) //this is the last frame
+		{
+			//raydium_log("last frame!!! total: %d number: %d",raydium_sprite_total_frames[id],raydium_sprite_current_frame[id]);
+			lastone=1;
+		}
+		else
+		{
+			lastone=0;
+		}
+		
+        //if not the last frame of the sprite, check if the next frame and the current one have the same group ID
+        if(!lastone && raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]+1]==raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]] )
         {
             //if they have the same group ID, then just advance one frame
             raydium_sprite_current_frame[id]++;
-        }
-        else //if they are different
+        }         
+        else //if they are different or this is the last frame of the sprite
         {
-            //if the group has an "stop" tag
-            if(raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]==-1)
+        	//raydium_log("nextjump: %d",raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]);
+        	//if the group has an "stop" tag
+            if(raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]==-1)
             {
                 if(RAYDIUM_SPRITE_DEBUG)raydium_log("Group %d has an STOP tag(-1)",grp);
+                raydium_sprite_stopped[id]=1;
                 //do nothing. PAUSE THE ANIMATION
             }
-            //if the group has no jump info -> LOOP. 
-            if (raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]==-2)
+            /*
+            else
+            {
+            	raydium_sprite_stopped[id]=0;
+			}
+			*/
+			
+        			
+
+            //if the group has LOOP. 
+            if (raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]==-2)
             {
                 raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];
             }
             //if the group has a regular jump
-            if (raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]>=0)
+            if (raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]>=0)
             {
                 //jumping to a new group
-                raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]];
-                if(RAYDIUM_SPRITE_DEBUG)raydium_log("grupo actual:%d grupo de salto:%d ",grp,raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]);
+                //BADD!!!!!!!!!!!!!
+                raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]];
+                //if(RAYDIUM_SPRITE_DEBUG)raydium_log("grupo actual:%d grupo de salto:%d ",grp,raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]);
             }
+            if (raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]==-999)
+            {
+            	//do nothing
+			}
+
+            //if the groups has a unkonw jump, then restart the group and notice
+            /*
+            if (raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]<-2 && raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]!=-999)
+            {
+            	raydium_log("UNKNOWK JUMP TYPE FOR SPRITE %d IN FRAME %d",id,raydium_sprite_current_frame[id]);
+            	raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];            
+            }
+            */
         }
-        
+        /*
         //If the animation comes to the end of the frames, we have to reset it (sending it to the begining of the group)
         if(raydium_sprite_current_frame[id]>=raydium_sprite_total_frames[id])
         {
             raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];            
-        }       
+        }
+        * */     
     }
 
 }
-
 
 //function to change the animation group of one sprite
 void raydium_sprite_group_change(int sprite,int group)
@@ -434,7 +485,7 @@ void raydium_sprite_free(int sprite)
 	raydium_ode_object_delete(raydium_sprite_collision_box_id[sprite]);
 	
 }
-
+/*
 //DON'T USE!!!
 int raydium_sprite_copy(int other)
 {
@@ -540,6 +591,7 @@ int raydium_sprite_copy(int other)
 		return -1;
 	}
 }
+*/
 
 //get a pointer to the position(float[3]) of an sprite. Need more testing.
 float *raydium_sprite_get_pos(int number)
@@ -601,4 +653,33 @@ int raydium_sprite_find(char *name)
 		return a;
 	}
 	return -1;
+}
+
+int raydium_sprite_is_stopped(int id)
+{
+	return raydium_sprite_stopped[id];
+}
+
+float raydium_sprite_change_sprite_time(int id,float time)
+{
+	raydium_sprite_time[id]=time;
+	if(raydium_sprite_time[id]<0)raydium_sprite_time[id]=0;
+	return raydium_sprite_time[id];
+}
+
+float raydium_sprite_change_sprite_time_relative(int id,float time)
+{
+	raydium_sprite_time[id]+=time;
+	if(raydium_sprite_time[id]<0)raydium_sprite_time[id]=0;
+	return raydium_sprite_time[id];
+}
+
+int raydium_sprite_get_current_group(int id)
+{
+	return raydium_sprite_group_current[id];
+}
+
+int raydium_sprite_get_current_frame(int id)
+{
+	return raydium_sprite_current_frame[id];
 }

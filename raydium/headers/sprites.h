@@ -116,10 +116,10 @@ __rayapi void raydium_sprite_free(int sprite);
 Internal use. DONT'T USE.experimental
 **/
 
-__rayapi int raydium_sprite_copy(int other);
-/**
-Internal use. DONT'T USE.experimental
-**/
+// __rayapi int raydium_sprite_copy(int other);
+///**
+//Internal use. DONT'T USE.experimental
+//**/
 
 __rayapi float *raydium_sprite_get_pos(int number);
 /**
@@ -152,5 +152,36 @@ This function will return the sprite id(int) of an sprite according its
 name
 **/
 
+__rayapi int raydium_sprite_is_stopped(int id);
+/**
+This functions returns 1 if the animation of the sprite id has been
+stoppped and 0 if it's playing.
+**/
+
+__rayapi void raydium_sprite_dump_info(int id);
+/**
+Dump of jumps for a certain sprite.
+**/
+
+__rayapi float raydium_sprite_change_sprite_time(int id,float time);
+/**
+Function to change the time betwen frames in the animation of an id sprite.
+**/
+
+
+
+__rayapi float raydium_sprite_change_sprite_time_relative(int id,float time);
+/**
+Same than previous but you can add a quantity of time to the previous stored time, ie relative.**/
+
+__rayapi int raydium_sprite_get_current_group(int id);
+/**
+Function to get the current group of an sprite.
+**/
+
+__rayapi int raydium_sprite_get_current_frame(int id);
+/**
+Function to get the current frame of an sprite.
+**/
 #endif
 

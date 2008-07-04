@@ -590,6 +590,7 @@ __global int	raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_G
 __global int	raydium_sprite_type[RAYDIUM_MAX_SPRITES];
 __global int	raydium_sprite_status[RAYDIUM_MAX_SPRITES];
 __global char	raydium_sprite_name[RAYDIUM_MAX_SPRITES][80];
+__global char   raydium_sprite_stopped[RAYDIUM_MAX_SPRITES];
 
 #ifdef linux
 #define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX	8
