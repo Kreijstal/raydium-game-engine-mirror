@@ -250,15 +250,11 @@ glTranslatef((((((GLfloat)raydium_mouse_x)/raydium_window_tx))*100.f) +raydium_o
 
 raydium_texture_current_set(raydium_osd_cursor_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glBegin(GL_QUADS);
-glTexCoord2f(0,0);
-glVertex3f(0,0,0);
-glTexCoord2f(1,0);
-glVertex3f(raydium_osd_cursor_xsize,0,0);
-glTexCoord2f(1,1);
-glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0);
-glTexCoord2f(0,1);
-glVertex3f(0,-raydium_osd_cursor_ysize,0);
+glBegin(GL_QUADS); 
+    glTexCoord2f(0,1);glVertex3f(0,-raydium_osd_cursor_ysize,0); 
+    glTexCoord2f(1,1);glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0); 
+    glTexCoord2f(1,0);glVertex3f(raydium_osd_cursor_xsize,0,0);
+    glTexCoord2f(0,0);glVertex3f(0,0,0);
 glEnd();
 raydium_rendering_internal_restore_render_state();
 
