@@ -91,14 +91,13 @@ raydium_texture_current_set(tex);
 raydium_rendering_internal_prepare_texture_render(tex);
 glColor4fv(raydium_osd_color);
 glBegin(GL_QUADS);
-glTexCoord2f(0,0);
-glVertex3f(x1,y1,0);
-glTexCoord2f(1,0);
-glVertex3f(x2,y1,0);
-glTexCoord2f(1,1);
-glVertex3f(x2,y2,0);
-glTexCoord2f(0,1);
-glVertex3f(x1,y2,0);
+
+glTexCoord2f(0,0);glVertex3f(x1,y1,0);
+glTexCoord2f(1,0);glVertex3f(x2,y1,0);
+glTexCoord2f(1,1);glVertex3f(x2,y2,0);
+glTexCoord2f(0,1);glVertex3f(x1,y2,0);
+
+
 glEnd();
 raydium_rendering_internal_restore_render_state();
 
@@ -152,14 +151,13 @@ for( i=0; str[i]; i++ )
 
  glColor4fv(raydium_osd_color);
  glBegin(GL_QUADS);
- glTexCoord2f(u,v);
- glVertex3f(-size+dx,size,0);
- glTexCoord2f(u+(1/16.f),v);
- glVertex3f(size+dx,size,0);
- glTexCoord2f(u+(1/16.f),v-(1/16.f));
- glVertex3f(size+dx,-size,0);
- glTexCoord2f(u,v-(1/16.f));
- glVertex3f(-size+dx,-size,0);
+
+
+
+ glTexCoord2f(u,v-(1/16.f)); glVertex3f(-size+dx,-size,0);
+ glTexCoord2f(u+(1/16.f),v-(1/16.f));glVertex3f(size+dx,-size,0);
+ glTexCoord2f(u+(1/16.f),v);glVertex3f(size+dx,size,0);
+ glTexCoord2f(u,v);glVertex3f(-size+dx,size,0);
  glEnd();
  dx+=(size*2*spacer);
 
@@ -238,7 +236,7 @@ raydium_osd_cursor_ysize=ysize;
 void raydium_osd_cursor_offset(GLfloat xoffset, GLfloat yoffset)
 {
 raydium_osd_cursor_xoffset=xoffset;
-raydium_osd_cursor_yoffset=yoffset;	
+raydium_osd_cursor_yoffset=yoffset;
 }
 
 void raydium_osd_cursor_draw(void)
@@ -309,21 +307,21 @@ if(step>=RAYDIUM_OSD_NET_STEP)
 
     // shift array to the left
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_delay[i-1]=past_delay[i];    
+	past_delay[i-1]=past_delay[i];
     past_delay[RAYDIUM_OSD_NET_SAMPLES-1]=raydium_netwok_queue_ack_delay_client;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_rx[i-1]=past_rx[i];    
+	past_rx[i-1]=past_rx[i];
     past_rx[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_rx-last_rx)/1024;
     last_rx=raydium_network_stat_rx;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_tx[i-1]=past_tx[i];    
+	past_tx[i-1]=past_tx[i];
     past_tx[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_tx-last_tx)/1024;
     last_tx=raydium_network_stat_tx;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_reemitted[i-1]=past_reemitted[i];    
+	past_reemitted[i-1]=past_reemitted[i];
     past_reemitted[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_reemitted-last_reemitted)*(size/10);
     last_reemitted=raydium_network_stat_reemitted;
 
@@ -540,7 +538,7 @@ if(raydium_osd_fade_color_timeleft>0)
     for(i=0;i<4;i++)
 	raydium_osd_fade_color_current[i]+=
 	    raydium_osd_fade_color_increment[i]*raydium_frame_time;
-    
+
     raydium_osd_mask(raydium_osd_fade_color_current);
     if(raydium_osd_fade_color_timeleft<=0 && raydium_osd_fade_OnFadeEnd)
 	{
