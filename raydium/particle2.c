@@ -8,7 +8,7 @@
 #include "index.h"
 #else
 #include "headers/particle2.h"
-#endif 
+#endif
 
 // Raydium Particle Engine, version 2
 
@@ -46,7 +46,7 @@ for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
 
 for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
     raydium_particle_particles[i]=NULL;
-    
+
 raydium_log("particle: OK");
 }
 
@@ -60,7 +60,7 @@ return 0;
 int raydium_particle_generator_find(char *name)
 {
 int i;
-                                                                                
+
 for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
     if(!strcmp(name,raydium_particle_generators[i].name) && raydium_particle_generator_isvalid(i))
      return i;
@@ -174,7 +174,7 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
 	{
 	FILE *sub;
 	char dir[RAYDIUM_MAX_NAME_LEN];
-	
+
 	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
 	    {
 	    raydium_log("particle: parser: include: wrong type");
@@ -486,7 +486,7 @@ int i;
 if(raydium_particle_generator_find(name)>=0)
     {
     raydium_log("particle: Cannot load \"%s\": '%s' already exists",filename,name);
-    return -1;    
+    return -1;
     }
 
 fp=raydium_file_fopen(filename,"rt"); // rb ? must test under win32
@@ -499,7 +499,7 @@ if(!fp)
 for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
     if(raydium_particle_generators[i].state==0)
 	break;
-	
+
 if(i==RAYDIUM_MAX_GENERATORS)
     {
     raydium_log("particle: no more available slots !");
@@ -582,7 +582,7 @@ raydium_particle_Generator *gen;
 raydium_particle_Particle *part;
 
 /*
-if(!raydium_particle_generators[g].state) 
+if(!raydium_particle_generators[g].state)
     {
     raydium_log("particle: Cannot update generator: invalid index");
     return;
@@ -634,14 +634,14 @@ for(i=0;i<to_create;i++)
     memcpy(part->gravity,gen->gravity,sizeof(GLfloat)*3);
 
 
-    if(gen->vector_sphere_force==0 && gen->vector_sphere_force_random==0) 
-    { 
+    if(gen->vector_sphere_force==0 && gen->vector_sphere_force_random==0)
+    {
      // ortho
      memcpy(part->vel,gen->vector,sizeof(GLfloat)*3);
      for(j=0;j<3;j++)
 	part->vel[j]+=raydium_random_f(-gen->vector_random[j],gen->vector_random[j]);
     }
-    else 
+    else
     {
     // spherical
     GLfloat def_angles[3]={0,0,1};
@@ -652,13 +652,13 @@ for(i=0;i<to_create;i++)
     for(j=0;j<3;j++)
 	angles[j]+=raydium_random_f(-gen->vector_sphere_angles_random[j],gen->vector_sphere_angles_random[j]);
 
-    
+
     force=gen->vector_sphere_force
          +raydium_random_f(-gen->vector_sphere_force_random,
 			    gen->vector_sphere_force_random);
     for(j=0;j<3;j++)
 	def_angles[j]*=force;
-    
+
     raydium_trigo_rotate(def_angles,angles[0],angles[1],angles[2],part->vel);
     }
 
@@ -678,11 +678,11 @@ for(i=0;i<to_create;i++)
     }
 
 
-if(gen->ttl_generator==0) 
+if(gen->ttl_generator==0)
     return; // infinite generator
 
 gen->ttl_generator-=step;
-if(gen->ttl_generator<=0) 
+if(gen->ttl_generator<=0)
     {
     // we've a OnDelete callback for particles and not for
     // generators ... 'must code it.
@@ -704,10 +704,10 @@ if(p->ttl!=0) // if not an infinite particle
  if(p->ttl<=0) // "timeout" ...
     {
     void (*f)(raydium_particle_Particle *);
-    
+
     f=p->OnDelete;
     if(f) f(p);
-    
+
     free(p);
     raydium_particle_particles[part]=NULL;
     return;
@@ -791,7 +791,7 @@ for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
 		p->current_color[2],
 		p->current_color[3],
 		p->visibility,
-		raydium_texture_name[p->texture]);	
+		raydium_texture_name[p->texture]);
 	}
 fclose(fp);
 raydium_log("particle: %i particle(s) dumped",cpt);
@@ -807,17 +807,17 @@ GLfloat pos[3],color[4],size,visibility;
 char texture[RAYDIUM_MAX_NAME_LEN];
 
 fp=raydium_file_fopen(filename,"rt");
-if(!fp) 
-    { 
+if(!fp)
+    {
     raydium_log("particle: ERROR: cannot read from file '%s'",filename);
-    return 0; 
+    return 0;
     }
 fscanf(fp,"%i\n",&visu);
 
 if(visu!=0)
-    { 
+    {
     raydium_log("particle: ERROR: '%s' file must be 'version 0'",filename);
-    return 0; 
+    return 0;
     }
 
 
@@ -864,7 +864,7 @@ while( fscanf(fp,"%f %f %f %f %f %f %f %f %f %s\n",
     part->gravity[0]=part->gravity[1]=part->gravity[2]=0;
 
     part->vel[0]=part->vel[1]=part->vel[2]=0;
-    
+
     memcpy(part->color_start,   color,sizeof(GLfloat)*4);
     memcpy(part->color_end,     color,sizeof(GLfloat)*4);
     memcpy(part->current_color, color,sizeof(GLfloat)*4);
@@ -902,22 +902,10 @@ rz*=TSIZE/2;
 // p->rotation
 
   glBegin(GL_QUADS); // berk... but i'll switch to triangles one day ;)
-  glTexCoord2f(1.0f, 0.0f);
-  glVertex3f(p->position[0] + (-rx - ux),
-	     p->position[1] + (-ry - uy),
-	     p->position[2] + (-rz - uz));
-  glTexCoord2f(1.0f, 1.0f);
-  glVertex3f(p->position[0] + (rx - ux),
-	     p->position[1] + (ry - uy),
-	     p->position[2] + (rz - uz));
-  glTexCoord2f(0.0f, 1.0f);
-  glVertex3f(p->position[0] + (rx + ux),
-	     p->position[1] + (ry + uy),
-	     p->position[2] + (rz + uz));
-  glTexCoord2f(0.0f, 0.0f);
-  glVertex3f(p->position[0] + (ux - rx),
-	     p->position[1] + (uy - ry),
-	     p->position[2] + (uz - rz));
+      glTexCoord2f(0.0f, 0.0f);glVertex3f(p->position[0] + (ux - rx),p->position[1] + (uy - ry),p->position[2] + (uz - rz));
+      glTexCoord2f(0.0f, 1.0f);glVertex3f(p->position[0] + (rx + ux),p->position[1] + (ry + uy),p->position[2] + (rz + uz));
+      glTexCoord2f(1.0f, 1.0f);glVertex3f(p->position[0] + (rx - ux),p->position[1] + (ry - uy),p->position[2] + (rz - uz));
+      glTexCoord2f(1.0f, 0.0f);glVertex3f(p->position[0] + (-rx - ux),p->position[1] + (-ry - uy),p->position[2] + (-rz - uz));
   glEnd();
 }
 
