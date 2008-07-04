@@ -53,6 +53,24 @@ Sets the camera at (x,y,z) position, and using (lacet,tangage,roulis)
 as rotation angles.
 **/
 
+__rayapi float *raydium_camera_get_data(void);
+/**
+Function to get the data of the camera in an array of 6 floats.
+The first 3 values are the position like x,y,z in universal coordinates.
+The next 3 are the rotation angles like r,s,t in degrees and universal orientation.
+example:
+%%(c)
+float *camdata;
+...
+camdata=raydium_camera_get_data();
+raydium_log("pos: %f %f %f rotation: %f %f %f",camdata[0],camdata[1],
+ camdata[2],camdata[3],camdata[4],camdata[5]);
+...
+%%
+Returned data is related to the current frame. 
+**/
+
+
 __rayapi void raydium_camera_look_at (GLfloat x, GLfloat y, GLfloat z, GLfloat x_to, GLfloat y_to, GLfloat z_to);
 /**
 Sets the camera at (x,y,z) position, and looks at (x_to,y_to,z_to).

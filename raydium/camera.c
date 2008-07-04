@@ -148,8 +148,18 @@ glTranslatef(x, y, z);
 glRotatef(90,0,0,1);
 glRotatef(90,0,1,0);
 raydium_camera_internal(z,x,-y);
+raydium_camera_data[0]=x;
+raydium_camera_data[1]=y;
+raydium_camera_data[2]=z;
+raydium_camera_data[3]=lacet;
+raydium_camera_data[4]=tangage;
+raydium_camera_data[5]=roulis;
 }
 
+float *raydium_camera_get_data(void)
+{
+	return (float *)raydium_camera_data;
+}
 
 void raydium_camera_look_at(GLfloat x, GLfloat y, GLfloat z,
 			  GLfloat x_to, GLfloat y_to, GLfloat z_to)
