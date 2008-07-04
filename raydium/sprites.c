@@ -52,52 +52,26 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
     texsave=raydium_texture_current_main;
     raydium_texture_current_set(textureid);
     raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    
-    glBegin(GL_QUADS); // berk... but i'll switch to triangles one day ;)
-    glTexCoord2f(s1, t0);
-    glVertex3f(x + (-rx - ux),
-         y + (-ry - uy),
-         z + (-rz - uz));
-    glTexCoord2f(s1, t1);
-    glVertex3f(x + (rx - ux),
-         y + (ry - uy),
-         z + (rz - uz));
-    glTexCoord2f(s0, t1);
-    glVertex3f(x + (rx + ux),
-         y + (ry + uy),
-         z + (rz + uz));
-    glTexCoord2f(s0, t0);
-    glVertex3f(x + (ux - rx),
-         y + (uy - ry),
-         z + (uz - rz));
+     glBegin(GL_QUADS); // berk... but i'll switch to triangles one day ;)
+         glTexCoord2f(s0, t0);glVertex3f(x + (ux - rx),y + (uy - ry),z + (uz - rz));
+         glTexCoord2f(s0, t1);glVertex3f(x + (rx + ux),y + (ry + uy),z + (rz + uz));
+         glTexCoord2f(s1, t1);glVertex3f(x + (rx - ux),y + (ry - uy),z + (rz - uz));
+         glTexCoord2f(s1, t0);glVertex3f(x + (-rx - ux),y + (-ry - uy),z + (-rz - uz));
     glEnd();
     /* 
     //first try using triangle instead of quad (should be at least twice faster)
     //How the hell can i calculate the texture coords?
-    
+
     // CANNOT BE USED IN THIS CASE CAUSE OF CLAMPING PROBLEM, THE REST OF THE TEXTURE IS VIEWED
     // BUT SHOULD BE WORK FINE WITH PARTICLES
-    
+
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
     glBegin(GL_TRIANGLES);
-    
-    //deforms the triangle, need to fix, but difficult to guess how
-    glTexCoord2f(2*s1, t0);
-    glVertex3f(x + (-2*rx - 2*ux),
-         y + (-ry - uy),
-         z + (-rz - uz));
-         
-    glTexCoord2f(s0, 2*t1);
-    glVertex3f(x + (rx + ux),
-         y + (2*ry + 2*uy),
-         z + (rz + uz));
-         
-    glTexCoord2f(s0, t0);
-    glVertex3f(x + (ux - rx),
-         y + (uy - ry),
-         z + (uz - rz));
-
+         //deforms the triangle, need to fix, but difficult to guess how
+         glTexCoord2f(s0, t0);glVertex3f(x + (ux - rx),Y + (uy - ry),Z + (uz - rz));
+          glTexCoord2f(s0, 2*t1);glVertex3f(x + (rx + ux),Y + (2*ry + 2*uy),Z + (rz + uz));         
+          glTexCoord2f(2*s1, t0);glVertex3f(x + (-2*rx - 2*ux),Y + (-ry - uy),Z + (-rz - uz));         
     glEnd();
     */
 }
