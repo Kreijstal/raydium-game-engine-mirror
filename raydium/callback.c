@@ -81,11 +81,13 @@ static unsigned long time_previous;
 unsigned long curr_time;
 float max_fps;
 
-if(raydium_render_max_fps!=0)
+//if(raydium_render_max_fps!=0)
+if(raydium_render_max_fps>0)
     {
     curr_time=raydium_timecall_clock();
     // 2 is an experimental offset
-    max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps+2);
+    //max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps+2);
+    max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps);
 
     if((curr_time-time_previous) < max_fps)
 	{
