@@ -2,7 +2,7 @@
 // gets file from repositories listed in repositories.list
 
 // params: $filename (string, input), $force (integer, input),
-// 	   $status (integer, output)
+//         $status (integer, output)
 
 // This script must be placed in "rayphp" sub-directory.
 
@@ -21,10 +21,10 @@ for($i=0;$i<count($repos);$i++)
   if(valid_entry($r))
     {
       if(update_file($file,$r,$path.$file,$force))
-	{
-	  $status=1;
-	  return;
-	}
+        {
+          $status=1;
+          return;
+        }
     }
 }
 // If we get here, something went wrong

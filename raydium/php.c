@@ -68,68 +68,68 @@ int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)
 // Ref: main/SAPI.h in PHP source tree
 static sapi_module_struct raydium_sapi_module = 
 {
-	"RayHandler",                   /* name */
-	"Raydium PHP Handler",          /* pretty name */
-									
+        "RayHandler",                   /* name */
+        "Raydium PHP Handler",          /* pretty name */
+                                                                        
 // Since PHP@Win32 is dirty... :
-	php_dummy,             /* startup */
-	php_dummy,	       /* shutdown */
+        php_dummy,             /* startup */
+        php_dummy,             /* shutdown */
 
-	NULL,				/* activate */
-	NULL,				/* deactivate */
+        NULL,                           /* activate */
+        NULL,                           /* deactivate */
 
-	raydium_php_uwrite,           	/* unbuffered write */
-	NULL,                 		/* flush */
-	NULL,                         	/* get uid */
-	NULL,                         	/* getenv */
+        raydium_php_uwrite,             /* unbuffered write */
+        NULL,                           /* flush */
+        NULL,                           /* get uid */
+        NULL,                           /* getenv */
 
-	raydium_php_error,          	/* error handler */
+        raydium_php_error,              /* error handler */
 
-	NULL,                         	/* header handler */
-	sapi_raydium_send_headers,      /* send headers handler */
-	sapi_raydium_send_header,       /* send header handler */
+        NULL,                           /* header handler */
+        sapi_raydium_send_headers,      /* send headers handler */
+        sapi_raydium_send_header,       /* send header handler */
 
-	NULL,                		/* read POST data */
-	NULL,             		/* read Cookies */
+        NULL,                           /* read POST data */
+        NULL,                           /* read Cookies */
 
-	sapi_raydium_register_variables,/* register server variables */
-	NULL,              		/* Log message */
-	NULL,				/* Get Request Time */
-	
-	NULL,				/* INI Path (changed later) */
+        sapi_raydium_register_variables,/* register server variables */
+        NULL,                           /* Log message */
+        NULL,                           /* Get Request Time */
+        
+        NULL,                           /* INI Path (changed later) */
 
-	NULL,				/* Block interruptions */
-	NULL,				/* Unblock interruptions */
+        NULL,                           /* Block interruptions */
+        NULL,                           /* Unblock interruptions */
 
 // 243:         void (*default_post_reader)(TSRMLS_D);
-	NULL,
+        NULL,
 // 244:         void (*treat_data)(int arg, char *str, zval *destArray TSRMLS_DC);
-	NULL,
+        NULL,
 // 245:         char *executable_location;
-	NULL,
+        NULL,
 // 246: 
 // 247:         int php_ini_ignore;
-	0,
+        0,
 // 248: 
 // 249:         int (*get_fd)(int *fd TSRMLS_DC);
-	NULL,
+        NULL,
 // 250: 
 // 251:         int (*force_http_10)(TSRMLS_D);
-	NULL,
+        NULL,
 // 252: 
 // 253:         int (*get_target_uid)(uid_t * TSRMLS_DC);
-	NULL,
+        NULL,
 // 254:         int (*get_target_gid)(gid_t * TSRMLS_DC);
-	NULL,
+        NULL,
 // 255: 
 // 256:         unsigned int (*input_filter)(int arg, char *var, char **val, unsigned int val_len, unsigned int *new_val_len TSRMLS_DC);
-	NULL,
+        NULL,
 // 257:         
 // 258:         void (*ini_defaults)(HashTable *configuration_hash);
-	NULL,
+        NULL,
 // 259:         int phpinfo_as_text;
-	1,
-	NULL	/* char *ini_entries; */
+        1,
+        NULL    /* char *ini_entries; */
 };
 
 
@@ -165,13 +165,13 @@ int raydium_php_exec(char *name)
     raydium_file_ext(suffix,name);
     if(strcasecmp(suffix,"php"))
     {
-	fp=raydium_file_fopen(name,"rb");
-	if(!fp)
-	    {
-	    raydium_log("php: ERROR: cannot pre-open '%s' file",name);
-	    return 0;
-	    }
-	fclose(fp);
+        fp=raydium_file_fopen(name,"rb");
+        if(!fp)
+            {
+            raydium_log("php: ERROR: cannot pre-open '%s' file",name);
+            return 0;
+            }
+        fclose(fp);
     }
 
 
@@ -200,10 +200,10 @@ int raydium_php_exec(char *name)
 
     file_handle.handle.fp=VCWD_FOPEN(name,"rb");
     if(!file_handle.handle.fp)
-	{
-	raydium_log("php: ERROR: cannot post-open '%s' file",name);
-	return 0;
-	}
+        {
+        raydium_log("php: ERROR: cannot post-open '%s' file",name);
+        return 0;
+        }
     file_handle.filename=name;
     file_handle.type = ZEND_HANDLE_FP;
     file_handle.free_filename = 0;
@@ -224,50 +224,50 @@ int raydium_php_exec(char *name)
  for(i=0;i<nvars;i++)
     {
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_INT)
-	{
+        {
         MAKE_STD_ZVAL(vars[i]); // init
-	ZVAL_LONG(vars[i],(*(int *)raydium_register_variable_addr[i]));
-	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
-	}
+        ZVAL_LONG(vars[i],(*(int *)raydium_register_variable_addr[i]));
+        ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
+        }
 
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_SCHAR)
-	{
+        {
         MAKE_STD_ZVAL(vars[i]); // init
-	ZVAL_LONG(vars[i],(int)(*(char *)raydium_register_variable_addr[i]));
-	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
-	}
+        ZVAL_LONG(vars[i],(int)(*(char *)raydium_register_variable_addr[i]));
+        ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
+        }
 
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_FLOAT)
-	{
+        {
         MAKE_STD_ZVAL(vars[i]); // init
-	ZVAL_DOUBLE(vars[i],(*(float *)raydium_register_variable_addr[i]));
-	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
-	}
+        ZVAL_DOUBLE(vars[i],(*(float *)raydium_register_variable_addr[i]));
+        ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
+        }
 
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_STR)
-	{
+        {
         MAKE_STD_ZVAL(vars[i]); // init
-	ZVAL_STRING(vars[i],(char *)raydium_register_variable_addr[i],1); // 1 means "duplicate string"
-	ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
-	}
+        ZVAL_STRING(vars[i],(char *)raydium_register_variable_addr[i],1); // 1 means "duplicate string"
+        ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
+        }
      
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_ICONST)
-	{
-	zend_register_long_constant(raydium_register_variable_name[i],
-				    strlen(raydium_register_variable_name[i])+1,
-				    (*(int *)raydium_register_variable_addr[i]),
-				    CONST_CS,
-				    0 TSRMLS_CC);
-	}
+        {
+        zend_register_long_constant(raydium_register_variable_name[i],
+                                    strlen(raydium_register_variable_name[i])+1,
+                                    (*(int *)raydium_register_variable_addr[i]),
+                                    CONST_CS,
+                                    0 TSRMLS_CC);
+        }
 
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_FCONST)
-	{
-	zend_register_double_constant(raydium_register_variable_name[i],
-				      strlen(raydium_register_variable_name[i])+1,
-				      (*(float *)raydium_register_variable_addr[i]),
-				      CONST_CS,
-				      0 TSRMLS_CC);
-	}
+        {
+        zend_register_double_constant(raydium_register_variable_name[i],
+                                      strlen(raydium_register_variable_name[i])+1,
+                                      (*(float *)raydium_register_variable_addr[i]),
+                                      CONST_CS,
+                                      0 TSRMLS_CC);
+        }
     }
 #ifdef WIN32
  zend_register_functions(NULL, raydium_register_function_list,CG(function_table), MODULE_PERSISTENT,TSRMLS_C);
@@ -281,38 +281,38 @@ int raydium_php_exec(char *name)
  for(i=0;i<nvars;i++)
     {
         if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_INT)
-	 {
-	    if(vars[i]->type == IS_LONG)
-		*(int *)raydium_register_variable_addr[i]=vars[i]->value.lval;
-	    else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
-	 }
+         {
+            if(vars[i]->type == IS_LONG)
+                *(int *)raydium_register_variable_addr[i]=vars[i]->value.lval;
+            else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
+         }
 
         if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_SCHAR)
-	 {
-	    if(vars[i]->type == IS_LONG)
-		*(char *)raydium_register_variable_addr[i]=vars[i]->value.lval;
-	    else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
-	 }
+         {
+            if(vars[i]->type == IS_LONG)
+                *(char *)raydium_register_variable_addr[i]=vars[i]->value.lval;
+            else raydium_log("php: (int)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
+         }
 
         if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_FLOAT)
-	 {
-	    if(vars[i]->type == IS_DOUBLE)
-		*(float *)raydium_register_variable_addr[i]=vars[i]->value.dval;
-	    else if(vars[i]->type == IS_LONG)
-		*(float *)raydium_register_variable_addr[i]=vars[i]->value.lval;		
-	    else raydium_log("php: (float)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
-	 }
+         {
+            if(vars[i]->type == IS_DOUBLE)
+                *(float *)raydium_register_variable_addr[i]=vars[i]->value.dval;
+            else if(vars[i]->type == IS_LONG)
+                *(float *)raydium_register_variable_addr[i]=vars[i]->value.lval;                
+            else raydium_log("php: (float)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
+         }
 
         if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_STR)
-	 {
-	    if(vars[i]->type == IS_STRING)
-		strcpy(raydium_register_variable_addr[i],vars[i]->value.str.val);
-	    else if(vars[i]->type == IS_DOUBLE)
-		sprintf(raydium_register_variable_addr[i],"%f",vars[i]->value.dval);
-	    else if(vars[i]->type == IS_LONG)
-		sprintf(raydium_register_variable_addr[i],"%li",vars[i]->value.lval);
-	    else raydium_log("php: (char *)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
-	 }
+         {
+            if(vars[i]->type == IS_STRING)
+                strcpy(raydium_register_variable_addr[i],vars[i]->value.str.val);
+            else if(vars[i]->type == IS_DOUBLE)
+                sprintf(raydium_register_variable_addr[i],"%f",vars[i]->value.dval);
+            else if(vars[i]->type == IS_LONG)
+                sprintf(raydium_register_variable_addr[i],"%li",vars[i]->value.lval);
+            else raydium_log("php: (char *)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
+         }
     }
 
  php_request_shutdown(NULL);

@@ -11,25 +11,25 @@
 #ifndef RAY_GUI_H
 #define RAY_GUI_H
 
-#define RAYDIUM_GUI_MAX_OBJECTS		128
-#define RAYDIUM_GUI_MAX_WINDOWS		16
+#define RAYDIUM_GUI_MAX_OBJECTS         128
+#define RAYDIUM_GUI_MAX_WINDOWS         16
 
-#define RAYDIUM_GUI_BUTTON	1
-#define RAYDIUM_GUI_LABEL	2
-#define RAYDIUM_GUI_TRACK	3
-#define RAYDIUM_GUI_EDIT	4
-#define RAYDIUM_GUI_CHECK	5
-#define RAYDIUM_GUI_COMBO	6
-#define RAYDIUM_GUI_ZONE	7
+#define RAYDIUM_GUI_BUTTON      1
+#define RAYDIUM_GUI_LABEL       2
+#define RAYDIUM_GUI_TRACK       3
+#define RAYDIUM_GUI_EDIT        4
+#define RAYDIUM_GUI_CHECK       5
+#define RAYDIUM_GUI_COMBO       6
+#define RAYDIUM_GUI_ZONE        7
 
-#define RAYDIUM_GUI_NORMAL	1
-#define RAYDIUM_GUI_FOCUS	2
-#define RAYDIUM_GUI_HOVER	3
+#define RAYDIUM_GUI_NORMAL      1
+#define RAYDIUM_GUI_FOCUS       2
+#define RAYDIUM_GUI_HOVER       3
 
-#define RAYDIUM_GUI_DATASIZE	4096
+#define RAYDIUM_GUI_DATASIZE    4096
 
-#define RAYDIUM_GUI_ITEM_SEPARATOR	'\n'
-#define RAYDIUM_GUI_COMBO_LIST_HEIGHT	5
+#define RAYDIUM_GUI_ITEM_SEPARATOR      '\n'
+#define RAYDIUM_GUI_COMBO_LIST_HEIGHT   5
 
 typedef struct raydium_gui_Button
 {
@@ -47,7 +47,7 @@ typedef struct raydium_gui_Zone
     GLfloat  col_normal[4];
     GLfloat  col_focus[4];
     GLfloat  col_hover[4];
-    int	     tag;
+    int      tag;
 } raydium_gui_Zone;
 
 typedef struct raydium_gui_Label
@@ -61,7 +61,7 @@ typedef struct raydium_gui_Track
     GLfloat  uv_rule[4];
     GLfloat  uv_cursor_normal[4];
     GLfloat  uv_cursor_focus[4];
-    int	     min;
+    int      min;
     int      max;
     int      current;
 } raydium_gui_Track;
@@ -128,7 +128,7 @@ typedef struct raydium_gui_Window
     GLfloat  size[2];
     raydium_gui_Object widgets[RAYDIUM_GUI_MAX_OBJECTS];
     int      focused_widget;
-    int	     old_focused;
+    int      old_focused;
     void *   OnDelete;
 } raydium_gui_Window;
 
@@ -147,9 +147,9 @@ __global raydium_gui_Theme  raydium_gui_theme_current;
 __global raydium_gui_Window raydium_gui_windows[RAYDIUM_GUI_MAX_WINDOWS];
 __global signed char        raydium_gui_visible;
 __global int                raydium_gui_window_focused;
-__global signed char	    raydium_gui_oldstate;
-__global GLfloat	    raydium_gui_widget_sizes_default[3];
-__global int		    raydium_gui_button_clicked_id;
-__global void *		    raydium_gui_AfterGuiDrawCallback;
+__global signed char        raydium_gui_oldstate;
+__global GLfloat            raydium_gui_widget_sizes_default[3];
+__global int                raydium_gui_button_clicked_id;
+__global void *             raydium_gui_AfterGuiDrawCallback;
 
 #endif

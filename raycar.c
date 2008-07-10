@@ -11,31 +11,31 @@
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 
-#define RAY_LEN		0.1
-#define MOTOR_SPEED	5	// max
+#define RAY_LEN         0.1
+#define MOTOR_SPEED     5       // max
 #define CAR_BASE_HEIGHT -0.2
-#define CAR_WHEEL_ANGLE 20	// degrees 
+#define CAR_WHEEL_ANGLE 20      // degrees 
 
-#define CAR_MU_REAR1	3
-#define CAR_MU_REAR2	3
+#define CAR_MU_REAR1    3
+#define CAR_MU_REAR2    3
 
-#define CAR_MU_FRONT1	0.0001	// rolling friction ?
-#define CAR_MU_FRONT2	2
+#define CAR_MU_FRONT1   0.0001  // rolling friction ?
+#define CAR_MU_FRONT2   2
 
-#define CAR_SLIP_FRONT1	0
-#define CAR_SLIP_FRONT2	0.3
+#define CAR_SLIP_FRONT1 0
+#define CAR_SLIP_FRONT2 0.3
 
-#define CAR_SLIP_REAR1	10
-#define CAR_SLIP_REAR2	0.3
+#define CAR_SLIP_REAR1  10
+#define CAR_SLIP_REAR2  0.3
 
-#define CAR_SUSP_ERP	0.01	
-#define CAR_SUSP_CFM	0.1  // more = less reactive susp
+#define CAR_SUSP_ERP    0.01    
+#define CAR_SUSP_CFM    0.1  // more = less reactive susp
 
-#define TYPE_CAR_BODY	7
+#define TYPE_CAR_BODY   7
 #define TYPE_BALANCIER  6
 
-#define BODY_DENS	0.2
-#define BALANCIER_DENS	0.8
+#define BODY_DENS       0.2
+#define BALANCIER_DENS  0.8
 
 char ray_callback(int e1, int e2, dContact *n)
 {
@@ -81,7 +81,7 @@ else // rear wheel (where engine works)
 
 raydium_trigo_rotate(org,0,0,wheel_rotation,res); 
 dBodyVectorToWorld(raydium_ode_element[raydium_ode_element_find("corps")].body,
-		    res[0],res[1],res[2],n->fdir1); 
+                    res[0],res[1],res[2],n->fdir1); 
 
 n->surface.soft_erp=CAR_SUSP_ERP;
 n->surface.soft_cfm=CAR_SUSP_CFM; 
@@ -123,7 +123,7 @@ raydium_ode_network_next_local_only=1;
 raydium_ode_object_box_add("balancier",a,BALANCIER_DENS,0.1,0.1,0.1,RAYDIUM_ODE_STANDARD,TYPE_BALANCIER,""); // crate.tri
 raydium_ode_element_move_name_3f("balancier",0,0,-0.5);
 raydium_ode_joint_attach_fixed_name("balanfixed","corps","balancier");
-		
+                
 raydium_ode_element_ray_attach_name("corps",RAY_LEN,0,0,-1);
 raydium_ode_element_ray_pos_name_3f("corps",0,0.42,0.253,CAR_BASE_HEIGHT);
 
@@ -184,7 +184,7 @@ else
     
     // standard smooth lookat camera
       raydium_camera_smooth(cam[0],cam[1],cam[2],mpos[1],-mpos[2],mpos[0],
-			    70,0,raydium_frame_time*5);
+                            70,0,raydium_frame_time*5);
     }
 
 

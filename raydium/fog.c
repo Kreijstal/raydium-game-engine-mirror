@@ -60,13 +60,13 @@ if(raydium_fog_enabled_tag)
     glHint(GL_FOG_HINT, GL_FASTEST);
 
     if(raydium_fog_far_value==0)
-	{	
-	raydium_fog_far_value=raydium_projection_far;
-	raydium_fog_near_value=raydium_projection_far/4.f;
-	}		
+        {       
+        raydium_fog_far_value=raydium_projection_far;
+        raydium_fog_near_value=raydium_projection_far/4.f;
+        }               
 
     glFogf(GL_FOG_START,raydium_fog_near_value);
-    glFogf(GL_FOG_END,raydium_fog_far_value);		
+    glFogf(GL_FOG_END,raydium_fog_far_value);           
     }
     else
     {
@@ -91,17 +91,17 @@ raydium_fog_volumetric_enabled_tag=0;
 switch(RENDER_VOLUMETRIC_FOG_AXIS)
     {
     case 0:
-	raydium_fog_volumetric_array=raydium_vertex_x;
-	break;
+        raydium_fog_volumetric_array=raydium_vertex_x;
+        break;
     case 1:
-	raydium_fog_volumetric_array=raydium_vertex_y;
-	break;
+        raydium_fog_volumetric_array=raydium_vertex_y;
+        break;
     case 2:
-	raydium_fog_volumetric_array=raydium_vertex_z;
-	break;	
+        raydium_fog_volumetric_array=raydium_vertex_z;
+        break;  
     default:
-	raydium_log("fog: FAILED: RENDER_VOLUMETRIC_FOG_AXIS is broken !");
-	exit(100);
+        raydium_log("fog: FAILED: RENDER_VOLUMETRIC_FOG_AXIS is broken !");
+        exit(100);
     }
 
 raydium_fog_enable();

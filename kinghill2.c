@@ -13,7 +13,7 @@ int game_state;
 int son_fall[FALL_SOUNDS];
 
 //#define DEFAULT_RESPAWN_ONLY
-#define MAX_RESPAWNS		16
+#define MAX_RESPAWNS            16
 GLfloat respawns[MAX_RESPAWNS][6];
 int respawn_index=0;
 GLfloat ground_z=0;
@@ -22,15 +22,15 @@ GLfloat partytime=0;
 short scores[RAYDIUM_NETWORK_MAX_CLIENTS];
 char camera_file[128];
 
-#define GAME_MENU		1
-#define GAME_GAME		2
-#define GAME_END		3
-#define GAME_OUT		4
+#define GAME_MENU               1
+#define GAME_GAME               2
+#define GAME_END                3
+#define GAME_OUT                4
 
 #define TYPE_BALANCIER          6
-#define TYPE_CORPS          	7
+#define TYPE_CORPS              7
 
-#define NET_REMAINING	(RAYDIUM_NETWORK_PACKET_BASE)
+#define NET_REMAINING   (RAYDIUM_NETWORK_PACKET_BASE)
 
 
 void read_world(char *filename)
@@ -47,16 +47,16 @@ fscanf(fp,"%i\n",&v);
 while(fscanf(fp,"%f %f %f %f %f %f %s\n",&p[0],&p[1],&p[2],&p[3],&p[4],&p[5],ent)!=EOF)
     {
     switch(ent[0])
-	{
-	case 'r':
-	    memcpy(respawns[respawn_index],p,sizeof(GLfloat)*6);
-	    respawn_index++;
-	    break;
-	case 'g':
-	    ground_z=p[2];
-	    break;
+        {
+        case 'r':
+            memcpy(respawns[respawn_index],p,sizeof(GLfloat)*6);
+            respawn_index++;
+            break;
+        case 'g':
+            ground_z=p[2];
+            break;
 
-	}
+        }
     }
 
 fclose(fp);
@@ -85,27 +85,27 @@ game_state=state;
 switch(state)
     {
     case GAME_MENU:
-	raydium_gui_show();
-	break;
+        raydium_gui_show();
+        break;
     case GAME_GAME:
-	raydium_gui_hide();
-	create_car();
-	partytime=60;
-	break;
+        raydium_gui_hide();
+        create_car();
+        partytime=60;
+        break;
     case GAME_END:
-	raydium_ode_object_delete_name("WATURE");
-	break;
+        raydium_ode_object_delete_name("WATURE");
+        break;
     case GAME_OUT:
-	// "tu tombes !"
+        // "tu tombes !"
     i=raydium_random_i(0,2);
     raydium_sound_SourcePlay(son_fall[i]);
     raydium_sound_SetSourcePosCamera(i);
     
-	i=raydium_network_uid;
-	if(i<0) i=0;
-	scores[i]++;
-	raydium_network_propag_refresh(RAYDIUM_NETWORK_PACKET_BASE+i+1);
-	break;
+        i=raydium_network_uid;
+        if(i<0) i=0;
+        scores[i]++;
+        raydium_network_propag_refresh(RAYDIUM_NETWORK_PACKET_BASE+i+1);
+        break;
     }
 }
 
@@ -181,7 +181,7 @@ if(!raydium_network_client_connect_to(server))
 
 game_state_change(GAME_GAME);
 }
-			
+                        
 
 void create_menu(void)
 {
@@ -281,12 +281,12 @@ raydium_ode_object_rotate(a,respawns[respawn]+3);
 
 //raydium_log("%i (%i)",respawn,respawn_index);
 /*raydium_log("%i | %f %f %f | %f %f %f",respawn,
-				  respawns[respawn][0],
-				  respawns[respawn][1],
-				  respawns[respawn][2],
-				  respawns[respawn][3],
-				  respawns[respawn][4],
-				  respawns[respawn][5]);*/
+                                  respawns[respawn][0],
+                                  respawns[respawn][1],
+                                  respawns[respawn][2],
+                                  respawns[respawn][3],
+                                  respawns[respawn][4],
+                                  respawns[respawn][5]);*/
 }
 
 
@@ -351,164 +351,164 @@ switch(game_state)
     { 
     case GAME_GAME:
 
-	raydium_joy_key_emul();
+        raydium_joy_key_emul();
  
         direct=raydium_joy_x*0.3;
 
         if(raydium_joy_y>0.3)
-    	    {
-    	    speed=raydium_joy_y*10;
-	    raydium_ode_motor_power_max_name("moteur",accel);
-	    tag=1;
-	    }
-	else
-	if(raydium_joy_y<-0.3)
-	    {
-    	    speed=raydium_joy_y*5;
-	    raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y);
-	    tag=1;
-	    }
+            {
+            speed=raydium_joy_y*10;
+            raydium_ode_motor_power_max_name("moteur",accel);
+            tag=1;
+            }
+        else
+        if(raydium_joy_y<-0.3)
+            {
+            speed=raydium_joy_y*5;
+            raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y);
+            tag=1;
+            }
 
-	if(!tag)
-	    {
-		speed=0;
-		raydium_ode_motor_power_max_name("moteur",0.05);
-	    }
+        if(!tag)
+            {
+                speed=0;
+                raydium_ode_motor_power_max_name("moteur",0.05);
+            }
  
-	raydium_ode_motor_speed_name("moteur",-speed);
+        raydium_ode_motor_speed_name("moteur",-speed);
         raydium_ode_motor_angle_name("direction",direct);
   
-	// get element position
+        // get element position
         pos=raydium_ode_element_pos_get_name("corps");
 
-	// raydium_log("%f %f",pos[2],ground_z);
+        // raydium_log("%f %f",pos[2],ground_z);
 #ifndef DEFAULT_RESPAWN_ONLY
-	if(pos[2]<ground_z)
-	    {
-	    // raydium_log("toto");
-	    game_state_change(GAME_OUT);
-	    }
-#endif	
+        if(pos[2]<ground_z)
+            {
+            // raydium_log("toto");
+            game_state_change(GAME_OUT);
+            }
+#endif  
 
 
         // get position of camera in world coords
         raydium_ode_element_RelPointPos_name("corps",-1,0,0,cam);
 
         // correct z pos (always at top of the car, for example)
-	cam[2]=pos[2]+0.5;
+        cam[2]=pos[2]+0.5;
     
         // standard smooth lookat camera
         raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],
-			      70,0,raydium_frame_time*3);
+                              70,0,raydium_frame_time*3);
 
 
         static_camera[0]=cam[0];
         static_camera[1]=cam[1];
-	static_camera[2]=cam[2];
+        static_camera[2]=cam[2];
  
-	display_all();
-	raydium_osd_printf(3.4,96.6,35,0.5,"font2.tga","^0- %s -",raydium_network_name_local);
-	raydium_osd_printf(3,97,35,0.5,"font2.tga","^f- %s -",raydium_network_name_local);
+        display_all();
+        raydium_osd_printf(3.4,96.6,35,0.5,"font2.tga","^0- %s -",raydium_network_name_local);
+        raydium_osd_printf(3,97,35,0.5,"font2.tga","^f- %s -",raydium_network_name_local);
 
 
-	i=raydium_network_uid;
-	if(i<0) i=0;
-	raydium_osd_printf(2,2,15,0.5,"font2.tga","^fscore: %i",scores[i]);
+        i=raydium_network_uid;
+        if(i<0) i=0;
+        raydium_osd_printf(2,2,15,0.5,"font2.tga","^fscore: %i",scores[i]);
 
         raydium_ode_element_sound_update_name("corps",son_moteur);
 
 
-	speed=raydium_ode_motor_speed_get_name("moteur",1);
-	speed/=12;
-	speed+=0.5;
-	speed+=(raydium_random_neg_pos_1()/15);
-	raydium_sound_SetSourcePitch(son_moteur,raydium_trigo_abs(speed));
+        speed=raydium_ode_motor_speed_get_name("moteur",1);
+        speed/=12;
+        speed+=0.5;
+        speed+=(raydium_random_neg_pos_1()/15);
+        raydium_sound_SetSourcePitch(son_moteur,raydium_trigo_abs(speed));
     break;
 
 
     case GAME_OUT:
-	raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_DEFAULT);
-	raydium_ode_motor_power_max_name("moteur",10);
-	raydium_ode_motor_speed_name("moteur",0);
+        raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_DEFAULT);
+        raydium_ode_motor_power_max_name("moteur",10);
+        raydium_ode_motor_speed_name("moteur",0);
         raydium_ode_motor_angle_name("direction",0);
         raydium_ode_element_sound_update_name("corps",son_moteur);
-	raydium_sound_SetSourcePitch(son_moteur,0.2);
+        raydium_sound_SetSourcePitch(son_moteur,0.2);
 
-	if(raydium_key_last==1032)
-	    game_state_change(GAME_GAME);
+        if(raydium_key_last==1032)
+            game_state_change(GAME_GAME);
 
 
-	pos=raydium_ode_element_pos_get_name("corps");
-	raydium_camera_smooth(static_camera[0],
-			      static_camera[1],	
-			      static_camera[2],	
-			      pos[1],-pos[2],pos[0],
-			      90,0,raydium_frame_time*3);
+        pos=raydium_ode_element_pos_get_name("corps");
+        raydium_camera_smooth(static_camera[0],
+                              static_camera[1], 
+                              static_camera[2], 
+                              pos[1],-pos[2],pos[0],
+                              90,0,raydium_frame_time*3);
 
-	display_all();
-	raydium_osd_printf(47,53,15,0.5,"font2.tga","^f[ ^cOUT!^f ]");
+        display_all();
+        raydium_osd_printf(47,53,15,0.5,"font2.tga","^f[ ^cOUT!^f ]");
     break;
 
     case GAME_MENU:
-	secs+=raydium_frame_time;
-	raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
-	display_all();
+        secs+=raydium_frame_time;
+        raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
+        display_all();
     break;
 
     case GAME_END:
-	secs+=raydium_frame_time;
-	raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
-	display_all();
-	raydium_osd_printf(47,93,15,0.5,"font2.tga","^f[ ^cSCORES^f ]");	
-	z=85;
-	
-	for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-	{
-	    if(raydium_network_name[i][0])
-	    {
-	    raydium_osd_printf(40,z,25,0.5,"font2.tga","^f%s %i",raydium_network_name[i],scores[i]);
-	    z-=10;
-	    }
-	}
-    break;	
+        secs+=raydium_frame_time;
+        raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
+        display_all();
+        raydium_osd_printf(47,93,15,0.5,"font2.tga","^f[ ^cSCORES^f ]");        
+        z=85;
+        
+        for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
+        {
+            if(raydium_network_name[i][0])
+            {
+            raydium_osd_printf(40,z,25,0.5,"font2.tga","^f%s %i",raydium_network_name[i],scores[i]);
+            z-=10;
+            }
+        }
+    break;      
 
     }
 
 
 if(game_state==GAME_GAME || game_state==GAME_OUT)
-	{
-	static dReal max=0;
-	dReal *torque;
-	dReal *pos;
-	dReal posc[3];
-	dReal t;
+        {
+        static dReal max=0;
+        dReal *torque;
+        dReal *pos;
+        dReal posc[3];
+        dReal t;
         
-	
-	pos=raydium_ode_element_pos_get_name("corps");
-	torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body);
-	t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
-	if(t>max)
-	    max=t;
-	//raydium_log("%f",max);
-	// problem !
-	if(t>300)
-	    {
-	    raydium_log("LIMITS !!!! %f %f %f",pos[0],pos[1],pos[2]);
-//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body,0,0,0);	
-//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ag")].body,0,0,0);
-//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ad")].body,0,0,0);
-//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rg")].body,0,0,0);
-//	    dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rd")].body,0,0,0);
-	    memcpy(posc,pos,sizeof(GLfloat)*3);
-	    create_car();
-	    raydium_ode_object_move_name("WATURE",posc);
-//    	    pos=raydium_ode_element_pos_get_name("corps");
-//	    raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
-	    }
-	
-	if(raydium_network_uid>=0)
-	    draw_timer();
-	}
+        
+        pos=raydium_ode_element_pos_get_name("corps");
+        torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body);
+        t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
+        if(t>max)
+            max=t;
+        //raydium_log("%f",max);
+        // problem !
+        if(t>300)
+            {
+            raydium_log("LIMITS !!!! %f %f %f",pos[0],pos[1],pos[2]);
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body,0,0,0);      
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ag")].body,0,0,0);
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ad")].body,0,0,0);
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rg")].body,0,0,0);
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rd")].body,0,0,0);
+            memcpy(posc,pos,sizeof(GLfloat)*3);
+            create_car();
+            raydium_ode_object_move_name("WATURE",posc);
+//          pos=raydium_ode_element_pos_get_name("corps");
+//          raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
+            }
+        
+        if(raydium_network_uid>=0)
+            draw_timer();
+        }
 
 raydium_rendering_finish();
 

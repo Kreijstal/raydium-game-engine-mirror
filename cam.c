@@ -132,15 +132,15 @@ int main(int argc, char **argv)
     out1=fopen("cam1.cam","wt");
 
     if(!out)
-	{
-	raydium_log("cannot open cam.cam (w)");
-	return 1;
-	}
+        {
+        raydium_log("cannot open cam.cam (w)");
+        return 1;
+        }
     if(!out1)
-	{
-	raydium_log("cannot open cam1.cam (w)");
-	return 1;
-	}
+        {
+        raydium_log("cannot open cam1.cam (w)");
+        return 1;
+        }
     raydium_callback(&display);
     return(0);
 }

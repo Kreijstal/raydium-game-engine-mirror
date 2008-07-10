@@ -55,15 +55,15 @@ void glutSetCursor(int cursor)
 switch(cursor)
     {
     case GLUT_CURSOR_LEFT_ARROW:
-	if(_glutMouseVisible) break;
-	ShowCursor(1);
-	_glutMouseVisible=1;
-	break;
+        if(_glutMouseVisible) break;
+        ShowCursor(1);
+        _glutMouseVisible=1;
+        break;
     case GLUT_CURSOR_NONE:
     default:
-	if(!_glutMouseVisible) break;
-	ShowCursor(0);
-	_glutMouseVisible=0;
+        if(!_glutMouseVisible) break;
+        ShowCursor(0);
+        _glutMouseVisible=0;
         break;
     break;
     }
@@ -394,33 +394,33 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
         case VK_END:    key = GLUT_KEY_END;       special=1; break;
         case VK_INSERT: key = GLUT_KEY_INSERT;    special=1; break;
 
-				default:
-					// don't do this for WinCE
+                                default:
+                                        // don't do this for WinCE
 
 
           b = GetKeyboardState( state );
-					assert(b);
+                                        assert(b);
 
-					code [ 0 ] = 0; // WK: I need to do this, or on my Win2k box, the upper bits remain unchanged.
+                                        code [ 0 ] = 0; // WK: I need to do this, or on my Win2k box, the upper bits remain unchanged.
           if( ToAscii( key, 0, state, code, 0 ) == 1 )
-						if((0xFF00 & code[0]) == 0) // setting a high bit in key causes crashes later on (out of range array access)
-							key=code[ 0 ];
+                                                if((0xFF00 & code[0]) == 0) // setting a high bit in key causes crashes later on (out of range array access)
+                                                        key=code[ 0 ];
 
       }
       if ( key != -1)
         {
 
-	    // special down
-	    if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !repeating)
-		glutSpecialFuncCB(key,lastx,lasty);
+            // special down
+            if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !repeating)
+                glutSpecialFuncCB(key,lastx,lasty);
 
-	    // special up
-	    if(special && updown==GLUT_UP && glutSpecialUpFuncCB && !repeating)
-		glutSpecialUpFuncCB(key,lastx,lasty);
+            // special up
+            if(special && updown==GLUT_UP && glutSpecialUpFuncCB && !repeating)
+                glutSpecialUpFuncCB(key,lastx,lasty);
 
         // normal
-	    if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
-		glutKeyboardFuncCB(key,lastx,lasty);
+            if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
+                glutKeyboardFuncCB(key,lastx,lasty);
 
 
         /*if(!special && repeating && glutKeyboardFuncCB)
@@ -436,7 +436,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
       _glutWindowSize[0]=size[0];
       _glutWindowSize[1]=size[1];
       if (glutReshapeFuncCB)
-    	    glutReshapeFuncCB(size[0], size[1]);
+            glutReshapeFuncCB(size[0], size[1]);
       break;
 
     case WM_CLOSE:

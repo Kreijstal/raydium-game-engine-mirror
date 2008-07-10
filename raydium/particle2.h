@@ -9,14 +9,14 @@
 #ifndef PARTICLE2_H
 #define PARTICLE2_H
 
-#define RAYDIUM_MAX_PARTICLES	8192
-#define RAYDIUM_MAX_GENERATORS	64
+#define RAYDIUM_MAX_PARTICLES   8192
+#define RAYDIUM_MAX_GENERATORS  64
 
 typedef struct raydium_particle_Generator
 {
  int      id;
- signed char	  state;
- signed char	  enabled;
+ signed char      state;
+ signed char      enabled;
  char     name[RAYDIUM_MAX_NAME_LEN];
  GLfloat  position[3];
  GLfloat  position_random[3];
@@ -25,7 +25,7 @@ typedef struct raydium_particle_Generator
  GLfloat  ttl_particles;
  GLfloat  ttl_particles_random;
  GLfloat  particles_per_second;
- int	  texture;
+ int      texture;
  GLfloat  size;
  GLfloat  size_random;
  GLfloat  size_inc_per_sec;
@@ -53,7 +53,7 @@ typedef struct raydium_particle_Particle
 {
  GLfloat ttl_init;
  GLfloat ttl; // is updated over time
- int	 texture;
+ int     texture;
  GLfloat  size;
  GLfloat  size_inc_per_sec;
  GLfloat  size_limit;

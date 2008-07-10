@@ -304,14 +304,14 @@ if(!raydium_vertex_index) return;
 switch(n)
 {
     case 0:
-	tbl=raydium_vertex_x;
-	break;
+        tbl=raydium_vertex_x;
+        break;
     case 1:
-	tbl=raydium_vertex_y;
-	break;
+        tbl=raydium_vertex_y;
+        break;
     case 2:
-	tbl=raydium_vertex_z;
-	break;
+        tbl=raydium_vertex_z;
+        break;
 }
 (*max)=(*min)=tbl[start];
 
@@ -407,11 +407,11 @@ if(raydium_object_anims[0]>0)
     cpt=raydium_object_anim_len[0];    
     for(i=0;i<raydium_object_anims[0];i++)
       for(j=0;j<raydium_object_anim_end[0][i]-raydium_object_anim_start[0][i];j++)
-	{
-	if(raydium_object_anim_names[0][i][0]=='*')
-	    center_(cpt,cpt+len);
-	cpt+=len;
-	}
+        {
+        if(raydium_object_anim_names[0][i][0]=='*')
+            center_(cpt,cpt+len);
+        cpt+=len;
+        }
     }
 else
     center_(0,raydium_vertex_index);

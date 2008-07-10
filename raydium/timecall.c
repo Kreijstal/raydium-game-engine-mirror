@@ -75,17 +75,17 @@ if( (ret=select(raydium_timecall_devrtc_handle+1, &readfds, NULL, NULL, &tv)) ==
 if(ret>0)
  {
         if( read(raydium_timecall_devrtc_handle, &data, sizeof(unsigned long)) == -1)
-	{
-	raydium_log("timecall: ERROR: reading /dev/rtc failed at runtime");
+        {
+        raydium_log("timecall: ERROR: reading /dev/rtc failed at runtime");
         perror("system");
         }
-	else 
-	{
-	// read first 3 bytes only
-	missed=(data & 0xffffff00UL)>>8;
-	raydium_timecall_devrtc_clocks+=missed;
-//	raydium_log("%i",raydium_timecall_devrtc_clocks);
-	}
+        else 
+        {
+        // read first 3 bytes only
+        missed=(data & 0xffffff00UL)>>8;
+        raydium_timecall_devrtc_clocks+=missed;
+//      raydium_log("%i",raydium_timecall_devrtc_clocks);
+        }
  }
  
 return raydium_timecall_devrtc_clocks;
@@ -127,15 +127,15 @@ signed char raydium_timecall_devrtc_rate_change(unsigned long new)
 {
 #ifndef WIN32
         if(ioctl(raydium_timecall_devrtc_handle, RTC_IRQP_SET, new)==-1)
-	{
-		raydium_log("timecall: ERROR: changing /dev/rtc rate to %lu Hz failed !",new);
-		raydium_log("timecall: is /proc/sys/dev/rtc/max-user-freq correct for this value ?");
+        {
+                raydium_log("timecall: ERROR: changing /dev/rtc rate to %lu Hz failed !",new);
+                raydium_log("timecall: is /proc/sys/dev/rtc/max-user-freq correct for this value ?");
                 perror("system");
 //                exit(errno);
                 return 0;
         }
-	raydium_log("timecall: /dev/rtc rate changed to %lu Hz",new);
-	return 1;
+        raydium_log("timecall: /dev/rtc rate changed to %lu Hz",new);
+        return 1;
 #else
 return 0;
 #endif
@@ -145,8 +145,8 @@ void raydium_timecall_devrtc_close(void)
 {
 #ifndef WIN32
         if(ioctl(raydium_timecall_devrtc_handle, RTC_PIE_OFF, 0) == -1)
-	{
-		raydium_log("timecall: ERROR disabling /dev/rtc periodic interrupts");
+        {
+                raydium_log("timecall: ERROR disabling /dev/rtc periodic interrupts");
                 perror("system");
 //                exit(errno);
         }
@@ -196,11 +196,11 @@ unsigned long raydium_timecall_devrtc_init(void)
     // Enable periodic interrupts
     if(ioctl(raydium_timecall_devrtc_handle, RTC_PIE_ON, 0) == -1)
     {
-	    raydium_log("timecall: ERROR enabling /dev/rtc periodic interrupts !");
-	    raydium_log("timecall: is /proc/sys/dev/rtc/max-user-freq allowing %lu Hz ?",freq);
+            raydium_log("timecall: ERROR enabling /dev/rtc periodic interrupts !");
+            raydium_log("timecall: is /proc/sys/dev/rtc/max-user-freq allowing %lu Hz ?",freq);
             perror("system");
 //            exit(errno);
-	    return 0;
+            return 0;
     }
 
 raydium_atexit(raydium_timecall_devrtc_close);
@@ -289,9 +289,9 @@ if(raydium_timecall_max_frequency<RAYDIUM_TIMECALL_FREQ_PREFERED)
 raydium_log("timecall: basic method accuracy is low , trying /dev/rtc ...");
 tmp=raydium_timecall_devrtc_init();
 if(tmp) {
-	raydium_timecall_method=RAYDIUM_TIMECALL_METHOD_DEVRTC;
-	raydium_timecall_max_frequency=tmp;
-	}
+        raydium_timecall_method=RAYDIUM_TIMECALL_METHOD_DEVRTC;
+        raydium_timecall_max_frequency=tmp;
+        }
 }
 
 if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
@@ -404,9 +404,9 @@ for(i=0;i<raydium_timecall_index;i++)
     raydium_timecall_next[i]=now+raydium_timecall_interval[i]-phase;
 
     if(steps>1000) { // DEBUG ! need to calculate this value
-		    steps=100;
-		    raydium_log("WARNING: timecall's too long");
-		 }    
+                    steps=100;
+                    raydium_log("WARNING: timecall's too long");
+                 }    
     
 //    raydium_log("debug: need %i steps",steps);
     f=raydium_timecall_funct[i];

@@ -34,9 +34,9 @@ for(i=0;i< RAYDIUM_MAX_PARTICLES;i++)
 
 
 void raydium_explosion_add(GLfloat x, GLfloat y, GLfloat z, 
-			   GLfloat vx, GLfloat vy, GLfloat vz, 
+                           GLfloat vx, GLfloat vy, GLfloat vz, 
                            GLfloat dispersion, GLuint ttl, GLfloat dens_perc,
-			   GLfloat grav)
+                           GLfloat grav)
 {
 GLuint n=0; // gngngngngng ... debug !
 
@@ -159,20 +159,20 @@ for(i=0;i< RAYDIUM_MAX_PARTICLES;i++)
   glBegin(GL_QUADS); // berk... but i'll switch to TRIANGLES one day ;)
   glTexCoord2f(0.0f, 0.0f);
   glVertex3f(raydium_particle_x[expl][i] + (-rx - ux),
-	     raydium_particle_y[expl][i] + (-ry - uy),
-	     raydium_particle_z[expl][i] + (-rz - uz));
+             raydium_particle_y[expl][i] + (-ry - uy),
+             raydium_particle_z[expl][i] + (-rz - uz));
   glTexCoord2f(1.0f, 0.0f);
   glVertex3f(raydium_particle_x[expl][i] + (rx - ux),
-	     raydium_particle_y[expl][i] + (ry - uy),
-	     raydium_particle_z[expl][i] + (rz - uz));
+             raydium_particle_y[expl][i] + (ry - uy),
+             raydium_particle_z[expl][i] + (rz - uz));
   glTexCoord2f(1.0f, 1.0f);
   glVertex3f(raydium_particle_x[expl][i] + (rx + ux),
-	     raydium_particle_y[expl][i] + (ry + uy),
-	     raydium_particle_z[expl][i] + (rz + uz));
+             raydium_particle_y[expl][i] + (ry + uy),
+             raydium_particle_z[expl][i] + (rz + uz));
   glTexCoord2f(0.0f, 1.0f);
   glVertex3f(raydium_particle_x[expl][i] + (ux - rx),
-	     raydium_particle_y[expl][i] + (uy - ry),
-	     raydium_particle_z[expl][i] + (uz - rz));
+             raydium_particle_y[expl][i] + (uy - ry),
+             raydium_particle_z[expl][i] + (uz - rz));
   glEnd();
  }
 }

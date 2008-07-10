@@ -27,14 +27,14 @@ found=0;
 
 for(i=1;i<raydium_init_argc;i++)
     if(!strcasecmp(full_option,raydium_init_argv[i]))
-	found=i;
+        found=i;
 
-if(!found) return 0; 	// option not found
+if(!found) return 0;    // option not found
 
 if((found+1) >= raydium_init_argc)
     {
     if(value) strcpy(value,"");
-    return 1;	// found, no value (last option of cli)
+    return 1;   // found, no value (last option of cli)
     }
 
 strncpy(head,raydium_init_argv[found+1],3);
@@ -43,7 +43,7 @@ head[2]=0;
 if(!strcasecmp(head,"--"))
     {
     if(value) strcpy(value,"");
-    return 1;	// found, no value (value starts with -- : is a option)
+    return 1;   // found, no value (value starts with -- : is a option)
     }
 
 if(value) strcpy(value,raydium_init_argv[found+1]);
@@ -103,10 +103,10 @@ fp=fopen(raydium_file_home_path("flag"),"wt");
 if(!fp)
     {
     if(mkdir(raydium_homedir,S_IRUSR|S_IWUSR|S_IRWXU)<0)
-	{
-	raydium_log("ERROR ! Unable to create home dir: '%s'",raydium_homedir);
-	exit(101);
-	}
+        {
+        raydium_log("ERROR ! Unable to create home dir: '%s'",raydium_homedir);
+        exit(101);
+        }
     }
 else
     {

@@ -319,52 +319,52 @@ all necessary functions to automate this task.
 ##*raydium_vertex_texture## contains, for each vertex stored 
 in the vertices data structure, u and v mapping information, 
 and associated texture number. U and V are texture mapping coordinates. 
-	
+        
 Raydium can automatically generates some of these data 
 (normals and uv coords, that is), Read "Vertices" section above 
 for more information.
-	
+        
 PLEASE, do not write directly in these tables, use dedicated functions.
-	
+        
 ===Objects===
-	
+        
 Objects are loaded in Vertices stream, identified by a "start" and an "end" 
 (##raydium_object_start[]## and ##raydium_object_end[]##) in this stream.
 An index is incremented each time you load an object 
 (##GLuint raydium_object_index##). Filename is also stored in 
 ##raydium_object_name[][]##. Go to "Objects" section to know more.
-	
+        
 ===Lights===
-	
+        
 First of all, ##raydium_light_enabled_tag## contains 0 when light is
 disabled, non-zero otherwise. This is a read-only variable, so use 
 suitable functions.
-	
+        
 Currently, for Raydium, a light can have 3 states: on, off, or blinking.
 ##raydium_light_internal_state[]## stores this.
-	
+        
 Next comes all light's features: position, color, intensity. You can 
 modify directly these variables, and call update fonctions, 
 if needed (not recommended).
-	
+        
 Next, ##raydium_light_blink_*## are used internaly for blinking lights, 
 setting lowest, higher light intensity, and blinking speed. 
 Do noy modify these variables, use suitable functions.
-	
+        
 You should read the chapter dedicated to lights for more information.
-	
+        
 ===Fog===
-	
+        
 Only one variable, here: ##raydium_fog_enabled_tag##, switching from zero 
 to non zero if fog is enabled. Do NOT use this variable to enable or 
 disable fog, but suitable functions, this variable is just a tag.
-	
+        
 ===Camera===
-	
+        
 Since many calls to camera functions are done during one frame,
 Raydium must track if any call to these functions was already done, 
 using ##raydium_frame_first_camera_pass## boolean.
-	
+        
 ##raydium_camera_pushed##, also used as a boolean, stores stack state. 
 When you place your camera in the scene with Raydium, it pushes matrix 
 on top of the stack, so you can modify it (the matrix), placing an object

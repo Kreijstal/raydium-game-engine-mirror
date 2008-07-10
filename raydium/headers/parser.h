@@ -88,7 +88,7 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
         {
         if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=2)
             {
-	    raydium_log("error: foobar_variable is not float array");
+            raydium_log("error: foobar_variable is not float array");
             continue;
             }
         memcpy(...);

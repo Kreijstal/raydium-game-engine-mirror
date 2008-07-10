@@ -26,17 +26,17 @@ GLfloat camx=3.01;
 GLfloat camy=3;
 GLfloat camz=0;
 
-#define PLAYER_MODEL	"sasc2.tri"
+#define PLAYER_MODEL    "sasc2.tri"
 
 #ifndef WIN32
-#define CAMERA_RES_X	320
-#define CAMERA_RES_Y	240
+#define CAMERA_RES_X    320
+#define CAMERA_RES_Y    240
 
 #define camera "camera_para.dat"
 
 #else
-#define CAMERA_RES_X	640
-#define CAMERA_RES_Y	480
+#define CAMERA_RES_X    640
+#define CAMERA_RES_Y    480
 
 #define camera "dvx.dat"
 #endif
@@ -54,14 +54,14 @@ int             patt_id;
 double          patt_width     = 80.0;
 double          patt_center[2] = {0.0, 0.0};
 double          patt_trans[3][4];
-int		rot_ok=0;
+int             rot_ok=0;
 
 double          target_width = 80.0;
 double          target_center[2] = {0.0, 0.0};
-double      	cam_trans[3][4];
-double 		gl_para[16];
+double          cam_trans[3][4];
+double          gl_para[16];
 
-double 		gl_cpara[16];
+double          gl_cpara[16];
 
 void argConvGlpara( double para[3][4], double gl_para[16] )
 {
@@ -179,7 +179,7 @@ int data_callback(unsigned char *data, int tx, int ty, int bpp)
 
     if( arDetectMarker(dataPtr, thresh, &marker_info, &marker_num) < 0 ) {
         //cleanup();
-	raydium_log("arDetectMarker error");
+        raydium_log("arDetectMarker error");
         exit(0);
     }
 
@@ -192,7 +192,7 @@ int data_callback(unsigned char *data, int tx, int ty, int bpp)
         }
     }
     if( k == -1 ) {
-	raydium_log("no marker available %i",raydium_random_i(0,10));
+        raydium_log("no marker available %i",raydium_random_i(0,10));
         return 1;
     }
     else
@@ -309,7 +309,7 @@ if(raydium_key_last==1000+'c')
     raydium_ode_element_move_name_3f(dummy,0,0,2);
     raydium_ode_element_ttl_set_name(dummy,raydium_ode_get_physics_freq()*60);
     }
-				
+                                
 if(raydium_key_last==1032) 
     {
     raydium_ode_object_delete_name("WATURE");
@@ -374,11 +374,11 @@ raydium_fog_disable();
 
     fp=raydium_file_fopen(cparam_name,"rb");
     if(!fp)
-	exit(1);
+        exit(1);
     fclose(fp);
     fp=raydium_file_fopen(patt_name,"rb");
     if(!fp)
-	exit(1);
+        exit(1);
     fclose(fp);
 
     /* set the initial camera parameters */

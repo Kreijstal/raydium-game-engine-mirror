@@ -106,7 +106,7 @@ total=0;
 while ((tmp = readdir(dir)))
     {
     if(is_jpg(tmp->d_name))
-	total++;
+        total++;
     }
 
 offset=0;
@@ -120,9 +120,9 @@ rewinddir(dir);
 while ((tmp = readdir(dir)))
     {
     if(!is_jpg(tmp->d_name))
-	{
-	continue;
-	}
+        {
+        continue;
+        }
 
     fprintf(fpo,"%i|",offset);
     offset+=filesize(tmp->d_name);
@@ -134,9 +134,9 @@ rewinddir(dir);
 while ((tmp = readdir(dir)))
     {
     if(!is_jpg(tmp->d_name))
-	{
-	continue;
-	}
+        {
+        continue;
+        }
 
     copy(tmp->d_name,fpo);
     }

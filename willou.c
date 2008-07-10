@@ -23,15 +23,15 @@ void display(void)
     raydium_joy_key_emul();
 
     if(raydium_key_last==1027)
-	exit(0);
+        exit(0);
 
     if(raydium_key[GLUT_KEY_F1]) { raydium_projection_fov/=(1.04); raydium_window_view_update(); }
     if(raydium_key[GLUT_KEY_F2]) { raydium_projection_fov*=(1.04); raydium_window_view_update(); }
 
     if(raydium_key_last==3)
-	raydium_light_disable();
+        raydium_light_disable();
     if(raydium_key_last==4)
-	raydium_light_enable();
+        raydium_light_enable();
 
     raydium_light_position[0][0]=50;
     raydium_light_position[0][1]=150;

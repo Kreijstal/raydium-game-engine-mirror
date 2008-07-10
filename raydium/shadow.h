@@ -7,8 +7,8 @@
 #ifndef SHADOW_H
 #define SHADOW_H
 
-#define RAYDIUM_SHADOW_OPACITY		0.5
-#define RAYDIUM_SHADOW_TEXTURE		"shadowmap"
+#define RAYDIUM_SHADOW_OPACITY          0.5
+#define RAYDIUM_SHADOW_TEXTURE          "shadowmap"
 
 __global GLuint raydium_shadow_map_size;
 __global GLuint raydium_shadow_texture;

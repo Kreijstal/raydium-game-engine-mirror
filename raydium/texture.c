@@ -130,9 +130,9 @@ if(!rgb && !faked)
     { 
     data[k+3]=temp[3]; 
     if(temp[3]>0 && temp[3]<255)
-	blended=1;
+        blended=1;
     if(temp[3]==0)
-	cutout=1;
+        cutout=1;
     }
   }
  }
@@ -151,7 +151,7 @@ if(raydium_texture_to_replace)
 if(raydium_texture_index>RAYDIUM_MAX_TEXTURES) 
     { 
     raydium_log("texture: No more texture slots left ! (%i max)",
-		RAYDIUM_MAX_TEXTURES); 
+                RAYDIUM_MAX_TEXTURES); 
     return 0; 
     }
 
@@ -162,28 +162,28 @@ if(faked)
     raydium_live_Texture *tex;
 
     if(or_live_id_fake>=0)
-	{
-	tex=&raydium_live_texture[or_live_id_fake];
-	tx=tex->hardware_tx;
-	ty=tex->hardware_ty;
-	bpp=tex->bpp/8;
-	}
+        {
+        tex=&raydium_live_texture[or_live_id_fake];
+        tx=tex->hardware_tx;
+        ty=tex->hardware_ty;
+        bpp=tex->bpp/8;
+        }
     else
-	{
-	tx=faked_tx;
-	ty=faked_ty;
-	bpp=faked_bpp;
-	}
+        {
+        tx=faked_tx;
+        ty=faked_ty;
+        bpp=faked_bpp;
+        }
 
     texsize = tx * ty * bpp;
     data=malloc(texsize);
     memset(data,0,texsize);
     if(!data) 
-	{ 
-	fclose(file); 
-    	raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
-	return 0; 
-	}
+        { 
+        fclose(file); 
+        raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
+        return 0; 
+        }
     }
 
 if(!rgb)
@@ -211,9 +211,9 @@ if(!rgb)
  if(raydium_texture_compression_enabled && !faked)
     {
     if(GLbppi==GL_RGBA8)
-	GLbppi=GL_COMPRESSED_RGBA;
+        GLbppi=GL_COMPRESSED_RGBA;
     if(GLbppi==GL_ALPHA8)
-	GLbppi=GL_COMPRESSED_ALPHA;
+        GLbppi=GL_COMPRESSED_ALPHA;
     }
 
  raydium_texture_blended[id]=0;
@@ -240,15 +240,15 @@ if(!simulate)
  if(strstr(filename,".tri."))
     raydium_texture_islightmap[id]=1;
 
- memcpy(temp,filename,3);						// TEMP !!
- temp[3]=0;								// TEMP !!
+ memcpy(temp,filename,3);                                               // TEMP !!
+ temp[3]=0;                                                             // TEMP !!
  if(!simulate)
  {
-  if(!strcmp("BOX",(char *)temp) || faked)				// TEMP !!
-  {									// TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	// TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);	// TEMP !!
-  }									// TEMP !!
+  if(!strcmp("BOX",(char *)temp) || faked)                              // TEMP !!
+  {                                                                     // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+  }                                                                     // TEMP !!
   else
   {
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
@@ -258,7 +258,7 @@ if(!simulate)
 
  filter=raydium_texture_filter;
 
- if(!strcmp("HDR",(char *)temp))				// TEMP !!
+ if(!strcmp("HDR",(char *)temp))                                // TEMP !!
     {
     raydium_texture_hdr[id]=1;
     raydium_texture_nolight[id]=1;
@@ -322,11 +322,11 @@ if(!simulate)
     strcpy(comp_str,"");
 
  raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i)%s",
-	     id,raydium_texture_name[id],
-	     (faked?"FAKED":"loaded"),
-	     tx,ty,bpp,
-	     blended,raydium_texture_islightmap[id],
-	     raydium_texture_hdr[id],comp_str);
+             id,raydium_texture_name[id],
+             (faked?"FAKED":"loaded"),
+             tx,ty,bpp,
+             blended,raydium_texture_islightmap[id],
+             raydium_texture_hdr[id],comp_str);
  free(data);
 } else /* is rgb color */
 {

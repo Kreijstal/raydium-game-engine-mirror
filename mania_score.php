@@ -13,9 +13,9 @@ $proxy=parse_url($proxy);
 try {
   // Create the client instance
   $client = new SoapClient($url, array('proxy_host' => $proxy["host"],
-				       'proxy_port' => (int) $proxy["port"],
-				       )
-			   );
+                                       'proxy_port' => (int) $proxy["port"],
+                                       )
+                           );
   // Call the SOAP method
   $result = $client->ScoreAddNew($name, $track, $score, $version);
 

@@ -23,10 +23,10 @@ void display(void)
     raydium_joy_key_emul();
 
     if(raydium_key_last==1027)
-	exit(0);
+        exit(0);
 
     if(raydium_key_last==1032)
-	raydium_php_exec("test.php");
+        raydium_php_exec("test.php");
 
     if(raydium_key_last==1116) draw_debug*=-1;
     

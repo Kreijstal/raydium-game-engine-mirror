@@ -25,7 +25,7 @@
 #define LIMIT(x) ((x)>0xffffff?0xff: ((x)<=0xffff?0:((x)>>16)))
 void
 v4l_copy_420_block (int yTL, int yTR, int yBL, int yBR,
-		    int u, int v, int rowPixels, unsigned char *rgb, int bits)
+                    int u, int v, int rowPixels, unsigned char *rgb, int bits)
 {
   const int rvScale = 91881;
   const int guScale = -22553;
@@ -62,25 +62,25 @@ v4l_copy_420_block (int yTL, int yTR, int yBL, int yBR,
     {
 /* Write out top two pixels */
       rgb[0] =
-	((LIMIT (b + yTL) >> 3) & 0x1F) | ((LIMIT (g + yTL) << 3) & 0xE0);
+        ((LIMIT (b + yTL) >> 3) & 0x1F) | ((LIMIT (g + yTL) << 3) & 0xE0);
       rgb[1] = ((LIMIT (g + yTL) >> 5) & 0x07) | (LIMIT (r + yTL) & 0xF8);
       rgb[2] =
-	((LIMIT (b + yTR) >> 3) & 0x1F) | ((LIMIT (g + yTR) << 3) & 0xE0);
+        ((LIMIT (b + yTR) >> 3) & 0x1F) | ((LIMIT (g + yTR) << 3) & 0xE0);
       rgb[3] = ((LIMIT (g + yTR) >> 5) & 0x07) | (LIMIT (r + yTR) & 0xF8);
 /* Skip down to next line to write out bottom two pixels */
       rgb += 2 * rowPixels;
       rgb[0] =
-	((LIMIT (b + yBL) >> 3) & 0x1F) | ((LIMIT (g + yBL) << 3) & 0xE0);
+        ((LIMIT (b + yBL) >> 3) & 0x1F) | ((LIMIT (g + yBL) << 3) & 0xE0);
       rgb[1] = ((LIMIT (g + yBL) >> 5) & 0x07) | (LIMIT (r + yBL) & 0xF8);
       rgb[2] =
-	((LIMIT (b + yBR) >> 3) & 0x1F) | ((LIMIT (g + yBR) << 3) & 0xE0);
+        ((LIMIT (b + yBR) >> 3) & 0x1F) | ((LIMIT (g + yBR) << 3) & 0xE0);
       rgb[3] = ((LIMIT (g + yBR) >> 5) & 0x07) | (LIMIT (r + yBR) & 0xF8);
     }
 }
 
 int
 v4l_yuv420p2rgb (unsigned char *rgb_out, unsigned char *yuv_in, int width, int
-		 height, int bits)
+                 height, int bits)
 {
   const int numpix = width * height;
   const unsigned int bytes = bits >> 3;
@@ -94,17 +94,17 @@ v4l_yuv420p2rgb (unsigned char *rgb_out, unsigned char *yuv_in, int width, int
   for (h = 0; h <= height - 2; h += 2)
     {
       for (w = 0; w <= width - 2; w += 2)
-	{
-	  y00 = *(pY);
-	  y01 = *(pY + 1);
-	  y10 = *(pY + width);
-	  y11 = *(pY + width + 1);
-	  u = (*pU++) - 128;
-	  v = (*pV++) - 128;
-	  v4l_copy_420_block (y00, y01, y10, y11, u, v, width, pOut, bits);
-	  pY += 2;
-	  pOut += bytes << 1;
-	}
+        {
+          y00 = *(pY);
+          y01 = *(pY + 1);
+          y10 = *(pY + width);
+          y11 = *(pY + width + 1);
+          u = (*pU++) - 128;
+          v = (*pV++) - 128;
+          v4l_copy_420_block (y00, y01, y10, y11, u, v, width, pOut, bits);
+          pY += 2;
+          pOut += bytes << 1;
+        }
       pY += width;
       pOut += width * bytes;
     }
@@ -119,7 +119,7 @@ signed char raydium_live_video_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_MAX_VIDEO_DEVICES &&
     raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
-	return 1;
+        return 1;
 return 0;
 }
 
@@ -130,7 +130,7 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
     if(raydium_live_device[i].capture_style==RAYDIUM_LIVE_FREE)
-	return i;
+        return i;
 return -1;
 }
 
@@ -140,7 +140,7 @@ return -1;
 #ifdef WIN32
 LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
 {
-    int i,j;		
+    int i,j;            
     BYTE * pin , * pout;
     raydium_live_Device *dev;
     BITMAPINFO * bmi_in, * bmi_out;
@@ -229,7 +229,7 @@ if (dev->fd<0)
             id = 0;
     
         //Capture Frame create
-        dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0);	
+        dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0); 
    
         if(!capDriverConnect(dev->hWnd_WC, id)) // Todo: Change 0 to what ever to have the good cam
         {
@@ -243,8 +243,8 @@ if (dev->fd<0)
     
     // Perhaps needed config dialog.
     //    capDlgVideoDisplay( dev->hWnd_WC );
-    //	capDlgVideoFormat ( dev->hWnd_WC );
-    //	capDlgVideoSource ( dev->hWnd_WC );
+    //  capDlgVideoFormat ( dev->hWnd_WC );
+    //  capDlgVideoSource ( dev->hWnd_WC );
         dev->hDC_WC = GetDC(dev->hWnd_WC);
     }
 
@@ -350,18 +350,18 @@ if(sizex<0 || sizey<0)
 #endif
 
     if(raydium_init_cli_option("video-size",s))
-	{
-	if(!raydium_parser_cut(s,sx,sy,'x'))
-	    {
-	    // apply to every video device ... :/
-	    raydium_log("live: ERROR: --video-size format invalid (ex: 352x288)");
-	    }
-	else
-	    {	    
-	    dev->win.width=atoi(sx);
-	    dev->win.height=atoi(sy);
-	    }
-	}
+        {
+        if(!raydium_parser_cut(s,sx,sy,'x'))
+            {
+            // apply to every video device ... :/
+            raydium_log("live: ERROR: --video-size format invalid (ex: 352x288)");
+            }
+        else
+            {       
+            dev->win.width=atoi(sx);
+            dev->win.height=atoi(sy);
+            }
+        }
     }
 else
     {
@@ -447,24 +447,24 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
 if (dev->cap.type & VID_TYPE_MONOCHROME) 
     {
     dev->vpic.depth=8;
-    dev->vpic.palette=VIDEO_PALETTE_GREY;	// 8bit grey
+    dev->vpic.palette=VIDEO_PALETTE_GREY;       // 8bit grey
     strcpy(palette,"grey, 8 bpp");
     if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
-	{
-	strcpy(palette,"grey, 6 bpp");
-	dev->vpic.depth=6;
-	if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
-	    {
-	    strcpy(palette,"grey, 4 bpp");
-	    dev->vpic.depth=4;
-	    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
-		{
-		raydium_log("live: ERROR: cannot found suitable grey palette");
-		close(dev->fd);
-		return -1;
-		}
-	    }
-	}
+        {
+        strcpy(palette,"grey, 6 bpp");
+        dev->vpic.depth=6;
+        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+            {
+            strcpy(palette,"grey, 4 bpp");
+            dev->vpic.depth=4;
+            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+                {
+                raydium_log("live: ERROR: cannot found suitable grey palette");
+                close(dev->fd);
+                return -1;
+                }
+            }
+        }
     } 
 else 
     {
@@ -472,29 +472,29 @@ else
     dev->vpic.depth=24;
     dev->vpic.palette=VIDEO_PALETTE_RGB24;
     if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
-	{
-	strcpy(palette,"RGB565, 16 bpp");
-	dev->vpic.palette=VIDEO_PALETTE_RGB565;
-	dev->vpic.depth=16;      
-	if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
-	    {
-	    strcpy(palette,"RGB555, 15 bpp");
-	    dev->vpic.palette=VIDEO_PALETTE_RGB555;
-	    dev->vpic.depth=15;
-	    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
-		{
-		strcpy(palette,"YUV420P, 24 bpp");
-		dev->vpic.palette=VIDEO_PALETTE_YUV420P;
-		dev->vpic.depth=24;
-		if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
-		    {
-		    raydium_log("live: ERROR: cannot found suitable color palette");
-		    close(dev->fd);
-		    return -1;
-		    }
-		}
-	    }
-	}
+        {
+        strcpy(palette,"RGB565, 16 bpp");
+        dev->vpic.palette=VIDEO_PALETTE_RGB565;
+        dev->vpic.depth=16;      
+        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+            {
+            strcpy(palette,"RGB555, 15 bpp");
+            dev->vpic.palette=VIDEO_PALETTE_RGB555;
+            dev->vpic.depth=15;
+            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+                {
+                strcpy(palette,"YUV420P, 24 bpp");
+                dev->vpic.palette=VIDEO_PALETTE_YUV420P;
+                dev->vpic.depth=24;
+                if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+                    {
+                    raydium_log("live: ERROR: cannot found suitable color palette");
+                    close(dev->fd);
+                    return -1;
+                    }
+                }
+            }
+        }
     }
 #else
     dev->vpic.depth=dev->capture_video_format.bmiHeader.biBitCount;
@@ -527,21 +527,21 @@ if(dev->cap.type & VID_TYPE_CAPTURE)
     {
     capture_style=RAYDIUM_LIVE_CAPTURE_MMAP;
     if(ioctl(dev->fd,VIDIOCGMBUF,&dev->gb_buffers)==-1)
-	{
-	perror("VIDIOCGMBUF");
-	raydium_log("live: ERROR: hardware refuse our mmap capture style (but is claiming this feature ...)");
-	force_read=1;
-	break;
-	}
+        {
+        perror("VIDIOCGMBUF");
+        raydium_log("live: ERROR: hardware refuse our mmap capture style (but is claiming this feature ...)");
+        force_read=1;
+        break;
+        }
 
     dev->buffer = mmap(0,dev->gb_buffers.size,PROT_READ|PROT_WRITE,MAP_SHARED,dev->fd,0);
     if(dev->buffer==(void *) -1)
-	{
-	perror("mmap");
-	raydium_log("live: ERROR: mmap failed");
-	force_read=1;
-	break;
-	}
+        {
+        perror("mmap");
+        raydium_log("live: ERROR: mmap failed");
+        force_read=1;
+        break;
+        }
 
     dev->gb_buf.frame=0;
     dev->gb_buf.height = dev->win.height;
@@ -549,13 +549,13 @@ if(dev->cap.type & VID_TYPE_CAPTURE)
     dev->gb_buf.format = dev->vpic.palette;
 
     if(ioctl(dev->fd, VIDIOCMCAPTURE, &dev->gb_buf)==-1)
-	{
-	perror("VIDIOCMCAPTURE");
-	raydium_log("live: ERROR: mmap capture test failed");
-	munmap(dev->buffer,dev->gb_buffers.size);
-	force_read=1;
-	break;
-	}
+        {
+        perror("VIDIOCMCAPTURE");
+        raydium_log("live: ERROR: mmap capture test failed");
+        munmap(dev->buffer,dev->gb_buffers.size);
+        force_read=1;
+        break;
+        }
     }
 } while(0); // i'm not proud of this ... :)
 
@@ -570,11 +570,11 @@ if( (!(dev->cap.type & VID_TYPE_CAPTURE)) || force_read )
   
     dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // /8 no ?
     if (!dev->buffer) 
-	{
-	raydium_log("live: ERROR: buffer2: out of memory (!?)");
-	close(dev->fd);
-	return -1;
-	}
+        {
+        raydium_log("live: ERROR: buffer2: out of memory (!?)");
+        close(dev->fd);
+        return -1;
+        }
     }
 
 raydium_log("live: current: %ix%i, palette %s, %s",
@@ -591,10 +591,10 @@ return id;
  
 
     capSetUserData(dev->hWnd_WC,dev);
-	capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);	
-//	capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
-/*	capPreviewRate(dev->hWnd_WC,100);
-	capPreview(dev->hWnd_WC,TRUE);*/
+        capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);       
+//      capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
+/*      capPreviewRate(dev->hWnd_WC,100);
+        capPreview(dev->hWnd_WC,TRUE);*/
     capCaptureSequenceNoFile(dev->hWnd_WC);
 
     }
@@ -651,10 +651,10 @@ else
     dev->gb_buf.frame=!dev->frame;
     ioctl(dev->fd, VIDIOCMCAPTURE, &dev->gb_buf);
     if(ioctl(dev->fd, VIDIOCSYNC, &dev->frame)==-1)
-	{
-	perror("mmap");
-	return 0;
-	}
+        {
+        perror("mmap");
+        return 0;
+        }
     dev->src+=dev->gb_buffers.offsets[dev->frame];
     }
 
@@ -670,12 +670,12 @@ else
     unsigned int i,j;
     int r,g,b;
     for (i = j = 0; i < dev->win.width * dev->win.height; i++) 
-	{
-	READ_VIDEO_PIXEL(dev->src, dev->vpic.palette, dev->vpic.depth, r, g, b);
-	dev->buffer2[j++]=b>>8;
-	dev->buffer2[j++]=g>>8;
-	dev->buffer2[j++]=r>>8;
-	}
+        {
+        READ_VIDEO_PIXEL(dev->src, dev->vpic.palette, dev->vpic.depth, r, g, b);
+        dev->buffer2[j++]=b>>8;
+        dev->buffer2[j++]=g>>8;
+        dev->buffer2[j++]=r>>8;
+        }
     }
 
 #endif
@@ -691,7 +691,7 @@ int i;
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
  if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
     if(raydium_live_video_read(&raydium_live_device[i]))
-	raydium_live_texture_refresh(i);
+        raydium_live_texture_refresh(i);
 }
 
 
@@ -742,7 +742,7 @@ raydium_log("video (live): OK");
 signed char raydium_live_texture_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_MAX_LIVE_TEXTURES && raydium_live_texture[i].state)
-	return 1;
+        return 1;
 return 0;
 }
 
@@ -752,7 +752,7 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_LIVE_TEXTURES;i++)
     if(!raydium_live_texture[i].state)
-	return i;
+        return i;
 return -1;
 }
 
@@ -763,7 +763,7 @@ int i;
 for(i=0;i<RAYDIUM_MAX_LIVE_TEXTURES;i++)
     if(raydium_live_texture[i].state &&
        raydium_live_texture[i].texture==original_texture)
-	    return i;
+            return i;
 return -1;
 }
 
@@ -840,11 +840,11 @@ if(f && !f(tex->data_source,tex->tx,tex->ty,tex->bpp))
 glEnable(GL_TEXTURE_2D);
 glBindTexture(GL_TEXTURE_2D,tex->texture);
 glTexSubImage2D(GL_TEXTURE_2D,0,0,0,
-		tex->tx,
-		tex->ty,
-		(tex->bpp==24?GL_RGB:GL_RGBA),
-		GL_UNSIGNED_BYTE,
-		tex->data_source);
+                tex->tx,
+                tex->ty,
+                (tex->bpp==24?GL_RGB:GL_RGBA),
+                GL_UNSIGNED_BYTE,
+                tex->data_source);
 }
 
 

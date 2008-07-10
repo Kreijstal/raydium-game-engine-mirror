@@ -113,9 +113,9 @@ else
 </head>
 <body>
     <div class="topbanner">
-	<ul>
-	    <li>Raydium Server Side Scripts (R3S) - Data Repository for Raydium 3D Game Engine - <a href="http://raydium.org/">http://raydium.org</a></li>
-	</ul>
+        <ul>
+            <li>Raydium Server Side Scripts (R3S) - Data Repository for Raydium 3D Game Engine - <a href="http://raydium.org/">http://raydium.org</a></li>
+        </ul>
     </div>
     <div id="contenu">
     <div class="contenu">
@@ -145,10 +145,10 @@ echo "<table border=0 cellpadding=2>";
  {
     while (($file = _readdir($dh)) !== false) 
     {
-	if($file[0]==".") continue;
-	$size=filesize($data_dir.$file);
-	$total_size+=$size;
-	echo "<tr><td><b><a href=\"?type=getBin&file=$file\">$file</a></b></td><td align=right>$size byte(s)</td><td>&nbsp;</td><td>".date("Y-m-d H:i:s",filemtime($data_dir.$file))."</td></tr>";
+        if($file[0]==".") continue;
+        $size=filesize($data_dir.$file);
+        $total_size+=$size;
+        echo "<tr><td><b><a href=\"?type=getBin&file=$file\">$file</a></b></td><td align=right>$size byte(s)</td><td>&nbsp;</td><td>".date("Y-m-d H:i:s",filemtime($data_dir.$file))."</td></tr>";
     }
  }
 echo "<tr><td>&nbsp;</td></tr>";
@@ -183,12 +183,12 @@ $file=$data_dir.$file;
 if($type=="listRepos")
     {
     if($file==$data_dir)
-	$file="$data_dir/*";
+        $file="$data_dir/*";
     foreach((array)glob($file) as $file)
-	{
-	if($file[0]!='.')
-	    echo trim(str_replace("/","",substr($file,strlen($data_dir))))."\n";
-	}
+        {
+        if($file[0]!='.')
+            echo trim(str_replace("/","",substr($file,strlen($data_dir))))."\n";
+        }
     return;
     }
 

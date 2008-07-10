@@ -89,7 +89,7 @@ void raydium_ode_init_joint(int i)
 raydium_ode_joint[i].id=i;
 raydium_ode_joint[i].name[0]=0;
 raydium_ode_joint[i].state=0;
-raydium_ode_joint[i].mesh=-1;	    
+raydium_ode_joint[i].mesh=-1;       
 raydium_ode_joint[i].joint=NULL;
 //raydium_ode_joint[i].hinge2correct=0;
 raydium_ode_joint[i].breakableforce=0;
@@ -268,7 +268,7 @@ return 0;
 
 
 void raydium_ode_ground_dTriArrayCallback (
-	dGeomID TriMesh, dGeomID RefObject,
+        dGeomID TriMesh, dGeomID RefObject,
         const int* TriIndices, int TriCount)
 {
 int offset;
@@ -303,10 +303,10 @@ for(i=1;i<TriCount;i++)
      (pos[1]-raydium_vertex_y[TriIndices[i]*3+offset]) +
      (pos[2]-raydium_vertex_z[TriIndices[i]*3+offset]) );
     if(tmp<=max_val)
-	{
-	max_index=i;
-	max_val=tmp;
-	}    
+        {
+        max_index=i;
+        max_val=tmp;
+        }    
     }
 
 //printf("%i %s %i %i\n",TriCount,e->name,TriIndices[0],TriIndices[1]);
@@ -316,9 +316,9 @@ raydium_vertex_tag[TriIndices[max_index]*3+offset]=1;
 
 
 int raydium_ode_ground_dTriCallback(
-		dGeomID TriMesh,
-		dGeomID RefObject,
-		int TriangleIndex)
+                dGeomID TriMesh,
+                dGeomID RefObject,
+                int TriangleIndex)
 {
 //printf("%i\n",TriangleIndex);
 raydium_vertex_tag[TriangleIndex*3]=1;
@@ -558,7 +558,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if( (raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD ||
          raydium_ode_element[i].state==RAYDIUM_ODE_STATIC) &&
          raydium_ode_element[i].object==o)
-	    dBodySetLinearVel(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+            dBodySetLinearVel(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_object_linearvelocity_set_name(char *o, dReal *vect)
@@ -586,7 +586,7 @@ if(!raydium_ode_object_isvalid(o))
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
         raydium_ode_element[i].object==o)
-	    dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+            dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_object_addforce_name(char *o, dReal *vect)
@@ -615,7 +615,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add force to a static element");
     return;
     }
-		
+                
 dBodyAddForce(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
 }
 
@@ -645,7 +645,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add torque to a static element");
     return;
     }
-		
+                
 dBodyAddTorque(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
 }
 
@@ -1062,10 +1062,10 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
         dMassSetSphere(&m,1,radius);
-	dMassAdjust(&m,mass);
+        dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
-//	dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
+//      dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
      }  
      else raydium_ode_element[i].body=0;
 
@@ -1125,22 +1125,22 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
       raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
       if(tx<0) // AUTODETECT
          {
-	 int ratio=tx;
+         int ratio=tx;
          raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-	 tx*=(-ratio);
-	 ty*=(-ratio);
-	 tz*=(-ratio);
-	 }
+         tx*=(-ratio);
+         ty*=(-ratio);
+         tz*=(-ratio);
+         }
      }
 
      if(type==RAYDIUM_ODE_STANDARD)
      {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
         dMassSetBox(&m,1,tx,ty,tz);
-	dMassAdjust(&m,mass);
+        dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
-//	dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
+//      dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
      } 
      else raydium_ode_element[i].body=0;
 
@@ -1389,10 +1389,10 @@ for(i=1;i<nelems;i++)
     {
     dGeomGetAABB(raydium_ode_element[elem[i]].geom,aabb);
     for(j=0;j<6;j+=2)
-	{
-	aabbR[j  ]=raydium_trigo_min(aabb[j  ],aabbR[j  ]);
-	aabbR[j+1]=raydium_trigo_max(aabb[j+1],aabbR[j+1]);
-	}
+        {
+        aabbR[j  ]=raydium_trigo_min(aabb[j  ],aabbR[j  ]);
+        aabbR[j+1]=raydium_trigo_max(aabb[j+1],aabbR[j+1]);
+        }
     }
 
 bounding[0]=aabbR[1]-aabbR[0];
@@ -1414,35 +1414,35 @@ mass=0;
 for(i=0;i<nelems;i++)
  for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
     if(raydium_ode_element[elemN].fixed_elements[j]==NULL)
-	{
-	raydium_ode_element[elemN].fixed_elements[j]=malloc(sizeof(raydium_ode_ElementInternalSave));
-	strcpy(raydium_ode_element[elemN].fixed_elements[j]->name,raydium_ode_element[elem[i]].name);
-	raydium_ode_element[elemN].fixed_elements[j]->type=dGeomGetClass(raydium_ode_element[elem[i]].geom);
-	dGeomBoxGetLengths(raydium_ode_element[elem[i]].geom,raydium_ode_element[elemN].fixed_elements[j]->box_sizes);
-	raydium_ode_element[elemN].fixed_elements[j]->sphere_radius=dGeomSphereGetRadius(raydium_ode_element[elem[i]].geom);
-	dBodyGetMass(raydium_ode_element[elem[i]].body,&m);
-	raydium_ode_element[elemN].fixed_elements[j]->mass=m.mass;
-	raydium_ode_element[elemN].fixed_elements[j]->object=raydium_ode_element[elem[i]].object;
-	raydium_ode_element[elemN].fixed_elements[j]->mesh=raydium_ode_element[elem[i]].mesh;
-	raydium_ode_element[elemN].fixed_elements[j]->slip=raydium_ode_element[elem[i]].slip;
-	raydium_ode_element[elemN].fixed_elements[j]->cfm=raydium_ode_element[elem[i]].cfm;
-	raydium_ode_element[elemN].fixed_elements[j]->erp=raydium_ode_element[elem[i]].erp;
+        {
+        raydium_ode_element[elemN].fixed_elements[j]=malloc(sizeof(raydium_ode_ElementInternalSave));
+        strcpy(raydium_ode_element[elemN].fixed_elements[j]->name,raydium_ode_element[elem[i]].name);
+        raydium_ode_element[elemN].fixed_elements[j]->type=dGeomGetClass(raydium_ode_element[elem[i]].geom);
+        dGeomBoxGetLengths(raydium_ode_element[elem[i]].geom,raydium_ode_element[elemN].fixed_elements[j]->box_sizes);
+        raydium_ode_element[elemN].fixed_elements[j]->sphere_radius=dGeomSphereGetRadius(raydium_ode_element[elem[i]].geom);
+        dBodyGetMass(raydium_ode_element[elem[i]].body,&m);
+        raydium_ode_element[elemN].fixed_elements[j]->mass=m.mass;
+        raydium_ode_element[elemN].fixed_elements[j]->object=raydium_ode_element[elem[i]].object;
+        raydium_ode_element[elemN].fixed_elements[j]->mesh=raydium_ode_element[elem[i]].mesh;
+        raydium_ode_element[elemN].fixed_elements[j]->slip=raydium_ode_element[elem[i]].slip;
+        raydium_ode_element[elemN].fixed_elements[j]->cfm=raydium_ode_element[elem[i]].cfm;
+        raydium_ode_element[elemN].fixed_elements[j]->erp=raydium_ode_element[elem[i]].erp;
 
-	data=(dReal *)dGeomGetPosition(raydium_ode_element[elem[i]].geom);
-	memcpy(raydium_ode_element[elemN].fixed_elements[j]->rel_pos,data,sizeof(dReal)*3);
-	raydium_ode_element[elemN].fixed_elements[j]->rel_pos[0]-=position[0];
-	raydium_ode_element[elemN].fixed_elements[j]->rel_pos[1]-=position[1];
-	raydium_ode_element[elemN].fixed_elements[j]->rel_pos[2]-=position[2];
-	dGeomGetQuaternion(raydium_ode_element[elem[i]].geom,raydium_ode_element[elemN].fixed_elements[j]->rel_rot);
-	raydium_ode_element[elemN].fixed_elements[j]->user_data=raydium_ode_element[elem[i]].user_data;
-	raydium_ode_element[elemN].fixed_elements[j]->user_tag=raydium_ode_element[elem[i]].user_tag;
-	dBodyGetMass(raydium_ode_element[elem[i]].body,&m);
-	raydium_ode_element[elemN].fixed_elements[j]->OnBlow=raydium_ode_element[elem[i]].OnBlow;
-	raydium_ode_element[elemN].fixed_elements[j]->OnDelete=raydium_ode_element[elem[i]].OnDelete;
-	mass+=m.mass;
-	done++;
-	j=RAYDIUM_ODE_ELEMENT_MAX_FIXING; // jump to next element to save
-	}
+        data=(dReal *)dGeomGetPosition(raydium_ode_element[elem[i]].geom);
+        memcpy(raydium_ode_element[elemN].fixed_elements[j]->rel_pos,data,sizeof(dReal)*3);
+        raydium_ode_element[elemN].fixed_elements[j]->rel_pos[0]-=position[0];
+        raydium_ode_element[elemN].fixed_elements[j]->rel_pos[1]-=position[1];
+        raydium_ode_element[elemN].fixed_elements[j]->rel_pos[2]-=position[2];
+        dGeomGetQuaternion(raydium_ode_element[elem[i]].geom,raydium_ode_element[elemN].fixed_elements[j]->rel_rot);
+        raydium_ode_element[elemN].fixed_elements[j]->user_data=raydium_ode_element[elem[i]].user_data;
+        raydium_ode_element[elemN].fixed_elements[j]->user_tag=raydium_ode_element[elem[i]].user_tag;
+        dBodyGetMass(raydium_ode_element[elem[i]].body,&m);
+        raydium_ode_element[elemN].fixed_elements[j]->OnBlow=raydium_ode_element[elem[i]].OnBlow;
+        raydium_ode_element[elemN].fixed_elements[j]->OnDelete=raydium_ode_element[elem[i]].OnDelete;
+        mass+=m.mass;
+        done++;
+        j=RAYDIUM_ODE_ELEMENT_MAX_FIXING; // jump to next element to save
+        }
 
 if(done!=nelems)
     raydium_log("ODE: Error: only %i/%i elems were fixed to %s ! Continue anyway...",done,nelems,name);
@@ -1481,13 +1481,13 @@ if(raydium_ode_element[e].state!=RAYDIUM_ODE_FIXING)
 
 for(i=0;i<RAYDIUM_ODE_ELEMENT_MAX_FIXING;i++)
     if(raydium_ode_element[e].fixed_elements[i])
-	{
-	// TODO:
-	// test type
-	// create element (using name)
-	// move/rotate
-	// restor params (erp, cfm, ...)
-	}
+        {
+        // TODO:
+        // test type
+        // create element (using name)
+        // move/rotate
+        // restor params (erp, cfm, ...)
+        }
 
 raydium_ode_element_delete(e,1);
 }
@@ -1851,18 +1851,18 @@ type=dJointGetType(raydium_ode_joint[j].joint);
 switch(type)
     {
     case dJointTypeHinge2:
-	f=dJointSetHinge2Param;
-	break;
+        f=dJointSetHinge2Param;
+        break;
     case dJointTypeHinge:
-	f=dJointSetHingeParam; // must check, maybe it just works for hinge2 !
-	break;
+        f=dJointSetHingeParam; // must check, maybe it just works for hinge2 !
+        break;
     case dJointTypeUniversal:
-	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP,erp);
-	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM,cfm);
-	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP2,erp);
-	dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM2,cfm);
-	return;
-	break;
+        dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP,erp);
+        dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM,cfm);
+        dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopERP2,erp);
+        dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM2,cfm);
+        return;
+        break;
     default: raydium_log("ODE: ERROR: suspension: joint type not supported!");
     }
 f(raydium_ode_joint[j].joint,dParamSuspensionERP,erp);
@@ -2147,17 +2147,17 @@ if(raydium_ode_joint_isvalid(j))
     {
 //    raydium_ode_joint[j].hinge2correct=block;
     if(!block)
-	{
+        {
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,-dInfinity);
-	dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,dInfinity);
+        dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,dInfinity);
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,-dInfinity);
-	}
+        }
     else
-	{
+        {
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,0);
-	dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,0);
+        dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,0);
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,0);
-	}
+        }
     return;
     }
 raydium_log("ODE: Error: cannot block: invalid index or name");
@@ -2252,8 +2252,8 @@ if(raydium_ode_motor_isvalid(j))
     dReal speed;
     // test if element is attached:
     if(raydium_ode_motor[j].rocket_element<0)
-	return;
-	
+        return;
+        
     speed=raydium_ode_motor[j].speed;
     if(raydium_ode_motor[j].rocket_playermovement &&
        !raydium_ode_element[raydium_ode_motor[j].rocket_element]._touched )
@@ -2261,102 +2261,102 @@ if(raydium_ode_motor_isvalid(j))
 
     if(speed!=0.f)
     dBodyAddRelForceAtRelPos(raydium_ode_element[raydium_ode_motor[j].rocket_element].body,
-			     raydium_ode_motor[j].rocket_direction[0],
-			     raydium_ode_motor[j].rocket_direction[1],
-			     raydium_ode_motor[j].rocket_direction[2],
-			     raydium_ode_motor[j].rocket_position[0],
-			     raydium_ode_motor[j].rocket_position[1],
-			     raydium_ode_motor[j].rocket_position[2]);
+                             raydium_ode_motor[j].rocket_direction[0],
+                             raydium_ode_motor[j].rocket_direction[1],
+                             raydium_ode_motor[j].rocket_direction[2],
+                             raydium_ode_motor[j].rocket_position[0],
+                             raydium_ode_motor[j].rocket_position[1],
+                             raydium_ode_motor[j].rocket_position[2]);
     return;
     }        
     // if motor is anything else than a rocket:
     for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
-	if(raydium_ode_motor[j].joints[i]>=0)
-	{
-	void (*SetParam)(dJointID,int,dReal);
-	dReal (*GetAngle)(dJointID);
-	int vel;
-	int fmax;
-	int type;
-	char cancel=0;
-	
-	switch(raydium_ode_motor[j].joints_axe[i])
-	    {
-	    case 0:
-		vel=dParamVel;
-		fmax=dParamFMax;
-		break;
-	    case 1:
-		vel=dParamVel2;
-		fmax=dParamFMax2;
-		break;
-	    case 2:
-		vel=dParamVel3;
-		fmax=dParamFMax3;
-		break;
-	    default:
-		cancel=1;
-		raydium_log("ODE: Motor: Invalid axe for this joint (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
-	    }
-	
-	type=dJointGetType(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
-    	    
-	switch(type)
-	    {
-	    case dJointTypeHinge2:
-		SetParam=dJointSetHinge2Param;
-		GetAngle=dJointGetHinge2Angle1;
-		if(raydium_ode_motor[j].joints_axe[i]!=0 && raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
-		    {
-		    cancel=1;
-		    raydium_log("ODE: Only axe Hinge2 axe 0 is supported with angular motors (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
-		    }
-		break;
-	    case dJointTypeHinge:
-		SetParam=dJointSetHingeParam;
-		GetAngle=dJointGetHingeAngle;
-		break;
-	    case dJointTypeUniversal:
-		SetParam=dJointSetUniversalParam;
-		if(raydium_ode_motor[j].joints_axe[i]==0)
-		    GetAngle=dJointGetUniversalAngle1;
-		else
-		    GetAngle=dJointGetUniversalAngle2;
-		break;
-	    default:
-		cancel=1;
-		raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
-	    }
-	    
-	
-	if(cancel) continue; // previous tests failed
-	
-	if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ENGINE)
-		{
-		dReal speed;
-		dReal force;
-		speed=raydium_ode_motor[j].speed*raydium_ode_motor[j].gears[raydium_ode_motor[j].gear];
-		
-		if(raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]==0.0)
-		    force=0;
-		else
-		    force=raydium_ode_motor[j].force*(1/raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]);
-		
-//		force=raydium_ode_motor[j].force;
-//		raydium_log("speed=%f force=%f",speed,force);
-		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,speed);
-		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,force);
-		}
-		
-	if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
-	    {
-		dReal v;
-		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,raydium_ode_motor[j].force);
-		v = raydium_ode_motor[j].angle - 
-		    GetAngle(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
-		SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,v*10);
-	    }	    	
-	}
+        if(raydium_ode_motor[j].joints[i]>=0)
+        {
+        void (*SetParam)(dJointID,int,dReal);
+        dReal (*GetAngle)(dJointID);
+        int vel;
+        int fmax;
+        int type;
+        char cancel=0;
+        
+        switch(raydium_ode_motor[j].joints_axe[i])
+            {
+            case 0:
+                vel=dParamVel;
+                fmax=dParamFMax;
+                break;
+            case 1:
+                vel=dParamVel2;
+                fmax=dParamFMax2;
+                break;
+            case 2:
+                vel=dParamVel3;
+                fmax=dParamFMax3;
+                break;
+            default:
+                cancel=1;
+                raydium_log("ODE: Motor: Invalid axe for this joint (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
+            }
+        
+        type=dJointGetType(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
+            
+        switch(type)
+            {
+            case dJointTypeHinge2:
+                SetParam=dJointSetHinge2Param;
+                GetAngle=dJointGetHinge2Angle1;
+                if(raydium_ode_motor[j].joints_axe[i]!=0 && raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
+                    {
+                    cancel=1;
+                    raydium_log("ODE: Only axe Hinge2 axe 0 is supported with angular motors (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
+                    }
+                break;
+            case dJointTypeHinge:
+                SetParam=dJointSetHingeParam;
+                GetAngle=dJointGetHingeAngle;
+                break;
+            case dJointTypeUniversal:
+                SetParam=dJointSetUniversalParam;
+                if(raydium_ode_motor[j].joints_axe[i]==0)
+                    GetAngle=dJointGetUniversalAngle1;
+                else
+                    GetAngle=dJointGetUniversalAngle2;
+                break;
+            default:
+                cancel=1;
+                raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[j].joints[i]].name,raydium_ode_motor[j].name);
+            }
+            
+        
+        if(cancel) continue; // previous tests failed
+        
+        if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ENGINE)
+                {
+                dReal speed;
+                dReal force;
+                speed=raydium_ode_motor[j].speed*raydium_ode_motor[j].gears[raydium_ode_motor[j].gear];
+                
+                if(raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]==0.0)
+                    force=0;
+                else
+                    force=raydium_ode_motor[j].force*(1/raydium_ode_motor[j].gears[raydium_ode_motor[j].gear]);
+                
+//              force=raydium_ode_motor[j].force;
+//              raydium_log("speed=%f force=%f",speed,force);
+                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,speed);
+                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,force);
+                }
+                
+        if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
+            {
+                dReal v;
+                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,raydium_ode_motor[j].force);
+                v = raydium_ode_motor[j].angle - 
+                    GetAngle(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
+                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,v*10);
+            }           
+        }
     return;
     }
 raydium_log("ODE: Error (internal): motor update failed: not found");
@@ -2369,7 +2369,7 @@ if(raydium_ode_motor_isvalid(j))
     raydium_ode_motor[j].speed=force;
     // refresh direction using direction and speed:
     if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ROCKET)
-	raydium_ode_motor_rocket_orientation(j,raydium_ode_motor[j].rocket_orientation[0],raydium_ode_motor[j].rocket_orientation[1],raydium_ode_motor[j].rocket_orientation[2]);
+        raydium_ode_motor_rocket_orientation(j,raydium_ode_motor[j].rocket_orientation[0],raydium_ode_motor[j].rocket_orientation[1],raydium_ode_motor[j].rocket_orientation[2]);
     return;
     }
 raydium_log("ODE: Error: cannot set motor's speed: invalid index or name");
@@ -2418,10 +2418,10 @@ void raydium_ode_motor_gears_set(int m,dReal *gears, int n_gears)
 if(raydium_ode_motor_isvalid(m))
     {
     if(raydium_ode_motor[m].state!=RAYDIUM_ODE_MOTOR_ENGINE)
-	{
-	raydium_log("ODE: Error: cannot use a gearbox with a non-engine motor");
-	return;
-	}
+        {
+        raydium_log("ODE: Error: cannot use a gearbox with a non-engine motor");
+        return;
+        }
     memcpy(raydium_ode_motor[m].gears,gears,sizeof(dReal)*n_gears);
     raydium_ode_motor[m].gear_max=n_gears-1;
     return;
@@ -2439,10 +2439,10 @@ void raydium_ode_motor_gear_change(int m, int gear)
 if(raydium_ode_motor_isvalid(m))
     {
     if(gear<0 || gear>raydium_ode_motor[m].gear_max)
-	{
-	raydium_log("ODE: Error: invalid gear (%i)",gear);
-	return;
-	}
+        {
+        raydium_log("ODE: Error: invalid gear (%i)",gear);
+        return;
+        }
     raydium_ode_motor[m].gear=gear;
     return;
     }
@@ -2502,16 +2502,16 @@ if(raydium_ode_element_isvalid(e))
     
     if(matrix[2] < 1-epsilon && matrix[2] > -1+epsilon)
     {
-	*ry=-asin(matrix[2]);
-	c=cos(*ry);
-	*rx= atan2(matrix[6]/c,matrix[10]/c);
-	*rz= atan2(matrix[1]/c,matrix[0]/c);
+        *ry=-asin(matrix[2]);
+        c=cos(*ry);
+        *rx= atan2(matrix[6]/c,matrix[10]/c);
+        *rz= atan2(matrix[1]/c,matrix[0]/c);
     } 
     else 
     {       
-	*rz=0;   
-	*ry=-atan2(matrix[2],0);
-	*rx= atan2(-matrix[9],matrix[5]);
+        *rz=0;   
+        *ry=-atan2(matrix[2],0);
+        *rx= atan2(-matrix[9],matrix[5]);
     }
     // rad to deg
     //(*rx)*=180/PI;
@@ -2539,16 +2539,16 @@ if(raydium_ode_element_isvalid(e))
     
     if(matrix[8] < 1-epsilon && matrix[8] > -1+epsilon)
     {
-	*ry=-asin(matrix[8]);
-	c=cos(*ry);
-	*rx= atan2(matrix[9]/c,matrix[10]/c);
-	*rz= atan2(matrix[4]/c,matrix[0]/c);
+        *ry=-asin(matrix[8]);
+        c=cos(*ry);
+        *rx= atan2(matrix[9]/c,matrix[10]/c);
+        *rz= atan2(matrix[4]/c,matrix[0]/c);
     }       
     else    
     {       
-	*rz=0;   
-	*ry=-atan2(matrix[8],0);
-	*rx= atan2(-matrix[6],matrix[5]);
+        *rz=0;   
+        *ry=-atan2(matrix[8],0);
+        *rx= atan2(-matrix[6],matrix[5]);
     }       
 
     // rad to deg
@@ -2656,17 +2656,17 @@ if(raydium_ode_motor_isvalid(motor) && raydium_ode_joint_isvalid(joint))
     if(raydium_ode_motor[motor].object!=raydium_ode_element[e1].object &&
        raydium_ode_motor[motor].object!=raydium_ode_element[e2].object )
         {
-	raydium_log("ODE: Cannot attach motor: joint must be attached to at least one element from motor's object");
-	return;
-	}	
+        raydium_log("ODE: Cannot attach motor: joint must be attached to at least one element from motor's object");
+        return;
+        }       
     
     for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
-	if(raydium_ode_motor[motor].joints[i]<0)
-	    {
-	    raydium_ode_motor[motor].joints[i]=joint;
-	    raydium_ode_motor[motor].joints_axe[i]=joint_axe;
-	    return;
-	    }
+        if(raydium_ode_motor[motor].joints[i]<0)
+            {
+            raydium_ode_motor[motor].joints[i]=joint;
+            raydium_ode_motor[motor].joints_axe[i]=joint_axe;
+            return;
+            }
     raydium_log("ODE: Error: no more joint slots for motor \"%s\" (while adding %s)", raydium_ode_motor[motor].name,raydium_ode_joint[joint].name);
     return;
     }
@@ -2696,12 +2696,12 @@ if(raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ROCKET)
 
 for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
     if(raydium_ode_motor[m].joints[i]>=0)
-	{
-	body=dJointGetBody(raydium_ode_joint[raydium_ode_motor[m].joints[i]].joint,raydium_ode_motor[m].joints_axe[i]);
-	vel=(dReal *)dBodyGetAngularVel(body);
-	velf+=sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]);
-	n++;
-	}
+        {
+        body=dJointGetBody(raydium_ode_joint[raydium_ode_motor[m].joints[i]].joint,raydium_ode_motor[m].joints_axe[i]);
+        vel=(dReal *)dBodyGetAngularVel(body);
+        velf+=sqrt(vel[0]*vel[0] + vel[1]*vel[1] + vel[2]*vel[2]);
+        n++;
+        }
 if(n) 
     {
     velf/=n;
@@ -2736,27 +2736,27 @@ if(raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ROCKET)
     return raydium_ode_motor[m].angle; // Not really sure
 
 /*
-	body=dJointGetBody(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,raydium_ode_motor[m].joints_axe[axe]);
-	dJointGetAMotorAngle (raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,);
+        body=dJointGetBody(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,raydium_ode_motor[m].joints_axe[axe]);
+        dJointGetAMotorAngle (raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint,);
 */
   
-	switch(dJointGetType(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint))
-	    {
-	    case dJointTypeHinge2:
-		GetAngle=dJointGetHinge2Angle1;
-		if(raydium_ode_motor[m].joints_axe[axe]!=0 && raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ANGULAR)
-		    {
-		    raydium_log("ODE: Only axe Hinge2 axe 0 is supported with angular motors (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
-		    return 0;
-		    }
-		break;
-	    case dJointTypeHinge:
-		GetAngle=dJointGetHingeAngle;
-		break;
-	    default:
-		raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
-		return 0;
-	    }
+        switch(dJointGetType(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint))
+            {
+            case dJointTypeHinge2:
+                GetAngle=dJointGetHinge2Angle1;
+                if(raydium_ode_motor[m].joints_axe[axe]!=0 && raydium_ode_motor[m].state==RAYDIUM_ODE_MOTOR_ANGULAR)
+                    {
+                    raydium_log("ODE: Only axe Hinge2 axe 0 is supported with angular motors (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
+                    return 0;
+                    }
+                break;
+            case dJointTypeHinge:
+                GetAngle=dJointGetHingeAngle;
+                break;
+            default:
+                raydium_log("ODE: Motor: Invalid joint type (%s, motor is %s)",raydium_ode_joint[raydium_ode_motor[m].joints[axe]].name,raydium_ode_motor[m].name);
+                return 0;
+            }
     return GetAngle(raydium_ode_joint[raydium_ode_motor[m].joints[axe]].joint);
 }
 
@@ -2872,11 +2872,11 @@ if(!raydium_ode_joint_isvalid(joint))
     }
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
     for(j=0;j<RAYDIUM_ODE_MOTOR_MAX_JOINTS;j++)
-	if(raydium_ode_motor[i].joints[j]==joint)
-	{
-	raydium_ode_motor[i].joints[j]=-1;
-	raydium_ode_motor[i].joints_axe[j]=0;
-	}
+        if(raydium_ode_motor[i].joints[j]==joint)
+        {
+        raydium_ode_motor[i].joints[j]=-1;
+        raydium_ode_motor[i].joints_axe[j]=0;
+        }
 
 free(dJointGetFeedback(raydium_ode_joint[joint].joint));
 dJointDestroy(raydium_ode_joint[joint].joint);
@@ -2943,28 +2943,28 @@ if(deletejoints && raydium_ode_element[e].state!=RAYDIUM_ODE_STATIC)
     n_joints=dBodyGetNumJoints(raydium_ode_element[e].body);
     if(n_joints)
      {
-	// create a list of joint to delete ...
-	to_delete=malloc(n_joints*sizeof(int));
-	for(i=0;i<n_joints;i++)
-	    {
-	    j=dJointGetData(dBodyGetJoint(raydium_ode_element[e].body,i));
-	    if(j)
-		to_delete[i]=j->id; 
-	    else 
-		to_delete[i]=-1;
-	    }    
-	// ... and delete joints
-	for(i=0;i<n_joints;i++)
-	  if(to_delete[i]>=0)
-	    raydium_ode_joint_delete(to_delete[i]);
+        // create a list of joint to delete ...
+        to_delete=malloc(n_joints*sizeof(int));
+        for(i=0;i<n_joints;i++)
+            {
+            j=dJointGetData(dBodyGetJoint(raydium_ode_element[e].body,i));
+            if(j)
+                to_delete[i]=j->id; 
+            else 
+                to_delete[i]=-1;
+            }    
+        // ... and delete joints
+        for(i=0;i<n_joints;i++)
+          if(to_delete[i]>=0)
+            raydium_ode_joint_delete(to_delete[i]);
 
-	free(to_delete);
+        free(to_delete);
      }
     }
 
 for(i=0;i<RAYDIUM_ODE_MAX_RAYS;i++)
     if(raydium_ode_element[e].ray[i].state)
-	raydium_ode_element_ray_delete(e,i);
+        raydium_ode_element_ray_delete(e,i);
 
 dGeomSetData(raydium_ode_element[e].geom,NULL); // no more linked to this structure
 dGeomDestroy(raydium_ode_element[e].geom);
@@ -2973,10 +2973,10 @@ if(raydium_ode_element[e].body)
 
 for(i=0;i<RAYDIUM_ODE_ELEMENT_MAX_FIXING;i++)
     if(raydium_ode_element[e].fixed_elements[i])
-	{
-	free(raydium_ode_element[e].fixed_elements[i]);
-	raydium_ode_element[e].fixed_elements[i]=NULL;
-	}
+        {
+        free(raydium_ode_element[e].fixed_elements[i]);
+        raydium_ode_element[e].fixed_elements[i]=NULL;
+        }
 
 // linked rockets
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
@@ -3018,7 +3018,7 @@ if(obj == raydium_ode_object_find("GLOBAL"))
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
     if(raydium_ode_motor[i].state &&
        raydium_ode_motor[i].object==obj)
-	raydium_ode_motor_delete(i);	
+        raydium_ode_motor_delete(i);    
     
 // Wow... group indices are unstable while deleting group's bodies !
 //for(i=0;i<dGeomGroupGetNumGeoms(raydium_ode_object[obj].group);i++)
@@ -3029,7 +3029,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
 // So i'll search for bodies in my own structures
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].object==obj)
-	raydium_ode_element_delete(i,1);
+        raydium_ode_element_delete(i,1);
 
 dSpaceDestroy(raydium_ode_object[obj].group);
 raydium_ode_init_object(obj);
@@ -3072,24 +3072,24 @@ for(i=0;i<dBodyGetNumJoints(raydium_ode_element[element].body);i++)
     {
     j=dJointGetData(dBodyGetJoint(raydium_ode_element[element].body,i));
     if(deletejoints)
-	raydium_ode_joint_delete(j->id);
+        raydium_ode_joint_delete(j->id);
     else
-	{
-	e1=dJointGetBody(j->joint,0);
-	e2=dJointGetBody(j->joint,1);
-	if(e1==raydium_ode_element[element].body) e1=0;
-	if(e2==raydium_ode_element[element].body) e2=0;
-	dJointAttach(j->joint,e1,e2);	
-	}
+        {
+        e1=dJointGetBody(j->joint,0);
+        e2=dJointGetBody(j->joint,1);
+        if(e1==raydium_ode_element[element].body) e1=0;
+        if(e2==raydium_ode_element[element].body) e2=0;
+        dJointAttach(j->joint,e1,e2);   
+        }
     }
 // Well well well.. donno if dGeomGroupAdd removes body from previous
 // GeomGroup, so i do it myself.
 raydium_ode_element[element]._movesfrom=raydium_ode_element[element].object;
 dSpaceRemove(raydium_ode_object[raydium_ode_element[element].object].group,
-	     raydium_ode_element[element].geom);
+             raydium_ode_element[element].geom);
 raydium_ode_element[element].object=object;
 dSpaceAdd(raydium_ode_object[raydium_ode_element[element].object].group,
-	     raydium_ode_element[element].geom);
+             raydium_ode_element[element].geom);
 
 return 1;
 }
@@ -3243,53 +3243,53 @@ raydium_ode_network_explosion_create=0;
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD)
-	{
-	dReal vect[3];
-	dReal *elp;
-	dReal len;
-	dReal force;
-	elp=(dReal *)dGeomGetPosition(raydium_ode_element[i].geom);
-	
-	//raydium_log("Blow: %s",raydium_ode_element[i].name);
-	
-	// explosion to element vector
-	vect[0]=elp[0]-pos[0];
-	vect[1]=elp[1]-pos[1];
-	vect[2]=elp[2]-pos[2];
-	// distance from explosion
-	len=sqrt(vect[0]*vect[0] + vect[1]*vect[1] + vect[2]*vect[2]);
-	
-	if(len==0.f) continue;
-//	raydium_log("dist from core: %f (radius=%f)",len,radius);
-	// normalize vector
-	vect[0]/=len;
-	vect[1]/=len;
-	vect[2]/=len;
-	
-	if(len>radius) continue;
-	force = ((radius*radius) - (len*len)) / (radius * radius) * max_force;
-//	raydium_log("resulting force: %f (max force at core=%f)",force,max_force);
-	vect[0]*=force;
-	vect[1]*=force;
-	vect[2]*=force;
-//	raydium_log("resulting impulse vector: [%f %f %f]",vect[0],vect[1],vect[2]);
-	dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+        {
+        dReal vect[3];
+        dReal *elp;
+        dReal len;
+        dReal force;
+        elp=(dReal *)dGeomGetPosition(raydium_ode_element[i].geom);
+        
+        //raydium_log("Blow: %s",raydium_ode_element[i].name);
+        
+        // explosion to element vector
+        vect[0]=elp[0]-pos[0];
+        vect[1]=elp[1]-pos[1];
+        vect[2]=elp[2]-pos[2];
+        // distance from explosion
+        len=sqrt(vect[0]*vect[0] + vect[1]*vect[1] + vect[2]*vect[2]);
+        
+        if(len==0.f) continue;
+//      raydium_log("dist from core: %f (radius=%f)",len,radius);
+        // normalize vector
+        vect[0]/=len;
+        vect[1]/=len;
+        vect[2]/=len;
+        
+        if(len>radius) continue;
+        force = ((radius*radius) - (len*len)) / (radius * radius) * max_force;
+//      raydium_log("resulting force: %f (max force at core=%f)",force,max_force);
+        vect[0]*=force;
+        vect[1]*=force;
+        vect[2]*=force;
+//      raydium_log("resulting impulse vector: [%f %f %f]",vect[0],vect[1],vect[2]);
+        dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
 
-	if(rand_factor)
-	{
-	    //ugly way of get a random float array
-    	    minrandtorq=-rand_factor;
-	    maxrandtorq= rand_factor;
-	    rmx[0]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-	    rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-	    rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
-    	    //added random torque to the pieces
-	    dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
-	}
+        if(rand_factor)
+        {
+            //ugly way of get a random float array
+            minrandtorq=-rand_factor;
+            maxrandtorq= rand_factor;
+            rmx[0]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+            rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+            rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
+            //added random torque to the pieces
+            dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
+        }
 
-	g=raydium_ode_element[i].OnBlow;
-	if(g) g(i,force,max_force);
-	}
+        g=raydium_ode_element[i].OnBlow;
+        if(g) g(i,force,max_force);
+        }
 f=raydium_ode_ExplosionCallback;
 if(f)
     f(RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW,radius,max_force,pos);
@@ -3356,7 +3356,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
      
      f=raydium_ode_ExplosionCallback;
      if(f)
-	f(RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL,final_radius,propag,pos);
+        f(RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL,final_radius,propag,pos);
 
      return i;
      }
@@ -3432,8 +3432,8 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
      glBegin(GL_LINES);
      glVertex3f(raydium_ode_motor[i].rocket_position[0],raydium_ode_motor[i].rocket_position[1],raydium_ode_motor[i].rocket_position[2]);
      glVertex3f(raydium_ode_motor[i].rocket_position[0]+raydium_ode_motor[i].rocket_direction[0],
-    		raydium_ode_motor[i].rocket_position[1]+raydium_ode_motor[i].rocket_direction[1],
-		raydium_ode_motor[i].rocket_position[2]+raydium_ode_motor[i].rocket_direction[2]);
+                raydium_ode_motor[i].rocket_position[1]+raydium_ode_motor[i].rocket_direction[1],
+                raydium_ode_motor[i].rocket_position[2]+raydium_ode_motor[i].rocket_direction[2]);
      glEnd();
      if(raydium_light_enabled_tag)
         glEnable(GL_LIGHTING);
@@ -3442,12 +3442,12 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
 if(names==RAYDIUM_ODE_DRAW_DEBUG)
  for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
     if(raydium_ode_explosion[i].state)
-	{
-	int j;
-	j=raydium_ode_explosion[i].element;
-    	raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[j].geom), (dReal *)dGeomGetRotation(raydium_ode_element[j].geom));
-	glutWireSphere(raydium_ode_explosion[i].radius,10,10);
-	}
+        {
+        int j;
+        j=raydium_ode_explosion[i].element;
+        raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[j].geom), (dReal *)dGeomGetRotation(raydium_ode_element[j].geom));
+        glutWireSphere(raydium_ode_explosion[i].radius,10,10);
+        }
 
 
 if(names==RAYDIUM_ODE_DRAW_DEBUG)
@@ -3464,29 +3464,29 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
     dRSetIdentity(r);
     type=dJointGetType(raydium_ode_joint[i].joint);
     switch(type)
-	{
-	case dJointTypeHinge2:
-	    f1=dJointGetHinge2Anchor;
-	    f2=dJointGetHinge2Anchor2;
-	    col='3';
-	    break;
-	case dJointTypeUniversal:
-	    f1=dJointGetUniversalAnchor;
-	    f2=dJointGetUniversalAnchor2;
-	    col='5';
-	    break;
-	case dJointTypeHinge:
-	    f1=dJointGetHingeAnchor;
-	    f2=dJointGetHingeAnchor2;
-	    col='2';
-	    break;
-	case dJointTypeFixed:
-	    f1=NULL;
-	    f2=NULL;
-	    col='0';
-	    break;
-	default: raydium_log("ODE: ERROR: draw_all: invalid joint type !");
-	}
+        {
+        case dJointTypeHinge2:
+            f1=dJointGetHinge2Anchor;
+            f2=dJointGetHinge2Anchor2;
+            col='3';
+            break;
+        case dJointTypeUniversal:
+            f1=dJointGetUniversalAnchor;
+            f2=dJointGetUniversalAnchor2;
+            col='5';
+            break;
+        case dJointTypeHinge:
+            f1=dJointGetHingeAnchor;
+            f2=dJointGetHingeAnchor2;
+            col='2';
+            break;
+        case dJointTypeFixed:
+            f1=NULL;
+            f2=NULL;
+            col='0';
+            break;
+        default: raydium_log("ODE: ERROR: draw_all: invalid joint type !");
+        }
 
      if(f1 && f2)
      {
@@ -3507,261 +3507,261 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
      {
-	
+        
      if(names==RAYDIUM_ODE_DRAW_NORMAL || 
         names==RAYDIUM_ODE_DRAW_SHADOWERS ||
-	names==RAYDIUM_ODE_DRAW_NORMAL_NO_POST)
+        names==RAYDIUM_ODE_DRAW_NORMAL_NO_POST)
         {
-	
-	if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
-	    continue;	
-	if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && bef && !bef(i))
-    	    continue;
+        
+        if(names==RAYDIUM_ODE_DRAW_SHADOWERS && raydium_ode_element[i].mesh==raydium_shadow_ground_mesh)
+            continue;   
+        if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && bef && !bef(i))
+            continue;
 
-    	raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
-	if(raydium_ode_element[i].mesh>=0)
-	    {
-	    if(raydium_shadow_rendering)
-    		raydium_shadow_object_draw(raydium_ode_element[i].mesh);
-	    else
-    		raydium_object_draw(raydium_ode_element[i].mesh);
-	    }
-	if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && aft)
-	    aft(i);
+        raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
+        if(raydium_ode_element[i].mesh>=0)
+            {
+            if(raydium_shadow_rendering)
+                raydium_shadow_object_draw(raydium_ode_element[i].mesh);
+            else
+                raydium_object_draw(raydium_ode_element[i].mesh);
+            }
+        if(names!=RAYDIUM_ODE_DRAW_SHADOWERS && aft)
+            aft(i);
 
-	if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)
-	    {
-	    dVector3 res;
+        if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)
+            {
+            dVector3 res;
 
-	    // if element is static, fake a temporary body
-	    if(raydium_ode_element[i].state==RAYDIUM_ODE_STATIC)
-	    {
-	     dBodyID body;
-	     dReal *pos;
-	     dQuaternion rot;
-	     body=dBodyCreate(raydium_ode_world);
-	     pos=raydium_ode_element_pos_get(i);
-	     raydium_ode_element_rotq_get(i,rot);
-	     dBodySetPosition(body,pos[0],pos[1],pos[2]);
-	     dBodySetQuaternion(body,rot);
-	     dBodyGetRelPointPos(body,
-				raydium_ode_element[i].particle_offset[0],
-				raydium_ode_element[i].particle_offset[1],
-				raydium_ode_element[i].particle_offset[2],	    
-				res);
-	     dBodyDestroy(body);
-	    }
-	    else
-	    if(raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD)
-	    {
-	     dBodyGetRelPointPos(raydium_ode_element[i].body,
-				raydium_ode_element[i].particle_offset[0],
-				raydium_ode_element[i].particle_offset[1],
-				raydium_ode_element[i].particle_offset[2],	    
-				res);	    
-	    }
-	    
-	    raydium_particle_generator_move(
-		raydium_ode_element[i].particle,res);
-	    }
-	   
-	for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
-	  if(raydium_ode_element[i].fixed_elements[j])
-	    {
-	    glPushMatrix();
-	    glTranslatef(raydium_ode_element[i].fixed_elements[j]->rel_pos[0],
-			 raydium_ode_element[i].fixed_elements[j]->rel_pos[1],
-			 raydium_ode_element[i].fixed_elements[j]->rel_pos[2]);
-	    {
-	    dMatrix3 R;
-	    GLfloat matrix[16];
-	    dQtoR(raydium_ode_element[i].fixed_elements[j]->rel_rot,R);
-	    matrix[0]=R[0];
-	    matrix[1]=R[4];
-	    matrix[2]=R[8];
-	    matrix[3]=0;
-	    matrix[4]=R[1];
-	    matrix[5]=R[5];
-	    matrix[6]=R[9];
-	    matrix[7]=0;
-	    matrix[8]=R[2];
-	    matrix[9]=R[6];
-	    matrix[10]=R[10];
-	    matrix[11]=0;
-	    matrix[12]=0;
-	    matrix[13]=0;
-	    matrix[14]=0;
-	    matrix[15]=1;
-	    glMultMatrixf (matrix);
-	    }
-	    raydium_object_draw(raydium_ode_element[i].fixed_elements[j]->mesh);
-	    glPopMatrix();
-	    }
-	}
+            // if element is static, fake a temporary body
+            if(raydium_ode_element[i].state==RAYDIUM_ODE_STATIC)
+            {
+             dBodyID body;
+             dReal *pos;
+             dQuaternion rot;
+             body=dBodyCreate(raydium_ode_world);
+             pos=raydium_ode_element_pos_get(i);
+             raydium_ode_element_rotq_get(i,rot);
+             dBodySetPosition(body,pos[0],pos[1],pos[2]);
+             dBodySetQuaternion(body,rot);
+             dBodyGetRelPointPos(body,
+                                raydium_ode_element[i].particle_offset[0],
+                                raydium_ode_element[i].particle_offset[1],
+                                raydium_ode_element[i].particle_offset[2],          
+                                res);
+             dBodyDestroy(body);
+            }
+            else
+            if(raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD)
+            {
+             dBodyGetRelPointPos(raydium_ode_element[i].body,
+                                raydium_ode_element[i].particle_offset[0],
+                                raydium_ode_element[i].particle_offset[1],
+                                raydium_ode_element[i].particle_offset[2],          
+                                res);       
+            }
+            
+            raydium_particle_generator_move(
+                raydium_ode_element[i].particle,res);
+            }
+           
+        for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
+          if(raydium_ode_element[i].fixed_elements[j])
+            {
+            glPushMatrix();
+            glTranslatef(raydium_ode_element[i].fixed_elements[j]->rel_pos[0],
+                         raydium_ode_element[i].fixed_elements[j]->rel_pos[1],
+                         raydium_ode_element[i].fixed_elements[j]->rel_pos[2]);
+            {
+            dMatrix3 R;
+            GLfloat matrix[16];
+            dQtoR(raydium_ode_element[i].fixed_elements[j]->rel_rot,R);
+            matrix[0]=R[0];
+            matrix[1]=R[4];
+            matrix[2]=R[8];
+            matrix[3]=0;
+            matrix[4]=R[1];
+            matrix[5]=R[5];
+            matrix[6]=R[9];
+            matrix[7]=0;
+            matrix[8]=R[2];
+            matrix[9]=R[6];
+            matrix[10]=R[10];
+            matrix[11]=0;
+            matrix[12]=0;
+            matrix[13]=0;
+            matrix[14]=0;
+            matrix[15]=1;
+            glMultMatrixf (matrix);
+            }
+            raydium_object_draw(raydium_ode_element[i].fixed_elements[j]->mesh);
+            glPopMatrix();
+            }
+        }
      else
         {
-	const dReal *p;
+        const dReal *p;
 
-	
-	if(names==RAYDIUM_ODE_DRAW_DEBUG) // draw shape
-	    {
-	    raydium_rendering_internal_prepare_texture_render(0); // !!!
-    	    raydium_texture_current_set_name("rgb(1,0,0)");
-	    raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
-	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+        
+        if(names==RAYDIUM_ODE_DRAW_DEBUG) // draw shape
+            {
+            raydium_rendering_internal_prepare_texture_render(0); // !!!
+            raydium_texture_current_set_name("rgb(1,0,0)");
+            raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
+            raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
-	    if(dGeomGetClass(raydium_ode_element[i].geom)==dBoxClass)
-		{
-		dVector3 sides;
-		float lx;
-		float ly;
-		float lz;
-		dGeomBoxGetLengths(raydium_ode_element[i].geom,sides);
-		lx = sides[0]*0.5f;
-		ly = sides[1]*0.5f;
-		lz = sides[2]*0.5f;
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		// sides
-		glBegin (GL_TRIANGLE_STRIP);
-		glNormal3f (-1,0,0);
-		glVertex3f (-lx,-ly,-lz);
-		glVertex3f (-lx,-ly,lz);
-		glVertex3f (-lx,ly,-lz);
-		glVertex3f (-lx,ly,lz);
-		glNormal3f (0,1,0);
-		glVertex3f (lx,ly,-lz);
-		glVertex3f (lx,ly,lz);
-		glNormal3f (1,0,0);
-		glVertex3f (lx,-ly,-lz);
-		glVertex3f (lx,-ly,lz);
-		glNormal3f (0,-1,0);
-		glVertex3f (-lx,-ly,-lz);
-		glVertex3f (-lx,-ly,lz);
-		glEnd();
-	    
-    	        // top face
-	        glBegin (GL_TRIANGLE_FAN);
-	        glNormal3f (0,0,1);
-	        glVertex3f (-lx,-ly,lz);
-	        glVertex3f (lx,-ly,lz);
-	        glVertex3f (lx,ly,lz);
-	        glVertex3f (-lx,ly,lz);
-	        glEnd();
+            if(dGeomGetClass(raydium_ode_element[i].geom)==dBoxClass)
+                {
+                dVector3 sides;
+                float lx;
+                float ly;
+                float lz;
+                dGeomBoxGetLengths(raydium_ode_element[i].geom,sides);
+                lx = sides[0]*0.5f;
+                ly = sides[1]*0.5f;
+                lz = sides[2]*0.5f;
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                // sides
+                glBegin (GL_TRIANGLE_STRIP);
+                glNormal3f (-1,0,0);
+                glVertex3f (-lx,-ly,-lz);
+                glVertex3f (-lx,-ly,lz);
+                glVertex3f (-lx,ly,-lz);
+                glVertex3f (-lx,ly,lz);
+                glNormal3f (0,1,0);
+                glVertex3f (lx,ly,-lz);
+                glVertex3f (lx,ly,lz);
+                glNormal3f (1,0,0);
+                glVertex3f (lx,-ly,-lz);
+                glVertex3f (lx,-ly,lz);
+                glNormal3f (0,-1,0);
+                glVertex3f (-lx,-ly,-lz);
+                glVertex3f (-lx,-ly,lz);
+                glEnd();
+            
+                // top face
+                glBegin (GL_TRIANGLE_FAN);
+                glNormal3f (0,0,1);
+                glVertex3f (-lx,-ly,lz);
+                glVertex3f (lx,-ly,lz);
+                glVertex3f (lx,ly,lz);
+                glVertex3f (-lx,ly,lz);
+                glEnd();
 
-	        // bottom face
-	        glBegin (GL_TRIANGLE_FAN);
-	        glNormal3f (0,0,-1);
-	        glVertex3f (-lx,-ly,-lz);
-	        glVertex3f (-lx,ly,-lz);
-	        glVertex3f (lx,ly,-lz);
-	        glVertex3f (lx,-ly,-lz);
-	        glEnd();
-	        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	    
-	        }
-	    else
-		if(dGeomGetClass(raydium_ode_element[i].geom)==dSphereClass)
-		{
-	        glutWireSphere(dGeomSphereGetRadius(raydium_ode_element[i].geom),10,10);
-	        }
-	    // else TriMesh ...
-		
-	
-	    p=dGeomGetPosition(raydium_ode_element[i].geom);
-	    if(raydium_ode_element[i]._touched)
-		raydium_osd_color_ega('c');
-	    else
-		raydium_osd_color_ega('f');
-		
-	    if(raydium_ode_element[i]._avoidedcol)
-		raydium_osd_color_ega('d');
-	
-	    if(!dGeomIsEnabled(raydium_ode_element[i].geom))
-		raydium_osd_color_ega('a');
+                // bottom face
+                glBegin (GL_TRIANGLE_FAN);
+                glNormal3f (0,0,-1);
+                glVertex3f (-lx,-ly,-lz);
+                glVertex3f (-lx,ly,-lz);
+                glVertex3f (lx,ly,-lz);
+                glVertex3f (lx,-ly,-lz);
+                glEnd();
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);          
+                }
+            else
+                if(dGeomGetClass(raydium_ode_element[i].geom)==dSphereClass)
+                {
+                glutWireSphere(dGeomSphereGetRadius(raydium_ode_element[i].geom),10,10);
+                }
+            // else TriMesh ...
+                
+        
+            p=dGeomGetPosition(raydium_ode_element[i].geom);
+            if(raydium_ode_element[i]._touched)
+                raydium_osd_color_ega('c');
+            else
+                raydium_osd_color_ega('f');
+                
+            if(raydium_ode_element[i]._avoidedcol)
+                raydium_osd_color_ega('d');
+        
+            if(!dGeomIsEnabled(raydium_ode_element[i].geom))
+                raydium_osd_color_ega('a');
 
-	    if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
-		!dBodyIsEnabled(raydium_ode_element[i].body) )
-		    raydium_osd_color_ega('0');
-	
-	    raydium_osd_printf_3D(p[0],p[1],p[2],12,0.6,"font2.tga","%i %s (%s) @ %i",i,raydium_ode_element[i].name,raydium_ode_object[raydium_ode_element[i].object].name,raydium_ode_element[i].distant_owner);
-	    }
+            if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
+                !dBodyIsEnabled(raydium_ode_element[i].body) )
+                    raydium_osd_color_ega('0');
+        
+            raydium_osd_printf_3D(p[0],p[1],p[2],12,0.6,"font2.tga","%i %s (%s) @ %i",i,raydium_ode_element[i].name,raydium_ode_object[raydium_ode_element[i].object].name,raydium_ode_element[i].distant_owner);
+            }
 
-	    if(names==RAYDIUM_ODE_DRAW_AABB) // draw AABB
-	    {
-	    dReal aabb[6];
+            if(names==RAYDIUM_ODE_DRAW_AABB) // draw AABB
+            {
+            dReal aabb[6];
 
-	    raydium_camera_replace();
-	    raydium_rendering_internal_prepare_texture_render(0); // !!
-	    raydium_texture_current_set_name("rgb(0,0,1)");
-	    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-	    dGeomGetAABB(raydium_ode_element[i].geom,aabb);
-	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	    // sides
-	    glBegin (GL_TRIANGLE_STRIP);
-	    glNormal3f (-1,0,0);
-	    glVertex3f (aabb[0],aabb[2],aabb[4]);
-	    glVertex3f (aabb[0],aabb[2],aabb[5]);
-	    glVertex3f (aabb[0],aabb[3],aabb[4]);
-	    glVertex3f (aabb[0],aabb[3],aabb[5]);
+            raydium_camera_replace();
+            raydium_rendering_internal_prepare_texture_render(0); // !!
+            raydium_texture_current_set_name("rgb(0,0,1)");
+            raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+            dGeomGetAABB(raydium_ode_element[i].geom,aabb);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            // sides
+            glBegin (GL_TRIANGLE_STRIP);
+            glNormal3f (-1,0,0);
+            glVertex3f (aabb[0],aabb[2],aabb[4]);
+            glVertex3f (aabb[0],aabb[2],aabb[5]);
+            glVertex3f (aabb[0],aabb[3],aabb[4]);
+            glVertex3f (aabb[0],aabb[3],aabb[5]);
 
-	    glNormal3f (0,1,0);
-	    glVertex3f (aabb[1],aabb[3],aabb[4]);
-	    glVertex3f (aabb[1],aabb[3],aabb[5]);
+            glNormal3f (0,1,0);
+            glVertex3f (aabb[1],aabb[3],aabb[4]);
+            glVertex3f (aabb[1],aabb[3],aabb[5]);
 
-	    glNormal3f (1,0,0);
-	    glVertex3f (aabb[1],aabb[2],aabb[4]);
-	    glVertex3f (aabb[1],aabb[2],aabb[5]);
+            glNormal3f (1,0,0);
+            glVertex3f (aabb[1],aabb[2],aabb[4]);
+            glVertex3f (aabb[1],aabb[2],aabb[5]);
 
-	    glNormal3f (0,-1,0);
-	    glVertex3f (aabb[0],aabb[2],aabb[4]);
-	    glVertex3f (aabb[0],aabb[2],aabb[5]);
-	    glEnd();
-	    
-    	    // top face
-	    glBegin (GL_TRIANGLE_FAN);
-	    glNormal3f (0,0,1);
-	    glVertex3f (aabb[0],aabb[2],aabb[5]);
-	    glVertex3f (aabb[1],aabb[2],aabb[5]);
-	    glVertex3f (aabb[1],aabb[3],aabb[5]);
-	    glVertex3f (aabb[0],aabb[3],aabb[5]);
-	    glEnd();
+            glNormal3f (0,-1,0);
+            glVertex3f (aabb[0],aabb[2],aabb[4]);
+            glVertex3f (aabb[0],aabb[2],aabb[5]);
+            glEnd();
+            
+            // top face
+            glBegin (GL_TRIANGLE_FAN);
+            glNormal3f (0,0,1);
+            glVertex3f (aabb[0],aabb[2],aabb[5]);
+            glVertex3f (aabb[1],aabb[2],aabb[5]);
+            glVertex3f (aabb[1],aabb[3],aabb[5]);
+            glVertex3f (aabb[0],aabb[3],aabb[5]);
+            glEnd();
 
-	    // bottom face
-	    glBegin (GL_TRIANGLE_FAN);
-	    glNormal3f (0,0,-1);
-	    glVertex3f (aabb[0],aabb[2],aabb[4]);
-	    glVertex3f (aabb[0],aabb[3],aabb[4]);
-	    glVertex3f (aabb[1],aabb[3],aabb[4]);
-	    glVertex3f (aabb[1],aabb[2],aabb[4]);
-	    glEnd();
-	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	    }
-	    
-	    if(names==RAYDIUM_ODE_DRAW_RAY)
-	    {
-	      for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
-	        if(raydium_ode_element[i].ray[j].state)
-		{
-		dVector3 start,dir;
-		dReal len;
+            // bottom face
+            glBegin (GL_TRIANGLE_FAN);
+            glNormal3f (0,0,-1);
+            glVertex3f (aabb[0],aabb[2],aabb[4]);
+            glVertex3f (aabb[0],aabb[3],aabb[4]);
+            glVertex3f (aabb[1],aabb[3],aabb[4]);
+            glVertex3f (aabb[1],aabb[2],aabb[4]);
+            glEnd();
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
+            
+            if(names==RAYDIUM_ODE_DRAW_RAY)
+            {
+              for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
+                if(raydium_ode_element[i].ray[j].state)
+                {
+                dVector3 start,dir;
+                dReal len;
 
-		raydium_rendering_internal_prepare_texture_render(0); // !!!
-    		raydium_texture_current_set_name("rgb(1,0,0)");
-		raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-		
-		dGeomRayGet(raydium_ode_element[i].ray[j].geom,start,dir);
-		
+                raydium_rendering_internal_prepare_texture_render(0); // !!!
+                raydium_texture_current_set_name("rgb(1,0,0)");
+                raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+                
+                dGeomRayGet(raydium_ode_element[i].ray[j].geom,start,dir);
+                
         if ((len=raydium_ode_element[i].ray[j].min_dist)==0)  // Draw ray to first contact point if exist
             len=dGeomRayGetLength(raydium_ode_element[i].ray[j].geom);
 
-		raydium_camera_replace();
-		glBegin(GL_LINES);
-		//printf("%f %f %f | %f %f %f\n",start[0],start[1],start[2],dir[0],dir[1],dir[2]);
-	        glVertex3f(start[0],start[1],start[2]);
-	        glVertex3f(start[0]+(dir[0]*len),start[1]+(dir[1]*len),start[2]+(dir[2]*len));
-		glEnd();
-	        }
-	    }
-	}
+                raydium_camera_replace();
+                glBegin(GL_LINES);
+                //printf("%f %f %f | %f %f %f\n",start[0],start[1],start[2],dir[0],dir[1],dir[2]);
+                glVertex3f(start[0],start[1],start[2]);
+                glVertex3f(start[0]+(dir[0]*len),start[1]+(dir[1]*len),start[2]+(dir[2]*len));
+                glEnd();
+                }
+            }
+        }
      }
 
 if(names==RAYDIUM_ODE_DRAW_NORMAL) // but not RAYDIUM_ODE_DRAW_NORMAL_NO_POST
@@ -3781,7 +3781,7 @@ int raydium_ode_internal_ray_geom_resolv(raydium_ode_Element *e,dGeomID geom)
 int i;
 for(i=0;i<RAYDIUM_ODE_MAX_RAYS;i++)
     if(e->ray[i].state && e->ray[i].geom == geom)
-	return i;
+        return i;
 return -1; // == coredump in the caller ;)
 }
 
@@ -3848,165 +3848,165 @@ e2=dGeomGetData(o2);
   {
   
     for (i=0; i<n; i++) 
-	{	
-	e1=dGeomGetData(contact[i].geom.g1);
-	e2=dGeomGetData(contact[i].geom.g2);
-	
-	if(e1==NULL || e2==NULL)
-	    continue; // Deleted, or not one of our elements
+        {       
+        e1=dGeomGetData(contact[i].geom.g1);
+        e2=dGeomGetData(contact[i].geom.g2);
+        
+        if(e1==NULL || e2==NULL)
+            continue; // Deleted, or not one of our elements
 
-	if(e1==e2)
-	    continue; // May happend with ray
+        if(e1==e2)
+            continue; // May happend with ray
 
-	if(e1 && e1->marked_as_deleted)
-	    return;
-	if(e2 && e2->marked_as_deleted)
-	    return;
+        if(e1 && e1->marked_as_deleted)
+            return;
+        if(e2 && e2->marked_as_deleted)
+            return;
 
-	if( e1 && e2 && e1->_movesfrom>=0 &&
-	    e1->_movesfrom==e2->object)
-		{
-		e1->_avoidedcol=1;
-		continue; // avoid collision ! (where are moving from this object)
-		}
+        if( e1 && e2 && e1->_movesfrom>=0 &&
+            e1->_movesfrom==e2->object)
+                {
+                e1->_avoidedcol=1;
+                continue; // avoid collision ! (where are moving from this object)
+                }
 
-	if( e1 && e2 && e2->_movesfrom>=0 &&
-	    e2->_movesfrom==e1->object)
-		{
-		e2->_avoidedcol=1;
-		continue; // avoid collision ! (where are moving from this object)
-		}
-	
-	erp=cfm=slip=0;
+        if( e1 && e2 && e2->_movesfrom>=0 &&
+            e2->_movesfrom==e1->object)
+                {
+                e2->_avoidedcol=1;
+                continue; // avoid collision ! (where are moving from this object)
+                }
+        
+        erp=cfm=slip=0;
 
-	if(e1)
-	    {
-	    erp=e1->erp;
-	    cfm=e1->cfm;
-	    slip=e1->slip;
-	    count=1;
-	    }
-	    
-	if(e2)
-	    {
-	    erp+=e2->erp;
-	    cfm+=e2->cfm;
-	    slip+=e2->slip;
-	    count++;
-	    }
-	    
-	if(count)
-	    {
-	    erp/=count;
-	    cfm/=count;
-	    slip/=count;
-	    }
-	    
-	contact[i].surface.mode = dContactSlip1 | dContactSlip2 |
-	dContactSoftERP | dContactSoftCFM | dContactApprox1;
-	contact[i].surface.mu = dInfinity;
+        if(e1)
+            {
+            erp=e1->erp;
+            cfm=e1->cfm;
+            slip=e1->slip;
+            count=1;
+            }
+            
+        if(e2)
+            {
+            erp+=e2->erp;
+            cfm+=e2->cfm;
+            slip+=e2->slip;
+            count++;
+            }
+            
+        if(count)
+            {
+            erp/=count;
+            cfm/=count;
+            slip/=count;
+            }
+            
+        contact[i].surface.mode = dContactSlip1 | dContactSlip2 |
+        dContactSoftERP | dContactSoftCFM | dContactApprox1;
+        contact[i].surface.mu = dInfinity;
 
-	contact[i].surface.slip1 = slip;
-	contact[i].surface.slip2 = slip;
-	
-	contact[i].surface.soft_erp = erp;
-	contact[i].surface.soft_cfm = cfm;
-
-
-	gencontact=0;
-	
-	if(dGeomGetClass(contact[i].geom.g1)==dRayClass)
-	    {
-	    // raydium_ode_RayCallback (1)
-	    ray_id=raydium_ode_internal_ray_geom_resolv(e1,contact[i].geom.g1);
-	    if(e1)
-		{
-		contact[i].geom.g1=e1->geom;
-		e1->_last_touched_ray=ray_id;
-		}
-	    
-	    if(r)
-		{
-		int id1,id2;
-		id1=id2=-1;
-		if(e1) id1=e1->id;
-		if(e2) id2=e2->id;
-		gencontact=r(id1,id2,&contact[i]);
-		if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
-		}
-
-	    if(e1 && e2 && 
-	    (e1->ray[ray_id].min_dist > contact[i].geom.depth || e1->ray[ray_id].min_dist==0) )
-		{
-		e1->ray[ray_id].min_dist=contact[i].geom.depth;
-		e1->ray[ray_id].min_elem=e2->id;
-		memcpy(e1->ray[ray_id].min_pos,contact[i].geom.pos,sizeof(dReal)*3);
-		}
-
-	    if(e1 && e2 && e1->ray[ray_id].max_dist < contact[i].geom.depth)
-		{
-		e1->ray[ray_id].max_dist=contact[i].geom.depth;
-		e1->ray[ray_id].max_elem=e2->id;
-		memcpy(e1->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
-		}
-	    if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
-		continue;
-	    }
-
-	if(dGeomGetClass(contact[i].geom.g2)==dRayClass)
-	    {
-	    // raydium_ode_RayCallback (2)
-	    ray_id=raydium_ode_internal_ray_geom_resolv(e2,contact[i].geom.g2);
-	    if(e2)
-		{
-		contact[i].geom.g2=e2->geom;
-		e2->_last_touched_ray=ray_id;
-		}
-
-	    if(r)
-		{
-		int id1,id2;
-		id1=id2=-1;
-		if(e1) id1=e1->id;
-		if(e2) id2=e2->id;
-		gencontact=r(id2,id1,&contact[i]);
-		if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
-		}
-
-	    if(e1 && e2 && 
-	    (e2->ray[ray_id].min_dist > contact[i].geom.depth || e2->ray[ray_id].min_dist==0) )
-		{
-		e2->ray[ray_id].min_dist=contact[i].geom.depth;
-		e2->ray[ray_id].min_elem=e1->id;
-		memcpy(e2->ray[ray_id].min_pos,contact[i].geom.pos,sizeof(dReal)*3);
-		}
-
-	    if(e1 && e2 && e2->ray[ray_id].max_dist < contact[i].geom.depth)
-		{
-		e2->ray[ray_id].max_dist=contact[i].geom.depth;
-		e2->ray[ray_id].max_elem=e1->id;
-		memcpy(e2->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
-		}
-	    if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
-		continue;
-	    }
-		
-	// raydium_ode_CollideCallback
-	if(f)
-	    {
-	    int id1,id2;
-	    id1=id2=-1;
-	    if(e1) id1=e1->id;
-	    if(e2) id2=e2->id;
-	    if(!f(id1,id2,&contact[i])) continue;
-	    }
+        contact[i].surface.slip1 = slip;
+        contact[i].surface.slip2 = slip;
+        
+        contact[i].surface.soft_erp = erp;
+        contact[i].surface.soft_cfm = cfm;
 
 
-	if(e1) e1->_touched=1; // may use it as a counter ?
-	if(e2) e2->_touched=1; // ...
-	//printf("%s <-> %s\n",e1->name,e2->name); // let's flood :)
-	c = dJointCreateContact (raydium_ode_world,raydium_ode_contactgroup,&contact[i]);
-	dJointAttach (c,dGeomGetBody(contact[i].geom.g1),dGeomGetBody(contact[i].geom.g2));
+        gencontact=0;
+        
+        if(dGeomGetClass(contact[i].geom.g1)==dRayClass)
+            {
+            // raydium_ode_RayCallback (1)
+            ray_id=raydium_ode_internal_ray_geom_resolv(e1,contact[i].geom.g1);
+            if(e1)
+                {
+                contact[i].geom.g1=e1->geom;
+                e1->_last_touched_ray=ray_id;
+                }
+            
+            if(r)
+                {
+                int id1,id2;
+                id1=id2=-1;
+                if(e1) id1=e1->id;
+                if(e2) id2=e2->id;
+                gencontact=r(id1,id2,&contact[i]);
+                if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
+                }
+
+            if(e1 && e2 && 
+            (e1->ray[ray_id].min_dist > contact[i].geom.depth || e1->ray[ray_id].min_dist==0) )
+                {
+                e1->ray[ray_id].min_dist=contact[i].geom.depth;
+                e1->ray[ray_id].min_elem=e2->id;
+                memcpy(e1->ray[ray_id].min_pos,contact[i].geom.pos,sizeof(dReal)*3);
+                }
+
+            if(e1 && e2 && e1->ray[ray_id].max_dist < contact[i].geom.depth)
+                {
+                e1->ray[ray_id].max_dist=contact[i].geom.depth;
+                e1->ray[ray_id].max_elem=e2->id;
+                memcpy(e1->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
+                }
+            if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
+                continue;
+            }
+
+        if(dGeomGetClass(contact[i].geom.g2)==dRayClass)
+            {
+            // raydium_ode_RayCallback (2)
+            ray_id=raydium_ode_internal_ray_geom_resolv(e2,contact[i].geom.g2);
+            if(e2)
+                {
+                contact[i].geom.g2=e2->geom;
+                e2->_last_touched_ray=ray_id;
+                }
+
+            if(r)
+                {
+                int id1,id2;
+                id1=id2=-1;
+                if(e1) id1=e1->id;
+                if(e2) id2=e2->id;
+                gencontact=r(id2,id1,&contact[i]);
+                if(gencontact==RAYDIUM_ODE_RAY_CONTACT_IGNORE) continue;
+                }
+
+            if(e1 && e2 && 
+            (e2->ray[ray_id].min_dist > contact[i].geom.depth || e2->ray[ray_id].min_dist==0) )
+                {
+                e2->ray[ray_id].min_dist=contact[i].geom.depth;
+                e2->ray[ray_id].min_elem=e1->id;
+                memcpy(e2->ray[ray_id].min_pos,contact[i].geom.pos,sizeof(dReal)*3);
+                }
+
+            if(e1 && e2 && e2->ray[ray_id].max_dist < contact[i].geom.depth)
+                {
+                e2->ray[ray_id].max_dist=contact[i].geom.depth;
+                e2->ray[ray_id].max_elem=e1->id;
+                memcpy(e2->ray[ray_id].max_pos,contact[i].geom.pos,sizeof(dReal)*3);
+                }
+            if(gencontact!=RAYDIUM_ODE_RAY_CONTACT_CREATE) // "report"
+                continue;
+            }
+                
+        // raydium_ode_CollideCallback
+        if(f)
+            {
+            int id1,id2;
+            id1=id2=-1;
+            if(e1) id1=e1->id;
+            if(e2) id2=e2->id;
+            if(!f(id1,id2,&contact[i])) continue;
+            }
+
+
+        if(e1) e1->_touched=1; // may use it as a counter ?
+        if(e2) e2->_touched=1; // ...
+        //printf("%s <-> %s\n",e1->name,e2->name); // let's flood :)
+        c = dJointCreateContact (raydium_ode_world,raydium_ode_contactgroup,&contact[i]);
+        dJointAttach (c,dGeomGetBody(contact[i].geom.g1),dGeomGetBody(contact[i].geom.g2));
     }
   }
 }
@@ -4025,44 +4025,44 @@ if(f) f();
 /*
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
     if(raydium_ode_joint[i].state)
-	{
-	if(raydium_ode_joint[i].hinge2correct)
-	    {
-	    //dJointCorrectHinge2(raydium_ode_joint[i].joint);
-	    }
-	}
+        {
+        if(raydium_ode_joint[i].hinge2correct)
+            {
+            //dJointCorrectHinge2(raydium_ode_joint[i].joint);
+            }
+        }
 */
 
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
     if(raydium_ode_motor[i].state)
-	raydium_ode_motor_update_joints_data_internal(i);
+        raydium_ode_motor_update_joints_data_internal(i);
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
-	{
-	// init per_step variables
-	raydium_ode_element[i]._touched=0;
-	raydium_ode_element[i]._avoidedcol=0;
-	raydium_ode_element[i].ground_texture=0;
-	// test for damping effect:
-	if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
-	    raydium_ode_element[i].rotfriction!=0.f)
-	    {
-	    dReal *torque;
-	    dReal torqueinv[3];
-	    // may use element size, too ...
-	    torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[i].body);
-	    torqueinv[0]=torque[0]*-raydium_ode_element[i].rotfriction;
-	    torqueinv[1]=torque[1]*-raydium_ode_element[i].rotfriction;
-	    torqueinv[2]=torque[2]*-raydium_ode_element[i].rotfriction;
-	    dBodyAddTorque(raydium_ode_element[i].body,torqueinv[0],torqueinv[1],torqueinv[2]);
-	    }
-	
-	for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
-	  if(raydium_ode_element[i].ray[j].state)
-	    {
-	        if (raydium_ode_element[i].body)
-	        {
+        {
+        // init per_step variables
+        raydium_ode_element[i]._touched=0;
+        raydium_ode_element[i]._avoidedcol=0;
+        raydium_ode_element[i].ground_texture=0;
+        // test for damping effect:
+        if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
+            raydium_ode_element[i].rotfriction!=0.f)
+            {
+            dReal *torque;
+            dReal torqueinv[3];
+            // may use element size, too ...
+            torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[i].body);
+            torqueinv[0]=torque[0]*-raydium_ode_element[i].rotfriction;
+            torqueinv[1]=torque[1]*-raydium_ode_element[i].rotfriction;
+            torqueinv[2]=torque[2]*-raydium_ode_element[i].rotfriction;
+            dBodyAddTorque(raydium_ode_element[i].body,torqueinv[0],torqueinv[1],torqueinv[2]);
+            }
+        
+        for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
+          if(raydium_ode_element[i].ray[j].state)
+            {
+                if (raydium_ode_element[i].body)
+                {
                 // update ray position and direction
                 dReal pos[3];
                 dReal dir[3];
@@ -4075,7 +4075,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                     r->rel_dir[2],
                     dir);
                 //printf("set : %f %f %f\n",dir[0],dir[1],dir[2]);
-        //	    pos=(dReal *)dBodyGetPosition(raydium_ode_element[i].body);
+        //          pos=(dReal *)dBodyGetPosition(raydium_ode_element[i].body);
                 dBodyGetRelPointPos(raydium_ode_element[i].body,
                     r->rel_pos[0],
                     r->rel_pos[1],
@@ -4086,12 +4086,12 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 r->max_dist=0;
                 r->min_dist=0;
                 r->max_elem=r->min_elem=-1;
-	        }
-	        else //element don't have body
-	        {
-	            dReal * pos;
-	            dReal * dir;
-	            dReal ndir[3],npos[3];
+                }
+                else //element don't have body
+                {
+                    dReal * pos;
+                    dReal * dir;
+                    dReal ndir[3],npos[3];
                 raydium_ode_Ray *r;
                 
                 r=&raydium_ode_element[i].ray[j];
@@ -4112,41 +4112,41 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 r->max_dist=0;
                 r->min_dist=0;
                 r->max_elem=r->min_elem=-1;
-	        }
-	    }
-	}
+                }
+            }
+        }
 
 for(i=0;i<RAYDIUM_ODE_MAX_EXPLOSIONS;i++)
     if(raydium_ode_explosion[i].state)
-	{
-	// 1 - check if radius > config_radius (and then delete explosion)
-	if(raydium_ode_explosion[i].radius>raydium_ode_explosion[i].config_radius)
-	    raydium_ode_explosion_delete(i);
-	else
-	 {
-	 // 2 - increment radius
-	 raydium_ode_explosion[i].radius+=raydium_ode_explosion[i].config_propag;
-	 
-	 // 3 - delete previous element if exists
-	 if(raydium_ode_explosion[i].element>=0)
-	    raydium_ode_element_delete(raydium_ode_explosion[i].element,0);
+        {
+        // 1 - check if radius > config_radius (and then delete explosion)
+        if(raydium_ode_explosion[i].radius>raydium_ode_explosion[i].config_radius)
+            raydium_ode_explosion_delete(i);
+        else
+         {
+         // 2 - increment radius
+         raydium_ode_explosion[i].radius+=raydium_ode_explosion[i].config_propag;
+         
+         // 3 - delete previous element if exists
+         if(raydium_ode_explosion[i].element>=0)
+            raydium_ode_element_delete(raydium_ode_explosion[i].element,0);
 
-	 // 4 - create new element
-	 // (not really a distant element, but we don't want progap' ...)
-	 raydium_ode_network_distant_create=1;
-	 raydium_ode_explosion[i].element=
-	 raydium_ode_object_sphere_add(raydium_ode_explosion[i].name,
-	                               raydium_ode_object_find("GLOBAL"),
-				       0,
-				       raydium_ode_explosion[i].radius,
-				       RAYDIUM_ODE_STATIC,
-				       0, /* see below */
-				       "");
-	 raydium_ode_element[raydium_ode_explosion[i].element].user_tag=RAYDIUM_ODE_TAG_EXPLOSION;
-	 raydium_ode_element_material(raydium_ode_explosion[i].element,RAYDIUM_ODE_MATERIAL_SOFT2);
-	 raydium_ode_element_move(raydium_ode_explosion[i].element,raydium_ode_explosion[i].position);
-	 }
-	}
+         // 4 - create new element
+         // (not really a distant element, but we don't want progap' ...)
+         raydium_ode_network_distant_create=1;
+         raydium_ode_explosion[i].element=
+         raydium_ode_object_sphere_add(raydium_ode_explosion[i].name,
+                                       raydium_ode_object_find("GLOBAL"),
+                                       0,
+                                       raydium_ode_explosion[i].radius,
+                                       RAYDIUM_ODE_STATIC,
+                                       0, /* see below */
+                                       "");
+         raydium_ode_element[raydium_ode_explosion[i].element].user_tag=RAYDIUM_ODE_TAG_EXPLOSION;
+         raydium_ode_element_material(raydium_ode_explosion[i].element,RAYDIUM_ODE_MATERIAL_SOFT2);
+         raydium_ode_element_move(raydium_ode_explosion[i].element,raydium_ode_explosion[i].position);
+         }
+        }
 
 
 raydium_ode_element_delete_LOCK=1;
@@ -4154,7 +4154,7 @@ raydium_ode_element_delete_LOCK=1;
 dSpaceCollide (raydium_ode_space,0,&raydium_ode_near_callback);
 for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
     if(raydium_ode_object[i].state && raydium_ode_object[i].colliding)
-	dSpaceCollide ((dSpaceID)raydium_ode_object[i].group,0,&raydium_ode_near_callback);
+        dSpaceCollide ((dSpaceID)raydium_ode_object[i].group,0,&raydium_ode_near_callback);
 //raydium_profile_end("collision detection");
 raydium_ode_element_delete_LOCK=0;
 
@@ -4174,47 +4174,47 @@ dJointGroupEmpty (raydium_ode_contactgroup);
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state  && 
        raydium_ode_element[i].marked_as_deleted)
-	    raydium_ode_element_delete(i,1);
-    	    
+            raydium_ode_element_delete(i,1);
+            
 
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].state  	    && 
+    if(raydium_ode_element[i].state         && 
        raydium_ode_element[i]._movesfrom>=0 &&
        !raydium_ode_element[i]._avoidedcol  )
-    	    raydium_ode_element[i]._movesfrom=-1;
+            raydium_ode_element[i]._movesfrom=-1;
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state   && 
        raydium_ode_element[i].isplayer )
         {
-	dMatrix3 R;
-	dRFromEulerAngles(R,0,0,raydium_ode_element[i].playerangle);
-	dBodySetRotation(raydium_ode_element[i].body,R);
-	dBodySetAngularVel(raydium_ode_element[i].body,0,0,0);
-	}
+        dMatrix3 R;
+        dRFromEulerAngles(R,0,0,raydium_ode_element[i].playerangle);
+        dBodySetRotation(raydium_ode_element[i].body,R);
+        dBodySetAngularVel(raydium_ode_element[i].body,0,0,0);
+        }
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state  &&
        raydium_ode_element[i].ttl!=-1 )
-	{
+        {
         if(raydium_ode_element[i].ttl==0)
-	    raydium_ode_element_delete(i,1);
-	else
-    	    raydium_ode_element[i].ttl--;	
-	}
+            raydium_ode_element_delete(i,1);
+        else
+            raydium_ode_element[i].ttl--;       
+        }
 
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state  &&
        raydium_ode_element[i].nid>=0  &&
        raydium_ode_element[i].distant)
-	    raydium_ode_network_element_trajectory_correct(i);
+            raydium_ode_network_element_trajectory_correct(i);
 
 
 for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
     if(raydium_ode_joint[i].state)
-	raydium_ode_joint_break(i);
+        raydium_ode_joint_break(i);
 
 
 if(raydium_ode_record_fp)
@@ -4229,36 +4229,36 @@ if(raydium_ode_record_fp)
 
     // It may be an good idea to find a quicker way to do this ... :)
     for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-	if(raydium_ode_element[i].state && 
-	   raydium_ode_element[i].id!=ground_elem_id &&
-	   raydium_ode_element[i].recorded)
-	    count++;
+        if(raydium_ode_element[i].state && 
+           raydium_ode_element[i].id!=ground_elem_id &&
+           raydium_ode_element[i].recorded)
+            count++;
 
     fwrite(&count,sizeof(count),1,raydium_ode_record_fp);
 
     for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-	if(raydium_ode_element[i].state && 
-	   raydium_ode_element[i].id!=ground_elem_id &&
-	   raydium_ode_element[i].recorded)
-	    {
-	    unsigned short id;
-	    dReal *p;
-	    dReal pos[3];
-	    dReal q[4];
-	    
-	    id=raydium_ode_element[i].id;
-	    fwrite(&id,sizeof(id),1,raydium_ode_record_fp);
-	    
-	    // no idea why I must make a local copy ... :/
-	    p=raydium_ode_element_pos_get(i);
-	    pos[0]=p[0];
-	    pos[1]=p[1];
-	    pos[2]=p[2];
-	    fwrite(&pos,sizeof(dReal),3,raydium_ode_record_fp);
+        if(raydium_ode_element[i].state && 
+           raydium_ode_element[i].id!=ground_elem_id &&
+           raydium_ode_element[i].recorded)
+            {
+            unsigned short id;
+            dReal *p;
+            dReal pos[3];
+            dReal q[4];
+            
+            id=raydium_ode_element[i].id;
+            fwrite(&id,sizeof(id),1,raydium_ode_record_fp);
+            
+            // no idea why I must make a local copy ... :/
+            p=raydium_ode_element_pos_get(i);
+            pos[0]=p[0];
+            pos[1]=p[1];
+            pos[2]=p[2];
+            fwrite(&pos,sizeof(dReal),3,raydium_ode_record_fp);
 
-	    raydium_ode_element_rotq_get(i,q);
-	    fwrite(&q,sizeof(dReal),4,raydium_ode_record_fp);  	    
-	    }
+            raydium_ode_element_rotq_get(i,q);
+            fwrite(&q,sizeof(dReal),4,raydium_ode_record_fp);       
+            }
     }
   else
     raydium_ode_record_countdown--;
@@ -4278,8 +4278,8 @@ int i;
 
 for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state &&
-	raydium_ode_element[i].particle==gen)
-	    raydium_ode_element[i].particle=-1;
+        raydium_ode_element[i].particle==gen)
+            raydium_ode_element[i].particle=-1;
 }
 
 void raydium_ode_element_particle(int elem, char *filename)
@@ -4423,61 +4423,61 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state && raydium_ode_element[i].mesh>=0)
      {
         int end;
-	
+        
         dBodyID body;
-	dReal *pos;
-	dQuaternion rot;
-	body=dBodyCreate(raydium_ode_world);
-	pos=raydium_ode_element_pos_get(i);
-	raydium_ode_element_rotq_get(i,rot);
-	dBodySetPosition(body,pos[0],pos[1],pos[2]);
-	dBodySetQuaternion(body,rot);
-	k=raydium_ode_element[i].mesh;
-	
-	// should prepare "ode" instance here, too ...
-	if(raydium_object_anims[k]>0)
-	    end=raydium_object_start[k]+raydium_object_anim_len[k];
-	else
-	    end=raydium_object_end[k];
-	
-	for(j=raydium_object_start[k];j<end;j++)
-	{
-	  if(raydium_vertex_texture_multi[j])
-	    {
-	    sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[j]],
-	                               raydium_vertex_texture_multi_u[j],
-	                               raydium_vertex_texture_multi_v[j],
-	                               raydium_texture_name[raydium_vertex_texture_multi[j]]);
-	    }
-	else
-	    strcpy(text,raydium_texture_name[raydium_vertex_texture[j]]);
-													       
-	dBodyGetRelPointPos(body,
-                        	raydium_vertex_x[j],
-                        	raydium_vertex_y[j],
-                        	raydium_vertex_z[j],
-                        	res);
-				
-	dBodyVectorToWorld(body,
-				raydium_vertex_normal_visu_x[j],
-				raydium_vertex_normal_visu_y[j],
-				raydium_vertex_normal_visu_z[j],
-				norm);
-	
-	fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
-					res[0],
-					res[1],
-					res[2],
-					norm[0],
-					norm[1],
-					norm[2],
-					raydium_vertex_texture_u[j],
-					raydium_vertex_texture_v[j],
-					text);
-	}
+        dReal *pos;
+        dQuaternion rot;
+        body=dBodyCreate(raydium_ode_world);
+        pos=raydium_ode_element_pos_get(i);
+        raydium_ode_element_rotq_get(i,rot);
+        dBodySetPosition(body,pos[0],pos[1],pos[2]);
+        dBodySetQuaternion(body,rot);
+        k=raydium_ode_element[i].mesh;
+        
+        // should prepare "ode" instance here, too ...
+        if(raydium_object_anims[k]>0)
+            end=raydium_object_start[k]+raydium_object_anim_len[k];
+        else
+            end=raydium_object_end[k];
+        
+        for(j=raydium_object_start[k];j<end;j++)
+        {
+          if(raydium_vertex_texture_multi[j])
+            {
+            sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[j]],
+                                       raydium_vertex_texture_multi_u[j],
+                                       raydium_vertex_texture_multi_v[j],
+                                       raydium_texture_name[raydium_vertex_texture_multi[j]]);
+            }
+        else
+            strcpy(text,raydium_texture_name[raydium_vertex_texture[j]]);
+                                                                                                               
+        dBodyGetRelPointPos(body,
+                                raydium_vertex_x[j],
+                                raydium_vertex_y[j],
+                                raydium_vertex_z[j],
+                                res);
+                                
+        dBodyVectorToWorld(body,
+                                raydium_vertex_normal_visu_x[j],
+                                raydium_vertex_normal_visu_y[j],
+                                raydium_vertex_normal_visu_z[j],
+                                norm);
+        
+        fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
+                                        res[0],
+                                        res[1],
+                                        res[2],
+                                        norm[0],
+                                        norm[1],
+                                        norm[2],
+                                        raydium_vertex_texture_u[j],
+                                        raydium_vertex_texture_v[j],
+                                        text);
+        }
 
-	dBodyDestroy(body);
-    	// raydium_ode_element[i].mesh
+        dBodyDestroy(body);
+        // raydium_ode_element[i].mesh
      }
 fclose(fp);
 raydium_log("3D capture saved to '%s'",filename);
@@ -4500,19 +4500,19 @@ for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
     if(!n) continue;
 
     for(j=0;j<n;j++)
-	{
-	g=dSpaceGetGeom(raydium_ode_object[i].group,j);
-	for(k=0;k<RAYDIUM_ODE_MAX_ELEMENTS;k++)
-	    if(raydium_ode_element[k].state)
-		if(raydium_ode_element[k].geom==g)
-		    break;
-	
-	if(k==RAYDIUM_ODE_MAX_ELEMENTS)
-	    {
-	    cpt++;
-	    raydium_log("new orphan in '%s'",raydium_ode_object[i].name);
-	    }
-	}
+        {
+        g=dSpaceGetGeom(raydium_ode_object[i].group,j);
+        for(k=0;k<RAYDIUM_ODE_MAX_ELEMENTS;k++)
+            if(raydium_ode_element[k].state)
+                if(raydium_ode_element[k].geom==g)
+                    break;
+        
+        if(k==RAYDIUM_ODE_MAX_ELEMENTS)
+            {
+            cpt++;
+            raydium_log("new orphan in '%s'",raydium_ode_object[i].name);
+            }
+        }
     }
 return cpt;
 }
@@ -4522,22 +4522,22 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
 {
     GLdouble dX, dY, dZ;
     int id;
-    dReal min_dist;	
+    dReal min_dist;     
     dGeomID ray;
     dContact pt;
     signed char (*f)(int,int, dContact *);
-	
+        
     f=raydium_ode_CollideCallback;
-	
+        
     // Get mouse pointed coordinate
     gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
 
-    //Create Ray	
+    //Create Ray        
     ray =  dCreateRay (raydium_ode_object[raydium_ode_object_find("GLOBAL")].group,dist);
     // Set ray origin and dist
     dGeomRaySet (ray, raydium_camera_x, raydium_camera_y,raydium_camera_z,dX-raydium_camera_x, dY-raydium_camera_y, dZ-raydium_camera_z);
     //dGeomRaySetClosestHit(ray, true);
-	
+        
     id=-1;
     min_dist=dist;
 
@@ -4604,11 +4604,11 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
             }
         }
         
-	dSpaceCollide2((dGeomID) raydium_ode_space,ray,(void *) NULL,&dNearPickback);
+        dSpaceCollide2((dGeomID) raydium_ode_space,ray,(void *) NULL,&dNearPickback);
     }
-	
+        
     dGeomDestroy(ray);
-	
+        
     pos[0]=pt.geom.pos[0];
     pos[1]=pt.geom.pos[1];
     pos[2]=pt.geom.pos[2];
@@ -4680,23 +4680,23 @@ if(!raydium_ode_record_fp)
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
-	{
-	ctype=-1;
-	type=dGeomGetClass(raydium_ode_element[i].geom);
-	if(type==dSphereClass)
-	    {
-	    sizes[0]=dGeomSphereGetRadius(raydium_ode_element[i].geom);
-	    ctype=RAYDIUM_ODE_RECORD_NEWSPHERE;
-	    }
-	if(type==dBoxClass)	
-	    {
-	    dGeomBoxGetLengths(raydium_ode_element[i].geom,sizes);
-	    ctype=RAYDIUM_ODE_RECORD_NEWBOX;
-	    }
-	
-	if(ctype!=-1)
-	    raydium_ode_capture_internal_create(ctype,i,sizes,raydium_object_name[raydium_ode_element[i].mesh]);
-	}		       
+        {
+        ctype=-1;
+        type=dGeomGetClass(raydium_ode_element[i].geom);
+        if(type==dSphereClass)
+            {
+            sizes[0]=dGeomSphereGetRadius(raydium_ode_element[i].geom);
+            ctype=RAYDIUM_ODE_RECORD_NEWSPHERE;
+            }
+        if(type==dBoxClass)     
+            {
+            dGeomBoxGetLengths(raydium_ode_element[i].geom,sizes);
+            ctype=RAYDIUM_ODE_RECORD_NEWBOX;
+            }
+        
+        if(ctype!=-1)
+            raydium_ode_capture_internal_create(ctype,i,sizes,raydium_object_name[raydium_ode_element[i].mesh]);
+        }                      
 }
 
 
@@ -4719,7 +4719,7 @@ if(type==dSphereClass)
     event=RAYDIUM_ODE_RECORD_DELSPHERE;
     sizes[0]=dGeomSphereGetRadius(raydium_ode_element[id].geom);
     }
-if(type==dBoxClass)	
+if(type==dBoxClass)     
     {
     event=RAYDIUM_ODE_RECORD_DELBOX;
     dGeomBoxGetLengths(raydium_ode_element[id].geom,sizes);
@@ -4812,51 +4812,51 @@ do
     pos=ftell(raydium_ode_record_play_fp)-sizeof(event);
 
     if(last_event_wrote)
-	{
-	last_event.fpos=pos;
-	last_event.index=raydium_ode_record_index_size;
-	last_event_wrote=0;
-	}
+        {
+        last_event.fpos=pos;
+        last_event.index=raydium_ode_record_index_size;
+        last_event_wrote=0;
+        }
 
     if(raydium_ode_record_index_size>0 && 
        raydium_ode_record_index_forward[raydium_ode_record_index_size-1].fpos==0)
         {
-	raydium_ode_record_index_forward[raydium_ode_record_index_size-1].fpos=pos;
-	raydium_ode_record_index_forward[raydium_ode_record_index_size-1].index=raydium_ode_record_index_size;
-	}
+        raydium_ode_record_index_forward[raydium_ode_record_index_size-1].fpos=pos;
+        raydium_ode_record_index_forward[raydium_ode_record_index_size-1].index=raydium_ode_record_index_size;
+        }
     
     n_events++;
     
     switch(event)
-	{
-	case RAYDIUM_ODE_RECORD_DELSPHERE:
-	    // delete sphere event : dReal + short + string
-	    fseek(raydium_ode_record_play_fp,sizeof(dReal)+sizeof(short),SEEK_CUR);
-	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	    break;
+        {
+        case RAYDIUM_ODE_RECORD_DELSPHERE:
+            // delete sphere event : dReal + short + string
+            fseek(raydium_ode_record_play_fp,sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
 
-	case RAYDIUM_ODE_RECORD_DELBOX:
-	    // delete box event : 3*dReal + short + string
-	    fseek(raydium_ode_record_play_fp,3*sizeof(dReal)+sizeof(short),SEEK_CUR);
-	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	    break;
+        case RAYDIUM_ODE_RECORD_DELBOX:
+            // delete box event : 3*dReal + short + string
+            fseek(raydium_ode_record_play_fp,3*sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
 
-	case RAYDIUM_ODE_RECORD_NEWBOX:
-	    // newbox event : 3*dReal + short + string
-	    fseek(raydium_ode_record_play_fp,3*sizeof(dReal)+sizeof(short),SEEK_CUR);
-	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	    break;
+        case RAYDIUM_ODE_RECORD_NEWBOX:
+            // newbox event : 3*dReal + short + string
+            fseek(raydium_ode_record_play_fp,3*sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
 
-	case RAYDIUM_ODE_RECORD_NEWSPHERE:	    
-	    // newbox event : dReal + short + string
-	    fseek(raydium_ode_record_play_fp,sizeof(dReal)+sizeof(short),SEEK_CUR);
-	    raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	    break;
-	default:
+        case RAYDIUM_ODE_RECORD_NEWSPHERE:          
+            // newbox event : dReal + short + string
+            fseek(raydium_ode_record_play_fp,sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
+        default:
             raydium_log("ERROR: replay playback index: unknown event type (%i) !",event);
-	    exit(100);
-	    break;
-	}
+            exit(100);
+            break;
+        }
     }
  else
     {
@@ -4864,13 +4864,13 @@ do
     event-=100;
 
     if(raydium_ode_record_index_size>=current_alloc_size)
-	{
-	//printf("realloc ...\n");
-	current_alloc_size+=9000; // 5 minutes
-	raydium_ode_record_index_moves=realloc(raydium_ode_record_index_moves,current_alloc_size*sizeof(int));
-	raydium_ode_record_index_forward=realloc(raydium_ode_record_index_forward,current_alloc_size*sizeof(raydium_ode_record_play_Index));
-	raydium_ode_record_index_backward=realloc(raydium_ode_record_index_backward,current_alloc_size*sizeof(raydium_ode_record_play_Index));
-	}
+        {
+        //printf("realloc ...\n");
+        current_alloc_size+=9000; // 5 minutes
+        raydium_ode_record_index_moves=realloc(raydium_ode_record_index_moves,current_alloc_size*sizeof(int));
+        raydium_ode_record_index_forward=realloc(raydium_ode_record_index_forward,current_alloc_size*sizeof(raydium_ode_record_play_Index));
+        raydium_ode_record_index_backward=realloc(raydium_ode_record_index_backward,current_alloc_size*sizeof(raydium_ode_record_play_Index));
+        }
     raydium_ode_record_index_moves[raydium_ode_record_index_size]=ftell(raydium_ode_record_play_fp)-sizeof(event);
     raydium_ode_record_index_forward[raydium_ode_record_index_size].fpos=0;
     raydium_ode_record_index_backward[raydium_ode_record_index_size].fpos=last_event.fpos;
@@ -4888,13 +4888,13 @@ last_event.index=0;
 for(i=raydium_ode_record_index_size-1;;i--)
     {
     if(raydium_ode_record_index_forward[i].fpos==0)
-    	raydium_ode_record_index_forward[i]=last_event;
+        raydium_ode_record_index_forward[i]=last_event;
     else
-	last_event=raydium_ode_record_index_forward[i];
+        last_event=raydium_ode_record_index_forward[i];
 
     // can't do it with the 'for', 'cause i is unsigned (so >=0 is always true)
     if(i==0)
-	break;
+        break;
     }
 
 
@@ -5005,18 +5005,18 @@ float result[4];
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state &&
-	raydium_ode_element[i].replayed)
-	{
-	for(j=0;j<3;j++)
-	    pos[j]=raydium_ode_element[i].capture_pos1[j]+
-		    (raydium_ode_element[i].capture_pos2[j] -
-		     raydium_ode_element[i].capture_pos1[j])*diff;
+        raydium_ode_element[i].replayed)
+        {
+        for(j=0;j<3;j++)
+            pos[j]=raydium_ode_element[i].capture_pos1[j]+
+                    (raydium_ode_element[i].capture_pos2[j] -
+                     raydium_ode_element[i].capture_pos1[j])*diff;
 
-	raydium_trigo_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
+        raydium_trigo_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
 
-	raydium_ode_element_move(i,pos);
-	raydium_ode_element_rotateq(i,result);
-	}
+        raydium_ode_element_move(i,pos);
+        raydium_ode_element_rotateq(i,result);
+        }
 }
 
 
@@ -5068,25 +5068,25 @@ if(sense==1)
     {
     // going forward ...
     while((int)raydium_ode_record_index_forward[origin].index<=step && raydium_ode_record_index_forward[origin].fpos!=0)
-	{
-//	raydium_log("reading f... (at %i)",raydium_ode_record_index_forward[origin].fpos);
-	fseek(raydium_ode_record_play_fp,raydium_ode_record_index_forward[origin].fpos,SEEK_SET);
-	// then read event(s) until we found a "move"
-	raydium_ode_capture_internal_read_event(sense);
-	origin=raydium_ode_record_index_forward[origin].index;
-	}
+        {
+//      raydium_log("reading f... (at %i)",raydium_ode_record_index_forward[origin].fpos);
+        fseek(raydium_ode_record_play_fp,raydium_ode_record_index_forward[origin].fpos,SEEK_SET);
+        // then read event(s) until we found a "move"
+        raydium_ode_capture_internal_read_event(sense);
+        origin=raydium_ode_record_index_forward[origin].index;
+        }
     }
 else
     {
     // going backward ...
     while(raydium_ode_record_index_backward[origin].index!=raydium_ode_record_index_backward[step].index)
-	{
-//	raydium_log("reading b... (at %i)",raydium_ode_record_index_backward[origin].fpos);
-	fseek(raydium_ode_record_play_fp,raydium_ode_record_index_backward[origin].fpos,SEEK_SET);
-	// then read event(s) until we found a "move"
-	raydium_ode_capture_internal_read_event(sense);
-	origin=raydium_ode_record_index_backward[origin].index-1;
-	}
+        {
+//      raydium_log("reading b... (at %i)",raydium_ode_record_index_backward[origin].fpos);
+        fseek(raydium_ode_record_play_fp,raydium_ode_record_index_backward[origin].fpos,SEEK_SET);
+        // then read event(s) until we found a "move"
+        raydium_ode_capture_internal_read_event(sense);
+        origin=raydium_ode_record_index_backward[origin].index-1;
+        }
     }
 
 // You may have a look to revision 591, there was a big bunch of code here ...
@@ -5158,72 +5158,72 @@ if(event<100)
     {
     // can't use switch/case here.
     if(event==delsphere)
-	{
-	fread(sizes,sizeof(dReal),1,raydium_ode_record_play_fp);
-	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
-	raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	if(sense==-1)
-	    raydium_ode_capture_internal_read_event(sense);
-	raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
-	if(sense==1)
-	    raydium_ode_capture_internal_read_event(sense);
-	ok=1;
-	}
+        {
+        fread(sizes,sizeof(dReal),1,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
 
     if(event==delbox)
-	{
-	fread(sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
-	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
-	raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	if(sense==-1)
-	    raydium_ode_capture_internal_read_event(sense);
-	raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
-	if(sense==1)
-	    raydium_ode_capture_internal_read_event(sense);
-	ok=1;
-	}
+        {
+        fread(sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
 
     if(event==newbox)
-	{
-	fread(sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
-	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
-	raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	raydium_ode_name_auto("REPLAY-B",autoname);
-	if(sense==-1)
-	    raydium_ode_capture_internal_read_event(sense);
-	newid=raydium_ode_object_box_add(
-	      autoname,raydium_ode_record_play_world,
-	      1,sizes[0],sizes[1],sizes[2],RAYDIUM_ODE_STATIC,0,name);
-	raydium_ode_record_element_mappings[short_id]=newid;
-	raydium_ode_element[newid].replayed=1;
-	if(sense==1)
-	    raydium_ode_capture_internal_read_event(sense);
-	ok=1;
-	}
+        {
+        fread(sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        raydium_ode_name_auto("REPLAY-B",autoname);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        newid=raydium_ode_object_box_add(
+              autoname,raydium_ode_record_play_world,
+              1,sizes[0],sizes[1],sizes[2],RAYDIUM_ODE_STATIC,0,name);
+        raydium_ode_record_element_mappings[short_id]=newid;
+        raydium_ode_element[newid].replayed=1;
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
 
     if(event==newsphere)
-	{
-	fread(sizes,sizeof(dReal),1,raydium_ode_record_play_fp);
-	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
-	raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
-	raydium_ode_name_auto("REPLAY-S",autoname);
-	if(sense==-1)
-	    raydium_ode_capture_internal_read_event(sense);
-	newid=raydium_ode_object_sphere_add(
-	      autoname,raydium_ode_record_play_world,
-	      1,sizes[0],RAYDIUM_ODE_STATIC,0,name);
-	raydium_ode_record_element_mappings[short_id]=newid;
-	raydium_ode_element[newid].replayed=1;
-	if(sense==1)
-	    raydium_ode_capture_internal_read_event(sense);
-	ok=1;
-	}
+        {
+        fread(sizes,sizeof(dReal),1,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        raydium_ode_name_auto("REPLAY-S",autoname);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        newid=raydium_ode_object_sphere_add(
+              autoname,raydium_ode_record_play_world,
+              1,sizes[0],RAYDIUM_ODE_STATIC,0,name);
+        raydium_ode_record_element_mappings[short_id]=newid;
+        raydium_ode_element[newid].replayed=1;
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
 
     if(!ok)
-	{
-	raydium_log("ERROR: record playback: unknown event type (%i) !",event);
-	exit(100);
-	}
+        {
+        raydium_log("ERROR: record playback: unknown event type (%i) !",event);
+        exit(100);
+        }
     }
 else // "moves" event (moves)
     {
@@ -5261,28 +5261,28 @@ else // normal event (moves)
     {
     event-=100; // elements in this step
     for(i=0;i<event;i++)
-	{
-	fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
-	fread(&pos,sizeof(dReal),3,raydium_ode_record_play_fp);
-	fread(&rot,sizeof(dReal),4,raydium_ode_record_play_fp);
-	newid=raydium_ode_record_element_mappings[short_id];
-	if(pass==0 || pass==-1)
-	    {
-	    //TODOXF: clean this ... and deal with rotations !
-	    raydium_ode_element[newid].capture_pos1[0]=pos[0];
-	    raydium_ode_element[newid].capture_pos1[1]=pos[1];
-	    raydium_ode_element[newid].capture_pos1[2]=pos[2];
-	    memcpy(raydium_ode_element[newid].capture_rot1,rot,sizeof(dReal)*4);
-	    }
-	if(pass==1 || pass==-1)
-	    {
-	    //TODOXF: clean this ... and deal with rotations !
-	    raydium_ode_element[newid].capture_pos2[0]=pos[0];
-	    raydium_ode_element[newid].capture_pos2[1]=pos[1];
-	    raydium_ode_element[newid].capture_pos2[2]=pos[2];
-	    memcpy(raydium_ode_element[newid].capture_rot2,rot,sizeof(dReal)*4);
-	    }
-	}
+        {
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        fread(&pos,sizeof(dReal),3,raydium_ode_record_play_fp);
+        fread(&rot,sizeof(dReal),4,raydium_ode_record_play_fp);
+        newid=raydium_ode_record_element_mappings[short_id];
+        if(pass==0 || pass==-1)
+            {
+            //TODOXF: clean this ... and deal with rotations !
+            raydium_ode_element[newid].capture_pos1[0]=pos[0];
+            raydium_ode_element[newid].capture_pos1[1]=pos[1];
+            raydium_ode_element[newid].capture_pos1[2]=pos[2];
+            memcpy(raydium_ode_element[newid].capture_rot1,rot,sizeof(dReal)*4);
+            }
+        if(pass==1 || pass==-1)
+            {
+            //TODOXF: clean this ... and deal with rotations !
+            raydium_ode_element[newid].capture_pos2[0]=pos[0];
+            raydium_ode_element[newid].capture_pos2[1]=pos[1];
+            raydium_ode_element[newid].capture_pos2[2]=pos[2];
+            memcpy(raydium_ode_element[newid].capture_rot2,rot,sizeof(dReal)*4);
+            }
+        }
     }
 }
 
@@ -5296,7 +5296,7 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
     {
     raydium_ode_capture_speed(0);
     if(raydium_ode_record_play_current<0) // let's be kind :)
-	raydium_ode_record_play_current=0;
+        raydium_ode_record_play_current=0;
     }
   }
 }

@@ -24,11 +24,11 @@ for($i=0;$i<count($a);$i++)
     {
     $l=$a[$i];
     if($l[0]=='d') // is Data
-	{
-	$l=substr($l,2);
-	$l=explode(';',$l);
-	return $l;
-	}
+        {
+        $l=substr($l,2);
+        $l=explode(';',$l);
+        return $l;
+        }
     }
 return array("$mni","unknown","0","0");
 }
@@ -43,9 +43,9 @@ foreach($scores as $s)
     {
     $a=explode(";",$s);
     if($a[0]==$mni &&  $a[1]<$best)
-	{
-	$best=trim($a[1]);
-	}
+        {
+        $best=trim($a[1]);
+        }
     }
 return $best;
 }
@@ -68,7 +68,7 @@ foreach($story as $s)
 
     $ret.="$s;^$col".$d[0]."  \n";
     if($b>$d[2])
-	$col='4';
+        $col='4';
     }
 
 if($col=='2')

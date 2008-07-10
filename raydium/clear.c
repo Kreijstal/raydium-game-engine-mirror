@@ -24,7 +24,7 @@ raydium_viewport_use=-1;
 void raydium_clear_color_update(void)
 {
 glClearColor(raydium_background_color[0],
-	     raydium_background_color[1],
-	     raydium_background_color[2],
-	     raydium_background_color[3]);
+             raydium_background_color[1],
+             raydium_background_color[2],
+             raydium_background_color[3]);
 }

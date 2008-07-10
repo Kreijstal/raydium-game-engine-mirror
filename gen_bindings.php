@@ -65,10 +65,10 @@ while(false !== ($file = readdir($h)))
     $l=fgets($fp);
     fclose($fp);
     if(substr($l,0,strlen($nobindings))==$nobindings)
-	{
-	echo "ignoring $file (asked by header)\n";
-	continue;
-	}
+        {
+        echo "ignoring $file (asked by header)\n";
+        continue;
+        }
 
     $hd="../headers/$file";
     fwrite($fpi,"%module raydium\n%{\n#include \"$hd\"\n%}\n\n%include \"$hd\"\n");
@@ -86,10 +86,10 @@ while(false !== ($file = readdir($h)))
     $l=fgets($fp);
     fclose($fp);
     if(substr($l,0,strlen($nobindings))==$nobindings)
-	{
-	echo "ignoring $file (asked by header)\n";
-	continue;
-	}
+        {
+        echo "ignoring $file (asked by header)\n";
+        continue;
+        }
 
     $hd="../$file";
     fwrite($fpi,"%module raydium\n%{\n#include \"$hd\"\n%}\n\n%include \"$hd\"\n");
@@ -136,8 +136,8 @@ $argvmap=<<<EOHC
 %typemap(python,in) FILE * {
   if (!PyFile_Check(\$input)) {
         PyErr_SetString(PyExc_TypeError, "Need a file!");
-	return NULL;
-	}
+        return NULL;
+        }
     \$1 = PyFile_AsFile(\$input);
 }
 
@@ -145,8 +145,8 @@ $argvmap=<<<EOHC
 %typemap(python,in) PyObject *pyfunc {
   if (!PyCallable_Check(\$input)) {
         PyErr_SetString(PyExc_TypeError, "Need a callable object!");
-	return NULL;
-	}
+        return NULL;
+        }
     \$1 = \$input;
 }
 
@@ -257,9 +257,9 @@ $maps=<<<EOS
 
 %javaconst(1);
 
-%typemap(jni) signed char, const signed char & 		"jint"
-%typemap(jtype) signed char, const signed char &	"int"
-%typemap(jstype) signed char, const signed char & 	"int"
+%typemap(jni) signed char, const signed char &          "jint"
+%typemap(jtype) signed char, const signed char &        "int"
+%typemap(jstype) signed char, const signed char &       "int"
 
 %typemap(in) (int argc, char **argv) {
 // This typemap create a dummy first arg, since Java does not provide
@@ -311,7 +311,7 @@ while (!feof($fp))
     $contents .= fread($fp, 8192);
     }
 fclose($fp);
-		
+                
 $fp=fopen("org/raydium/raydium.i","wt");
 fwrite($fp,$maps."\n".$contents);
 fclose($fp);
@@ -352,15 +352,15 @@ if($arg1=="")
 switch($arg1)
     {
     case "--python":
-	generate_interface_file();
-	swig_wrappers_python();
+        generate_interface_file();
+        swig_wrappers_python();
     break;
 
     case "--java":
-	generate_interface_file();
-	swig_wrappers_java();
+        generate_interface_file();
+        swig_wrappers_java();
     break;
     
     default:
-	echo "error: invalid argument '$arg1'\n";
+        echo "error: invalid argument '$arg1'\n";
     }

@@ -10,7 +10,7 @@ if($dir==false) die("Cannot find \"music/\" directory...");
 unset($tbl);
 while (($file = readdir($dir)) != false)
     if(substr($file,-4) == ".ogg")
-	$tbl[]=$file;
+        $tbl[]=$file;
 
 
 $raydium_ogg_file="music/".$tbl[rand(0,count($tbl)-1)];

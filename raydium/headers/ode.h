@@ -747,7 +747,7 @@ typedef struct raydium_ode_Ray
     dReal   min_dist;
     int     min_elem;   // touched element, -1 if no element was touched
     dReal   min_pos[3];
-} raydium_ode_Ray;						
+} raydium_ode_Ray;                                              
 %%
 
 Obviously, this function won't allocate any memory, you must provide a

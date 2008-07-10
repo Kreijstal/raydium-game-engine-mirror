@@ -49,9 +49,9 @@ for(bl=0;bl<2;bl++)
   if(raydium_vertex_texture_multi[i])
   {
    sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[i]],
-			      raydium_vertex_texture_multi_u[i],
-			      raydium_vertex_texture_multi_v[i],
-			      raydium_texture_name[raydium_vertex_texture_multi[i]]);
+                              raydium_vertex_texture_multi_u[i],
+                              raydium_vertex_texture_multi_v[i],
+                              raydium_texture_name[raydium_vertex_texture_multi[i]]);
   }
   else
   strcpy(text,raydium_texture_name[raydium_vertex_texture[i]]);
@@ -171,8 +171,8 @@ if(sep_env)
 if(sep && sep2)
 {
   sscanf(sep+1,"%f|%f|%s\n", &raydium_texture_current_multi_u,
-			    &raydium_texture_current_multi_v,
-			    texname);
+                            &raydium_texture_current_multi_v,
+                            texname);
   raydium_texture_current_multi=raydium_texture_find_by_name(texname);
   *sep=0;
   raydium_texture_current_set_name(name);
@@ -230,10 +230,10 @@ if(visu==2)
     fscanf(fp,"%i %i\n",&j,&k);
     
     if(j>RAYDIUM_MAX_OBJECT_ANIMS)
-	{
-	raydium_log("object: too much anims for this file ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
-	j=RAYDIUM_MAX_OBJECT_ANIMS; // will no work ;) (fixme)
-	}
+        {
+        raydium_log("object: too much anims for this file ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
+        j=RAYDIUM_MAX_OBJECT_ANIMS; // will no work ;) (fixme)
+        }
     
     raydium_object_anims[raydium_object_index]=j;
     raydium_object_anim_len[raydium_object_index]=k;
@@ -241,31 +241,31 @@ if(visu==2)
     raydium_object_anim_default_anim[raydium_object_index]=0;
 
     for(ii=0;ii<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;ii++)
-	{
-	raydium_object_anim_current[raydium_object_index][ii]=0;
-	raydium_object_anim_frame_current[raydium_object_index][ii]=0;
-	raydium_object_anim_previous[raydium_object_index][ii]=-1;
-	raydium_object_anim_frame_previous[raydium_object_index][ii]=0;
-	raydium_object_anim_frame_previous_timeout[raydium_object_index][ii]=0;
-	raydium_object_anim_punctually_flag[raydium_object_index][ii]=-1;
-	}
+        {
+        raydium_object_anim_current[raydium_object_index][ii]=0;
+        raydium_object_anim_frame_current[raydium_object_index][ii]=0;
+        raydium_object_anim_previous[raydium_object_index][ii]=-1;
+        raydium_object_anim_frame_previous[raydium_object_index][ii]=0;
+        raydium_object_anim_frame_previous_timeout[raydium_object_index][ii]=0;
+        raydium_object_anim_punctually_flag[raydium_object_index][ii]=-1;
+        }
 
 
     for(i=0;i<raydium_object_anims[raydium_object_index];i++)
-	{
-	fscanf(fp,"%i %i %s\n",&j,&k,name);
-	raydium_object_anim_start[raydium_object_index][i]=j;
-	raydium_object_anim_end[raydium_object_index][i]=k;
-	raydium_object_anim_automatic_factor[raydium_object_index][i]=0;
-	strcpy(raydium_object_anim_names[raydium_object_index][i],name);
-	}
+        {
+        fscanf(fp,"%i %i %s\n",&j,&k,name);
+        raydium_object_anim_start[raydium_object_index][i]=j;
+        raydium_object_anim_end[raydium_object_index][i]=k;
+        raydium_object_anim_automatic_factor[raydium_object_index][i]=0;
+        strcpy(raydium_object_anim_names[raydium_object_index][i],name);
+        }
 
     // build "current transformed model" space
     for(ui=0;ui<raydium_object_anim_len[raydium_object_index];ui++)
-	{
-	raydium_vertex_add(0,0,0);
-	raydium_vertex_texture[raydium_vertex_index-1]=0;
-	}
+        {
+        raydium_vertex_add(0,0,0);
+        raydium_vertex_texture[raydium_vertex_index-1]=0;
+        }
 
     fscanf(fp,"%i\n",&visu);
     raydium_log("object: anim: %i frame(s) with %i vertice per frame (ver %i)",raydium_object_anims[raydium_object_index],raydium_object_anim_len[raydium_object_index],visu);

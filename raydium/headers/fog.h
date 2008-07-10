@@ -20,19 +20,19 @@ There are 3 types of fog. They are:
 
     * Linear:
 
-		      Far-z
-		fog= --------- 
-		     Far-Near
+                      Far-z
+                fog= --------- 
+                     Far-Near
 
     * Exp:
 
-		       (-density*z)
-		fog= e^
+                       (-density*z)
+                fog= e^
 
     * Exp2:
 
-		       (-density*z)^2
-		fog= e^
+                       (-density*z)^2
+                fog= e^
 
 Above ##z## is the distance to the calculated point from the camera.
 As you can see, linear mode doesn't use ##Density##; and Exp & Exp2 modes don't

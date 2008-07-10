@@ -35,9 +35,9 @@ if(key==222) raydium_capture_frame_auto();
 #endif
 
 if(raydium_console_pos && ( (key>=32 && key<127) 
-		       || key==8 
-		       || key==9 
-		       || key==13) )
+                       || key==8 
+                       || key==9 
+                       || key==13) )
  {
  i=strlen(raydium_console_get_string);
 // printf("%s\n",raydium_console_get_string);

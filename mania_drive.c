@@ -18,14 +18,14 @@ char *version="ManiaDrive 1.3custom";
 #define SERVER_BINARY "./mania_server.static"
 #endif
 
-#define STORY_FILE_BEG		"mania_drive.story.beg"
-#define STORY_FILE_PRO		"mania_drive.story.pro"
-#define HISTORY_STATE_FILE	raydium_file_home_path("mania_drive.state")
+#define STORY_FILE_BEG          "mania_drive.story.beg"
+#define STORY_FILE_PRO          "mania_drive.story.pro"
+#define HISTORY_STATE_FILE      raydium_file_home_path("mania_drive.state")
 
-#define MUSIC_MENU	"mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
+#define MUSIC_MENU      "mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
 #define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768\n1152x864"
 
-#define MAX_PROPS	100
+#define MAX_PROPS       100
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
 GLfloat amb[]={1.0,0.0,0.0,1.0};
@@ -103,11 +103,11 @@ void showMessage(char *file, int id);
 void build_gui_Solo(void);
 
 
-#define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
-#define NET_RESTART	(RAYDIUM_NETWORK_PACKET_BASE+2)
-#define NET_CHANGE_MAP	(RAYDIUM_NETWORK_PACKET_BASE+3)
-#define NET_REMAINING	(RAYDIUM_NETWORK_PACKET_BASE+4)
-#define NET_SCORE_BASE	(RAYDIUM_NETWORK_PACKET_BASE+10)
+#define NET_SCORE_TRACK (RAYDIUM_NETWORK_PACKET_BASE+1)
+#define NET_RESTART     (RAYDIUM_NETWORK_PACKET_BASE+2)
+#define NET_CHANGE_MAP  (RAYDIUM_NETWORK_PACKET_BASE+3)
+#define NET_REMAINING   (RAYDIUM_NETWORK_PACKET_BASE+4)
+#define NET_SCORE_BASE  (RAYDIUM_NETWORK_PACKET_BASE+10)
 
 
 typedef struct Score
@@ -132,18 +132,18 @@ Score track_score;
 
 pid_t server_pid=0;
 
-#define GAME_COUNTDOWN	1
-#define GAME_GAME	2
-#define GAME_END	3
-#define GAME_SCORE	4
+#define GAME_COUNTDOWN  1
+#define GAME_GAME       2
+#define GAME_END        3
+#define GAME_SCORE      4
 
-#define MODE_NONE	0
-#define MODE_SOLO	1
-#define MODE_NET	2
-#define MODE_MULTI	3
-#define MODE_OTHERS	4
+#define MODE_NONE       0
+#define MODE_SOLO       1
+#define MODE_NET        2
+#define MODE_MULTI      3
+#define MODE_OTHERS     4
 
-#define SHADOW_OFFSET	0.3
+#define SHADOW_OFFSET   0.3
 
 
 void delete_props(void)
@@ -151,7 +151,7 @@ void delete_props(void)
 int i;
 for(i=0;i<MAX_PROPS;i++)
     if(props[i]>=0)
-	raydium_ode_element_delete(props[i],1);
+        raydium_ode_element_delete(props[i],1);
 }
 
 void create_props(char *filename)
@@ -181,11 +181,11 @@ while(fscanf(fp,"%f %f %f %f %f %f %s\n",&p[0],&p[1],&p[2],&r[0],&r[1],&r[2],ent
     raydium_ode_element_move(id,p);
     raydium_ode_element_rotate(id,r);
     for(i=0;i<MAX_PROPS;i++)
-	if(props[i]==-1)
-	    {
-	    props[i]=id;
-	    break;
-	    }
+        if(props[i]==-1)
+            {
+            props[i]=id;
+            break;
+            }
     }
 
 fclose(fp);
@@ -300,7 +300,7 @@ create_car();
 void netcall_mni_change(int type, char *buff)
 {
 if(!mni_network_get(buff+RAYDIUM_NETWORK_PACKET_OFFSET))
-	return;
+        return;
 mni_load(buff+RAYDIUM_NETWORK_PACKET_OFFSET);
 }
 
@@ -314,7 +314,7 @@ trck=buff+RAYDIUM_NETWORK_PACKET_OFFSET+sizeof(float);
 if(strlen(mni_current)==0 || strcmp(mni_current,trck))
     {
     if(!mni_network_get(trck))
-	return;
+        return;
     mni_load(trck);
     }
 partytime=f;
@@ -353,7 +353,7 @@ if(ret==0)
     raydium_log("CANNOT GENERATE TRACK FROM MNI FILE '%s'",mni);
 
     if(simple_mni)
-	exit(1);
+        exit(1);
     
     return 0;
     }
@@ -496,12 +496,12 @@ static float alpha=1;
 if(raydium_video_find("video_beg")>=0)
     {
     if(!raydium_video_isplaying_name("video_beg"))
-	alpha-=raydium_frame_time;
+        alpha-=raydium_frame_time;
 
-    raydium_live_texture_draw_name("video_beg",alpha,px,py,px+size,py+size);	
+    raydium_live_texture_draw_name("video_beg",alpha,px,py,px+size,py+size);    
     
     if(alpha<=0)
-	raydium_video_delete_name("video_beg");
+        raydium_video_delete_name("video_beg");
     }
 else
     alpha=1;
@@ -1293,21 +1293,21 @@ if(fp)
  while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
     if(!strcasecmp(var,lang))
-	{
+        {
         if(ret!=RAYDIUM_PARSER_TYPE_RAWDATA)
-	    {
-	    raydium_log("message is wrong type, must be RAWDATA.");
-	    continue;
-	    }							
-	if(count!=id)
-	    {
-	    count++;
-	    continue;
-	    }
+            {
+            raydium_log("message is wrong type, must be RAWDATA.");
+            continue;
+            }                                                   
+        if(count!=id)
+            {
+            count++;
+            continue;
+            }
 
-	found=1;
-	break;
-	}
+        found=1;
+        break;
+        }
     }
  fclose(fp);
 } // fp was ok
@@ -1327,15 +1327,15 @@ if(found)
     
     mx=0;
     for(i=0;i<len;i++)
-	if(val_s[i]=='\n')
-	    {
-	    val_s[i]=0;
-	    lines[nlines]=start;
-	    if(strlen(val_s+start)>mx)
-		mx=strlen(val_s+start);
-	    start=i+1;
-	    nlines++;
-	    }
+        if(val_s[i]=='\n')
+            {
+            val_s[i]=0;
+            lines[nlines]=start;
+            if(strlen(val_s+start)>mx)
+                mx=strlen(val_s+start);
+            start=i+1;
+            nlines++;
+            }
 
     width=mx*1.6;
     heigth=(nlines+2)*5;
@@ -1345,10 +1345,10 @@ if(found)
     handle=raydium_gui_window_create("menu",((float)100-width)/2,((float)100-heigth)/2,width,heigth);
     raydium_gui_widget_sizes(0,0,18);
     for(i=0;i<nlines;i++)
-	{
-	sprintf(var,"lbl%i",i);
-	raydium_gui_label_create(var,handle,50,100-((float)100/(nlines+2))*(i+1),val_s+lines[i],0.2,0,0);
-	}
+        {
+        sprintf(var,"lbl%i",i);
+        raydium_gui_label_create(var,handle,50,100-((float)100/(nlines+2))*(i+1),val_s+lines[i],0.2,0,0);
+        }
 
     // create button here
     sprintf(var,"btnMessageOk;%i",id+1);
@@ -1418,12 +1418,12 @@ for(j=0;j<MAX_ELEMS;j++)
 j=0;
 
 while(fscanf(fp,"%f %f %f %f %f %f %i\n",&box[j].x,
-				       &box[j].y,
-				       &box[j].z,
-				       &box[j].tx,
-				       &box[j].ty,
-				       &box[j].tz,
-				       &box[j].type)!=EOF)
+                                       &box[j].y,
+                                       &box[j].z,
+                                       &box[j].tx,
+                                       &box[j].ty,
+                                       &box[j].tz,
+                                       &box[j].type)!=EOF)
 {
     box[j].state=1;
     raydium_ode_name_auto("box",name);
@@ -1434,10 +1434,10 @@ while(fscanf(fp,"%f %f %f %f %f %f %i\n",&box[j].x,
 
     j++;
     if(j==MAX_ELEMS)
-	{
-	raydium_log("MAX_ELEMS reached, loading not completed");
-	break;
-	}
+        {
+        raydium_log("MAX_ELEMS reached, loading not completed");
+        break;
+        }
 }
 
 raydium_log("%s: %i box(es) loaded",filename,j);
@@ -1476,73 +1476,73 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
     done=0;
 
     if(!strcasecmp(var,"name"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("'name' is wrong type");
-	    continue;
-	    }
-	strcpy(trackdata.name,val_s);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("'name' is wrong type");
+            continue;
+            }
+        strcpy(trackdata.name,val_s);
+        done=1;
+        }
 
     if(!strcasecmp(var,"author"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("'author' is wrong type");
-	    continue;
-	    }
-	strcpy(trackdata.author,val_s);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("'author' is wrong type");
+            continue;
+            }
+        strcpy(trackdata.author,val_s);
+        done=1;
+        }
 
     if(!strcasecmp(var,"message"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("'message' is wrong type");
-	    continue;
-	    }
-	strcpy(trackdata.message_file,val_s);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("'message' is wrong type");
+            continue;
+            }
+        strcpy(trackdata.message_file,val_s);
+        done=1;
+        }
 
     if(!strcasecmp(var,"ent"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("'ent' is wrong type");
-	    continue;
-	    }
-	strcpy(trackdata.ent_file,val_s);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("'ent' is wrong type");
+            continue;
+            }
+        strcpy(trackdata.ent_file,val_s);
+        done=1;
+        }
 
     if(!strcasecmp(var,"gold_time"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("'gold_time' is wrong type");
-	    continue;
-	    }
-	trackdata.gold_time=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("'gold_time' is wrong type");
+            continue;
+            }
+        trackdata.gold_time=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"author_time"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("'author_time' is wrong type");
-	    continue;
-	    }
-	trackdata.author_time=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("'author_time' is wrong type");
+            continue;
+            }
+        trackdata.author_time=val_f[0];
+        done=1;
+        }
 
     if(!done)
-	raydium_log("invalid statement '%s'",var);
+        raydium_log("invalid statement '%s'",var);
 
     }
 fclose(fp);
@@ -1568,10 +1568,10 @@ if(game_state==GAME_GAME)
 if(game_state==GAME_COUNTDOWN && strlen(trackdata.message_file)==0)
     {
     if(step<1) // wow .. this a a "track loading" lag
-	countdown-=step;
+        countdown-=step;
 
     if(countdown<=0)
-	change_game_state(GAME_GAME);
+        change_game_state(GAME_GAME);
     }
 }
 
@@ -1592,53 +1592,53 @@ if(type==GAME_END)
 
     if((timer<best_score[raydium_network_uid].time || 
         best_score[raydium_network_uid].time==-1) &&
-	raydium_network_uid>=0)
-	{
-	best_score[raydium_network_uid].time=timer;
-	strcpy(best_score[raydium_network_uid].player,raydium_network_name_local);
-	raydium_network_propag_refresh(NET_SCORE_BASE+raydium_network_uid);
-	}
+        raydium_network_uid>=0)
+        {
+        best_score[raydium_network_uid].time=timer;
+        strcpy(best_score[raydium_network_uid].player,raydium_network_name_local);
+        raydium_network_propag_refresh(NET_SCORE_BASE+raydium_network_uid);
+        }
 
     if(timer<track_score.time)
-	{
-	track_score.time=timer;
-	strcpy(track_score.player,raydium_network_name_local);
-	raydium_network_propag_refresh(NET_SCORE_TRACK);
-	}
+        {
+        track_score.time=timer;
+        strcpy(track_score.player,raydium_network_name_local);
+        raydium_network_propag_refresh(NET_SCORE_TRACK);
+        }
 
     if(timer<yourbest || yourbest==0)
-	yourbest=timer;
+        yourbest=timer;
 
     if(mode==MODE_SOLO)
-	{
-	if(timer<=trackdata.gold_time)
-	    {
-	    // win
-	    if(timer<trackdata.author_time)
-		strcpy(message,gettext("Impressive ! Quicker than the author !"));
-	    else
-		strcpy(message,gettext("Right ! You got it."));
-	    
-	    // (add score to local database)
-	    post_score_local(mni_current,timer);
-	    }
-	else
-	    {
-	    // try again
-	    strcpy(message,gettext("- Try again (press space key) -"));
-	    }
-	}
+        {
+        if(timer<=trackdata.gold_time)
+            {
+            // win
+            if(timer<trackdata.author_time)
+                strcpy(message,gettext("Impressive ! Quicker than the author !"));
+            else
+                strcpy(message,gettext("Right ! You got it."));
+            
+            // (add score to local database)
+            post_score_local(mni_current,timer);
+            }
+        else
+            {
+            // try again
+            strcpy(message,gettext("- Try again (press space key) -"));
+            }
+        }
 
     if(mode!=MODE_SOLO && mode!=MODE_MULTI)
-	{
-	int p;
-	p=post_score(mni_current,raydium_network_name_local,score);
-	if(p)
-	    sprintf(message,gettext("Your place: %i"),p);
-	else
-	    sprintf(message,gettext("(unofficial track or connection failure)"));
-	
-	}
+        {
+        int p;
+        p=post_score(mni_current,raydium_network_name_local,score);
+        if(p)
+            sprintf(message,gettext("Your place: %i"),p);
+        else
+            sprintf(message,gettext("(unofficial track or connection failure)"));
+        
+        }
     }
 
 if(type==GAME_GAME)
@@ -1700,8 +1700,8 @@ else
     int off=0;
     
     if(mode==MODE_NET || simple_mni)
-	off=10;
-	
+        off=10;
+        
     hms(yourbest,&h2,&m2,&s2,&ms2);
     raydium_osd_color_change(0.89,0.85,0.66);
     raydium_osd_printf(20-off,4,12,0.5,"font-impact.tga",gettext("  your best:"));
@@ -1749,23 +1749,23 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
     bestid=-1;
     for(j=0;j<RAYDIUM_NETWORK_MAX_CLIENTS;j++)
-	if(!ok[j] && (best_score[j].time<best || bestid==-1))
-	{
-	best=best_score[j].time;
-	bestid=j;
-	}
+        if(!ok[j] && (best_score[j].time<best || bestid==-1))
+        {
+        best=best_score[j].time;
+        bestid=j;
+        }
 
     ok[bestid]=1;
     hms(best_score[bestid].time,&h,&m,&s,&ms);
     if(best_score[bestid].time>=0)
-	{
-	raydium_osd_printf(2,pos,10,0.5,"font-impact.tga","^c%i ^f-",cpt);
-	raydium_osd_color_change(0.89,0.85,0.66);
-	raydium_osd_printf(5,pos,10,0.5,"font-lcdmono.tga","%i:%02i:%02i:%03i",h,m,s,ms);
-	raydium_osd_printf(15,pos-0.05,12,0.5,"font-impact.tga","^f%s",best_score[bestid].player);
-	pos-=3;
-	cpt++;
-	}
+        {
+        raydium_osd_printf(2,pos,10,0.5,"font-impact.tga","^c%i ^f-",cpt);
+        raydium_osd_color_change(0.89,0.85,0.66);
+        raydium_osd_printf(5,pos,10,0.5,"font-lcdmono.tga","%i:%02i:%02i:%03i",h,m,s,ms);
+        raydium_osd_printf(15,pos-0.05,12,0.5,"font-impact.tga","^f%s",best_score[bestid].player);
+        pos-=3;
+        cpt++;
+        }
     }
 
 if(game_state==GAME_SCORE)
@@ -1804,12 +1804,12 @@ music_popup_inc=1;
 }
 
 #define sizepp 50.f
-#define maxpp	0.f
+#define maxpp   0.f
 #define minpp  -sizepp
 #define posypp 5.f
 #define ratiopp 3.f
 #define rollbackpp 200.f
-#define speedpp	100.f
+#define speedpp 100.f
 #define printoffsetpp 4.f
 #define printcolpp "^0"
 #define printcol2pp "^f"
@@ -1873,81 +1873,81 @@ id=raydium_ode_element_tag_get(box_id);
 switch(id)
     {
     case TYPE_CHECKPOINT:
-	for(i=0;i<MAX_ELEMS;i++)
-	    if(box[i].state && box[i].id==box_id)
-		{
-		if(box[i].state!=2)
-		    {
-		    raydium_sound_SetSourcePosCamera(sound_checkpoint);
-		    raydium_sound_SourcePlay(sound_checkpoint);
-		    box[i].state=2;
-		    }
-		break;
-		}
-	break;
+        for(i=0;i<MAX_ELEMS;i++)
+            if(box[i].state && box[i].id==box_id)
+                {
+                if(box[i].state!=2)
+                    {
+                    raydium_sound_SetSourcePosCamera(sound_checkpoint);
+                    raydium_sound_SourcePlay(sound_checkpoint);
+                    box[i].state=2;
+                    }
+                break;
+                }
+        break;
     case TYPE_LOOP:
-	break;
+        break;
 /*
     case TYPE_START_E:
-	break;
+        break;
     case TYPE_START_W:
-	break;
+        break;
     case TYPE_START_N:
-	break;
+        break;
     case TYPE_START_S:
-	break;
+        break;
 */
     case TYPE_END:
-	if(game_state!=GAME_GAME)
-	    return;
-	    
-	n=m=0;
-	for(i=0;i<MAX_ELEMS;i++)
-	    if(box[i].state && box[i].type==TYPE_CHECKPOINT)
-		{
-		n++;
-		if(box[i].state==2)
-		    m++;
-		}
-	if(n==m)
-	    {
-	    raydium_sound_SetSourcePosCamera(sound_owww);
-	    raydium_sound_SourcePlay(sound_owww);
-	    change_game_state(GAME_END);
-	    }
-	break;
+        if(game_state!=GAME_GAME)
+            return;
+            
+        n=m=0;
+        for(i=0;i<MAX_ELEMS;i++)
+            if(box[i].state && box[i].type==TYPE_CHECKPOINT)
+                {
+                n++;
+                if(box[i].state==2)
+                    m++;
+                }
+        if(n==m)
+            {
+            raydium_sound_SetSourcePosCamera(sound_owww);
+            raydium_sound_SourcePlay(sound_owww);
+            change_game_state(GAME_END);
+            }
+        break;
     case TYPE_TURBO_E:
-	vect[0]=TURBO_POWA;
-	vect[1]=0;
-	vect[2]=0;
-	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
-	raydium_sound_SetSourcePosCamera(sound_wizz);
-	raydium_sound_SourcePlay(sound_wizz);
-	break;
+        vect[0]=TURBO_POWA;
+        vect[1]=0;
+        vect[2]=0;
+        raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+        raydium_sound_SetSourcePosCamera(sound_wizz);
+        raydium_sound_SourcePlay(sound_wizz);
+        break;
     case TYPE_TURBO_W:
-	vect[0]=-TURBO_POWA;
-	vect[1]=0;
-	vect[2]=0;
-	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
-	raydium_sound_SetSourcePosCamera(sound_wizz);
-	raydium_sound_SourcePlay(sound_wizz);
-	break;
+        vect[0]=-TURBO_POWA;
+        vect[1]=0;
+        vect[2]=0;
+        raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+        raydium_sound_SetSourcePosCamera(sound_wizz);
+        raydium_sound_SourcePlay(sound_wizz);
+        break;
     case TYPE_TURBO_N:
-	vect[0]=0;
-	vect[1]=TURBO_POWA;
-	vect[2]=0;
-	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
-	raydium_sound_SetSourcePosCamera(sound_wizz);
-	raydium_sound_SourcePlay(sound_wizz);
-	break;
+        vect[0]=0;
+        vect[1]=TURBO_POWA;
+        vect[2]=0;
+        raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+        raydium_sound_SetSourcePosCamera(sound_wizz);
+        raydium_sound_SourcePlay(sound_wizz);
+        break;
     case TYPE_TURBO_S:
-	vect[0]=0;
-	vect[1]=-TURBO_POWA;
-	vect[2]=0;
-	raydium_sound_SetSourcePosCamera(sound_wizz);
-	raydium_sound_SourcePlay(sound_wizz);
-	raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
-	break;
+        vect[0]=0;
+        vect[1]=-TURBO_POWA;
+        vect[2]=0;
+        raydium_sound_SetSourcePosCamera(sound_wizz);
+        raydium_sound_SourcePlay(sound_wizz);
+        raydium_ode_object_addforce(raydium_ode_element_object_get(car),vect);
+        break;
     }
 }
 
@@ -2042,28 +2042,28 @@ for(i=0;i<MAX_ELEMS;i++)
     *z=box[i].z;
     
     if(box[i].type==TYPE_START_E)
-	{
-	*dir='e';
-	return i;
-	}
+        {
+        *dir='e';
+        return i;
+        }
 
     if(box[i].type==TYPE_START_W)
-	{
-	*dir='w';
-	return i;
-	}
+        {
+        *dir='w';
+        return i;
+        }
 
     if(box[i].type==TYPE_START_N)
-	{
-	*dir='n';
-	return i;
-	}
+        {
+        *dir='n';
+        return i;
+        }
 
     if(box[i].type==TYPE_START_S)
-	{
-	*dir='s';
-	return i;
-	}
+        {
+        *dir='s';
+        return i;
+        }
     }
 return -1;
 }
@@ -2099,9 +2099,9 @@ else
 
 void create_car(void)
 {
-#define BREAK_FORCE	0
-#define ROTFRICTION	0.0005
-#define ERP_CFM		0.3,0.8
+#define BREAK_FORCE     0
+#define ROTFRICTION     0.0005
+#define ERP_CFM         0.3,0.8
 int a,i;
 float x,y,z;
 char dir;
@@ -2119,7 +2119,7 @@ body_id=find_car_meshes(body,wheel);
 timer=0;
 for(i=0;i<MAX_ELEMS;i++)
     if(box[i].state==2)
-	box[i].state=1;
+        box[i].state=1;
 
     raydium_ode_object_delete_name("WATURE");
 
@@ -2191,17 +2191,17 @@ raydium_ode_object_move(a,pos);
 switch(dir)
     {
     case 'e':
-	rot[2]=0;
-	break;
+        rot[2]=0;
+        break;
     case 'w':
-	rot[2]=M_PI;
-	break;
+        rot[2]=M_PI;
+        break;
     case 'n':
-	rot[2]=-M_PI/2;
-	break;
+        rot[2]=-M_PI/2;
+        break;
     case 's':
         rot[2]=M_PI/2;
-	break;
+        break;
     }
 rot[0]=rot[1]=0;
 raydium_ode_object_rotate_name("WATURE",rot);
@@ -2259,10 +2259,10 @@ if(scroll>=0)
     float y,tmp;
     
     if(scroll!=99999)
-	scroll+=raydium_frame_time*10; // must #define factor
+        scroll+=raydium_frame_time*10; // must #define factor
 
     if(raydium_key_last==1027)
-	credits_stop();
+        credits_stop();
     
     raydium_clear_frame();
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
@@ -2273,31 +2273,31 @@ if(scroll>=0)
     y=scroll;
     cpt=0;
     for(i=0;i<credits_nlines();i++)
-	{
-	if(y>-10 && y<110)
-	    {
-	    // centering ...
-	    tmp=30/RAYDIUM_OSD_FONT_SIZE_FACTOR;
-	    tmp=((strlen(credits_lines[i])-1)*tmp)/2;
-	    tmp=50-tmp;
-	    raydium_osd_printf(tmp+(SHADOW_OFFSET*3),y-(SHADOW_OFFSET*3),30,0.5,"font-impact.tga","^0%s",credits_lines[i]);
-	    raydium_osd_printf(tmp,y,30,0.5,"font-impact.tga","^f%s",credits_lines[i]);
-	    cpt++;
-	    }
-	y-=10; // per line step (must #define it)
-	}
+        {
+        if(y>-10 && y<110)
+            {
+            // centering ...
+            tmp=30/RAYDIUM_OSD_FONT_SIZE_FACTOR;
+            tmp=((strlen(credits_lines[i])-1)*tmp)/2;
+            tmp=50-tmp;
+            raydium_osd_printf(tmp+(SHADOW_OFFSET*3),y-(SHADOW_OFFSET*3),30,0.5,"font-impact.tga","^0%s",credits_lines[i]);
+            raydium_osd_printf(tmp,y,30,0.5,"font-impact.tga","^f%s",credits_lines[i]);
+            cpt++;
+            }
+        y-=10; // per line step (must #define it)
+        }
 
     draw_music_popup();
 
 //    raydium_log("%i %f",cpt,y);
 
     if(cpt==0 && scroll!=99999)
-	{
-	GLfloat from[4]={0,0,0,0};
-	GLfloat to[4]={0,0,0,1};	
-	scroll=99999; // ugly :)
-	raydium_osd_fade_from(from,to,1,credits_stop);
-	}
+        {
+        GLfloat from[4]={0,0,0,0};
+        GLfloat to[4]={0,0,0,1};        
+        scroll=99999; // ugly :)
+        raydium_osd_fade_from(from,to,1,credits_stop);
+        }
     raydium_rendering_finish();
 
     return;
@@ -2313,7 +2313,7 @@ if(strlen(mni_current)==0)
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
 
     if(!raydium_gui_isvisible())
-	build_gui_Main(); // MODE_NONE
+        build_gui_Main(); // MODE_NONE
 
     raydium_live_texture_mask_name("video",1);
     {
@@ -2331,16 +2331,16 @@ if(strlen(mni_current)==0)
     raydium_rendering_finish();
 
     if(raydium_gui_widget_find("lblLanServerSearch",raydium_gui_window_find("menu"))>=0)
-	{
-	static GLfloat timer;
-	timer+=raydium_frame_time;
+        {
+        static GLfloat timer;
+        timer+=raydium_frame_time;
 
-	if(timer>RAYDIUM_NETWORK_BEACON_DELAY)
-	    {
-	    timer=0;
-	    btnSearchLAN(NULL);
-	    }
-	}
+        if(timer>RAYDIUM_NETWORK_BEACON_DELAY)
+            {
+            timer=0;
+            btnSearchLAN(NULL);
+            }
+        }
 
     
     return;
@@ -2349,7 +2349,7 @@ if(strlen(mni_current)==0)
 if(raydium_key_last==1027)
     {
     if(simple_mni)
-	exit(0);    
+        exit(0);    
     leave();
     return;
     }
@@ -2381,24 +2381,24 @@ speed=0;
 accel=0.12;
 
     if(raydium_joy_y>0.3)
-	{
+        {
         speed=raydium_joy_y*55;
-	raydium_ode_motor_power_max_name("moteur",accel);
-	raydium_particle_generator_enable_name("corps",1);
-	}
+        raydium_ode_motor_power_max_name("moteur",accel);
+        raydium_particle_generator_enable_name("corps",1);
+        }
     else
     if(raydium_joy_y<0.3)
-	{
+        {
         speed=raydium_joy_y*5;
-	raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y);
-	raydium_particle_generator_enable_name("corps",0);
-	}
+        raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y);
+        raydium_particle_generator_enable_name("corps",0);
+        }
     else
-	{
-	speed=0;
-	raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y); // 0.2 ? joy_y ?
-	raydium_particle_generator_enable_name("corps",0);
-	}
+        {
+        speed=0;
+        raydium_ode_motor_power_max_name("moteur",0.2 * -raydium_joy_y); // 0.2 ? joy_y ?
+        raydium_particle_generator_enable_name("corps",0);
+        }
 
 direct=raydium_joy_x*0.3;
 
@@ -2421,9 +2421,9 @@ if(raydium_key_last==1101) { raydium_ode_time_change(100); }
 if(raydium_key_last==1000+'c')
     {
     if(vue==3)
-	raydium_key_last=6;
+        raydium_key_last=6;
     else
-	raydium_key_last=3;
+        raydium_key_last=3;
     }
 // l key  to limit the game at 90 frames per second
 // maybe this should be an option into the options menu of the game
@@ -2497,7 +2497,7 @@ if(vue==3)
     dReal mpos[3];
     dReal *vel;
     dReal cam[3];
-	dReal dist_vector[3];
+        dReal dist_vector[3];
     dReal car_to_cam_distance; 
     // get element position
     pos=raydium_ode_element_pos_get_name("corps");
@@ -2534,7 +2534,7 @@ if(vue==3)
     // standard smooth lookat camera
     if(camera_lag)
       raydium_camera_smooth(cam[0],cam[1],cam[2],mpos[1],-mpos[2],mpos[0],
-			    70,0,raydium_frame_time*camera_lag_speed);
+                            70,0,raydium_frame_time*camera_lag_speed);
     else
       raydium_camera_look_at(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0]);
 
@@ -2612,15 +2612,15 @@ raydium_osd_printf(2,4,12,0.5,"font2.tga","^f%f %f %f",rx*180/PI,ry*180/PI,rz*18
     int i,total,n;
     total=n=0;
     for(i=0;i<MAX_ELEMS;i++)
-	if(box[i].state && box[i].type==TYPE_CHECKPOINT)
-	{
-	total++;
-	if(box[i].state==2)
-	    n++;
-	}
-	raydium_osd_color_change(0.89,0.85,0.66);
-	raydium_osd_printf(55,7,12,0.5,"font-impact.tga",gettext("checkpoints:"));
-	raydium_osd_printf(68,7,12,0.7,"font-lcdmono.tga","%02i/%02i",n,total);
+        if(box[i].state && box[i].type==TYPE_CHECKPOINT)
+        {
+        total++;
+        if(box[i].state==2)
+            n++;
+        }
+        raydium_osd_color_change(0.89,0.85,0.66);
+        raydium_osd_printf(55,7,12,0.5,"font-impact.tga",gettext("checkpoints:"));
+        raydium_osd_printf(68,7,12,0.7,"font-lcdmono.tga","%02i/%02i",n,total);
     }
 
 draw_timer();
@@ -2689,7 +2689,7 @@ raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
-raydium_projection_far=1000;	
+raydium_projection_far=1000;    
 raydium_projection_fov=70;
 //raydium_light_disable();
 raydium_fog_disable();

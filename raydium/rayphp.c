@@ -118,18 +118,18 @@ if(status)
     len=strlen(res);
     
     for(i=0;i<len;i++)
-	{
-	if(res[i]=='\n')
-	    {
-	    res[i]=0;
-	    if(strlen(res+last))
-		{
-		raydium_log("%s",res+last);
-		count++;
-		}
-	    last=i+1;
-	    }
-	}
+        {
+        if(res[i]=='\n')
+            {
+            res[i]=0;
+            if(strlen(res+last))
+                {
+                raydium_log("%s",res+last);
+                count++;
+                }
+            last=i+1;
+            }
+        }
     }
 raydium_log("%i file(s)",count);
 free(res);
@@ -158,10 +158,10 @@ if(!raydium_file_readable(raydium_file_home_path("repositories.list")))
     {
     fp=fopen(raydium_file_home_path("repositories.list"),"wt");
     if(!fp)
-	{
-	raydium_log("rayphp: ERROR: Unable to create default repository (download) file");
-	return 0;
-	}
+        {
+        raydium_log("rayphp: ERROR: Unable to create default repository (download) file");
+        return 0;
+        }
     fprintf(fp,"%s\n%s\n",head,def);
     fclose(fp);
     raydium_log("rayphp: default repository.list created");
@@ -171,10 +171,10 @@ if(!raydium_file_readable(raydium_file_home_path("repositories.upload")))
     {
     fp=fopen(raydium_file_home_path("repositories.upload"),"wt");
     if(!fp)
-	{
-	raydium_log("rayphp: ERROR: Unable to create default repository (upload) file");
-	return 0;
-	}
+        {
+        raydium_log("rayphp: ERROR: Unable to create default repository (upload) file");
+        return 0;
+        }
     fprintf(fp,"%s\n%s\n",head,def);
     fclose(fp);
     raydium_log("rayphp: default repository.upload created");

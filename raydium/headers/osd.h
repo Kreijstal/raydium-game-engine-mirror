@@ -219,7 +219,7 @@ void restorefade(void)
    raydium_osd_fade_from(from,to,1,NULL);
    // do things (like moving camera to another place, for example).
 }
-				
+                                
 ...
 
 // If space key : fade to black
@@ -229,7 +229,7 @@ if(raydium_key_last==1032)
     GLfloat to[4]={0,0,0,1};
     raydium_osd_fade_from(from,to,0.3,restorefade);
     }
-%%				 
+%%                               
 **/
 
 #endif

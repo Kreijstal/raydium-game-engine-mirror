@@ -35,7 +35,7 @@ raydium_console_get_string[0]=0;
 raydium_console_get_string_last[0]=0;
 
 raydium_init_cli_option_default("history",raydium_console_history_filename,
-				raydium_file_home_path("raydium_history"));
+                                raydium_file_home_path("raydium_history"));
 
 for(i=0;i<RAYDIUM_CONSOLE_MAX_HISTORY;i++)
     raydium_console_history[i][0]=0;
@@ -46,9 +46,9 @@ fp=fopen(raydium_console_history_filename,"rt");
 if(fp)
     {
     while(fgets(line,RAYDIUM_MAX_NAME_LEN,fp))
-	{
-	line[strlen(line)-1]=0;
-	raydium_console_history_add(line);
+        {
+        line[strlen(line)-1]=0;
+        raydium_console_history_add(line);
         }
     fclose(fp);
     }
@@ -72,10 +72,10 @@ if(!fp)
 
 for(i=0;i<raydium_console_history_index;i++)
     if(strcmp(raydium_console_history[i],last))
-	{
-	strcpy(last,raydium_console_history[i]);
-	fprintf(fp,"%s\n",raydium_console_history[i]);
-	}
+        {
+        strcpy(last,raydium_console_history[i]);
+        fprintf(fp,"%s\n",raydium_console_history[i]);
+        }
 fclose(fp);
 }
 
@@ -134,17 +134,17 @@ if(raydium_console_history_index==RAYDIUM_CONSOLE_MAX_HISTORY)
     /*
     printf("-----\n");
     for(i=0;i<RAYDIUM_CONSOLE_MAX_HISTORY;i++)
-	printf("%s\n",raydium_console_history[i]);
+        printf("%s\n",raydium_console_history[i]);
     */
 
     for(i=0;i<RAYDIUM_CONSOLE_MAX_HISTORY-1;i++)
-	strcpy(raydium_console_history[i],raydium_console_history[i+1]);
+        strcpy(raydium_console_history[i],raydium_console_history[i+1]);
 
     strcpy(raydium_console_history[RAYDIUM_CONSOLE_MAX_HISTORY-1],str);
     /*
     printf("-----\n");
     for(i=0;i<RAYDIUM_CONSOLE_MAX_HISTORY;i++)
-	printf("%s\n",raydium_console_history[i]);
+        printf("%s\n",raydium_console_history[i]);
     */
     return;
     }
@@ -288,8 +288,8 @@ if(first)
 
 if(raydium_console_inc!=0) raydium_console_inc*=-1;
 else {
-	if(raydium_console_pos==0) raydium_console_inc=raydium_console_config_speed;
-	else raydium_console_inc=-raydium_console_config_speed;
+        if(raydium_console_pos==0) raydium_console_inc=raydium_console_config_speed;
+        else raydium_console_inc=-raydium_console_config_speed;
      }
 }
 
@@ -386,10 +386,10 @@ len=strlen(str);
 for(i=(len-1);i>=0;i--)
     {
     if(!raydium_console_internal_isalphanumuscore(str[i]))
-	{
-	i++;
-	break;
-	}
+        {
+        i++;
+        break;
+        }
     }
 if(i==-1) i=0; // first word of sentence
 
@@ -406,10 +406,10 @@ for(i=0;i<raydium_register_variable_index;i++)
     strcpy(candidate,raydium_register_variable_name[i]);
     candidate[len]=0;
     if(!strcmp(candidate,word))
-	{
-	candidates_type[n_candidates]=0; // 0 = variable
-	strcpy(candidates[n_candidates++],raydium_register_variable_name[i]);
-	}
+        {
+        candidates_type[n_candidates]=0; // 0 = variable
+        strcpy(candidates[n_candidates++],raydium_register_variable_name[i]);
+        }
     if(n_candidates==RAYDIUM_CONSOLE_MAX_COMPLETION) break;
     }
 
@@ -419,10 +419,10 @@ for(i=0;i<raydium_register_function_index;i++)
     strcpy(candidate,raydium_register_function_list[i].fname);
     candidate[len]=0;
     if(!strcmp(candidate,word))
-	{
-	candidates_type[n_candidates]=1; // 1 = function
-	strcpy(candidates[n_candidates++],raydium_register_function_list[i].fname);
-	}
+        {
+        candidates_type[n_candidates]=1; // 1 = function
+        strcpy(candidates[n_candidates++],raydium_register_function_list[i].fname);
+        }
     if(n_candidates==RAYDIUM_CONSOLE_MAX_COMPLETION) break;
     }
 
@@ -434,12 +434,12 @@ if(n_candidates==1)
     {
     str[word_offset]=0;
     if(strlen(str)+strlen(candidates[0]) >= (RAYDIUM_MAX_NAME_LEN-1))
-	return;	
+        return; 
     strcat(str,candidates[0]);
     if(candidates_type[0])
-	strcat(str,"(");
+        strcat(str,"(");
     else
-	strcat(str," ");
+        strcat(str," ");
     return;
     }
     
@@ -450,9 +450,9 @@ raydium_console_line_add("> %s",str);
 for(i=0;i<n_candidates;i++)
     {
     if(candidates_type[i])
-	raydium_console_line_add("%s()",candidates[i]);
+        raydium_console_line_add("%s()",candidates[i]);
     else
-	raydium_console_line_add("$%s",candidates[i]);
+        raydium_console_line_add("$%s",candidates[i]);
     }
 if(n_candidates==RAYDIUM_CONSOLE_MAX_COMPLETION)
     raydium_console_line_add("..."); // limited results
@@ -469,15 +469,15 @@ for(i=strlen(word);i<=candidate_min_len;i++) // '\0' must be tested, too
     c=candidates[0][i];
     for(j=1;j<n_candidates;j++)
       if(c!=candidates[j][i]) // last equiv
-	{
-	candidates[0][i]=0;
-	strcpy(candidate,candidates[0]);
-	str[word_offset]=0;
-	if(strlen(str)+strlen(candidate) >= (RAYDIUM_MAX_NAME_LEN-1))
-	    return;
-	strcat(str,candidate);
-	return;
-	}
+        {
+        candidates[0][i]=0;
+        strcpy(candidate,candidates[0]);
+        str[word_offset]=0;
+        if(strlen(str)+strlen(candidate) >= (RAYDIUM_MAX_NAME_LEN-1))
+            return;
+        strcat(str,candidate);
+        return;
+        }
     }
 #endif
 }

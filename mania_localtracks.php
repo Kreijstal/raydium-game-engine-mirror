@@ -19,7 +19,7 @@ while( ($file = readdir($handle)) !== false )
     {
     $ext=substr($file,-4,4);
     if($ext!==".mni" || $file=="dyn_track.mni")
-	continue;
+        continue;
     $tracks[]=$file;
     }
 

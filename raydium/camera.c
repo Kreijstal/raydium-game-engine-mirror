@@ -69,18 +69,18 @@ if(raydium_camera_rumble_remaining>0)
     x=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
     y=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
     z=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
-	
+        
     glRotatef(z,0,0,1);
     glRotatef(x,1,0,0);
     glRotatef(y,0,1,0);
-	
+        
     raydium_camera_rumble_remaining-=raydium_frame_time;
     raydium_camera_rumble_amplitude+=(raydium_camera_rumble_evolution*raydium_frame_time);
     if(raydium_camera_rumble_amplitude<=0)
-	{
-	raydium_camera_rumble_amplitude=0;
-	raydium_camera_rumble_remaining=0;
-	}
+        {
+        raydium_camera_rumble_amplitude=0;
+        raydium_camera_rumble_remaining=0;
+        }
     }
 else raydium_camera_rumble_remaining=0;
 }
@@ -96,21 +96,21 @@ if(raydium_frame_first_camera_pass)
     pos[1]=y;
     pos[2]=z;
     if(raydium_sound && raydium_viewport_use==-1) 
-	{
-	raydium_camera_vectors(or); // get vectors
-	raydium_sound_SetListenerPos(pos);
-	raydium_sound_SetListenerOr(or);
-	}
+        {
+        raydium_camera_vectors(or); // get vectors
+        raydium_sound_SetListenerPos(pos);
+        raydium_sound_SetListenerOr(or);
+        }
     
     if(raydium_sky_atmosphere_check())
-	{
-	raydium_sky_box_render(x,y,z);
-	raydium_sky_atmosphere_render(x,y,z,RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL);
-	}
+        {
+        raydium_sky_box_render(x,y,z);
+        raydium_sky_atmosphere_render(x,y,z,RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL);
+        }
     else
-	{
-	raydium_sky_box_render(x,y,z);
-	}
+        {
+        raydium_sky_box_render(x,y,z);
+        }
     
     //raydium_sky_box_render(x,y,z);
     //raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
@@ -137,7 +137,7 @@ else raydium_log("Warning: too many calls to camera_* ! (matrix already pushed)"
 
 
 void raydium_camera_place(GLfloat x, GLfloat y, GLfloat z,
-			  GLfloat lacet, GLfloat tangage, GLfloat roulis)
+                          GLfloat lacet, GLfloat tangage, GLfloat roulis)
 {
 //glLoadIdentity();
 raydium_camera_internal_prepare();
@@ -158,11 +158,11 @@ raydium_camera_data[5]=roulis;
 
 float *raydium_camera_get_data(void)
 {
-	return (float *)raydium_camera_data;
+        return (float *)raydium_camera_data;
 }
 
 void raydium_camera_look_at(GLfloat x, GLfloat y, GLfloat z,
-			  GLfloat x_to, GLfloat y_to, GLfloat z_to)
+                          GLfloat x_to, GLfloat y_to, GLfloat z_to)
 {
 //glLoadIdentity();
 raydium_camera_internal_prepare();
@@ -236,8 +236,8 @@ raydium_camera_path_reset_flag=1;
 // camera will be placed only if step is >=0 (negative steps are used
 // only to change internal vars)
 void raydium_camera_smooth(GLfloat px, GLfloat py, GLfloat pz, 
-			   GLfloat lx, GLfloat ly, GLfloat lz, 
-			   GLfloat zoom, GLfloat roll, GLfloat step)
+                           GLfloat lx, GLfloat ly, GLfloat lz, 
+                           GLfloat zoom, GLfloat roll, GLfloat step)
 {
 static GLfloat opx,opy,opz;
 static GLfloat olx,oly,olz;
@@ -318,7 +318,7 @@ int raydium_camera_path_find(char *name)
 int i;
 for(i=0;i<RAYDIUM_MAX_CAMERA_PATHS;i++)
     if(!strcmp(raydium_camera_path[i].name,name) && raydium_camera_path[i].steps>-1)
-	return i;
+        return i;
 return -1;
 }
 
@@ -339,7 +339,7 @@ if(!fp)
 
 for(p=0;p<RAYDIUM_MAX_CAMERA_PATHS;p++)
     if(raydium_camera_path[p].steps==-1)
-	break;
+        break;
 
 if(p==RAYDIUM_MAX_CAMERA_PATHS)
     {
@@ -378,17 +378,17 @@ if(p>=0 && p<RAYDIUM_MAX_CAMERA_PATHS)
     glBegin(GL_LINE_LOOP);
 
     for(i=0;i<raydium_camera_path[p].steps;i++)
-	{
-	glVertex3f(
-		raydium_camera_path[p].x[i],
-		raydium_camera_path[p].y[i],
-		raydium_camera_path[p].z[i]);
-	}
+        {
+        glVertex3f(
+                raydium_camera_path[p].x[i],
+                raydium_camera_path[p].y[i],
+                raydium_camera_path[p].z[i]);
+        }
 
     glEnd();
     if(raydium_light_enabled_tag)
-	glEnable(GL_LIGHTING);
-	     
+        glEnable(GL_LIGHTING);
+             
     return;
     }
 raydium_log("camera path draw failed : invalid index");
@@ -497,13 +497,13 @@ int i;
     {
         for(i=0;i<raydium_viewport_nb;i++)
             if(!strcmp(name,raydium_viewport[i].name))
-	    {
+            {
                 raydium_log ("Viewport %s already exist",name);
                 return;
             }
 
         if(raydium_texture_load_internal("",name,1,tx,ty,4,-1))
-	{
+        {
             strcpy(raydium_viewport[raydium_viewport_nb].name,name);
             raydium_viewport[raydium_viewport_nb].tx=tx;
             raydium_viewport[raydium_viewport_nb].ty=ty;
@@ -588,8 +588,8 @@ void raydium_camera_freemove(int move)
         if(raydium_key[GLUT_KEY_LEFT]) dir_x=-1;
         if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
 
-	dir_x*=(raydium_frame_time*60);
-	dir_y*=(raydium_frame_time*60);
+        dir_x*=(raydium_frame_time*60);
+        dir_y*=(raydium_frame_time*60);
 
         //calculating the position (x,y,z) of the camera
         rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));

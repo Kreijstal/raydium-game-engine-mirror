@@ -108,16 +108,16 @@ void display(void)
     raydium_joy_key_emul();
 
     if(raydium_key_last==1027)
-	exit(0);
+        exit(0);
 
 // won't work until you disable display lists
     if(raydium_key_last==3)
-	raydium_light_disable();
+        raydium_light_disable();
     if(raydium_key_last==4)
-	raydium_light_enable();
+        raydium_light_enable();
 
     if(raydium_key_last==1032)
-	create_ragdoll();
+        create_ragdoll();
 
 if(raydium_ode_object_find("RAGDOLL")>=0)
 {
@@ -125,24 +125,24 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
 #define MUSCLE_FORCE 0.6
 //#define MUSCLE_FORCE 2
     if(raydium_key[GLUT_KEY_F1])
-	{
-	raydium_ode_motor_angle_name("knees",0);
+        {
+        raydium_ode_motor_angle_name("knees",0);
         raydium_ode_motor_power_max_name("knees",MUSCLE_FORCE);
-	}
-	else
-	{
+        }
+        else
+        {
         raydium_ode_motor_power_max_name("knees",0);
-	}
+        }
 
     if(raydium_key[GLUT_KEY_F2])
-	{
-	raydium_ode_motor_angle_name("torso",0);
+        {
+        raydium_ode_motor_angle_name("torso",0);
         raydium_ode_motor_power_max_name("torso",MUSCLE_FORCE);
-	}
-	else
-	{
+        }
+        else
+        {
         raydium_ode_motor_power_max_name("torso",0);
-	}
+        }
 
 }
     

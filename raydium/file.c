@@ -69,7 +69,7 @@ dest[0]=0;
 raydium_file_basename(name,from);
 if( (c=strrchr(name,'.')) )
     if(c[1]!=0)
-	strcpy(dest,c+1);
+        strcpy(dest,c+1);
 }
 
 
@@ -121,10 +121,10 @@ if(!file || !strlen(file))
 
 for(i=0;i<raydium_file_log_fopen_index;i++)
     if(!strcmp(raydium_file_log_fopen[i],file))
-	{
-	found=1;
-	break;
-	}
+        {
+        found=1;
+        break;
+        }
 
 if(!found) strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index++],file);
 
@@ -239,22 +239,22 @@ do {
     c=fgetc(stream);
 
     if(c==EOF)
-	{
-	dest[i]=0;
-	break;
-	}
+        {
+        dest[i]=0;
+        break;
+        }
 
     dest[i]=c;
 
     if(c==0)
-	break;
+        break;
 
     i++;
     if(i>=(max-1))
-	{
-	dest[i]=0;
-	break;
-	}
+        {
+        dest[i]=0;
+        break;
+        }
     } while(1);
 
 return i;

@@ -133,8 +133,8 @@ static int n=0;
 if(!n)
     {
     for(n=0;;n++)
-	if(!strcmp(credits_lines[n],"EOL"))
-	    break;
+        if(!strcmp(credits_lines[n],"EOL"))
+            break;
     }
 return n;
 }

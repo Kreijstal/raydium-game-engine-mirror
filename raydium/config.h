@@ -66,11 +66,11 @@
 //#define RENDER_ALLOW_LIGHTING_FOR_LIGHTMAPS
 
 // raydium_capture_frame_jpeg() JPEG quality percentage
-#define DEBUG_JPEG_QUALITY	75
+#define DEBUG_JPEG_QUALITY      75
 
 // axis used by Volumetric Fog when rendering meshes
 // values: 0=x y=1 z=2
-#define RENDER_VOLUMETRIC_FOG_AXIS	2
+#define RENDER_VOLUMETRIC_FOG_AXIS      2
 
 // reverse values from axis ?
 #define RENDER_VOLUMETRIC_FOG_AXIS_REVERSE

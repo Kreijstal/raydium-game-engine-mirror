@@ -20,7 +20,7 @@ available (see ##object.c##).
 2. version 0: providing uv texture mapping.
 3. version -1: only providing vertices. 
 4. version 2: mesh animation support
-	 
+         
 Version 1 example file:
 %%
 1
@@ -29,7 +29,7 @@ Version 1 example file:
 5.0 11.75 -3.82 0.0000 0.0000 -1.0000 0.5158 0.5365 rgb(0.5,0.5,0.5)
 ...
 %%
-	      
+              
 You can find the file version on first line, and then data.
 Next lines: vertex position (x,y,z), normal (x,y,z), texture mapping (u,v)
 and texture (string). 

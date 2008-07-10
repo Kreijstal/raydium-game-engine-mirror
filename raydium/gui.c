@@ -996,7 +996,7 @@ void raydium_gui_combo_draw(int w, int window)
     if(raydium_gui_window_focused==window &&
       (mxy[0]>=xy[0] && mxy[1]>=xy[1] &&
        mxy[0]<=xy[2] && mxy[1]<=xy[3] ))
-    	style=RAYDIUM_GUI_HOVER;
+        style=RAYDIUM_GUI_HOVER;
     */
 
 // uv
@@ -1157,7 +1157,7 @@ void raydium_gui_combo_draw(int w, int window)
                 str[end-start]=0;
                 //raydium_log("%i %i -%s-",start,end,str);
 
-                //	suv
+                //      suv
                 arrow=0;
                 suv=c->uv_list_middle;
                 if (cpt==0)
@@ -1178,11 +1178,11 @@ void raydium_gui_combo_draw(int w, int window)
 
                 xy[1]-=raydium_gui_windows[window].widgets[w].size[1];
                 xy[3]-=raydium_gui_windows[window].widgets[w].size[1];
-                //	draw
+                //      draw
                 raydium_gui_widget_draw_internal(uv,xy);
 
-                //	test current
-                //	    suv current and draw
+                //      test current
+                //          suv current and draw
                 if (cpt+c->offset==c->current)
                 {
                     suv=c->uv_list_current;
@@ -1239,7 +1239,7 @@ void raydium_gui_combo_draw(int w, int window)
                                    raydium_gui_windows[window].widgets[w].font_size,
                                    0.5,raydium_gui_theme_current.font,"%s",str);
 
-                //	events (change current ?)
+                //      events (change current ?)
                 if (raydium_gui_window_focused==window &&
                         mxy[0]>=xy[0] && mxy[1]>=xy[1] &&
                         mxy[0]<=xy[2] && mxy[1]<=xy[3] &&

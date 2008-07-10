@@ -34,8 +34,8 @@ int i;
 
 #define BREAK_FORCE     200
 
-#define ERP_CFM		0.8,0.1 //#define ERP_CFM         0.1,1.0
-#define ROTFRICTION	0.001 //#define ROTFRICTION     0.05
+#define ERP_CFM         0.8,0.1 //#define ERP_CFM         0.1,1.0
+#define ROTFRICTION     0.001 //#define ROTFRICTION     0.05
 
 
     

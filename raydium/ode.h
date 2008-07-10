@@ -13,88 +13,88 @@
 #endif
 #include "../ode/include/ode/ode.h"
 
-#define RAYDIUM_ODE_MAX_OBJECTS			64
-#define RAYDIUM_ODE_MAX_ELEMENTS		256
-#define RAYDIUM_ODE_MAX_JOINTS			256
-#define RAYDIUM_ODE_MAX_MOTORS			64
-#define RAYDIUM_ODE_MAX_EXPLOSIONS		32
-#define RAYDIUM_ODE_MAX_RAYS			4	// per element ...
-#define	RAYDIUM_ODE_MOTOR_MAX_JOINTS		10
-#define	RAYDIUM_ODE_MOTOR_MAX_GEARS		10
-#define	RAYDIUM_ODE_ELEMENT_MAX_FIXING		10
+#define RAYDIUM_ODE_MAX_OBJECTS                 64
+#define RAYDIUM_ODE_MAX_ELEMENTS                256
+#define RAYDIUM_ODE_MAX_JOINTS                  256
+#define RAYDIUM_ODE_MAX_MOTORS                  64
+#define RAYDIUM_ODE_MAX_EXPLOSIONS              32
+#define RAYDIUM_ODE_MAX_RAYS                    4       // per element ...
+#define RAYDIUM_ODE_MOTOR_MAX_JOINTS            10
+#define RAYDIUM_ODE_MOTOR_MAX_GEARS             10
+#define RAYDIUM_ODE_ELEMENT_MAX_FIXING          10
 
-//#define RAYDIUM_ODE_PHYSICS_FREQ		400
-//#define	RAYDIUM_ODE_TIMESTEP			(0.006f)
+//#define RAYDIUM_ODE_PHYSICS_FREQ              400
+//#define       RAYDIUM_ODE_TIMESTEP                    (0.006f)
 
-#define RAYDIUM_ODE_AUTODETECT			-1.f
-#define RAYDIUM_ODE_STANDARD			1
-#define RAYDIUM_ODE_STATIC			2
-#define RAYDIUM_ODE_FIXING			3
-#define RAYDIUM_ODE_MOTOR_ENGINE		1
-#define RAYDIUM_ODE_MOTOR_ANGULAR		2
-#define RAYDIUM_ODE_MOTOR_ROCKET		3
+#define RAYDIUM_ODE_AUTODETECT                  -1.f
+#define RAYDIUM_ODE_STANDARD                    1
+#define RAYDIUM_ODE_STATIC                      2
+#define RAYDIUM_ODE_FIXING                      3
+#define RAYDIUM_ODE_MOTOR_ENGINE                1
+#define RAYDIUM_ODE_MOTOR_ANGULAR               2
+#define RAYDIUM_ODE_MOTOR_ROCKET                3
 
-#define RAYDIUM_ODE_JOINT_AXE_X			1,0,0
-#define RAYDIUM_ODE_JOINT_AXE_Y			0,1,0
-#define RAYDIUM_ODE_JOINT_AXE_Z			0,0,1
-#define RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES	RAYDIUM_ODE_JOINT_AXE_Z,RAYDIUM_ODE_JOINT_AXE_Y
-#define RAYDIUM_ODE_JOINT_FIXED			-10
+#define RAYDIUM_ODE_JOINT_AXE_X                 1,0,0
+#define RAYDIUM_ODE_JOINT_AXE_Y                 0,1,0
+#define RAYDIUM_ODE_JOINT_AXE_Z                 0,0,1
+#define RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES     RAYDIUM_ODE_JOINT_AXE_Z,RAYDIUM_ODE_JOINT_AXE_Y
+#define RAYDIUM_ODE_JOINT_FIXED                 -10
 
-#define RAYDIUM_ODE_MATERIAL_HARD		0.9,0.1
-#define RAYDIUM_ODE_MATERIAL_MEDIUM		0.5,0.5
-#define RAYDIUM_ODE_MATERIAL_SOFT		0.1,0.9
-#define RAYDIUM_ODE_MATERIAL_SOFT2		0.0,0.9
-#define RAYDIUM_ODE_MATERIAL_DEFAULT		RAYDIUM_ODE_MATERIAL_HARD
+#define RAYDIUM_ODE_MATERIAL_HARD               0.9,0.1
+#define RAYDIUM_ODE_MATERIAL_MEDIUM             0.5,0.5
+#define RAYDIUM_ODE_MATERIAL_SOFT               0.1,0.9
+#define RAYDIUM_ODE_MATERIAL_SOFT2              0.0,0.9
+#define RAYDIUM_ODE_MATERIAL_DEFAULT            RAYDIUM_ODE_MATERIAL_HARD
 
-#define RAYDIUM_ODE_SLIP_ICE			5.f
-#define RAYDIUM_ODE_SLIP_PLAYER			10.f
-#define RAYDIUM_ODE_SLIP_NORMAL			0.4f		
-#define RAYDIUM_ODE_SLIP_DEFAULT		RAYDIUM_ODE_SLIP_NORMAL
+#define RAYDIUM_ODE_SLIP_ICE                    5.f
+#define RAYDIUM_ODE_SLIP_PLAYER                 10.f
+#define RAYDIUM_ODE_SLIP_NORMAL                 0.4f            
+#define RAYDIUM_ODE_SLIP_DEFAULT                RAYDIUM_ODE_SLIP_NORMAL
 
-#define RAYDIUM_ODE_TAG_EXPLOSION		-1
-#define RAYDIUM_ODE_TAG_GROUND			-2
+#define RAYDIUM_ODE_TAG_EXPLOSION               -1
+#define RAYDIUM_ODE_TAG_GROUND                  -2
 
-#define RAYDIUM_ODE_NETWORK_OPTIMAL		-1
-#define RAYDIUM_ODE_NETWORK_MAXFREQ		20
+#define RAYDIUM_ODE_NETWORK_OPTIMAL             -1
+#define RAYDIUM_ODE_NETWORK_MAXFREQ             20
 
-#define RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL	1
-#define RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW	2
+#define RAYDIUM_ODE_NETWORK_EXPLOSION_EXPL      1
+#define RAYDIUM_ODE_NETWORK_EXPLOSION_BLOW      2
 
 // do not change values, some other file are using numeric values ! (shadows)
-#define RAYDIUM_ODE_DRAW_NORMAL			0
-#define RAYDIUM_ODE_DRAW_DEBUG			1
-#define RAYDIUM_ODE_DRAW_AABB			2
-#define RAYDIUM_ODE_DRAW_RAY			3
-#define RAYDIUM_ODE_DRAW_SHADOWERS		4
-#define RAYDIUM_ODE_DRAW_NORMAL_NO_POST		5
+#define RAYDIUM_ODE_DRAW_NORMAL                 0
+#define RAYDIUM_ODE_DRAW_DEBUG                  1
+#define RAYDIUM_ODE_DRAW_AABB                   2
+#define RAYDIUM_ODE_DRAW_RAY                    3
+#define RAYDIUM_ODE_DRAW_SHADOWERS              4
+#define RAYDIUM_ODE_DRAW_NORMAL_NO_POST         5
 
-#define RAYDIUM_ODE_RAY_CONTACT_IGNORE		0
-#define RAYDIUM_ODE_RAY_CONTACT_REPORT		1
-#define RAYDIUM_ODE_RAY_CONTACT_CREATE		2
+#define RAYDIUM_ODE_RAY_CONTACT_IGNORE          0
+#define RAYDIUM_ODE_RAY_CONTACT_REPORT          1
+#define RAYDIUM_ODE_RAY_CONTACT_CREATE          2
 
-#define RAYDIUM_ODE_RECORD_RATE_DEFAULT		30
-#define RAYDIUM_ODE_RECORD_NEWBOX		1
-#define RAYDIUM_ODE_RECORD_NEWSPHERE		2
-#define RAYDIUM_ODE_RECORD_DELBOX		3
-#define RAYDIUM_ODE_RECORD_DELSPHERE		4
+#define RAYDIUM_ODE_RECORD_RATE_DEFAULT         30
+#define RAYDIUM_ODE_RECORD_NEWBOX               1
+#define RAYDIUM_ODE_RECORD_NEWSPHERE            2
+#define RAYDIUM_ODE_RECORD_DELBOX               3
+#define RAYDIUM_ODE_RECORD_DELSPHERE            4
 
-__global dWorldID 	raydium_ode_world;
-__global dSpaceID 	raydium_ode_space;
-__global dJointGroupID 	raydium_ode_contactgroup;
-__global int		raydium_ode_ground_mesh;
-__global GLint		raydium_ode_timecall; // read only (timecall index for ode callback)
-__global void *		raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
-__global void *		raydium_ode_StepCallback; // void f(void)
-__global void *		raydium_ode_ObjectNearCollide; // signed char f(int,int)
-__global void *		raydium_ode_RayCallback; // signed char f(int,int,dContact*)
-__global signed char	raydium_ode_network_distant_create;
-__global signed char	raydium_ode_network_next_local_only;
-__global signed char	raydium_ode_network_explosion_create;
-__global int		raydium_ode_network_maxfreq;
-__global void *		raydium_ode_ExplosionCallback; // void f(signed char,dReal,dReal,dReal *)
-__global void *		raydium_ode_BeforeElementDrawCallback;
-__global void *		raydium_ode_AfterElementDrawCallback;
-__global signed char	raydium_ode_element_delete_LOCK;
+__global dWorldID       raydium_ode_world;
+__global dSpaceID       raydium_ode_space;
+__global dJointGroupID  raydium_ode_contactgroup;
+__global int            raydium_ode_ground_mesh;
+__global GLint          raydium_ode_timecall; // read only (timecall index for ode callback)
+__global void *         raydium_ode_CollideCallback; // signed char f(int,int,dContact*)
+__global void *         raydium_ode_StepCallback; // void f(void)
+__global void *         raydium_ode_ObjectNearCollide; // signed char f(int,int)
+__global void *         raydium_ode_RayCallback; // signed char f(int,int,dContact*)
+__global signed char    raydium_ode_network_distant_create;
+__global signed char    raydium_ode_network_next_local_only;
+__global signed char    raydium_ode_network_explosion_create;
+__global int            raydium_ode_network_maxfreq;
+__global void *         raydium_ode_ExplosionCallback; // void f(signed char,dReal,dReal,dReal *)
+__global void *         raydium_ode_BeforeElementDrawCallback;
+__global void *         raydium_ode_AfterElementDrawCallback;
+__global signed char    raydium_ode_element_delete_LOCK;
 
 typedef struct raydium_ode_Explosion // used for "blowing" explosions
 {
@@ -130,7 +130,7 @@ typedef struct raydium_ode_Motor
     signed char  state;
     int   object; // owner
     int   joints[RAYDIUM_ODE_MOTOR_MAX_JOINTS];      // attached to ... (joints)
-    int	  joints_axe[RAYDIUM_ODE_MOTOR_MAX_JOINTS];  // wich axe ? (joint relative)
+    int   joints_axe[RAYDIUM_ODE_MOTOR_MAX_JOINTS];  // wich axe ? (joint relative)
     int   rocket_element; // rocket only: attached to this element
     dReal rocket_direction[3]; // rocket only (relative to element)
     dReal rocket_orientation[3]; // rocket only (relative to element)
@@ -147,7 +147,7 @@ typedef struct raydium_ode_Motor
 typedef struct raydium_ode_ElementInternalSave
 {
     char  name[RAYDIUM_MAX_NAME_LEN];
-    int	  type; // ODE geom type
+    int   type; // ODE geom type
     dReal sphere_radius;
     dReal box_sizes[3];
     dReal mass;
@@ -190,44 +190,44 @@ typedef struct raydium_ode_Element
     signed char    state;
     int     object;
     int     mesh;
-    signed char    _touched;	// touched during very last timestep
-    signed char    _movesfrom;	// is leaving this object to "object" member
-    signed char    _avoidedcol;	// is any collision was avoided because of this move ?
-    int		   _last_touched_ray; // hack for raydium_ode_RayCallback
-    signed char    isplayer;	// is this element an FPS player ? ("standing elem")
+    signed char    _touched;    // touched during very last timestep
+    signed char    _movesfrom;  // is leaving this object to "object" member
+    signed char    _avoidedcol; // is any collision was avoided because of this move ?
+    int            _last_touched_ray; // hack for raydium_ode_RayCallback
+    signed char    isplayer;    // is this element an FPS player ? ("standing elem")
     dReal   playerangle; // FPS player angle
-    dReal   slip;	// slipping factor
+    dReal   slip;       // slipping factor
     dReal   rotfriction; // rotation friction factor (avoid infinite rolling spheres)
     dGeomID geom;
     dBodyID body;
     dReal   erp;
     dReal   cfm;    
     void *  user_data; // point to user data
-    int	    user_tag; // tag reseverd to user (this tag is networked)
+    int     user_tag; // tag reseverd to user (this tag is networked)
     raydium_ode_ElementInternalSave *fixed_elements[RAYDIUM_ODE_ELEMENT_MAX_FIXING];
-    int	    nid; //  network ID
+    int     nid; //  network ID
     signed char    distant; // owned by a distant machine
     int     distant_owner;
     time_t  lastnetupdate;
     void *  OnBlow; // when touched by a blowing explosion void (*f)(int,dReal,dReal)
     void *  OnDelete; // int (*f)(int)
-    int	    ttl; // time to live, -1 for infinite (default)
-    int	    particle;
+    int     ttl; // time to live, -1 for infinite (default)
+    int     particle;
     dReal   particle_offset[3];
     unsigned long net_last_time;
     dReal         net_last_pos1[3];
     dReal         net_last_pos2[3];
     dReal         netvel[3]; // test
     unsigned long net_last_interval;
-    int		  ground_texture;
-    signed char	  marked_as_deleted;
+    int           ground_texture;
+    signed char   marked_as_deleted;
     raydium_ode_Ray ray[RAYDIUM_ODE_MAX_RAYS];
     signed char   recorded; // is currently recorded
     signed char   replayed; // is currently "replayed"
-    dReal	capture_pos1[3];
-    dReal	capture_pos2[3];
-    dReal	capture_rot1[4];
-    dReal	capture_rot2[4];
+    dReal       capture_pos1[3];
+    dReal       capture_pos2[3];
+    dReal       capture_rot1[4];
+    dReal       capture_rot2[4];
 } raydium_ode_Element;
 
 

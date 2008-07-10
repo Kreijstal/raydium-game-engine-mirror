@@ -9,8 +9,8 @@
 
 #include "raydium/index.c"
 
-#define CAM_FILE	"volcano.cam"
-#define CAM_FILE2	"volcano1.cam"
+#define CAM_FILE        "volcano.cam"
+#define CAM_FILE2       "volcano1.cam"
 
 GLint water_textures_size;
 GLfloat water_height=0;
@@ -28,8 +28,8 @@ GLfloat  *back_color=light_color;
 float volcano_center[]= {53.2,47,45};
 char *rocks[]={"rock0.tri","rock1.tri","rock2.tri"};
 
-#define ROCK_TAG	10
-#define WATER_TAG	11
+#define ROCK_TAG        10
+#define WATER_TAG       11
 
 int sound_water,sound_rock;
 float needed_water_volume;
@@ -47,7 +47,7 @@ t2=raydium_ode_element_tag_get(e2);
 
 if( (t1==RAYDIUM_ODE_TAG_GROUND && t2==WATER_TAG) ||
     (t2==RAYDIUM_ODE_TAG_GROUND && t1==WATER_TAG) )
-	return 0;
+        return 0;
 
 
 rock=-1;
@@ -61,7 +61,7 @@ if(rock>=0)
     vel=raydium_ode_element_linearvelocity_get(rock);
     speed=0;
     for(i=0;i<3;i++)
-	speed+=raydium_trigo_abs(vel[i]);
+        speed+=raydium_trigo_abs(vel[i]);
     }
 
 
@@ -70,50 +70,50 @@ if(t1==ROCK_TAG || t2==ROCK_TAG)
     char name[255];
 
     if(t1==WATER_TAG || t2==WATER_TAG) // rock vs. water
-	{
-	int i;
-	dReal op[3];
-	
-	sprintf(name,"water-%i-%i",e1,e2);
-	if(raydium_particle_generator_find(name)>=0)
-	    return 0;
+        {
+        int i;
+        dReal op[3];
+        
+        sprintf(name,"water-%i-%i",e1,e2);
+        if(raydium_particle_generator_find(name)>=0)
+            return 0;
 
-	//printf("%f\n",speed);	
-	if(speed>4)
-	    {
-	    raydium_particle_generator_load("volcano_e_water.prt",name);
-	    raydium_particle_generator_move_name(name,n->geom.pos);
-	    }
+        //printf("%f\n",speed); 
+        if(speed>4)
+            {
+            raydium_particle_generator_load("volcano_e_water.prt",name);
+            raydium_particle_generator_move_name(name,n->geom.pos);
+            }
 
 
-	for(i=0;i<3;i++)
-	    op[i]=vel[i]*-1;
-	raydium_ode_element_addforce(rock,op);	
+        for(i=0;i<3;i++)
+            op[i]=vel[i]*-1;
+        raydium_ode_element_addforce(rock,op);  
 
-	needed_water_volume+=speed/100;
-/*	if(!raydium_sound_IsPlaying(sound_water) && speed>5)
-	    {
-	    raydium_sound_SourcePlay(sound_water);
-	    raydium_sound_SetSourcePos(sound_water,n->geom.pos);
-	    }
+        needed_water_volume+=speed/100;
+/*      if(!raydium_sound_IsPlaying(sound_water) && speed>5)
+            {
+            raydium_sound_SourcePlay(sound_water);
+            raydium_sound_SetSourcePos(sound_water,n->geom.pos);
+            }
 */
-	return 0;
-	}
+        return 0;
+        }
     else // ground vs. rock
-	{
-	sprintf(name,"ground-%i-%i",e1,e2);
-	if(raydium_particle_generator_find(name)>=0)
-	    return 1;
-	if(n->geom.pos[2]<0)
-	    return 1;
-	raydium_particle_generator_load("volcano_e_collide.prt",name);
-	raydium_particle_generator_move_name(name,n->geom.pos);
-	if(!raydium_sound_IsPlaying(sound_rock) && speed>5)
-	    {
-	    raydium_sound_SourcePlay(sound_rock);
-	    raydium_sound_SetSourcePos(sound_rock,n->geom.pos);
-	    }
-	}
+        {
+        sprintf(name,"ground-%i-%i",e1,e2);
+        if(raydium_particle_generator_find(name)>=0)
+            return 1;
+        if(n->geom.pos[2]<0)
+            return 1;
+        raydium_particle_generator_load("volcano_e_collide.prt",name);
+        raydium_particle_generator_move_name(name,n->geom.pos);
+        if(!raydium_sound_IsPlaying(sound_rock) && speed>5)
+            {
+            raydium_sound_SourcePlay(sound_rock);
+            raydium_sound_SetSourcePos(sound_rock,n->geom.pos);
+            }
+        }
     }
 
 return 1;
@@ -126,36 +126,36 @@ void display(void)
     static GLfloat countdown=0;
 
     if(raydium_key_last==1027)
-	exit(0);
+        exit(0);
 
 //    if(raydium_key_last==1032)
 if(countdown<=0 && raydium_random_i(0,15)==0)
         {
-	int a,r;
-	char name[255];
-	float x,y,z;
+        int a,r;
+        char name[255];
+        float x,y,z;
 
-	a=raydium_ode_object_find("GLOBAL");
-	raydium_ode_name_auto("rock",name);
-	r=raydium_random_i(0,2);
-	raydium_ode_object_sphere_add(name,a,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,ROCK_TAG,rocks[r]);
-	raydium_ode_element_move_name(name,volcano_center);
+        a=raydium_ode_object_find("GLOBAL");
+        raydium_ode_name_auto("rock",name);
+        r=raydium_random_i(0,2);
+        raydium_ode_object_sphere_add(name,a,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,ROCK_TAG,rocks[r]);
+        raydium_ode_element_move_name(name,volcano_center);
 
-	x=-raydium_random_pos_1()*500;
-	y=-raydium_random_pos_1()*500;
-	raydium_ode_element_addforce_name_3f(name,x,y,1000);
+        x=-raydium_random_pos_1()*500;
+        y=-raydium_random_pos_1()*500;
+        raydium_ode_element_addforce_name_3f(name,x,y,1000);
 
-	x=raydium_random_neg_pos_1()*100;
-	y=raydium_random_neg_pos_1()*100;
-	z=raydium_random_neg_pos_1()*100;
-	raydium_ode_element_addtorque_name_3f(name,x,y,z);
+        x=raydium_random_neg_pos_1()*100;
+        y=raydium_random_neg_pos_1()*100;
+        z=raydium_random_neg_pos_1()*100;
+        raydium_ode_element_addtorque_name_3f(name,x,y,z);
 
-	raydium_ode_element_particle_name(name,"volcano_e_fire.prt");
-	raydium_ode_element_ttl_set_name(name,raydium_ode_get_physics_freq()*25);
+        raydium_ode_element_particle_name(name,"volcano_e_fire.prt");
+        raydium_ode_element_ttl_set_name(name,raydium_ode_get_physics_freq()*25);
 
-	raydium_camera_rumble(0.3,-0.1,3);
-	countdown=0.3;
-	}
+        raydium_camera_rumble(0.3,-0.1,3);
+        countdown=0.3;
+        }
 
     secs+=raydium_frame_time/2;
     countdown-=raydium_frame_time;
@@ -261,59 +261,59 @@ raydium_rendering_prepare_texture_unit(GL_TEXTURE3_ARB,raydium_texture_find_by_n
 raydium_shader_current_name("water");
 // draw quad
 {
-	// Create a static variable for the movement of the water
-	static float move = 0.0f;
+        // Create a static variable for the movement of the water
+        static float move = 0.0f;
 
-	// Use this variable for the normal map and make it slower
-	// than the refraction map's speed.  We want the refraction
-	// map to be jittery, but not the normal map's waviness.
-	float move2 = move * kNormalMapScale;
+        // Use this variable for the normal map and make it slower
+        // than the refraction map's speed.  We want the refraction
+        // map to be jittery, but not the normal map's waviness.
+        float move2 = move * kNormalMapScale;
 
-	// Set the refraction map's UV coordinates to our global g_WaterUV
-	float refrUV = g_WaterUV;
+        // Set the refraction map's UV coordinates to our global g_WaterUV
+        float refrUV = g_WaterUV;
 
-	// Set our normal map's UV scale and shrink it by kNormalMapScale
-	float normalUV = g_WaterUV * kNormalMapScale;
+        // Set our normal map's UV scale and shrink it by kNormalMapScale
+        float normalUV = g_WaterUV * kNormalMapScale;
 
         float low=-100;
         float high=100;
 
         // Move the water by our global speed
         //printf("%f\n",raydium_frame_time);
-	move += (g_WaterFlow*raydium_frame_time);
+        move += (g_WaterFlow*raydium_frame_time);
         
 glBegin(GL_QUADS);
 
 // The back left vertice for the water
- glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, g_WaterUV);				// Reflection texture				
- glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, refrUV - move);			// Refraction texture
- glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0.0f, normalUV + move2);		// Normal map texture
- glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);						// DUDV map texture
- glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);						// Depth texture
+ glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, g_WaterUV);                                // Reflection texture                           
+ glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, refrUV - move);                    // Refraction texture
+ glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0.0f, normalUV + move2);         // Normal map texture
+ glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);                                           // DUDV map texture
+ glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);                                           // Depth texture
  glVertex3f(low, low, water_height);
 
 // The front left vertice for the water
- glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);					// Reflection texture
- glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, 0.0f - move);			// Refraction texture
- glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0.0f, 0.0f + move2);			// Normal map texture
- glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);						// DUDV map texture
- glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);						// Depth texture
+ glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);                                     // Reflection texture
+ glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, 0.0f - move);                      // Refraction texture
+ glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0.0f, 0.0f + move2);                     // Normal map texture
+ glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);                                           // DUDV map texture
+ glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);                                           // Depth texture
  glVertex3f(low, high, water_height);
 
 // The front right vertice for the water
- glMultiTexCoord2fARB(GL_TEXTURE0_ARB, g_WaterUV, 0.0f);				// Reflection texture
- glMultiTexCoord2fARB(GL_TEXTURE1_ARB, refrUV, 0.0f - move);			// Refraction texture
- glMultiTexCoord2fARB(GL_TEXTURE2_ARB, normalUV, 0.0f + move2);		// Normal map texture
- glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);						// DUDV map texture
- glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);						// Depth texture
+ glMultiTexCoord2fARB(GL_TEXTURE0_ARB, g_WaterUV, 0.0f);                                // Reflection texture
+ glMultiTexCoord2fARB(GL_TEXTURE1_ARB, refrUV, 0.0f - move);                    // Refraction texture
+ glMultiTexCoord2fARB(GL_TEXTURE2_ARB, normalUV, 0.0f + move2);         // Normal map texture
+ glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);                                           // DUDV map texture
+ glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);                                           // Depth texture
  glVertex3f(high, high, water_height);
 
 // The back right vertice for the water
- glMultiTexCoord2fARB(GL_TEXTURE0_ARB, g_WaterUV, g_WaterUV);		// Reflection texture
- glMultiTexCoord2fARB(GL_TEXTURE1_ARB, refrUV, refrUV - move);		// Refraction texture
- glMultiTexCoord2fARB(GL_TEXTURE2_ARB, normalUV, normalUV + move2);	// Normal map texture
- glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);						// DUDV map texture
- glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);						// Depth texture
+ glMultiTexCoord2fARB(GL_TEXTURE0_ARB, g_WaterUV, g_WaterUV);           // Reflection texture
+ glMultiTexCoord2fARB(GL_TEXTURE1_ARB, refrUV, refrUV - move);          // Refraction texture
+ glMultiTexCoord2fARB(GL_TEXTURE2_ARB, normalUV, normalUV + move2);     // Normal map texture
+ glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);                                           // DUDV map texture
+ glMultiTexCoord2fARB(GL_TEXTURE4_ARB, 0, 0);                                           // Depth texture
  glVertex3f(high, low, water_height);
 
 glEnd();

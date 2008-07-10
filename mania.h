@@ -1,27 +1,27 @@
-#define TYPE_CHECKPOINT 	100
+#define TYPE_CHECKPOINT         100
 
-#define TYPE_LOOP 		30
+#define TYPE_LOOP               30
 
-#define TYPE_START_E 		10
-#define TYPE_START_W		11
-#define TYPE_START_N 		12
-#define TYPE_START_S 		13
+#define TYPE_START_E            10
+#define TYPE_START_W            11
+#define TYPE_START_N            12
+#define TYPE_START_S            13
 
-#define TYPE_END 		20
+#define TYPE_END                20
 
-#define TYPE_TURBO_E		2
-#define TYPE_TURBO_W		3
-#define TYPE_TURBO_N		4
-#define TYPE_TURBO_S		5
+#define TYPE_TURBO_E            2
+#define TYPE_TURBO_W            3
+#define TYPE_TURBO_N            4
+#define TYPE_TURBO_S            5
 
-#define TYPE_CAR		1
-#define TYPE_CAR_BODY		7
-#define TYPE_CAR_BODY_SP	8
-#define TYPE_BALANCIER		6
+#define TYPE_CAR                1
+#define TYPE_CAR_BODY           7
+#define TYPE_CAR_BODY_SP        8
+#define TYPE_BALANCIER          6
 
-#define TURBO_POWA		0.5
+#define TURBO_POWA              0.5
 
-#define IS_CAR_BODY(a)		(((a)==TYPE_CAR_BODY) || ((a)==TYPE_CAR_BODY_SP))
+#define IS_CAR_BODY(a)          (((a)==TYPE_CAR_BODY) || ((a)==TYPE_CAR_BODY_SP))
 
 typedef struct Grid
     {
@@ -47,11 +47,11 @@ typedef struct Box
     int id;
     } Box;
     
-#define MAX_ELEMS	4096
-#define FACT 		6
-#define MOVE_X 		-5
-#define MOVE_Y 		-3
-#define MOVE_Z 		-1
+#define MAX_ELEMS       4096
+#define FACT            6
+#define MOVE_X          -5
+#define MOVE_Y          -3
+#define MOVE_Z          -1
 
 Grid grid[MAX_ELEMS];
 Box box[MAX_ELEMS];
@@ -71,26 +71,26 @@ start=0;
 for(i=0;i<=strlen(from);i++)
     {
     if(d[i]==';' || d[i]==0 || d[i]=='\r')
-	{
-	d[i]=0;
-	//printf("%i %s\n",cpt,d+start);
-	if(cpt==0)
-	    strcpy(to_name,d+start);
-	if(cpt==1)
-	    strcpy(to_author,d+start);
-	if(cpt==2)
-	    strcpy(to_gold,d+start);
-	if(cpt==3)
-	    strcpy(to_author_time,d+start);
-	if(cpt==4)
-	    strcpy(message_file,d+start);
-	if(cpt==5)
-	    strcpy(ent_file,d+start);
+        {
+        d[i]=0;
+        //printf("%i %s\n",cpt,d+start);
+        if(cpt==0)
+            strcpy(to_name,d+start);
+        if(cpt==1)
+            strcpy(to_author,d+start);
+        if(cpt==2)
+            strcpy(to_gold,d+start);
+        if(cpt==3)
+            strcpy(to_author_time,d+start);
+        if(cpt==4)
+            strcpy(message_file,d+start);
+        if(cpt==5)
+            strcpy(ent_file,d+start);
 
-	// finalize
-	cpt++;
-	start=i+1;
-	}
+        // finalize
+        cpt++;
+        start=i+1;
+        }
     }
 }
 
@@ -172,70 +172,70 @@ if(c==EOF) break;
 switch(c)
     {
     case 'b':
-	fscanf(in,"%f %f %f %f %f %f %i\n", &x,
-					    &y,
-				    	    &z,
-				    	    &tx,
-				    	    &ty,
-				    	    &tz,
-					    &type);
-	x=x*FACT+MOVE_X;
-	y=y*FACT+MOVE_Y;
-	z=z*FACT+MOVE_Z;
-	tx=tx*FACT;
-	ty=ty*FACT;
-	tz=tz*FACT;
-	fprintf(box,"%f %f %f %f %f %f %i\n",x,y,z,tx,ty,tz,type);
-	break;
+        fscanf(in,"%f %f %f %f %f %f %i\n", &x,
+                                            &y,
+                                            &z,
+                                            &tx,
+                                            &ty,
+                                            &tz,
+                                            &type);
+        x=x*FACT+MOVE_X;
+        y=y*FACT+MOVE_Y;
+        z=z*FACT+MOVE_Z;
+        tx=tx*FACT;
+        ty=ty*FACT;
+        tz=tz*FACT;
+        fprintf(box,"%f %f %f %f %f %f %i\n",x,y,z,tx,ty,tz,type);
+        break;
     case 'g':
-	fscanf(in,"%f %f %f %i %i %s\n",&x,
-				        &y,
-				        &z,
-				        &rot,
-				        &flags,
-				        str);
-	obj=raydium_object_find_load(str);
-	for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
-	    {
-	    vx=raydium_vertex_x[i];
-	    vy=raydium_vertex_y[i];
-	    vz=raydium_vertex_z[i];
-	    nx=raydium_vertex_normal_visu_x[i];
-	    ny=raydium_vertex_normal_visu_y[i];
-	    nz=raydium_vertex_normal_visu_z[i];
-	    vx-=0.5;
-	    vy-=0.5;
+        fscanf(in,"%f %f %f %i %i %s\n",&x,
+                                        &y,
+                                        &z,
+                                        &rot,
+                                        &flags,
+                                        str);
+        obj=raydium_object_find_load(str);
+        for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
+            {
+            vx=raydium_vertex_x[i];
+            vy=raydium_vertex_y[i];
+            vz=raydium_vertex_z[i];
+            nx=raydium_vertex_normal_visu_x[i];
+            ny=raydium_vertex_normal_visu_y[i];
+            nz=raydium_vertex_normal_visu_z[i];
+            vx-=0.5;
+            vy-=0.5;
 
-	    rvx=vx*raydium_trigo_cos(rot) - vy*raydium_trigo_sin(rot);
-	    rvy=vx*raydium_trigo_sin(rot) + vy*raydium_trigo_cos(rot);
-	    rvz=vz;
-	    rnx=nx*raydium_trigo_cos(rot) - ny*raydium_trigo_sin(rot);
-	    rny=nx*raydium_trigo_sin(rot) + ny*raydium_trigo_cos(rot);
-	    rnz=nz;
+            rvx=vx*raydium_trigo_cos(rot) - vy*raydium_trigo_sin(rot);
+            rvy=vx*raydium_trigo_sin(rot) + vy*raydium_trigo_cos(rot);
+            rvz=vz;
+            rnx=nx*raydium_trigo_cos(rot) - ny*raydium_trigo_sin(rot);
+            rny=nx*raydium_trigo_sin(rot) + ny*raydium_trigo_cos(rot);
+            rnz=nz;
 
-	    rvx+=0.5;
-	    rvy+=0.5;
-	    rvx+=x;
-	    rvy+=y;
-	    rvz+=z;
-	    rvx*=FACT;
-	    rvy*=FACT;
-	    rvz*=FACT;
-	    rvx+=MOVE_X;
-	    rvy+=MOVE_Y;
-	    rvz+=MOVE_Z;
-	    fprintf(tri,"%f %f %f %f %f %f %f %f %s\n",rvx,rvy,rvz,rnx,rny,rnz,raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[raydium_vertex_texture[i]]);
-	    }
-	break;    
+            rvx+=0.5;
+            rvy+=0.5;
+            rvx+=x;
+            rvy+=y;
+            rvz+=z;
+            rvx*=FACT;
+            rvy*=FACT;
+            rvz*=FACT;
+            rvx+=MOVE_X;
+            rvy+=MOVE_Y;
+            rvz+=MOVE_Z;
+            fprintf(tri,"%f %f %f %f %f %f %f %f %s\n",rvx,rvy,rvz,rnx,rny,rnz,raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[raydium_vertex_texture[i]]);
+            }
+        break;    
     case 'd':
-	fgets(tdata,4000,in);
-	if(tdata[strlen(tdata)-1]=='\n')
-	    tdata[strlen(tdata)-1]=0;
-	dump_data_to(raydium_file_home_path("mania.dat"));
-	break;
+        fgets(tdata,4000,in);
+        if(tdata[strlen(tdata)-1]=='\n')
+            tdata[strlen(tdata)-1]=0;
+        dump_data_to(raydium_file_home_path("mania.dat"));
+        break;
     default:
-	raydium_log("mni_gen: invalid track file (block type '%c' unknown)",c);
-	break;
+        raydium_log("mni_gen: invalid track file (block type '%c' unknown)",c);
+        break;
     }
 } // end while
 

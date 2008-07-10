@@ -18,12 +18,12 @@ GLfloat amb[]={1.0,0.0,0.0,1.0};
 
 
 #define ROCKET_FIABILITY  5
-#define ROCKET_SPEED	 70
-#define RELOAD_TIME	2.5
+#define ROCKET_SPEED     70
+#define RELOAD_TIME     2.5
 #define PLAYER_SPEED    0.2
-#define PLAYER_JUMP	 20
-#define BULLET_SPEED	 50
-#define BULLET_RATE	 50
+#define PLAYER_JUMP      20
+#define BULLET_SPEED     50
+#define BULLET_RATE      50
 
 #define SOUND_MAX_EXPLOS 4
 char wav_boom[SOUND_MAX_EXPLOS][128]={"xf_boom1.wav","xf_boom2.wav","xf_boom3.wav","xf_boom4.wav"};
@@ -234,8 +234,8 @@ life=0;
 
 void create_game(char alive)
 {
-#define BREAK_FORCE	130
-#define ROTFRICTION	0.0005
+#define BREAK_FORCE     130
+#define ROTFRICTION     0.0005
 int a;
     
     
@@ -457,32 +457,32 @@ if(raydium_key[GLUT_KEY_RIGHT] && raydium_key[GLUT_KEY_DOWN]) dir=9;
 switch(dir)
     {
     case 1:
-	ptmp=-45;
-	break;
+        ptmp=-45;
+        break;
     case 2:
-	ptmp=0;
-	break;
+        ptmp=0;
+        break;
     case 3:
-	ptmp=45;
-	break;
+        ptmp=45;
+        break;
     case 4:
-	ptmp=-90;
-	break;
+        ptmp=-90;
+        break;
     case 5:
-	speed=0; // stops player
-	break;
+        speed=0; // stops player
+        break;
     case 6:
-	ptmp=90;
-	break;
+        ptmp=90;
+        break;
     case 7:
-	ptmp=-135;
-	break;
+        ptmp=-135;
+        break;
     case 8:
-	ptmp=180;
-	break;
+        ptmp=180;
+        break;
     case 9:
-	ptmp=135;
-	break;
+        ptmp=135;
+        break;
     }
 
 raydium_ode_motor_speed_name("player_react",speed);

@@ -52,13 +52,13 @@ while(*ptr)
     raydium_parser_cut(*ptr,part1,part2,'=');
     
     if(!strcasecmp("title",part1))
-	strcpy(raydium_sound_music_info.title,part2);
+        strcpy(raydium_sound_music_info.title,part2);
 
     if(!strcasecmp("album",part1))
-	strcpy(raydium_sound_music_info.album,part2);
+        strcpy(raydium_sound_music_info.album,part2);
 
     if(!strcasecmp("artist",part1))
-	strcpy(raydium_sound_music_info.artist,part2);
+        strcpy(raydium_sound_music_info.artist,part2);
 
       ++ptr;
     }
@@ -87,10 +87,10 @@ int raydium_sound_Array3IsValid(ALfloat *a)
 if( !raydium_trigo_isfloat(a[0]) ||
     !raydium_trigo_isfloat(a[1]) ||
     !raydium_trigo_isfloat(a[2]) )
-	{
-	raydium_log("sound : ERROR: invalid 3xALfloat array provided");
-	return 0;
-	}
+        {
+        raydium_log("sound : ERROR: invalid 3xALfloat array provided");
+        return 0;
+        }
 return 1;
 }
 
@@ -252,10 +252,10 @@ int raydium_sound_SetSourcePitch(int src, ALfloat p)
    static signed char first=1;
    p=2.0;//CLIPPING
    if(first)
-	{
-	raydium_log("sound: Pitch Overflow, clipped to 2. Message will not be repeated !");
-	first=0;
-	}
+        {
+        raydium_log("sound: Pitch Overflow, clipped to 2. Message will not be repeated !");
+        first=0;
+        }
   }
   if(p<=0.0)
   {
@@ -546,22 +546,22 @@ if(!alutInit(&raydium_init_argc, raydium_init_argv))
 #endif
 /* 
 {
-		const ALchar *tempString;
+                const ALchar *tempString;
 
-		ALCcontext* pContext;
-		ALCdevice* pDevice;
-		pContext = alcGetCurrentContext();
-		pDevice = alcGetContextsDevice(pContext);
-		tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
-		printf("OpenAL Context Device Specifier is '%s'\n", tempString);
-		tempString = alGetString(AL_RENDERER);
-		printf("OpenAL Renderer is '%s'\n", tempString);
-		tempString = alGetString(AL_VERSION);
-		printf("OpenAL Version is '%s'\n", tempString);
-		tempString = alGetString(AL_VENDOR);
-		printf("OpenAL Vendor is '%s'\n", tempString);
-		tempString = alGetString(AL_EXTENSIONS);
-		printf("OpenAL Extensions supported are :\n%s\n", tempString);
+                ALCcontext* pContext;
+                ALCdevice* pDevice;
+                pContext = alcGetCurrentContext();
+                pDevice = alcGetContextsDevice(pContext);
+                tempString = alcGetString(pDevice, ALC_DEVICE_SPECIFIER);
+                printf("OpenAL Context Device Specifier is '%s'\n", tempString);
+                tempString = alGetString(AL_RENDERER);
+                printf("OpenAL Renderer is '%s'\n", tempString);
+                tempString = alGetString(AL_VERSION);
+                printf("OpenAL Version is '%s'\n", tempString);
+                tempString = alGetString(AL_VENDOR);
+                printf("OpenAL Vendor is '%s'\n", tempString);
+                tempString = alGetString(AL_EXTENSIONS);
+                printf("OpenAL Extensions supported are :\n%s\n", tempString);
 }    
 */ 
 raydium_sound_music_info_init();
@@ -654,15 +654,15 @@ ALCcontext* pContext;
    
 
 #ifdef WIN32
-  	//Get active context
-	pContext=alcGetCurrentContext();
-	//Get device for active context
-	pDevice=alcGetContextsDevice(pContext);
-	//Release context(s)
+        //Get active context
+        pContext=alcGetCurrentContext();
+        //Get device for active context
+        pDevice=alcGetContextsDevice(pContext);
+        //Release context(s)
     alcMakeContextCurrent(NULL);
     alcDestroyContext(pContext);
-	//Close device
-	alcCloseDevice(pDevice);
+        //Close device
+        alcCloseDevice(pDevice);
 #endif
   alutExit();
  }
@@ -688,10 +688,10 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
     now=ov_time_tell(file);
     //printf("now=%f video=%f diff=%f\n",now,videopos,now-videopos);
     if(raydium_trigo_abs(now-videopos)>RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD)
-	{
-	ov_time_seek_lap(file,videopos);
-	//printf("adjusting A/V sync...\n");
-	}
+        {
+        ov_time_seek_lap(file,videopos);
+        //printf("adjusting A/V sync...\n");
+        }
     }
 
   while(count<SOUNDDATASIZE)
@@ -727,12 +727,12 @@ void raydium_sound_internal_cleanstreambuffs(void)
 
     alGetSourcei(raydium_sound_source[0], AL_BUFFERS_PROCESSED, &lProcessed);
     //printf("%i -----\n",lProcessed);
-			while (lProcessed)
-			{
+                        while (lProcessed)
+                        {
                 //printf(".");
-				alSourceUnqueueBuffers(raydium_sound_source[0], 1, &TempBufferID);
+                                alSourceUnqueueBuffers(raydium_sound_source[0], 1, &TempBufferID);
                 lProcessed--;
-			}
+                        }
 }
 
 
@@ -819,18 +819,18 @@ char newfile[RAYDIUM_MAX_NAME_LEN];
     fseek(raydium_sound_music_file,0,SEEK_SET);//rewind in the file if we hit the end
     raydium_log("sound: end of file reached");
     if(raydium_sound_music_eof_callback && raydium_sound_music_eof_callback(newfile)>0)
-	{
-	if(strlen(newfile)) 
-	    raydium_sound_load_music(newfile);
-	else
-	    {
-	    // may cause glitches on next music.. ?
-	    //fclose(raydium_sound_music_file);
-	    //raydium_sound_music_file=NULL;
-	    raydium_sound_load_music(NULL);
-	    }
-	return ;
-	}
+        {
+        if(strlen(newfile)) 
+            raydium_sound_load_music(newfile);
+        else
+            {
+            // may cause glitches on next music.. ?
+            //fclose(raydium_sound_music_file);
+            //raydium_sound_music_file=NULL;
+            raydium_sound_load_music(NULL);
+            }
+        return ;
+        }
     }
 
  alGetSourcei(raydium_sound_source[0],AL_BUFFERS_PROCESSED,&nprocessed);
@@ -876,30 +876,30 @@ raydium_sound_music_callback();
 // source fading ?
 for(i=0;i<raydium_sound_top_buffer;i++)
     if(raydium_sound_source_fade_factor[i]!=0)
-	{
-	raydium_sound_GetSourceGain(i,&g);
-	g+=(raydium_sound_source_fade_factor[i]*raydium_frame_time);
-	raydium_sound_SetSourceGain(i,g);
-	if(g<=0)
-	    {
-	    raydium_sound_source_fade_factor[i]=0;
-	    
-	    if(i==0) // music source
-		{
-		if(raydium_sound_source_fade_tofile[i][0]==0)
-		    {
-		    raydium_sound_load_music(NULL);
-		    }
-		else
-		    {
-		    raydium_sound_load_music(raydium_sound_source_fade_tofile[i]);
-		    raydium_sound_source_fade_tofile[i][0]=0;
-		    }
-		}
-	    else
-		    raydium_sound_SourceStop(i);
-	    }
-	}
+        {
+        raydium_sound_GetSourceGain(i,&g);
+        g+=(raydium_sound_source_fade_factor[i]*raydium_frame_time);
+        raydium_sound_SetSourceGain(i,g);
+        if(g<=0)
+            {
+            raydium_sound_source_fade_factor[i]=0;
+            
+            if(i==0) // music source
+                {
+                if(raydium_sound_source_fade_tofile[i][0]==0)
+                    {
+                    raydium_sound_load_music(NULL);
+                    }
+                else
+                    {
+                    raydium_sound_load_music(raydium_sound_source_fade_tofile[i]);
+                    raydium_sound_source_fade_tofile[i][0]=0;
+                    }
+                }
+            else
+                    raydium_sound_SourceStop(i);
+            }
+        }
 }
 
 void raydium_sound_source_fade(int src, ALfloat len)

@@ -20,7 +20,7 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_PATHS;i++)
     if(!raydium_path_paths[i].state)
-	return i;
+        return i;
 return -1;
 }
 
@@ -132,12 +132,12 @@ raydium_path_reset();
 do
  {
     if((c=strchr(str,':')))
-	end=c-str;
+        end=c-str;
     else
-	{
-	end=strlen(str);
-	last=1;
-	}
+        {
+        end=strlen(str);
+        last=1;
+        }
 
     strncpy(part,str,end);
     part[end]=0;
@@ -155,17 +155,17 @@ int i;
 out[0]=0;
 for(i=0;i<RAYDIUM_MAX_PATHS;i++)
     if( raydium_path_paths[i].state && 
-	raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
-	    {
-	    strcat(out,raydium_path_paths[i].path);
-	    if(strlen(raydium_path_paths[i].ext))
-		{
-		strcat(out,"/*.");
-		strcat(out,raydium_path_paths[i].ext);
-		}
-	    
-	    strcat(out,":");
-	    }
+        raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
+            {
+            strcat(out,raydium_path_paths[i].path);
+            if(strlen(raydium_path_paths[i].ext))
+                {
+                strcat(out,"/*.");
+                strcat(out,raydium_path_paths[i].ext);
+                }
+            
+            strcat(out,":");
+            }
 
 if(strlen(out))
     out[strlen(out)-1]=0; // trim last ':'
@@ -195,25 +195,25 @@ if(mode=='r')
 
     // Just thinking ... should'nt we check "." after all other paths ?
     if(raydium_file_readable(in))
-	return;
+        return;
 
     // ok ... file does not exists, search paths
     raydium_file_ext(ext,in);
     for(i=0;i<RAYDIUM_MAX_PATHS;i++)
-	if( raydium_path_paths[i].state && 
-	    raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
-	    {
-	    if(raydium_path_paths[i].ext[0] &&
-	       strcmp(raydium_path_paths[i].ext,ext))
-	        continue; // not the good extension
+        if( raydium_path_paths[i].state && 
+            raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
+            {
+            if(raydium_path_paths[i].ext[0] &&
+               strcmp(raydium_path_paths[i].ext,ext))
+                continue; // not the good extension
 
-	    sprintf(path,"%s/%s",raydium_path_paths[i].path,in);
-	    if(raydium_file_readable(path))
-		{
-		strcpy(out,path);
-		return;
-		}
-	    }
+            sprintf(path,"%s/%s",raydium_path_paths[i].path,in);
+            if(raydium_file_readable(path))
+                {
+                strcpy(out,path);
+                return;
+                }
+            }
 
     // ok, if we're here, the file does not exists at all, let's
     // prepare R3S job:
@@ -223,7 +223,7 @@ if(mode=='r')
 if(mode=='w')
     {
     if(raydium_file_directory_writable(".") && raydium_path_write_local_dir_allowed)
-	return;
+        return;
 
     sprintf(out,"%s/%s",raydium_path_write_current,in);
     }
@@ -266,19 +266,19 @@ if(!ok)
     {
     strcpy(path,raydium_file_home_path("data"));
     if(!raydium_file_directory_writable(path))
-	{
-	mkdir(path,0755);
-	if(!raydium_file_directory_writable(path))
-	    {
-	    ok=0;
-	    raydium_log("ERROR: path: cannot create '%s'",path);
-	    }
-	else
-	    {
-	    ok=1;
-	    raydium_log("path: created writable path '%s'",path);
-	    }
-	}
+        {
+        mkdir(path,0755);
+        if(!raydium_file_directory_writable(path))
+            {
+            ok=0;
+            raydium_log("ERROR: path: cannot create '%s'",path);
+            }
+        else
+            {
+            ok=1;
+            raydium_log("path: created writable path '%s'",path);
+            }
+        }
     else ok=1;
     }
 

@@ -31,7 +31,7 @@ int i;
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_PROPAGS;i++)
   if(raydium_network_propag[i].state && raydium_network_propag[i].type==type)
-	return i;
+        return i;
 return -1;
 }
 
@@ -123,15 +123,15 @@ if(raydium_network_propag_find(type)>=0)
     
 for(i=0;i<RAYDIUM_NETWORK_MAX_PROPAGS;i++)
     if(!raydium_network_propag[i].state)
-	{
-	raydium_network_propag[i].state=1;
-	raydium_network_propag[i].version=0;
-	raydium_network_propag[i].type=type;
-	raydium_network_propag[i].size=size;
-	raydium_network_propag[i].data=data;
-	raydium_network_netcall_add(raydium_network_propag_recv,type,1);
-	return i;	
-	}
+        {
+        raydium_network_propag[i].state=1;
+        raydium_network_propag[i].version=0;
+        raydium_network_propag[i].type=type;
+        raydium_network_propag[i].size=size;
+        raydium_network_propag[i].data=data;
+        raydium_network_netcall_add(raydium_network_propag_recv,type,1);
+        return i;       
+        }
 raydium_log("network: ERROR: no more propag' slots !");
 return -1;
 }
@@ -161,15 +161,15 @@ return gen;
 
 void raydium_network_queue_tcpid_known_add(int tcpid, int player)
 {
-	raydium_network_tcpid_i[raydium_network_tcpid_index]=tcpid; // mark this TCP-ID as "known"
-	raydium_network_tcpid_p[raydium_network_tcpid_index]=player; // ... from this player
+        raydium_network_tcpid_i[raydium_network_tcpid_index]=tcpid; // mark this TCP-ID as "known"
+        raydium_network_tcpid_p[raydium_network_tcpid_index]=player; // ... from this player
 #ifdef DEBUG_NETWORK
-	raydium_log("ACK adding tcpid=%i (player %i) to known packets",tcpid,player);
-#endif	
-	raydium_network_tcpid_index++;
+        raydium_log("ACK adding tcpid=%i (player %i) to known packets",tcpid,player);
+#endif  
+        raydium_network_tcpid_index++;
 
-	if(raydium_network_tcpid_index==RAYDIUM_NETWORK_TX_QUEUE_SIZE)
-	    raydium_network_tcpid_index=0;
+        if(raydium_network_tcpid_index==RAYDIUM_NETWORK_TX_QUEUE_SIZE)
+            raydium_network_tcpid_index=0;
 }
 
 signed char raydium_network_queue_tcpid_known(unsigned short tcpid, unsigned short player)
@@ -193,7 +193,7 @@ int i=0;
 if(type >= 0)
   for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
     if(raydium_network_netcall_type[i]==type && raydium_network_netcall_tcp[i])
-	return 1;
+        return 1;
 return 0;
 }
 
@@ -227,14 +227,14 @@ if(raydium_network_mode==RAYDIUM_NETWORK_MODE_SERVER)
     int i;
     
     for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-	if(raydium_network_client[i] && &raydium_network_client_addr[i]==to)
-	    break;
+        if(raydium_network_client[i] && &raydium_network_client_addr[i]==to)
+            break;
     
     if(i==RAYDIUM_NETWORK_MAX_CLIENTS) // not found
-	{
-	raydium_log("ERROR: server: TCP style: cannot find client");
-	return;
-	}
+        {
+        raydium_log("ERROR: server: TCP style: cannot find client");
+        return;
+        }
     e->to_player=i;
     }
 
@@ -252,10 +252,10 @@ if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT)
 else // (server)
     {
     if(player<0 || player>=RAYDIUM_NETWORK_MAX_CLIENTS)
-	{
-	raydium_log("ERROR: server: bad client id in resend queue ! SHOULD NEVER APPEND !");
-	return NULL; // eeeerk !
-	}
+        {
+        raydium_log("ERROR: server: bad client id in resend queue ! SHOULD NEVER APPEND !");
+        return NULL; // eeeerk !
+        }
     return &raydium_netwok_queue_ack_delay_server[player];
     }
 }
@@ -281,33 +281,33 @@ for(i=0;i<RAYDIUM_NETWORK_TX_QUEUE_SIZE;i++)
     
     // TCP style timeout: timeout=estimatedRTT*2
     if( now>(e->time+(*delay)*2) || e->time>now )
-	{
-	// resend packet (and do not add this packet to queue again !)
+        {
+        // resend packet (and do not add this packet to queue again !)
 #ifdef DEBUG_NETWORK
-	raydium_log("ACK re-asking: tcpid=%i",e->tcpid);
+        raydium_log("ACK re-asking: tcpid=%i",e->tcpid);
 #endif
-	raydium_network_write_notcp=1;
-	raydium_network_write(&e->to,-1,e->packet[0],e->packet);
-	raydium_network_stat_reemitted++;
-	(*delay)*=2; // Karn/Partridge TCP algo
+        raydium_network_write_notcp=1;
+        raydium_network_write(&e->to,-1,e->packet[0],e->packet);
+        raydium_network_stat_reemitted++;
+        (*delay)*=2; // Karn/Partridge TCP algo
         if((*delay)/(double)raydium_timecall_clocks_per_sec>RAYDIUM_NETWORK_ACK_DELAY_MAX)
-	    {
+            {
 #ifdef DEBUG_NETWORK
-	    raydium_log("ACK: slow network ! max ack delay reached");
+            raydium_log("ACK: slow network ! max ack delay reached");
 #endif
-	    (*delay)=raydium_timecall_clocks_per_sec*RAYDIUM_NETWORK_ACK_DELAY_MAX;
-	    }
-	e->retries_left--;
-	e->time=now;
-	if(e->retries_left==0) 
-	    {
+            (*delay)=raydium_timecall_clocks_per_sec*RAYDIUM_NETWORK_ACK_DELAY_MAX;
+            }
+        e->retries_left--;
+        e->time=now;
+        if(e->retries_left==0) 
+            {
 #ifdef DEBUG_NETWORK
-	    raydium_log("ACK: packet lost, too many retries: tcpid=%i",e->tcpid);
+            raydium_log("ACK: packet lost, too many retries: tcpid=%i",e->tcpid);
 #endif
-	    raydium_network_queue_element_init(e);
-	    raydium_network_stat_lost++;
-	    }
-	}
+            raydium_network_queue_element_init(e);
+            raydium_network_stat_lost++;
+            }
+        }
     }
 }
 
@@ -340,26 +340,26 @@ for(i=0;i<RAYDIUM_NETWORK_TX_QUEUE_SIZE;i++)
     {
     e=&raydium_network_queue[i];
     if(e->state && e->tcpid==tcpid)
-	{
-	// ACK is correct, deleting packet from queue
+        {
+        // ACK is correct, deleting packet from queue
 #ifdef DEBUG_NETWORK
-	raydium_log("ACK recv ok: tcpid=%i",tcpid);
+        raydium_log("ACK recv ok: tcpid=%i",tcpid);
 #endif
-	now=raydium_timecall_clock();
-	if(e->time<now)
-	    {
-	    unsigned long *delay;
-	    
-	    delay=raydium_network_internal_find_delay_addr(e->to_player);
-	    // Based on original TCP adaptative retransmission algorithm :
-	    *(delay)=a * (*delay) + b*(now - e->time);
+        now=raydium_timecall_clock();
+        if(e->time<now)
+            {
+            unsigned long *delay;
+            
+            delay=raydium_network_internal_find_delay_addr(e->to_player);
+            // Based on original TCP adaptative retransmission algorithm :
+            *(delay)=a * (*delay) + b*(now - e->time);
 #ifdef DEBUG_NETWORK
-	    raydium_log("ACK delay re-eval: %.2f msec (inst=%.2f msec) (client %i)",(*delay)/(double)raydium_timecall_clocks_per_sec*1000,(now - e->time)/(double)raydium_timecall_clocks_per_sec*1000,e->to_player);
-#endif	
-	    }
-	raydium_network_queue_element_init(e);	    
-	return;
-	}    
+            raydium_log("ACK delay re-eval: %.2f msec (inst=%.2f msec) (client %i)",(*delay)/(double)raydium_timecall_clocks_per_sec*1000,(now - e->time)/(double)raydium_timecall_clocks_per_sec*1000,e->to_player);
+#endif  
+            }
+        raydium_network_queue_element_init(e);      
+        return;
+        }    
     }
 raydium_network_stat_bogus_ack++;
 #ifdef DEBUG_NETWORK
@@ -434,7 +434,7 @@ return closesocket(fd);
 
 // I've no idea why some version of Dev-CPP are losing this value ...
 #ifndef FD_SETSIZE
-#define FD_SETSIZE	64
+#define FD_SETSIZE      64
 #endif
 
 signed char raydium_network_socket_is_readable(int fd)
@@ -613,7 +613,7 @@ raydium_network_connected_server[0]=0;
 if(raydium_init_cli_option("name",raydium_network_name_local))
 {
     if(strlen(raydium_network_name_local)==0)
-	raydium_log("Warning: network: --name option needs an argument");
+        raydium_log("Warning: network: --name option needs an argument");
 }
 
 if(strlen(raydium_network_name_local)==0)
@@ -696,8 +696,8 @@ raydium_network_server_broadcast_check();
 // search for outdated server slots (should isolate this in a function ?)
 for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
     if(raydium_network_server_list[i].when!=0)
-	if((time_t)raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
-	    raydium_network_server_list[i].when=0;
+        if((time_t)raydium_network_server_list[i].when+RAYDIUM_NETWORK_BEACON_DEFAULT_TTL<now)
+            raydium_network_server_list[i].when=0;
 
 len=sizeof(struct sockaddr);
 ret=recvfrom(raydium_network_socket,buff,RAYDIUM_NETWORK_PACKET_SIZE,0,&from,&len);
@@ -718,13 +718,13 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     raydium_log("ACK read (and will send): tcpid=%i type=%i",tcpid,*type);
 #endif
     if(raydium_network_queue_tcpid_known(tcpid,*id))
-	{
-	raydium_network_stat_double++;
-	dbl=1;
+        {
+        raydium_network_stat_double++;
+        dbl=1;
 #ifdef DEBUG_NETWORK
-	raydium_log("ACK double: tcpid=%i type=%i",tcpid,*type);
+        raydium_log("ACK double: tcpid=%i type=%i",tcpid,*type);
 #endif
-	}
+        }
     /*else*/ raydium_network_queue_ack_send(tcpid,&from);
      raydium_network_queue_tcpid_known_add(tcpid,buff[1]);
     }
@@ -737,79 +737,79 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     {
     if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER && 
        raydium_network_beacon_search.active)
-	{	
-	int id;
-	int dec;
-	int version;
-	char *app_or_mod;
-	char *name;
-	char *info;
-	int player_count;
-	int player_max;
-	int slot=-1;
+        {       
+        int id;
+        int dec;
+        int version;
+        char *app_or_mod;
+        char *name;
+        char *info;
+        int player_count;
+        int player_max;
+        int slot=-1;
 
-	dec=RAYDIUM_NETWORK_PACKET_OFFSET;
-	dec++; // 1st byte is useless for us (server side flag)
+        dec=RAYDIUM_NETWORK_PACKET_OFFSET;
+        dec++; // 1st byte is useless for us (server side flag)
 
-	memcpy(&id,buff+dec,sizeof(id));
-	dec+=sizeof(id);
+        memcpy(&id,buff+dec,sizeof(id));
+        dec+=sizeof(id);
 
-	// search id -> id already found -> update time -> return
-	for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
-	    if(raydium_network_server_list[i].when!=0)
-		if(raydium_network_server_list[i].id==id)
-		    {
-		    //raydium_network_server_list[i].when=now;
-		    //return(RAYDIUM_NETWORK_DATA_NONE);
-		    slot=i;
-		    break;
-		    }
-
-
-	memcpy(&version,buff+dec,sizeof(version));
-	dec+=sizeof(version);
-
-	app_or_mod=buff+dec;
-	dec+=(strlen(app_or_mod)+1);
-	
-	// else -> id not found -> test game+version
-	if(version != raydium_network_beacon_search.version ||
-	   strcmp(app_or_mod,raydium_network_beacon_search.app_or_mod))
-		return(RAYDIUM_NETWORK_DATA_NONE); // not for us ...
-
-	name=buff+dec;	
-	dec+=(strlen(name)+1);
-	
-	info=buff+dec;
-	dec+=RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN;
-
-	memcpy(&player_count,buff+dec,sizeof(player_count));
-	dec+=sizeof(player_count);
-
-	memcpy(&player_max,buff+dec,sizeof(player_max));
-	dec+=sizeof(player_max);
+        // search id -> id already found -> update time -> return
+        for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+            if(raydium_network_server_list[i].when!=0)
+                if(raydium_network_server_list[i].id==id)
+                    {
+                    //raydium_network_server_list[i].when=now;
+                    //return(RAYDIUM_NETWORK_DATA_NONE);
+                    slot=i;
+                    break;
+                    }
 
 
-	// true -> search free -> add server
-	if(slot==-1)
-	    for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
-		if(raydium_network_server_list[i].when==0)
-		    slot=i;
+        memcpy(&version,buff+dec,sizeof(version));
+        dec+=sizeof(version);
 
-	if(slot<0)
-	    {
-	    raydium_log("network: discover: too much server in this LAN ! (max=%i)",RAYDIUM_NETWORK_MAX_SERVERS);
-	    return(RAYDIUM_NETWORK_DATA_NONE);
-	    }
+        app_or_mod=buff+dec;
+        dec+=(strlen(app_or_mod)+1);
+        
+        // else -> id not found -> test game+version
+        if(version != raydium_network_beacon_search.version ||
+           strcmp(app_or_mod,raydium_network_beacon_search.app_or_mod))
+                return(RAYDIUM_NETWORK_DATA_NONE); // not for us ...
 
-	raydium_network_server_list[slot].id=id;
-	raydium_network_server_list[slot].when=now;
-	strcpy(raydium_network_server_list[slot].name,name);
-	strcpy(raydium_network_server_list[slot].ip,inet_ntoa(((struct sockaddr_in *)(&from))->sin_addr));
-	strcpy(raydium_network_server_list[slot].info,info);
-	raydium_network_server_list[slot].player_count=player_count;
-	raydium_network_server_list[slot].player_max=player_max;
-	}
+        name=buff+dec;  
+        dec+=(strlen(name)+1);
+        
+        info=buff+dec;
+        dec+=RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN;
+
+        memcpy(&player_count,buff+dec,sizeof(player_count));
+        dec+=sizeof(player_count);
+
+        memcpy(&player_max,buff+dec,sizeof(player_max));
+        dec+=sizeof(player_max);
+
+
+        // true -> search free -> add server
+        if(slot==-1)
+            for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
+                if(raydium_network_server_list[i].when==0)
+                    slot=i;
+
+        if(slot<0)
+            {
+            raydium_log("network: discover: too much server in this LAN ! (max=%i)",RAYDIUM_NETWORK_MAX_SERVERS);
+            return(RAYDIUM_NETWORK_DATA_NONE);
+            }
+
+        raydium_network_server_list[slot].id=id;
+        raydium_network_server_list[slot].when=now;
+        strcpy(raydium_network_server_list[slot].name,name);
+        strcpy(raydium_network_server_list[slot].ip,inet_ntoa(((struct sockaddr_in *)(&from))->sin_addr));
+        strcpy(raydium_network_server_list[slot].info,info);
+        raydium_network_server_list[slot].player_count=player_count;
+        raydium_network_server_list[slot].player_max=player_max;
+        }
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
  
@@ -833,7 +833,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     strcpy(raydium_network_name[i],buff+RAYDIUM_NETWORK_PACKET_OFFSET+1);
     raydium_log("network: client %i is %s",i,raydium_network_name[i]);
     if(strlen(raydium_network_name[i]))
-	raydium_network_propag_refresh_all(); // spread propags to this new client
+        raydium_network_propag_refresh_all(); // spread propags to this new client
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
 
@@ -843,13 +843,13 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
 else if(errno==EAGAIN) return(RAYDIUM_NETWORK_DATA_NONE); // POSIX
 else { 
 #ifdef WIN32
-	ret=WSAGetLastError();
-	if(ret==WSAEWOULDBLOCK) return(RAYDIUM_NETWORK_DATA_NONE); // NON POSIX (GRRrrr)
+        ret=WSAGetLastError();
+        if(ret==WSAEWOULDBLOCK) return(RAYDIUM_NETWORK_DATA_NONE); // NON POSIX (GRRrrr)
 #else
-//	perror("System");	
+//      perror("System");       
 #endif
-//	raydium_log("ERROR ! network: error receiving ! (%i)",ret);
-	return(RAYDIUM_NETWORK_DATA_ERROR);
+//      raydium_log("ERROR ! network: error receiving ! (%i)",ret);
+        return(RAYDIUM_NETWORK_DATA_ERROR);
      }
 }
 
@@ -992,8 +992,8 @@ if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
     player_max=RAYDIUM_NETWORK_MAX_CLIENTS;
     player_count=0;
     for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-	if(raydium_network_client[i])
-	    player_count++;
+        if(raydium_network_client[i])
+            player_count++;
 
     dec=raydium_network_beacon_info_offset+RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN;
     memcpy(raydium_network_beacon+dec,&player_count,sizeof(player_count));
@@ -1003,8 +1003,8 @@ if(now>last+RAYDIUM_NETWORK_BEACON_DELAY)
 
 #ifdef linux
     for(i=0;i<raydium_network_broadcast_interface_index;i++)
-	    raydium_network_write((struct sockaddr *)&raydium_network_broadcast_interfaces[i],
-	    255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
+            raydium_network_write((struct sockaddr *)&raydium_network_broadcast_interfaces[i],
+            255,RAYDIUM_NETWORK_PACKET_SERVER_BEACON,raydium_network_beacon);
 #else
     sock.sin_family=AF_INET;
     sock.sin_addr.s_addr=htonl(INADDR_BROADCAST);
@@ -1217,7 +1217,7 @@ if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_DISCOVER ||
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
     if(raydium_network_server_list[i].when!=0)
-	cpt++;
+        cpt++;
 
 return cpt;
 }
@@ -1238,19 +1238,19 @@ if( raydium_network_mode!=RAYDIUM_NETWORK_MODE_DISCOVER ||
 
 for(cpt=0,i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
     if(raydium_network_server_list[i].when!=0)
-	{
-	if(cpt==num)
-	    {
-	    slot=i;
-	    break;
-	    }
-	cpt++;
-	}
+        {
+        if(cpt==num)
+            {
+            slot=i;
+            break;
+            }
+        cpt++;
+        }
 
 if(slot<0)
     return 0;
 
-//	printf(".\n");
+//      printf(".\n");
 
 strcpy(name,raydium_network_server_list[slot].name);
 strcpy(ip,raydium_network_server_list[slot].ip);
@@ -1335,10 +1335,10 @@ int i;
 raydium_log("Network server delays:");
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
          if(raydium_network_client[i])
-	    raydium_log("player %i : %.2f msec (%s)",
-		i,
-		raydium_netwok_queue_ack_delay_server[i]/(double)raydium_timecall_clocks_per_sec*1000,
-		raydium_network_name[i]);
+            raydium_log("player %i : %.2f msec (%s)",
+                i,
+                raydium_netwok_queue_ack_delay_server[i]/(double)raydium_timecall_clocks_per_sec*1000,
+                raydium_network_name[i]);
 }
 
 void raydium_network_internal_dump(void)
@@ -1355,9 +1355,9 @@ raydium_log("Packets (err): Tx: %i erased or lost, bogus ACK: %i",raydium_networ
 
 /*
 // Test internet connection using a root dns server ... shame ? :)
-#define RAYDIUM_NETWORK_INTERNET_TEST_HOST	"198.41.0.4"
-#define RAYDIUM_NETWORK_INTERNET_TEST_PORT	53
-#define RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT	8
+#define RAYDIUM_NETWORK_INTERNET_TEST_HOST      "198.41.0.4"
+#define RAYDIUM_NETWORK_INTERNET_TEST_PORT      53
+#define RAYDIUM_NETWORK_INTERNET_TEST_TIMEOUT   8
 */
 
 signed char raydium_network_internet_test(void)
@@ -1389,7 +1389,7 @@ connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
 // dont ask me why ... (Dev-CPP's mingw needs it)
 #ifdef WIN32
 #ifndef FD_SETSIZE
-#define FD_SETSIZE	64
+#define FD_SETSIZE      64
 #endif
 #endif
 
@@ -1459,7 +1459,7 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
     len += sizeof(struct ifreq);
 
     if (ifreqp->ifr_addr.sa_family != AF_INET)
-	    continue;
+            continue;
 
     addr = *(struct sockaddr_in *)&ifreqp->ifr_addr;
     strcpy(name,ifreqp->ifr_name);
@@ -1467,44 +1467,44 @@ for (len = 0; len + (int)sizeof(struct ifreq) <= ifconf.ifc_len;)
 
     ifreq = *ifreqp;
     if (ioctl(fd, SIOCGIFFLAGS, (char *)&ifreq) == -1) 
-	{
-	raydium_log("network: linux broadcast find interfaces: ERROR");
-	perror("ioctl SIOCGIFFLAGS");
-	continue;
-	}
+        {
+        raydium_log("network: linux broadcast find interfaces: ERROR");
+        perror("ioctl SIOCGIFFLAGS");
+        continue;
+        }
 
     ifflags = ifreq.ifr_flags;
 
     // interface up ?
     if ((ifflags & IFF_UP) == 0) 
-	continue;
+        continue;
 
     // running ?
     if ((ifflags & IFF_RUNNING) == 0)
-	continue;
+        continue;
 
     // is loopback ?
     if ((ifflags & IFF_LOOPBACK) != 0) 
-	continue;
+        continue;
 
     // can broadcast ?
     if ((ifflags & IFF_BROADCAST) == 0)
-	continue;
+        continue;
     
     ifreq = *ifreqp;
 
     if (ioctl(fd, SIOCGIFBRDADDR, (char *)&ifreq) == -1) 
-	{
-	perror("ioctl SIOCGIFBRDADDR");
-	continue;
-	}
+        {
+        perror("ioctl SIOCGIFBRDADDR");
+        continue;
+        }
 
     addr = *(struct sockaddr_in *)&ifreq.ifr_addr;
 
     addr.sin_family = AF_INET;
     addr.sin_port=htons(RAYDIUM_NETWORK_BEACON_PORT);
     memcpy( &raydium_network_broadcast_interfaces[raydium_network_broadcast_interface_index],
-	    &addr,sizeof(addr)); // broadcast address
+            &addr,sizeof(addr)); // broadcast address
     strcat(msg,name);
     strcat(msg," ");
     raydium_network_broadcast_interface_index++;

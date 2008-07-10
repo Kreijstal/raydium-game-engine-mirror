@@ -51,7 +51,7 @@ if(first)
     {
     int i;
     for(i=0;i<RAYDIUM_RENDER_MAX_TEXUNITS;i++)
-	texunit_state[i]=0;    
+        texunit_state[i]=0;    
 
     first=0;
     }
@@ -85,7 +85,7 @@ if(tui>0)
  glDisable(GL_LIGHTING); 
  }
  else if(raydium_light_enabled_tag)
-	glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHTING);
 #endif 
 
  glDisable(GL_TEXTURE_GEN_S);
@@ -303,9 +303,9 @@ for(tex=1;tex<raydium_texture_index;tex++)
     if(raydium_vertex_tag[i  ] ||
        raydium_vertex_tag[i+1] ||
        raydium_vertex_tag[i+2] )
-	glColor4f(1.f,0.f,1.f,1.f);
+        glColor4f(1.f,0.f,1.f,1.f);
     else
-	glColor4f(1.f,1.f,1.f,1.f);
+        glColor4f(1.f,1.f,1.f,1.f);
 #endif    
 
     for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
@@ -317,65 +317,65 @@ for(tex=1;tex<raydium_texture_index;tex++)
     
     if(env || raydium_vertex_texture_multi[i])
     {
-	if(raydium_vertex_texture_multi[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
-	    {
-	    //glEnd(); // done by "prepare_texture_multi"
-	    glBegin(GL_TRIANGLES);
-	    multi_prepared=1;
-	    }
+        if(raydium_vertex_texture_multi[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
+            {
+            //glEnd(); // done by "prepare_texture_multi"
+            glBegin(GL_TRIANGLES);
+            multi_prepared=1;
+            }
 
-	if(env)
-	    {
+        if(env)
+            {
             for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
                 raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,raydium_vertex_texture_env[j][i]);
             //glEnd(); // done by "prepare_texture_multi"
-	    glBegin(GL_TRIANGLES);
-	    multi_prepared=1;
-	    }
+            glBegin(GL_TRIANGLES);
+            multi_prepared=1;
+            }
 
-	// THIS CODE IS DUPLICATED FOR SPEED REASON (1) (but not vertex attributes !)
-	for(j=0;j<3;j++)
-	{
-	glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
-	raydium_shader_internal_vertex_attributes(i+j);
-	glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
-	glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
-	//printf("%f %f\n",raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
-	if(raydium_fog_volumetric_enabled_tag)
+        // THIS CODE IS DUPLICATED FOR SPEED REASON (1) (but not vertex attributes !)
+        for(j=0;j<3;j++)
+        {
+        glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
+        raydium_shader_internal_vertex_attributes(i+j);
+        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
+        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
+        //printf("%f %f\n",raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
+        if(raydium_fog_volumetric_enabled_tag)
 #ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
-	    glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
 #else
-	    glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
 #endif
-	glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
-	raydium_vertex_counter++;
-	}
+        glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
+        raydium_vertex_counter++;
+        }
     }
     else
     {
-	// cancel previous multitexturing settings
-	if(multi_prepared)
-	    {
+        // cancel previous multitexturing settings
+        if(multi_prepared)
+            {
             for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
-	        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
-	    multi_prepared=0;
-	    glBegin(GL_TRIANGLES);
-	    }
+                raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
+            multi_prepared=0;
+            glBegin(GL_TRIANGLES);
+            }
 
-	// THIS CODE IS DUPLICATED FOR SPEED REASON (2) (but not vertex attributes !)
-	for(j=0;j<3;j++)
-	{
-	glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
-	glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
-	if(raydium_fog_volumetric_enabled_tag)
+        // THIS CODE IS DUPLICATED FOR SPEED REASON (2) (but not vertex attributes !)
+        for(j=0;j<3;j++)
+        {
+        glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
+        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
+        if(raydium_fog_volumetric_enabled_tag)
 #ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
-	    glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
 #else
-	    glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
 #endif
-	glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
-	raydium_vertex_counter++;
-	}
+        glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
+        raydium_vertex_counter++;
+        }
     }
   }
   glEnd();
@@ -424,11 +424,11 @@ frame++;
 switch(raydium_capture_asked)
     {
     case RAYDIUM_CAPTURE_TGA:
-	raydium_capture_frame_now(raydium_capture_filename);
-	break;
+        raydium_capture_frame_now(raydium_capture_filename);
+        break;
     case RAYDIUM_CAPTURE_JPG:
-	raydium_capture_frame_jpeg_now(raydium_capture_filename);
-	break;
+        raydium_capture_frame_jpeg_now(raydium_capture_filename);
+        break;
 }
 raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 

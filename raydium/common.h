@@ -19,8 +19,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#define RAYDIUM_MAJOR	0
-#define RAYDIUM_MINOR	706
+#define RAYDIUM_MAJOR   0
+#define RAYDIUM_MINOR   706
 
 #ifdef WIN32
 # ifdef RAYDLL
@@ -131,164 +131,164 @@
 
 #include <jpeglib.h>
 
-#define PI 					(3.1415926535f)
+#define PI                                      (3.1415926535f)
 
 // Our turn, let's define all about Raydium ...
-#define RAYDIUM_APP_SHORTNAME			"raydium"
+#define RAYDIUM_APP_SHORTNAME                   "raydium"
 
-#define RAYDIUM_MAX_VERTICES  			2000000
-#define RAYDIUM_MAX_TEXTURES    	   	256
-#define RAYDIUM_MAX_LIGHTS         	     	8
-#define RAYDIUM_MAX_NAME_LEN     	   	255
-#define RAYDIUM_MAX_DIR_LEN     	   	4096
-#define RAYDIUM_MAX_OBJECTS		  	1024
-#define RAYDIUM_MAX_OBJECT_ANIMS		20
-#define RAYDIUM_MAX_OBJECT_ANIM_INSTANCES	64
-#define RAYDIUM_MAX_TIMECALLS 			16
-#define RAYDIUM_MAX_REG_VARIABLES  		256
-#define RAYDIUM_MAX_REG_FUNCTION		256
-#define RAYDIUM_MAX_LOG_FOPEN			256
-#define RAYDIUM_MAX_CAMERA_PATHS		16
-#define RAYDIUM_MAX_CAMERA_PATH_STEPS		512
-#define RAYDIUM_MAX_VIDEO_DEVICES		4
-#define RAYDIUM_MAX_LIVE_TEXTURES		8
-#define RAYDIUM_MAX_VIDEOS			4
-#define RAYDIUM_MAX_SHADERS			32
+#define RAYDIUM_MAX_VERTICES                    2000000
+#define RAYDIUM_MAX_TEXTURES                    256
+#define RAYDIUM_MAX_LIGHTS                      8
+#define RAYDIUM_MAX_NAME_LEN                    255
+#define RAYDIUM_MAX_DIR_LEN                     4096
+#define RAYDIUM_MAX_OBJECTS                     1024
+#define RAYDIUM_MAX_OBJECT_ANIMS                20
+#define RAYDIUM_MAX_OBJECT_ANIM_INSTANCES       64
+#define RAYDIUM_MAX_TIMECALLS                   16
+#define RAYDIUM_MAX_REG_VARIABLES               256
+#define RAYDIUM_MAX_REG_FUNCTION                256
+#define RAYDIUM_MAX_LOG_FOPEN                   256
+#define RAYDIUM_MAX_CAMERA_PATHS                16
+#define RAYDIUM_MAX_CAMERA_PATH_STEPS           512
+#define RAYDIUM_MAX_VIDEO_DEVICES               4
+#define RAYDIUM_MAX_LIVE_TEXTURES               8
+#define RAYDIUM_MAX_VIDEOS                      4
+#define RAYDIUM_MAX_SHADERS                     32
 
-#define RAYDIUM_VIEWPORT_MAX 			4
+#define RAYDIUM_VIEWPORT_MAX                    4
 
-#define RAYDIUM_LIGHT_ON           	     	1
-#define RAYDIUM_LIGHT_BLINKING     	     	2
-#define RAYDIUM_LIGHT_OFF         	    	-1
+#define RAYDIUM_LIGHT_ON                        1
+#define RAYDIUM_LIGHT_BLINKING                  2
+#define RAYDIUM_LIGHT_OFF                       -1
 
-#define RAYDIUM_TEXTURE_FILTER_NONE	     	0
-#define RAYDIUM_TEXTURE_FILTER_BILINEAR	     	1
-#define RAYDIUM_TEXTURE_FILTER_TRILINEAR     	2
-#define RAYDIUM_TEXTURE_FILTER_ANISO     	3
+#define RAYDIUM_TEXTURE_FILTER_NONE             0
+#define RAYDIUM_TEXTURE_FILTER_BILINEAR         1
+#define RAYDIUM_TEXTURE_FILTER_TRILINEAR        2
+#define RAYDIUM_TEXTURE_FILTER_ANISO            3
 
-#define RAYDIUM_TEXTURE_BLEND_NONE		0
-#define RAYDIUM_TEXTURE_BLEND_BLENDED		1
-#define RAYDIUM_TEXTURE_BLEND_CUTOUT		2 
-#define RAYDIUM_TEXTURE_PHANTOM			3
+#define RAYDIUM_TEXTURE_BLEND_NONE              0
+#define RAYDIUM_TEXTURE_BLEND_BLENDED           1
+#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2 
+#define RAYDIUM_TEXTURE_PHANTOM                 3
 
-#define RAYDIUM_RENDERING_WINDOW      	    	0
-#define RAYDIUM_RENDERING_FULLSCREEN  	     	1
-#define RAYDIUM_RENDERING_NONE  	     	2
+#define RAYDIUM_RENDERING_WINDOW                0
+#define RAYDIUM_RENDERING_FULLSCREEN            1
+#define RAYDIUM_RENDERING_NONE                  2
 
-#define RAYDIUM_PROJECTION_ORTHO       	     	0
-#define RAYDIUM_PROJECTION_PERSPECTIVE 	     	1
+#define RAYDIUM_PROJECTION_ORTHO                0
+#define RAYDIUM_PROJECTION_PERSPECTIVE          1
 
-#define RAYDIUM_KEYBOARD_SIZE	       	   	256
-#define RAYDIUM_JOY_MAX_BUTTONS			16
-#define RAYDIUM_JOY_MAX_AXIS			8
+#define RAYDIUM_KEYBOARD_SIZE                   256
+#define RAYDIUM_JOY_MAX_BUTTONS                 16
+#define RAYDIUM_JOY_MAX_AXIS                    8
 
-#define RAYDIUM_NETWORK_PORT			29104
-#define RAYDIUM_NETWORK_BEACON_PORT		(RAYDIUM_NETWORK_PORT+1)
-#define RAYDIUM_NETWORK_PACKET_SIZE		512
-#define RAYDIUM_NETWORK_TIMEOUT			10
-#define RAYDIUM_NETWORK_PACKET_OFFSET		4
-#define RAYDIUM_NETWORK_MAX_CLIENTS		8
-#define RAYDIUM_NETWORK_MAX_SERVERS		32 // LAN server list
-#define RAYDIUM_NETWORK_TX_QUEUE_SIZE		128
-#define RAYDIUM_NETWORK_MAX_TRIES		8
-#define RAYDIUM_NETWORK_MAX_NETCALLS 		32
-#define RAYDIUM_NETWORK_MAX_PROPAGS 		32
-#define RAYDIUM_NETWORK_ACK_DELAY_MAX		2
-#define RAYDIUM_NETWORK_PROPAG_HEAD		sizeof(int)
-#define RAYDIUM_NETWORK_BEACON_DELAY		5
-#define RAYDIUM_NETWORK_BEACON_DEFAULT_TTL	15
-#define RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN	100
-#define RAYDIUM_NETWORK_MODE_NONE		0
-#define RAYDIUM_NETWORK_MODE_CLIENT		1
-#define RAYDIUM_NETWORK_MODE_SERVER		2
-#define RAYDIUM_NETWORK_MODE_DISCOVER		3
-//#define RAYDIUM_NETWORK_TCP			SOCK_STREAM
-#define RAYDIUM_NETWORK_UDP			SOCK_DGRAM
-#define RAYDIUM_NETWORK_DATA_OK			1
-#define RAYDIUM_NETWORK_DATA_NONE		0
-#define RAYDIUM_NETWORK_DATA_ERROR		-1
+#define RAYDIUM_NETWORK_PORT                    29104
+#define RAYDIUM_NETWORK_BEACON_PORT             (RAYDIUM_NETWORK_PORT+1)
+#define RAYDIUM_NETWORK_PACKET_SIZE             512
+#define RAYDIUM_NETWORK_TIMEOUT                 10
+#define RAYDIUM_NETWORK_PACKET_OFFSET           4
+#define RAYDIUM_NETWORK_MAX_CLIENTS             8
+#define RAYDIUM_NETWORK_MAX_SERVERS             32 // LAN server list
+#define RAYDIUM_NETWORK_TX_QUEUE_SIZE           128
+#define RAYDIUM_NETWORK_MAX_TRIES               8
+#define RAYDIUM_NETWORK_MAX_NETCALLS            32
+#define RAYDIUM_NETWORK_MAX_PROPAGS             32
+#define RAYDIUM_NETWORK_ACK_DELAY_MAX           2
+#define RAYDIUM_NETWORK_PROPAG_HEAD             sizeof(int)
+#define RAYDIUM_NETWORK_BEACON_DELAY            5
+#define RAYDIUM_NETWORK_BEACON_DEFAULT_TTL      15
+#define RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN     100
+#define RAYDIUM_NETWORK_MODE_NONE               0
+#define RAYDIUM_NETWORK_MODE_CLIENT             1
+#define RAYDIUM_NETWORK_MODE_SERVER             2
+#define RAYDIUM_NETWORK_MODE_DISCOVER           3
+//#define RAYDIUM_NETWORK_TCP                   SOCK_STREAM
+#define RAYDIUM_NETWORK_UDP                     SOCK_DGRAM
+#define RAYDIUM_NETWORK_DATA_OK                 1
+#define RAYDIUM_NETWORK_DATA_NONE               0
+#define RAYDIUM_NETWORK_DATA_ERROR              -1
 
-#define RAYDIUM_NETWORK_PACKET_DATA			1
-#define RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE	2
-#define RAYDIUM_NETWORK_PACKET_ATTRIB_UID		3
-#define RAYDIUM_NETWORK_PACKET_REQUEST_UID		4
-#define RAYDIUM_NETWORK_PACKET_INFO_NAME		5
-#define RAYDIUM_NETWORK_PACKET_ACK			6
-#define RAYDIUM_NETWORK_PACKET_SERVER_BEACON		7
-#define RAYDIUM_NETWORK_PACKET_ODE_DATA			10
-#define RAYDIUM_NETWORK_PACKET_ODE_NEWELEM		11
-#define RAYDIUM_NETWORK_PACKET_ODE_REMELEM		12
-#define RAYDIUM_NETWORK_PACKET_ODE_NIDWHO		13
-#define RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION		14
-#define	RAYDIUM_NETWORK_PACKET_BASE			20
+#define RAYDIUM_NETWORK_PACKET_DATA                     1
+#define RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE      2
+#define RAYDIUM_NETWORK_PACKET_ATTRIB_UID               3
+#define RAYDIUM_NETWORK_PACKET_REQUEST_UID              4
+#define RAYDIUM_NETWORK_PACKET_INFO_NAME                5
+#define RAYDIUM_NETWORK_PACKET_ACK                      6
+#define RAYDIUM_NETWORK_PACKET_SERVER_BEACON            7
+#define RAYDIUM_NETWORK_PACKET_ODE_DATA                 10
+#define RAYDIUM_NETWORK_PACKET_ODE_NEWELEM              11
+#define RAYDIUM_NETWORK_PACKET_ODE_REMELEM              12
+#define RAYDIUM_NETWORK_PACKET_ODE_NIDWHO               13
+#define RAYDIUM_NETWORK_PACKET_ODE_EXPLOSION            14
+#define RAYDIUM_NETWORK_PACKET_BASE                     20
 
-#define RAYDIUM_SOUND_NUM_BUFFERS 		30
-#define RAYDIUM_SOUND_NUM_SOURCES 		30
-#define RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD	0.01 // 10 ms
-#define SOUNDDATASIZE 				(4096*20)
-//#define RAYDIUM_SOUND_NUM_ENVIRONMENTS 		1
+#define RAYDIUM_SOUND_NUM_BUFFERS               30
+#define RAYDIUM_SOUND_NUM_SOURCES               30
+#define RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD      0.01 // 10 ms
+#define SOUNDDATASIZE                           (4096*20)
+//#define RAYDIUM_SOUND_NUM_ENVIRONMENTS                1
 
-#define RAYDIUM_CONSOLE_MAX_LINES		18
-#define RAYDIUM_CONSOLE_MAX_HISTORY		1000
-#define RAYDIUM_CONSOLE_FONT_SIZE		16
-#define RAYDIUM_CONSOLE_FONT_SPACER		0.5
-#define RAYDIUM_CONSOLE_MAX_COMPLETION		10
+#define RAYDIUM_CONSOLE_MAX_LINES               18
+#define RAYDIUM_CONSOLE_MAX_HISTORY             1000
+#define RAYDIUM_CONSOLE_FONT_SIZE               16
+#define RAYDIUM_CONSOLE_FONT_SPACER             0.5
+#define RAYDIUM_CONSOLE_MAX_COMPLETION          10
 
-#define RAYDIUM_TIMECALL_METHOD_NONE		0
-#define RAYDIUM_TIMECALL_METHOD_CLOCK		1
-#define RAYDIUM_TIMECALL_METHOD_DEVRTC 		2
+#define RAYDIUM_TIMECALL_METHOD_NONE            0
+#define RAYDIUM_TIMECALL_METHOD_CLOCK           1
+#define RAYDIUM_TIMECALL_METHOD_DEVRTC          2
 
-#define RAYDIUM_TIMECALL_FREQ_MIN 		100
-#define RAYDIUM_TIMECALL_FREQ_PREFERED 		8192
-#define RAYDIUM_TIMECALL_W32_MODULO_MIN		15
+#define RAYDIUM_TIMECALL_FREQ_MIN               100
+#define RAYDIUM_TIMECALL_FREQ_PREFERED          8192
+#define RAYDIUM_TIMECALL_W32_MODULO_MIN         15
 
-#define RAYDIUM_REGISTER_INT    		1
-#define RAYDIUM_REGISTER_FLOAT  		2
-#define RAYDIUM_REGISTER_STR    		3
-#define RAYDIUM_REGISTER_ICONST			4
-#define RAYDIUM_REGISTER_FCONST			5
-#define RAYDIUM_REGISTER_SCHAR			6
+#define RAYDIUM_REGISTER_INT                    1
+#define RAYDIUM_REGISTER_FLOAT                  2
+#define RAYDIUM_REGISTER_STR                    3
+#define RAYDIUM_REGISTER_ICONST                 4
+#define RAYDIUM_REGISTER_FCONST                 5
+#define RAYDIUM_REGISTER_SCHAR                  6
 
-#define RAYDIUM_PARSER_TYPE_EOF			0
-#define RAYDIUM_PARSER_TYPE_FLOAT		1
-#define RAYDIUM_PARSER_TYPE_STRING		2
-#define RAYDIUM_PARSER_TYPE_DEBUG		3
-#define RAYDIUM_PARSER_TYPE_RAWDATA		4
+#define RAYDIUM_PARSER_TYPE_EOF                 0
+#define RAYDIUM_PARSER_TYPE_FLOAT               1
+#define RAYDIUM_PARSER_TYPE_STRING              2
+#define RAYDIUM_PARSER_TYPE_DEBUG               3
+#define RAYDIUM_PARSER_TYPE_RAWDATA             4
 
-#define RAYDIUM_OSD_FONT_SIZE_FACTOR		(12.f)
+#define RAYDIUM_OSD_FONT_SIZE_FACTOR            (12.f)
 
-#define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT	(50.f)
-#define RAYDIUM_RENDER_REFLECTION_FACT		(0.1f)
+#define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT    (50.f)
+#define RAYDIUM_RENDER_REFLECTION_FACT          (0.1f)
 #define RAYDIUM_RENDER_MAX_TEXUNITS             4
 
-#define RAYDIUM_SKY_SPHERE_MAX_DETAIL 		30
-#define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL 	25
+#define RAYDIUM_SKY_SPHERE_MAX_DETAIL           30
+#define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL       25
 
-#define RAYDIUM_CAPTURE_NONE			0
-#define RAYDIUM_CAPTURE_TGA			1
-#define RAYDIUM_CAPTURE_JPG			2
+#define RAYDIUM_CAPTURE_NONE                    0
+#define RAYDIUM_CAPTURE_TGA                     1
+#define RAYDIUM_CAPTURE_JPG                     2
 
-#define RAYDIUM_DB_FILENAME			raydium_file_home_path("raydium.db")
-#define RAYDIUM_DB_TEMP				raydium_file_home_path("raydium.db.temp")
-#define RAYDIUM_DB_SEPARATOR			';'
+#define RAYDIUM_DB_FILENAME                     raydium_file_home_path("raydium.db")
+#define RAYDIUM_DB_TEMP                         raydium_file_home_path("raydium.db.temp")
+#define RAYDIUM_DB_SEPARATOR                    ';'
 
-#define RAYDIUM_HDR_SIZE			64
-#define RAYDIUM_HDR_PASS			8
-#define RAYDIUM_HDR_EYE_SPEED_DEFAULT		0.1f
+#define RAYDIUM_HDR_SIZE                        64
+#define RAYDIUM_HDR_PASS                        8
+#define RAYDIUM_HDR_EYE_SPEED_DEFAULT           0.1f
 
-#define RAYDIUM_FOG_MODE_LINEAR			GL_LINEAR
-#define RAYDIUM_FOG_MODE_EXP			GL_EXP
-#define RAYDIUM_FOG_MODE_EXP2			GL_EXP2
+#define RAYDIUM_FOG_MODE_LINEAR                 GL_LINEAR
+#define RAYDIUM_FOG_MODE_EXP                    GL_EXP
+#define RAYDIUM_FOG_MODE_EXP2                   GL_EXP2
 
-#define RAYDIUM_MAX_SPRITES	64
-#define RAYDIUM_MAX_FRAMES_PER_SPRITE	256
+#define RAYDIUM_MAX_SPRITES     64
+#define RAYDIUM_MAX_FRAMES_PER_SPRITE   256
 #define RAYDIUM_SPRITE_DEBUG 0
-#define RAYDIUM_SPRITE_MAX_GROUPS	64
+#define RAYDIUM_SPRITE_MAX_GROUPS       64
 
-__global int 	 raydium_init_argc;
+__global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
-__global char	 raydium_homedir[RAYDIUM_MAX_DIR_LEN];
+__global char    raydium_homedir[RAYDIUM_MAX_DIR_LEN];
 
 __global int     raydium_key_last;
 __global signed char    raydium_key[RAYDIUM_KEYBOARD_SIZE];
@@ -298,8 +298,8 @@ __global signed char    raydium_mouse_button[3];
 __global GLint  raydium_mouse_x;
 __global GLint  raydium_mouse_y;
 __global signed char    raydium_joy_button[RAYDIUM_JOY_MAX_BUTTONS];
-__global GLfloat 	raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS];
-__global signed char	raydium_joy_click;
+__global GLfloat        raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS];
+__global signed char    raydium_joy_click;
 __global GLfloat raydium_joy_x;
 __global GLfloat raydium_joy_y;
 __global GLfloat raydium_joy_z;
@@ -318,21 +318,21 @@ __global GLuint   raydium_texture_current_env[RAYDIUM_RENDER_MAX_TEXUNITS-1]; //
 __global signed char     raydium_texture_filter;
 __global signed char     raydium_texture_compression_available;
 __global signed char     raydium_texture_compression_enabled;
-__global GLint	  raydium_texture_size_max;
-__global GLint	  raydium_texture_units;
+__global GLint    raydium_texture_size_max;
+__global GLint    raydium_texture_units;
 __global GLfloat  raydium_texture_filter_aniso_levels;
 __global GLuint   raydium_internal_size_vector_float_4;
 __global GLuint   raydium_texture_to_replace;
 __global GLfloat  raydium_texture_used_memory;
 
 __global signed char    raydium_projection;
-__global GLfloat raydium_projection_fov;  	// perspective only
-__global GLfloat raydium_projection_near; 	// perspective & ortho
-__global GLfloat raydium_projection_far; 	// perspective & ortho
-__global GLfloat raydium_projection_left; 	// ortho only
-__global GLfloat raydium_projection_right; 	// ortho only
-__global GLfloat raydium_projection_bottom; 	// ortho only
-__global GLfloat raydium_projection_top; 	// ortho only
+__global GLfloat raydium_projection_fov;        // perspective only
+__global GLfloat raydium_projection_near;       // perspective & ortho
+__global GLfloat raydium_projection_far;        // perspective & ortho
+__global GLfloat raydium_projection_left;       // ortho only
+__global GLfloat raydium_projection_right;      // ortho only
+__global GLfloat raydium_projection_bottom;     // ortho only
+__global GLfloat raydium_projection_top;        // ortho only
 __global GLfloat raydium_background_color[4];
 
 __global signed char raydium_sky_force;
@@ -349,7 +349,7 @@ __global signed char raydium_sky_sphere_generated;
 
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
-__global signed char	 raydium_window_mode;
+__global signed char     raydium_window_mode;
 
 __global GLuint  raydium_vertex_index;
 __global GLuint  raydium_vertex_counter;
@@ -374,7 +374,7 @@ __global GLuint  *raydium_vertex_texture_multi;
 __global GLfloat *raydium_vertex_texture_multi_u;
 __global GLfloat *raydium_vertex_texture_multi_v;
 __global GLuint  *raydium_vertex_texture_env[RAYDIUM_RENDER_MAX_TEXUNITS];
-__global signed char	 *raydium_vertex_tag;
+__global signed char     *raydium_vertex_tag;
 
 __global signed char     raydium_texture_islightmap[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_nolight[RAYDIUM_MAX_TEXTURES];
@@ -385,10 +385,10 @@ __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 
-__global GLint	raydium_object_index;
-__global GLuint	raydium_object_start[RAYDIUM_MAX_OBJECTS];
-__global GLuint	raydium_object_end[RAYDIUM_MAX_OBJECTS];
-__global char	raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];
+__global GLint  raydium_object_index;
+__global GLuint raydium_object_start[RAYDIUM_MAX_OBJECTS];
+__global GLuint raydium_object_end[RAYDIUM_MAX_OBJECTS];
+__global char   raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];
 __global signed char raydium_object_anims[RAYDIUM_MAX_OBJECTS]; // number of anims
 __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each anim
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
@@ -399,32 +399,32 @@ __global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // cu
 __global GLfloat raydium_object_anim_automatic_factor[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS]; // frame automatic factor
 __global GLfloat raydium_object_anim_time_factor;
 // states
-__global int	 raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current anim
+__global int     raydium_object_anim_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current anim
 __global GLfloat raydium_object_anim_frame_current[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // current frame
-__global int	 raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last anim)
+__global int     raydium_object_anim_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last anim)
 __global GLfloat raydium_object_anim_frame_previous[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // anim switch blending (last frame)
 __global GLfloat raydium_object_anim_frame_previous_timeout[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES]; // "timer" for anim switch blending
-__global int 	 raydium_object_anim_punctually_flag[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
+__global int     raydium_object_anim_punctually_flag[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIM_INSTANCES];
 
-__global int	 raydium_render_fps;
+__global int     raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
 __global GLfloat raydium_render_lightmap_color_value[4];
-__global signed char	 raydium_render_rgb_force_tag;
-__global char	 raydium_render_displaylists_tag;
+__global signed char     raydium_render_rgb_force_tag;
+__global char    raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 __global float   raydium_render_max_fps;
 
 __global void (*raydium_callback_loop)(void); // for glutMainLoop wrapper
 
-__global signed char	 raydium_fog_enabled_tag;
-__global signed char	 raydium_fog_volumetric_enabled_tag;
-__global int		 raydium_fog_mode_value;
-__global float		 raydium_fog_far_value;
-__global float		 raydium_fog_near_value;
-__global float		 raydium_fog_density_value;
-__global GLfloat *	 raydium_fog_volumetric_array;
+__global signed char     raydium_fog_enabled_tag;
+__global signed char     raydium_fog_volumetric_enabled_tag;
+__global int             raydium_fog_mode_value;
+__global float           raydium_fog_far_value;
+__global float           raydium_fog_near_value;
+__global float           raydium_fog_density_value;
+__global GLfloat *       raydium_fog_volumetric_array;
 
-__global signed char	raydium_light_enabled_tag;
+__global signed char    raydium_light_enabled_tag;
 __global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];
 __global GLfloat raydium_light_position[RAYDIUM_MAX_LIGHTS][4];
 __global GLfloat raydium_light_color[RAYDIUM_MAX_LIGHTS][4];
@@ -441,12 +441,12 @@ __global GLfloat raydium_internal_vertex_next_nx;
 __global GLfloat raydium_internal_vertex_next_ny;
 __global GLfloat raydium_internal_vertex_next_nz;
 
-__global signed char	 raydium_frame_first_camera_pass;
-__global float	 raydium_frame_time;
+__global signed char     raydium_frame_first_camera_pass;
+__global float   raydium_frame_time;
 __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
-__global signed char	 raydium_camera_pushed;
+__global signed char     raydium_camera_pushed;
 __global GLfloat  raydium_camera_cursor_place[3];
 __global GLfloat  raydium_camera_look_at_roll;
 __global GLfloat  raydium_camera_rumble_amplitude;
@@ -454,7 +454,7 @@ __global GLfloat  raydium_camera_rumble_evolution;
 __global GLfloat  raydium_camera_rumble_remaining;
 __global GLdouble raydium_camera_gl_modelview[16];
 __global GLdouble raydium_camera_gl_projection[16];
-__global GLint	  raydium_camera_gl_viewport[4];
+__global GLint    raydium_camera_gl_viewport[4];
 __global GLfloat  raydium_camera_freemove_sensibility;
 __global GLfloat  raydium_camera_freemove_speed;
 __global GLfloat  raydium_camera_data[6];
@@ -488,13 +488,13 @@ __global raydium_Viewport raydium_viewport[RAYDIUM_VIEWPORT_MAX];
 __global int raydium_viewport_nb;
 __global int raydium_viewport_use;
 
-__global int 	raydium_network_socket;
-__global int 	raydium_network_uid;
-__global signed char	raydium_network_mode;
-__global signed char	raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
+__global int    raydium_network_socket;
+__global int    raydium_network_uid;
+__global signed char    raydium_network_mode;
+__global signed char    raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_start;
 __global struct sockaddr
-	raydium_network_client_addr[RAYDIUM_NETWORK_MAX_CLIENTS];
+        raydium_network_client_addr[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_keepalive[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global char   raydium_network_name_local[RAYDIUM_MAX_NAME_LEN];
 __global char   raydium_network_name[RAYDIUM_NETWORK_MAX_CLIENTS][RAYDIUM_MAX_NAME_LEN];
@@ -527,11 +527,11 @@ __global int raydium_network_queue_index;
 
 __global unsigned short raydium_network_tcpid_i[RAYDIUM_NETWORK_TX_QUEUE_SIZE]; // ID
 __global int            raydium_network_tcpid_p[RAYDIUM_NETWORK_TX_QUEUE_SIZE]; // Player
-__global int		raydium_network_tcpid_index;
+__global int            raydium_network_tcpid_index;
 
 __global unsigned long raydium_netwok_queue_ack_delay_client;
 __global unsigned long raydium_netwok_queue_ack_delay_server[RAYDIUM_NETWORK_MAX_CLIENTS];
-__global signed char	       raydium_network_write_notcp;
+__global signed char           raydium_network_write_notcp;
 
 typedef struct raydium_network_Propag
     {
@@ -567,33 +567,33 @@ __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 __global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
-__global float	spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
-__global int	raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
-//__global int	raydium_current_sprite=-1;
-__global int	raydium_current_sprite;
-__global float	raydium_sprite_size[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_used[RAYDIUM_MAX_SPRITES];
-__global float	raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
-__global int	raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
-__global float	raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
-__global float	raydium_sprite_time[RAYDIUM_MAX_SPRITES];
-__global float	raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_total_frames[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_group_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
-__global int	raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
-__global float	raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
-__global int	raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_collision_element_id[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
-__global int	raydium_sprite_type[RAYDIUM_MAX_SPRITES];
-__global int	raydium_sprite_status[RAYDIUM_MAX_SPRITES];
-__global char	raydium_sprite_name[RAYDIUM_MAX_SPRITES][80];
+__global float  spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
+__global int    raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
+//__global int  raydium_current_sprite=-1;
+__global int    raydium_current_sprite;
+__global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
+__global float  raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
+__global int    raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+__global float  raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
+__global float  raydium_sprite_time[RAYDIUM_MAX_SPRITES];
+__global float  raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_total_frames[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+__global int    raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
+__global float  raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
+__global int    raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_collision_element_id[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
+__global int    raydium_sprite_type[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_status[RAYDIUM_MAX_SPRITES];
+__global char   raydium_sprite_name[RAYDIUM_MAX_SPRITES][80];
 __global char   raydium_sprite_stopped[RAYDIUM_MAX_SPRITES];
 
 #ifdef linux
-#define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX	8
+#define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX 8
 __global int raydium_network_broadcast_interface_index;
 __global struct sockaddr_in raydium_network_broadcast_interfaces[RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX];
 #endif
@@ -603,14 +603,14 @@ __global ALuint  raydium_sound_source[RAYDIUM_SOUND_NUM_SOURCES];
 __global ALfloat raydium_sound_source_fade_factor[RAYDIUM_SOUND_NUM_SOURCES];
 __global char    raydium_sound_source_fade_tofile[RAYDIUM_SOUND_NUM_SOURCES][RAYDIUM_MAX_NAME_LEN];
 __global ALfloat raydium_sound_DefaultReferenceDistance;
-__global int 	 raydium_sound;
-__global int 	 raydium_sound_top_buffer;
+__global int     raydium_sound;
+__global int     raydium_sound_top_buffer;
 __global char    raydium_sound_music_buf[SOUNDDATASIZE];
 __global FILE   *raydium_sound_music_file;
 __global OggVorbis_File raydium_sound_vf;
 __global vorbis_info   *raydium_sound_ogginfo;
-__global int 	(*raydium_sound_music_eof_callback)(char *);
-__global void 	(*raydium_sound_music_changed_callback)(void);
+__global int    (*raydium_sound_music_eof_callback)(char *);
+__global void   (*raydium_sound_music_changed_callback)(void);
 
 typedef struct raydium_sound_music_Info {
     char artist[RAYDIUM_MAX_NAME_LEN];
@@ -646,7 +646,7 @@ __global GLfloat raydium_osd_ega[]=
          1.0f, 0.3f, 1.0f, // D: light purple
          1.0f, 1.0f, 0.3f, // E: light yellow
          1.0f, 1.0f, 1.0f  // F: light white
-	 };
+         };
 #else
 __global GLfloat raydium_osd_ega[48];
 #endif
@@ -662,28 +662,28 @@ __global GLfloat raydium_console_config_speed;
 __global char    raydium_console_config_texture[RAYDIUM_MAX_NAME_LEN];
 __global char    raydium_console_config_font[RAYDIUM_MAX_NAME_LEN];
 __global GLfloat raydium_console_cursor_blink;
-__global char	 raydium_console_lines[RAYDIUM_CONSOLE_MAX_LINES][RAYDIUM_MAX_NAME_LEN];
-__global int	 raydium_console_line_last;
+__global char    raydium_console_lines[RAYDIUM_CONSOLE_MAX_LINES][RAYDIUM_MAX_NAME_LEN];
+__global int     raydium_console_line_last;
 __global char    raydium_console_get_string[RAYDIUM_MAX_NAME_LEN];
 __global char    raydium_console_get_string_last[RAYDIUM_MAX_NAME_LEN];
-__global void *	 raydium_console_gets_callback;
-__global char	 raydium_console_history[RAYDIUM_CONSOLE_MAX_HISTORY][RAYDIUM_MAX_NAME_LEN];
-__global int	 raydium_console_history_index; // store
-__global int	 raydium_console_history_index_current; // user
+__global void *  raydium_console_gets_callback;
+__global char    raydium_console_history[RAYDIUM_CONSOLE_MAX_HISTORY][RAYDIUM_MAX_NAME_LEN];
+__global int     raydium_console_history_index; // store
+__global int     raydium_console_history_index_current; // user
 __global char    raydium_console_history_filename[RAYDIUM_MAX_NAME_LEN];
 
-__global int		raydium_timecall_index;
-__global signed char	raydium_timecall_method;
-__global unsigned long 	raydium_timecall_max_frequency;
-__global unsigned long 	raydium_timecall_clocks_per_sec;
-__global int           	raydium_timecall_devrtc_handle;
+__global int            raydium_timecall_index;
+__global signed char    raydium_timecall_method;
+__global unsigned long  raydium_timecall_max_frequency;
+__global unsigned long  raydium_timecall_clocks_per_sec;
+__global int            raydium_timecall_devrtc_handle;
 __global unsigned long  raydium_timecall_devrtc_clocks;
-__global void *	      	raydium_timecall_funct[RAYDIUM_MAX_TIMECALLS];
-__global GLint 		raydium_timecall_soft_call[RAYDIUM_MAX_TIMECALLS];
-__global clock_t 	raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
-__global clock_t 	raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
+__global void *         raydium_timecall_funct[RAYDIUM_MAX_TIMECALLS];
+__global GLint          raydium_timecall_soft_call[RAYDIUM_MAX_TIMECALLS];
+__global clock_t        raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
+__global clock_t        raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
 __global int            raydium_timecall_w32_divmodulo;
-__global unsigned long 	raydium_timecall_debug_movie;
+__global unsigned long  raydium_timecall_debug_movie;
 
 __global signed char raydium_shadow_tag;
 __global signed char raydium_shadow_rendering;

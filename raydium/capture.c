@@ -83,16 +83,16 @@ strcpy(raydium_capture_filename,filename);
 
 void raydium_capture_frame_jpeg_now(char *filename)
 {
-JSAMPLE * image_buffer;	/* Points to large array of R,G,B-order data */
-int image_height;	/* Number of rows in image */
-int image_width;		/* Number of columns in image */
+JSAMPLE * image_buffer; /* Points to large array of R,G,B-order data */
+int image_height;       /* Number of rows in image */
+int image_width;                /* Number of columns in image */
 int quality;
 
 struct jpeg_compress_struct cinfo;
 struct jpeg_error_mgr jerr;
-FILE * outfile;		/* target file */
-JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
-int row_stride;		/* physical row width in image buffer */
+FILE * outfile;         /* target file */
+JSAMPROW row_pointer[1];        /* pointer to JSAMPLE row[s] */
+int row_stride;         /* physical row width in image buffer */
 int size;
 
 cinfo.err = jpeg_std_error(&jerr);
@@ -111,17 +111,17 @@ quality=DEBUG_JPEG_QUALITY;
 
 jpeg_stdio_dest(&cinfo, outfile);
 
-cinfo.image_width = image_width; 	/* image width and height, in pixels */
+cinfo.image_width = image_width;        /* image width and height, in pixels */
 cinfo.image_height = image_height;
-cinfo.input_components = 3;		/* # of color components per pixel */
-cinfo.in_color_space = JCS_RGB; 	/* colorspace of input image */
+cinfo.input_components = 3;             /* # of color components per pixel */
+cinfo.in_color_space = JCS_RGB;         /* colorspace of input image */
 
 jpeg_set_defaults(&cinfo);
 jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
 
 jpeg_start_compress(&cinfo, TRUE);
 
-row_stride = image_width * 3;	/* JSAMPLEs per row in image_buffer */
+row_stride = image_width * 3;   /* JSAMPLEs per row in image_buffer */
 
 while (cinfo.next_scanline < cinfo.image_height) 
     {
@@ -146,14 +146,14 @@ struct tm *ptm;
 time(&rawtime);
 ptm=gmtime(&rawtime); // localtime() ?
 sprintf(dest,"raycap%i-%02i-%02i-%02i%02i%02i-%02i.%s",
-	ptm->tm_year+1900,
-	ptm->tm_mon+1,
-	ptm->tm_mday,
-	ptm->tm_hour,
-	ptm->tm_min,
-	ptm->tm_sec,
-	cpt,
-	format);
+        ptm->tm_year+1900,
+        ptm->tm_mon+1,
+        ptm->tm_mday,
+        ptm->tm_hour,
+        ptm->tm_min,
+        ptm->tm_sec,
+        cpt,
+        format);
 cpt++;
 }
 

@@ -28,19 +28,19 @@
 #include <X11/Xm/MwmUtil.h>
 #else
 /* bit definitions for MwmHints.flags */
-#define MWM_HINTS_FUNCTIONS	(1L << 0)
-#define MWM_HINTS_DECORATIONS	(1L << 1)
-#define MWM_HINTS_INPUT_MODE	(1L << 2)
-#define MWM_HINTS_STATUS	(1L << 3)
+#define MWM_HINTS_FUNCTIONS     (1L << 0)
+#define MWM_HINTS_DECORATIONS   (1L << 1)
+#define MWM_HINTS_INPUT_MODE    (1L << 2)
+#define MWM_HINTS_STATUS        (1L << 3)
 
 /* bit definitions for MwmHints.decorations */
-#define MWM_DECOR_ALL		(1L << 0)
-#define MWM_DECOR_BORDER	(1L << 1)
-#define MWM_DECOR_RESIZEH	(1L << 2)
-#define MWM_DECOR_TITLE		(1L << 3)
-#define MWM_DECOR_MENU		(1L << 4)
-#define MWM_DECOR_MINIMIZE	(1L << 5)
-#define MWM_DECOR_MAXIMIZE	(1L << 6)
+#define MWM_DECOR_ALL           (1L << 0)
+#define MWM_DECOR_BORDER        (1L << 1)
+#define MWM_DECOR_RESIZEH       (1L << 2)
+#define MWM_DECOR_TITLE         (1L << 3)
+#define MWM_DECOR_MENU          (1L << 4)
+#define MWM_DECOR_MINIMIZE      (1L << 5)
+#define MWM_DECOR_MAXIMIZE      (1L << 6)
 
 typedef struct
 {
@@ -51,7 +51,7 @@ typedef struct
   unsigned long status      ;
 } PropMotifWmHints ;
 
-#define PROP_MOTIF_WM_HINTS_ELEMENTS	5
+#define PROP_MOTIF_WM_HINTS_ELEMENTS    5
 
 #endif
 
@@ -144,14 +144,14 @@ XColor bcol ;
 switch(cursor)
     {
     case GLUT_CURSOR_LEFT_ARROW:
-	currCursor = XC_left_ptr;
-	XDefineCursor( currDisplay, currHandle,
+        currCursor = XC_left_ptr;
+        XDefineCursor( currDisplay, currHandle,
                  XCreateFontCursor ( currDisplay, currCursor ) ) ;
-	_glutMouseVisible=1;
-	break;
-    case GLUT_CURSOR_NONE:	
+        _glutMouseVisible=1;
+        break;
+    case GLUT_CURSOR_NONE:      
     default:
-	memset(blank_cursor,0,16*16);
+        memset(blank_cursor,0,16*16);
       
         pix = XCreateBitmapFromData ( currDisplay,
                                       rootWindow,
@@ -160,7 +160,7 @@ switch(cursor)
                         XCreatePixmapCursor ( currDisplay,
                             pix, pix, &bcol, &bcol, 0, 0 ) ) ;
         XFreePixmap   ( currDisplay, pix ) ;
-	_glutMouseVisible=1;
+        _glutMouseVisible=1;
     }
 }
 
@@ -321,15 +321,15 @@ void pwInit ( int x, int y, int w, int h, int multisample,
     else
     {
     if(raydium_init_cli_option("xinerama-screen",str))
-	selected=atoi(str);
+        selected=atoi(str);
     else
-	selected=0;
+        selected=0;
 
     if(selected<0 || selected >=num_screens)
-	{
-	raydium_log("invalid screen id !");
-	selected=0;
-	}
+        {
+        raydium_log("invalid screen id !");
+        selected=0;
+        }
     raydium_log("using Xinerama screen %i",selected);
 
     x+=screens[selected].x_org;
@@ -398,7 +398,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   attribs.event_mask = StructureNotifyMask | ExposureMask         |
                        ButtonPressMask     | ButtonReleaseMask    |
                        KeyPressMask        | KeyReleaseMask       |
-		       EnterWindowMask     | LeaveWindowMask      |
+                       EnterWindowMask     | LeaveWindowMask      |
                        PointerMotionMask   | ButtonMotionMask     |
                        VisibilityChangeMask ;
 
@@ -470,7 +470,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   XStringListToTextProperty ( (char **) &title, 1, &textProperty ) ;
 
   XSetWMProperties ( currDisplay, currHandle,
-	                  &textProperty, &textProperty, 0, 0,
+                          &textProperty, &textProperty, 0, 0,
                           &sizeHints, &wmHints, NULL ) ;
   XSetWMProtocols  ( currDisplay, currHandle, &delWinAtom  , 1 );
   XMapWindow       ( currDisplay, currHandle ) ;
@@ -499,7 +499,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 #endif
   XGetScreenSaver(currDisplay, &timeout, &interval, &prefer_blank, &allow_exp);
     if (timeout)
-	XSetScreenSaver(currDisplay, 0, interval, prefer_blank, allow_exp);
+        XSetScreenSaver(currDisplay, 0, interval, prefer_blank, allow_exp);
 }
 
 
@@ -542,21 +542,21 @@ void myglutGetEvents (void)
           glXWaitX    () ;
 
           if (glutReshapeFuncCB)
-    	    glutReshapeFuncCB(size[0], size[1]);
+            glutReshapeFuncCB(size[0], size[1]);
         }
-	break;
+        break;
 
       case MappingNotify:
-	XRefreshKeyboardMapping ( (XMappingEvent *) &event ) ;
-	break;
+        XRefreshKeyboardMapping ( (XMappingEvent *) &event ) ;
+        break;
 
       case EnterNotify     :
         if(XineramaAndFullscreenFocusHack)
-    	    {
-	    XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
-	    XRaiseWindow(currDisplay,currHandle);
-	    }
-	break;
+            {
+            XSetInputFocus(currDisplay,currHandle,RevertToParent,CurrentTime);
+            XRaiseWindow(currDisplay,currHandle);
+            }
+        break;
       case LeaveNotify     :
       case VisibilityNotify:
       case Expose          : break ;
@@ -588,10 +588,10 @@ void myglutGetEvents (void)
         result = -1 ;
 
         if( len > 0 )
-	  result = keySym;
+          result = keySym;
         else
         {
-	special=1;
+        special=1;
           switch( keySym )
           {
             case XK_F1:     result = GLUT_KEY_F1;     break;
@@ -607,16 +607,16 @@ void myglutGetEvents (void)
             case XK_F11:    result = GLUT_KEY_F11;    break;
             case XK_F12:    result = GLUT_KEY_F12;    break;
 
-	    case XK_KP_Left:
+            case XK_KP_Left:
             case XK_Left:   result = GLUT_KEY_LEFT;   break;
 
-	    case XK_KP_Right:
+            case XK_KP_Right:
             case XK_Right:  result = GLUT_KEY_RIGHT;  break;
 
-	    case XK_KP_Up:
+            case XK_KP_Up:
             case XK_Up:     result = GLUT_KEY_UP;     break;
 
-	    case XK_KP_Down:
+            case XK_KP_Down:
             case XK_Down:   result = GLUT_KEY_DOWN;   break;
 
             case XK_KP_Prior:
@@ -632,36 +632,36 @@ void myglutGetEvents (void)
           }
         }
 
-	if(result!=-1)
-	    {
-	    // check autorepeat with current KeyRelease and next event
-	    if (special && XEventsQueued(currDisplay, QueuedAfterReading))
-	    {
-	    XEvent ahead;
-	    XPeekEvent(currDisplay, &ahead);
-	    if (ahead.type == KeyPress && event.type == KeyRelease
-	        && ahead.xkey.window == event.xkey.window
-	        && ahead.xkey.keycode == event.xkey.keycode
-	        && ahead.xkey.time == event.xkey.time) 
-		{
-		// repeating key. Discard event.
-		break;
-		}
-	    }
+        if(result!=-1)
+            {
+            // check autorepeat with current KeyRelease and next event
+            if (special && XEventsQueued(currDisplay, QueuedAfterReading))
+            {
+            XEvent ahead;
+            XPeekEvent(currDisplay, &ahead);
+            if (ahead.type == KeyPress && event.type == KeyRelease
+                && ahead.xkey.window == event.xkey.window
+                && ahead.xkey.keycode == event.xkey.keycode
+                && ahead.xkey.time == event.xkey.time) 
+                {
+                // repeating key. Discard event.
+                break;
+                }
+            }
 
-	    // special down
-	    if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !raydium_key[result])
-		glutSpecialFuncCB(result,event.xkey.x, event.xkey.y);
+            // special down
+            if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !raydium_key[result])
+                glutSpecialFuncCB(result,event.xkey.x, event.xkey.y);
 
-	    // special up
-	    if(special && updown==GLUT_UP && glutSpecialUpFuncCB && raydium_key[result])
-		glutSpecialUpFuncCB(result,event.xkey.x, event.xkey.y);
+            // special up
+            if(special && updown==GLUT_UP && glutSpecialUpFuncCB && raydium_key[result])
+                glutSpecialUpFuncCB(result,event.xkey.x, event.xkey.y);
 
-	    // normal
-	    if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
-		glutKeyboardFuncCB(result,event.xkey.x, event.xkey.y);
-	    
-	    }
+            // normal
+            if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
+                glutKeyboardFuncCB(result,event.xkey.x, event.xkey.y);
+            
+            }
 
         break ;
     }

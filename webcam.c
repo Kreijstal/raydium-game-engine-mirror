@@ -51,28 +51,28 @@ void bresenham(int x1, int y1, int x2, int y2, unsigned char r, unsigned char g,
 
   if (dy>dx) 
   {
-	temp=dx;
-	dx=dy;
-	dy=temp;
-	troca=1;
+        temp=dx;
+        dx=dy;
+        dy=temp;
+        troca=1;
   }
   else
   {
-	troca=0;
+        troca=0;
   }
 
   e=2*dy-dx;
 
   for (i=1; i<=dx; i++)
   {  
-	set_pixel(x,y,r,g,b,img);
+        set_pixel(x,y,r,g,b,img);
   
     while (e>=0) 
     {
-	if (troca==1)
-	  x=x+s1;
-	else
-	  y=y+s2;
+        if (troca==1)
+          x=x+s1;
+        else
+          y=y+s2;
   
       e=e-2*dx;
     }
@@ -80,7 +80,7 @@ void bresenham(int x1, int y1, int x2, int y2, unsigned char r, unsigned char g,
     if (troca==1)
         y=y+s2;
     else
-	x=x+s1;
+        x=x+s1;
 
   e=e+2*dy;
 
@@ -139,12 +139,12 @@ for(y=0;y<ty;y++)
 
 
     if(j>max)
-	{
-	max=j;
-	where=i;
-	wherex=x/(float)tx;
-	wherey=y/(float)ty;
-	}
+        {
+        max=j;
+        where=i;
+        wherex=x/(float)tx;
+        wherey=y/(float)ty;
+        }
     }
 
 if(where>=0)

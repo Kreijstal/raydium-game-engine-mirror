@@ -17,48 +17,48 @@ float delta_y=0.01;
 
 int switchgravity(void)
 {
-	spritegravity=spritegravity?0:1;
-	raydium_ode_element_gravity (raydium_sprite_object_get(spriteid), spritegravity);
-	return spritegravity;
+        spritegravity=spritegravity?0:1;
+        raydium_ode_element_gravity (raydium_sprite_object_get(spriteid), spritegravity);
+        return spritegravity;
 }
 
 void display(void)
 {
 int moving=0;
-raydium_clear_frame();	
+raydium_clear_frame();  
 raydium_joy_key_emul();
 
 if(raydium_key_last==1027)
     exit(0);
     
 if(raydium_key_last==1000+'d')
-	debug=debug?0:1;
-	
+        debug=debug?0:1;
+        
 if(raydium_key_last==1000+'g')
-	switchgravity();
+        switchgravity();
 if(raydium_key[GLUT_KEY_UP])
 {
-	if(raydium_sprite_group_current[spriteid]!=5)raydium_sprite_group_change(spriteid,5);
-	raydium_sprite_move_relative(spriteid,-delta_x,0,0);
-	moving=1;
+        if(raydium_sprite_group_current[spriteid]!=5)raydium_sprite_group_change(spriteid,5);
+        raydium_sprite_move_relative(spriteid,-delta_x,0,0);
+        moving=1;
 }
 if(raydium_key[GLUT_KEY_DOWN])
 {
-	if(raydium_sprite_group_current[spriteid]!=2)raydium_sprite_group_change(spriteid,2);
-	raydium_sprite_move_relative(spriteid,delta_x,0,0);
-	moving=1;
+        if(raydium_sprite_group_current[spriteid]!=2)raydium_sprite_group_change(spriteid,2);
+        raydium_sprite_move_relative(spriteid,delta_x,0,0);
+        moving=1;
 }
 if(raydium_key[GLUT_KEY_LEFT])
 {
-	if(raydium_sprite_group_current[spriteid]!=3)raydium_sprite_group_change(spriteid,3);
-	raydium_sprite_move_relative(spriteid,0,-delta_y,0);
-	moving=1;
+        if(raydium_sprite_group_current[spriteid]!=3)raydium_sprite_group_change(spriteid,3);
+        raydium_sprite_move_relative(spriteid,0,-delta_y,0);
+        moving=1;
 }
 if(raydium_key[GLUT_KEY_RIGHT])
 {
-	if(raydium_sprite_group_current[spriteid]!=4)raydium_sprite_group_change(spriteid,4);
-	raydium_sprite_move_relative(spriteid,0,delta_y,0);
-	moving=1;
+        if(raydium_sprite_group_current[spriteid]!=4)raydium_sprite_group_change(spriteid,4);
+        raydium_sprite_move_relative(spriteid,0,delta_y,0);
+        moving=1;
 }
 if(!moving) if(raydium_sprite_group_current[spriteid]!=1)raydium_sprite_group_change(spriteid,1);
 

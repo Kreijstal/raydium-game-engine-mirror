@@ -50,112 +50,112 @@ send(fd,buffer,strlen(buffer),0);
 /* this is a child web server process, so we can exit on errors */
 void raydium_web_request(int fd)
 {
-	int j, file_fd, buflen, len;
-	long i, ret;
-	char * fstr;
-	static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
-	static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
-	signed char (*handler)(char *,char *, int);
+        int j, file_fd, buflen, len;
+        long i, ret;
+        char * fstr;
+        static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
+        static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
+        signed char (*handler)(char *,char *, int);
     
     ret=recv(fd,buffer,RAYDIUM_WEB_BUFSIZE,0);
     
     if(ret == 0 || ret == -1)
-	    {
-	    /* read failure stop now */
+            {
+            /* read failure stop now */
         perror("read");
-	    raydium_web_answer("error: Failed to read browser request",fd);
-	    return;
-	    }
+            raydium_web_answer("error: Failed to read browser request",fd);
+            return;
+            }
 
-	if(ret > 0 && ret < RAYDIUM_WEB_BUFSIZE)	/* return code is valid chars */
-	    buffer[ret]=0;				/* terminate the buffer */
-	else 
-	    buffer[0]=0;
+        if(ret > 0 && ret < RAYDIUM_WEB_BUFSIZE)        /* return code is valid chars */
+            buffer[ret]=0;                              /* terminate the buffer */
+        else 
+            buffer[0]=0;
 
-	for(i=0;i<ret;i++)	/* remove CR and LF characters */
-	  if(buffer[i] == '\r' || buffer[i] == '\n')
-	    buffer[i]='*';
+        for(i=0;i<ret;i++)      /* remove CR and LF characters */
+          if(buffer[i] == '\r' || buffer[i] == '\n')
+            buffer[i]='*';
 
-	raydium_log("web: request from client ...");
+        raydium_log("web: request from client ...");
 
-	if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
-	    {
-	    raydium_web_answer("error: Only simple GET operation supported",fd);
-	    return;
-	    }
+        if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
+            {
+            raydium_web_answer("error: Only simple GET operation supported",fd);
+            return;
+            }
 
-	for(i=4;i<RAYDIUM_WEB_BUFSIZE;i++) 
-	{ 
-	/* null terminate after the second space to ignore extra stuff */
-	if(buffer[i] == ' ')
-	    {
-	    /* string is "GET URL " +lots of other stuff */
-	    buffer[i] = 0;
-	    break;
-	    }
-	}
+        for(i=4;i<RAYDIUM_WEB_BUFSIZE;i++) 
+        { 
+        /* null terminate after the second space to ignore extra stuff */
+        if(buffer[i] == ' ')
+            {
+            /* string is "GET URL " +lots of other stuff */
+            buffer[i] = 0;
+            break;
+            }
+        }
 
-	for(j=0;j<i-1;j++) 	/* check for illegal parent directory use .. */
-	  if(buffer[j] == '.' && buffer[j+1] == '.')
-	    {
-	    raydium_web_answer("error: Invalid path",fd);
-	    return;
-	    }
+        for(j=0;j<i-1;j++)      /* check for illegal parent directory use .. */
+          if(buffer[j] == '.' && buffer[j+1] == '.')
+            {
+            raydium_web_answer("error: Invalid path",fd);
+            return;
+            }
 
-	if( !strncmp(&buffer[0],"GET /\0",6) || !strncmp(&buffer[0],"get /\0",6) ) /* convert no filename to index file */
-	    {
-	    char msg[RAYDIUM_MAX_NAME_LEN];
-	    sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
-	    raydium_web_answer(msg,fd);
-	    return;
-	    }
+        if( !strncmp(&buffer[0],"GET /\0",6) || !strncmp(&buffer[0],"get /\0",6) ) /* convert no filename to index file */
+            {
+            char msg[RAYDIUM_MAX_NAME_LEN];
+            sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
+            raydium_web_answer(msg,fd);
+            return;
+            }
 
-	/* work out the file type and check we support it */
-	buflen=strlen(buffer);
-	fstr = (char *)0;
-	handler=NULL;
-	for(i=0;i<raydium_web_extension_count;i++) 
-	    {
-	    len = strlen(raydium_web_extensions[i].ext);
-	    if( !strncmp(&buffer[buflen-len], raydium_web_extensions[i].ext, len))
-		{
-		fstr=raydium_web_extensions[i].filetype;
-		handler=raydium_web_extensions[i].handler;
-		break;
-		}
-	    }
-
-
-	if(fstr == 0)
-	    {
-	    raydium_web_answer("error: Invalid target request",fd);
-	    return;
-	    }
+        /* work out the file type and check we support it */
+        buflen=strlen(buffer);
+        fstr = (char *)0;
+        handler=NULL;
+        for(i=0;i<raydium_web_extension_count;i++) 
+            {
+            len = strlen(raydium_web_extensions[i].ext);
+            if( !strncmp(&buffer[buflen-len], raydium_web_extensions[i].ext, len))
+                {
+                fstr=raydium_web_extensions[i].filetype;
+                handler=raydium_web_extensions[i].handler;
+                break;
+                }
+            }
 
 
-	if(handler)
-	    {
-	    answer[0]=0;
-	    if(!handler(&buffer[5],answer,RAYDIUM_WEB_BUFSIZE))
-		{
-		raydium_web_answer("error: Handler denied this request",fd);
-		return;
-		}
-	    
-	    // if there's no filetype, use web_answer
-	    if(!strlen(fstr))
-		raydium_web_answer(answer,fd);
-	    // else let the user control the whole output
-	    else
-		{
-		// WARNING: do not change "Type: message" header offset !
-		// See raydium_web_client_get() otherwise.
-		sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
-		send(fd,buffer,strlen(buffer),0);
-		send(fd,answer,strlen(answer),0);
-		}
-	    return;
-	    }
+        if(fstr == 0)
+            {
+            raydium_web_answer("error: Invalid target request",fd);
+            return;
+            }
+
+
+        if(handler)
+            {
+            answer[0]=0;
+            if(!handler(&buffer[5],answer,RAYDIUM_WEB_BUFSIZE))
+                {
+                raydium_web_answer("error: Handler denied this request",fd);
+                return;
+                }
+            
+            // if there's no filetype, use web_answer
+            if(!strlen(fstr))
+                raydium_web_answer(answer,fd);
+            // else let the user control the whole output
+            else
+                {
+                // WARNING: do not change "Type: message" header offset !
+                // See raydium_web_client_get() otherwise.
+                sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
+                send(fd,buffer,strlen(buffer),0);
+                send(fd,answer,strlen(answer),0);
+                }
+            return;
+            }
 
 
 // POSIX layer, hmmm ?
@@ -165,24 +165,24 @@ void raydium_web_request(int fd)
 #define _RAYDIUM_FILE_MODE O_RDONLY
 #endif
 
-	if(( file_fd = open(&buffer[5],_RAYDIUM_FILE_MODE)) == -1) /* open the file for reading */
-	    {
-	    raydium_web_answer("error: Not found",fd);
-	    return;
-	    }
+        if(( file_fd = open(&buffer[5],_RAYDIUM_FILE_MODE)) == -1) /* open the file for reading */
+            {
+            raydium_web_answer("error: Not found",fd);
+            return;
+            }
 
 #undef _RAYDIUM_FILE_MODE
 
-	raydium_log("web: ... sending '%s'",&buffer[5]);
+        raydium_log("web: ... sending '%s'",&buffer[5]);
 
-	sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
-	send(fd,buffer,strlen(buffer),0);
+        sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
+        send(fd,buffer,strlen(buffer),0);
 
-	/* send file in 8KB block - last block may be smaller */
-	while (	(ret = read(file_fd, buffer, RAYDIUM_WEB_BUFSIZE)) > 0 )
-	    {
-    	    send(fd,buffer,ret,0);
-	    }
+        /* send file in 8KB block - last block may be smaller */
+        while ( (ret = read(file_fd, buffer, RAYDIUM_WEB_BUFSIZE)) > 0 )
+            {
+            send(fd,buffer,ret,0);
+            }
 }
 
 void raydium_web_start(char *title)
@@ -196,7 +196,7 @@ if(raydium_web_active)
     }
 
 raydium_log("web: starting Raydium HTTP server on port %i",RAYDIUM_NETWORK_PORT);
-	
+        
 if((raydium_web_listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
     {
     raydium_log("web: error: socket failed");
@@ -271,9 +271,9 @@ BODY {color: #424242; font-family: Verdana,Arial,Helvetica,sans-serif,monospace;
 A.blk {color: black;}\
 A {color: #F19137;}\
 A:HOVER {color: #227CBF;}\
-.topbanner {background-color: #FFCC00;	border: 0; border-bottom: 1px dashed #5E5E5E; text-align: right;margin: 0; height: 15px; font-size: x-small; padding: 0;}\
+.topbanner {background-color: #FFCC00;  border: 0; border-bottom: 1px dashed #5E5E5E; text-align: right;margin: 0; height: 15px; font-size: x-small; padding: 0;}\
 .topbanner A {color: Black;}\
-.topbanner A:HOVER {color: #F19137;	text-decoration: none;}\
+.topbanner A:HOVER {color: #F19137;     text-decoration: none;}\
 .topbanner UL {list-style: none; border: 0; margin: 0;}\
 .topbanner LI {display: inline; margin: 3px;}\
 #contenu {margin: 0 10%% 0 170px; position: absolute; left:5px; top: 45px; width: 800px;}\
@@ -391,7 +391,7 @@ if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <0)
     return 0;
     }
 
-sprintf(req,"GET /%s \r\n",filename);			
+sprintf(req,"GET /%s \r\n",filename);                   
 send(sockfd,req,strlen(req),0);
 
 chunk=0;
@@ -399,61 +399,61 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
     {
     data=buffer;
     if(chunk==0)
-	{
-	int x;
-	//check: "HTTP/1.x 200 OK"
-	if(buffer[9]!='2' || buffer[10]!='0' || buffer[11]!='0')
-	    {
-	    buffer[12]=0;
-	    raydium_log("web: client: error: server said %s",buffer);
-	    raydium_network_socket_close(sockfd);
-	    return 0;
-	    }
+        {
+        int x;
+        //check: "HTTP/1.x 200 OK"
+        if(buffer[9]!='2' || buffer[10]!='0' || buffer[11]!='0')
+            {
+            buffer[12]=0;
+            raydium_log("web: client: error: server said %s",buffer);
+            raydium_network_socket_close(sockfd);
+            return 0;
+            }
 
-	// is this real data or an simple message from Raydium webserver ?
-	// See "Type" header here :
-	// "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nType: message\r\n\r\n"
-	strncpy(req,buffer,60);
-	req[55]=0;
-	if(!strcmp(req+42,"Type: message"))
-	    {
-	    raydium_log("web: client: error: no data, this is a server message (not found ?)");
-	    raydium_network_socket_close(sockfd);
-	    return 0;
-	    }
+        // is this real data or an simple message from Raydium webserver ?
+        // See "Type" header here :
+        // "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nType: message\r\n\r\n"
+        strncpy(req,buffer,60);
+        req[55]=0;
+        if(!strcmp(req+42,"Type: message"))
+            {
+            raydium_log("web: client: error: no data, this is a server message (not found ?)");
+            raydium_network_socket_close(sockfd);
+            return 0;
+            }
 
-	// ok, now search for \r\n\r\n	
-	for(x=12;x<i;x++)
-	    if(buffer[x-3]=='\r' && 
-	       buffer[x-2]=='\n' && 
-	       buffer[x-1]=='\r' && 
-	       buffer[x-0]=='\n')
-	        break;
-	
-	if(x==i)
-	    {
-	    raydium_log("web: client: error: cannot found header end");
-	    raydium_network_socket_close(sockfd);
-	    return 0;
-	    }
-	// found, adjust offset 1 byte after
-	x++;	
-	data+=x;
-	i-=x;
-	
-	fp=fopen(RAYDIUM_WEB_CLIENT_TEMP,"wb");
-	if(!fp)
-	    {
-	    raydium_log("web: client: error: cannot create temporary file");
-	    raydium_network_socket_close(sockfd);
-	    return 0;
-	    }	
-	}
+        // ok, now search for \r\n\r\n  
+        for(x=12;x<i;x++)
+            if(buffer[x-3]=='\r' && 
+               buffer[x-2]=='\n' && 
+               buffer[x-1]=='\r' && 
+               buffer[x-0]=='\n')
+                break;
+        
+        if(x==i)
+            {
+            raydium_log("web: client: error: cannot found header end");
+            raydium_network_socket_close(sockfd);
+            return 0;
+            }
+        // found, adjust offset 1 byte after
+        x++;    
+        data+=x;
+        i-=x;
+        
+        fp=fopen(RAYDIUM_WEB_CLIENT_TEMP,"wb");
+        if(!fp)
+            {
+            raydium_log("web: client: error: cannot create temporary file");
+            raydium_network_socket_close(sockfd);
+            return 0;
+            }   
+        }
 
     fwrite(data,i,1,fp);
     chunk++;
     }
-			
+                        
 fclose(fp);
 raydium_network_socket_close(sockfd);
 
@@ -465,11 +465,11 @@ if(raydium_file_sum_simple_mode(complete,"rbl")!=
     {    
     unlink(complete);
     if(rename(RAYDIUM_WEB_CLIENT_TEMP,complete)==-1)
-	{
-	raydium_log("web: client: cannot rename downloaded file !");
-	perror("rename");
-	return 0;
-	}
+        {
+        raydium_log("web: client: cannot rename downloaded file !");
+        perror("rename");
+        return 0;
+        }
     raydium_log("web: client: file '%s': download ok",filename);
     }
 else

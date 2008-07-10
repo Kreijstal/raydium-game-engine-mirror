@@ -9,8 +9,8 @@ char *title="CQFD Corp. Mania2";
 #include "raydium/index.c"
 #include "mania.h"
 
-#define POP_MODE_ELEM	1
-#define POP_MODE_BOX	2
+#define POP_MODE_ELEM   1
+#define POP_MODE_BOX    2
 
 #ifdef WIN32
 #define MANIA_BINARY "mania_drive.exe"
@@ -39,7 +39,7 @@ int pop_mode=POP_MODE_ELEM;
 signed char view_glue=0;
 
 
-int n_boxpresets=0;	
+int n_boxpresets=0;     
 Box boxpreset[MAX_ELEMS];
 
 char current_track[RAYDIUM_MAX_NAME_LEN];
@@ -151,7 +151,7 @@ ret=system(str);
 if(ret!=0)
     {
     raydium_log("CANNOT TEST MNI TRACK FROM '%s'",mni);
-    }		
+    }           
 build_gui_access(NULL);
 }
 
@@ -386,21 +386,21 @@ fprintf(fp,"d %s\n",tdata);
 for(i=0;i<MAX_ELEMS;i++)
   if(grid[i].state)
     fprintf(fp,"g %f %f %f %i %i %s\n",grid[i].x,
-				     grid[i].y,
-				     grid[i].z,
-				     grid[i].rot,
-				     grid[i].flags,
-				     raydium_object_name[grid[i].obj]);
+                                     grid[i].y,
+                                     grid[i].z,
+                                     grid[i].rot,
+                                     grid[i].flags,
+                                     raydium_object_name[grid[i].obj]);
 
 for(i=0;i<MAX_ELEMS;i++)
   if(box[i].state)
     fprintf(fp,"b %f %f %f %f %f %f %i\n",box[i].x,
-				          box[i].y,
-				          box[i].z,
-				          box[i].tx,
-				          box[i].ty,
-				          box[i].tz,
-				          box[i].type);
+                                          box[i].y,
+                                          box[i].z,
+                                          box[i].tx,
+                                          box[i].ty,
+                                          box[i].tz,
+                                          box[i].type);
 
 
 fclose(fp);
@@ -437,11 +437,11 @@ if(c==EOF) break;
 if(c=='g')
 {
     fscanf(fp,"%f %f %f %i %i %s\n",&grid[i].x,
-				      &grid[i].y,
-				      &grid[i].z,
-				      &grid[i].rot,
-				      &grid[i].flags,
-				      name);
+                                      &grid[i].y,
+                                      &grid[i].z,
+                                      &grid[i].rot,
+                                      &grid[i].flags,
+                                      name);
     grid[i].state=1;
     grid[i].obj=raydium_object_find_load(name);
     i++;
@@ -450,12 +450,12 @@ if(c=='g')
 if(c=='b')
 {
     fscanf(fp,"%f %f %f %f %f %f %i\n",&box[j].x,
-				       &box[j].y,
-				       &box[j].z,
-				       &box[j].tx,
-				       &box[j].ty,
-				       &box[j].tz,
-				       &box[j].type);
+                                       &box[j].y,
+                                       &box[j].z,
+                                       &box[j].tx,
+                                       &box[j].ty,
+                                       &box[j].tz,
+                                       &box[j].type);
     box[j].state=1;
     j++;
 }
@@ -464,14 +464,14 @@ if(c=='d')
 {
     fgets(tdata,4000,fp);
     if(tdata[strlen(tdata)-1]=='\n')
-	tdata[strlen(tdata)-1]=0;
+        tdata[strlen(tdata)-1]=0;
 }
 
     if(i==MAX_ELEMS || j==MAX_ELEMS)
-	{
-	raydium_log("MAX_ELEMS reached, loading not completed");
-	break;
-	}
+        {
+        raydium_log("MAX_ELEMS reached, loading not completed");
+        break;
+        }
 }
 raydium_log("%s: %i grid elements loaded, %i box(es)",filename,i,j);
 fclose(fp);
@@ -532,19 +532,19 @@ for(i=0;i<MAX_ELEMS;i++)
     if(grid[i].state)
     {
     rotatez(grid[i].rot,grid[i].obj);
-	for(j=raydium_object_start[grid[i].obj];j<raydium_object_end[grid[i].obj];j++)
-	{
-	raydium_vertex_x[raydium_vertex_index]=raydium_vertex_x[j]+grid[i].x;
-	raydium_vertex_y[raydium_vertex_index]=raydium_vertex_y[j]+grid[i].y;
-	raydium_vertex_z[raydium_vertex_index]=raydium_vertex_z[j]+grid[i].z;
-	raydium_vertex_texture_u[raydium_vertex_index]=raydium_vertex_texture_u[j];
-	raydium_vertex_texture_v[raydium_vertex_index]=raydium_vertex_texture_v[j];
-	raydium_vertex_texture[raydium_vertex_index]=raydium_vertex_texture[j];
-	raydium_vertex_texture_multi[raydium_vertex_index]=raydium_vertex_texture_multi[j];
-	raydium_vertex_texture_multi_u[raydium_vertex_index]=raydium_vertex_texture_multi_u[j];
-	raydium_vertex_texture_multi_v[raydium_vertex_index]=raydium_vertex_texture_multi_v[j];
-	raydium_vertex_index++;
-	}
+        for(j=raydium_object_start[grid[i].obj];j<raydium_object_end[grid[i].obj];j++)
+        {
+        raydium_vertex_x[raydium_vertex_index]=raydium_vertex_x[j]+grid[i].x;
+        raydium_vertex_y[raydium_vertex_index]=raydium_vertex_y[j]+grid[i].y;
+        raydium_vertex_z[raydium_vertex_index]=raydium_vertex_z[j]+grid[i].z;
+        raydium_vertex_texture_u[raydium_vertex_index]=raydium_vertex_texture_u[j];
+        raydium_vertex_texture_v[raydium_vertex_index]=raydium_vertex_texture_v[j];
+        raydium_vertex_texture[raydium_vertex_index]=raydium_vertex_texture[j];
+        raydium_vertex_texture_multi[raydium_vertex_index]=raydium_vertex_texture_multi[j];
+        raydium_vertex_texture_multi_u[raydium_vertex_index]=raydium_vertex_texture_multi_u[j];
+        raydium_vertex_texture_multi_v[raydium_vertex_index]=raydium_vertex_texture_multi_v[j];
+        raydium_vertex_index++;
+        }
     rotatez(-grid[i].rot,grid[i].obj);
     }
 raydium_object_end[obj]=raydium_vertex_index;
@@ -628,49 +628,49 @@ z+=oz;
  switch(type)
   {
   case TYPE_CHECKPOINT:
-	    glColor3f(0,0,1);
-	    break;
+            glColor3f(0,0,1);
+            break;
 
   case TYPE_START_E:
-	    dir='e';
-	    glColor3f(0,1,0);
-	    break;
+            dir='e';
+            glColor3f(0,1,0);
+            break;
   case TYPE_START_W:
-	    dir='w';
-	    glColor3f(0,1,0);
-	    break;
+            dir='w';
+            glColor3f(0,1,0);
+            break;
   case TYPE_START_N:
-	    dir='n';
-	    glColor3f(0,1,0);
-	    break;
+            dir='n';
+            glColor3f(0,1,0);
+            break;
   case TYPE_START_S:
-	    dir='s';
-	    glColor3f(0,1,0);
-	    break;
+            dir='s';
+            glColor3f(0,1,0);
+            break;
 
   case TYPE_END:
-	    glColor3f(1,0,0);
-	    break;
+            glColor3f(1,0,0);
+            break;
   case TYPE_LOOP:
-	    glColor3f(1,1,1);
-	    break;
+            glColor3f(1,1,1);
+            break;
 
   case TYPE_TURBO_E:
-	    dir='e';
-	    glColor3f(1,1,0);
-	    break;
+            dir='e';
+            glColor3f(1,1,0);
+            break;
   case TYPE_TURBO_W:
-	    dir='w';
-	    glColor3f(1,1,0);
-	    break;
+            dir='w';
+            glColor3f(1,1,0);
+            break;
   case TYPE_TURBO_N:
-	    dir='n';
-	    glColor3f(1,1,0);
-	    break;
+            dir='n';
+            glColor3f(1,1,0);
+            break;
   case TYPE_TURBO_S:
-	    dir='s';
-	    glColor3f(1,1,0);
-	    break;
+            dir='s';
+            glColor3f(1,1,0);
+            break;
 
   } // end switch
 
@@ -778,17 +778,17 @@ raydium_log("pop !");
 
 for(i=0;i<MAX_ELEMS;i++)
     if(!grid[i].state)
-	{
-	grid[i].state=1;
-	grid[i].x=px;
-	grid[i].y=py;
-	grid[i].z=pz;
-	grid[i].flags=0;
-	grid[i].rot=curangle;
-	grid[i].obj=curobj;	
-	grid_generate_obj();
-	return;
-	}
+        {
+        grid[i].state=1;
+        grid[i].x=px;
+        grid[i].y=py;
+        grid[i].z=pz;
+        grid[i].flags=0;
+        grid[i].rot=curangle;
+        grid[i].obj=curobj;     
+        grid_generate_obj();
+        return;
+        }
 
 raydium_log("MAX_ELEMS reached");
 }
@@ -812,17 +812,17 @@ raydium_log("pop the box !");
 
 for(i=0;i<MAX_ELEMS;i++)
     if(!box[i].state)
-	{
-	box[i].state=1;
-	box[i].x=x;
-	box[i].y=y;
-	box[i].z=z;
-	box[i].tx=tx;
-	box[i].ty=ty;
-	box[i].tz=tz;
-	box[i].type=type;
-	return;
-	}
+        {
+        box[i].state=1;
+        box[i].x=x;
+        box[i].y=y;
+        box[i].z=z;
+        box[i].tx=tx;
+        box[i].ty=ty;
+        box[i].tz=tz;
+        box[i].type=type;
+        return;
+        }
 raydium_log("MAX_ELEMS reached for boxes");
 }
 
@@ -836,7 +836,7 @@ for(i=0;i<MAX_ELEMS;i++)
         grid[i].x==px &&
         grid[i].y==py &&
         grid[i].z==pz )
-	    grid[i].state=0;
+            grid[i].state=0;
 
 if(pop_mode==POP_MODE_BOX)
 for(i=0;i<MAX_ELEMS;i++)
@@ -847,8 +847,8 @@ for(i=0;i<MAX_ELEMS;i++)
         box[i].y<=py+1 &&
         box[i].z>=pz   &&
         box[i].z<=pz+1 )
-	    box[i].state=0;
-	    
+            box[i].state=0;
+            
 grid_generate_obj();
 }
 
@@ -964,7 +964,7 @@ for(i=0;i<MAX_ELEMS;i++)
     draw_box(0,0,0,
              box[i].x,box[i].y,box[i].z,
              box[i].tx,box[i].ty,box[i].tz,
-	     box[i].type);
+             box[i].type);
     }
 
 draw_selection();
@@ -997,18 +997,18 @@ while(fgets(trifile,255,fp)!=NULL)
     if(!strlen(trifile)) continue;
     if(trifile[0]=='#') continue;
     if(trifile[0]=='*')
-	{
-	boxpreset[n_boxpresets].state=1;
-	sscanf(trifile+2,"%f %f %f %f %f %f %i",
-				       &boxpreset[n_boxpresets].x,
-				       &boxpreset[n_boxpresets].y,
-				       &boxpreset[n_boxpresets].z,
-				       &boxpreset[n_boxpresets].tx,
-				       &boxpreset[n_boxpresets].ty,
-				       &boxpreset[n_boxpresets].tz,
-				       &boxpreset[n_boxpresets].type);
-	n_boxpresets++;
-	}
+        {
+        boxpreset[n_boxpresets].state=1;
+        sscanf(trifile+2,"%f %f %f %f %f %f %i",
+                                       &boxpreset[n_boxpresets].x,
+                                       &boxpreset[n_boxpresets].y,
+                                       &boxpreset[n_boxpresets].z,
+                                       &boxpreset[n_boxpresets].tx,
+                                       &boxpreset[n_boxpresets].ty,
+                                       &boxpreset[n_boxpresets].tz,
+                                       &boxpreset[n_boxpresets].type);
+        n_boxpresets++;
+        }
     else raydium_object_load(trifile);
     }
 fclose(fp);

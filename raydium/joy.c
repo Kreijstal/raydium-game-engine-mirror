@@ -20,13 +20,13 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 // This file needs a lot of work, again ...
 // (will use Glut for windows joy support soon ...)
 
-//#define joy_debug 1			//do we display debug infos ?
+//#define joy_debug 1                   //do we display debug infos ?
 
 #define JS_EVENT_BUTTON         0x01    /* button pressed/released */
 #define JS_EVENT_AXIS           0x02    /* joystick moved */
 #define JS_EVENT_INIT           0x80    /* initial state of device */
 /*
-			// function                     3rd arg
+                        // function                     3rd arg
 #define JSIOCGAXES      // get number of axes           char
 #define JSIOCGBUTTONS   // get number of buttons        char
 #define JSIOCGVERSION   // get driver version           int
@@ -35,7 +35,7 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 #define JSIOCGCORR      // get correction values        &js_corr
 */
 
-//int joy;				//file handle
+//int joy;                              //file handle
 
 //struct input_event play;
 //struct input_event stop;
@@ -78,86 +78,86 @@ int raydium_joy_process_event(struct js_event e)
     switch(e.type)
     {
         case JS_EVENT_BUTTON:
-		if(e.number<RAYDIUM_JOY_MAX_BUTTONS)
-		{
-		    if(e.value==1)
-		    {
-			raydium_joy_click=e.number+1;
-			raydium_joy_button[e.number]=e.value;
-			#ifdef joy_debug
-			raydium_log("Button %d pushed",e.number);
-			#endif
-		    }
-		    else
-		    {
-			// release
-			raydium_joy_button[e.number]=e.value;
-		    }
-		}
-        	break;
+                if(e.number<RAYDIUM_JOY_MAX_BUTTONS)
+                {
+                    if(e.value==1)
+                    {
+                        raydium_joy_click=e.number+1;
+                        raydium_joy_button[e.number]=e.value;
+                        #ifdef joy_debug
+                        raydium_log("Button %d pushed",e.number);
+                        #endif
+                    }
+                    else
+                    {
+                        // release
+                        raydium_joy_button[e.number]=e.value;
+                    }
+                }
+                break;
         case JS_EVENT_AXIS:
-		if(e.number<RAYDIUM_JOY_MAX_AXIS)
-		{
-		    #ifdef joy_debug
-		    raydium_log("Axis Moved: %i",e.value);
-		    #endif
-		    raydium_joy_axis[e.number]=e.value/(float)32767;
-		    //here we invert values from the y axis: we want 
-		    //1 for up and -1 for down
-			if(e.value<0)
-			{
-		          #ifdef joy_debug
-			   if(e.number==1)raydium_log("Up");
-			   if(e.number==0)raydium_log("Left");
-			  #endif
-			  if(e.number==2)
-			  {
-			   raydium_joy_z=e.value/(float)32767*-1;
-			  }
-			  if(e.number==1)
-			  {
-			   raydium_joy_y=e.value/(float)32767*-1;
-			  }
-			  if(e.number==0)
-			  {
-			   raydium_joy_x=e.value/(float)32767;
-			  }
-			}
-			if(e.value>0)
-			{
-			  #ifdef joy_debug
-			   if(e.number==1)raydium_log("Down");
-			   if(e.number==0)raydium_log("Right");
-			  #endif
-			  if(e.number==2)
-			  {
-			   raydium_joy_z=e.value/(float)32767*-1;
-			  }
-			  if(e.number==1)
-			  {
-			   raydium_joy_y=e.value/(float)32767*-1;
-			  }
-			  if(e.number==0)
-			  {
-			   raydium_joy_x=e.value/(float)32767;
-			  }
-			}
-			if(e.value==0)
-			{
-			  if(e.number==1)
-			  {
-			   raydium_joy_y=0.0;
-			  }
-			  if(e.number==0)
-			  {
-			   raydium_joy_x=0.0;
-			  }
-		 	}
-		}
-		break;
+                if(e.number<RAYDIUM_JOY_MAX_AXIS)
+                {
+                    #ifdef joy_debug
+                    raydium_log("Axis Moved: %i",e.value);
+                    #endif
+                    raydium_joy_axis[e.number]=e.value/(float)32767;
+                    //here we invert values from the y axis: we want 
+                    //1 for up and -1 for down
+                        if(e.value<0)
+                        {
+                          #ifdef joy_debug
+                           if(e.number==1)raydium_log("Up");
+                           if(e.number==0)raydium_log("Left");
+                          #endif
+                          if(e.number==2)
+                          {
+                           raydium_joy_z=e.value/(float)32767*-1;
+                          }
+                          if(e.number==1)
+                          {
+                           raydium_joy_y=e.value/(float)32767*-1;
+                          }
+                          if(e.number==0)
+                          {
+                           raydium_joy_x=e.value/(float)32767;
+                          }
+                        }
+                        if(e.value>0)
+                        {
+                          #ifdef joy_debug
+                           if(e.number==1)raydium_log("Down");
+                           if(e.number==0)raydium_log("Right");
+                          #endif
+                          if(e.number==2)
+                          {
+                           raydium_joy_z=e.value/(float)32767*-1;
+                          }
+                          if(e.number==1)
+                          {
+                           raydium_joy_y=e.value/(float)32767*-1;
+                          }
+                          if(e.number==0)
+                          {
+                           raydium_joy_x=e.value/(float)32767;
+                          }
+                        }
+                        if(e.value==0)
+                        {
+                          if(e.number==1)
+                          {
+                           raydium_joy_y=0.0;
+                          }
+                          if(e.number==0)
+                          {
+                           raydium_joy_x=0.0;
+                          }
+                        }
+                }
+                break;
         case JS_EVENT_INIT:
-		    //raydium_log("Joystick returned its initial state\n");
-        	    break;
+                    //raydium_log("Joystick returned its initial state\n");
+                    break;
 
     }
     return(e.type);
@@ -167,15 +167,15 @@ int raydium_joy_process_event(struct js_event e)
 void raydium_joy_callback(void)
 {
 #ifndef WIN32
- struct js_event e;			//structure for storing an event
+ struct js_event e;                     //structure for storing an event
  
-	if(!raydium_joy) { raydium_joy_init_vars(); return; }
+        if(!raydium_joy) { raydium_joy_init_vars(); return; }
         raydium_joy_click=0;
 
-	while (read (raydium_joy, &e, sizeof(struct js_event)) > 0)
-	{
+        while (read (raydium_joy, &e, sizeof(struct js_event)) > 0)
+        {
             raydium_joy_process_event (e);
-	    //raydium_log("joy_DEBUG number:%d, value:%d",e.number,e.value);
+            //raydium_log("joy_DEBUG number:%d, value:%d",e.number,e.value);
         }
 #else
         JOYINFOEX ActualPos;
@@ -242,76 +242,76 @@ if (write(raydium_joy_event_handle, &ie, sizeof(ie)) == -1)
 
 void raydium_joy_init(void)
 {
- int ret;					//test var for ioctls
- char name[128];				//driver String (and temp things)
+ int ret;                                       //test var for ioctls
+ char name[128];                                //driver String (and temp things)
 
 int autocenter=5;         /* default value. between 0 and 100 */
 
-	raydium_joy_init_vars();
+        raydium_joy_init_vars();
 #ifndef WIN32
     
     raydium_init_cli_option_default("joydev",name,"/dev/js0");
     raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
     if(raydium_joy==-1)
     {
-	    raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
-	}
-	
+            raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
+        }
+        
     if(raydium_joy==-1)
-	{
-		raydium_log("joy: FAILED (cannot open %s)",name);
-		raydium_joy=0;
-	}
-	else
-	{
-		raydium_log("joy: OK (found)");
-	}
-	
-	raydium_init_cli_option_default("evdev",name,"/dev/input/event0");
-	    
-	raydium_joy_event_handle = open(name, O_RDWR);
-	if(raydium_joy_event_handle==-1) 
-	  raydium_log("%s: cannot open (rw), no Force Feedback.",name);
-	last_event=raydium_timecall_clock();
+        {
+                raydium_log("joy: FAILED (cannot open %s)",name);
+                raydium_joy=0;
+        }
+        else
+        {
+                raydium_log("joy: OK (found)");
+        }
+        
+        raydium_init_cli_option_default("evdev",name,"/dev/input/event0");
+            
+        raydium_joy_event_handle = open(name, O_RDWR);
+        if(raydium_joy_event_handle==-1) 
+          raydium_log("%s: cannot open (rw), no Force Feedback.",name);
+        last_event=raydium_timecall_clock();
 
-	raydium_joy_ff_autocenter(autocenter);
-	
+        raydium_joy_ff_autocenter(autocenter);
+        
 
 
-	if(raydium_joy)
-	{
-		ret=ioctl (raydium_joy,JSIOCGNAME(sizeof(name)),name);
-		if(ret==-1)
-		{
-	    		raydium_log("Error reading joystick driver's signature");
-	    		strncpy(name,"Unknown",sizeof(name));
-		}
-		else
-		{
-		    	raydium_log("Joystick driver's signature: %s",name);
+        if(raydium_joy)
+        {
+                ret=ioctl (raydium_joy,JSIOCGNAME(sizeof(name)),name);
+                if(ret==-1)
+                {
+                        raydium_log("Error reading joystick driver's signature");
+                        strncpy(name,"Unknown",sizeof(name));
+                }
+                else
+                {
+                        raydium_log("Joystick driver's signature: %s",name);
                         strcpy(raydium_joy_name,name);
-		}
+                }
 
-		ret=ioctl (raydium_joy,JSIOCGAXES,&raydium_joy_n_axes);
-		if(ret==-1)
-		{
-	    		raydium_log("Error reading number of axes");
-		}
-		else
-		{
-	    		raydium_log("This joystick has %d axes",raydium_joy_n_axes);
-		}
+                ret=ioctl (raydium_joy,JSIOCGAXES,&raydium_joy_n_axes);
+                if(ret==-1)
+                {
+                        raydium_log("Error reading number of axes");
+                }
+                else
+                {
+                        raydium_log("This joystick has %d axes",raydium_joy_n_axes);
+                }
 
-		ret=ioctl (raydium_joy,JSIOCGBUTTONS,&raydium_joy_n_buttons);
-		if(ret==-1)
-		{
-	    		raydium_log("Error reading number of buttons");
-		}
-		else
-		{
-	    		raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
-		}
-	}
+                ret=ioctl (raydium_joy,JSIOCGBUTTONS,&raydium_joy_n_buttons);
+                if(ret==-1)
+                {
+                        raydium_log("Error reading number of buttons");
+                }
+                else
+                {
+                        raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
+                }
+        }
 #else
     {
         int i;
@@ -356,7 +356,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
 void raydium_joy_close(void)
 {
-	if(raydium_joy)	close(raydium_joy);
+        if(raydium_joy) close(raydium_joy);
 }
 
 void raydium_joy_ff(void)
@@ -370,29 +370,29 @@ void raydium_joy_ff(void)
 // effect.u.constant.shape.attack_level=0x8888;
 // effect.u.constant.shape.fade_length=20000;
 // effect.u.constant.shape.fade_level=0x2222;
-/*	effect.type = FF_SPRING;
-	effect.u.interactive.direction=0x4000;
-	effect.u.interactive.right_saturation = 32767;
-	effect.u.interactive.left_saturation = 32767;
-	effect.u.interactive.right_coeff = 32767;
-	effect.u.interactive.left_coeff = 32767;
-	effect.u.interactive.deadband = 0x0;
-	effect.u.interactive.center = 0x0;*/
+/*      effect.type = FF_SPRING;
+        effect.u.interactive.direction=0x4000;
+        effect.u.interactive.right_saturation = 32767;
+        effect.u.interactive.left_saturation = 32767;
+        effect.u.interactive.right_coeff = 32767;
+        effect.u.interactive.left_coeff = 32767;
+        effect.u.interactive.deadband = 0x0;
+        effect.u.interactive.center = 0x0;*/
 //    effect.type = FF_PERIODIC;
 /*
-#define FF_SQUARE	0x58
-#define FF_TRIANGLE	0x59
-#define FF_SINE		0x5a
-#define FF_SAW_UP	0x5b
-#define FF_SAW_DOWN	0x5c
-#define FF_CUSTOM	0x5d
+#define FF_SQUARE       0x58
+#define FF_TRIANGLE     0x59
+#define FF_SINE         0x5a
+#define FF_SAW_UP       0x5b
+#define FF_SAW_DOWN     0x5c
+#define FF_CUSTOM       0x5d
 */
 /*    effect.u.periodic.waveform=FF_TRIANGLE;
     effect.u.periodic.period=50;
     effect.u.periodic.magnitude=16000;
     effect.u.periodic.direction=0x4000;*/
     
-	
+        
 
 
 

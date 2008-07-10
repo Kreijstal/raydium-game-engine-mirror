@@ -37,13 +37,13 @@ void myglutCreateWindow(GLuint tx, GLuint ty, signed char rendering, char *name)
 switch(rendering)
     {
     case RAYDIUM_RENDERING_NONE:
-	return;
+        return;
     case RAYDIUM_RENDERING_WINDOW:
-	pwInit(-1,-1,tx,ty,0,name,1,0);
-	break;
+        pwInit(-1,-1,tx,ty,0,name,1,0);
+        break;
     case RAYDIUM_RENDERING_FULLSCREEN:
-	pwInit(0,0,-1,-1,0,name,0,0);
-	break;    
+        pwInit(0,0,-1,-1,0,name,0,0);
+        break;    
     }
 }
 
@@ -91,13 +91,13 @@ int glutGet(int enu)
 switch(enu)
     {
     case GLUT_WINDOW_CURSOR:
-	return _glutMouseVisible;
+        return _glutMouseVisible;
     case GLUT_WINDOW_WIDTH:
-	return _glutWindowSize[0];
+        return _glutWindowSize[0];
     case GLUT_WINDOW_HEIGHT:
-	return _glutWindowSize[1];
+        return _glutWindowSize[1];
     default:
-	raydium_log("(my)glutGet: ERROR: unknown 'enu' %i",enu);
+        raydium_log("(my)glutGet: ERROR: unknown 'enu' %i",enu);
     }
 return 0;
 }
@@ -177,14 +177,14 @@ if(!ext) return 0;
 for(i=0;i<=(int)strlen(ext);i++)
     {
     if(ext[i]==' ' || ext[i]==0)
-	{
-	strncpy(curr,ext+start,i-start);
-	curr[i-start]=0;
-	//printf("-%s-\n",curr);
-	if(!strcasecmp(curr,name))
-	    return 1;
-	start=i+1;
-	}
+        {
+        strncpy(curr,ext+start,i-start);
+        curr[i-start]=0;
+        //printf("-%s-\n",curr);
+        if(!strcasecmp(curr,name))
+            return 1;
+        start=i+1;
+        }
     }
 return 0;
 }

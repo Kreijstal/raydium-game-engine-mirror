@@ -30,7 +30,7 @@ signed char raydium_video_isvalid(int i)
 {
 if(i>=0 && i<RAYDIUM_MAX_VIDEOS &&
     raydium_video_video[i].state)
-	return 1;
+        return 1;
 return 0;
 
 }
@@ -41,7 +41,7 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if(!raydium_video_video[i].state)
-	return i;
+        return i;
 return -1;
 }
 
@@ -56,7 +56,7 @@ live=raydium_live_texture_find(raydium_texture_exists(name));
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if(raydium_video_video[i].state &&
        raydium_video_video[i].live_id==live)
-	return i;
+        return i;
 
 return -1;
 }
@@ -79,7 +79,7 @@ jpeg_start_decompress(&cinfo);
 
 row_stride = cinfo.output_width * cinfo.output_components;
 buffer = (*cinfo.mem->alloc_sarray)
-	((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+        ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
 count=cinfo.output_height-1;
 while (cinfo.output_scanline < cinfo.output_height) 
@@ -103,8 +103,8 @@ int i,j,c;
 // we must find any previous load of this video
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if( raydium_video_video[i].state && 
-	!strcmp(raydium_video_video[i].name,filename))
-	    return i;
+        !strcmp(raydium_video_video[i].name,filename))
+            return i;
 */
 
 id=raydium_video_find_free();
@@ -127,10 +127,10 @@ fread(head,90,1,raydium_video_video[id].fp);
 head_end=0;
 for(i=0;i<90;i++)
     if(head[i]=='|')
-	{
-	head_end=i;
-	break;
-	}
+        {
+        head_end=i;
+        break;
+        }
 
 if(!head_end)
     {
@@ -159,10 +159,10 @@ for(i=0;i<raydium_video_video[id].frames_total;i++)
     head[0]=0;
     j=0;
     while((c=fgetc(raydium_video_video[id].fp))!='|')
-	{
-	head[j++]=c;
-	head[j]=0;
-	}
+        {
+        head[j++]=c;
+        head[j]=0;
+        }
     raydium_video_video[id].offsets[i]=atol(head);
     }
 
@@ -181,9 +181,9 @@ raydium_video_video[id].frames_total);
 if(ogg!=NULL && strlen(ogg)>0)
     {
     if(raydium_sound_load_music(ogg)<0)
-	raydium_log("cannot sync '%s' audio to video '%s'",ogg,as);
+        raydium_log("cannot sync '%s' audio to video '%s'",ogg,as);
     else
-	raydium_video_current_with_sound=id;
+        raydium_video_current_with_sound=id;
     }
 
 return id;
@@ -210,13 +210,13 @@ current=raydium_video_video[id].elapsed*raydium_video_video[id].fps;
 if(current>=raydium_video_video[id].frames_total)
     {
     if(!raydium_video_video[id].loop)
-	{
-	if(raydium_video_current_with_sound==id)
-	    raydium_video_current_with_sound=-1;
-	raydium_video_video[id].playing=0;
-	return;
-	}
-	
+        {
+        if(raydium_video_current_with_sound==id)
+            raydium_video_current_with_sound=-1;
+        raydium_video_video[id].playing=0;
+        return;
+        }
+        
     raydium_video_video[id].elapsed=0;
     current=0;
     }
@@ -240,9 +240,9 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEOS;i++)
     if(raydium_video_video[i].state)
-	{
-	raydium_video_callback_video(i);
-	}
+        {
+        raydium_video_callback_video(i);
+        }
 }
 
 

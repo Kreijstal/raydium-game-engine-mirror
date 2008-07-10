@@ -50,17 +50,17 @@ if(raydium_mouse_click==1)
     id = raydium_ode_mouse_pick(100,pos,&dist);
     
     if(id>=0)
-	{
-	// attached_pos (camera pos to element's space)
-	cam[0]=raydium_camera_x;
-	cam[1]=raydium_camera_y;
-	cam[2]=raydium_camera_z;
-	raydium_ode_element_world2rel(id,cam,attached_pos);
-	// attached_lookat (impact pos to element's space)
-	raydium_ode_element_world2rel(id,pos,attached_lookat);
-	attached_id=id;
-	attached=1;
-	}    
+        {
+        // attached_pos (camera pos to element's space)
+        cam[0]=raydium_camera_x;
+        cam[1]=raydium_camera_y;
+        cam[2]=raydium_camera_z;
+        raydium_ode_element_world2rel(id,cam,attached_pos);
+        // attached_lookat (impact pos to element's space)
+        raydium_ode_element_world2rel(id,pos,attached_lookat);
+        attached_id=id;
+        attached=1;
+        }    
     }
   else // is alread attached
     {
@@ -77,8 +77,8 @@ if(!attached)
     raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 else
     raydium_ode_element_camera_inboard(attached_id,
-		    attached_pos[0],attached_pos[1],attached_pos[2],
-		    attached_lookat[0],attached_lookat[1],attached_lookat[2]);
+                    attached_pos[0],attached_pos[1],attached_pos[2],
+                    attached_lookat[0],attached_lookat[1],attached_lookat[2]);
     
 
 raydium_ode_draw_all(0);

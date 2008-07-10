@@ -103,7 +103,7 @@ if(value>65536 || value<0)
 
 for(i=0;i<pows_count;i++)
     if(pows[i]>=value)
-	return pows[i];
+        return pows[i];
 
 
 // should never hit this point
@@ -115,36 +115,36 @@ return -1;
 /** function which returns the determinant of a given matrix */
 double raydium_matrix_determinant(matrix4x4 matrix)
 {
-	return raydium_matrix_internal_determinant(matrix,4);
+        return raydium_matrix_internal_determinant(matrix,4);
 }
 
 /**  function which returns the adjoint of a given matrix.      */
 matrix4x4 raydium_matrix_adjoint(matrix4x4 matrix)
 {
-	return raydium_matrix_internal_adjoint(matrix,4);
+        return raydium_matrix_internal_adjoint(matrix,4);
 }
 /* Function to find the product of two matrices   */
 /* beware: the order is important. matrix1xmatrix2 != matrix2xmatrix1*/
 matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2)
 {
-	return raydium_matrix_internal_multiply(matrix1,matrix2,4);
+        return raydium_matrix_internal_multiply(matrix1,matrix2,4);
 }
 
 /*  Function to find the inverse of a given matrix */
 matrix4x4 raydium_matrix_inverse(matrix4x4 matrix)
 {
-	matrix4x4 matrix_adj;
-	double determinant;
-	
-	determinant	=	raydium_matrix_determinant(matrix);
-	matrix_adj	=	raydium_matrix_adjoint(matrix);
-	return raydium_matrix_internal_inverse(matrix_adj, determinant, 4);
+        matrix4x4 matrix_adj;
+        double determinant;
+        
+        determinant     =       raydium_matrix_determinant(matrix);
+        matrix_adj      =       raydium_matrix_adjoint(matrix);
+        return raydium_matrix_internal_inverse(matrix_adj, determinant, 4);
 }
 
 /** Function which returns the determinant of a given matrix */
 double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension)
 {
-	static int tot;
+        static int tot;
   int    i, orig_mat_row, orig_mat_col, temp_mat_row, temp_mat_col;
   double det;
 
@@ -153,7 +153,7 @@ double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension)
   if(dimension == 2)
   {
     //det = ( (matrix.ray[0][0]) * (matrix.ray[1][1]) ) - ( (matrix.ray[0][1]) * (matrix.ray[1][0]) );
-	  det = ( (matrix.ray[0]) * (matrix.ray[3]) ) - ( (matrix.ray[1]) * (matrix.ray[2]) );
+          det = ( (matrix.ray[0]) * (matrix.ray[3]) ) - ( (matrix.ray[1]) * (matrix.ray[2]) );
     return(det);
   }
 
@@ -162,18 +162,18 @@ double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension)
       temp_mat_row = 0;
       temp_mat_col = 0;
       for(orig_mat_row = 1; orig_mat_row <= dimension - 1; orig_mat_row++) {
-				for(orig_mat_col = 0; orig_mat_col <= dimension - 1; orig_mat_col++) {
-	  			if( orig_mat_col != i ) {
-	    			//temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
-					temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
-	    			temp_mat_col++;
-				  }
-				}
-				temp_mat_row++;
-				temp_mat_col = 0;
+                                for(orig_mat_col = 0; orig_mat_col <= dimension - 1; orig_mat_col++) {
+                                if( orig_mat_col != i ) {
+                                //temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
+                                        temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
+                                temp_mat_col++;
+                                  }
+                                }
+                                temp_mat_row++;
+                                temp_mat_col = 0;
       }
       //det = (matrix.ray[0][i] * determinant(temp_matrix,dimension-1));
-	  det = (matrix.ray[(0*dimension)+i] * raydium_matrix_internal_determinant(temp_matrix,dimension-1));
+          det = (matrix.ray[(0*dimension)+i] * raydium_matrix_internal_determinant(temp_matrix,dimension-1));
       tot = tot + det * pow(-1,i+1);
     }
     return(-1 * tot);
@@ -190,57 +190,57 @@ matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension)
 
   if(dimension == 2) {
     //conjugate_matrix.ray[0][0] = matrix.ray[1][1];
-	  conjugate_matrix.ray[0] = matrix.ray[3];
+          conjugate_matrix.ray[0] = matrix.ray[3];
     //conjugate_matrix.ray[0][1] = -1 * matrix.ray[0][1];
-	  conjugate_matrix.ray[1] = -1 * matrix.ray[1];
+          conjugate_matrix.ray[1] = -1 * matrix.ray[1];
     //conjugate_matrix.ray[1][0] = -1 * matrix.ray[1][0];
-	  conjugate_matrix.ray[2] = -1 * matrix.ray[2];
+          conjugate_matrix.ray[2] = -1 * matrix.ray[2];
     //conjugate_matrix.ray[1][1] = matrix.ray[0][0];
-	  conjugate_matrix.ray[3] = matrix.ray[0];
+          conjugate_matrix.ray[3] = matrix.ray[0];
 
     return(conjugate_matrix);
   }
   else
   {
     for(row = 0; row < dimension; row++)
-	{
+        {
       for(col = 0; col < dimension; col++)
-	  {	
-				temp_mat_row = 0;
-				temp_mat_col = 0;
-	
-				for(orig_mat_row = 0; orig_mat_row < dimension; orig_mat_row++)
-				{
-					for(orig_mat_col = 0; orig_mat_col < dimension ; orig_mat_col++)
-					{
-	    				if(orig_mat_row != row && orig_mat_col != col)
-						{
-				      		//temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
-							temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
-	    			  		temp_mat_col++;
-						}
-					}
-	  				if( temp_mat_col > (dimension - 2) )
-					{
-	    				temp_mat_row++;
-	    				temp_mat_col = 0;
-				  	}
-				}
-				//conjugate_matrix.ray[row][col] = determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
-				conjugate_matrix.ray[(row*dimension)+col] = raydium_matrix_internal_determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
+          {     
+                                temp_mat_row = 0;
+                                temp_mat_col = 0;
+        
+                                for(orig_mat_row = 0; orig_mat_row < dimension; orig_mat_row++)
+                                {
+                                        for(orig_mat_col = 0; orig_mat_col < dimension ; orig_mat_col++)
+                                        {
+                                        if(orig_mat_row != row && orig_mat_col != col)
+                                                {
+                                                //temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
+                                                        temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
+                                                temp_mat_col++;
+                                                }
+                                        }
+                                        if( temp_mat_col > (dimension - 2) )
+                                        {
+                                        temp_mat_row++;
+                                        temp_mat_col = 0;
+                                        }
+                                }
+                                //conjugate_matrix.ray[row][col] = determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
+                                conjugate_matrix.ray[(row*dimension)+col] = raydium_matrix_internal_determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
       }
 
-    	for(row = 0; row < dimension; row++)
-		{
-     		for(col = 0; col < dimension; col++)
-			{
-				//transpose_matrix.ray[col][row] = conjugate_matrix.ray[row][col];
-				transpose_matrix.ray[(col*dimension)+row] = conjugate_matrix.ray[(row*dimension)+col];
-			}
-		} 		
-	}
-	return(transpose_matrix);
-  }	
+        for(row = 0; row < dimension; row++)
+                {
+                for(col = 0; col < dimension; col++)
+                        {
+                                //transpose_matrix.ray[col][row] = conjugate_matrix.ray[row][col];
+                                transpose_matrix.ray[(col*dimension)+row] = conjugate_matrix.ray[(row*dimension)+col];
+                        }
+                }               
+        }
+        return(transpose_matrix);
+  }     
 
 }
 
@@ -256,14 +256,14 @@ matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matri
   for(i=0;i<dimension;i++)
   {
     for(j=0;j<dimension;j++)
-	{	
-		//result_matrix.ray[i][j] = 0;
-		result_matrix.ray[(i*dimension)+j] = 0;
-		for(k=0;k<dimension;k++)
-		{
-			//result_matrix.ray[i][j] = result_matrix.ray[i][j] + ( matrix_one.ray[i][k] * matrix_two.ray[k][j] );
-			result_matrix.ray[(i*dimension)+j] = result_matrix.ray[(i*dimension)+j] + ( matrix_one.ray[(i*dimension)+k] * matrix_two.ray[(k*dimension)+j] );
-		}
+        {       
+                //result_matrix.ray[i][j] = 0;
+                result_matrix.ray[(i*dimension)+j] = 0;
+                for(k=0;k<dimension;k++)
+                {
+                        //result_matrix.ray[i][j] = result_matrix.ray[i][j] + ( matrix_one.ray[i][k] * matrix_two.ray[k][j] );
+                        result_matrix.ray[(i*dimension)+j] = result_matrix.ray[(i*dimension)+j] + ( matrix_one.ray[(i*dimension)+k] * matrix_two.ray[(k*dimension)+j] );
+                }
     }
   }
   return(result_matrix);
@@ -281,11 +281,11 @@ matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,in
 
   for(row = 0; row < dimension; row++)
     for(col = 0; col < dimension; col++)
-	{
+        {
       //inverse_matrix.ray[row][col] = (adjoint_matrix.ray[row][col]) / det ;
-	  //beware ¡¡¡
-		inverse_matrix.ray[(row*dimension)+col] =  (adjoint_matrix.ray[(row*dimension)+col]) / det ;
-	}
+          //beware ¡¡¡
+                inverse_matrix.ray[(row*dimension)+col] =  (adjoint_matrix.ray[(row*dimension)+col]) / det ;
+        }
   return(inverse_matrix);
 }
 
@@ -342,16 +342,16 @@ difference = ((start[0] * end[0]) + (start[1] * end[1]) + (start[2] * end[2]) + 
 if ((1.0f - fabs(difference)) > SLERP_TO_LERP_SWITCH_THRESHOLD) 
     {
     float theta, oneOverSinTheta;
-	       
+               
     theta = acos(fabs(difference));
     oneOverSinTheta = (1.0f / sin(theta));
     startWeight = (sin(theta * (1.0f - alpha)) * oneOverSinTheta);
     endWeight = (sin(theta * alpha) * oneOverSinTheta);
 
     if (difference < 0.0f) 
-	{
-	startWeight = -startWeight;
-	}
+        {
+        startWeight = -startWeight;
+        }
     } 
 else 
     {

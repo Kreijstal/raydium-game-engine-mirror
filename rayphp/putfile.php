@@ -2,7 +2,7 @@
 // gets file from repositories listed in repositories.list
 
 // params: $filename (string, input), $depends (integer, input)
-// 	   $status (integer, output)
+//         $status (integer, output)
 
 // This script must be placed in "rayphp" sub-directory.
 
@@ -41,29 +41,29 @@ for($j=0;$j<count($deps);$j++)
     {
       $r = $repos[$i];
       if(valid_entry($r))
-	{
-	  // http or ftp ?
-	  $type=parse_url($r);
-	  $type=$type["scheme"];
-	  
-	  if(($type=="ftp" ||
-	      $type=="ftps" )
-	     && ftp_upload($r,$path.$file,$file))
-	    {
-	      touch($path.$file);
-	      $status++;
-	      break;
-	    }
-	  
-	  if(($type=="http" ||
-	      $type=="https" )
-	     && http_upload($r,$path.$file,$file))
-	    {
-	      touch($path.$file);
-	      $status++;
-	      break;
-	    }	
-	}
+        {
+          // http or ftp ?
+          $type=parse_url($r);
+          $type=$type["scheme"];
+          
+          if(($type=="ftp" ||
+              $type=="ftps" )
+             && ftp_upload($r,$path.$file,$file))
+            {
+              touch($path.$file);
+              $status++;
+              break;
+            }
+          
+          if(($type=="http" ||
+              $type=="https" )
+             && http_upload($r,$path.$file,$file))
+            {
+              touch($path.$file);
+              $status++;
+              break;
+            }   
+        }
     }
 }
 

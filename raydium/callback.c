@@ -90,14 +90,14 @@ if(raydium_render_max_fps>0)
     max_fps=raydium_timecall_clocks_per_sec/(raydium_render_max_fps);
 
     if((curr_time-time_previous) < max_fps)
-	{
+        {
 #ifndef WIN32
-	usleep(1);
+        usleep(1);
 #else
-	Sleep(1);
+        Sleep(1);
 #endif
-	return;
-	}
+        return;
+        }
 
     time_previous=curr_time;
     }

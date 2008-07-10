@@ -7,7 +7,7 @@
 #ifndef ATEXIT_H
 #define ATEXIT_H
 
-#define RAYDIUM_MAX_ATEXIT_FUNCTIONS	32
+#define RAYDIUM_MAX_ATEXIT_FUNCTIONS    32
 
 __global void *raydium_atexit_functions[RAYDIUM_MAX_ATEXIT_FUNCTIONS];
 __global int raydium_atexit_index;

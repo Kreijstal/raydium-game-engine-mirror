@@ -22,12 +22,12 @@ strcpy(temp,org);
 
 for(i=0;i<(int)strlen(temp);i++)
     if(temp[i]!=' ')
-	break;
+        break;
 strcpy(org,temp+i); // heading spaces: ok
 
 for(i=strlen(org);i>=0;i--)
     if(org[i]!=' ' && org[i]!='\n' && org[i]!='\r' && org[i]!=0 && org[i]!=';')
-	break;
+        break;
 
 org[i+1]=0; // tailing chars: ok
 }
@@ -50,7 +50,7 @@ len=strlen(str);
 
 for(i=0;i<len+1;i++)
     if(str[i]==separator)
-	break;
+        break;
 
 if(i==len+1) 
     {
@@ -75,7 +75,7 @@ len=strlen(str);
 
 for(i=0;i<len;i++)
     if(str[i]==what)
-	str[i]=with;
+        str[i]=with;
 
 }
 
@@ -105,15 +105,15 @@ if(val_s[0]=='[') // is raw data (RAYDIUM_MAX_NAME_LEN limit !)
     int len;
     
     do {
-	str[0]=0;
-	ret=fgets(str,RAYDIUM_MAX_NAME_LEN-1,fp);
-	if(ret==NULL)
-	    break;
-	if(strlen(str)>=1 && str[0]==']') // bad idea, but ... no time for now
-	    break;
-	len=strlen(str);
-	memcpy(val_s+offset,str,len);
-	offset+=len;
+        str[0]=0;
+        ret=fgets(str,RAYDIUM_MAX_NAME_LEN-1,fp);
+        if(ret==NULL)
+            break;
+        if(strlen(str)>=1 && str[0]==']') // bad idea, but ... no time for now
+            break;
+        len=strlen(str);
+        memcpy(val_s+offset,str,len);
+        offset+=len;
     } while(1);
     
     val_s[offset]=0;
@@ -130,26 +130,26 @@ if(val_s[0]=='"') // is a string
 
     // search both double quotes (string must not contains dq, then !)
     for(i=0;i<(int)strlen(temp);i++)
-	if(temp[i]=='"')
-	    {
-	    p1=i;
-	    break;
-	    }
+        if(temp[i]=='"')
+            {
+            p1=i;
+            break;
+            }
 
     for(i=p1+1;i<(int)strlen(temp);i++)
-	if(temp[i]=='"')
-	    {
-	    p2=i;
-	    break;
-	    }
+        if(temp[i]=='"')
+            {
+            p2=i;
+            break;
+            }
 
     if(p1==-1 || p2==-1)
-	{
-	raydium_log("ERROR: parser: invalid value for string '%s'",var);
-	val_s[0]=0;
-	*size=0;
-	return RAYDIUM_PARSER_TYPE_STRING;
-	}
+        {
+        raydium_log("ERROR: parser: invalid value for string '%s'",var);
+        val_s[0]=0;
+        *size=0;
+        return RAYDIUM_PARSER_TYPE_STRING;
+        }
 
     temp[p2]=0;
     strcpy(val_s,temp+p1+1);
@@ -167,11 +167,11 @@ if(val_s[0]=='{') // is a float array
     raydium_parser_trim(val_s);
 
     while(raydium_parser_cut(val_s,extracted,next,','))
-	{
-	val_f[*size]=atof(extracted);
-	(*size)++;
-	strcpy(val_s,next);
-	}
+        {
+        val_f[*size]=atof(extracted);
+        (*size)++;
+        strcpy(val_s,next);
+        }
     val_f[*size]=atof(val_s);
     (*size)++;
     val_s[0]=0;
@@ -199,13 +199,13 @@ while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
     {
     raydium_parser_trim(line);
     if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
-	{
-	//raydium_log("db: ERROR: invalid: '%s'",line);
-	continue;
-	}
+        {
+        //raydium_log("db: ERROR: invalid: '%s'",line);
+        continue;
+        }
 
     if(strcmp(part1,key))
-	continue;
+        continue;
 
     found=1;
     strcpy(value,part2);
@@ -248,17 +248,17 @@ while( fp && (fgets(line,RAYDIUM_MAX_NAME_LEN,fp)) )
     raydium_parser_trim(line);
 
     if(!raydium_parser_cut(line,part1,part2,RAYDIUM_DB_SEPARATOR))
-	{
-	//raydium_log("db: ERROR: invalid: '%s'",line);
-	continue;
-	}
+        {
+        //raydium_log("db: ERROR: invalid: '%s'",line);
+        continue;
+        }
 
     if(!strcmp(part1,key))
-	{
-	fprintf(out,"%s;%s\n",key,value);
-	found=1;
-	continue;
-	}
+        {
+        fprintf(out,"%s;%s\n",key,value);
+        found=1;
+        continue;
+        }
 
     fprintf(out,"%s\n",line);
     }

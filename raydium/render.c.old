@@ -154,9 +154,9 @@ for(tex=1;tex<raydium_texture_index;tex++)
     if(raydium_vertex_tag[i  ] ||
        raydium_vertex_tag[i+1] ||
        raydium_vertex_tag[i+2] )
-	glColor4f(1.f,0.f,1.f,1.f);
-	else
-	glColor4f(1.f,1.f,1.f,1.f);
+        glColor4f(1.f,0.f,1.f,1.f);
+        else
+        glColor4f(1.f,1.f,1.f,1.f);
 #endif    
     
     for(j=0;j<3;j++)

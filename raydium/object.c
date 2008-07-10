@@ -89,7 +89,7 @@ if(raydium_object_anims[o]>0)
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
 if(first)
     for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
-	dl_state[i]=-1;
+        dl_state[i]=-1;
 
 
 if(raydium_render_displaylists_tag && !raydium_shadow_rendering)
@@ -176,14 +176,14 @@ for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
     nz=oz+raydium_random_neg_pos_1()*ampl;
 
     for(j=i;j<raydium_object_end[obj];j++)
-	if(raydium_vertex_x[j]==ox && 
-	   raydium_vertex_y[j]==oy && 
-	   raydium_vertex_z[j]==oz)
-	{
-	raydium_vertex_x[j]=nx;
-	raydium_vertex_y[j]=ny;
-	raydium_vertex_z[j]=nz;
-	}
+        if(raydium_vertex_x[j]==ox && 
+           raydium_vertex_y[j]==oy && 
+           raydium_vertex_z[j]==oz)
+        {
+        raydium_vertex_x[j]=nx;
+        raydium_vertex_y[j]=ny;
+        raydium_vertex_z[j]=nz;
+        }
     }*/
 }
 
@@ -221,8 +221,8 @@ else
 for(i=start;i<end;i++)
     {
     val=sqrt((raydium_vertex_x[i]*raydium_vertex_x[i])+
-	     (raydium_vertex_y[i]*raydium_vertex_y[i])+
-	    (raydium_vertex_z[i]*raydium_vertex_z[i]) );
+             (raydium_vertex_y[i]*raydium_vertex_y[i])+
+            (raydium_vertex_z[i]*raydium_vertex_z[i]) );
     if(val>max) max=val;
     }
 return max;
@@ -298,18 +298,18 @@ min[2]=max[2]=raydium_vertex_z[start];
 for(i=start+1;i<end;i++)
     {
     if(raydium_vertex_x[i]<min[0])
-	min[0]=raydium_vertex_x[i];
+        min[0]=raydium_vertex_x[i];
     if(raydium_vertex_y[i]<min[1])
-	min[1]=raydium_vertex_y[i];
+        min[1]=raydium_vertex_y[i];
     if(raydium_vertex_z[i]<min[2])
-	min[2]=raydium_vertex_z[i];
+        min[2]=raydium_vertex_z[i];
 
     if(raydium_vertex_x[i]>max[0])
-	max[0]=raydium_vertex_x[i];
+        max[0]=raydium_vertex_x[i];
     if(raydium_vertex_y[i]>max[1])
-	max[1]=raydium_vertex_y[i];
+        max[1]=raydium_vertex_y[i];
     if(raydium_vertex_z[i]>max[2])
-	max[2]=raydium_vertex_z[i];
+        max[2]=raydium_vertex_z[i];
     }
 /*tx=(max[0]-min[0]);
 *ty=(max[1]-min[1]);
@@ -374,7 +374,7 @@ if(!raydium_object_isvalid(object))
 
 for(i=0;i<raydium_object_anims[object];i++)
     if(!strcmp(raydium_object_anim_names[object][i],name))
-	return i;
+        return i;
 
 return -1;
 }
@@ -447,7 +447,7 @@ if( ((int)anim_frame_current) >= anim_frames)
     frame_b=raydium_object_start[object] +
            (raydium_object_anim_start[object][anim_current] *
             raydium_object_anim_len[object]) +
-    	    raydium_object_anim_len[object];
+            raydium_object_anim_len[object];
     }
 else    
     frame_b=frame_a+raydium_object_anim_len[object];
@@ -459,44 +459,44 @@ if(raydium_object_anim_previous[object][instance]>=0)
 
     // is it the first pass right after anim change ?
     if(raydium_object_anim_frame_previous_timeout[object][instance]==-1)
-	{
-	// save current frame
-	raydium_object_anim_frame_previous_timeout[object][instance]=raydium_object_anim_frame_current[object][instance];
-	//printf("*** start\n");
-	}
+        {
+        // save current frame
+        raydium_object_anim_frame_previous_timeout[object][instance]=raydium_object_anim_frame_current[object][instance];
+        //printf("*** start\n");
+        }
 
     // We're now in current anim, cancel previous one
     if(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]>=1)
-	{
-	raydium_object_anim_previous[object][instance]=-1;
-	//printf("*** end\n");
-	}
+        {
+        raydium_object_anim_previous[object][instance]=-1;
+        //printf("*** end\n");
+        }
     else
-	{
-	// ... erase frame_a
-	//printf("%f| erasing %i (%f)",anim_frame_current,anim_current,anim_frame_current);
-	anim_current=raydium_object_anim_previous[object][instance];
-	anim_frame_current=raydium_object_anim_frame_previous[object][instance];
+        {
+        // ... erase frame_a
+        //printf("%f| erasing %i (%f)",anim_frame_current,anim_current,anim_frame_current);
+        anim_current=raydium_object_anim_previous[object][instance];
+        anim_frame_current=raydium_object_anim_frame_previous[object][instance];
 
-	anim_frames=
-	    raydium_object_anim_end[object][anim_current] - 
-	    raydium_object_anim_start[object][anim_current];
+        anim_frames=
+            raydium_object_anim_end[object][anim_current] - 
+            raydium_object_anim_start[object][anim_current];
 
-	// slow ... :( (any good idea to make a modulo on a float ?)
-	while(anim_frame_current>(anim_frames+1))
-	    anim_frame_current-=(anim_frames+1);
-	
-	//printf(" with %i (%f)\n",anim_current,anim_frame_current);
+        // slow ... :( (any good idea to make a modulo on a float ?)
+        while(anim_frame_current>(anim_frames+1))
+            anim_frame_current-=(anim_frames+1);
+        
+        //printf(" with %i (%f)\n",anim_current,anim_frame_current);
 
-	factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
+        factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
 
-	frame_a=raydium_object_start[object]+
-    	    (raydium_object_anim_start[object][anim_current] *
-    	    raydium_object_anim_len[object]) +
-    	    (((int)anim_frame_current) *
-    	    raydium_object_anim_len[object]) +
-    	    raydium_object_anim_len[object];
-	}
+        frame_a=raydium_object_start[object]+
+            (raydium_object_anim_start[object][anim_current] *
+            raydium_object_anim_len[object]) +
+            (((int)anim_frame_current) *
+            raydium_object_anim_len[object]) +
+            raydium_object_anim_len[object];
+        }
     
     //printf("refresh from %i/%i (a) and %i/%i (b), factor = %.2f (%i af)\n",frame_a,frame_a/raydium_object_anim_len[object],frame_b,frame_b/raydium_object_anim_len[object],factor,anim_frames);
     }
@@ -622,12 +622,12 @@ int o,i;
 
 for(o=0;o<raydium_object_index;o++)
     if(raydium_object_anims[o]>0)
-	for(i=0;i<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;i++)    
-	    {
-	    f=raydium_frame_time * raydium_object_anim_time_factor *
-	      raydium_object_anim_automatic_factor[o][raydium_object_anim_current[o][i]];
-	    raydium_object_anim_frame_current[o][i]+=f;    
-	    }
+        for(i=0;i<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;i++)    
+            {
+            f=raydium_frame_time * raydium_object_anim_time_factor *
+              raydium_object_anim_automatic_factor[o][raydium_object_anim_current[o][i]];
+            raydium_object_anim_frame_current[o][i]+=f;    
+            }
 }
 
 

@@ -151,19 +151,19 @@ for(y=1;y<RAYDIUM_HDR_SIZE-1;y++)
 // body
 for(x=1;x<RAYDIUM_HDR_SIZE-1;x++)
     for(y=1;y<RAYDIUM_HDR_SIZE-1;y++)
-	{
-	p=0;
-	p+=in[(x+0)+((y+0)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x-1)+((y-1)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x+0)+((y-1)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x+1)+((y-1)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x-1)+((y+0)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x+1)+((y+0)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x-1)+((y+1)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x+0)+((y+1)*RAYDIUM_HDR_SIZE)];
-	p+=in[(x+1)+((y+1)*RAYDIUM_HDR_SIZE)];
-	out[x+(y*RAYDIUM_HDR_SIZE)]=p/9;
-	}
+        {
+        p=0;
+        p+=in[(x+0)+((y+0)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x-1)+((y-1)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x+0)+((y-1)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x+1)+((y-1)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x-1)+((y+0)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x+1)+((y+0)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x-1)+((y+1)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x+0)+((y+1)*RAYDIUM_HDR_SIZE)];
+        p+=in[(x+1)+((y+1)*RAYDIUM_HDR_SIZE)];
+        out[x+(y*RAYDIUM_HDR_SIZE)]=p/9;
+        }
 
 // upper left pixel
 p=0;
@@ -223,15 +223,15 @@ total=0;
 for(y=0;y<RAYDIUM_HDR_SIZE;y++)
     {
     for(x=0;x<RAYDIUM_HDR_SIZE;x++)
-	{
-	offset=(x+(RAYDIUM_HDR_SIZE*y));
-	pixel=raydium_hdr_mem[raydium_trigo_round(fx)+(raydium_window_tx*(raydium_trigo_round(fy)))];
-	//slooooooooooooow ! (?!)
-	//glReadPixels(raydium_trigo_round(fx),raydium_trigo_round(fy),1,1,GL_STENCIL_INDEX,GL_UNSIGNED_BYTE,&pixel);
-	raydium_hdr_mem_hdr2[offset]=(pixel?255:0);
-	total+=pixel;
+        {
+        offset=(x+(RAYDIUM_HDR_SIZE*y));
+        pixel=raydium_hdr_mem[raydium_trigo_round(fx)+(raydium_window_tx*(raydium_trigo_round(fy)))];
+        //slooooooooooooow ! (?!)
+        //glReadPixels(raydium_trigo_round(fx),raydium_trigo_round(fy),1,1,GL_STENCIL_INDEX,GL_UNSIGNED_BYTE,&pixel);
+        raydium_hdr_mem_hdr2[offset]=(pixel?255:0);
+        total+=pixel;
         fx+=incx;
-	}
+        }
     fx=0;
     fy+=incy;
     }
@@ -244,7 +244,7 @@ if(raydium_hdr_eye>0)
     {
     raydium_hdr_eye-=(hdr_exposure*(raydium_hdr_eye_speed*raydium_frame_time));
     if(raydium_hdr_eye<=0) 
-	raydium_hdr_eye=-9999; // the eye is now ok
+        raydium_hdr_eye=-9999; // the eye is now ok
     }
 
 // we're in "total" drak

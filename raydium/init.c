@@ -383,7 +383,7 @@ int raydium_init_load(char *filename)
                 flag_near=1;            
             }
             if(strcmp(var,"far")==0)
-            {        	
+            {           
                 raydium_parser_trim(val_s);
                 tmp_far=atof(val_s);
                 raydium_log("Far plane: %f",tmp_far);          
@@ -391,28 +391,28 @@ int raydium_init_load(char *filename)
             }
             if(strcmp(var,"fog")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 tmp_fog=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
                 raydium_log("Fog: %s",(tmp_fog?"enable":"disable"));          
                 flag_fog=1;            
             }
             if(strcmp(var,"lighting")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 tmp_lighting=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
                 raydium_log("Lighting: %s",(tmp_lighting?"enable":"disable"));          
                 flag_lighting=1;            
             }
             if(strcmp(var,"light0")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 sscanf(val_s, "%f,%f,%f,%f,%f,%f,%f,%f", &tmp_light0[0], &tmp_light0[1],&tmp_light0[2],&tmp_light0[3],&tmp_light0[4],&tmp_light0[5],&tmp_light0[6],&tmp_light0[7]);
                 raydium_log("Light number 0 values: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f",tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]);          
                 flag_light0=1;            
             }
              if(strcmp(var,"background")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 sscanf( val_s, "%f,%f,%f,%f", &tmp_background[0], &tmp_background[1],&tmp_background[2],&tmp_background[3]);
                 raydium_log("Background colors: %.2f,%.2f,%.2f,%.2f",tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);          
                 flag_background=1;            
@@ -420,17 +420,17 @@ int raydium_init_load(char *filename)
             //symple way to allow new paths
             if(strcmp(var,"paths")==0)
             {
-            	raydium_parser_trim(val_s);
-            	if(strcmp(val_s,"foldered")==0)
-            	{
-            		raydium_log("Foldered paths");
-            		flag_paths=1;
-				}
-			}
+                raydium_parser_trim(val_s);
+                if(strcmp(val_s,"foldered")==0)
+                {
+                        raydium_log("Foldered paths");
+                        flag_paths=1;
+                                }
+                        }
             //HDR effect
             if(strcmp(var,"hdr")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 tmp_hdr=((strcmp(val_s,"on")==0) || (strcmp(val_s,"enable")==0))?1:0;
                 raydium_log("HDR: %s",(tmp_hdr?"enable":"disable"));          
                 flag_hdr=1;            
@@ -438,7 +438,7 @@ int raydium_init_load(char *filename)
             //sky type
             if(strcmp(var,"sky")==0)
             {
-            	raydium_parser_trim(val_s);
+                raydium_parser_trim(val_s);
                 tmp_sky=((strcmp(val_s,"box")==0))?1:0;
                 raydium_log("Sky type: %s",(tmp_sky?"box":"dynamic"));          
                 flag_sky=1;            
@@ -457,14 +457,14 @@ int raydium_init_load(char *filename)
                 raydium_texture_filter_change(tmp_filter);
             }
         //view_perspective
-    	if (flag_fov && flag_near && flag_far)
+        if (flag_fov && flag_near && flag_far)
         {
-        	raydium_window_view_perspective(tmp_fov,tmp_near,tmp_far); // fov 60 + near and far planes
+                raydium_window_view_perspective(tmp_fov,tmp_near,tmp_far); // fov 60 + near and far planes
         }
         //fog  
         if(flag_fog)
         {
-        	if(tmp_fog)
+                if(tmp_fog)
                 raydium_fog_enable();
             else 
                 raydium_fog_disable(); 
@@ -472,20 +472,20 @@ int raydium_init_load(char *filename)
         //light
         if(flag_lighting)
         {
-        	if(tmp_lighting)
+                if(tmp_lighting)
                 raydium_light_enable();
             else
                 raydium_light_disable(); 
         }
         if(flag_light0 && flag_lighting && tmp_lighting)
         {
-        	raydium_light_on(0);
-    		raydium_light_conf_7f(tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]); 	
+                raydium_light_on(0);
+                raydium_light_conf_7f(tmp_light0[0],tmp_light0[1],tmp_light0[2],tmp_light0[3],tmp_light0[4],tmp_light0[5],tmp_light0[6],tmp_light0[7]);         
         }
         //background
         if(flag_background)
         {
-        	raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);    	
+                raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);      
         }
         //sky type
         if(flag_sky)
@@ -499,23 +499,23 @@ int raydium_init_load(char *filename)
         
         if(flag_paths)
         {
-        	if(flag_paths==1)
-        	{
-				raydium_path_ext("./data/textures/","tga");
-				raydium_path_ext("./data/fonts/","tga");
-				raydium_path_ext("./data/shaders/","vert");
-				raydium_path_ext("./data/shaders/","frag");
-				raydium_path_ext("./data/meshes/","tri");
-				raydium_path_ext("./data/themes/","gui");
-				raydium_path_ext("./data/particles/","prt");
-				//raydium_path_ext("./data/cars/","car");
-				raydium_path_ext("./data/cams/","cam");
-				raydium_path_ext("./data/sprites/","sprite");
-				raydium_path_ext("./","tga");
-				//raydium_path_ext("./data/levels/","goals");
-				//raydium_path_ext("./data/levels/","terrain");
-			}
-		}
+                if(flag_paths==1)
+                {
+                                raydium_path_ext("./data/textures/","tga");
+                                raydium_path_ext("./data/fonts/","tga");
+                                raydium_path_ext("./data/shaders/","vert");
+                                raydium_path_ext("./data/shaders/","frag");
+                                raydium_path_ext("./data/meshes/","tri");
+                                raydium_path_ext("./data/themes/","gui");
+                                raydium_path_ext("./data/particles/","prt");
+                                //raydium_path_ext("./data/cars/","car");
+                                raydium_path_ext("./data/cams/","cam");
+                                raydium_path_ext("./data/sprites/","sprite");
+                                raydium_path_ext("./","tga");
+                                //raydium_path_ext("./data/levels/","goals");
+                                //raydium_path_ext("./data/levels/","terrain");
+                        }
+                }
     
         if(flag_hdr && tmp_hdr)
         {

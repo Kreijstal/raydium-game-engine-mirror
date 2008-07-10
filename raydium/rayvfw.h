@@ -115,9 +115,9 @@ typedef struct videohdr_tag {
 #define WM_CAP_GET_SEQUENCE_SETUP       (WM_CAP_START+  65)
 #define capCaptureGetSetup(hwnd, s, wSize)         ((BOOL)AVICapSM(hwnd, WM_CAP_GET_SEQUENCE_SETUP, (WPARAM)(wSize), (LPARAM)(LPVOID)(LPCAPTUREPARMS)(s)))
 
-#define WM_CAP_GET_USER_DATA		(WM_CAP_START+  8)
+#define WM_CAP_GET_USER_DATA            (WM_CAP_START+  8)
 #define capGetUserData(hwnd)               (AVICapSM(hwnd, WM_CAP_GET_USER_DATA, 0, 0))
 
-#define WM_CAP_SET_USER_DATA		(WM_CAP_START+  9)
+#define WM_CAP_SET_USER_DATA            (WM_CAP_START+  9)
 #define capSetUserData(hwnd, lUser)        ((BOOL)AVICapSM(hwnd, WM_CAP_SET_USER_DATA, 0, (LPARAM)lUser))
 

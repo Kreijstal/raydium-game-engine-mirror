@@ -3,16 +3,16 @@
 #define RAYDIUM_NETWORK_ONLY
 #include "raydium/index.c"
 
-#define PARTY_TIMEOUT   	(5*60) // default : 5
-#define PARTY_SCORE_TIME	(10)
-#define REMAINING_SEND		5
+#define PARTY_TIMEOUT           (5*60) // default : 5
+#define PARTY_SCORE_TIME        (10)
+#define REMAINING_SEND          5
 
 
-#define NET_SCORE_TRACK	(RAYDIUM_NETWORK_PACKET_BASE+1)
-#define NET_RESTART	(RAYDIUM_NETWORK_PACKET_BASE+2)
-#define NET_CHANGE_MAP	(RAYDIUM_NETWORK_PACKET_BASE+3)
-#define NET_REMAINING	(RAYDIUM_NETWORK_PACKET_BASE+4)
-#define NET_SCORE_BASE	(RAYDIUM_NETWORK_PACKET_BASE+10)
+#define NET_SCORE_TRACK (RAYDIUM_NETWORK_PACKET_BASE+1)
+#define NET_RESTART     (RAYDIUM_NETWORK_PACKET_BASE+2)
+#define NET_CHANGE_MAP  (RAYDIUM_NETWORK_PACKET_BASE+3)
+#define NET_REMAINING   (RAYDIUM_NETWORK_PACKET_BASE+4)
+#define NET_SCORE_BASE  (RAYDIUM_NETWORK_PACKET_BASE+10)
 
 
 char str[RAYDIUM_NETWORK_PACKET_SIZE];
@@ -108,7 +108,7 @@ if(steps>=(PARTY_TIMEOUT+PARTY_SCORE_TIME))
     steps=0;
     // change map
     if(switch_track())
-	change_track(track);
+        change_track(track);
     }
 }
 
@@ -150,8 +150,8 @@ if(!strcmp("data.dyn",req))
     ",RAYDIUM_NETWORK_MAX_CLIENTS);
 
     for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-	if(raydium_network_client[i])
-	    sprintf(response+strlen(response),"<tr><td>%s</td></tr>",raydium_network_name[i]);
+        if(raydium_network_client[i])
+            sprintf(response+strlen(response),"<tr><td>%s</td></tr>",raydium_network_name[i]);
     
     sprintf(response+strlen(response),"</table><br/>");
     sprintf(response+strlen(response),"<center><a href=\"http://maniadrive.raydium.org/index.php?scores=track&track=%s\">\
@@ -174,7 +174,7 @@ if(!strcmp("console.dyn",req))
     <i>Raydium console:</i><pre class=\"border_one\">");
 
     for(i=0;i<n;i++)
-	sprintf(response+strlen(response),"%s\n",hist[i]);
+        sprintf(response+strlen(response),"%s\n",hist[i]);
 
     sprintf(response+strlen(response),"</pre>");
     sprintf(response+strlen(response),"<br/><a href=\"/\">Back</a>");

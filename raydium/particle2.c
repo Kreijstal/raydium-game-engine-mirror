@@ -133,25 +133,25 @@ if(!fp)
 while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
     if(!strcasecmp(var,"include"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("particle: parser: include: wrong type");
-	    continue;
-	    }
-	raydium_particle_preload(val_s);
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("particle: parser: include: wrong type");
+            continue;
+            }
+        raydium_particle_preload(val_s);
+        }
 
     if(!strcasecmp(var,"texture"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("particle: parser: texture: wrong type");
-	    continue; // in case of multiple textures ? (degenarated file)
-	    }
-	// cache texture
-	raydium_texture_current_set_name(val_s);
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("particle: parser: texture: wrong type");
+            continue; // in case of multiple textures ? (degenarated file)
+            }
+        // cache texture
+        raydium_texture_current_set_name(val_s);
+        }
     }
 fclose(fp);
 }
@@ -171,308 +171,308 @@ while( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_
     done=0;
 
     if(!strcasecmp(var,"include"))
-	{
-	FILE *sub;
-	char dir[RAYDIUM_MAX_NAME_LEN];
+        {
+        FILE *sub;
+        char dir[RAYDIUM_MAX_NAME_LEN];
 
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("particle: parser: include: wrong type");
-	    continue;
-	    }
-	raydium_file_dirname(dir,filename);
-	strcat(dir,val_s);
-	strcpy(val_s,dir);
-	sub=raydium_file_fopen(val_s,"rt"); // idem
-	if(!sub)
-	 {
-	 raydium_log("particle: ERROR: %s cannot open %s particle subfile",filename,val_s);
-	 continue;
-	 }
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("particle: parser: include: wrong type");
+            continue;
+            }
+        raydium_file_dirname(dir,filename);
+        strcat(dir,val_s);
+        strcpy(val_s,dir);
+        sub=raydium_file_fopen(val_s,"rt"); // idem
+        if(!sub)
+         {
+         raydium_log("particle: ERROR: %s cannot open %s particle subfile",filename,val_s);
+         continue;
+         }
         raydium_particle_generator_load_internal(generator,sub,val_s);
-	fclose(sub);
-	done=1;
-	}
+        fclose(sub);
+        done=1;
+        }
 
     if(!strcasecmp(var,"position"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: position: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].position,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: position: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].position,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"position_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: position_random: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].position_random,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: position_random: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].position_random,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"ttl_generator"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: ttl_generator: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].ttl_generator=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: ttl_generator: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].ttl_generator=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"ttl_particles"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: ttl_particles: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].ttl_particles=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: ttl_particles: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].ttl_particles=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"ttl_particles_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: ttl_particles_random: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].ttl_particles_random=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: ttl_particles_random: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].ttl_particles_random=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"particles_per_second"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: particles_per_second: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].particles_per_second=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: particles_per_second: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].particles_per_second=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"texture"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_STRING)
-	    {
-	    raydium_log("particle: parser: texture: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].texture=
-	    raydium_texture_find_by_name(val_s);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+            raydium_log("particle: parser: texture: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].texture=
+            raydium_texture_find_by_name(val_s);
+        done=1;
+        }
 
 
     if(!strcasecmp(var,"size"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: size: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].size=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: size: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].size=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"size_inc_per_sec"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: size_inc_per_sec: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].size_inc_per_sec=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: size_inc_per_sec: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].size_inc_per_sec=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"size_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: size_random: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].size_random=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: size_random: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].size_random=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"size_limit"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: size_limit: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].size_limit=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: size_limit: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].size_limit=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"gravity"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: gravity: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].gravity,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: gravity: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].gravity,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: vector: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].vector,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: vector: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].vector,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: vector_random: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].vector_random,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: vector_random: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].vector_random,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector_sphere_angles"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: vector_sphere_angles: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].vector_sphere_angles,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: vector_sphere_angles: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].vector_sphere_angles,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector_sphere_angles_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
-	    {
-	    raydium_log("particle: parser: vector_sphere_angles_random: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].vector_sphere_angles_random,val_f,sizeof(GLfloat)*3);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=3)
+            {
+            raydium_log("particle: parser: vector_sphere_angles_random: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].vector_sphere_angles_random,val_f,sizeof(GLfloat)*3);
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector_sphere_force"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: vector_sphere_force: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].vector_sphere_force=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: vector_sphere_force: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].vector_sphere_force=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"vector_sphere_force_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: vector_sphere_force_random: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].vector_sphere_force_random=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: vector_sphere_force_random: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].vector_sphere_force_random=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"rotation_speed"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: rotation_speed: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].rotation_speed=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: rotation_speed: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].rotation_speed=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"rotation_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: rotation_random: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].rotation_random=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: rotation_random: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].rotation_random=val_f[0];
+        done=1;
+        }
 
     if(!strcasecmp(var,"color_start"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
-	    {
-	    raydium_log("particle: parser: color_start: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].color_start,val_f,sizeof(GLfloat)*4);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+            raydium_log("particle: parser: color_start: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].color_start,val_f,sizeof(GLfloat)*4);
+        done=1;
+        }
 
     if(!strcasecmp(var,"color_start_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
-	    {
-	    raydium_log("particle: parser: color_start_random: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].color_start_random,val_f,sizeof(GLfloat)*4);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+            raydium_log("particle: parser: color_start_random: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].color_start_random,val_f,sizeof(GLfloat)*4);
+        done=1;
+        }
 
     if(!strcasecmp(var,"color_end"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
-	    {
-	    raydium_log("particle: parser: color_end: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].color_end,val_f,sizeof(GLfloat)*4);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+            raydium_log("particle: parser: color_end: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].color_end,val_f,sizeof(GLfloat)*4);
+        done=1;
+        }
 
     if(!strcasecmp(var,"color_end_random"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
-	    {
-	    raydium_log("particle: parser: color_end_random: wrong type");
-	    continue;
-	    }
-	memcpy(raydium_particle_generators[generator].color_end_random,val_f,sizeof(GLfloat)*4);
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=4)
+            {
+            raydium_log("particle: parser: color_end_random: wrong type");
+            continue;
+            }
+        memcpy(raydium_particle_generators[generator].color_end_random,val_f,sizeof(GLfloat)*4);
+        done=1;
+        }
 
     if(!strcasecmp(var,"visibility"))
-	{
-	if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
-	    {
-	    raydium_log("particle: parser: visibility: wrong type");
-	    continue;
-	    }
-	raydium_particle_generators[generator].visibility=val_f[0];
-	done=1;
-	}
+        {
+        if(ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+            raydium_log("particle: parser: visibility: wrong type");
+            continue;
+            }
+        raydium_particle_generators[generator].visibility=val_f[0];
+        done=1;
+        }
 
     if(!done)
-	raydium_log("particle: parser: invalid or unsupported option '%s' (%s)",var,filename);
+        raydium_log("particle: parser: invalid or unsupported option '%s' (%s)",var,filename);
     }
 }
 
@@ -498,7 +498,7 @@ if(!fp)
 
 for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
     if(raydium_particle_generators[i].state==0)
-	break;
+        break;
 
 if(i==RAYDIUM_MAX_GENERATORS)
     {
@@ -601,17 +601,17 @@ for(i=0;i<to_create;i++)
     {
     p=raydium_particle_find_free();
     if(p<0)
-	{
-	//raydium_log("particle: No more particle slots !");
-	break;
-	}
+        {
+        //raydium_log("particle: No more particle slots !");
+        break;
+        }
 
     raydium_particle_particles[p]=malloc(sizeof(raydium_particle_Particle));
     if(!raydium_particle_particles[p])
-	{
-	raydium_log("particle: ERROR: malloc failed !");
-	return;
-	}
+        {
+        raydium_log("particle: ERROR: malloc failed !");
+        return;
+        }
 
 
     part=raydium_particle_particles[p];
@@ -622,10 +622,10 @@ for(i=0;i<to_create;i++)
 
     memcpy(part->position,gen->position,sizeof(GLfloat)*3);
     for(j=0;j<3;j++)
-	part->position[j]+=raydium_random_f(-gen->position_random[j],gen->position_random[j]);
+        part->position[j]+=raydium_random_f(-gen->position_random[j],gen->position_random[j]);
 
     for(j=0;j<3;j++)
-	part->position[j]+=gen->position_user[j];
+        part->position[j]+=gen->position_user[j];
 
     part->size=raydium_random_f(gen->size-gen->size_random,gen->size+gen->size_random);
     part->size_inc_per_sec=gen->size_inc_per_sec;
@@ -639,7 +639,7 @@ for(i=0;i<to_create;i++)
      // ortho
      memcpy(part->vel,gen->vector,sizeof(GLfloat)*3);
      for(j=0;j<3;j++)
-	part->vel[j]+=raydium_random_f(-gen->vector_random[j],gen->vector_random[j]);
+        part->vel[j]+=raydium_random_f(-gen->vector_random[j],gen->vector_random[j]);
     }
     else
     {
@@ -650,28 +650,28 @@ for(i=0;i<to_create;i++)
 
     memcpy(angles,gen->vector_sphere_angles,sizeof(GLfloat)*3);
     for(j=0;j<3;j++)
-	angles[j]+=raydium_random_f(-gen->vector_sphere_angles_random[j],gen->vector_sphere_angles_random[j]);
+        angles[j]+=raydium_random_f(-gen->vector_sphere_angles_random[j],gen->vector_sphere_angles_random[j]);
 
 
     force=gen->vector_sphere_force
          +raydium_random_f(-gen->vector_sphere_force_random,
-			    gen->vector_sphere_force_random);
+                            gen->vector_sphere_force_random);
     for(j=0;j<3;j++)
-	def_angles[j]*=force;
+        def_angles[j]*=force;
 
     raydium_trigo_rotate(def_angles,angles[0],angles[1],angles[2],part->vel);
     }
 
     memcpy(part->color_start,gen->color_start,sizeof(GLfloat)*4);
     for(j=0;j<4;j++)
-	part->color_start[j]+=raydium_random_f(-gen->color_start_random[j],gen->color_start_random[j]);
+        part->color_start[j]+=raydium_random_f(-gen->color_start_random[j],gen->color_start_random[j]);
 
     memcpy(part->color_end,gen->color_end,sizeof(GLfloat)*4);
     for(j=0;j<4;j++)
-	part->color_end[j]+=raydium_random_f(-gen->color_end_random[j],gen->color_end_random[j]);
+        part->color_end[j]+=raydium_random_f(-gen->color_end_random[j],gen->color_end_random[j]);
 
     part->rotation_speed=raydium_random_f(gen->rotation_speed-gen->rotation_random,
-					  gen->rotation_speed+gen->rotation_random);
+                                          gen->rotation_speed+gen->rotation_random);
 
     part->visibility=gen->visibility;
     part->OnDelete=gen->OnDeleteParticle;
@@ -750,11 +750,11 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_GENERATORS;i++)
     if(raydium_particle_generators[i].state)
-	raydium_particle_generator_update(i,raydium_frame_time*raydium_particle_time_factor);
+        raydium_particle_generator_update(i,raydium_frame_time*raydium_particle_time_factor);
 
 for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
     if(raydium_particle_particles[i])
-	raydium_particle_update(i,raydium_frame_time*raydium_particle_time_factor);
+        raydium_particle_update(i,raydium_frame_time*raydium_particle_time_factor);
 
 //raydium_profile_end("particles updating");
 }
@@ -778,21 +778,21 @@ fprintf(fp,"0\n");
 
 for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
     if(raydium_particle_particles[i])
-	{
-	cpt++;
-	p=raydium_particle_particles[i];
-	fprintf(fp,"%f %f %f %f %f %f %f %f %f %s\n",
-		p->position[0],
-		p->position[1],
-		p->position[2],
-		p->size,
-		p->current_color[0],
-		p->current_color[1],
-		p->current_color[2],
-		p->current_color[3],
-		p->visibility,
-		raydium_texture_name[p->texture]);
-	}
+        {
+        cpt++;
+        p=raydium_particle_particles[i];
+        fprintf(fp,"%f %f %f %f %f %f %f %f %f %s\n",
+                p->position[0],
+                p->position[1],
+                p->position[2],
+                p->size,
+                p->current_color[0],
+                p->current_color[1],
+                p->current_color[2],
+                p->current_color[3],
+                p->visibility,
+                raydium_texture_name[p->texture]);
+        }
 fclose(fp);
 raydium_log("particle: %i particle(s) dumped",cpt);
 return 1;
@@ -836,17 +836,17 @@ while( fscanf(fp,"%f %f %f %f %f %f %f %f %f %s\n",
     cpt++;
     p=raydium_particle_find_free();
     if(p<0)
-	{
-	raydium_log("particle: No more particle slots !");
-	return -1;
-	}
+        {
+        raydium_log("particle: No more particle slots !");
+        return -1;
+        }
 
     raydium_particle_particles[p]=malloc(sizeof(raydium_particle_Particle));
     if(!raydium_particle_particles[p])
-	{
-	raydium_log("particle: ERROR: malloc failed !");
-	return 0;
-	}
+        {
+        raydium_log("particle: ERROR: malloc failed !");
+        return 0;
+        }
 
 
     part=raydium_particle_particles[p];
@@ -948,7 +948,7 @@ glDepthMask(GL_FALSE);
 
 for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
     if(raydium_particle_particles[i])
-	raydium_particle_draw(raydium_particle_particles[i],ux,uy,uz,rx,ry,rz);
+        raydium_particle_draw(raydium_particle_particles[i],ux,uy,uz,rx,ry,rz);
 
 glDepthMask(GL_TRUE);
 if(light) raydium_light_enable();

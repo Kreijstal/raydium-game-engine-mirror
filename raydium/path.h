@@ -7,10 +7,10 @@
 #ifndef PATH_H
 #define PATH_H
 
-#define RAYDIUM_MAX_PATHS	32
+#define RAYDIUM_MAX_PATHS       32
 
-#define RAYDIUM_PATH_MODE_READ	1
-#define RAYDIUM_PATH_MODE_WRITE	2 // not used yet
+#define RAYDIUM_PATH_MODE_READ  1
+#define RAYDIUM_PATH_MODE_WRITE 2 // not used yet
 
 typedef struct raydium_path_Path
 {

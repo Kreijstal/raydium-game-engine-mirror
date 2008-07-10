@@ -58,21 +58,21 @@ switch(rendering)
     {
     case RAYDIUM_RENDERING_FULLSCREEN:
     
-	glutGameModeString(mode);
-	if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
-	    raydium_log("cannot fullscreen to %s mode",mode);
-	glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
-	break;    
+        glutGameModeString(mode);
+        if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+            raydium_log("cannot fullscreen to %s mode",mode);
+        glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
+        break;    
  
     case RAYDIUM_RENDERING_WINDOW:
-	glutInitWindowSize(tx,ty);
-	glutCreateWindow(name);
-	break;
+        glutInitWindowSize(tx,ty);
+        glutCreateWindow(name);
+        break;
 
     default:
-	raydium_log("Invalid rendering mode (windowed or fullscreen only)");
-	exit(46);
-	break;
+        raydium_log("Invalid rendering mode (windowed or fullscreen only)");
+        exit(46);
+        break;
     }
 
 gtx=glutGet(GLUT_WINDOW_WIDTH);
@@ -127,7 +127,7 @@ raydium_window_ty=Height;
 if(raydium_projection==RAYDIUM_PROJECTION_ORTHO)
 glOrtho(raydium_projection_left,raydium_projection_right,
         raydium_projection_bottom,raydium_projection_top,
-	raydium_projection_near,raydium_projection_far);
+        raydium_projection_near,raydium_projection_far);
 
 if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
 gluPerspective(raydium_projection_fov,(GLfloat)Width/(GLfloat)Height,

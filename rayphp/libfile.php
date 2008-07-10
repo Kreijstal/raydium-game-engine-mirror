@@ -259,40 +259,40 @@ function depends_tri($filename)
       $line=explode(" ",$line);
       $tex=trim($line[count($line)-1]);
       if(substr($tex,0,4)!="rgb(")
-	{
-	  $tex=trim($tex);
-	  $ok=false;
+        {
+          $tex=trim($tex);
+          $ok=false;
 
-	  if(strpos($tex,';') && !$ok) // is multitextured with ";" ?
-	    {
-	    $ok=true;
-	    $texs=explode(";",$tex);
-	    if(strlen($texs[0])) $ret[]=$texs[0]; // yes, and it's a "detail texture"
-	    if(strlen($texs[1]))  // yes and it's a lightmap
-		{
-	        if(strpos($texs[1],"|")!==false)
-		    {
-		    $lm=explode("|",$texs[1]);
-		    $ret[]=$lm[2];
-		    }
-	        else
-		    $ret[]=$texs[1];
-		}
-	    }
+          if(strpos($tex,';') && !$ok) // is multitextured with ";" ?
+            {
+            $ok=true;
+            $texs=explode(";",$tex);
+            if(strlen($texs[0])) $ret[]=$texs[0]; // yes, and it's a "detail texture"
+            if(strlen($texs[1]))  // yes and it's a lightmap
+                {
+                if(strpos($texs[1],"|")!==false)
+                    {
+                    $lm=explode("|",$texs[1]);
+                    $ret[]=$lm[2];
+                    }
+                else
+                    $ret[]=$texs[1];
+                }
+            }
 
-	  if(strpos($tex,'#') && !$ok) // is an environment map ? (or texture slots for shaders)
-	    {
-	    $ok=true;
-	    $texs=explode("#",$tex);
-	    for($z=0;$z<count($texs);$z++)
-		$ret[]=$texs[$z];
-	    }
-	    
-	  if(!$ok && strlen($tex))
-	    $ret[]=$tex;
+          if(strpos($tex,'#') && !$ok) // is an environment map ? (or texture slots for shaders)
+            {
+            $ok=true;
+            $texs=explode("#",$tex);
+            for($z=0;$z<count($texs);$z++)
+                $ret[]=$texs[$z];
+            }
+            
+          if(!$ok && strlen($tex))
+            $ret[]=$tex;
 
-	  $ret=@array_values(array_unique($ret));
-	}
+          $ret=@array_values(array_unique($ret));
+        }
     }
   fclose($fp);
   $ret[]=$filename;

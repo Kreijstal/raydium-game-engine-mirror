@@ -14,7 +14,7 @@ if($name[0]=='-')
 
 for($i=0;$i<$anims_num;$i++)
     if(!strcmp($anims[$i]["name"],$name))
-	return $anims[$i];
+        return $anims[$i];
 
 die("\nanim not found: $name\n");
 }
@@ -35,9 +35,9 @@ $len++;
 $v=array();
 for($i=0;$i<$len;$i++)
     for($j=0;$j<$anims_len;$j++)
-	{
-	$v[$i].=fgets($fp);
-	}
+        {
+        $v[$i].=fgets($fp);
+        }
 
 // test - and reverse
 if($name[0]=='-')
@@ -67,7 +67,7 @@ if($f!=2)
 for($i=2;true;$i++)
     {
     if($argv[$i]=="")
-	break;
+        break;
     $wanted[]=$argv[$i];
     }
 

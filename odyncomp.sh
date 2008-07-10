@@ -7,13 +7,13 @@
 # you may define following env vars:
 
 # AR_PATH
-#	for AR Toolkit (http://artoolkit.sourceforge.net/)
+#       for AR Toolkit (http://artoolkit.sourceforge.net/)
 
 # LIBWII_INCLUDES
-#	for libcwiimote (http://libwiimote.sourceforge.net)
+#       for libcwiimote (http://libwiimote.sourceforge.net)
 
 # ODYNCOMP_FLAGS
-#	for anything else you may need ...
+#       for anything else you may need ...
 
 ulimit -c 0
 make
@@ -29,8 +29,8 @@ fi
 
 if [ -n "$AR_PATH" ]; then
     if [ ! -d "$AR_PATH" ]; then
-	echo "Unable to find ARToolKit (AR_PATH env)"
-	exit 1
+        echo "Unable to find ARToolKit (AR_PATH env)"
+        exit 1
     fi
     AR_PATH_INCLUDE="-I $AR_PATH/include"
     AR_PATH_LIBS="$AR_PATH/lib/libAR.a"
@@ -40,8 +40,8 @@ fi
 # http://libwiimote.sourceforge.net/
 if [ -n "$LIBWII_INCLUDES" ]; then
     if [ ! -f "$LIBWII_INCLUDES/wiimote.h" ]; then
-	echo "Unable to find libwiimote includes (LIBWII_INCLUDES env)"
-	exit 1
+        echo "Unable to find libwiimote includes (LIBWII_INCLUDES env)"
+        exit 1
     fi
     LIBWII_PATH_INCLUDE="-I $LIBWII_INCLUDES"
     LIBWII_ADDS="-D_ENABLE_TILT -D_ENABLE_FORCE -lbluetooth -lcwiimote"

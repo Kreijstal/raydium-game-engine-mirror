@@ -139,10 +139,10 @@ for( i=0; str[i]; i++ )
  if(str[i]=='\n' || str[i]=='\t') continue;
  if(str[i]=='^' && i+1<RAYDIUM_MAX_NAME_LEN && str[i+1]!=0) {
                  // oh ! ... you cannot draw '^' char since i'm
-		 // too lazy to code it for now :)
+                 // too lazy to code it for now :)
                  raydium_osd_color_ega(str[++i]);
-		 continue;
-		 }
+                 continue;
+                 }
  c=str[i]; // c=str[i]-32;
  ligne=c/16;
  offset=c-(ligne*16);
@@ -270,8 +270,8 @@ glVertex3f(x,y,0);
 
 void raydium_osd_network_stat_draw(GLfloat px, GLfloat py, GLfloat size)
 {
-#define RAYDIUM_OSD_NET_SAMPLES		32
-#define RAYDIUM_OSD_NET_STEP		0.3
+#define RAYDIUM_OSD_NET_SAMPLES         32
+#define RAYDIUM_OSD_NET_STEP            0.3
 static GLfloat past_delay[RAYDIUM_OSD_NET_SAMPLES];
 static GLfloat past_rx[RAYDIUM_OSD_NET_SAMPLES];
 static GLfloat past_tx[RAYDIUM_OSD_NET_SAMPLES];
@@ -303,36 +303,36 @@ if(step>=RAYDIUM_OSD_NET_STEP)
 
     // shift array to the left
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_delay[i-1]=past_delay[i];
+        past_delay[i-1]=past_delay[i];
     past_delay[RAYDIUM_OSD_NET_SAMPLES-1]=raydium_netwok_queue_ack_delay_client;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_rx[i-1]=past_rx[i];
+        past_rx[i-1]=past_rx[i];
     past_rx[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_rx-last_rx)/1024;
     last_rx=raydium_network_stat_rx;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_tx[i-1]=past_tx[i];
+        past_tx[i-1]=past_tx[i];
     past_tx[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_tx-last_tx)/1024;
     last_tx=raydium_network_stat_tx;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_reemitted[i-1]=past_reemitted[i];
+        past_reemitted[i-1]=past_reemitted[i];
     past_reemitted[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_reemitted-last_reemitted)*(size/10);
     last_reemitted=raydium_network_stat_reemitted;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_double[i-1]=past_double[i];
+        past_double[i-1]=past_double[i];
     past_double[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_double-last_double)*(size/10);
     last_double=raydium_network_stat_double;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_lost[i-1]=past_lost[i];
+        past_lost[i-1]=past_lost[i];
     past_lost[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_lost-last_lost)*(size/10);
     last_lost=raydium_network_stat_lost;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
-	past_bogus[i-1]=past_bogus[i];
+        past_bogus[i-1]=past_bogus[i];
     past_bogus[RAYDIUM_OSD_NET_SAMPLES-1]=(raydium_network_stat_bogus_ack-last_bogus)*(size/10);
     last_bogus=raydium_network_stat_bogus_ack;
 
@@ -349,9 +349,9 @@ glBegin(GL_LINE_STRIP);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+(past_delay[i]/(double)raydium_timecall_clocks_per_sec*1000*fact_y_delay),
-	py+size);
+        px+(i*fact_x),
+        py+(past_delay[i]/(double)raydium_timecall_clocks_per_sec*1000*fact_y_delay),
+        py+size);
     }
 glEnd();
 
@@ -361,9 +361,9 @@ glBegin(GL_LINE_STRIP);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+(past_tx[i]*fact_y_rxtx),
-	py+size);
+        px+(i*fact_x),
+        py+(past_tx[i]*fact_y_rxtx),
+        py+size);
     }
 glEnd();
 
@@ -373,9 +373,9 @@ glBegin(GL_LINE_STRIP);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+(past_rx[i]*fact_y_rxtx),
-	py+size);
+        px+(i*fact_x),
+        py+(past_rx[i]*fact_y_rxtx),
+        py+size);
     }
 glEnd();
 
@@ -385,13 +385,13 @@ glBegin(GL_LINES);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py,
-	py+size);
+        px+(i*fact_x),
+        py,
+        py+size);
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+past_reemitted[i],
-	py+size);
+        px+(i*fact_x),
+        py+past_reemitted[i],
+        py+size);
     }
 glEnd();
 
@@ -401,13 +401,13 @@ glBegin(GL_LINES);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py,
-	py+size);
+        px+(i*fact_x),
+        py,
+        py+size);
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+past_double[i],
-	py+size);
+        px+(i*fact_x),
+        py+past_double[i],
+        py+size);
     }
 glEnd();
 
@@ -417,13 +417,13 @@ glBegin(GL_LINES);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py,
-	py+size);
+        px+(i*fact_x),
+        py,
+        py+size);
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+past_lost[i],
-	py+size);
+        px+(i*fact_x),
+        py+past_lost[i],
+        py+size);
     }
 glEnd();
 
@@ -433,13 +433,13 @@ glBegin(GL_LINES);
 for(i=0;i<RAYDIUM_OSD_NET_SAMPLES;i++)
     {
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py,
-	py+size);
+        px+(i*fact_x),
+        py,
+        py+size);
     raydium_osd_internal_vertex(
-	px+(i*fact_x),
-	py+past_bogus[i],
-	py+size);
+        px+(i*fact_x),
+        py+past_bogus[i],
+        py+size);
     }
 glEnd();
 
@@ -532,16 +532,16 @@ if(raydium_osd_fade_color_timeleft>0)
     {
     raydium_osd_fade_color_timeleft-=raydium_frame_time;
     for(i=0;i<4;i++)
-	raydium_osd_fade_color_current[i]+=
-	    raydium_osd_fade_color_increment[i]*raydium_frame_time;
+        raydium_osd_fade_color_current[i]+=
+            raydium_osd_fade_color_increment[i]*raydium_frame_time;
 
     raydium_osd_mask(raydium_osd_fade_color_current);
     if(raydium_osd_fade_color_timeleft<=0 && raydium_osd_fade_OnFadeEnd)
-	{
-	f=raydium_osd_fade_OnFadeEnd;
-	f();
-	return; // fade may have changed during playback ...
-	}
+        {
+        f=raydium_osd_fade_OnFadeEnd;
+        f();
+        return; // fade may have changed during playback ...
+        }
     }
 }
 

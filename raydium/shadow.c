@@ -122,7 +122,7 @@ int i;
 
 if(first)
     for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
-	dl_state[i]=-1;
+        dl_state[i]=-1;
 
 if(raydium_render_displaylists_tag && raydium_object_anims[o]==0)
 {
@@ -161,13 +161,13 @@ glLoadIdentity();
 
 glTranslatef((raydium_shadow_ground_center_factor_x-0.5)*2,(raydium_shadow_ground_center_factor_y-0.5)*2,0);
 glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-	-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-	-1000,1000); // should probably use far clipping
+        -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+        -1000,1000); // should probably use far clipping
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
 gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
-	  raydium_light_position[raydium_shadow_light][1]*0,
-	  raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
+          raydium_light_position[raydium_shadow_light][1]*0,
+          raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
 
 glDisable(GL_LIGHTING);
 glDisable(GL_TEXTURE_2D);
@@ -231,12 +231,12 @@ glTranslatef(raydium_shadow_ground_center_factor_x,raydium_shadow_ground_center_
 glScalef(0.5,0.5,1.0);
 glColor4f(1,1,1,1);
 glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-	-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-	-1,1);
+        -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+        -1,1);
 
 gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
-	  raydium_light_position[raydium_shadow_light][1]*0,
-	  raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
+          raydium_light_position[raydium_shadow_light][1]*0,
+          raydium_light_position[raydium_shadow_light][2], 0,0,0, 0,1,0);
 
 glMultMatrixf(imview);
 

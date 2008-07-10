@@ -22,7 +22,7 @@ int i;
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state && raydium_ode_element[i].nid==nid)
-	return i;
+        return i;
 return -1;
 }
 
@@ -54,7 +54,7 @@ if(type==RAYDIUM_NETWORK_PACKET_ODE_NEWELEM)
     
     // if we already have this element, refresh it
     if(elem>=0) 
-	raydium_ode_element_delete(elem,1);
+        raydium_ode_element_delete(elem,1);
     
     memcpy(&type,buff+dec,sizeof(int));
     dec+=sizeof(int);
@@ -70,16 +70,16 @@ if(type==RAYDIUM_NETWORK_PACKET_ODE_NEWELEM)
 
     group=raydium_ode_object_find("DISTANT");
     switch(type)
-	{
-	case dSphereClass:
-	    raydium_ode_network_distant_create=1;
-	    elem=raydium_ode_object_sphere_add(name,group,1,get[0],RAYDIUM_ODE_STATIC,tag,mesh);
-	    break;
-	case dBoxClass:
-	    raydium_ode_network_distant_create=1;
-	    elem=raydium_ode_object_box_add(name,group,1,get[0],get[1],get[2],RAYDIUM_ODE_STATIC,tag,mesh);
-	    break;
-	}
+        {
+        case dSphereClass:
+            raydium_ode_network_distant_create=1;
+            elem=raydium_ode_object_sphere_add(name,group,1,get[0],RAYDIUM_ODE_STATIC,tag,mesh);
+            break;
+        case dBoxClass:
+            raydium_ode_network_distant_create=1;
+            elem=raydium_ode_object_box_add(name,group,1,get[0],get[1],get[2],RAYDIUM_ODE_STATIC,tag,mesh);
+            break;
+        }
     raydium_ode_element[elem].distant_owner=buff[1];
     raydium_ode_element[elem].nid=nid;
     raydium_ode_element[elem].lastnetupdate=time(NULL);
@@ -227,10 +227,10 @@ n=0;
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
  if(raydium_ode_element_isvalid(i) &&
     raydium_ode_element[i].nid>=0 )
-	{
-	e[n]=i;
-	n++;
-	}
+        {
+        e[n]=i;
+        n++;
+        }
 raydium_ode_network_element_send(n,e);
 }
 
@@ -254,11 +254,11 @@ while(i<nelems)
     {
     n=raydium_random_i(0,RAYDIUM_ODE_MAX_ELEMENTS);
     if(raydium_ode_element[n].state && raydium_ode_element[n].nid>=0 && !done[n])
-	{
-	done[n]=1;
-	e[i]=n;
-	i++;
-	}
+        {
+        done[n]=1;
+        e[i]=n;
+        i++;
+        }
     total++;
     if(total>RAYDIUM_ODE_MAX_ELEMENTS) break;
     }
@@ -283,10 +283,10 @@ while(i<nelems)
     curr++;
     if(curr>=RAYDIUM_ODE_MAX_ELEMENTS) curr=0;
     if(raydium_ode_element[curr].state && raydium_ode_element[curr].nid>=0)
-	{
-	e[i]=curr;
-	i++;
-	}
+        {
+        e[i]=curr;
+        i++;
+        }
     total++;
     if(total>RAYDIUM_ODE_MAX_ELEMENTS) break;
     }
@@ -353,14 +353,14 @@ raydium_log("ODE 1 sec factor : %f",factor);
 if(factor<0.01) // probably another packet from the same read loop
     {
     for(i=0;i<3;i++)
-	raydium_ode_element[elem].netvel[i]=0;
+        raydium_ode_element[elem].netvel[i]=0;
     return;
     }
 
 // 1 - determine probable next point (real and predi vectors cross point)
 for(i=0;i<3;i++)
     Pcross[i]=ev->pos[i]+
-		(ev->vel[i] * factor);
+                (ev->vel[i] * factor);
 
 #ifdef DEBUG_ODENET
 raydium_log("pcross = %f %f %f | pos = %f %f %f",Pcross[0],Pcross[1],Pcross[2],pos[0],pos[1],pos[2]);
@@ -373,12 +373,12 @@ for(i=0;i<3;i++)
 
 #ifdef DEBUG_ODENET
 raydium_log("netvel = %f %f %f | org = %f %f %f",
-				raydium_ode_element[elem].netvel[0],
-				raydium_ode_element[elem].netvel[1],
-				raydium_ode_element[elem].netvel[2],
-				ev->vel[0],
-				ev->vel[1],
-				ev->vel[2]);
+                                raydium_ode_element[elem].netvel[0],
+                                raydium_ode_element[elem].netvel[1],
+                                raydium_ode_element[elem].netvel[2],
+                                ev->vel[0],
+                                ev->vel[1],
+                                ev->vel[2]);
 raydium_log("---");
 #endif
 
@@ -424,10 +424,10 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].nid>=0 && 
        raydium_ode_element[i].distant &&
        (time(NULL)>raydium_ode_element[i].lastnetupdate+RAYDIUM_NETWORK_TIMEOUT))
-    	    {
-	    raydium_ode_element_delete(i,1);
-	    //raydium_log("element %i deleted: timeout",i);
-	    }
+            {
+            raydium_ode_element_delete(i,1);
+            //raydium_log("element %i deleted: timeout",i);
+            }
 
 // read (flushed ?), and if RAYDIUM_NETWORK_PACKET_DATA, search nid and update pos/rot
 if(raydium_network_read(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
@@ -476,12 +476,12 @@ dec+=sizeof(int);
 switch(i)
     {
     case dSphereClass:
-	set[0]=dGeomSphereGetRadius(raydium_ode_element[e].geom);
-	set[1]=set[2]=0;
-	break;
+        set[0]=dGeomSphereGetRadius(raydium_ode_element[e].geom);
+        set[1]=set[2]=0;
+        break;
     case dBoxClass:
-	dGeomBoxGetLengths(raydium_ode_element[e].geom,set);
-	break;
+        dGeomBoxGetLengths(raydium_ode_element[e].geom,set);
+        break;
     }
 memcpy(data+dec,set,sizeof(dReal)*3);
 dec+=(sizeof(dReal)*3);
@@ -584,8 +584,8 @@ e=&raydium_ode_element[elem];
 cur=raydium_ode_element_pos_get(elem);
 memcpy(pos,cur,sizeof(dReal)*3);
 for(i=0;i<3;i++)
-	pos[i]+=(e->netvel[i]*raydium_ode_timestep);
-//	pos[i]+=(e->netvel[i]/raydium_ode_physics_freq);
+        pos[i]+=(e->netvel[i]*raydium_ode_timestep);
+//      pos[i]+=(e->netvel[i]/raydium_ode_physics_freq);
 
 //printf("cur = %f %f %f | next = %f %f %f (%f %f %f)\n",cur[0],cur[1],cur[2],pos[0],pos[1],pos[2],e->netvel[0],e->netvel[1],e->netvel[2]);
 

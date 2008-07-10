@@ -37,7 +37,7 @@ for($i=$from;$i<count($lines);$i++)
     {
     $l=$lines[$i];
     if(substr(trim($l),0,strlen($tag))==$tag)
-	return $i;
+        return $i;
     }
 return -1;
 }
@@ -91,17 +91,17 @@ function getHeaders($directory)
 $res=array();
 if (is_dir($directory)) 
     {
-	if ($dh = opendir($directory)) 
-	{
-	    while (($file = readdir($dh)) !== false) 
-	    {
-		if(substr($file,-2)==".h")
-		{
-		    $res[]=$file;
-		}
-	    }
-	closedir($dh);
-	}
+        if ($dh = opendir($directory)) 
+        {
+            while (($file = readdir($dh)) !== false) 
+            {
+                if(substr($file,-2)==".h")
+                {
+                    $res[]=$file;
+                }
+            }
+        closedir($dh);
+        }
     }
     else echo "'$directory' is not a directory";
 return $res;
@@ -169,10 +169,10 @@ for($i=0;$i<count($files);$i++)
     $file=$files[$i];
     $p=getPriority($file);
     if($p==-1)
-	$p=999000+$i;
-	
+        $p=999000+$i;
+        
     while(isset($sorted[$p]))
-	$p++;
+        $p++;
     $sorted[$p]=$file;
     }
 ksort($sorted);
@@ -189,10 +189,10 @@ for($i=0;$i<count($sorted);$i++)
     $title=getTitle($file);
 
     if($title==-1) 
-	{
-	h1(($i+1)." no documentation for $file");
-	continue;
-	}
+        {
+        h1(($i+1)." no documentation for $file");
+        continue;
+        }
     
     h1(($i+1)." $title");
     
@@ -200,83 +200,83 @@ for($i=0;$i<count($sorted);$i++)
     $last=0;
     $n=0;
     while(($l=getTagLine("/**",$f,$last))!=-1)
-	{
-	$title=trim($f[$l-1]);
-	if($title=="")
-	    $title="// unknown item";
-	    
-	// types:
-	// 1 - Comment (//)
-	// 2 - Macro (#)
-	// 3 - Code (...)
-	$type=3;
-	if($title[0]=="/")
-	    {
-	    $type=1;
-	    $com_type=$title[1];
-	    $title=trim(substr($title,2));
-	    if($com_type=='*')
-		{
-		$title=str_replace( "*/", "", $title);
-		$title=trim($title);
-		}
-	    }
+        {
+        $title=trim($f[$l-1]);
+        if($title=="")
+            $title="// unknown item";
+            
+        // types:
+        // 1 - Comment (//)
+        // 2 - Macro (#)
+        // 3 - Code (...)
+        $type=3;
+        if($title[0]=="/")
+            {
+            $type=1;
+            $com_type=$title[1];
+            $title=trim(substr($title,2));
+            if($com_type=='*')
+                {
+                $title=str_replace( "*/", "", $title);
+                $title=trim($title);
+                }
+            }
 
-	if($title[0]=="#")
-	    {
-	    $type=2;
-	    $pos=strpos($title,")");
-	    if($pos)
-		{
-		$title=substr($title,0,$pos+1);
-		}
-	    $title=trim(str_replace("#define ","",$title))." (macro)";
-	    
-	    }
+        if($title[0]=="#")
+            {
+            $type=2;
+            $pos=strpos($title,")");
+            if($pos)
+                {
+                $title=substr($title,0,$pos+1);
+                }
+            $title=trim(str_replace("#define ","",$title))." (macro)";
+            
+            }
 
-	if($type==3)
-	    {
-	    if(substr($title,0,7)=="extern ")
-		$title=trim(substr($title,7));
-	    if(substr($title,0,9)=="__rayapi ")
-		$title=trim(substr($title,9));
-	    if($title[strlen($title)-1]==";")
-		$title=substr($title,0,-1);
-	    $title=trim(str_replace("**","* *",$title));
-	    }
-	
-	if($type==2 || $type==3)
-	    $id=addToIndex($title);
-	
-	h2('""'."<a name=$id></a>".'""'.($i+1).".".($n+1)." $title");
-	
-	$last=$l+1;
-	$end=getTagLine("**/",$f,$last);
-	if($end==-1)
-	    die("expected '**/' (started line $l)");
-	
-	unset($body);
-/*	for($j=$l+1;$j<$end;$j++)
-	    {
-	    $lj=trim($f[$j]);
-	    if($lj=="") 
-		$lj="\n\n";
-	    else
-		$lj.=" ";
-	    $body[]=$lj;
-	    }
-	$str=implode("",$body);*/
-	for($j=$l+1;$j<$end;$j++)
-	    {
-	    $lj=trim($f[$j]);
-	    $body[]=$lj;
-	    }
-	$str=@implode("\n",$body);
-	body($str);
-	
-	$last=$end+1;
-	$n++;
-	}
+        if($type==3)
+            {
+            if(substr($title,0,7)=="extern ")
+                $title=trim(substr($title,7));
+            if(substr($title,0,9)=="__rayapi ")
+                $title=trim(substr($title,9));
+            if($title[strlen($title)-1]==";")
+                $title=substr($title,0,-1);
+            $title=trim(str_replace("**","* *",$title));
+            }
+        
+        if($type==2 || $type==3)
+            $id=addToIndex($title);
+        
+        h2('""'."<a name=$id></a>".'""'.($i+1).".".($n+1)." $title");
+        
+        $last=$l+1;
+        $end=getTagLine("**/",$f,$last);
+        if($end==-1)
+            die("expected '**/' (started line $l)");
+        
+        unset($body);
+/*      for($j=$l+1;$j<$end;$j++)
+            {
+            $lj=trim($f[$j]);
+            if($lj=="") 
+                $lj="\n\n";
+            else
+                $lj.=" ";
+            $body[]=$lj;
+            }
+        $str=implode("",$body);*/
+        for($j=$l+1;$j<$end;$j++)
+            {
+            $lj=trim($f[$j]);
+            $body[]=$lj;
+            }
+        $str=@implode("\n",$body);
+        body($str);
+        
+        $last=$end+1;
+        $n++;
+        }
     }
 
 

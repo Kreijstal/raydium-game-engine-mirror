@@ -21,13 +21,13 @@ char *version="version 0.96";
 #include "raydium/index.c"
 
 
-#define DEFAULT_ZOOM		20
-#define DEFAULT_CAMX		0
-#define DEFAULT_CAMY		-100
-#define DEFAULT_CAMZ		5
-#define PLANE_PLACE		30
-#define PARACHUTE_PORTANCE 	0.1
-#define MAX_TOUCH_TIME		5
+#define DEFAULT_ZOOM            20
+#define DEFAULT_CAMX            0
+#define DEFAULT_CAMY            -100
+#define DEFAULT_CAMZ            5
+#define PLANE_PLACE             30
+#define PARACHUTE_PORTANCE      0.1
+#define MAX_TOUCH_TIME          5
 
 
 GLfloat sun[]={1.0,0.9,0.5,1.0};
@@ -61,7 +61,7 @@ char fp_view=-1;
 #define GAME_PART_JUMP     1
 #define GAME_PART_PARA     2
 #define GAME_PART_TOUCHED  3
-#define GAME_PART_SCORE	   4
+#define GAME_PART_SCORE    4
 #define GAME_PART_QUIT     5
 int game_part=-1;
 
@@ -207,9 +207,9 @@ c2=raydium_ode_element_data_get(e2);
 
     if(((c1==&type_para && c2==&type_lander) || 
         (c2==&type_para && c1==&type_lander)  ) && game_part<GAME_PART_SCORE)
-	{
-	touching=1;
-	}
+        {
+        touching=1;
+        }
 
 if((c1==&type_para || c2==&type_para) && (game_part==GAME_PART_PARA || game_part==GAME_PART_JUMP)) 
 {
@@ -224,10 +224,10 @@ if(c1==&type_plane || c2==&type_plane)
     {
      if(!plane_touched)
         {
-	raydium_sound_SourceStop(S_plane);
-	play_hurt_sound();
-	plane_touched++;
-	}
+        raydium_sound_SourceStop(S_plane);
+        play_hurt_sound();
+        plane_touched++;
+        }
     }
 
 return 1;
@@ -464,16 +464,16 @@ if((score_timer>30 || raydium_key_last==1008) && game_part==GAME_PART_SCORE)
 if(raydium_key_last==1032)
     {
     if(game_part==GAME_PART_PLANE)
-	{
-	create_para("plane 1");
-	game_part=GAME_PART_JUMP;
-	}
-    else	
+        {
+        create_para("plane 1");
+        game_part=GAME_PART_JUMP;
+        }
+    else        
     if(game_part==GAME_PART_JUMP)
-	{
-	para_open=1;
-	game_part=GAME_PART_PARA;
-	}
+        {
+        para_open=1;
+        game_part=GAME_PART_PARA;
+        }
     }
 
 if(touching_steps>=400*MAX_TOUCH_TIME && game_part==GAME_PART_TOUCHED)
@@ -500,47 +500,47 @@ switch(game_part)
         camx=DEFAULT_CAMX;
         camy=DEFAULT_CAMY;
         camz=DEFAULT_CAMZ;
-	camzoom=20;
-	strcpy(cam,"ground");
-	tip=0;
-	break;
+        camzoom=20;
+        strcpy(cam,"ground");
+        tip=0;
+        break;
     case GAME_PART_JUMP:
-	camzoom=5;
-	strcpy(cam,"body");
-	tip=1;
-	break;	
+        camzoom=5;
+        strcpy(cam,"body");
+        tip=1;
+        break;  
     case GAME_PART_PARA:
-	camzoom=15;
-	strcpy(cam,"body");
-	tip=2;
-	break;
+        camzoom=15;
+        strcpy(cam,"body");
+        tip=2;
+        break;
     case GAME_PART_TOUCHED:
-	camzoom=6;
-	camz=50;
-	camx=raydium_trigo_cos(angle)*100;
-	camy=raydium_trigo_sin(angle)*100;
-	strcpy(cam,"head");
-	tip=3;
-	break;	
+        camzoom=6;
+        camz=50;
+        camx=raydium_trigo_cos(angle)*100;
+        camy=raydium_trigo_sin(angle)*100;
+        strcpy(cam,"head");
+        tip=3;
+        break;  
     case GAME_PART_QUIT:
-	camx=camy=1;
-	camz+=(camz*last_frame_step)/60;
-	camzoom=70;
-	strcpy(cam,"ground");
-	tip=4;
-	if(camz>500) exit(0);
-	break;    
+        camx=camy=1;
+        camz+=(camz*last_frame_step)/60;
+        camzoom=70;
+        strcpy(cam,"ground");
+        tip=4;
+        if(camz>500) exit(0);
+        break;    
     case GAME_PART_SCORE:
-	if(raydium_ode_object_find("PLANE 1")<0)
-	    create_plane(1);
-	dBodySetGravityMode(raydium_ode_element[raydium_ode_element_find("plane 1")].body,1);
-	camzoom=4;
-	camz=30;
-	camx=raydium_trigo_cos(-angle)*200;
-	camy=raydium_trigo_sin(-angle)*200;
-	strcpy(cam,"plane 1");
-	tip=3;
-	break;
+        if(raydium_ode_object_find("PLANE 1")<0)
+            create_plane(1);
+        dBodySetGravityMode(raydium_ode_element[raydium_ode_element_find("plane 1")].body,1);
+        camzoom=4;
+        camz=30;
+        camx=raydium_trigo_cos(-angle)*200;
+        camy=raydium_trigo_sin(-angle)*200;
+        strcpy(cam,"plane 1");
+        tip=3;
+        break;
     }
 
 
@@ -555,11 +555,11 @@ if(raydium_ode_object_find("PLANE 1")>=0 && game_part<GAME_PART_SCORE)
     raydium_sound_SetSourcePos(S_plane,pos);
     raydium_sound_SetSourcePos(S_plane_fall,pos);
     if(tmp[0]>250)
-	{
-	score_timer=0;
-	game_part=GAME_PART_SCORE;
-	return;
-	}
+        {
+        score_timer=0;
+        game_part=GAME_PART_SCORE;
+        return;
+        }
     }
 
 
@@ -586,9 +586,9 @@ if(fp_view>0 && game_part<GAME_PART_SCORE)
     to_p=raydium_ode_element_pos_get(to);
     
     if(game_part>=GAME_PART_TOUCHED)
-	camera(to_p[0]-0.3,to_p[1]-0.3,to_p[2]+0.5,from_p[1],-from_p[2],from_p[0],80);
+        camera(to_p[0]-0.3,to_p[1]-0.3,to_p[2]+0.5,from_p[1],-from_p[2],from_p[0],80);
     else
-	camera(from_p[0],from_p[1]-2,from_p[2]+1,to_p[0],to_p[1],to_p[2],80);
+        camera(from_p[0],from_p[1]-2,from_p[2]+1,to_p[0],to_p[1],to_p[2],80);
 //    raydium_projection_fov=90;
 //    raydium_window_view_update();
 //    raydium_ode_element_camera_inboard(from,0,-1,0,0,1,0);
