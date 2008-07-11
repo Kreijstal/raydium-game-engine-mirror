@@ -10,7 +10,7 @@
 # tags in geany. All C files opened with Geany will have Raydium 
 # autocompletion and syntax help.
 
-HEADERS=../raydium/headers
+HEADERS=../../raydium/headers
 GEANYLOCAL=~/.geany/tags/
 
 # We may be called from any path, so let's
