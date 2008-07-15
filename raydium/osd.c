@@ -241,6 +241,7 @@ raydium_osd_cursor_yoffset=yoffset;
 
 void raydium_osd_cursor_draw(void)
 {
+char flip;
 if(!raydium_osd_cursor_texture || !raydium_window_tx) return;
 
 raydium_osd_start();
@@ -253,11 +254,7 @@ raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
 //checking if the texture is vertically flipped (old raydium cursors)
 //Patch for keeping backwards compatibliby
-char flip;
-if(!raydium_texture_flipped_vertical[raydium_osd_cursor_texture])
-    flip=0;
-else
-    flip=1;
+flip=raydium_texture_flipped_vertical[raydium_osd_cursor_texture];
 
 glBegin(GL_QUADS); 
     glTexCoord2f(0,flip);glVertex3f(0,-raydium_osd_cursor_ysize,0); 
