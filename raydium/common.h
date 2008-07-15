@@ -384,6 +384,7 @@ __global signed char     raydium_texture_env[RAYDIUM_MAX_TEXTURES];
 __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
+__global signed char    raydium_texture_flipped_vertical[RAYDIUM_MAX_TEXTURES];
 
 __global GLint  raydium_object_index;
 __global GLuint raydium_object_start[RAYDIUM_MAX_OBJECTS];

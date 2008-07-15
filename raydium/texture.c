@@ -45,6 +45,8 @@ GLfloat r,g,b;
 signed char reflect=0;
 GLint compressed=0;
 char comp_str[128];
+//default to zero for security
+int flipped=0;
 
 // "as" is duplicated ?
 for(i=0;i<raydium_texture_index;i++)
@@ -67,7 +69,7 @@ strcpy((char *)temp,filename);
 temp[3]=0;
 if(!strcmp("ENV",(char *)temp)) reflect=1;
 
-
+/* is a texture image file ? */
 if(!rgb && !faked)
 {
  file=raydium_file_fopen(filename,"rb");
@@ -89,6 +91,23 @@ if(!rgb && !faked)
 
  tx = temp[1] * 256 + temp[0]; // highbyte*256+lowbyte
  ty = temp[3] * 256 + temp[2]; // highbyte*256+lowbyte
+
+//Checking vertical flipping.
+//if the 6th bit of the descriptor(temp[5]) is on, then the image is
+// flipped.
+//We take this into account to prevent the newer patch flip the old
+//cursors (bag coded). So don't remove or we'll lost  backward compability
+//Looks like all raydium textures are inversed (According the rest of
+//the people in the world) so we use negative logic.
+ if(!(temp[5] & 0x20))
+ {
+    raydium_log("Warning: --Old raydium--: Texture verticaly flipped!");
+    flipped=1;
+ }
+ else
+ {
+    flipped=0;
+ }
 
  if( !raydium_texture_size_is_correct(tx) || !raydium_texture_size_is_correct(ty) )
  {
@@ -147,6 +166,9 @@ if(raydium_texture_to_replace)
  { id=raydium_texture_to_replace; raydium_texture_to_replace=0; }
  else
  id=raydium_texture_index++;
+ 
+//if we are loading a new image file, we apply the flip (if needed)
+if(!rgb && !faked) raydium_texture_flipped_vertical[id]=flipped; 
  
 if(raydium_texture_index>RAYDIUM_MAX_TEXTURES) 
     { 
@@ -344,7 +366,7 @@ if(!simulate)
  {
     raydium_texture_blended[id]=0;
     raydium_log("Texture num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
- }
+ } 
 }
  
 return id;
