@@ -53,6 +53,14 @@ fi
 $CC $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM \
 -Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS $ODYNCOMP_FLAGS
-export LD_LIBRARY_PATH=.
-shift
-./test "$@"
+
+ret=$?
+if [ $ret -ne 0 ]; then
+    exit $ret
+fi
+
+if [ -z "$DISABLE_AUTORUN" ]; then
+    export LD_LIBRARY_PATH=.
+    shift
+    ./test "$@"
+fi
