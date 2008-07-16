@@ -241,5 +241,13 @@ If ##move## is ##RAYDIUM_CAMERA_FREEMOVE_FIXED##, camera is only placed and fixe
 Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and orientation are updated with Mouse/Keyboard.
 **/
 
+__rayapi void raydium_camera_orbitmove(float x, float y, float z, float x_to, float y_to, float z_to);
+/**
+Tis functions allow to rotate (in fact orbit) around a certain point
+(x_to,y_to,z_to). The distance of the point xyz to the camera is
+calculated  into the function, you just have to give a initial position
+for the camera (x,y,z).
+Then the distance will be kept while you are orbiting.
+**/
 #endif
 

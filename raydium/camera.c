@@ -614,3 +614,18 @@ void raydium_camera_freemove(int move)
     raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,0);
 }
 
+void raydium_camera_orbitmove(float x, float y, float z, float x_to, float y_to, float z_to)
+{
+    static float delta_x,delta_y;
+    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
+    delta_x+= raydium_mouse_x - (raydium_window_tx/2);
+    delta_y+= raydium_mouse_y - (raydium_window_ty/2);
+    raydium_camera_internal_prepare();
+    glRotatef(raydium_camera_look_at_roll,0,0,1);
+    raydium_camera_look_at_roll=0;
+    gluLookAt(x,y,z,z_to,x_to,-y_to,0.,0.,1.);
+    glRotatef(delta_y,0,1,0);
+    glRotatef(delta_x,0,0,1);
+    raydium_camera_internal(x,y,z);
+}
+
