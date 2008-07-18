@@ -3,7 +3,8 @@
 /*
     Raydium - CQFD Corp.
     http://raydium.org/
-    License: GPL - GNU General Public License, see "gpl.txt" file.
+    Released under both BSD license and Lesser GPL library license.
+    See "license.txt" file.
 */
 
 // This script generates a Wiki(ni) style documentation from comments of
