@@ -19,5 +19,5 @@ cd "$(dirname "$0")"
 
 geany -g -P raydium-tags-tmp.c.tags $HEADERS/*.h
 mkdir -p $GEANYLOCAL
-cp raydium-tags-tmp.c.tags $GEANYLOCAL/raydium.c.tags
+mv -f raydium-tags-tmp.c.tags $GEANYLOCAL/raydium.c.tags
 
