@@ -104,7 +104,8 @@ if(!rgb && !faked)
  else
     flipped=0;
  
- if( !raydium_texture_size_is_correct(tx) || !raydium_texture_size_is_correct(ty) )
+ if(!glutExtensionSupported("GL_ARB_texture_non_power_of_two") &&
+ (!raydium_texture_size_is_correct(tx) || !raydium_texture_size_is_correct(ty)) )
  {
  raydium_log("texture: ERROR: cannot load %s: invalid size %ix%i (must be a power of two and inferior to your max hardware size: %i)",filename,tx,ty,raydium_texture_size_max);
  raydium_log("texture: I will fake this texture.");
