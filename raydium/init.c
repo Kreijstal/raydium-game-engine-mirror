@@ -441,7 +441,8 @@ int raydium_init_load(char *filename)
             {
                 raydium_parser_trim(val_s);
                 tmp_sky=((strcmp(val_s,"box")==0))?1:0;
-                raydium_log("Sky type: %s",(tmp_sky?"box":"dynamic"));          
+                tmp_sky=((strcmp(val_s,"none")==0))?-1:tmp_sky;
+                raydium_log("Sky type: %s. Value %d",(tmp_sky?"box":"dynamic"),tmp_sky);          
                 flag_sky=1;            
             }
         }
@@ -491,10 +492,13 @@ int raydium_init_load(char *filename)
         //sky type
         if(flag_sky)
         {
-            if(tmp_sky)
-                raydium_sky_box_cache();
-            else
-                raydium_sky_atmosphere_enable();
+            if(tmp_sky!=-1)
+            {            
+                if(tmp_sky)
+                    raydium_sky_box_cache();
+                else
+                    raydium_sky_atmosphere_enable();
+            }
         }
         //This must be placed after paths processing: Textures involved.
         
@@ -512,6 +516,8 @@ int raydium_init_load(char *filename)
                                 //raydium_path_ext("./data/cars/","car");
                                 raydium_path_ext("./data/cams/","cam");
                                 raydium_path_ext("./data/sprites/","sprite");
+                                raydium_path_ext("./data/music/","wav");
+                                raydium_path_ext("./data/music/","ogg");
                                 raydium_path_ext("./","tga");
                                 //raydium_path_ext("./data/levels/","goals");
                                 //raydium_path_ext("./data/levels/","terrain");
@@ -554,10 +560,11 @@ light0=0,50,150,200,1000000,1,0.9,0.7   #light 0 parameters (default:  0,50,150,
 background=1,0.9,0.7,1                  #background color (default:  1,0.9,0.7,1)\n\
 hdr=\"off\"                             #Fake HDR effect(default:off)\n\
 paths=\"foldered\"                      #data can be foldered into \"data\" folders and its subfolders: \"foldered\" or anything else. (default:\"foldered\")\n\
-sky=\"box\"                             #Sky type: \"box\" or \"dynamic\" \n\
+sky=\"box\"                             #Sky type: \"box\" or \"dynamic\" or \"none\" \n\
 ");
             }
             fclose(fp);
+            //Hm... Dangerous!!!
             raydium_init_load(filename);
             return 1;
         }
@@ -576,7 +583,7 @@ sky=\"box\"                             #Sky type: \"box\" or \"dynamic\" \n\
             raydium_light_conf_7f(0,50,150,200,1000000,1,0.9,0.7); // id, pos, intensity and color (RGB)
             raydium_background_color_change(1,0.9,0.7,1);
 
-            raydium_sky_box_cache();
+            if(tmp_sky!=-1)raydium_sky_box_cache();
         }
         if (fp) fclose(fp);
         return 0;
