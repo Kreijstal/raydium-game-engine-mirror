@@ -110,7 +110,7 @@ if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
   {
 // return GetTickCount();
     LARGE_INTEGER t;
-    QueryPerformanceCounter(&t);
+    if(!QueryPerformanceCounter(&t))raydium_log("TIMECALL ERROR: Your system can not provide data(high resolution timer) to QueryPerformanceCounter function. Please tell us about this in the raydium forum.Thanks");
     t.QuadPart>>=raydium_timecall_w32_divmodulo;
     return t.LowPart;
   }
