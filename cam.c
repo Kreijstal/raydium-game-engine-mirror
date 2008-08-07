@@ -5,9 +5,9 @@
     See "license.txt" file.
 */
 
-// This small app will generate camera paths
+// This small app will allow you to generate camera paths.
+// Using the console, you can change speed using "$speed=0.01", for example.
 
-#define NO_ODE_SUPPORT
 #include "raydium/index.c"
 
 GLfloat cam_angle_x = 0;
@@ -20,8 +20,6 @@ GLfloat roll = 0;
 
 GLfloat speed = 0.1;
 GLint sensibilite = 3;
-
-GLint lacet = 0;
 
 char model[RAYDIUM_MAX_NAME_LEN];
 
@@ -95,7 +93,6 @@ if(raydium_key_last==1032)
     raydium_osd_fade_from(from,to,0.2,NULL);
     }
 
-raydium_osd_logo("logo.tga");
 raydium_osd_printf(2,98,16,0.48,"font2.tga","^fF1/F2: Zoom - F3/F4: Roll - Space: add path point - see cam.cam / cam1.cam");
     
 raydium_rendering_finish();
@@ -121,7 +118,6 @@ int main(int argc, char **argv)
     raydium_light_intensity[0] = 1000000;
     raydium_light_update_all(0);
 
-//    raydium_osd_cursor_set("BOXcursor.tga",4,4);
 
     raydium_window_view_update();
 
@@ -142,6 +138,8 @@ int main(int argc, char **argv)
         raydium_log("cannot open cam1.cam (w)");
         return 1;
         }
+
+    raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
     raydium_callback(&display);
     return(0);
 }
