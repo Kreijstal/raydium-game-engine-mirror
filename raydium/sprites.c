@@ -77,6 +77,7 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
     */
 }
 
+
 void raydium_sprite_dump_info(int id)
 {
         int a;
@@ -460,6 +461,33 @@ void raydium_sprite_free(int sprite)
         raydium_ode_object_delete(raydium_sprite_collision_box_id[sprite]);
         
 }
+//frees an sprite
+void raydium_sprite_free_name(char *name)
+{
+    int a,sprite;
+    sprite=0;
+    for (a=0;a<RAYDIUM_MAX_SPRITES;a++)
+    {
+        if(raydium_sprite_used[a]==1 && strcmp(raydium_sprite_name[a],name)==0)
+        {
+            sprite=a;
+            //pending to free really the content of the sprite
+            raydium_sprite_pos[sprite][0]=0;
+            raydium_sprite_pos[sprite][1]=0;
+            raydium_sprite_pos[sprite][2]=0;
+            raydium_sprite_used[sprite]=0;
+            raydium_sprite_current_frame[sprite]=0;
+            raydium_sprite_total_frames[sprite]=0;
+            raydium_ode_object_delete(raydium_sprite_collision_box_id[sprite]);
+            strcpy(raydium_sprite_name[sprite],NULL);
+            break;
+        }
+    }
+        
+        
+}
+
+
 /*
 //DON'T USE!!!
 int raydium_sprite_copy(int other)
