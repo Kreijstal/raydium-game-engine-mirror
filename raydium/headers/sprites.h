@@ -114,8 +114,14 @@ Function to change the animation group of a certain sprite.
 
 __rayapi void raydium_sprite_free(int sprite);
 /**
-Internal use. DONT'T USE.experimental
+Deletes an sprite.
 **/
+
+__rayapi void raydium_sprite_free_name(char *name);
+/**
+Function to delete all the sprites using a certain filename.
+**/
+
 
 // __rayapi int raydium_sprite_copy(int other);
 ///**
