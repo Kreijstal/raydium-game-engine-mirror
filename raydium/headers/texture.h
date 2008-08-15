@@ -60,6 +60,12 @@ __rayapi GLuint raydium_texture_load_erase (char *filename, GLuint to_replace);
 Same as above, but ##to_replace## texture (index) is erased with ##filename##.
 **/
 
+__rayapi void raydium_texture_free(int number);
+/** experimental function to free textures **/
+
+__rayapi void raydium_texture_free_name(char *name);
+/** experimental function to free textures by its name**/
+
 __rayapi signed char raydium_texture_current_set (GLuint current);
 /**
 Switch active texture to "current" index. Mostly used for runtime object 

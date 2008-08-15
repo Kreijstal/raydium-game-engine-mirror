@@ -388,6 +388,24 @@ raydium_texture_to_replace=to_replace;
 return raydium_texture_load(filename);
 }
 
+void raydium_texture_free(int number)
+{
+    GLuint textures[1];
+    textures[0]=number;
+    glDeleteTextures( 1, (GLuint *)&textures );
+    strcpy(raydium_texture_name[number],"");
+    
+}
+
+void raydium_texture_free_name(char *name)
+{
+    int i;
+    for(i=0;i<(int)raydium_texture_index;i++)
+    if(!strcmp(raydium_texture_name[i],name))
+    {
+        raydium_texture_free(i);
+    }
+}
 
 signed char raydium_texture_current_set(GLuint current)
 {
