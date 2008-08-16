@@ -324,6 +324,8 @@ __global GLfloat  raydium_texture_filter_aniso_levels;
 __global GLuint   raydium_internal_size_vector_float_4;
 __global GLuint   raydium_texture_to_replace;
 __global GLfloat  raydium_texture_used_memory;
+__global int    raydium_texture_slot_used[RAYDIUM_MAX_TEXTURES];
+__global int    raydium_texture_use_npot_textures;
 
 __global signed char    raydium_projection;
 __global GLfloat raydium_projection_fov;        // perspective only

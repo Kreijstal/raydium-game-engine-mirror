@@ -49,8 +49,9 @@ char comp_str[128];
 int flipped=0;
 
 // "as" is duplicated ?
+//check if the filename of the texture is already loaded
 for(i=0;i<raydium_texture_index;i++)
-    if(!strcmp(raydium_texture_name[i],as)) 
+    if(!strcmp(raydium_texture_name[i],as))
     {
     raydium_log("texture: (internal) %s is duplicated",as);
     return i;
@@ -103,14 +104,39 @@ if(!rgb && !faked)
     flipped=1;
  else
     flipped=0;
- 
- if(!glutExtensionSupported("GL_ARB_texture_non_power_of_two") && !glutExtensionSupported("GL_ARB_texture_rectangle")  &&
- (!raydium_texture_size_is_correct(tx) || !raydium_texture_size_is_correct(ty)) )
+ //checking if you can use NPOT textures
+ if(!raydium_texture_use_npot_textures)
  {
- raydium_log("texture: ERROR: cannot load %s: invalid size %ix%i (must be a power of two and inferior to your max hardware size: %i)",filename,tx,ty,raydium_texture_size_max);
- raydium_log("texture: I will fake this texture.");
- tx=ty=1;
+     //no, you can not use NPOT textures
+     //check if the texture is valid
+      if(!raydium_texture_size_is_correct(tx) || !raydium_texture_size_is_correct(ty))
+     {
+         //it's not a valid one
+         raydium_log("texture: ERROR: cannot load %s: invalid size %ix%i (must be a power of two and inferior to your max hardware size: %i)",filename,tx,ty,raydium_texture_size_max);
+         raydium_log("texture: I will fake this texture.");
+         tx=ty=1;
+     }
+     
+     
  }
+ else
+ {
+     //yes, you can use NPOT textures
+     //check if the texture is valid
+      if(
+        !glutExtensionSupported("GL_ARB_texture_non_power_of_two") && 
+        !glutExtensionSupported("GL_ARB_texture_rectangle")  &&
+        (   !raydium_texture_size_is_correct(tx) || 
+            !raydium_texture_size_is_correct(ty)) 
+        )
+     {
+         //it's not a valid one
+         raydium_log("texture: ERROR: cannot load %s: invalid size %ix%i (must be a power of two and inferior to your max hardware size: %i)",filename,tx,ty,raydium_texture_size_max);
+         raydium_log("texture: I will fake this texture.");
+         tx=ty=1;
+     }
+ }
+
  bpp= temp[4] / 8;
  texsize = tx * ty * bpp;
 
@@ -366,6 +392,16 @@ if(!simulate)
 }
  
 return id;
+}
+
+void raydium_texture_enable_npot_textures(void)
+{
+    raydium_texture_use_npot_textures=1;
+}
+
+void raydium_texture_disable_npot_textures(void)
+{
+    raydium_texture_use_npot_textures=0;
 }
 
 GLuint raydium_texture_load(char *filename)

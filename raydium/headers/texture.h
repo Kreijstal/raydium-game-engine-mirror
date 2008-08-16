@@ -92,6 +92,17 @@ Same as above, but don't load texture if ##name## isn't already loaded and
 then returns -1. Returns texture id otherwise.
 **/
 
+void raydium_texture_enable_npot_textures(void);
+/**
+You can allow the load of Non-power-of-two textures with this function.
+**/
+
+void raydium_texture_disable_npot_textures(void);
+/**
+Function to disabled the previous behaviour. By default Raydium already
+has this behaviour disabled. 
+**/
+
 __rayapi void raydium_texture_filter_change (GLuint filter);
 /**
 
