@@ -394,12 +394,12 @@ if(!simulate)
 return id;
 }
 
-void raydium_texture_enable_npot_textures(void)
+void raydium_texture_npot_enable(void)
 {
     raydium_texture_use_npot_textures=1;
 }
 
-void raydium_texture_disable_npot_textures(void)
+void raydium_texture_npot_disable(void)
 {
     raydium_texture_use_npot_textures=0;
 }
