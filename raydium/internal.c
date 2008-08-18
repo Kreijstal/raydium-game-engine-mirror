@@ -33,7 +33,7 @@ for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
     {
         for(j=0,a=0;j<raydium_vertex_index;j++)
             if(raydium_vertex_texture[j]==i) a++;
-                raydium_log("Texture num %i: %i vertex(s) - loaded as \"%s\". Using %.2f MB",i,a,raydium_texture_name[i],raydium_texture_memory[i]/1024.f/1024.f);
+                raydium_log("Texture %i: %i vert, as \"%s\" (%.2f MB)",i,a,raydium_texture_name[i],raydium_texture_memory[i]/1024.f/1024.f);
     }
     }
 raydium_log("Estimated total: %.2f MB used for textures.",raydium_texture_used_memory/1024.f/1024.f);
@@ -42,7 +42,7 @@ raydium_log("Using %i object(s):",raydium_object_index);
 for(si=0;si<raydium_object_index;si++)
     {
     a=raydium_object_end[si]-raydium_object_start[si];
-    raydium_log("Object num %i: %i vertex(s) - loaded as \"%s\"",si,a,raydium_object_name[si]);
+    raydium_log("Object %i: %i vert, as \"%s\"",si,a,raydium_object_name[si]);
     }
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_NONE)
