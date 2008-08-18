@@ -15,6 +15,8 @@
 # ODYNCOMP_FLAGS
 #       for anything else you may need ...
 
+# Known bugs: AR_PATH and LIBWII_INCLUDES must not contain space character ...
+
 ulimit -c 0
 make
 
@@ -50,7 +52,7 @@ fi
 if [ -f test ]; then
     rm test
 fi
-$CC $1 -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
+$CC "$1" -g -Wall -DFORCE_LIBRAYDIUM -o test libraydium.so \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM \
 -Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS $ODYNCOMP_FLAGS
 
