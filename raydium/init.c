@@ -102,20 +102,10 @@ raydium_hdr_init();
 raydium_shader_init();
 raydium_web_init();
 
-// Must find a way to delete textures from video card's memory, too...
-
+//reset all the textures
 for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
 {
- raydium_texture_name[i][0]=0;
- raydium_texture_blended[i]=0;
- raydium_texture_nolight[i]=0;
- raydium_texture_env[i]=0;
- raydium_texture_islightmap[i]=0;
- raydium_texture_shader[i]=-1;
- raydium_texture_rgb[0][i]=-1.f;
- raydium_texture_rgb[1][i]=-1.f;
- raydium_texture_rgb[2][i]=-1.f;
- raydium_texture_rgb[3][i]=1.f;
+    raydium_texture_free(i);
 }
 
 raydium_hdr_texture_reset();
@@ -125,7 +115,7 @@ raydium_vertex_offset_triangle=0;
 
 strcpy(raydium_texture_name[0],"dummy.null");
 
-raydium_texture_index=1; // no more texture loaded (0 is not a texture)
+//raydium_texture_index=1; // no more texture loaded (0 is not a texture)
 raydium_texture_current_main=0; // sets an "invalid" current texture
 raydium_texture_current_multi=0; // sets an "invalid" current texture
 raydium_texture_current_multi_u=0;

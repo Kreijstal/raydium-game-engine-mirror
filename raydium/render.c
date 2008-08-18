@@ -278,8 +278,11 @@ if(raydium_shadow_rendering)
     return;
     }
 
-for(tex=1;tex<raydium_texture_index;tex++)
+//for(tex=1;tex<raydium_texture_index;tex++)
+for(tex=1;tex<RAYDIUM_MAX_TEXTURES;tex++)
+if(raydium_texture_used[tex])
 {
+    
   // prepare first texture unit
   raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,tex);
   // ... and reset next ones

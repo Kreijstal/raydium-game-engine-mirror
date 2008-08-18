@@ -50,14 +50,28 @@ int flipped=0;
 
 // "as" is duplicated ?
 //check if the filename of the texture is already loaded
-for(i=0;i<raydium_texture_index;i++)
+/*for(i=0;i<raydium_texture_index;i++)
     if(!strcmp(raydium_texture_name[i],as))
     {
     raydium_log("texture: (internal) %s is duplicated",as);
     return i;
     }
+*/
+// "as" is duplicated ?
+//check if the filename of the texture is already loaded
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+{
+    if(raydium_texture_used[i])
+    {
+        if (!strcmp(raydium_texture_name[i],as))
+        {
+            raydium_log("texture: (internal) %s is duplicated",as);
+            return i;
+        }
+    }
+}
 
-
+//detect if there is no rendering window
 if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
     simulate=1;
 
@@ -66,13 +80,16 @@ strcpy((char *)temp,filename);
 temp[4]=0;
 if(!strcmp("rgb(",(char *)temp)) rgb=1; else rgb=0;
 
+//copying the filename in temp
 strcpy((char *)temp,filename);
 temp[3]=0;
+//has reflection ENV string?
 if(!strcmp("ENV",(char *)temp)) reflect=1;
 
 /* is a texture image file ? */
 if(!rgb && !faked)
 {
+ //yes, it's a texture image file
  file=raydium_file_fopen(filename,"rb");
  if(!file)
   {
@@ -83,9 +100,9 @@ if(!rgb && !faked)
  fread(temp,1,12,file);
  if(temp[2]!=2 && temp[2]!=3) 
  { 
- fclose(file); 
- raydium_log("%s is not an uncompressed TGA RGB or grayscale file (type %i)",filename,temp[2]);
- return 0; //not a: uncompressed TGA RGB file
+     fclose(file); 
+     raydium_log("%s is not an uncompressed TGA RGB or grayscale file (type %i)",filename,temp[2]);
+     return 0; //not a: uncompressed TGA RGB file
  } 
 
  fread(temp,1,6,file);
@@ -116,8 +133,6 @@ if(!rgb && !faked)
          raydium_log("texture: I will fake this texture.");
          tx=ty=1;
      }
-     
-     
  }
  else
  {
@@ -145,7 +160,7 @@ if(!rgb && !faked)
  fclose(file); 
  raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
  return 0; }
-
+ //reading the image data in the file
  for(j=0; j<ty; j++)
  for(i=0; i<tx; i++)
  {
@@ -183,21 +198,28 @@ if(!rgb && !faked)
 } //end !rgb && !faked
 
 
-
+//Have we to overwrite another texture?
 if(raydium_texture_to_replace)
- { id=raydium_texture_to_replace; raydium_texture_to_replace=0; }
+{ 
+    id=raydium_texture_to_replace;
+    //TODO:WARNING: Not tested!!!!    
+    raydium_texture_free(raydium_texture_to_replace);
+    raydium_texture_to_replace=0;
+}
  else
- id=raydium_texture_index++;
- 
-//if we are loading a new image file, we apply the flip (if needed)
-if(!rgb && !faked) raydium_texture_flipped_vertical[id]=flipped; 
- 
-if(raydium_texture_index>RAYDIUM_MAX_TEXTURES) 
-    { 
-    raydium_log("texture: No more texture slots left ! (%i max)",
-                RAYDIUM_MAX_TEXTURES); 
-    return 0; 
+ {
+ id=raydium_texture_get_next_free_slot_internal();
     }
+
+//check if there is one texture slot free
+if((int)id==-1) 
+{ 
+    raydium_log("texture: No more texture slots left ! (%i max)", RAYDIUM_MAX_TEXTURES); 
+    return 0; 
+}
+    
+//if we are loading a new image file, we apply the flip (if needed)
+if(!rgb && !faked) raydium_texture_flipped_vertical[id]=flipped;
 
 strcpy(raydium_texture_name[id],as);
 
@@ -272,10 +294,14 @@ if(!rgb)
 
 
  raydium_texture_used_memory+=texsize;
+ raydium_texture_memory[id]+=texsize;
  if( (raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR ||
       raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_ANISO) 
      && !faked)
+     {
     raydium_texture_used_memory+=(texsize/3); // mipmaps
+    raydium_texture_memory[id]+=(texsize/3); // mipmaps
+    }
 
 if(!simulate)
  glBindTexture(GL_TEXTURE_2D,id);
@@ -359,7 +385,9 @@ if(!simulate)
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB, &size);
     level=(float)texsize/size;
     raydium_texture_used_memory-=texsize;
+    raydium_texture_memory[id]-=texsize;
     raydium_texture_used_memory+=size; // should take care of mipmaps too !
+    raydium_texture_memory[id]+=size; // should take care of mipmaps too !
     sprintf(comp_str," compression ratio: %.2f",level);
     }
   else
@@ -390,7 +418,7 @@ if(!simulate)
     raydium_log("Texture num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
  } 
 }
- 
+if(id>0)raydium_texture_used[id]=TRUE; 
 return id;
 }
 
@@ -406,9 +434,9 @@ void raydium_texture_npot_disable(void)
 
 GLuint raydium_texture_load(char *filename)
 {
-GLuint res;
+int res;
 res=raydium_texture_load_internal(filename,filename,0,0,0,0,0);
-if(res<=0)
+if((int)res<0)
     {
     raydium_log("texture: faking '%s' with pink color",filename);
     res=raydium_texture_load_internal("rgb(1,0,1)",filename,0,0,0,0,0);
@@ -424,23 +452,63 @@ raydium_texture_to_replace=to_replace;
 return raydium_texture_load(filename);
 }
 
-void raydium_texture_free(int number)
+void raydium_texture_free(int id)
 {
     GLuint textures[1];
-    textures[0]=number;
+    textures[0]=id;
     glDeleteTextures( 1, (GLuint *)&textures );
-    strcpy(raydium_texture_name[number],"");
     
+    raydium_texture_name[id][0]=0;
+    raydium_texture_blended[id]=0;
+    raydium_texture_nolight[id]=0;
+    raydium_texture_env[id]=0;
+    raydium_texture_islightmap[id]=0;
+    raydium_texture_shader[id]=-1;
+    raydium_texture_rgb[0][id]=-1.f;
+    raydium_texture_rgb[1][id]=-1.f;
+    raydium_texture_rgb[2][id]=-1.f;
+    raydium_texture_rgb[3][id]=1.f;    
+    raydium_texture_hdr[id]=0;
+    raydium_texture_flipped_vertical[id]=0;
+    raydium_texture_used[id]=0; 
+     
+    //rest the memory of this texture to the total
+    raydium_texture_used_memory-=raydium_texture_memory[id];
+    
+    raydium_texture_memory[id]=0;  
 }
 
 void raydium_texture_free_name(char *name)
 {
     int i;
-    for(i=0;i<(int)raydium_texture_index;i++)
+    //for(i=0;i<(int)raydium_texture_index;i++)
+    //TODO:re-analise this code to avoid useless passes
+    for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
     if(!strcmp(raydium_texture_name[i],name))
     {
         raydium_texture_free(i);
     }
+}
+int raydium_texture_is_slot_used(int slot)
+{
+    if(raydium_texture_used[slot]==TRUE)
+    return TRUE;
+	else	
+    return FALSE;
+}
+
+int raydium_texture_get_next_free_slot_internal(void)
+{
+    int i;
+    //TODO: Starting in 0 or 1?
+    for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+    {
+        if(raydium_texture_used[i]==FALSE)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 signed char raydium_texture_current_set(GLuint current)
@@ -456,8 +524,13 @@ GLuint i;
 char flag=0;
 GLuint ret=0;
 
-for(i=0;i<raydium_texture_index;i++)
+//for(i=0;i<raydium_texture_index;i++)
+//TODO: re-analise this code to avoid useless passes
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+if(raydium_texture_used[i])
+{
 if(!strcmp(raydium_texture_name[i],name)) { flag++; ret=i; }
+}
 
 if(!flag) ret=raydium_texture_load(name);
 return ret;
@@ -467,9 +540,16 @@ GLint raydium_texture_exists(char *name)
 {
 int i;
 
-for(i=0;i<(int)raydium_texture_index;i++)
+//for(i=0;i<raydium_texture_index;i++)
+//TODO:re-analise code to avoid useless passes
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+{
+if(raydium_texture_used[i])
+{
 if(!strcmp(raydium_texture_name[i],name))
     return i;
+}
+}
 
 return -1;
 }

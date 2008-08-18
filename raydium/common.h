@@ -324,7 +324,6 @@ __global GLfloat  raydium_texture_filter_aniso_levels;
 __global GLuint   raydium_internal_size_vector_float_4;
 __global GLuint   raydium_texture_to_replace;
 __global GLfloat  raydium_texture_used_memory;
-__global int    raydium_texture_slot_used[RAYDIUM_MAX_TEXTURES];
 __global int    raydium_texture_use_npot_textures;
 
 __global signed char    raydium_projection;
@@ -387,6 +386,8 @@ __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
 __global signed char    raydium_texture_flipped_vertical[RAYDIUM_MAX_TEXTURES];
+__global int    raydium_texture_used[RAYDIUM_MAX_TEXTURES];
+__global float  raydium_texture_memory[RAYDIUM_MAX_TEXTURES];
 
 __global GLint  raydium_object_index;
 __global GLuint raydium_object_start[RAYDIUM_MAX_OBJECTS];

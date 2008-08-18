@@ -373,7 +373,8 @@ if(shader!=-1 && !raydium_shader_isvalid(shader)) // -1 to disable shader
     raydium_log("shader: cannot attach shader: Invalid shader");
     return 0;
     }
-if(texture<=0 || texture>=(int)raydium_texture_index)
+//if(texture<=0 || texture>=(int)raydium_texture_index)
+if(!raydium_texture_is_slot_used(texture))
     {
     raydium_log("shader: cannot attach shader: Invalid texture");
     return 0;

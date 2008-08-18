@@ -364,7 +364,8 @@ raydium_osd_stop();
 
 signed char raydium_hdr_texture(int texture, signed char hdr)
 {
-if(texture>=0 && texture<(int)raydium_texture_index)
+//if(texture>=0 && texture<(int)raydium_texture_index)
+if(raydium_texture_is_slot_used(texture))
     {
     raydium_texture_hdr[texture]=hdr;
     return 1;
@@ -383,6 +384,6 @@ void raydium_hdr_texture_reset(void)
 {
 int i;
 
-for(i=0;i<RAYDIUM_MAX_TEXTURES;i++)
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
  raydium_texture_hdr[i]=0;
 }

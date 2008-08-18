@@ -25,11 +25,16 @@ if(raydium_init_cli_option("regs",NULL))
 raydium_log("Internal buffers:");
 raydium_log("-----------------");
 raydium_log("Total of %i vertex(s) loaded:",raydium_vertex_index);
-for(i=0;i<raydium_texture_index;i++)
+
+//for(i=0;i<raydium_texture_index;i++)
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
     {
-    for(j=0,a=0;j<raydium_vertex_index;j++)
-        if(raydium_vertex_texture[j]==i) a++;
-            raydium_log("Texture num %i: %i vertex(s) - loaded as \"%s\"",i,a,raydium_texture_name[i]);
+    if(raydium_texture_used[i])
+    {
+        for(j=0,a=0;j<raydium_vertex_index;j++)
+            if(raydium_vertex_texture[j]==i) a++;
+                raydium_log("Texture num %i: %i vertex(s) - loaded as \"%s\". Using %.2f MB",i,a,raydium_texture_name[i],raydium_texture_memory[i]/1024.f/1024.f);
+    }
     }
 raydium_log("Estimated total: %.2f MB used for textures.",raydium_texture_used_memory/1024.f/1024.f);
 

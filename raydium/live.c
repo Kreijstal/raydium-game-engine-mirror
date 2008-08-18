@@ -878,7 +878,10 @@ if(bpp!=24 && bpp!=32)
 
 
 // duplicated ?
-for(i=0;i<raydium_texture_index;i++)
+//for(i=0;i<raydium_texture_index;i++)
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+if(raydium_texture_used[i])
+{
     if(!strcmp(raydium_texture_name[i],as)) 
     {
     raydium_log("live: WARNING ! %s is duplicated",as);
@@ -894,7 +897,7 @@ for(i=0;i<raydium_texture_index;i++)
     raydium_live_texture_refresh(id);
     return id;
     }
-
+}
 
 tex=&raydium_live_texture[id];
 tex->tx=tx;

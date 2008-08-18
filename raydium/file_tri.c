@@ -91,19 +91,25 @@ fprintf(fp,"1\n");
 
 for(bl=0;bl<2;bl++)
 {
-for(tex=0;tex<raydium_texture_index;tex++)
-if( (raydium_texture_blended[tex]?1:0) == bl)
+//for(tex=0;tex<raydium_texture_index;tex++)
+for(tex=1;tex<RAYDIUM_MAX_TEXTURES;tex++)
 {
-  printf("%s\n",raydium_texture_name[tex]);
-  strcpy(text,raydium_texture_name[tex]);
-// fprintf(fp,"%i\n",j);
- for(i=0;i<raydium_vertex_index;i++)
-  if(raydium_vertex_texture[i]==tex )
-  fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
-  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
-  raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
-  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
-  text);
+    if(raydium_texture_used[tex])
+    {
+        if( (raydium_texture_blended[tex]?1:0) == bl)
+        {
+          printf("%s\n",raydium_texture_name[tex]);
+          strcpy(text,raydium_texture_name[tex]);
+        // fprintf(fp,"%i\n",j);
+         for(i=0;i<raydium_vertex_index;i++)
+          if(raydium_vertex_texture[i]==tex )
+          fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
+          raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
+          raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
+          raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
+          text);
+        }
+    }
 }
 printf("----\n");
 }

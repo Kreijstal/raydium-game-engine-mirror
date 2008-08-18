@@ -88,7 +88,8 @@ raydium_light_update_position(l);
 
 signed char raydium_light_texture(int texture, signed char enable)
 {
-if(texture>=0 && texture<(int)raydium_texture_index)
+//if(texture>=0 && texture<(int)raydium_texture_index)
+if(!raydium_texture_is_slot_used(texture))
     {
     raydium_texture_nolight[texture]=!enable;
     return 1;
