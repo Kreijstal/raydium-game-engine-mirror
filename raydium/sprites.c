@@ -21,11 +21,11 @@ int raydium_sprite_check_available(void)
         for(a=0;a<RAYDIUM_MAX_SPRITES;a++)
         {
                 if(raydium_sprite_used[a]==0)
-                {                       
+                {
                         id=a;
                         //automatically reserve the sprite. TESTING
                         raydium_sprite_used[a]=1;
-                        break;                  
+                        break;
                 }
         }
         return id;
@@ -35,7 +35,7 @@ int raydium_sprite_check_available(void)
 void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, float uz, float rx, float ry, float rz, int textureid, float s0, float s1, float t0, float t1,float size)
 
 {
-        
+
     GLfloat TSIZE;
     int texsave;
     TSIZE=size;
@@ -59,7 +59,7 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
          glTexCoord2f(s1, t1);glVertex3f(x + (rx - ux),y + (ry - uy),z + (rz - uz));
          glTexCoord2f(s1, t0);glVertex3f(x + (-rx - ux),y + (-ry - uy),z + (-rz - uz));
     glEnd();
-    /* 
+    /*
     //first try using triangle instead of quad (should be at least twice faster)
     //How the hell can i calculate the texture coords?
 
@@ -71,8 +71,8 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
     glBegin(GL_TRIANGLES);
          //deforms the triangle, need to fix, but difficult to guess how
          glTexCoord2f(s0, t0);glVertex3f(x + (ux - rx),Y + (uy - ry),Z + (uz - rz));
-          glTexCoord2f(s0, 2*t1);glVertex3f(x + (rx + ux),Y + (2*ry + 2*uy),Z + (rz + uz));         
-          glTexCoord2f(2*s1, t0);glVertex3f(x + (-2*rx - 2*ux),Y + (-ry - uy),Z + (-rz - uz));         
+          glTexCoord2f(s0, 2*t1);glVertex3f(x + (rx + ux),Y + (2*ry + 2*uy),Z + (rz + uz));
+          glTexCoord2f(2*s1, t0);glVertex3f(x + (-2*rx - 2*ux),Y + (-ry - uy),Z + (-rz - uz));
     glEnd();
     */
 }
@@ -110,27 +110,27 @@ of the new sprite.
     GLfloat val_f[RAYDIUM_MAX_NAME_LEN];
     int group;
     char cadena[255];
-    
+
     //initializing the counter of frames
     i=0;
         //getting the next available sprite id
     sid=raydium_sprite_check_available();
-    
+
     //resetting the values of the sprite
     for(group=0;group<RAYDIUM_SPRITE_MAX_GROUPS;group++)
     {
         raydium_sprite_group_start_frame[sid][group]=   -1;
         raydium_sprite_group_jump[sid][group]       =   -1;
-        
+
     }
     raydium_sprite_size[sid]=1;
-    
+
     //opening the sprite file. TODO:Clean
     if((spr=raydium_file_fopen(fichero,"r")))
     {
                 //loop for reading each line of the file
                 while( (ret=raydium_parser_read(var,val_s,val_f,&size,spr))!=RAYDIUM_PARSER_TYPE_EOF)
-                {  
+                {
                         //checking the collision box(long, depth, height)
                         if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"collision")==0 && size==3)
                         {
@@ -141,29 +141,29 @@ of the new sprite.
                         }
                         //checking if it's a float array of 4 elements. A frame
                         if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"coords")==0 && size==4)
-                        {            
+                        {
                                 if(RAYDIUM_SPRITE_DEBUG)raydium_log("FOTOGRAMA %d LEIDO para \"%s\": %f, %f, %f, %f",i,var,val_f[0],val_f[1],val_f[2],val_f[3]);
                                 //inverted values to prevent horizontal flip
                                 //something wrong with this or maybe the billboard sprite function is wrong?
-                                raydium_sprite_coords[sid][i][0]=val_f[1];                        
+                                raydium_sprite_coords[sid][i][0]=val_f[1];
                                 raydium_sprite_coords[sid][i][1]=val_f[0];
                                 raydium_sprite_coords[sid][i][2]=val_f[2];
-                                raydium_sprite_coords[sid][i][3]=val_f[3];            
+                                raydium_sprite_coords[sid][i][3]=val_f[3];
                         }
-                        
+
                         //checking if it's a float array of 1 element
                         /*if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"jump")==0 && size==1)
-                        {            
+                        {
                                 if(RAYDIUM_SPRITE_DEBUG)raydium_log("** Group will jump to group %d.",val_f[0]);
-                                raydium_sprite_group_jump[sid]=val_f[0];            
+                                raydium_sprite_group_jump[sid]=val_f[0];
                         }
-                        
+
                         if(ret==RAYDIUM_PARSER_TYPE_STRING && strcmp(var,"jump")==0 && strcmp(val_s,"stop")==0)
                         {
                                 if(RAYDIUM_SPRITE_DEBUG)raydium_log("** The group will stop in its last frame");
-                                raydium_sprite_group_jump[sid]=-1; 
+                                raydium_sprite_group_jump[sid]=-1;
                         }*/
-                        
+
                         //checking if it's an string (the filename of the texture)
                         if(ret==RAYDIUM_PARSER_TYPE_STRING && strcmp(var,"texture")==0)
                         {
@@ -178,7 +178,7 @@ of the new sprite.
                                 //as the texture file is the last element for a frame, we increase the counter
                                 i++;
                         }
-                        
+
                         //checking if it's an string(the group of the sprite)
                         if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"group")==0 && size==1)
                         {
@@ -187,10 +187,10 @@ of the new sprite.
                                 if(raydium_sprite_group_start_frame[sid][(int)val_f[0]]==-1) raydium_sprite_group_start_frame[sid][(int)val_f[0]]=i;
                                 raydium_sprite_group_frame[sid][i]=(int)val_f[0];
                         }
-                        
+
                         if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"group")==0 && size==2)
                         {
-                                
+
                                 //if this is the first frame of a new group, we mark that frame as start_frame of that group.
                                 if(raydium_sprite_group_start_frame[sid][(int)val_f[0]]==-1) raydium_sprite_group_start_frame[sid][(int)val_f[0]]=i;
                                 raydium_sprite_group_frame[sid][i]=(int)val_f[0];
@@ -202,29 +202,29 @@ of the new sprite.
                                 if(RAYDIUM_SPRITE_DEBUG)raydium_log("*** size of the sprite %d: %f.",sid,val_f);
                                 raydium_sprite_size[sid]=val_f[0];
                         }
-                        
+
                 }
                 //closing the file
                 fclose(spr);
-                
+
                 //reset the posision of the sprite
                 raydium_sprite_pos[sid][0]=0;
                 raydium_sprite_pos[sid][1]=0;
                 raydium_sprite_pos[sid][2]=0;
-                
+
                 //adding an standard frametime for the sprite
                 raydium_sprite_time[sid]=20;
-                
+
                 //initializing the sprite at its first frame
                 raydium_sprite_current_frame[sid]=0;
-                
+
                 //storing the total number of frames
                 raydium_sprite_total_frames[sid]=i-1;
-                
+
                 //initializing the current group
                 raydium_sprite_group_current[sid]=1;
-                
-                //create the ODE object    
+
+                //create the ODE object
                 sprintf(cadena,"raydium_sprite_%d",sid);
                 raydium_ode_object_delete_name(cadena);
                 raydium_sprite_collision_box_id[sid]=raydium_ode_object_create(cadena);
@@ -250,17 +250,17 @@ of the new sprite.
         }
     //returning the new spriteid or -1 if nothing loaded.
     if(i>0)
-    {       
+    {
         strcpy(raydium_sprite_name[sid],fichero);
         raydium_sprite_type[sid]=-1;
         raydium_sprite_status[sid]=-1;
-        raydium_current_sprite++; 
+        raydium_current_sprite++;
         return sid;
     }
     else
     {
         return -1;
-    }     
+    }
 }
 
 //get the name (char*) of an sprite from its related ODE object id
@@ -270,7 +270,7 @@ char *raydium_sprite_get_name_from_object(int obj)
         for(a=0;a<RAYDIUM_MAX_SPRITES;a++)
         {
                 if(raydium_sprite_collision_box_id[a]==obj)
-                {                       
+                {
                         return raydium_sprite_name[a];
                 }
         }
@@ -296,9 +296,9 @@ void sprite_render_frame(float x, float y, float z, int spriteid,int frame,float
     GLfloat rx;
     GLfloat ry;
     GLfloat rz;
-    
+
         glPushMatrix();
-        
+
     //storing the current texture, to recover it at last
     texsave=raydium_texture_current_main;
     //storing light state
@@ -308,7 +308,7 @@ void sprite_render_frame(float x, float y, float z, int spriteid,int frame,float
     //raydium_rendering_internal_restore_render_state();
     //applying plane matrix
     glGetFloatv(GL_MODELVIEW_MATRIX,modmat);
-    
+
     ux=modmat[0]*scalex;
     uy=modmat[4]*scalex;
     uz=modmat[8]*scalex;//no idea which scale have to use!!!!!
@@ -319,9 +319,9 @@ void sprite_render_frame(float x, float y, float z, int spriteid,int frame,float
     //raydium_billboard_sprite(x,y,z,ux,uy,uz,rx,ry,rz,1);
     raydium_sprite_billboard(x,y,z,ux,uy,uz,rx,ry,rz,raydium_sprite_textureid[spriteid][frame],raydium_sprite_coords[spriteid][frame][0],raydium_sprite_coords[spriteid][frame][1],raydium_sprite_coords[spriteid][frame][2],raydium_sprite_coords[spriteid][frame][3],raydium_sprite_size[spriteid]);
     glDepthMask(GL_TRUE);
-    
-    glPopMatrix(); 
-    
+
+    glPopMatrix();
+
     //restoring previous light and texture.
     if(light) raydium_light_enable();
     raydium_texture_current_set(texsave);
@@ -332,7 +332,7 @@ void raydium_sprite_move(int sprite,float x, float y, float z)
 {
     raydium_sprite_pos[sprite][0]=x;
     raydium_sprite_pos[sprite][1]=y;
-    raydium_sprite_pos[sprite][2]=z;    
+    raydium_sprite_pos[sprite][2]=z;
     raydium_ode_object_move_3f(raydium_sprite_collision_box_id[sprite],raydium_sprite_pos[sprite][0],raydium_sprite_pos[sprite][1],raydium_sprite_pos[sprite][2]);
 }
 
@@ -341,7 +341,7 @@ void raydium_sprite_move_relative(int sprite, float deltax, float deltay, float 
 {
     raydium_sprite_pos[sprite][0]+=deltax;
     raydium_sprite_pos[sprite][1]+=deltay;
-    raydium_sprite_pos[sprite][2]+=deltaz;    
+    raydium_sprite_pos[sprite][2]+=deltaz;
     raydium_ode_object_move_3f(raydium_sprite_collision_box_id[sprite],raydium_sprite_pos[sprite][0],raydium_sprite_pos[sprite][1],raydium_sprite_pos[sprite][2]);
 }
 
@@ -351,7 +351,7 @@ void raydium_sprite_display(int id)
         raydium_camera_replace();
     int grp;
     int lastone=0;
-    
+
     grp = raydium_sprite_group_current[id];
     sprite_render_frame(raydium_sprite_pos[id][0],raydium_sprite_pos[id][1],raydium_sprite_pos[id][2],id,raydium_sprite_current_frame[id],1,1);
     //adding the frametime to the loop...Hmmm, not sure about this...
@@ -359,7 +359,7 @@ void raydium_sprite_display(int id)
     //Is it time to draw a new frame?
     if(raydium_sprite_timer[id]>=raydium_sprite_time[id])
     {
-        
+
         //erase the counter
         raydium_sprite_timer[id]=0;
         raydium_sprite_stopped[id]=0;
@@ -373,13 +373,13 @@ void raydium_sprite_display(int id)
                 {
                         lastone=0;
                 }
-                
+
         //if not the last frame of the sprite, check if the next frame and the current one have the same group ID
         if(!lastone && raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]+1]==raydium_sprite_group_frame[id][raydium_sprite_current_frame[id]] )
         {
             //if they have the same group ID, then just advance one frame
             raydium_sprite_current_frame[id]++;
-        }         
+        }
         else //if they are different or this is the last frame of the sprite
         {
                 //raydium_log("nextjump: %d",raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]);
@@ -396,10 +396,10 @@ void raydium_sprite_display(int id)
                 raydium_sprite_stopped[id]=0;
                         }
                         */
-                        
-                                
 
-            //if the group has LOOP. 
+
+
+            //if the group has LOOP.
             if (raydium_sprite_group_jump[id][raydium_sprite_group_current[id]]==-2)
             {
                 raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];
@@ -422,7 +422,7 @@ void raydium_sprite_display(int id)
             if (raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]<-2 && raydium_sprite_group_jump[id][raydium_sprite_current_frame[id]]!=-999)
             {
                 raydium_log("UNKNOWK JUMP TYPE FOR SPRITE %d IN FRAME %d",id,raydium_sprite_current_frame[id]);
-                raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];            
+                raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];
             }
             */
         }
@@ -430,9 +430,9 @@ void raydium_sprite_display(int id)
         //If the animation comes to the end of the frames, we have to reset it (sending it to the begining of the group)
         if(raydium_sprite_current_frame[id]>=raydium_sprite_total_frames[id])
         {
-            raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];            
+            raydium_sprite_current_frame[id]=raydium_sprite_group_start_frame[id][raydium_sprite_group_current[id]];
         }
-        * */     
+        * */
     }
 
 }
@@ -459,7 +459,7 @@ void raydium_sprite_free(int sprite)
         raydium_sprite_current_frame[sprite]=0;
         raydium_sprite_total_frames[sprite]=0;
         raydium_ode_object_delete(raydium_sprite_collision_box_id[sprite]);
-        
+
 }
 //frees an sprite
 void raydium_sprite_free_name(char *name)
@@ -479,12 +479,12 @@ void raydium_sprite_free_name(char *name)
             raydium_sprite_current_frame[sprite]=0;
             raydium_sprite_total_frames[sprite]=0;
             raydium_ode_object_delete(raydium_sprite_collision_box_id[sprite]);
-            strcpy(raydium_sprite_name[sprite],NULL);
+            raydium_sprite_name[sprite][0]=0;
             break;
         }
     }
-        
-        
+
+
 }
 
 
@@ -500,11 +500,11 @@ int raydium_sprite_copy(int other)
         {
                 //returning the new id
                 //bad way, i need a function.
-                raydium_log("copying sprite");          
-                //sid=raydium_current_sprite + 1; 
+                raydium_log("copying sprite");
+                //sid=raydium_current_sprite + 1;
                 sid=raydium_sprite_check_available();
                 //raydium_sprite_used[sid]=1;
-                
+
                 //copying all the parameters:
                 //the frames
                 raydium_sprite_total_frames[sid]=raydium_sprite_total_frames[other];
@@ -520,7 +520,7 @@ int raydium_sprite_copy(int other)
                         spritecoord[sid][a][6]=spritecoord[other][a][6];
                         spritecoord[sid][a][7]=spritecoord[other][a][7];
                 }
-                //the position          
+                //the position
                 raydium_sprite_pos[sid][0]=raydium_sprite_pos[other][0];
                 raydium_sprite_pos[sid][1]=raydium_sprite_pos[other][1];
                 raydium_sprite_pos[sid][2]=raydium_sprite_pos[other][2];
@@ -536,7 +536,7 @@ int raydium_sprite_copy(int other)
                         raydium_sprite_coords[sid][a][1]=raydium_sprite_coords[other][a][1];
                         raydium_sprite_coords[sid][a][2]=raydium_sprite_coords[other][a][2];
                         raydium_sprite_coords[sid][a][3]=raydium_sprite_coords[other][a][3];
-                        
+
                 }
                 //the time
                 raydium_sprite_time[sid]=raydium_sprite_time[other];
@@ -575,8 +575,8 @@ int raydium_sprite_copy(int other)
                         if(raydium_sprite_group_jump[other]!=0)
                                 raydium_sprite_group_jump[sid][a]=raydium_sprite_group_jump[other][a]; //-2=no jump, -1=stop, number=group to jump
                 }
-                
-                raydium_current_sprite++; 
+
+                raydium_current_sprite++;
                 //creating the new object
                 char *cadena;
                 sprintf(cadena,"raydium_sprite_%d",sid);
@@ -585,7 +585,7 @@ int raydium_sprite_copy(int other)
                 sprintf(cadena,"raydium_sprite_box_%d",sid);
                 raydium_ode_object_box_add(cadena,raydium_sprite_collision_box_id[sid],1,raydium_sprite_collision_box[sid][0],raydium_sprite_collision_box[sid][1],raydium_sprite_collision_box[sid][2], RAYDIUM_ODE_STATIC,0,"");
                 raydium_ode_element_move_name_3f(cadena,raydium_sprite_pos[sid][0],raydium_sprite_pos[sid][1],raydium_sprite_pos[sid][2]);
-                
+
                 return sid;
         }
         else
