@@ -840,12 +840,19 @@ if(f && !f(tex->data_source,tex->tx,tex->ty,tex->bpp))
 
 glEnable(GL_TEXTURE_2D);
 glBindTexture(GL_TEXTURE_2D,tex->texture);
-glTexSubImage2D(GL_TEXTURE_2D,0,0,0,
-                tex->tx,
-                tex->ty,
-                (tex->bpp==24?GL_RGB:GL_RGBA),
-                GL_UNSIGNED_BYTE,
-                tex->data_source);
+
+// We'll use glTexImage2D() only if texture sizes are power of two
+if(tex->tx != tex->hardware_tx || tex->ty != tex->hardware_ty)
+    glTexSubImage2D(GL_TEXTURE_2D,0,0,0,
+                    tex->tx,
+                    tex->ty,
+                    (tex->bpp==24?GL_RGB:GL_RGBA),
+                    GL_UNSIGNED_BYTE,
+                    tex->data_source);
+else
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,tex->tx,tex->ty,
+                 0,(tex->bpp==24?GL_RGB:GL_RGBA),
+                 GL_UNSIGNED_BYTE,tex->data_source);
 }
 
 
