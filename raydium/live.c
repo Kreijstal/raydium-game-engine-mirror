@@ -141,18 +141,18 @@ return -1;
 #ifdef WIN32
 LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
 {
-    int i,j;            
+    int i,j;
     BYTE * pin , * pout;
     raydium_live_Device *dev;
     BITMAPINFO * bmi_in, * bmi_out;
     pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
-    
+
     bmi_in = &dev->capture_video_format_original;
     ICDecompressBegin( dev->compressor, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format_original, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format);
     ICDecompress( dev->compressor,ICDECOMPRESS_HURRYUP,(LPBITMAPINFOHEADER) &dev->capture_video_format_original, lpVHdr->lpData, (LPBITMAPINFOHEADER)  &dev->capture_video_format, dev->buffer);
     ICDecompressEnd( dev->compressor );
-    
+
     pin = dev->buffer;
     pin +=dev->win.width*dev->win.height*(dev->vpic.depth/8);
     pout = dev->buffer2;
@@ -160,8 +160,8 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
     {
         pin-=dev->win.width*3;
         for (j=0;j<dev->win.width;j++)
-        {    
-            *pout++=*(pin+2);   
+        {
+            *pout++=*(pin+2);
             *pout++=*(pin+1);
             *pout++=*(pin+0);
             pin+=3;
@@ -169,7 +169,7 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
         pin-=dev->win.width*3;
     }
     return 0;
-}  
+}
 #endif
 
 int raydium_live_video_open(char *device, int sizex, int sizey)
@@ -219,29 +219,29 @@ if (dev->fd<0)
         char webcam_name_list[RAYDIUM_MAX_NAME_LEN];
         char webcam_drv_list[RAYDIUM_MAX_NAME_LEN];
         int i;
-        
-        
+
+
         hWnd = GetDesktopWindow();
         hDC = GetDC(hWnd);
-        
+
         if (device)
             id = atoi(device);
         else
             id = 0;
-    
+
         //Capture Frame create
-        dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0); 
-   
+        dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0);
+
         if(!capDriverConnect(dev->hWnd_WC, id)) // Todo: Change 0 to what ever to have the good cam
         {
             raydium_log("Error creating capture context");
             return -1;
         }
-     
+
         capGetDriverDescription (id, webcam_name_list, sizeof(webcam_name_list), webcam_drv_list,sizeof(webcam_drv_list));
         raydium_log ("Found WebCam: %d %s",id,webcam_name_list);
         strcpy(dev->name,webcam_name_list);
-    
+
     // Perhaps needed config dialog.
     //    capDlgVideoDisplay( dev->hWnd_WC );
     //  capDlgVideoFormat ( dev->hWnd_WC );
@@ -252,7 +252,7 @@ if (dev->fd<0)
 #endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGCAP, &dev->cap) < 0) 
+if (ioctl(dev->fd, VIDIOCGCAP, &dev->cap) < 0)
     {
     perror("VIDIOGCAP");
     raydium_log("live: ERROR: not a video4linux device '%s'",device);
@@ -270,7 +270,7 @@ if (!capDriverGetCaps (dev->hWnd_WC,&dev->capdriver_caps,sizeof(CAPDRIVERCAPS)))
 #endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0) 
+if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     {
     perror("VIDIOCGWIN");
     raydium_log("live: ERROR: early error");
@@ -287,7 +287,7 @@ if (!capCaptureGetSetup(dev->hWnd_WC,&dev->capture_param,sizeof(CAPTUREPARMS))){
 #endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGPICT, &dev->vpic) < 0) 
+if (ioctl(dev->fd, VIDIOCGPICT, &dev->vpic) < 0)
     {
     perror("VIDIOCGPICT");
     raydium_log("live: ERROR: early error");
@@ -309,8 +309,8 @@ if (!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO
     capDriverDisconnect(dev->hWnd_WC);
     DestroyWindow(dev->hWnd_WC);
     return -1;
-    }    
-*/    
+    }
+*/
 #endif
 
 #ifndef WIN32
@@ -358,7 +358,7 @@ if(sizex<0 || sizey<0)
             raydium_log("live: ERROR: --video-size format invalid (ex: 352x288)");
             }
         else
-            {       
+            {
             dev->win.width=atoi(sx);
             dev->win.height=atoi(sy);
             }
@@ -369,16 +369,16 @@ else
     dev->win.width=sizex;
     dev->win.height=sizey;
     }
-    
+
 #ifndef WIN32
 dev->win.flags=0;
 dev->win.clips=NULL;
 dev->win.clipcount=0;
 dev->win.chromakey=0;
-#endif 
+#endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0) 
+if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0)
     {
     perror("VIDIOCSWIN");
     raydium_log("live: ERROR: video mode refused: %ix%i",dev->win.width,dev->win.height);
@@ -386,8 +386,8 @@ if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0)
     return -1;
     }
 
-// read back    
-if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0) 
+// read back
+if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     {
     perror("VIDIOCGWIN");
     raydium_log("live: ERROR: cannot read back window settings. Should never happen.");
@@ -395,43 +395,43 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     return -1;
     }
 
-    
+
 #else
 
 // Try to set good frame format.
 // First direct try with hardware drive
     dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
-    dev->capture_video_format.bmiHeader.biHeight = dev->win.height; 
+    dev->capture_video_format.bmiHeader.biHeight = dev->win.height;
     dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
     dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
     dev->capture_video_format.bmiHeader.biPlanes = 1;
     dev->capture_video_format.bmiHeader.biSize = sizeof(BITMAPINFO);
-    
+
     if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
     {
         raydium_log("live: ERROR: not a capSetVideoFormat to RGB 24bpp Failed device '%s'",device);
         raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
         capDlgVideoFormat ( dev->hWnd_WC );
     }
-    
+
     if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO)))
     {
         raydium_log("Impossible to have correct format, live api not avaible");
         capDriverDisconnect(dev->hWnd_WC);
         DestroyWindow(dev->hWnd_WC);
-        return -1;        
-    }  
+        return -1;
+    }
 // Try to find correct decompressor
 
     dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
-    dev->capture_video_format.bmiHeader.biHeight = dev->win.height; 
+    dev->capture_video_format.bmiHeader.biHeight = dev->win.height;
     dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
     dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
     dev->capture_video_format.bmiHeader.biPlanes = 1;
     dev->capture_video_format.bmiHeader.biClrImportant =0;
     dev->capture_video_format.bmiHeader.biClrUsed=0;
     dev->capture_video_format.bmiHeader.biCompression = BI_RGB;
-    
+
     dev->compressor=NULL;
     dev->compressor = ICLocate(ICTYPE_VIDEO, (DWORD) NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
     if (dev->compressor)
@@ -445,20 +445,20 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
 #endif
 
 #ifndef WIN32
-if (dev->cap.type & VID_TYPE_MONOCHROME) 
+if (dev->cap.type & VID_TYPE_MONOCHROME)
     {
     dev->vpic.depth=8;
     dev->vpic.palette=VIDEO_PALETTE_GREY;       // 8bit grey
     strcpy(palette,"grey, 8 bpp");
-    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
         {
         strcpy(palette,"grey, 6 bpp");
         dev->vpic.depth=6;
-        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
             {
             strcpy(palette,"grey, 4 bpp");
             dev->vpic.depth=4;
-            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
                 {
                 raydium_log("live: ERROR: cannot found suitable grey palette");
                 close(dev->fd);
@@ -466,28 +466,28 @@ if (dev->cap.type & VID_TYPE_MONOCHROME)
                 }
             }
         }
-    } 
-else 
+    }
+else
     {
     strcpy(palette,"RGB, 24 bpp");
     dev->vpic.depth=24;
     dev->vpic.palette=VIDEO_PALETTE_RGB24;
-    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0) 
+    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
         {
         strcpy(palette,"RGB565, 16 bpp");
         dev->vpic.palette=VIDEO_PALETTE_RGB565;
-        dev->vpic.depth=16;      
-        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+        dev->vpic.depth=16;
+        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
             {
             strcpy(palette,"RGB555, 15 bpp");
             dev->vpic.palette=VIDEO_PALETTE_RGB555;
             dev->vpic.depth=15;
-            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
                 {
                 strcpy(palette,"YUV420P, 24 bpp");
                 dev->vpic.palette=VIDEO_PALETTE_YUV420P;
                 dev->vpic.depth=24;
-                if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1) 
+                if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
                     {
                     raydium_log("live: ERROR: cannot found suitable color palette");
                     close(dev->fd);
@@ -508,7 +508,7 @@ dev->buffer  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
 dev->buffer2  = malloc((dev->win.width * dev->win.height) * (dev->vpic.depth/8));
 #endif
 
-if (!dev->buffer2) 
+if (!dev->buffer2)
     {
     raydium_log("live: ERROR: buffer2: out of memory (!?)");
 #ifndef WIN32
@@ -523,7 +523,7 @@ if (!dev->buffer2)
 
 #ifndef WIN32
 do // just to allow break in this if :)
-{ 
+{
 if(dev->cap.type & VID_TYPE_CAPTURE)
     {
     capture_style=RAYDIUM_LIVE_CAPTURE_MMAP;
@@ -568,9 +568,9 @@ if(force_read)
 if( (!(dev->cap.type & VID_TYPE_CAPTURE)) || force_read )
     {
     capture_style=RAYDIUM_LIVE_CAPTURE_READ;
-  
+
     dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // /8 no ?
-    if (!dev->buffer) 
+    if (!dev->buffer)
         {
         raydium_log("live: ERROR: buffer2: out of memory (!?)");
         close(dev->fd);
@@ -589,10 +589,10 @@ raydium_log("live: video init for this device is ok");
 return id;
 #else
     {
- 
+
 
     capSetUserData(dev->hWnd_WC,dev);
-        capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);       
+        capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);
 //      capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
 /*      capPreviewRate(dev->hWnd_WC,100);
         capPreview(dev->hWnd_WC,TRUE);*/
@@ -670,7 +670,7 @@ else
     // RGB style
     unsigned int i,j;
     int r,g,b;
-    for (i = j = 0; i < dev->win.width * dev->win.height; i++) 
+    for (i = j = 0; i < dev->win.width * dev->win.height; i++)
         {
         READ_VIDEO_PIXEL(dev->src, dev->vpic.palette, dev->vpic.depth, r, g, b);
         dev->buffer2[j++]=b>>8;
@@ -725,7 +725,7 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
     raydium_live_device[i].capture_style=RAYDIUM_LIVE_FREE;
     raydium_live_device[i].buffer=NULL;
     raydium_live_device[i].frame=0;
-    }    
+    }
 
 for(i=0;i<RAYDIUM_MAX_LIVE_TEXTURES;i++)
     {
@@ -733,7 +733,7 @@ for(i=0;i<RAYDIUM_MAX_LIVE_TEXTURES;i++)
     raydium_live_texture[i].device=NULL;
     raydium_live_texture[i].OnRefresh=NULL;
     raydium_live_texture[i].data_source=NULL;
-    }    
+    }
 
 raydium_log("video (live): OK");
 }
@@ -788,7 +788,7 @@ id=raydium_live_texture_find_free();
 if(id<0)
     {
     raydium_log("live: ERROR: no more free live texture slot available (max: %i)",RAYDIUM_MAX_LIVE_TEXTURES);
-    return -1;    
+    return -1;
     }
 
 tex=&raydium_live_texture[id];
@@ -804,7 +804,7 @@ tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 if(tex->texture<=0)
     {
     raydium_log("live: ERROR: cannot create 'faked' texture (see above)");
-    return -1;    
+    return -1;
     }
 
 tex->device=dev;
@@ -867,13 +867,13 @@ id=raydium_live_texture_find_free();
 if(id<0)
     {
     raydium_log("live: ERROR: no more free live texture slot available (max: %i)",RAYDIUM_MAX_LIVE_TEXTURES);
-    return -1;    
+    return -1;
     }
 
 if(bpp!=24 && bpp!=32)
     {
     raydium_log("live: ERROR: live textures are limited to 24 or 32 bpp color depth only, for now");
-    return -1;    
+    return -1;
     }
 
 
@@ -882,7 +882,7 @@ if(bpp!=24 && bpp!=32)
 for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
 if(raydium_texture_used[i])
 {
-    if(!strcmp(raydium_texture_name[i],as)) 
+    if(!strcmp(raydium_texture_name[i],as))
     {
     raydium_log("live: WARNING ! %s is duplicated",as);
     // this is the right answer only if duplicated texture
@@ -910,7 +910,7 @@ tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 if(tex->texture<=0)
     {
     raydium_log("live: ERROR: cannot create 'faked' texture (see above)");
-    return -1;    
+    return -1;
     }
 
 tex->device=NULL;
