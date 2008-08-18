@@ -61,10 +61,25 @@ Same as above, but ##to_replace## texture (index) is erased with ##filename##.
 **/
 
 __rayapi void raydium_texture_free(int number);
-/** experimental function to free textures **/
+/**
+experimental function to free textures
+**/
 
 __rayapi void raydium_texture_free_name(char *name);
-/** experimental function to free textures by its name**/
+/**
+experimental function to free textures by its name
+**/
+
+__rayapi int raydium_texture_is_slot_used(int slot);
+/**
+Returns true (1) if the texture ##slot## is used for a texture, and
+therefore, valid.
+**/
+
+__rayapi int raydium_texture_get_next_free_slot_internal(void);
+/**
+Internal use. Will search a new free texture slot.
+**/
 
 __rayapi signed char raydium_texture_current_set (GLuint current);
 /**

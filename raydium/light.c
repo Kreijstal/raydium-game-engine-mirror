@@ -12,6 +12,7 @@
 #endif 
 
 GLuint raydium_texture_find_by_name(char *name);
+int raydium_texture_is_slot_used(int slot);
 
 void raydium_light_enable(void)
 {
