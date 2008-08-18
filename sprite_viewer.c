@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     raydium_init_args(argc,argv);
     if(!argv[1])
         {
-        raydium_log("\n\n\nERROR!!!!!\n You must indicate a valid sprite file in the command line. Example:\n./odyncomp.sh sprite_viewer.c sprite1.sprite\n\n\n");
+        raydium_log("\n\n\nERROR!!!!!\n You must indicate a valid sprite file in the command line. Example:\n./odyncomp.sh sprite_viewer.c sprite1-test.sprite\n\n\n");
         return 0;
         }
 
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 
     if((spriteid=raydium_sprite_load((char*)argv[1],0))==-1)
         {
-        raydium_log("\n\n\nERROR!!!!!\n You must indicate a valid sprite file in the command line. Example:\n./odyncomp.sh sprite_viewer.c sprite1.sprite\n\n\n");
+        raydium_log("\n\n\nERROR!!!!!\n You must indicate a valid sprite file in the command line. Example:\n./odyncomp.sh sprite_viewer.c sprite1-test.sprite\n\n\n");
         return 0;
         }
 
