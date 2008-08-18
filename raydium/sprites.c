@@ -142,7 +142,7 @@ of the new sprite.
                         //checking if it's a float array of 4 elements. A frame
                         if(ret==RAYDIUM_PARSER_TYPE_FLOAT && strcmp(var,"coords")==0 && size==4)
                         {
-                                if(RAYDIUM_SPRITE_DEBUG)raydium_log("FOTOGRAMA %d LEIDO para \"%s\": %f, %f, %f, %f",i,var,val_f[0],val_f[1],val_f[2],val_f[3]);
+                                if(RAYDIUM_SPRITE_DEBUG)raydium_log("Frame %d readed for \"%s\": %f, %f, %f, %f",i,var,val_f[0],val_f[1],val_f[2],val_f[3]);
                                 //inverted values to prevent horizontal flip
                                 //something wrong with this or maybe the billboard sprite function is wrong?
                                 raydium_sprite_coords[sid][i][0]=val_f[1];
@@ -174,7 +174,7 @@ of the new sprite.
                                 //How can reset the previous texture filter?
                                 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_ANISO);
                                 //some debug
-                                raydium_log("For sprite %d, the frame %d has the texture ID %d(%s)",sid,i,raydium_sprite_textureid[sid][i],val_s);
+                                if(RAYDIUM_SPRITE_DEBUG)raydium_log("For sprite %d, the frame %d has the texture ID %d(%s)",sid,i,raydium_sprite_textureid[sid][i],val_s);
                                 //as the texture file is the last element for a frame, we increase the counter
                                 i++;
                         }
@@ -244,7 +244,7 @@ of the new sprite.
                         }
                         for(group=0;group<RAYDIUM_SPRITE_MAX_GROUPS;group++)
                         {
-                                raydium_log("Fotograma inicial del grupo %d: %d",group,raydium_sprite_group_start_frame[sid][group]);
+                                raydium_log("Initial frame of group %d: %d",group,raydium_sprite_group_start_frame[sid][group]);
                         }
                 }
         }
