@@ -1,14 +1,26 @@
 #ifndef _CORE_COMMON_H
 #define _CORE_COMMON_H
 /*
-    Raydium - CQFD Corp.
-    http://raydium.org/
-    Released under both BSD license and Lesser GPL library license.
-    See "license.txt" file.
+* Raydium - CQFD Corp.
+* http://raydium.org/
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #define RAYDIUM_MAJOR   0
-#define RAYDIUM_MINOR   800
+#define RAYDIUM_MINOR   706
 
 #ifdef WIN32
 # ifdef RAYDLL
@@ -156,7 +168,7 @@
 
 #define RAYDIUM_TEXTURE_BLEND_NONE              0
 #define RAYDIUM_TEXTURE_BLEND_BLENDED           1
-#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2
+#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2 
 #define RAYDIUM_TEXTURE_PHANTOM                 3
 
 #define RAYDIUM_RENDERING_WINDOW                0
@@ -268,10 +280,10 @@
 #define RAYDIUM_FOG_MODE_EXP                    GL_EXP
 #define RAYDIUM_FOG_MODE_EXP2                   GL_EXP2
 
-#define RAYDIUM_MAX_SPRITES                     64
-#define RAYDIUM_MAX_FRAMES_PER_SPRITE           256
-#define RAYDIUM_SPRITE_DEBUG                    0
-#define RAYDIUM_SPRITE_MAX_GROUPS               64
+#define RAYDIUM_MAX_SPRITES     64
+#define RAYDIUM_MAX_FRAMES_PER_SPRITE   256
+#define RAYDIUM_SPRITE_DEBUG 0
+#define RAYDIUM_SPRITE_MAX_GROUPS       64
 
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -435,7 +447,6 @@ __global GLfloat raydium_internal_vertex_next_nz;
 
 __global signed char     raydium_frame_first_camera_pass;
 __global float   raydium_frame_time;
-__global float   raydium_frames_per_second;
 __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
@@ -465,7 +476,7 @@ typedef struct raydium_camera_Path
     GLfloat roll[RAYDIUM_MAX_CAMERA_PATH_STEPS];
     int steps;
     } raydium_camera_Path;
-
+    
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
 __global signed char raydium_camera_path_reset_flag;
 
@@ -532,7 +543,7 @@ typedef struct raydium_network_Propag
     int type;
     unsigned short size;
     unsigned int version;
-    void *data;
+    void *data;    
     } raydium_network_Propag;
 
 __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPAGS];
@@ -560,8 +571,9 @@ __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 __global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
-//__global float  raydium_spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
+__global float  spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
 __global int    raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
+//__global int  raydium_current_sprite=-1;
 __global int    raydium_current_sprite;
 __global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
 __global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
