@@ -24,7 +24,6 @@ int raydium_timecall_add(void *funct, GLint hz);
 void raydium_timecall_raydium(GLfloat step)
 {
 raydium_frame_time=step;
-raydium_frames_per_second=1.f/(float)raydium_frame_time;
 }
 
 #ifdef WIN32
@@ -32,10 +31,10 @@ float raydium_timecall_internal_w32_detect_modulo(int div)
 {
  LARGE_INTEGER t;
  unsigned long mx;
-
+ 
  QueryPerformanceFrequency(&t);
  t.QuadPart >>= div;
- mx=(0xFFFFFFFF / t.LowPart);
+ mx=(0xFFFFFFFF / t.LowPart); 
  return mx/60.f;
 }
 
@@ -81,7 +80,7 @@ if(ret>0)
         raydium_log("timecall: ERROR: reading /dev/rtc failed at runtime");
         perror("system");
         }
-        else
+        else 
         {
         // read first 3 bytes only
         missed=(data & 0xffffff00UL)>>8;
@@ -89,7 +88,7 @@ if(ret>0)
 //      raydium_log("%i",raydium_timecall_devrtc_clocks);
         }
  }
-
+ 
 return raydium_timecall_devrtc_clocks;
 #else
 return 0;
@@ -162,7 +161,7 @@ unsigned long raydium_timecall_devrtc_init(void)
 #ifndef WIN32
  unsigned long freq;
  raydium_timecall_devrtc_clocks=0;
-
+ 
  if((raydium_timecall_devrtc_handle = open ("/dev/rtc", O_RDONLY)) == -1 )
  {
   raydium_log("timecall: ERROR: /dev/rtc unavailable ! (chmod a+rx /dev/rtc ?)");
@@ -187,11 +186,11 @@ unsigned long raydium_timecall_devrtc_init(void)
    if(!raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED)) return 0;
    else freq=RAYDIUM_TIMECALL_FREQ_PREFERED; // need to verify this new value ?
   }
-
+ 
  if(freq<RAYDIUM_TIMECALL_FREQ_PREFERED)
   {
    raydium_log("timecall: /dev/rtc rate (%i Hz) is low (prefered: %i)",freq,RAYDIUM_TIMECALL_FREQ_PREFERED);
-   if(raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED))
+   if(raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED)) 
       freq=RAYDIUM_TIMECALL_FREQ_PREFERED; // need to verify this new value ?
   }
 
@@ -383,7 +382,7 @@ if(last>now)
     {
     raydium_log("timecall: warning: time modulo detected: workarounding");
     for(i=0;i<raydium_timecall_index;i++)
-        if(!raydium_timecall_soft_call[i] &&
+        if(!raydium_timecall_soft_call[i] && 
             raydium_timecall_interval[i])
             {
               // reset timecall next value
@@ -408,8 +407,8 @@ for(i=0;i<raydium_timecall_index;i++)
     if(steps>1000) { // DEBUG ! need to calculate this value
                     steps=100;
                     raydium_log("WARNING: timecall's too long");
-                 }
-
+                 }    
+    
 //    raydium_log("debug: need %i steps",steps);
     f=raydium_timecall_funct[i];
 
