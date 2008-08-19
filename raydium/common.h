@@ -385,7 +385,9 @@ __global signed char raydium_object_anims[RAYDIUM_MAX_OBJECTS]; // number of ani
 __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each anim
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
 __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];
+#ifndef SWIG
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
+#endif
 __global GLuint raydium_object_anim_default_anim[RAYDIUM_MAX_OBJECTS];
 __global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // current "rendering" instance
 __global GLfloat raydium_object_anim_automatic_factor[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS]; // frame automatic factor
@@ -566,7 +568,9 @@ __global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
 __global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
 __global float  raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
 __global int    raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+#ifndef SWIG
 __global float  raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
+#endif
 __global float  raydium_sprite_time[RAYDIUM_MAX_SPRITES];
 __global float  raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
 __global int    raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
@@ -706,7 +710,9 @@ __global int    raydium_register_variable_type[RAYDIUM_MAX_REG_VARIABLES];
 #else
 #define ZFE void *
 #endif
+#ifndef SWIG
 __global ZFE raydium_register_function_list[RAYDIUM_MAX_REG_FUNCTION];
+#endif
 
 __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 
