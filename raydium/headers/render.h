@@ -6,12 +6,39 @@ Rendering
 **/
 
 // Introduction
-/*=
+/**
 render.c contains Raydium rendering core, so only "public" and 
 interesting function will be documented.
 
-It' obvious for me that many parts of this code have to be 
-rewritten (tips: slow, buggy, old, ... :) 
+A few variable may be very useful here. First, you can see how many frames
+were rendered during last second, reading ##raydium_render_fps## (interger, 
+read only). This variable is refreshed every second. If you need a 
+instantaneous measure, see below.
+
+You may also read ##raydium_frame_time## (float, read only) since it gives you 
+the elasped time during the last frame ! (in seconds). This a very easy way
+to make framerate independent things. See this example, featuring two different
+uses of this variable:
+%%(c)
+void display(void)
+{
+static float posx=0;
+float speed=10; // our object should move of 10 units per second
+static float time_elasped_in_seconds=0;
+...
+posx = posx + (speed * raydium_frame_time);
+time_elasped_in_seconds+=raydium_frame_time;
+...
+}
+%%
+
+Note that you can have instantaneous framerate with, for instance:
+%%(c)
+float fps=(1.f)/raydium_frame_time;
+%%
+
+As a note, I must said that it' obvious for me that many parts of render.c 
+have to be rewritten (tips: slow, buggy, old, ... :) 
 **/
 
 __rayapi void raydium_render_lightmap_color(GLfloat *color);
