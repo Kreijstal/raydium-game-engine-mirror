@@ -168,7 +168,7 @@
 
 #define RAYDIUM_TEXTURE_BLEND_NONE              0
 #define RAYDIUM_TEXTURE_BLEND_BLENDED           1
-#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2 
+#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2
 #define RAYDIUM_TEXTURE_PHANTOM                 3
 
 #define RAYDIUM_RENDERING_WINDOW                0
@@ -447,6 +447,7 @@ __global GLfloat raydium_internal_vertex_next_nz;
 
 __global signed char     raydium_frame_first_camera_pass;
 __global float   raydium_frame_time;
+__global float   raydium_frames_per_second;
 __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
@@ -476,7 +477,7 @@ typedef struct raydium_camera_Path
     GLfloat roll[RAYDIUM_MAX_CAMERA_PATH_STEPS];
     int steps;
     } raydium_camera_Path;
-    
+
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
 __global signed char raydium_camera_path_reset_flag;
 
@@ -543,7 +544,7 @@ typedef struct raydium_network_Propag
     int type;
     unsigned short size;
     unsigned int version;
-    void *data;    
+    void *data;
     } raydium_network_Propag;
 
 __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPAGS];

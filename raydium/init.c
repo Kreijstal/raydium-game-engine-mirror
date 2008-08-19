@@ -163,6 +163,7 @@ raydium_register_variable_index=0;
 raydium_register_function_index=0;
 raydium_file_log_fopen_index=0;
 raydium_frame_time=0;
+raydium_frames_per_second=0;
 raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 
 raydium_ode_timestep = (0.006f);
