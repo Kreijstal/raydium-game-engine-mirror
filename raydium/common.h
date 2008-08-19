@@ -268,10 +268,10 @@
 #define RAYDIUM_FOG_MODE_EXP                    GL_EXP
 #define RAYDIUM_FOG_MODE_EXP2                   GL_EXP2
 
-#define RAYDIUM_MAX_SPRITES     64
-#define RAYDIUM_MAX_FRAMES_PER_SPRITE   256
-#define RAYDIUM_SPRITE_DEBUG 0
-#define RAYDIUM_SPRITE_MAX_GROUPS       64
+#define RAYDIUM_MAX_SPRITES                     64
+#define RAYDIUM_MAX_FRAMES_PER_SPRITE           256
+#define RAYDIUM_SPRITE_DEBUG                    0
+#define RAYDIUM_SPRITE_MAX_GROUPS               64
 
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -560,9 +560,8 @@ __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 __global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
-__global float  spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
+//__global float  raydium_spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
 __global int    raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
-//__global int  raydium_current_sprite=-1;
 __global int    raydium_current_sprite;
 __global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
 __global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
