@@ -1,9 +1,3 @@
-/*
-    Raydium - CQFD Corp.
-    http://raydium.org/
-    Released under both BSD license and Lesser GPL library license.
-    See "license.txt" file.
-*/
 #ifndef _SPRITES_H
 #define _SPRITES_H
 /*=
@@ -13,51 +7,58 @@ Sprites (viewer axis aligned 2D billboards)
 
 // Introduction
 /**
-Raydium can use it's own sprite system.
-Each sprite needs an .sprite file. This file is as this:
-collision={0.8,0.7,0.8}
+Raydium provides its own sprite system.
+Each sprite needs a .sprite file. This file is as this:
+%%collision={0.8,0.7,0.8};
+size=1;
 
-size=1
+coords={0.0,0.25,0.0,0.25};
+group=1;
+texture="sprite1-test.tga";
 
-coords={0.0,0.25,0.0,0.25}
-group={1,1}
-texture="sprite1-test.tga"
+coords={0,0.25,0.5,0.75};
+group=2;
+texture="sprite1-test.tga";
 
-The collision variables defines the size of an ODE box.
-Size is the size of the displayed sprite. It won't affect the ODE object
-, just the graphical stuff.
+...%%
+The ##collision## variable defines the size of a RayODE box element.
 
-Then you have to define each frame of the sprite.
+##size## is the size of the displayed sprite. It won't affect the ODE object,
+just the graphical stuff.
+
+Then you'll have to define each frame of the sprite. Each frame must be
+defined by ##coords## (interval 0 to 1) in a ##texture## file.
+
 It's important to have in mind that the sprite can have "groups".
-Those groups are used to team up some related sprites.
-For example we can have 3 sprites of a forward movement, those could be
-in one specific group.
-In that way you can change from onu group to another with a raydium
-function easily.
-Even more. The frames of an sprite group will be animated automatically
-and when the animation comes to the end of the group then you can chosee
-what will be the next acction:
-You can stop animation, you can restart the group animation or you can
+Those groups are used to team up some related sprites. For example we can
+have 3 sprites of a forward movement, those could be in one specific group.
+In that way you can change from one group to another with a Raydium function easily.
+
+Even more, the frames of a sprite group will be animated automatically
+and when the animation comes to the end of the group then you can chose
+what will be the next action:
+1) You can stop animation, you can restart the group animation or you can
 jump to a new group.
-You can indicate a "jump" to another group with
-something like:
-group={7,11} That would jump to the group 11
-group={5,-1} -1 means STOP THE ANIMATION
-group={3,-2} -2 means LOOP IN THE SAME GROUP
+2) you can indicate a "jump" to another group with something like:
+%%group={7,11}; That would jump to the group 11
+group={5,-1}; -1 means STOP THE ANIMATION
+group={3,-2}; -2 means LOOP IN THE SAME GROUP
+%%
 
-
+Raydium provides a sprite viewer (sprite_viewer.c) that will download
+a sample sprite file, very useful to understand how sprite file are built.
 **/
 
 //returns the first sprite id available
 __rayapi int raydium_sprite_check_available(void);
 /**
-Internal use. 
+Internal use.
 **/
 
 //function to draw directly the sprite. Internal. Don't use
 __rayapi void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, float uz, float rx, float ry, float rz, int textureid, float s0, float s1, float t0, float t1,float size);
 /**
-Internal use. 
+Internal use.
 **/
 //Load an sprite (filename.sprite) preloading its textures.
 //TODO:it should check if the sprite file is already loaded and if it's true
@@ -85,7 +86,7 @@ Function to get the ODE object linked to the sprite.
 
 __rayapi void sprite_render_frame(float x, float y, float z, int spriteid,int frame,float scalex,float scaley);
 /**
-Internal use. 
+Internal use.
 **/
 
 __rayapi void raydium_sprite_move(int sprite,float x, float y, float z);
@@ -122,12 +123,6 @@ __rayapi void raydium_sprite_free_name(char *name);
 Function to delete all the sprites using a certain filename.
 **/
 
-
-// __rayapi int raydium_sprite_copy(int other);
-///**
-//Internal use. DONT'T USE.experimental
-//**/
-
 __rayapi float *raydium_sprite_get_pos(int number);
 /**
 Returns a 3float array with the position (universe coordinates) of a
@@ -142,7 +137,7 @@ Returns the id of an sprite from the element id given.
 //function to change the type of one sprite
 __rayapi int raydium_sprite_set_type(int id,int value);
 /**
-Internal use. 
+Internal use.
 **/
 
 //function to change the name of one sprite
@@ -176,10 +171,11 @@ Function to change the time betwen frames in the animation of an id sprite.
 **/
 
 
-
 __rayapi float raydium_sprite_change_sprite_time_relative(int id,float time);
 /**
-Same than previous but you can add a quantity of time to the previous stored time, ie relative.**/
+Same than previous but you can add a quantity of time to the previous
+stored time, ie relative.
+**/
 
 __rayapi int raydium_sprite_get_current_group(int id);
 /**

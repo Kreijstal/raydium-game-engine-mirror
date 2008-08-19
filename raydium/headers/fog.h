@@ -17,25 +17,12 @@ about estetic aspect), you must bring near_clipping to a closer value,
 reducing the overall number of triangles displayed at the same time. 
 
 There are 3 types of fog. They are: 
-
-    * Linear:
-
-                      Far-z
-                fog= --------- 
-                     Far-Near
-
-    * Exp:
-
-                       (-density*z)
-                fog= e^
-
-    * Exp2:
-
-                       (-density*z)^2
-                fog= e^
+* Linear: fog = (Far-z) / (Far-Near)
+* Exp: fog = e^(-density*z)
+* Exp2: fog = e^((-density*z)^2)
 
 Above ##z## is the distance to the calculated point from the camera.
-As you can see, linear mode doesn't use ##Density##; and Exp & Exp2 modes don't
+As you can see, linear mode doesn't use ##density##, and Exp & Exp2 modes don't
 use near and far values. Remember that.
 **/
 

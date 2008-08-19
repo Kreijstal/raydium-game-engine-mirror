@@ -15,9 +15,9 @@ not "standard", mostly after a window resize.
 Also there are "auto" functions that provide a simplest method to make an screen
 capture. So,the following example (put into the ##display()## function), allows jpeg 
 screenshots just pressing F9 key:
-##
-if(raydium_key_last==9)   raydium_capture_frame_jpeg_auto();
-##
+%%(c)
+if(raydium_key_last==9) raydium_capture_frame_jpeg_auto();
+%%
 
 Raydium also allow you to capture movies: activate ##DEBUG_MOVIE## option
 in ##raydium/config.h## with the needed framerate, and press F11. Raydium

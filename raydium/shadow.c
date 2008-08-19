@@ -18,6 +18,7 @@ void raydium_shadow_init(void)
 raydium_shadow_tag=0;
 raydium_shadow_ground_mesh=-1;
 raydium_shadow_rendering=0;
+raydium_shadow_light=0;
 raydium_log("shadow: OK");
 }
 

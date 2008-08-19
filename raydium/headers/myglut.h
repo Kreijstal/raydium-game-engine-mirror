@@ -5,6 +5,24 @@
     See "license.txt" file.
 */
 
+/*=
+MyGLUT
+4700
+**/
+
+// Details
+/**
+MyGLUT is an alternative to "real" GLUT, providing a small subset of the
+original API, up to Raydium needs, and tries to enhances some GLUT features,
+such as window and keyboard management.
+
+While staying portable on all Raydium targets, MyGLUT is able to use some
+platform-specific features, such as Xinerama for Linux.
+
+MyGLUT is heavily based on PW, the PLIB windowing library
+( http://plib.sourceforge.net/ ). Huge thanks to Steve Baker for his great work.
+**/
+
 // avoid "real GLUT"
 #ifndef GLUT_API_VERSION
 #ifndef MYGLUT
