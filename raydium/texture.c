@@ -536,15 +536,9 @@ GLint raydium_texture_exists(char *name)
 {
 int i;
 for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
-{
-if(raydium_texture_used[i])
-{
-//this IF in a different line to prevent useless cpu usage
-if(!strcmp(raydium_texture_name[i],name))
-    return i;
-}
+    if(raydium_texture_used[i] && !strcmp(raydium_texture_name[i],name))
+        return i;
 return -1;
-}
 }
 
 
