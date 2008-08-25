@@ -144,6 +144,9 @@ for(j=0;j<3;j++)
 
 void raydium_ode_init(void)
 {
+#ifdef __APPLE__
+    dInitODE();
+#endif
 int i;
 
 if(sizeof(dReal) != sizeof(float))

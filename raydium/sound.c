@@ -702,7 +702,13 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
           0,2,1,&stream);
     if(amt<=0)
     {
+#ifndef __APPLE__
+      /*
+       Causes heavy CPU load under Mac OS X Leopard,
+       when running as .app, because of syslogd.
+      */
       raydium_log("sound: ov_read error");
+#endif
       break;
     }
     count+=amt;

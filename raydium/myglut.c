@@ -24,7 +24,11 @@ signed char _glutMouseVisible;
 #ifdef WIN32
 #include "myglut-win32.c"
 #else
+#ifdef __APPLE__
+#include "myglut-macosx.c"
+#else
 #include "myglut-x11.c"
+#endif
 #endif
 
 //glutInitDisplayMode

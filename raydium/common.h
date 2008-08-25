@@ -53,8 +53,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 #include <math.h>
 #include <time.h>
 #include <memory.h>
@@ -63,7 +68,11 @@
 #include <signal.h>
 #include <stdarg.h>
 
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#else
 #include <AL/al.h>
+#endif
 #include <AL/alut.h>
 #include <vorbis/vorbisfile.h>
 
@@ -74,9 +83,13 @@
 
 // need to separate LINUX & others, using glut for joystick..
 #ifndef WIN32
+#ifndef __APPLE__
 #include <linux/joystick.h>
+#endif
 #include <sys/ioctl.h>
+#ifndef __APPLE__
 #include <linux/rtc.h>
+#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

@@ -14,9 +14,11 @@
 #define LIVE_H
 
 #ifndef WIN32
+#ifndef __APPLE__
 #include <linux/types.h>
 #include <linux/videodev.h>
 #include <sys/mman.h>
+#endif
 #else
 #include <vfw.h>
 #include "rayvfw.h" // Extra define for vfw missing in standart ming headers
@@ -39,6 +41,7 @@
 typedef struct raydium_live_Device 
 {
 #ifndef WIN32
+#ifndef __APPLE__
   int fd;
   struct video_capability cap;
   struct video_window win;
@@ -48,6 +51,7 @@ typedef struct raydium_live_Device
   struct video_mbuf gb_buffers;
   struct video_mmap gb_buf;
   
+#endif
 #else
     HWND        hWnd_WC;
     HDC         hDC_WC;

@@ -42,10 +42,12 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 //struct input_event stop;
 //struct ff_effect effect;
 int raydium_joy_event_handle;
+#ifndef __APPLE__
 #ifndef WIN32
 struct ff_effect effect_tremble;
 #else
 int raydium_joy_win_id;
+#endif
 #endif
 char effect_tremble_state=0;
 unsigned long last_event;
@@ -73,6 +75,7 @@ if(raydium_key[GLUT_KEY_RIGHT]) raydium_joy_x=1.f;
 //buttons
 }
 
+#ifndef __APPLE__
 #ifndef WIN32
 int raydium_joy_process_event(struct js_event e)
 {
@@ -164,9 +167,11 @@ int raydium_joy_process_event(struct js_event e)
     return(e.type);
 }
 #endif
+#endif
 
 void raydium_joy_callback(void)
 {
+#ifndef __APPLE__
 #ifndef WIN32
  struct js_event e;                     //structure for storing an event
  
@@ -220,11 +225,13 @@ void raydium_joy_callback(void)
         }
         dwButtons = ActualPos.dwButtons;
 #endif
+#endif
 //raydium_log("Joy x=%f,y=%f,z=%f",raydium_joy_x,raydium_joy_y,raydium_joy_z);
 }
 
 void raydium_joy_ff_autocenter(int perc)
 {
+#ifndef __APPLE__
 #ifndef WIN32
 struct input_event ie;
 
@@ -238,6 +245,7 @@ if (write(raydium_joy_event_handle, &ie, sizeof(ie)) == -1)
         perror("set auto-center");
 
 #endif
+#endif
 }
 
 
@@ -249,6 +257,7 @@ void raydium_joy_init(void)
 int autocenter=5;         /* default value. between 0 and 100 */
 
         raydium_joy_init_vars();
+#ifndef __APPLE__
 #ifndef WIN32
     
     raydium_init_cli_option_default("joydev",name,"/dev/js0");
@@ -353,6 +362,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
         }
     }
 #endif
+#endif
 }
 
 void raydium_joy_close(void)
@@ -417,6 +427,7 @@ void raydium_joy_ff(void)
 
 void raydium_joy_ff_tremble_set(GLfloat period, GLfloat force)
 {
+#ifndef __APPLE__
 #ifndef WIN32
 struct input_event play;
 struct input_event stop;
@@ -453,6 +464,7 @@ write(raydium_joy_event_handle, (const void*) &play, sizeof(play));
 effect_tremble_state=1;
 last_event=raydium_timecall_clock();
 //printf("ff event refreshed\n");
+#endif
 #endif
 }
 

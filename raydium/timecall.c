@@ -126,6 +126,7 @@ if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
 
 signed char raydium_timecall_devrtc_rate_change(unsigned long new)
 {
+#ifndef __APPLE__
 #ifndef WIN32
         if(ioctl(raydium_timecall_devrtc_handle, RTC_IRQP_SET, new)==-1)
         {
@@ -140,10 +141,12 @@ signed char raydium_timecall_devrtc_rate_change(unsigned long new)
 #else
 return 0;
 #endif
+#endif
 }
 
 void raydium_timecall_devrtc_close(void)
 {
+#ifndef __APPLE__
 #ifndef WIN32
         if(ioctl(raydium_timecall_devrtc_handle, RTC_PIE_OFF, 0) == -1)
         {
@@ -153,11 +156,13 @@ void raydium_timecall_devrtc_close(void)
         }
 close(raydium_timecall_devrtc_handle);
 #endif
+#endif
 }
 
 
 unsigned long raydium_timecall_devrtc_init(void)
 {
+#ifndef __APPLE__
 #ifndef WIN32
  unsigned long freq;
  raydium_timecall_devrtc_clocks=0;
@@ -209,6 +214,7 @@ return freq;
 #else
 raydium_log("timecall: FAILED: /dev/rtc only available for Linux");
 return 0;
+#endif
 #endif
 }
 

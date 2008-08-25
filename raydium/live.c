@@ -175,6 +175,7 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
 int raydium_live_video_open(char *device, int sizex, int sizey)
 {
 
+#ifndef __APPLE__
 char *default_device=RAYDIUM_LIVE_DEVICE_DEFAULT;
 int id;
 int capture_style = RAYDIUM_LIVE_FREE;
@@ -602,6 +603,7 @@ return id;
 raydium_log("live: First attempt to support on Win32");
 return id;
 #endif
+#endif
 }
 
 
@@ -613,6 +615,7 @@ return raydium_live_video_open(RAYDIUM_LIVE_DEVICE_AUTO,RAYDIUM_LIVE_SIZE_AUTO,R
 
 int raydium_live_video_read(raydium_live_Device *dev)
 {
+#ifndef __APPLE__
 #ifndef WIN32
 fd_set fds;
 struct timeval tv;
@@ -680,6 +683,7 @@ else
     }
 
 #endif
+#endif
 return 1;
 
 }
@@ -700,6 +704,7 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
 
 void raydium_internal_live_close(void)
 {
+#ifndef __APPLE__
 int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
@@ -713,6 +718,7 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
 #else
     capDriverDisconnect(raydium_live_device[i].hWnd_WC);
     DestroyWindow(raydium_live_device[i].hWnd_WC);
+#endif
 #endif
 }
 
@@ -771,6 +777,7 @@ return -1;
 
 int raydium_live_texture_video(int device_id, char *as)
 {
+#ifndef __APPLE__
 //#ifndef WIN32
 int id;
 raydium_live_Device *dev;
@@ -816,6 +823,10 @@ return id;
 raydium_log("live: Live API is not supported under win32 yet");
 return -1;
 #endif*/
+#else
+    raydium_log("live: Live API is not yet supported under Mac OS X.");
+    return -1;
+#endif
 }
 
 
