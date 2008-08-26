@@ -318,6 +318,7 @@ int raydium_php_exec(char *name)
 
  php_request_shutdown(NULL);
  raydium_sapi_module.shutdown(&raydium_sapi_module);
+ php_module_shutdown(TSRMLS_C);
  return 1;
 }
 
