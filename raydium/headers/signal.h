@@ -7,7 +7,7 @@ Signals
 
 // Quickview
 /**
-There almost nothing to saiy about signals management, except that Raydium 
+There almost nothing to say about signals management, except that Raydium 
 will try to catch SIGINT signal (sended by CTRL+C sequence, for example).
 There's nothing else for now, but we plan a user callback for this signal. 
 **/

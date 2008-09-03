@@ -65,11 +65,20 @@ Reads a new data line in ##fp##.
 if it's a string, or ##val_f## if it's a float (or a float array). In this last
 case, ##size## will return the number of elements if the array.
 Watch out for buffer overflows with float arrays !
-Returns RAYDIUM_PARSER_TYPE_STRING if the line read is an string like:
-variable="string between double quotes"
-Returns RAYDIUM_PARSER_TYPE_FLOAT if the line read is an float array like:
-variable={1.0,2.0,3.0,4.0}
-Returns RAYDIUM_PARSER_TYPE_RAWDATA if is not one of the previous types
+Returns ##RAYDIUM_PARSER_TYPE_STRING## if the line read is an string like:
+variable="string between double quotes";
+Returns ##RAYDIUM_PARSER_TYPE_FLOAT## if the line read is an float array like:
+variable={1.0,2.0,3.0,4.0};
+Returns ##RAYDIUM_PARSER_TYPE_RAWDATA## for things like:
+%%
+variable=[
+xxxxxxxx
+#  oo  #
+#      #
+#  oo  #
+xxxxxxxx
+];
+%%
 Returns RAYDIUM_PARSER_TYPE_EOF at the end of file.
 
 %%(c)
