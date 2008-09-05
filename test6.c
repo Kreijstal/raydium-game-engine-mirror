@@ -673,7 +673,7 @@ glLoadIdentity();
 if(raydium_ode_element_find(cam)<0) strcpy(cam,"player");
 tmp=raydium_ode_element_pos_get_name(cam);
 if(vue==5) raydium_camera_look_at(camx,camy,camz,tmp[1],-tmp[2],tmp[0]);
-if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-1.9,0,0.5,2,0,0);
+if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-0.15,0,0.1,2,0,0);
 if(vue==4) raydium_ode_element_camera_inboard_name("buggy_corps",0,0.35,-0.2,2,0,-0.2);
 if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_trigo_sin(cam_angle_v),0,raydium_trigo_cos(cam_angle_v));
 if(vue==8) raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
