@@ -19,25 +19,6 @@ network layer, ... so you've almost nothing else to do but setting up objects.
 Raydium's website provides tutorials for building physics ready applications.
 **/
 
-// About ODE names
-
-/**
- - Important: All ODE Objects, elements, motors,... must have UNIQUE NAME !!!!
-So, here is an example of what you SHOULD NOT DO.
-%%(c)
-int car1=raydium_ode_object_create("car");
-int car2=raydium_ode_object_create("car");
-int car3=raydium_ode_object_create("car");
-%%
-
-Ant this is the RIGHT WAY:
-%%(c)
-int car1=raydium_ode_object_create("car1");
-int car2=raydium_ode_object_create("car2");
-int car3=raydium_ode_object_create("car3");
-%%
-
-**/
 
 // Vocabulary
 /**
@@ -104,6 +85,24 @@ Launchers are not real entities, but "only" tools. Obviously, they are
 allowing you to launch an element (you must provice force and orientation)
 from another element (relatively). More informations about launchers below.
 
+**/
+
+// About RayODE names
+/**
+ - Important: All ODE Objects, elements, motors,... **must have unique name** !
+So, here is an example of what you **SHOULD NOT DO**:
+%%(c)
+int car1=raydium_ode_object_create("car");
+int car2=raydium_ode_object_create("car");
+int car3=raydium_ode_object_create("car");
+%%
+
+Ant this is the right way:
+%%(c)
+int car1=raydium_ode_object_create("car1");
+int car2=raydium_ode_object_create("car2");
+int car3=raydium_ode_object_create("car3");
+%%
 **/
 
 // Callbacks
