@@ -4293,6 +4293,9 @@ if(!raydium_ode_element_isvalid(elem))
     raydium_log("ODE: Error: Cannot attach particle generator: invalid index or name");
     return;
     }
+if(raydium_ode_element[elem].particle>=0)
+    raydium_particle_generator_delete(raydium_ode_element[elem].particle);
+
 raydium_ode_element[elem].particle=raydium_particle_generator_load(filename,raydium_ode_element[elem].name);
 memset(raydium_ode_element[elem].particle_offset,0,sizeof(dReal)*3);
 }
@@ -4309,7 +4312,12 @@ if(!raydium_ode_element_isvalid(elem))
     raydium_log("ODE: Error: Cannot attach particle generator (offset): invalid index or name");
     return;
     }
+
+if(raydium_ode_element[elem].particle>=0)
+    raydium_particle_generator_delete(raydium_ode_element[elem].particle);
+
 raydium_ode_element[elem].particle=raydium_particle_generator_load(filename,raydium_ode_element[elem].name);
+raydium_log("%i\n",raydium_ode_element[elem].particle);
 memcpy(raydium_ode_element[elem].particle_offset,offset,sizeof(dReal)*3);
 }
 
