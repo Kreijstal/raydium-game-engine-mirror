@@ -72,8 +72,8 @@ void boom(char type, dReal radius, dReal force_or_propag, dReal *pos)
 {
 int i;
 int g1,g2;
-char name1[128];
-char name2[128];
+char name1[RAYDIUM_MAX_NAME_LEN];
+char name2[RAYDIUM_MAX_NAME_LEN];
 
 i=raydium_random_i(0,SOUND_MAX_EXPLOS-1);
 //raydium_explosion_add(pos[0],pos[1],pos[2],0,0,0,0.6,3,6,0.1);
@@ -87,6 +87,7 @@ raydium_particle_generator_move(g2,pos);
 
 raydium_sound_SourcePlay(son_boom[i]);
 raydium_sound_SetSourcePos(son_boom[i],pos);
+
 }
 
 void blow_touched(int elem, dReal force, dReal max_force)
@@ -197,7 +198,7 @@ if(raydium_mouse_button[1] && cpt>BULLET_RATE)
     {
     // fire !
     int a;
-    char name[255];
+    char name[RAYDIUM_MAX_NAME_LEN];
     cpt=0;
     a=raydium_ode_object_find("PLAYER");
     raydium_ode_name_auto("bullet",name);
@@ -318,8 +319,8 @@ raydium_ode_object_delete_name("BUGGY");
     //dReal pos[3]={2,2,2};
     //raydium_ode_object_move(a,pos);
     }
-//    raydium_ode_element_particle_offset_name_3f("buggy_corps","smoke.prt",-0.5,0,0);
-//    raydium_ode_element_particle_offset_name_3f("buggy_corps","dust.prt",-0.5,0,-0.3);
+    raydium_ode_element_particle_offset_name_3f("buggy_corps","smoke.prt",-0.5,0,0);
+    raydium_ode_element_particle_offset_name_3f("buggy_corps","dust.prt",-0.5,0,-0.3);
 
 /*
 raydium_ode_object_delete_name("TANK");
@@ -493,7 +494,7 @@ if(raydium_mouse_click==1 && reload_time<0)
     {
     // launch rocket
     int a;
-    char name[255];
+    char name[RAYDIUM_MAX_NAME_LEN];
     a=raydium_ode_object_find("PLAYER");
     raydium_ode_name_auto("mav",name);
     strcpy(cam,name);
@@ -528,7 +529,7 @@ if(raydium_key_last==1032)
     {
 
     int a;
-    char name[255];
+    char name[RAYDIUM_MAX_NAME_LEN];
     a=raydium_ode_object_find("GLOBAL");
     raydium_ode_name_auto("box",name);
     raydium_ode_object_box_add(name,a,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"crate.tri");
@@ -672,7 +673,7 @@ glLoadIdentity();
 if(raydium_ode_element_find(cam)<0) strcpy(cam,"player");
 tmp=raydium_ode_element_pos_get_name(cam);
 if(vue==5) raydium_camera_look_at(camx,camy,camz,tmp[1],-tmp[2],tmp[0]);
-if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-0.15,0,0.1,2,0,0);
+if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-1.9,0,0.5,2,0,0);
 if(vue==4) raydium_ode_element_camera_inboard_name("buggy_corps",0,0.35,-0.2,2,0,-0.2);
 if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_trigo_sin(cam_angle_v),0,raydium_trigo_cos(cam_angle_v));
 if(vue==8) raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
