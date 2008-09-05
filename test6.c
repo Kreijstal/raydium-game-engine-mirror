@@ -320,7 +320,7 @@ raydium_ode_object_delete_name("BUGGY");
     //raydium_ode_object_move(a,pos);
     }
     raydium_ode_element_particle_offset_name_3f("buggy_corps","smoke.prt",-0.5,0,0);
-    raydium_ode_element_particle_offset_name_3f("buggy_corps","dust.prt",-0.5,0,-0.3);
+//    raydium_ode_element_particle_offset_name_3f("buggy_corps","dust.prt",-0.5,0,-0.3);
 
 /*
 raydium_ode_object_delete_name("TANK");
