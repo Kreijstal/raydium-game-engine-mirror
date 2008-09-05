@@ -10,13 +10,33 @@ Integrated Physics (ODE)
 // Introduction
 /**
 Raydium allows you to build applications with full physics, using ODE (Open
-Dynamics Engine). ODE is "an open source, high performance library for 
+Dynamics Engine). ODE is "an open source, high performance library for
 simulating rigid body dynamics", and is fully integrated into Raydium, with
 the usual abstraction. You can build cars, ragdolls, rockets, ... with
 only few lines of code. Physics are linked to sound API, particles engine,
 network layer, ... so you've almost nothing else to do but setting up objects.
 
 Raydium's website provides tutorials for building physics ready applications.
+**/
+
+// About ODE names
+
+/**
+ - Important: All ODE Objects, elements, motors,... must have UNIQUE NAME !!!!
+So, here is an example of what you SHOULD NOT DO.
+%%(c)
+int car1=raydium_ode_object_create("car");
+int car2=raydium_ode_object_create("car");
+int car3=raydium_ode_object_create("car");
+%%
+
+Ant this is the RIGHT WAY:
+%%(c)
+int car1=raydium_ode_object_create("car1");
+int car2=raydium_ode_object_create("car2");
+int car3=raydium_ode_object_create("car3");
+%%
+
 **/
 
 // Vocabulary
@@ -29,19 +49,19 @@ doesn't collide each others. "Car", "Player", "Crane" are good object examples.
 
 - **Elements:**
 Elements are the main thing you will play with. An element is rendered using
-an associated 3D mesh, is configured with a geometry, density, a size, 
+an associated 3D mesh, is configured with a geometry, density, a size,
 collides with others elements, ...
 An element **must** be owned by an object.
 For now, there is 3 element types (standard, satic, fixing). Static elements
 are unmovable, they just collide with other elements, usefull for very
-big elements, or externally controlled elements (motion capture, network, 
+big elements, or externally controlled elements (motion capture, network,
 haptic interface, ...), for example.
 Raydium supports boxes and spheres.
 
 - **Joints:**
 Joints are dedicated to elements linking. A joint **must** be linked with two
 elements or unwanted behaviors may happen.
-For now, Raydium supports 4 joint types (hinge, hinge2, universal, fixed), and 
+For now, Raydium supports 4 joint types (hinge, hinge2, universal, fixed), and
 you will find more informations with suitable functions documentation, below.
 On a joint, you could setup limits (min and max for all axes) and a maximum
 force before joint breaks, if needed.
@@ -53,25 +73,25 @@ functions, since they want a string, not a integer constant).
 A motor is linked to joints, and may powering an unlimited amount of joints.
 For now, 3 motor types are available: engine, angular and rocket.
 
-**Engine** type works the same way as a car's engine: it will try to 
-make "something" turning, at the desired **speed**. You can link a 
+**Engine** type works the same way as a car's engine: it will try to
+make "something" turning, at the desired **speed**. You can link a
 gearbox to this type (and only this one).
 
 **Angular** type will try to rotate "something" to the desired **angle**,
 usefull for car's front wheels, for example.
 
 **Rocket type** is very simple: give a force and an orientation. Usefull for
-creating copters, rockets, and for elements "pushing", for example. 
+creating copters, rockets, and for elements "pushing", for example.
 Special rocket is avaiblable for FPS style player controls.
 Warning, a rocket is linked to an element ! (not a joint)
 
 - **Explosions:**
 Explosions are not directly related to rigid body physics, but consider it
-as a high level primitive. 
+as a high level primitive.
 With Raydium, you have two different ways to create an explosion.
 
 First, you can create a "blowing explosion", generating a spherical blow. Any
-element in this growing sphere will be ejected. 
+element in this growing sphere will be ejected.
 Use this for very consequent explosions only !
 
 Next, you can create an instantaneous explosion, with a degressive blowing
@@ -88,7 +108,7 @@ from another element (relatively). More informations about launchers below.
 
 // Callbacks
 /**
-For **advanced** uses, you may want to enter into some "internal" parts of 
+For **advanced** uses, you may want to enter into some "internal" parts of
 RayODE. Many callbacks are available for such needs.
 To cancel any callback, set its value to ##NULL## (default value).
 Here is a quick list:
@@ -110,40 +130,40 @@ you want to "validate" collision, or false (0) if you don't want that two
 objects to collide.
 
 
-- ##raydium_ode_CollideCallback## 
+- ##raydium_ode_CollideCallback##
 When two objects collides, Raydium will search all collisions between
 every elements. For each contact, this callback is fired. For complex
 objects, with a lot of elements, this callback may be fired a **very** large
 number of times during **one** ODE step ! Do only simple things here.
 
 Callback prototype: ##signed char f(int e1, int e2, dContact *c);##
-##e1## and ##e2## are the two colliding elements, and you must return true (1) 
-if you want to "validate" this contact, or false (0) to cancel this contact 
+##e1## and ##e2## are the two colliding elements, and you must return true (1)
+if you want to "validate" this contact, or false (0) to cancel this contact
 (and only this one !)
 
 See ODE documentation, chapter 7.3.7, for more informations about ##dContact##
 structure.
 
 
-- ##raydium_ode_ExplosionCallback## 
+- ##raydium_ode_ExplosionCallback##
 At every explosion, of any type, this event is fired. This is the best
 place to play suitable sound, create particles and such things.
 
 Callback prototype: ##void f(signed char type, dReal radius, dReal force_or_propag, dReal *pos);##
 You can find in callback params:
 explosion ##type## (see above), ##radius##, force or propag (depending on
-explosion type) and ##pos##, an array of 3 dReal values for explosion position. 
-The value you will find in ##force_or_propag## is something 
+explosion type) and ##pos##, an array of 3 dReal values for explosion position.
+The value you will find in ##force_or_propag## is something
 like ##RAYDIUM_ODE_NETWORK_EXPLOSION_*## (EXPL or BLOW).
 
 
 - ##raydium_ode_BeforeElementDrawCallback##
-When ##raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL)## is called, for every 
+When ##raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL)## is called, for every
 element to draw, this callback is **before** element drawing.
 
 Callback prototype: ##signed char f(int elem);##
 ##elem## is the element'id. Return true (1) if you want to draw this element,
-or false (0) otherwise. This is also the best place to drawn team colors on 
+or false (0) otherwise. This is also the best place to drawn team colors on
 cars, for example (see ##raydium_rendering_rgb_force## for this use).
 
 
@@ -163,11 +183,11 @@ elements and create contacts during a ray launch.
 // Miscallenous
 /**
 By default, ODE is called 400 times per second, allowing **very** accurate
-physics. You may change this using ##raydium_ode_set_physics_freq##, 
+physics. You may change this using ##raydium_ode_set_physics_freq##,
 but most ERP and CFM values must be changed in your
 applications. ODE use a lot of cache mechanisms, so 400 Hz is a reasonable value.
 
-Please note RayODE interface is using ##dReal## ODE type for variables. 
+Please note RayODE interface is using ##dReal## ODE type for variables.
 For now, ##dReal## is an alias to ##float## type. But please use ##sizeof()##.
 
 Raydium provides some other functions for advanced uses, and you can
@@ -399,11 +419,11 @@ __rayapi signed char raydium_ode_element_material (int e, dReal erp, dReal cfm);
 /**
 When two elements collides, there's two important parameters used for
 contact point generation : ERP and CFM.
-ERP means "Error Reduction Parameter", and its value is between 0 and 1 and 
+ERP means "Error Reduction Parameter", and its value is between 0 and 1 and
 CFM means "Constraint Force Mixing".
 Changing ERP and CFM values will change the way this element collides with
 other elements, providing a "material" notion.
-Raydium provides a few default values, see ##RAYDIUM_ODE_MATERIAL_*## defines 
+Raydium provides a few default values, see ##RAYDIUM_ODE_MATERIAL_*## defines
 in ##raydium/ode.h## file (hard, medium, soft, soft2, default, ...).
 
 For more informations, see ODE documentation, chapters 3.7 and 3.8.
@@ -417,7 +437,7 @@ Same as above, but using element's name.
 __rayapi signed char raydium_ode_element_slip (int e, dReal slip);
 /**
 Slip parameter is a complement of material values (ERP and CFM, see above).
-Raydium provides a few default values, see ##RAYDIUM_ODE_SLIP_*## defines 
+Raydium provides a few default values, see ##RAYDIUM_ODE_SLIP_*## defines
 in ##raydium/ode.h## file (ice, player, normal, default).
 **/
 
@@ -428,7 +448,7 @@ Same as above, but using element's name.
 
 __rayapi signed char raydium_ode_element_rotfriction (int e, dReal rotfriction);
 /**
-rotfriction stands for "Rotation Friction", "Rolling Friction", 
+rotfriction stands for "Rotation Friction", "Rolling Friction",
 "Damping Effect", ...
 With RayODE, by default, when a sphere element is rolling over a flat ground,
 it will roll forever. Applying a rotfriction factor will solve this.
@@ -531,7 +551,7 @@ Same as above, but using element's name.
 __rayapi signed char raydium_ode_element_rel2world(int element,dReal *rel,dReal *world);
 /**
 Utility function that take a point on a ##element## (##rel## is a dReal[3]) and
-return  that point's position or velocity in world coordinates (##world## is 
+return  that point's position or velocity in world coordinates (##world## is
 a dReal[3] too).
 
 No memory allocation is done here.
@@ -553,7 +573,7 @@ Note: This is a "Raydium clone" of dBodyGetPosRelPoint.
 
 __rayapi signed char raydium_ode_element_vect2world(int element,dReal *vect,dReal *world);
 /**
-Given a vector expressed in the ##element## coordinate system (dReal[3]), 
+Given a vector expressed in the ##element## coordinate system (dReal[3]),
 rotate it to the world coordinate system (##world##, dReal[3]).
 
 No memory allocation is done here.
@@ -652,7 +672,7 @@ You must provide:
 - ##group##: owner object id.
 - ##mass##: density of this new element. Mass will depend on radius.
 - ##radius##: radius of the element sphere geometry. Raydium is able to
-detect this value with ##RAYDIUM_ODE_AUTODETECT##. Things like 
+detect this value with ##RAYDIUM_ODE_AUTODETECT##. Things like
 ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning "twice the detected radius".
 - ##type##: ##RAYDIUM_ODE_STANDARD## or ##RAYDIUM_ODE_STATIC## (collide only,
 no physics).
@@ -672,7 +692,7 @@ Arguments are the same as ##raydium_ode_object_sphere_add## (see above) but
 ##tx##, ##ty## and ##tz##, used for box sizes. As for spheres, you can
 use ##RAYDIUM_ODE_AUTODETECT##. Give this value only for ##tx##, this will
 automatically apply to ##ty## and ##tz##.
-Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning 
+Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning
 "twice the detected size".
 **/
 
@@ -681,7 +701,7 @@ __rayapi signed char raydium_ode_element_ray_attach(int element, dReal length, d
 This function will attach a new ray to ##element##. This may be used as a
 sensor, "hitscan" line, intersection test, ...
 Then you can get from this ray things like distance between the start
-of the ray (element's center) and the first "touched" element. You will also 
+of the ray (element's center) and the first "touched" element. You will also
 find wich element was touched, and where. The same applies for the last touched
 element.
 Do not try to retrieve informations until next frame.
@@ -698,7 +718,7 @@ If you want to filter wich elements are used to generate rays'informations,
 you can use ##raydium_ode_RayCallback##. This callback is following the
 same prototype as ##raydium_ode_CollideCallback## (see at the top of
 this chapter). In this callback, you can use 3 different return values:
-- ##RAYDIUM_ODE_RAY_CONTACT_IGNORE## if you don't want this "contact" for 
+- ##RAYDIUM_ODE_RAY_CONTACT_IGNORE## if you don't want this "contact" for
 ray informations,
 - ##RAYDIUM_ODE_RAY_CONTACT_REPORT## if you want to report the contact: it will
 update informations for ##raydium_ode_element_ray_get()##.
@@ -718,7 +738,7 @@ Same as above, but using element's name.
 
 __rayapi signed char raydium_ode_element_ray_delete(int element, int ray_id);
 /**
-Delete ray ##ray_id## from ##element##. No more ray "reports" will be available 
+Delete ray ##ray_id## from ##element##. No more ray "reports" will be available
 after this call.
 **/
 
@@ -747,7 +767,7 @@ typedef struct raydium_ode_Ray
     dReal   min_dist;
     int     min_elem;   // touched element, -1 if no element was touched
     dReal   min_pos[3];
-} raydium_ode_Ray;                                              
+} raydium_ode_Ray;
 %%
 
 Obviously, this function won't allocate any memory, you must provide a
@@ -975,7 +995,7 @@ Same as above, but using element's name.
 
 __rayapi void raydium_ode_joint_suspension (int j, dReal erp, dReal cfm);
 /**
-ERP means "Error Reduction Parameter", and its value is between 0 and 1 and 
+ERP means "Error Reduction Parameter", and its value is between 0 and 1 and
 CFM means "Constraint Force Mixing".
 Changing ERP and CFM values will change joint energy absorption and restitution.
 
@@ -999,13 +1019,13 @@ Hinge2 is a very specialized joint, perfect for car wheel's for example.
 
 [[http://ode.org/pix/hinge2.jpg hinge2]]
 
-"Axis 1 is specified relative to body 1 (this would be the steering 
-axis if body 1 is the chassis). Axis 2 is specified relative to body 2 
+"Axis 1 is specified relative to body 1 (this would be the steering
+axis if body 1 is the chassis). Axis 2 is specified relative to body 2
 (this would be the wheel axis if body 2 is the wheel)."
 
 You must also provide joint's ##name##.
 
-Raydium provides ##RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES## define, useful for 
+Raydium provides ##RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES## define, useful for
 most chassis-wheel joints, and ##RAYDIUM_ODE_JOINT_AXE_X##, Y and Z for
 other cases.
 
@@ -1023,8 +1043,8 @@ Will create a new joint between two elements (##elem1## and ##elem2##).
 
 [[http://ode.org/pix/universal.jpg universal]]
 
-"Given axis 1 on body 1, and axis 2 on body 2 that is perpendicular to 
-axis 1, it keeps them perpendicular. In other words, rotation of the two 
+"Given axis 1 on body 1, and axis 2 on body 2 that is perpendicular to
+axis 1, it keeps them perpendicular. In other words, rotation of the two
 bodies about the direction perpendicular to the two axes will be equal."
 
 "Axis 1 and axis 2 should be perpendicular to each other."
@@ -1067,7 +1087,7 @@ __rayapi int raydium_ode_joint_attach_fixed (char *name, int elem1, int elem2);
 /**
 Will create a new joint between two elements (##elem1## and ##elem2##).
 
-Fixed joint is more a hack than a real joint. Use only when it's absolutely 
+Fixed joint is more a hack than a real joint. Use only when it's absolutely
 necessary, and have a look to ##raydium_ode_element_fix##.
 
 You must provide joint's ##name##
@@ -1091,7 +1111,7 @@ Same as above, but using joint's name.
 
 __rayapi void raydium_ode_joint_universal_limits (int j, dReal lo1, dReal hi1, dReal lo2, dReal hi2);
 /**
-Sets low and hight limits for axe 1 (##lo1##, ##hi1##) and axe 2 (##lo2##, 
+Sets low and hight limits for axe 1 (##lo1##, ##hi1##) and axe 2 (##lo2##,
 ##hi2##) for universal joint ##j##. See ##raydium_ode_joint_attach_universal##
 for more informations about universal joint axes.
 **/
@@ -1213,7 +1233,7 @@ If you want to cancel a gearbox, set a gearbox with only one gear with 1.0
 factor value.
 
 Raydium gearboxes implementation is very naive, with 100% output.
-For example, a 0.5 gear factor will divide maximum speed by two, but will 
+For example, a 0.5 gear factor will divide maximum speed by two, but will
 provide twice the normal torque.
 **/
 
@@ -1339,7 +1359,7 @@ Will return current motor angle on ##axe## axe. Avaible only for angular motor.
 **/
 
 __rayapi dReal raydium_ode_motor_angle_get_name(char *name, int axe);
-/** 
+/**
 same as above, but using motor's name.
 **/
 
@@ -1368,7 +1388,7 @@ same as above, but using motor's name.
 __rayapi void raydium_ode_motor_rocket_playermovement (int m, signed char isplayermovement);
 /**
 Will configure rocket ##m## for player movements. This type of rocket will be
-automatically disabled when linked element is not touched by 
+automatically disabled when linked element is not touched by
 anything (ground in most cases).
 **/
 
@@ -1484,7 +1504,7 @@ __rayapi void raydium_ode_explosion_blow (dReal radius, dReal max_force, dReal *
 /**
 This function will create an instantaneous explosion, generating a degressive
 blowing effect.
-You must provide a ##radius## (normal world units), a maximum force 
+You must provide a ##radius## (normal world units), a maximum force
 (##max_force##), and a position (##pos##, 3 x dReal array).
 **/
 
@@ -1509,7 +1529,7 @@ __rayapi int raydium_ode_explosion_create (char *name, dReal final_radius, dReal
 This function will create an spherical growing explosion. Any element in the
 explosion will be ejected.
 As said before: "Use this for very consequent explosions only !".
-You must provide ##final_radius##, ##propag## (growing size) and a 
+You must provide ##final_radius##, ##propag## (growing size) and a
 position (##pos##, 3 x dReal array).
 When an explosion reach its final radius, it will be deleted.
 **/
@@ -1533,7 +1553,7 @@ This function will draw all RayODE scene. You must call this function
 by yourself.
 Sets ##names## to ##RAYDIUM_ODE_DRAW_NORMAL## for normal rendering.
 Other ##names## values will:
-- draw only elements, joints and motors names and elements bounding boxes 
+- draw only elements, joints and motors names and elements bounding boxes
 with ##RAYDIUM_ODE_DRAW_DEBUG##
 - draw only objets AABB (Axis-Aligned Bounding Box) with ##RAYDIUM_ODE_DRAW_AABB##
 - draw only element rays (if any) with ##RAYDIUM_ODE_DRAW_RAY##
@@ -1555,7 +1575,7 @@ __rayapi void raydium_ode_time_change (GLfloat perc);
 /**
 This function will change RayODE timecall frequency, allowing slow motion
 effects, for example, where ##perc## is the percentage of the normal time base.
-Since this function obviously do not change physics accuracy, be careful 
+Since this function obviously do not change physics accuracy, be careful
 with ##perc## > 100, wich will generate a big load for the CPU.
 This function also change particles and mesh animations time.
 **/
@@ -1649,7 +1669,7 @@ special file format with all particles found during the dump. You can reload
 Note from source code:
 %%(c)
 // This function is provided "for fun" only. Not all effects are dumped:
-// Missing : shadows, forced colors, before/after callbacks, 
+// Missing : shadows, forced colors, before/after callbacks,
 // fixed elements, ...
 // Some code is pasted from file.c (and this is BAD ! :)
 %%
