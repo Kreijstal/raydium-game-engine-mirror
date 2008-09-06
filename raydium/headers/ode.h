@@ -388,9 +388,14 @@ Adds force ##vect## to element ##e##.
 Force is sets thru ##vect##, a 3 x dReal array.
 **/
 
+__rayapi void raydium_ode_element_addforce_3f (int e, dReal vx, dReal vy, dReal vz);
+/**
+Same as above, but using 3 dReal values.
+**/
+
 __rayapi void raydium_ode_element_addforce_name (char *e, dReal * vect);
 /**
-Same as above, but using element's name.
+Same as above, but using element's name and one vector.
 **/
 
 __rayapi void raydium_ode_element_addforce_name_3f (char *e, dReal vx, dReal vy, dReal vz);
