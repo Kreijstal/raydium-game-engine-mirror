@@ -1644,7 +1644,7 @@ dBodySetMass(raydium_ode_element[elem].body,&m);
 
 void raydium_ode_element_mass_set(int elem, dReal mass)
 {
-    raydium_ode_element_mass(elem,mass);
+raydium_ode_element_mass(elem,mass);
 }
 
 void raydium_ode_element_mass_name(char *elem, dReal mass)

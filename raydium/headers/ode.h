@@ -365,7 +365,7 @@ __rayapi void raydium_ode_object_linearvelocity_set_name_3f (char *o, dReal vx, 
 Same as above, but using 3 dReal values.
 **/
 
-__rayapi void raydium_ode_object_addforce (int o, dReal * vect);
+__rayapi void raydium_ode_object_addforce (int o, dReal *vect);
 /**
 Add force ##vect## to all elements of object ##o##.
 Force is sets thru ##vect##, a 3 x dReal array.
@@ -387,13 +387,13 @@ __rayapi void raydium_ode_object_addforce_name_3f (char *o, dReal vx, dReal vy, 
 Same as above, but using 3 dReal values.
 **/
 
-__rayapi void raydium_ode_element_addforce (int e, dReal * vect);
+__rayapi void raydium_ode_element_addforce (int e, dReal *vect);
 /**
 Adds force ##vect## to element ##e##.
 Force is sets thru ##vect##, a 3 x dReal array.
 **/
 
-__rayapi void raydium_ode_element_addforce_3f (int e, dReal fx,dReal fu,dReal fz);
+__rayapi void raydium_ode_element_addforce_3f (int e, dReal fx, dReal fu, dReal fz);
 /**
 Same as above, but using 3 dReal values.
 **/
@@ -499,29 +499,29 @@ raydium_log("%f %f %f",p[0],p[1],p[2]);
 Returned data is available only for the current frame.
 **/
 
-__rayapi dReal * raydium_ode_element_linearvelocity_get_name(char *e);
+__rayapi dReal *raydium_ode_element_linearvelocity_get_name(char *e);
 /**
 Same as above using element name.
 **/
 
 
-__rayapi void raydium_ode_element_linearvelocity_set (int e,dReal *vel);
+__rayapi void raydium_ode_element_linearvelocity_set (int e, dReal *vel);
 /**
 Set element's linear velocity. Linear velocity is an
 array of 3 x dReal.
 **/
 
-__rayapi void raydium_ode_element_linearvelocity_set_name (char * e,dReal *vel);
+__rayapi void raydium_ode_element_linearvelocity_set_name (char * e, dReal *vel);
 /**
 Same as above usign element's name.
 **/
 
-__rayapi void raydium_ode_element_linearvelocity_set_3f (int e,dReal velx,dReal vely,dReal velz);
+__rayapi void raydium_ode_element_linearvelocity_set_3f (int e, dReal velx, dReal vely, dReal velz);
 /**
-Same as above, 3 dReal.
+Same as above, using 3 dReal values.
 **/
 
-__rayapi void raydium_ode_element_linearvelocity_set_name_3f(char *e,dReal vx,dReal vy, dReal vz);
+__rayapi void raydium_ode_element_linearvelocity_set_name_3f(char *e, dReal vx, dReal vy, dReal vz);
 /**
 Same as above using element name.
 **/
@@ -904,17 +904,25 @@ Experimental code. Unimplemented, yet.
 Symmetric function, see ##raydium_ode_element_fix##.
 **/
 
-__rayapi void raydium_ode_element_mass_set(int elem,dReal mass);
 __rayapi void raydium_ode_element_mass(int elem, dReal mass);
 /**
 Change ##mass## the the ##elem## element. Obviously, you can't change the
 mass of static element.
 **/
 
-__rayapi void raydium_ode_element_mass_set_name(char *elem, dReal mass);
 __rayapi void raydium_ode_element_mass_name(char *elem, dReal mass);
 /**
 Same as above, but using element's name.
+**/
+
+__rayapi void raydium_ode_element_mass_set(int elem,dReal mass);
+/**
+Alias for ##raydium_ode_element_mass()##.
+**/
+
+__rayapi void raydium_ode_element_mass_set_name(char *elem, dReal mass);
+/**
+Alias for ##raydium_ode_element_mass_name()##.
 **/
 
 __rayapi dReal raydium_ode_element_mass_get(int elem);
@@ -1892,25 +1900,27 @@ Internal frame callback for capture playing.
 
 __rayapi void raydium_ode_autodisable_set(int autod);
 /**
-RayOde can automatically disable resting element.
-This is usefull for physical solver. It don't have to reserve space in the solver matrix
-and compute solution for this element.
+RayODE can automatically disable resting elements.
+This is useful for physical solver. It don't have to reserve space in 
+the solver matrix and compute solution for this element.
 
-RayOde can automaticaly disable resting body (default is not).
-This can speed up the program.
+This can greatly speed up the program, but may cause some strange
+behaviors, like elements resting in mid-air.
 
+This feature is disabled by default.
 **/
 
 __rayapi int raydium_ode_autodisable_get(void);
 /**
-Get general RayOde autodisable state.
+Is RayODE autodisable feature is enabled ? This function will
+return ##1## (true) if yes, ##0## (false) otherwise.
 **/
 
 int raydium_ode_element_disable_get(int elem);
 /**
-Return whatever or not an element is disactived.
+Return whatever or not an element is disabled.
 In this case it is not treated by the solver.
-Will return 1 if element is disabled else return 0.
+Will return ##1## if element is disabled, ##0## if not.
 **/
 
 int raydium_ode_element_disable_get_name (char *e);
@@ -1921,7 +1931,7 @@ Same as above using element name.
 void raydium_ode_element_disable_set(int elem,int disable_state);
 /**
 Allow user to disable or reactivate an element manually.
-if ##disable_state## is ##1## element will be desactived.
+if ##disable_state## is ##1## element will be desactived,
 ##0## will re-activate the element.
 **/
 
