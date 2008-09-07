@@ -596,39 +596,39 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 
 void raydium_ode_object_addforce(int o, dReal *vect)
 {
-        raydium_ode_object_addforce_3f(o,vect[0],vect[1],vect[2]);
+raydium_ode_object_addforce_3f(o,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_object_addforce_name(char *o, dReal *vect)
 {
-    raydium_ode_object_addforce(raydium_ode_object_find(o),vect);
+raydium_ode_object_addforce(raydium_ode_object_find(o),vect);
 }
 
 void raydium_ode_object_addforce_name_3f(char *o, dReal vx, dReal vy, dReal vz)
 {
-    raydium_ode_object_addforce_3f(raydium_ode_object_find(o),vx,vy,vz);
+raydium_ode_object_addforce_3f(raydium_ode_object_find(o),vx,vy,vz);
 }
 
 void raydium_ode_element_addforce_3f(int a,dReal fx,dReal fy,dReal fz)
 {
-    if(!raydium_ode_element_isvalid(a))
+if(!raydium_ode_element_isvalid(a))
     {
     raydium_log("ODE: Error: cannot add force to element: invalid name or index");
     return;
     }
-    if(raydium_ode_element[a].state==RAYDIUM_ODE_STATIC)
+if(raydium_ode_element[a].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: cannot add force to a static element");
     return;
     }
     
-    dBodyEnable(raydium_ode_element[a].body);                
-    dBodyAddForce(raydium_ode_element[a].body,fx,fy,fz);
+dBodyEnable(raydium_ode_element[a].body);                
+dBodyAddForce(raydium_ode_element[a].body,fx,fy,fz);
 }
 
 void raydium_ode_element_addforce(int e, dReal *vect)
 {
-    raydium_ode_element_addforce_3f(e,vect[0],vect[1],vect[2]);
+raydium_ode_element_addforce_3f(e,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_element_addforce_name(char *e, dReal *vect)
@@ -645,30 +645,30 @@ vect[2]=vz;
 raydium_ode_element_addforce_name(e,vect);
 }
 
-dReal * raydium_ode_element_force_get (int e)
+dReal *raydium_ode_element_force_get (int e)
 {
-    if(!raydium_ode_element_isvalid(e))
+if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot get element's forces: invalid name or index");
     return;
     }
-    if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
+if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: cannot get forces of a static element");
     return;
     }   
-    return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
+return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
 }
 
-dReal * raydium_ode_element_force_get_name(char * elem)
+dReal *raydium_ode_element_force_get_name(char * elem)
 {
-    return (dReal *) raydium_ode_element_force_get(raydium_ode_element_find(elem));
+return (dReal *)raydium_ode_element_force_get(raydium_ode_element_find(elem));
 }
 
 
 void raydium_ode_element_addtorque_3f(int e, dReal vx, dReal vy, dReal vz)
 {
-    if(!raydium_ode_element_isvalid(e))
+if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot add torque to element: invalid name or index");
     return;
@@ -678,14 +678,13 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add torque to a static element");
     return;
     }
-    dBodyEnable(raydium_ode_element[e].body);                
-    dBodyAddTorque(raydium_ode_element[e].body,vx,vy,vz);
- 
+dBodyEnable(raydium_ode_element[e].body);                
+dBodyAddTorque(raydium_ode_element[e].body,vx,vy,vz); 
 }
 
 void raydium_ode_element_addtorque(int e, dReal *vect)
 {
-    raydium_ode_element_addtorque_3f(e,vect[0],vect[1],vect[2]);
+raydium_ode_element_addtorque_3f(e,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_element_addtorque_name(char *e, dReal *vect)
@@ -768,71 +767,69 @@ if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
 return (dReal *)dBodyGetLinearVel(raydium_ode_element[e].body);
 }
 
-dReal * raydium_ode_element_linearvelocity_get_name(char *elem)
+dReal *raydium_ode_element_linearvelocity_get_name(char *elem)
 {
-    return (dReal *) raydium_ode_element_linearvelocity_get(raydium_ode_element_find(elem));
+return (dReal *)raydium_ode_element_linearvelocity_get(raydium_ode_element_find(elem));
 }
 
 void raydium_ode_element_linearvelocity_set_3f(int e,dReal velx,dReal vely,dReal velz)
 {
-    if(!raydium_ode_element_isvalid(e))
+if(!raydium_ode_element_isvalid(e))
     {
-        raydium_log("ODE: Error: cannot set element linear velocity: invalid name or index");
-        return ;
+    raydium_log("ODE: Error: cannot set element linear velocity: invalid name or index");
+    return ;
     }
-    if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
+if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
     {
-        raydium_log("ODE: Error: cannot set element linear velocity: not a standard object");
-        return ;
+    raydium_log("ODE: Error: cannot set element linear velocity: not a standard object");
+    return ;
     }
-    dBodySetLinearVel(raydium_ode_element[e].body,velx,vely,velz);
-
+dBodySetLinearVel(raydium_ode_element[e].body,velx,vely,velz);
 }
 
 void raydium_ode_element_linearvelocity_set(int e,dReal * vel)
 {  
-    raydium_ode_element_linearvelocity_set_3f(e,vel[0],vel[1],vel[2]);
+raydium_ode_element_linearvelocity_set_3f(e,vel[0],vel[1],vel[2]);
 }
 
 void raydium_ode_element_linearvelocity_set_name(char *e,dReal * vel)
 {
-    raydium_ode_element_linearvelocity_set(raydium_ode_element_find(e),vel);
+raydium_ode_element_linearvelocity_set(raydium_ode_element_find(e),vel);
 }
 
 void raydium_ode_element_linearvelocity_set_name_3f(char *e,dReal vx,dReal vy, dReal vz)
 {
-    raydium_ode_element_linearvelocity_set_3f(raydium_ode_element_find(e),vx,vy,vz);
+raydium_ode_element_linearvelocity_set_3f(raydium_ode_element_find(e),vx,vy,vz);
 }
 
 void raydium_ode_element_angularvelocity_set_3f(int e,dReal avelx,dReal avely,dReal avelz)
 {
-    if(!raydium_ode_element_isvalid(e))
+if(!raydium_ode_element_isvalid(e))
     {
-        raydium_log("ODE: Error: cannot set element angular velocity: invalid name or index");
-        return ;
+    raydium_log("ODE: Error: cannot set element angular velocity: invalid name or index");
+    return ;
     }
-    if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
+if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
     {
-        raydium_log("ODE: Error: cannot set element angular velocity: not a standard object");
-        return ;
+    raydium_log("ODE: Error: cannot set element angular velocity: not a standard object");
+    return ;
     }
-    dBodySetAngularVel(raydium_ode_element[e].body,avelx,avely,avelz);
-
+dBodySetAngularVel(raydium_ode_element[e].body,avelx,avely,avelz);
 }
 
 void raydium_ode_element_angularvelocity_set(int e,dReal * avel)
 {  
-    raydium_ode_element_angularvelocity_set_3f(e,avel[0],avel[1],avel[2]);
+raydium_ode_element_angularvelocity_set_3f(e,avel[0],avel[1],avel[2]);
 }
 
 void raydium_ode_element_angularvelocity_set_name_3f(char *e,dReal avelx,dReal avely,dReal avelz)
 {
-    raydium_ode_element_angularvelocity_set_3f(raydium_ode_element_find(e),avelx,avely,avelz);
+raydium_ode_element_angularvelocity_set_3f(raydium_ode_element_find(e),avelx,avely,avelz);
 }
 
 void raydium_ode_element_angularvelocity_set_name(char *e,dReal *avel)
 {
-    raydium_ode_element_angularvelocity_set_name_3f(e,avel[0],avel[1],avel[2]);
+raydium_ode_element_angularvelocity_set_name_3f(e,avel[0],avel[1],avel[2]);
 }
 
 dReal * raydium_ode_element_angularvelocity_get(int elem)
@@ -850,9 +847,9 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
 return (dReal *)dBodyGetAngularVel(raydium_ode_element[elem].body);
 }
 
-dReal * raydium_ode_element_angularvelocity_get_name(char *elem)
+dReal *raydium_ode_element_angularvelocity_get_name(char *elem)
 {
-    return (dReal *) raydium_ode_element_angularvelocity_get(raydium_ode_element_find(elem));
+return (dReal *)raydium_ode_element_angularvelocity_get(raydium_ode_element_find(elem));
 }
 
 void raydium_ode_element_OnBlow(int e, void *OnBlow)
@@ -1656,34 +1653,33 @@ raydium_ode_element_mass(raydium_ode_element_find(elem),mass);
 
 void raydium_ode_element_mass_set_name(char *elem, dReal mass)
 {
-    raydium_ode_element_mass_name(elem,mass);
+raydium_ode_element_mass_name(elem,mass);
 }
 
 dReal raydium_ode_element_mass_get(int elem)
 {
-    dMass m;
+dMass m;
 
-    if(!raydium_ode_element_isvalid(elem))
+if(!raydium_ode_element_isvalid(elem))
     {
-        raydium_log("ODE: Error: Cannot change mass of element: invalid index or name");
-        return;
+    raydium_log("ODE: Error: Cannot change mass of element: invalid index or name");
+    return;
     }
 
-    if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
+if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
     {
-        raydium_log("ODE: Error: Cannot change mass of a static element");
-        return;
+    raydium_log("ODE: Error: Cannot change mass of a static element");
+    return;
     }
     
-    dBodyGetMass(raydium_ode_element[elem].body,&m);
+dBodyGetMass(raydium_ode_element[elem].body,&m);
 
-    return (m.mass);
-    
+return (m.mass);    
 }
 
 dReal raydium_ode_element_mass_get_name(char * elem)
 {
-    raydium_ode_element_mass_get(raydium_ode_element_find(elem));
+raydium_ode_element_mass_get(raydium_ode_element_find(elem));
 }
 
 void raydium_ode_element_move(int elem, dReal *pos)
@@ -2404,32 +2400,34 @@ int i;
 if(raydium_ode_motor_isvalid(j))
     {
     if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ROCKET)
-    {
-    dReal speed;
-    // test if element is attached:
-    if(raydium_ode_motor[j].rocket_element<0)
+        {
+        dReal speed;
+        // test if element is attached:
+        if(raydium_ode_motor[j].rocket_element<0)
+            return;
+
+        speed=raydium_ode_motor[j].speed;
+        if(raydium_ode_motor[j].rocket_playermovement &&
+           !raydium_ode_element[raydium_ode_motor[j].rocket_element]._touched)
+                speed=0;
+
+        if(speed!=0.f)
+            {
+            dBodyEnable(raydium_ode_element[raydium_ode_motor[j].rocket_element].body);
+            dBodyAddRelForceAtRelPos(raydium_ode_element[raydium_ode_motor[j].rocket_element].body,
+                                    raydium_ode_motor[j].rocket_direction[0],
+                                    raydium_ode_motor[j].rocket_direction[1],
+                                    raydium_ode_motor[j].rocket_direction[2],
+                                    raydium_ode_motor[j].rocket_position[0],
+                                    raydium_ode_motor[j].rocket_position[1],
+                                    raydium_ode_motor[j].rocket_position[2]);
+            }
         return;
+        }
 
-    speed=raydium_ode_motor[j].speed;
-    if(raydium_ode_motor[j].rocket_playermovement &&
-       !raydium_ode_element[raydium_ode_motor[j].rocket_element]._touched )
-       speed=0;
-
-    if(speed!=0.f){
-    dBodyEnable(raydium_ode_element[raydium_ode_motor[j].rocket_element].body);
-    dBodyAddRelForceAtRelPos(raydium_ode_element[raydium_ode_motor[j].rocket_element].body,
-                             raydium_ode_motor[j].rocket_direction[0],
-                             raydium_ode_motor[j].rocket_direction[1],
-                             raydium_ode_motor[j].rocket_direction[2],
-                             raydium_ode_motor[j].rocket_position[0],
-                             raydium_ode_motor[j].rocket_position[1],
-                             raydium_ode_motor[j].rocket_position[2]);
-    }
-    return;
-    }
     // if motor is anything else than a rocket:
     for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
-        if(raydium_ode_motor[j].joints[i]>=0)
+      if(raydium_ode_motor[j].joints[i]>=0)
         {
         void (*SetParam)(dJointID,int,dReal);
         dReal (*GetAngle)(dJointID);
@@ -2508,11 +2506,11 @@ if(raydium_ode_motor_isvalid(j))
 
         if(raydium_ode_motor[j].state==RAYDIUM_ODE_MOTOR_ANGULAR)
             {
-                dReal v;
-                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,raydium_ode_motor[j].force);
-                v = raydium_ode_motor[j].angle -
-                    GetAngle(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
-                SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,v*10);
+            dReal v;
+            SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,fmax,raydium_ode_motor[j].force);
+            v=raydium_ode_motor[j].angle -
+                GetAngle(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint);
+            SetParam(raydium_ode_joint[raydium_ode_motor[j].joints[i]].joint,vel,v*10);
             }
         }
     return;
@@ -5469,65 +5467,64 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
 
 void raydium_ode_autodisable_set(int autod)
 {
-    dWorldSetAutoDisableFlag(raydium_ode_world,autod);   
-    // dWorldSetAutoDisableAngularAverageThreshold(); 
-    // dWorldSetAutoDisableAngularThreshold();
-    // dWorldSetAutoDisableAverageSamplesCount();
-    // dWorldSetAutoDisableLinearAverageThreshold();
-    // dWorldSetAutoDisableLinearThreshold();
-    // dWorldSetAutoDisableSteps();
-    // dWorldSetAutoDisableTime();
-    
+dWorldSetAutoDisableFlag(raydium_ode_world,autod);   
+// dWorldSetAutoDisableAngularAverageThreshold(); 
+// dWorldSetAutoDisableAngularThreshold();
+// dWorldSetAutoDisableAverageSamplesCount();
+// dWorldSetAutoDisableLinearAverageThreshold();
+// dWorldSetAutoDisableLinearThreshold();
+// dWorldSetAutoDisableSteps();
+// dWorldSetAutoDisableTime();   
 }
 
 int raydium_ode_autodisable_get(void)
 {
-    return dWorldGetAutoDisableFlag(raydium_ode_world);
+return dWorldGetAutoDisableFlag(raydium_ode_world);
 }
 
 int raydium_ode_element_disable_get(int elem)
 {
-    if(!raydium_ode_element_isvalid(elem))
+if(!raydium_ode_element_isvalid(elem))
     {
-        raydium_log("ODE: Error: cannot get autodisable flag: invalid name or index");
-        return ;
+    raydium_log("ODE: Error: cannot get autodisable flag: invalid name or index");
+    return ;
     }
-    if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
+if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
     {
-        raydium_log("ODE: Error: cannot get autodisable flag: not a standard object");
-        return ;
+    raydium_log("ODE: Error: cannot get autodisable flag: not a standard object");
+    return ;
     }
-    return !dBodyIsEnabled(raydium_ode_element[elem].body);
-    
+
+return !dBodyIsEnabled(raydium_ode_element[elem].body);   
 }
 
 int raydium_ode_element_disable_get_name (char *e)
 {
-    return raydium_ode_element_disable_get(raydium_ode_element_find(e));
+return raydium_ode_element_disable_get(raydium_ode_element_find(e));
 }
 
-void raydium_ode_element_disable_set(int elem,int disable_state)
+void raydium_ode_element_disable_set(int elem, int disable_state)
 {
-    if(!raydium_ode_element_isvalid(elem))
+if(!raydium_ode_element_isvalid(elem))
     {
-        raydium_log("ODE: Error: cannot set disable flag: invalid name or index");
-        return ;
+    raydium_log("ODE: Error: cannot set disable flag: invalid name or index");
+    return ;
     }
-    if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
+if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
     {
-        raydium_log("ODE: Error: cannot set disable flag: not a standard object");
-        return ;
+    raydium_log("ODE: Error: cannot set disable flag: not a standard object");
+    return ;
     }
-    if (disable_state)
-        dBodyDisable(raydium_ode_element[elem].body);
-    else
-        dBodyEnable(raydium_ode_element[elem].body);
-    
+
+if(disable_state)
+    dBodyDisable(raydium_ode_element[elem].body);
+else
+    dBodyEnable(raydium_ode_element[elem].body);    
 }
 
 void raydium_ode_element_disable_set_name (char *e,int disable_state)
 {
-    raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
+raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
 }
 
 
