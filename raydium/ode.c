@@ -1679,7 +1679,7 @@ return (m.mass);
 
 dReal raydium_ode_element_mass_get_name(char * elem)
 {
-raydium_ode_element_mass_get(raydium_ode_element_find(elem));
+return raydium_ode_element_mass_get(raydium_ode_element_find(elem));
 }
 
 void raydium_ode_element_move(int elem, dReal *pos)
