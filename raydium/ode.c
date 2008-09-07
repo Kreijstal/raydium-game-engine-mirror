@@ -4469,7 +4469,6 @@ if(raydium_ode_element[elem].particle>=0)
     raydium_particle_generator_delete(raydium_ode_element[elem].particle);
 
 raydium_ode_element[elem].particle=raydium_particle_generator_load(filename,raydium_ode_element[elem].name);
-raydium_log("%i\n",raydium_ode_element[elem].particle);
 memcpy(raydium_ode_element[elem].particle_offset,offset,sizeof(dReal)*3);
 }
 
