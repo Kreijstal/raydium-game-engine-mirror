@@ -1898,7 +1898,7 @@ __rayapi void raydium_ode_capture_play_callback(void);
 Internal frame callback for capture playing.
 **/
 
-__rayapi void raydium_ode_autodisable_set(int autod);
+__rayapi void raydium_ode_autodisable_set(signed char autod);
 /**
 RayODE can automatically disable resting elements.
 This is useful for physical solver. It don't have to reserve space in 
@@ -1910,32 +1910,32 @@ behaviors, like elements resting in mid-air.
 This feature is disabled by default.
 **/
 
-__rayapi int raydium_ode_autodisable_get(void);
+__rayapi signed char raydium_ode_autodisable_get(void);
 /**
 Is RayODE autodisable feature is enabled ? This function will
 return ##1## (true) if yes, ##0## (false) otherwise.
 **/
 
-int raydium_ode_element_disable_get(int elem);
+signed char raydium_ode_element_disable_get(int elem);
 /**
 Return whatever or not an element is disabled.
 In this case it is not treated by the solver.
 Will return ##1## if element is disabled, ##0## if not.
 **/
 
-int raydium_ode_element_disable_get_name (char *e);
+signed char raydium_ode_element_disable_get_name (char *e);
 /**
 Same as above using element name.
 **/
 
-void raydium_ode_element_disable_set(int elem,int disable_state);
+void raydium_ode_element_disable_set(int elem, signed char disable_state);
 /**
 Allow user to disable or reactivate an element manually.
 if ##disable_state## is ##1## element will be desactived,
 ##0## will re-activate the element.
 **/
 
-void raydium_ode_element_disable_set_name (char *e,int disable_state);
+void raydium_ode_element_disable_set_name (char *e, signed char disable_state);
 /**
 Same as above with element name.
 **/

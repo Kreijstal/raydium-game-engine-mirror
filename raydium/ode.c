@@ -5465,9 +5465,9 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
   }
 }
 
-void raydium_ode_autodisable_set(int autod)
+void raydium_ode_autodisable_set(signed char autod)
 {
-dWorldSetAutoDisableFlag(raydium_ode_world,autod);   
+dWorldSetAutoDisableFlag(raydium_ode_world,(int)autod);   
 // dWorldSetAutoDisableAngularAverageThreshold(); 
 // dWorldSetAutoDisableAngularThreshold();
 // dWorldSetAutoDisableAverageSamplesCount();
@@ -5477,12 +5477,12 @@ dWorldSetAutoDisableFlag(raydium_ode_world,autod);
 // dWorldSetAutoDisableTime();   
 }
 
-int raydium_ode_autodisable_get(void)
+signed char raydium_ode_autodisable_get(void)
 {
 return dWorldGetAutoDisableFlag(raydium_ode_world);
 }
 
-int raydium_ode_element_disable_get(int elem)
+signed char raydium_ode_element_disable_get(int elem)
 {
 if(!raydium_ode_element_isvalid(elem))
     {
@@ -5498,12 +5498,12 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
 return !dBodyIsEnabled(raydium_ode_element[elem].body);   
 }
 
-int raydium_ode_element_disable_get_name(char *e)
+signed char raydium_ode_element_disable_get_name(char *e)
 {
 return raydium_ode_element_disable_get(raydium_ode_element_find(e));
 }
 
-void raydium_ode_element_disable_set(int elem, int disable_state)
+void raydium_ode_element_disable_set(int elem, signed char disable_state)
 {
 if(!raydium_ode_element_isvalid(elem))
     {
@@ -5522,7 +5522,7 @@ else
     dBodyEnable(raydium_ode_element[elem].body);    
 }
 
-void raydium_ode_element_disable_set_name(char *e, int disable_state)
+void raydium_ode_element_disable_set_name(char *e, signed char disable_state)
 {
 raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
 }
