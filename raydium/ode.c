@@ -650,12 +650,12 @@ dReal *raydium_ode_element_force_get (int e)
 if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot get element's forces: invalid name or index");
-    return;
+    return NULL;
     }
 if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: cannot get forces of a static element");
-    return;
+    return NULL;
     }   
 return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
 }
@@ -1663,17 +1663,16 @@ dMass m;
 if(!raydium_ode_element_isvalid(elem))
     {
     raydium_log("ODE: Error: Cannot change mass of element: invalid index or name");
-    return;
+    return 0;
     }
 
 if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: Cannot change mass of a static element");
-    return;
+    return 0;
     }
     
 dBodyGetMass(raydium_ode_element[elem].body,&m);
-
 return (m.mass);    
 }
 
@@ -5487,12 +5486,12 @@ int raydium_ode_element_disable_get(int elem)
 if(!raydium_ode_element_isvalid(elem))
     {
     raydium_log("ODE: Error: cannot get autodisable flag: invalid name or index");
-    return ;
+    return -1;
     }
 if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
     {
     raydium_log("ODE: Error: cannot get autodisable flag: not a standard object");
-    return ;
+    return -1;
     }
 
 return !dBodyIsEnabled(raydium_ode_element[elem].body);   
