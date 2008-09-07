@@ -645,7 +645,7 @@ vect[2]=vz;
 raydium_ode_element_addforce_name(e,vect);
 }
 
-dReal *raydium_ode_element_force_get (int e)
+dReal *raydium_ode_element_force_get(int e)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -660,7 +660,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
 return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
 }
 
-dReal *raydium_ode_element_force_get_name(char * elem)
+dReal *raydium_ode_element_force_get_name(char *elem)
 {
 return (dReal *)raydium_ode_element_force_get(raydium_ode_element_find(elem));
 }
@@ -772,7 +772,7 @@ dReal *raydium_ode_element_linearvelocity_get_name(char *elem)
 return (dReal *)raydium_ode_element_linearvelocity_get(raydium_ode_element_find(elem));
 }
 
-void raydium_ode_element_linearvelocity_set_3f(int e,dReal velx,dReal vely,dReal velz)
+void raydium_ode_element_linearvelocity_set_3f(int e, dReal velx,dReal vely,dReal velz)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -787,22 +787,22 @@ if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
 dBodySetLinearVel(raydium_ode_element[e].body,velx,vely,velz);
 }
 
-void raydium_ode_element_linearvelocity_set(int e,dReal * vel)
+void raydium_ode_element_linearvelocity_set(int e, dReal *vel)
 {  
 raydium_ode_element_linearvelocity_set_3f(e,vel[0],vel[1],vel[2]);
 }
 
-void raydium_ode_element_linearvelocity_set_name(char *e,dReal * vel)
+void raydium_ode_element_linearvelocity_set_name(char *e, dReal *vel)
 {
 raydium_ode_element_linearvelocity_set(raydium_ode_element_find(e),vel);
 }
 
-void raydium_ode_element_linearvelocity_set_name_3f(char *e,dReal vx,dReal vy, dReal vz)
+void raydium_ode_element_linearvelocity_set_name_3f(char *e, dReal vx, dReal vy, dReal vz)
 {
 raydium_ode_element_linearvelocity_set_3f(raydium_ode_element_find(e),vx,vy,vz);
 }
 
-void raydium_ode_element_angularvelocity_set_3f(int e,dReal avelx,dReal avely,dReal avelz)
+void raydium_ode_element_angularvelocity_set_3f(int e, dReal avelx, dReal avely, dReal avelz)
 {
 if(!raydium_ode_element_isvalid(e))
     {
@@ -817,17 +817,17 @@ if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
 dBodySetAngularVel(raydium_ode_element[e].body,avelx,avely,avelz);
 }
 
-void raydium_ode_element_angularvelocity_set(int e,dReal * avel)
+void raydium_ode_element_angularvelocity_set(int e, dReal *avel)
 {  
 raydium_ode_element_angularvelocity_set_3f(e,avel[0],avel[1],avel[2]);
 }
 
-void raydium_ode_element_angularvelocity_set_name_3f(char *e,dReal avelx,dReal avely,dReal avelz)
+void raydium_ode_element_angularvelocity_set_name_3f(char *e, dReal avelx, dReal avely, dReal avelz)
 {
 raydium_ode_element_angularvelocity_set_3f(raydium_ode_element_find(e),avelx,avely,avelz);
 }
 
-void raydium_ode_element_angularvelocity_set_name(char *e,dReal *avel)
+void raydium_ode_element_angularvelocity_set_name(char *e, dReal *avel)
 {
 raydium_ode_element_angularvelocity_set_name_3f(e,avel[0],avel[1],avel[2]);
 }
@@ -1642,7 +1642,8 @@ dMassAdjust(&m,mass);
 dBodySetMass(raydium_ode_element[elem].body,&m);
 }
 
-void raydium_ode_element_mass_set (int elem,dReal mass){
+void raydium_ode_element_mass_set(int elem, dReal mass)
+{
     raydium_ode_element_mass(elem,mass);
 }
 
@@ -5497,7 +5498,7 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
 return !dBodyIsEnabled(raydium_ode_element[elem].body);   
 }
 
-int raydium_ode_element_disable_get_name (char *e)
+int raydium_ode_element_disable_get_name(char *e)
 {
 return raydium_ode_element_disable_get(raydium_ode_element_find(e));
 }
@@ -5521,7 +5522,7 @@ else
     dBodyEnable(raydium_ode_element[elem].body);    
 }
 
-void raydium_ode_element_disable_set_name (char *e,int disable_state)
+void raydium_ode_element_disable_set_name(char *e, int disable_state)
 {
 raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
 }
