@@ -372,6 +372,11 @@ Force is sets thru ##vect##, a 3 x dReal array.
 Prefer this method to ##..._linearvelocity_set...## functions.
 **/
 
+__rayapi void raydium_ode_object_addforce_3f (int o, dReal vx, dReal vy, dReal vz);
+/**
+Same as above, but using 3 dReal values.
+**/
+
 __rayapi void raydium_ode_object_addforce_name (char *o, dReal * vect);
 /**
 Same as above, but using object's name.
@@ -388,7 +393,7 @@ Adds force ##vect## to element ##e##.
 Force is sets thru ##vect##, a 3 x dReal array.
 **/
 
-__rayapi void raydium_ode_element_addforce_3f (int e, dReal vx, dReal vy, dReal vz);
+__rayapi void raydium_ode_element_addforce_3f (int e, dReal fx,dReal fu,dReal fz);
 /**
 Same as above, but using 3 dReal values.
 **/
@@ -403,10 +408,25 @@ __rayapi void raydium_ode_element_addforce_name_3f (char *e, dReal vx, dReal vy,
 Same as above, but using 3 dReal values.
 **/
 
+__rayapi dReal * raydium_ode_element_force_get(int e);
+/**
+Return forces accumulated by a given body;
+**/
+
+__rayapi dReal * raydium_ode_element_force_get_name(char * elem);
+/**
+Same as above with the name.
+**/
+
 __rayapi void raydium_ode_element_addtorque (int e, dReal * vect);
 /**
 Adds torque ##vect## to element ##e##.
 Torque is sets thru ##vect##, a 3 x dReal array.
+**/
+
+__rayapi void raydium_ode_element_addtorque_3f(int e, dReal vx, dReal vy, dReal vz);
+/**
+Same as above using 3 dReal values.
 **/
 
 __rayapi void raydium_ode_element_addtorque_name (char *e, dReal * vect);
@@ -479,9 +499,63 @@ raydium_log("%f %f %f",p[0],p[1],p[2]);
 Returned data is available only for the current frame.
 **/
 
-__rayapi dReal *raydium_ode_element_linearvelocity_get_name (char *e);
+__rayapi dReal * raydium_ode_element_linearvelocity_get_name(char *e);
 /**
-Same as above, but using element's name.
+Same as above using element name.
+**/
+
+
+__rayapi void raydium_ode_element_linearvelocity_set (int e,dReal *vel);
+/**
+Set element's linear velocity. Linear velocity is an
+array of 3 x dReal.
+**/
+
+__rayapi void raydium_ode_element_linearvelocity_set_name (char * e,dReal *vel);
+/**
+Same as above usign element's name.
+**/
+
+__rayapi void raydium_ode_element_linearvelocity_set_3f (int e,dReal velx,dReal vely,dReal velz);
+/**
+Same as above, 3 dReal.
+**/
+
+__rayapi void raydium_ode_element_linearvelocity_set_name_3f(char *e,dReal vx,dReal vy, dReal vz);
+/**
+Same as above using element name.
+**/
+
+__rayapi void raydium_ode_element_angularvelocity_set (int e,dReal *avel);
+/**
+Set element's angular velocity. Angular velocity is an
+array of 3 x dReal.
+**/
+
+__rayapi void raydium_ode_element_angularvelocity_set_3f (int e,dReal avelx,dReal avely,dReal avelz);
+/**
+Same as above, 3 dReal.
+**/
+
+__rayapi void raydium_ode_element_angularvelocity_set_name (char * e,dReal *avel);
+/**
+Set element's angular velocity using it's name. Angular velocity is an
+array of 3 x dReal.
+**/
+
+__rayapi void raydium_ode_element_angularvelocity_set_name_3f (char * e,dReal avelx,dReal avely,dReal avelz);
+/**
+Same as above, 3 dReal.
+**/
+
+__rayapi dReal * raydium_ode_element_angularvelocity_get(int elem);
+/**
+Return element angular velocity. Return is aun array of 3 real.
+**/
+
+__rayapi dReal * raydium_ode_element_angularvelocity_get_name(char *elem);
+/**
+Same as above using element name.
 **/
 
 __rayapi void raydium_ode_element_OnBlow (int e, void *OnBlow);
@@ -830,15 +904,28 @@ Experimental code. Unimplemented, yet.
 Symmetric function, see ##raydium_ode_element_fix##.
 **/
 
+__rayapi void raydium_ode_element_mass_set(int elem,dReal mass);
 __rayapi void raydium_ode_element_mass(int elem, dReal mass);
 /**
 Change ##mass## the the ##elem## element. Obviously, you can't change the
 mass of static element.
 **/
 
+__rayapi void raydium_ode_element_mass_set_name(char *elem, dReal mass);
 __rayapi void raydium_ode_element_mass_name(char *elem, dReal mass);
 /**
 Same as above, but using element's name.
+**/
+
+__rayapi dReal raydium_ode_element_mass_get(int elem);
+/**
+Return ##mass## of the ##elem## element.
+Return only the mass of the element not the inertia matrix.
+**/
+
+__rayapi dReal raydium_ode_element_mass_get_name(char * elem);
+/**
+Same as above using element name.
 **/
 
 __rayapi void raydium_ode_element_move (int elem, dReal * pos);
@@ -1801,6 +1888,46 @@ Internal. Reads a "move" event at the current file position.
 __rayapi void raydium_ode_capture_play_callback(void);
 /**
 Internal frame callback for capture playing.
+**/
+
+__rayapi void raydium_ode_autodisable_set(int autod);
+/**
+RayOde can automatically disable resting element.
+This is usefull for physical solver. It don't have to reserve space in the solver matrix
+and compute solution for this element.
+
+RayOde can automaticaly disable resting body (default is not).
+This can speed up the program.
+
+**/
+
+__rayapi int raydium_ode_autodisable_get(void);
+/**
+Get general RayOde autodisable state.
+**/
+
+int raydium_ode_element_disable_get(int elem);
+/**
+Return whatever or not an element is disactived.
+In this case it is not treated by the solver.
+Will return 1 if element is disabled else return 0.
+**/
+
+int raydium_ode_element_disable_get_name (char *e);
+/**
+Same as above using element name.
+**/
+
+void raydium_ode_element_disable_set(int elem,int disable_state);
+/**
+Allow user to disable or reactivate an element manually.
+if ##disable_state## is ##1## element will be desactived.
+##0## will re-activate the element.
+**/
+
+void raydium_ode_element_disable_set_name (char *e,int disable_state);
+/**
+Same as above with element name.
 **/
 
 #include "ode_net.h"

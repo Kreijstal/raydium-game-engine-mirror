@@ -562,7 +562,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if( (raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD ||
          raydium_ode_element[i].state==RAYDIUM_ODE_STATIC) &&
          raydium_ode_element[i].object==o)
-            dBodySetLinearVel(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+            raydium_ode_element_linearvelocity_set_3f(i,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_object_linearvelocity_set_name(char *o, dReal *vect)
@@ -579,7 +579,7 @@ vect[2]=vz;
 raydium_ode_object_linearvelocity_set_name(o,vect);
 }
 
-void raydium_ode_object_addforce(int o, dReal *vect)
+void raydium_ode_object_addforce_3f(int o, dReal fx,dReal fy, dReal fz)
 {
 int i;
 if(!raydium_ode_object_isvalid(o))
@@ -590,46 +590,45 @@ if(!raydium_ode_object_isvalid(o))
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
         raydium_ode_element[i].object==o)
-            dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+            raydium_ode_element_addforce_3f(i,fx,fy,fz);
+        
+}
+
+void raydium_ode_object_addforce(int o, dReal *vect)
+{
+        raydium_ode_object_addforce_3f(o,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_object_addforce_name(char *o, dReal *vect)
 {
-raydium_ode_object_addforce(raydium_ode_object_find(o),vect);
+    raydium_ode_object_addforce(raydium_ode_object_find(o),vect);
 }
 
 void raydium_ode_object_addforce_name_3f(char *o, dReal vx, dReal vy, dReal vz)
 {
-dReal vect[3];
-vect[0]=vx;
-vect[1]=vy;
-vect[2]=vz;
-raydium_ode_object_addforce_name(o,vect);
+    raydium_ode_object_addforce_3f(raydium_ode_object_find(o),vx,vy,vz);
 }
 
-void raydium_ode_element_addforce(int e, dReal *vect)
+void raydium_ode_element_addforce_3f(int a,dReal fx,dReal fy,dReal fz)
 {
-if(!raydium_ode_element_isvalid(e))
+    if(!raydium_ode_element_isvalid(a))
     {
     raydium_log("ODE: Error: cannot add force to element: invalid name or index");
     return;
     }
-if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
+    if(raydium_ode_element[a].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: cannot add force to a static element");
     return;
     }
-
-dBodyAddForce(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
+    
+    dBodyEnable(raydium_ode_element[a].body);                
+    dBodyAddForce(raydium_ode_element[a].body,fx,fy,fz);
 }
 
-void raydium_ode_element_addforce_3f(int e, dReal vx, dReal vy, dReal vz)
+void raydium_ode_element_addforce(int e, dReal *vect)
 {
-dReal vect[3];
-vect[0]=vx;
-vect[1]=vy;
-vect[2]=vz;
-raydium_ode_element_addforce(e,vect);
+    raydium_ode_element_addforce_3f(e,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_element_addforce_name(char *e, dReal *vect)
@@ -646,9 +645,30 @@ vect[2]=vz;
 raydium_ode_element_addforce_name(e,vect);
 }
 
-void raydium_ode_element_addtorque(int e, dReal *vect)
+dReal * raydium_ode_element_force_get (int e)
 {
-if(!raydium_ode_element_isvalid(e))
+    if(!raydium_ode_element_isvalid(e))
+    {
+    raydium_log("ODE: Error: cannot get element's forces: invalid name or index");
+    return;
+    }
+    if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
+    {
+    raydium_log("ODE: Error: cannot get forces of a static element");
+    return;
+    }   
+    return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
+}
+
+dReal * raydium_ode_element_force_get_name(char * elem)
+{
+    return (dReal *) raydium_ode_element_force_get(raydium_ode_element_find(elem));
+}
+
+
+void raydium_ode_element_addtorque_3f(int e, dReal vx, dReal vy, dReal vz)
+{
+    if(!raydium_ode_element_isvalid(e))
     {
     raydium_log("ODE: Error: cannot add torque to element: invalid name or index");
     return;
@@ -658,8 +678,14 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add torque to a static element");
     return;
     }
+    dBodyEnable(raydium_ode_element[e].body);                
+    dBodyAddTorque(raydium_ode_element[e].body,vx,vy,vz);
+ 
+}
 
-dBodyAddTorque(raydium_ode_element[e].body,vect[0],vect[1],vect[2]);
+void raydium_ode_element_addtorque(int e, dReal *vect)
+{
+    raydium_ode_element_addtorque_3f(e,vect[0],vect[1],vect[2]);
 }
 
 void raydium_ode_element_addtorque_name(char *e, dReal *vect)
@@ -742,9 +768,91 @@ if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
 return (dReal *)dBodyGetLinearVel(raydium_ode_element[e].body);
 }
 
-dReal *raydium_ode_element_linearvelocity_get_name(char *e)
+dReal * raydium_ode_element_linearvelocity_get_name(char *elem)
 {
-return raydium_ode_element_linearvelocity_get(raydium_ode_element_find(e));
+    return (dReal *) raydium_ode_element_linearvelocity_get(raydium_ode_element_find(elem));
+}
+
+void raydium_ode_element_linearvelocity_set_3f(int e,dReal velx,dReal vely,dReal velz)
+{
+    if(!raydium_ode_element_isvalid(e))
+    {
+        raydium_log("ODE: Error: cannot set element linear velocity: invalid name or index");
+        return ;
+    }
+    if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
+    {
+        raydium_log("ODE: Error: cannot set element linear velocity: not a standard object");
+        return ;
+    }
+    dBodySetLinearVel(raydium_ode_element[e].body,velx,vely,velz);
+
+}
+
+void raydium_ode_element_linearvelocity_set(int e,dReal * vel)
+{  
+    raydium_ode_element_linearvelocity_set_3f(e,vel[0],vel[1],vel[2]);
+}
+
+void raydium_ode_element_linearvelocity_set_name(char *e,dReal * vel)
+{
+    raydium_ode_element_linearvelocity_set(raydium_ode_element_find(e),vel);
+}
+
+void raydium_ode_element_linearvelocity_set_name_3f(char *e,dReal vx,dReal vy, dReal vz)
+{
+    raydium_ode_element_linearvelocity_set_3f(raydium_ode_element_find(e),vx,vy,vz);
+}
+
+void raydium_ode_element_angularvelocity_set_3f(int e,dReal avelx,dReal avely,dReal avelz)
+{
+    if(!raydium_ode_element_isvalid(e))
+    {
+        raydium_log("ODE: Error: cannot set element angular velocity: invalid name or index");
+        return ;
+    }
+    if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
+    {
+        raydium_log("ODE: Error: cannot set element angular velocity: not a standard object");
+        return ;
+    }
+    dBodySetAngularVel(raydium_ode_element[e].body,avelx,avely,avelz);
+
+}
+
+void raydium_ode_element_angularvelocity_set(int e,dReal * avel)
+{  
+    raydium_ode_element_angularvelocity_set_3f(e,avel[0],avel[1],avel[2]);
+}
+
+void raydium_ode_element_angularvelocity_set_name_3f(char *e,dReal avelx,dReal avely,dReal avelz)
+{
+    raydium_ode_element_angularvelocity_set_3f(raydium_ode_element_find(e),avelx,avely,avelz);
+}
+
+void raydium_ode_element_angularvelocity_set_name(char *e,dReal *avel)
+{
+    raydium_ode_element_angularvelocity_set_name_3f(e,avel[0],avel[1],avel[2]);
+}
+
+dReal * raydium_ode_element_angularvelocity_get(int elem)
+{
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: cannot get element angular velocity: invalid name or index");
+    return NULL;
+    }
+if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
+    {
+    raydium_log("ODE: Error: cannot get element angular velocity: not a standard object");
+    return NULL;
+    }
+return (dReal *)dBodyGetAngularVel(raydium_ode_element[elem].body);
+}
+
+dReal * raydium_ode_element_angularvelocity_get_name(char *elem)
+{
+    return (dReal *) raydium_ode_element_angularvelocity_get(raydium_ode_element_find(elem));
 }
 
 void raydium_ode_element_OnBlow(int e, void *OnBlow)
@@ -1537,12 +1645,46 @@ dMassAdjust(&m,mass);
 dBodySetMass(raydium_ode_element[elem].body,&m);
 }
 
+void raydium_ode_element_mass_set (int elem,dReal mass){
+    raydium_ode_element_mass(elem,mass);
+}
 
 void raydium_ode_element_mass_name(char *elem, dReal mass)
 {
 raydium_ode_element_mass(raydium_ode_element_find(elem),mass);
 }
 
+void raydium_ode_element_mass_set_name(char *elem, dReal mass)
+{
+    raydium_ode_element_mass_name(elem,mass);
+}
+
+dReal raydium_ode_element_mass_get(int elem)
+{
+    dMass m;
+
+    if(!raydium_ode_element_isvalid(elem))
+    {
+        raydium_log("ODE: Error: Cannot change mass of element: invalid index or name");
+        return;
+    }
+
+    if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
+    {
+        raydium_log("ODE: Error: Cannot change mass of a static element");
+        return;
+    }
+    
+    dBodyGetMass(raydium_ode_element[elem].body,&m);
+
+    return (m.mass);
+    
+}
+
+dReal raydium_ode_element_mass_get_name(char * elem)
+{
+    raydium_ode_element_mass_get(raydium_ode_element_find(elem));
+}
 
 void raydium_ode_element_move(int elem, dReal *pos)
 {
@@ -1646,6 +1788,7 @@ else
  vel=(dReal *)dBodyGetLinearVel(raydium_ode_element[elem].body);
 
 dRFrom2Axes(R,vel[0],vel[1],vel[2], vel[0],vel[1],vel[2]*0); // 1 0 0
+dBodyEnable(raydium_ode_element[elem].body);
 dBodySetRotation(raydium_ode_element[elem].body,R);
 }
 
@@ -2272,7 +2415,8 @@ if(raydium_ode_motor_isvalid(j))
        !raydium_ode_element[raydium_ode_motor[j].rocket_element]._touched )
        speed=0;
 
-    if(speed!=0.f)
+    if(speed!=0.f){
+    dBodyEnable(raydium_ode_element[raydium_ode_motor[j].rocket_element].body);
     dBodyAddRelForceAtRelPos(raydium_ode_element[raydium_ode_motor[j].rocket_element].body,
                              raydium_ode_motor[j].rocket_direction[0],
                              raydium_ode_motor[j].rocket_direction[1],
@@ -2280,6 +2424,7 @@ if(raydium_ode_motor_isvalid(j))
                              raydium_ode_motor[j].rocket_position[0],
                              raydium_ode_motor[j].rocket_position[1],
                              raydium_ode_motor[j].rocket_position[2]);
+    }
     return;
     }
     // if motor is anything else than a rocket:
@@ -3171,7 +3316,7 @@ initial=(dReal *)dBodyGetLinearVel(raydium_ode_element[from_element].body);
 final[0]+=initial[0];
 final[1]+=initial[1];
 final[2]+=initial[2];
-dBodyAddForce(raydium_ode_element[element].body,final[0],final[1],final[2]);
+raydium_ode_element_addforce_3f(element,final[0],final[1],final[2]);
 return 1;
 }
 
@@ -3286,7 +3431,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         vect[1]*=force;
         vect[2]*=force;
 //      raydium_log("resulting impulse vector: [%f %f %f]",vect[0],vect[1],vect[2]);
-        dBodyAddForce(raydium_ode_element[i].body,vect[0],vect[1],vect[2]);
+        raydium_ode_element_addforce_3f(i,vect[0],vect[1],vect[2]);
 
         if(rand_factor)
         {
@@ -3297,7 +3442,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             rmx[1]=raydium_random_f(minrandtorq,maxrandtorq)*force;
             rmx[2]=raydium_random_f(minrandtorq,maxrandtorq)*force;
             //added random torque to the pieces
-            dBodyAddTorque(raydium_ode_element[i].body,rmx[0],rmx[1],rmx[2]);
+            raydium_ode_element_addtorque_3f(i,rmx[0],rmx[1],rmx[2]);
         }
 
         g=raydium_ode_element[i].OnBlow;
@@ -3691,8 +3836,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             if(!dGeomIsEnabled(raydium_ode_element[i].geom))
                 raydium_osd_color_ega('a');
 
-            if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
-                !dBodyIsEnabled(raydium_ode_element[i].body) )
+            if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD && 
+                raydium_ode_element_disable_get(i) )
                     raydium_osd_color_ega('0');
 
             raydium_osd_printf_3D(p[0],p[1],p[2],12,0.6,"font2.tga","%i %s (%s) @ %i",i,raydium_ode_element[i].name,raydium_ode_object[raydium_ode_element[i].object].name,raydium_ode_element[i].distant_owner);
@@ -4068,7 +4213,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             torqueinv[0]=torque[0]*-raydium_ode_element[i].rotfriction;
             torqueinv[1]=torque[1]*-raydium_ode_element[i].rotfriction;
             torqueinv[2]=torque[2]*-raydium_ode_element[i].rotfriction;
-            dBodyAddTorque(raydium_ode_element[i].body,torqueinv[0],torqueinv[1],torqueinv[2]);
+            raydium_ode_element_addtorque_3f(i,torqueinv[0],torqueinv[1],torqueinv[2]);
             }
 
         for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
@@ -4204,7 +4349,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         dMatrix3 R;
         dRFromEulerAngles(R,0,0,raydium_ode_element[i].playerangle);
         dBodySetRotation(raydium_ode_element[i].body,R);
-        dBodySetAngularVel(raydium_ode_element[i].body,0,0,0);
+        raydium_ode_element_angularvelocity_set_3f(i,0,0,0);
         }
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
@@ -5321,4 +5466,69 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
     }
   }
 }
+
+void raydium_ode_autodisable_set(int autod)
+{
+    dWorldSetAutoDisableFlag(raydium_ode_world,autod);   
+    // dWorldSetAutoDisableAngularAverageThreshold(); 
+    // dWorldSetAutoDisableAngularThreshold();
+    // dWorldSetAutoDisableAverageSamplesCount();
+    // dWorldSetAutoDisableLinearAverageThreshold();
+    // dWorldSetAutoDisableLinearThreshold();
+    // dWorldSetAutoDisableSteps();
+    // dWorldSetAutoDisableTime();
+    
+}
+
+int raydium_ode_autodisable_get(void)
+{
+    return dWorldGetAutoDisableFlag(raydium_ode_world);
+}
+
+int raydium_ode_element_disable_get(int elem)
+{
+    if(!raydium_ode_element_isvalid(elem))
+    {
+        raydium_log("ODE: Error: cannot get autodisable flag: invalid name or index");
+        return ;
+    }
+    if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
+    {
+        raydium_log("ODE: Error: cannot get autodisable flag: not a standard object");
+        return ;
+    }
+    return !dBodyIsEnabled(raydium_ode_element[elem].body);
+    
+}
+
+int raydium_ode_element_disable_get_name (char *e)
+{
+    return raydium_ode_element_disable_get(raydium_ode_element_find(e));
+}
+
+void raydium_ode_element_disable_set(int elem,int disable_state)
+{
+    if(!raydium_ode_element_isvalid(elem))
+    {
+        raydium_log("ODE: Error: cannot set disable flag: invalid name or index");
+        return ;
+    }
+    if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
+    {
+        raydium_log("ODE: Error: cannot set disable flag: not a standard object");
+        return ;
+    }
+    if (disable_state)
+        dBodyDisable(raydium_ode_element[elem].body);
+    else
+        dBodyEnable(raydium_ode_element[elem].body);
+    
+}
+
+void raydium_ode_element_disable_set_name (char *e,int disable_state)
+{
+    raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
+}
+
+
 #include "ode_net.c"

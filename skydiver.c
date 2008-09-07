@@ -294,7 +294,8 @@ a=raydium_ode_object_create(obj);
   raydium_ode_element_move_name_3f(ele,-PLANE_PLACE,0,10);
   raydium_ode_element_data_set_name(ele,&type_plane);
   // hey ... we shouldn't call ODE directly !
-  dBodyAddForce(raydium_ode_element[raydium_ode_element_find(ele)].body,500,0,0);
+  raydium_ode_element_addforce_name_3f(ele,500,0,0);
+  //dBodyAddForce(raydium_ode_element[raydium_ode_element_find(ele)].body,500,0,0);
   dBodySetGravityMode(raydium_ode_element[raydium_ode_element_find(ele)].body,0);
   raydium_sound_SourcePlay(S_plane);
 }
@@ -397,7 +398,8 @@ int a;
     memcpy(mypos,pos,sizeof(dReal)*3);
     mypos[2]-=2;
     raydium_ode_object_move_name("RAGDOLL",mypos);
-    pos=(dReal *)dBodyGetLinearVel(raydium_ode_element[raydium_ode_element_find(plane)].body);
+    pos = (dReal *) raydium_ode_element_linearvelocity_get_name(plane);
+    //pos=(dReal *)dBodyGetLinearVel(raydium_ode_element[raydium_ode_element_find(plane)].body);
     raydium_ode_object_linearvelocity_set_name("RAGDOLL",pos);
 }
 

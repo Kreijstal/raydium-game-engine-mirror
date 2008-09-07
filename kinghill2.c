@@ -485,7 +485,7 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
         
         
         pos=raydium_ode_element_pos_get_name("corps");
-        torque=(dReal *)dBodyGetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body);
+        torque = raydium_ode_element_angularvelocity_get_name("corps");
         t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
         if(t>max)
             max=t;
