@@ -161,6 +161,7 @@ PHP_v_s(raydium_ode_capture_record);
 PHP_v_v(raydium_ode_capture_record_stop);
 PHP_v_si(raydium_ode_capture_play);
 PHP_v_v(raydium_ode_capture_stop);
+PHP_v_i(raydium_ode_autodisable_set);
 
 // ode_net.c
 PHP_i_i(raydium_ode_network_element_isdistant);
@@ -376,6 +377,7 @@ raydium_register_function(C2PHP(raydium_ode_capture_record),"raydium_ode_capture
 raydium_register_function(C2PHP(raydium_ode_capture_record_stop),"raydium_ode_capture_record_stop");
 raydium_register_function(C2PHP(raydium_ode_capture_play),"raydium_ode_capture_play");
 raydium_register_function(C2PHP(raydium_ode_capture_stop),"raydium_ode_capture_stop");
+raydium_register_function(C2PHP(raydium_ode_autodisable_set),"raydium_ode_autodisable_set");
 raydium_register_variable_const_i(RAYDIUM_ODE_AUTODETECT,"RAYDIUM_ODE_AUTODETECT");
 raydium_register_variable_const_i(RAYDIUM_ODE_STANDARD,"RAYDIUM_ODE_STANDARD");
 raydium_register_variable_const_i(RAYDIUM_ODE_STATIC,"RAYDIUM_ODE_STATIC");
