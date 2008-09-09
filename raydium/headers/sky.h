@@ -77,26 +77,4 @@ This functions only check if the atmosphere features are been used.
 Returns 1 if they are used, else 0.
 **/
 
-__rayapi void raydium_sky_box_set_texture_prefix(char *prefix, char *ext);
-/**
-This function allows to load custom name sky textures. 
-By default the names of the sky texture are: 
-BOXfront.tga
-BOXback.tga
-BOXleft.tga
-BOXright.tga
-BOXbottom.tga
-BOXtop.tga
-However with this function you can define a prefix name and an extension
-to apply for each texture. So the final names would remain as:
-<prefix>front.<ext>
-<prefix>back.<ext>
-<prefix>left.<ext>
-<prefix>right.<ext>
-<prefix>bottom.<ext>
-<prefix>top.<ext>
-
-This function should be called before that raydium_sky_box_cache().
-**/
-
 #endif
