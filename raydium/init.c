@@ -164,6 +164,7 @@ raydium_register_function_index=0;
 raydium_file_log_fopen_index=0;
 raydium_frame_time=0;
 raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
+raydium_sky_prefix_defined=0;
 
 raydium_ode_timestep = (0.006f);
 raydium_ode_physics_freq = 400;

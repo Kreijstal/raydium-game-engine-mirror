@@ -169,7 +169,7 @@
 
 #define RAYDIUM_TEXTURE_BLEND_NONE              0
 #define RAYDIUM_TEXTURE_BLEND_BLENDED           1
-#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2 
+#define RAYDIUM_TEXTURE_BLEND_CUTOUT            2
 #define RAYDIUM_TEXTURE_PHANTOM                 3
 
 #define RAYDIUM_RENDERING_WINDOW                0
@@ -348,6 +348,14 @@ __global GLfloat     raydium_sky_sphere_y_pos;
 __global GLfloat     raydium_sky_sphere_quality;
 __global GLfloat     raydium_sky_sphere_heigth;
 __global signed char raydium_sky_sphere_generated;
+__global char raydium_sky_texture_cubemap_front[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_cubemap_back[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_cubemap_left[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_cubemap_right[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_cubemap_bottom[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_cubemap_top[RAYDIUM_MAX_NAME_LEN];
+__global int raydium_sky_prefix_defined;
+
 
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
@@ -479,7 +487,7 @@ typedef struct raydium_camera_Path
     GLfloat roll[RAYDIUM_MAX_CAMERA_PATH_STEPS];
     int steps;
     } raydium_camera_Path;
-    
+
 __global raydium_camera_Path raydium_camera_path[RAYDIUM_MAX_CAMERA_PATHS];
 __global signed char raydium_camera_path_reset_flag;
 
@@ -546,7 +554,7 @@ typedef struct raydium_network_Propag
     int type;
     unsigned short size;
     unsigned int version;
-    void *data;    
+    void *data;
     } raydium_network_Propag;
 
 __global raydium_network_Propag raydium_network_propag[RAYDIUM_NETWORK_MAX_PROPAGS];

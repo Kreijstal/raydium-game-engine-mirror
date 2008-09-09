@@ -11,9 +11,9 @@ Sky and environement boxes
 Skyboxes are mostly automated.
 
 For now, Raydium will use ##BOXfront.tga##, ##BOXback.tga##, ##BOXleft.tga##,
-##BOXright.tga##, ##BOXbottom.tga## and ##BOXtop.tga## and will draw a 
-skybox only if fog is disabled (this is not for technical reasons, 
-but only for realism, just think about it ;)... but you can force 
+##BOXright.tga##, ##BOXbottom.tga## and ##BOXtop.tga## and will draw a
+skybox only if fog is disabled (this is not for technical reasons,
+but only for realism, just think about it ;)... but you can force
 skybox with fog using ##raydium_sky_force## if you really want).
 **/
 
@@ -21,7 +21,7 @@ skybox with fog using ##raydium_sky_force## if you really want).
 __rayapi void raydium_sky_box_cache (void);
 /**
 As skybox texture are sometimes large files, you can pre-load skybox
-with this function. If you don't do it, Raydium will load textures 
+with this function. If you don't do it, Raydium will load textures
 during the first frame of your application.
 Calling this function will automatically define sky as a HDR emitter.
 See HDR chapter for more information.
@@ -41,20 +41,20 @@ Calculates and draw the sphere. Also rotate it according the angles or orbit.
 //Atmosphere
 /**
 Atmosphere are series of effects that intend to make the sky and the atmosphere
-of the game more realistic. As this is quite-beta state, only a orbital sky 
-effect is available right now. 
+of the game more realistic. As this is quite-beta state, only a orbital sky
+effect is available right now.
 To activate/deactivate this series of effects, you should use:
-##raydium_sky_atmosphere_enable## and ##raydium_sky_atmosphere_disable## 
+##raydium_sky_atmosphere_enable## and ##raydium_sky_atmosphere_disable##
 respectively.
-If you need to check if the atmosphere is activated or not, use 
-##raydium_sky_atmosphere_check##. The rest of the functions are internal 
+If you need to check if the atmosphere is activated or not, use
+##raydium_sky_atmosphere_check##. The rest of the functions are internal
 and should not used by normal programs.
 **/
 
 __rayapi void raydium_sky_atmosphere_enable(void);
 /**
 turn on the use of atmosphere effects.
-This one and _disable function a program should use, the other 
+This one and _disable function a program should use, the other
 ##raydium_sky_atmosphere_## are internal ones.
 **/
 
@@ -65,7 +65,7 @@ turn off the use of atmosphere effects.
 
 __rayapi void raydium_sky_atmosphere_render(GLfloat x, GLfloat y, GLfloat z,int detail);
 /**
-Internal use. This internal function draws the atmosphere effects. Right 
+Internal use. This internal function draws the atmosphere effects. Right
 now only draws a rotating sphere with a gradient of color (from black to white).
 In a future, it will draw multiples layers of sky (with and without textures),
 stars, satellites... Maybe rain and snow could be included here also.
@@ -73,8 +73,30 @@ stars, satellites... Maybe rain and snow could be included here also.
 
 __rayapi signed char raydium_sky_atmosphere_check(void);
 /**
-This functions only check if the atmosphere features are been used. 
+This functions only check if the atmosphere features are been used.
 Returns 1 if they are used, else 0.
+**/
+
+__rayapi void raydium_sky_box_set_name(char *pref, char *ext);
+/**
+This function allows to load custom name sky textures.
+By default the names of the sky texture are:
+BOXfront.tga
+BOXback.tga
+BOXleft.tga
+BOXright.tga
+BOXbottom.tga
+BOXtop.tga
+However with this function you can define a prefix name and an extension
+to apply for each texture. So the final names would remain as:
+<prefix>front.<ext>
+<prefix>back.<ext>
+<prefix>left.<ext>
+<prefix>right.<ext>
+<prefix>bottom.<ext>
+<prefix>top.<ext>
+
+This function should be called before that raydium_sky_box_cache().
 **/
 
 #endif

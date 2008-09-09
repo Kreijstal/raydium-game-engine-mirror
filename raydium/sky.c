@@ -12,121 +12,143 @@
 #endif
 
 
+void raydium_sky_box_set_name(char *pref, char *ext)
+{
+    sprintf(raydium_sky_texture_cubemap_front,"%sfront.%s",pref,ext);
+    sprintf(raydium_sky_texture_cubemap_back,"%sback.%s",pref,ext);
+    sprintf(raydium_sky_texture_cubemap_left,"%sleft.%s",pref,ext);
+    sprintf(raydium_sky_texture_cubemap_right,"%sright.%s",pref,ext);
+    sprintf(raydium_sky_texture_cubemap_bottom,"%sbottom.%s",pref,ext);
+    sprintf(raydium_sky_texture_cubemap_top,"%stop.%s",pref,ext);
+    raydium_sky_prefix_defined = 1;
+}
+
+
 void raydium_sky_box_cache(void)
 {
-raydium_texture_current_set_name("BOXfront.tga");
-raydium_texture_current_set_name("BOXback.tga");
-raydium_texture_current_set_name("BOXleft.tga");
-raydium_texture_current_set_name("BOXright.tga");
-raydium_texture_current_set_name("BOXbottom.tga");
-raydium_texture_current_set_name("BOXtop.tga");
+    if (raydium_sky_prefix_defined==0)
+    {
+            raydium_sky_box_set_name("BOX","tga");
+    }
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
 
-raydium_hdr_texture_name("BOXfront.tga",1);
-raydium_hdr_texture_name("BOXback.tga",1);
-raydium_hdr_texture_name("BOXleft.tga",1);
-raydium_hdr_texture_name("BOXright.tga",1);
-raydium_hdr_texture_name("BOXbottom.tga",1);
-raydium_hdr_texture_name("BOXtop.tga",1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_front,1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_back,1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_left,1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_right,1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_bottom,1);
+    raydium_hdr_texture_name(raydium_sky_texture_cubemap_top,1);
 }
 
 
 void raydium_sky_box_render(GLfloat x, GLfloat y, GLfloat z)
 {
-//GLfloat one[]={1.,1.,1.,1.};
-#define sizeb ((raydium_projection_far-raydium_projection_near)/2.f)
-/*
-GLfloat (x+size)=(x+5);
-GLfloat sizey=(x+5);
-GLfloat (z+size)=(x+5);
-GLfloat minv=(x-5);
-*/
+    //GLfloat one[]={1.,1.,1.,1.};
+    #define sizeb ((raydium_projection_far-raydium_projection_near)/2.f)
+    /*
+    GLfloat (x+size)=(x+5);
+    GLfloat sizey=(x+5);
+    GLfloat (z+size)=(x+5);
+    GLfloat minv=(x-5);
+    */
 
-if(raydium_fog_enabled_tag && !raydium_sky_force) return;
+    if(raydium_fog_enabled_tag && !raydium_sky_force) return;
 
-glDisable(GL_LIGHTING);
-glDisable(GL_FOG);
-//glColor4fv(raydium_background_color);
-//glColor4fv(one);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_FOG);
+    //glColor4fv(raydium_background_color);
+    //glColor4fv(one);
 
-raydium_texture_current_set_name("BOXfront.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXfront.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-glEnd();
-
-
-raydium_texture_current_set_name("BOXback.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXback.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-glEnd();
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+    glEnd();
 
 
-raydium_texture_current_set_name("BOXright.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXright.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-glEnd();
-
-raydium_texture_current_set_name("BOXleft.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXleft.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-glEnd();
-
-raydium_texture_current_set_name("BOXtop.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXtop.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-glEnd();
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+    glEnd();
 
 
-raydium_texture_current_set_name("BOXbottom.tga");
-raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_current_set_name("BOXbottom.tga"));
-glColor4fv(raydium_background_color);
-glDepthMask(GL_FALSE);
-glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-glEnd();
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+    glEnd();
+
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+    glEnd();
+
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+    glEnd();
 
 
-if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
-if(raydium_fog_enabled_tag) glEnable(GL_FOG);
-glDepthMask(GL_TRUE);
+    raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
+    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glColor4fv(raydium_background_color);
+    glDepthMask(GL_FALSE);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+    glEnd();
+
+
+    if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
+    if(raydium_fog_enabled_tag) glEnable(GL_FOG);
+    glDepthMask(GL_TRUE);
 
 }
 
