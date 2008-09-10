@@ -348,12 +348,12 @@ __global GLfloat     raydium_sky_sphere_y_pos;
 __global GLfloat     raydium_sky_sphere_quality;
 __global GLfloat     raydium_sky_sphere_heigth;
 __global signed char raydium_sky_sphere_generated;
-__global char raydium_sky_texture_cubemap_front[RAYDIUM_MAX_NAME_LEN];
-__global char raydium_sky_texture_cubemap_back[RAYDIUM_MAX_NAME_LEN];
-__global char raydium_sky_texture_cubemap_left[RAYDIUM_MAX_NAME_LEN];
-__global char raydium_sky_texture_cubemap_right[RAYDIUM_MAX_NAME_LEN];
-__global char raydium_sky_texture_cubemap_bottom[RAYDIUM_MAX_NAME_LEN];
-__global char raydium_sky_texture_cubemap_top[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_front[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_back[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_left[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_right[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_bottom[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_top[RAYDIUM_MAX_NAME_LEN];
 __global int raydium_sky_prefix_defined;
 
 

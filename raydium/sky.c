@@ -12,37 +12,45 @@
 #endif
 
 
-void raydium_sky_box_set_name(char *pref, char *ext)
+void raydium_sky_box_name(char *name)
 {
-sprintf(raydium_sky_texture_cubemap_front,"%sfront.%s",pref,ext);
-sprintf(raydium_sky_texture_cubemap_back,"%sback.%s",pref,ext);
-sprintf(raydium_sky_texture_cubemap_left,"%sleft.%s",pref,ext);
-sprintf(raydium_sky_texture_cubemap_right,"%sright.%s",pref,ext);
-sprintf(raydium_sky_texture_cubemap_bottom,"%sbottom.%s",pref,ext);
-sprintf(raydium_sky_texture_cubemap_top,"%stop.%s",pref,ext);
+char c_name[RAYDIUM_MAX_NAME_LEN];
+
+if(!name)
+    strcpy(c_name,"");
+else
+    sprintf(c_name,"_%s_",name);
+
+sprintf(raydium_sky_texture_skybox_front,"BOX%sfront.tga",c_name);
+sprintf(raydium_sky_texture_skybox_back,"BOX%sback.tga",c_name);
+sprintf(raydium_sky_texture_skybox_left,"BOX%sleft.tga",c_name);
+sprintf(raydium_sky_texture_skybox_right,"BOX%sright.tga",c_name);
+sprintf(raydium_sky_texture_skybox_bottom,"BOX%sbottom.tga",c_name);
+sprintf(raydium_sky_texture_skybox_top,"BOX%stop.tga",c_name);
 raydium_sky_prefix_defined = 1;
 }
 
+void raydium_sky_init(void)
+{
+raydium_sky_box_name(NULL);
+raydium_log("Sky: OK");
+}
 
 void raydium_sky_box_cache(void)
 {
-if (raydium_sky_prefix_defined==0)
-    {
-    raydium_sky_box_set_name("BOX","tga");
-    }
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_back);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_left);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_right);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_bottom);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_top);
 
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_front,1);
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_back,1);
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_left,1);
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_right,1);
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_bottom,1);
-raydium_hdr_texture_name(raydium_sky_texture_cubemap_top,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_front,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_back,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_left,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_right,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_bottom,1);
+raydium_hdr_texture_name(raydium_sky_texture_skybox_top,1);
 }
 
 
@@ -64,10 +72,8 @@ glDisable(GL_FOG);
 //glColor4fv(raydium_background_color);
 //glColor4fv(one);
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
@@ -78,10 +84,8 @@ glBegin(GL_QUADS);
 glEnd();
 
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_back);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
@@ -92,10 +96,8 @@ glBegin(GL_QUADS);
 glEnd();
 
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_right);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
@@ -105,10 +107,8 @@ glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
 glEnd();
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_left);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
@@ -118,10 +118,8 @@ glBegin(GL_QUADS);
     glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
 glEnd();
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_top);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);
@@ -132,10 +130,8 @@ glBegin(GL_QUADS);
 glEnd();
 
 
-raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
+raydium_texture_current_set_name(raydium_sky_texture_skybox_bottom);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
 glColor4fv(raydium_background_color);
 glDepthMask(GL_FALSE);
 glBegin(GL_QUADS);

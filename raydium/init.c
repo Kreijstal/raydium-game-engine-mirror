@@ -19,6 +19,7 @@ void raydium_register_api(void);
 void raydium_live_init(void);
 #endif
 void raydium_fog_init(void);
+void raydium_sky_init(void);
 void raydium_video_init(void);
 void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
@@ -85,6 +86,7 @@ free(raydium_texture_ptr[i]);
 
 raydium_init_lights();
 raydium_fog_init();
+raydium_sky_init();
 raydium_init_objects();
 raydium_network_init();
 raydium_timecall_init();

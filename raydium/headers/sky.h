@@ -10,13 +10,19 @@ Sky and environement boxes
 /**
 Skyboxes are mostly automated.
 
-For now, Raydium will use ##BOXfront.tga##, ##BOXback.tga##, ##BOXleft.tga##,
-##BOXright.tga##, ##BOXbottom.tga## and ##BOXtop.tga## and will draw a
-skybox only if fog is disabled (this is not for technical reasons,
-but only for realism, just think about it ;)... but you can force
+Currently, Raydium will use ##BOXfront.tga##, ##BOXback.tga##, ##BOXleft.tga##,
+##BOXright.tga##, ##BOXbottom.tga## and ##BOXtop.tga## as default skybox
+and will draw a skybox only if fog is disabled (this is not for technical
+reasons, but only for realism, just think about it ;)... but you can force
 skybox with fog using ##raydium_sky_force## if you really want).
+
+See ##raydium_sky_box_name()## if you want to change default skybox.
 **/
 
+__rayapi void raydium_sky_box_cache (void);
+/**
+Internal use. Will init default skybox.
+**/
 
 __rayapi void raydium_sky_box_cache (void);
 /**
@@ -77,26 +83,27 @@ This functions only check if the atmosphere features are been used.
 Returns 1 if they are used, else 0.
 **/
 
-__rayapi void raydium_sky_box_set_name(char *pref, char *ext);
+__rayapi void raydium_sky_box_name(char *name);
 /**
 This function allows to load custom name sky textures.
 By default the names of the sky texture are:
-BOXfront.tga
-BOXback.tga
-BOXleft.tga
-BOXright.tga
-BOXbottom.tga
-BOXtop.tga
-However with this function you can define a prefix name and an extension
-to apply for each texture. So the final names would remain as:
-<prefix>front.<ext>
-<prefix>back.<ext>
-<prefix>left.<ext>
-<prefix>right.<ext>
-<prefix>bottom.<ext>
-<prefix>top.<ext>
+##BOXfront.tga##, ##BOXback.tga##, ##BOXleft.tga##, ##BOXright.tga##,
+##BOXbottom.tga## and ##BOXtop.tga##.
 
-This function should be called before that raydium_sky_box_cache().
+However with this function you can define your own skybox textures, with the
+following name format:
+##BOX_<name>_front.tga##, ##BOX_<name>_front.tga##, ...
+
+Example:
+%%(c)
+raydium_sky_box_name("mybox");
+// Skybox textures will be BOX_mybox_top.tga, BOX_mybox_left.tga and so on ...
+%%
+
+This function can be called anytime, but will cancel ##raydium_sky_box_cache()##
+effect: new textures will be loaded during this function call, causing a
+small freeze, and new textures will not have HDR tag.
+Note that you can call ##raydium_sky_box_cache()## again to restore HDR tags.
 **/
 
 #endif
