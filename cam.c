@@ -34,12 +34,12 @@ int delta_x, delta_y;
 
 raydium_joy_key_emul();
 
-cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
+cam_pos_z += (raydium_math_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_math_sin(90-cam_angle_y));
+cam_pos_x += (raydium_math_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_math_sin(90-cam_angle_y));
+cam_pos_y += (raydium_math_cos(90-cam_angle_y)*speed*raydium_joy_y);
     
-cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
-cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
+cam_pos_x -= (raydium_math_cos(cam_angle_x)*raydium_joy_x*speed);
+cam_pos_z -= (raydium_math_sin(cam_angle_x)*raydium_joy_x*speed);
     
 if(raydium_key_last==1027)
     exit(0);
@@ -87,7 +87,7 @@ if(raydium_key_last==1032)
     pos[0]=10;
     pos[1]=0;
     pos[2]=0;
-    raydium_trigo_rotate(pos,0,cam_angle_y,cam_angle_x,pos2);
+    raydium_math_rotate(pos,0,cam_angle_y,cam_angle_x,pos2);
     
     fprintf(out1,"%f %f %f %f %f\n",cam_pos_z+pos2[0],cam_pos_x+pos2[1],-cam_pos_y+pos2[2],raydium_projection_fov,roll);
     raydium_osd_fade_from(from,to,0.2,NULL);

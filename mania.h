@@ -206,11 +206,11 @@ switch(c)
             vx-=0.5;
             vy-=0.5;
 
-            rvx=vx*raydium_trigo_cos(rot) - vy*raydium_trigo_sin(rot);
-            rvy=vx*raydium_trigo_sin(rot) + vy*raydium_trigo_cos(rot);
+            rvx=vx*raydium_math_cos(rot) - vy*raydium_math_sin(rot);
+            rvy=vx*raydium_math_sin(rot) + vy*raydium_math_cos(rot);
             rvz=vz;
-            rnx=nx*raydium_trigo_cos(rot) - ny*raydium_trigo_sin(rot);
-            rny=nx*raydium_trigo_sin(rot) + ny*raydium_trigo_cos(rot);
+            rnx=nx*raydium_math_cos(rot) - ny*raydium_math_sin(rot);
+            rny=nx*raydium_math_sin(rot) + ny*raydium_math_cos(rot);
             rnz=nz;
 
             rvx+=0.5;

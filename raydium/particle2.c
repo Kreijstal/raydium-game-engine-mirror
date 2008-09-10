@@ -660,7 +660,7 @@ for(i=0;i<to_create;i++)
     for(j=0;j<3;j++)
         def_angles[j]*=force;
 
-    raydium_trigo_rotate(def_angles,angles[0],angles[1],angles[2],part->vel);
+    raydium_math_rotate(def_angles,angles[0],angles[1],angles[2],part->vel);
     }
 
     memcpy(part->color_start,gen->color_start,sizeof(GLfloat)*4);

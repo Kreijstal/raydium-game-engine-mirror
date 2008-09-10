@@ -80,7 +80,7 @@ else // rear wheel (where engine works)
     n->surface.motion1 = raydium_joy_y*MOTOR_SPEED; 
     }
 
-raydium_trigo_rotate(org,0,0,wheel_rotation,res); 
+raydium_math_rotate(org,0,0,wheel_rotation,res); 
 dBodyVectorToWorld(raydium_ode_element[raydium_ode_element_find("corps")].body,
                     res[0],res[1],res[2],n->fdir1); 
 

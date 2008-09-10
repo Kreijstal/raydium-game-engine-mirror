@@ -802,8 +802,8 @@ tex=&raydium_live_texture[id];
 
 tex->tx=dev->win.width;
 tex->ty=dev->win.height;
-tex->hardware_tx=raydium_trigo_pow2_next(dev->win.width);
-tex->hardware_ty=raydium_trigo_pow2_next(dev->win.height);
+tex->hardware_tx=raydium_math_pow2_next(dev->win.width);
+tex->hardware_ty=raydium_math_pow2_next(dev->win.height);
 tex->bpp=dev->vpic.depth;
 tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 
@@ -920,8 +920,8 @@ if(raydium_texture_used[i])
 tex=&raydium_live_texture[id];
 tex->tx=tx;
 tex->ty=ty;
-tex->hardware_tx=raydium_trigo_pow2_next(tex->tx);
-tex->hardware_ty=raydium_trigo_pow2_next(tex->ty);
+tex->hardware_tx=raydium_math_pow2_next(tex->tx);
+tex->hardware_ty=raydium_math_pow2_next(tex->ty);
 tex->bpp=bpp;
 tex->texture=raydium_texture_load_internal("not needed :)",as,1,0,0,0,id);
 

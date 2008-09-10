@@ -257,9 +257,9 @@ else
 
 for(i=start;i<end;i++)
     {
-    if(raydium_trigo_abs(raydium_vertex_x[i])>*tx) *tx=raydium_trigo_abs(raydium_vertex_x[i]);
-    if(raydium_trigo_abs(raydium_vertex_y[i])>*ty) *ty=raydium_trigo_abs(raydium_vertex_y[i]);
-    if(raydium_trigo_abs(raydium_vertex_z[i])>*tz) *tz=raydium_trigo_abs(raydium_vertex_z[i]);
+    if(raydium_math_abs(raydium_vertex_x[i])>*tx) *tx=raydium_math_abs(raydium_vertex_x[i]);
+    if(raydium_math_abs(raydium_vertex_y[i])>*ty) *ty=raydium_math_abs(raydium_vertex_y[i]);
+    if(raydium_math_abs(raydium_vertex_z[i])>*tz) *tz=raydium_math_abs(raydium_vertex_z[i]);
     }
 *tx*=2;
 *ty*=2;

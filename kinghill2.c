@@ -422,7 +422,7 @@ switch(game_state)
         speed/=12;
         speed+=0.5;
         speed+=(raydium_random_neg_pos_1()/15);
-        raydium_sound_SetSourcePitch(son_moteur,raydium_trigo_abs(speed));
+        raydium_sound_SetSourcePitch(son_moteur,raydium_math_abs(speed));
     break;
 
 

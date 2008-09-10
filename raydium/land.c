@@ -25,8 +25,8 @@ b+=phase;
 while(a>=360) a-=360;
 while(b>=360) b-=360;
 
-a=raydium_trigo_cos(a);
-b=raydium_trigo_cos(b);
+a=raydium_math_cos(a);
+b=raydium_math_cos(b);
 
 b=b*a;
 b*=ampl;

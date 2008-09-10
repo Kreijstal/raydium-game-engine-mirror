@@ -45,7 +45,7 @@ tx=max[0]-min[0];
 ty=max[1]-min[1];
 tz=max[2]-min[2];
 
-raydium_shadow_ground_modelsize=raydium_trigo_max(tx,raydium_trigo_max(ty,tz));
+raydium_shadow_ground_modelsize=raydium_math_max(tx,raydium_math_max(ty,tz));
 raydium_shadow_ground_modelsize/=2;
 
 raydium_log("shadow: ground (%i) modelsize is %.2f, center factors : %.2f/%.2f",
@@ -225,7 +225,7 @@ glTexGeni(GL_R,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
 glTexGeni(GL_Q,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
 
 glGetFloatv(GL_MODELVIEW_MATRIX,mview);
-_raydium_trigo_MatrixInverse(mview,imview);
+_raydium_math_MatrixInverse(mview,imview);
 
 glMatrixMode(GL_TEXTURE);
 glLoadIdentity();

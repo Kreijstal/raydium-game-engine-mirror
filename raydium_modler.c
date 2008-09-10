@@ -252,8 +252,8 @@ for(i=0;i<raydium_vertex_index;i++)
 x=raydium_vertex_x[i];
 y=raydium_vertex_y[i];
 
-raydium_vertex_x[i]=x*raydium_trigo_cos(angle) - y*raydium_trigo_sin(angle);
-raydium_vertex_y[i]=x*raydium_trigo_sin(angle) + y*raydium_trigo_cos(angle);
+raydium_vertex_x[i]=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
+raydium_vertex_y[i]=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -270,8 +270,8 @@ for(i=0;i<raydium_vertex_index;i++)
 x=raydium_vertex_x[i];
 z=raydium_vertex_z[i];
 
-raydium_vertex_x[i]=x*raydium_trigo_cos(angle) - z*raydium_trigo_sin(angle);
-raydium_vertex_z[i]=x*raydium_trigo_sin(angle) + z*raydium_trigo_cos(angle);
+raydium_vertex_x[i]=x*raydium_math_cos(angle) - z*raydium_math_sin(angle);
+raydium_vertex_z[i]=x*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -287,8 +287,8 @@ for(i=0;i<raydium_vertex_index;i++)
 y=raydium_vertex_y[i];
 z=raydium_vertex_z[i];
 
-raydium_vertex_y[i]=y*raydium_trigo_cos(angle) - z*raydium_trigo_sin(angle);
-raydium_vertex_z[i]=y*raydium_trigo_sin(angle) + z*raydium_trigo_cos(angle);
+raydium_vertex_y[i]=y*raydium_math_cos(angle) - z*raydium_math_sin(angle);
+raydium_vertex_z[i]=y*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -336,11 +336,11 @@ int i;
 GLfloat min,max;
 
 size_n(0,&min,&max);
-raydium_log("%f < x < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < x < %f, diff= %f\n",min,max,raydium_math_abs(max-min));
 size_n(1,&min,&max);
-raydium_log("%f < y < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < y < %f, diff= %f\n",min,max,raydium_math_abs(max-min));
 size_n(2,&min,&max);
-raydium_log("%f < z < %f, diff= %f\n",min,max,raydium_trigo_abs(max-min));
+raydium_log("%f < z < %f, diff= %f\n",min,max,raydium_math_abs(max-min));
 }
 
 

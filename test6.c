@@ -541,6 +541,11 @@ if(raydium_key_last==1032)
 if(raydium_key_last==1097) { movie_spf=0; raydium_ode_time_change(0); }
 if(raydium_key_last==1122) { movie_spf=3; raydium_ode_time_change(10); }
 if(raydium_key_last==1101) { movie_spf=16; raydium_ode_time_change(100); }
+if (raydium_key_last=='d'+1000)
+    raydium_ode_autodisable_set(1);
+if (raydium_key_last=='D'+1000)
+    raydium_ode_autodisable_set(0);
+
 
 if(raydium_key_last==1109 && 0)  // disabled
  {
@@ -675,7 +680,7 @@ tmp=raydium_ode_element_pos_get_name(cam);
 if(vue==5) raydium_camera_look_at(camx,camy,camz,tmp[1],-tmp[2],tmp[0]);
 if(vue==6) raydium_ode_element_camera_inboard_name("buggy_corps",-0.15,0,0.1,2,0,0);
 if(vue==4) raydium_ode_element_camera_inboard_name("buggy_corps",0,0.35,-0.2,2,0,-0.2);
-if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_trigo_sin(cam_angle_v),0,raydium_trigo_cos(cam_angle_v));
+if(vue==7) raydium_ode_element_camera_inboard_name("player",0,0,0.1, raydium_math_sin(cam_angle_v),0,raydium_math_cos(cam_angle_v));
 if(vue==8) raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 if(vue==3) raydium_ode_element_camera_inboard_name(cam,0,0,0.1, 1,0,0);
 if(vue==9) raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_FIXED);
@@ -717,7 +722,7 @@ speed*=0.1; // wheel radius
 speed/=4;
 speed+=0.5;
 speed+=(raydium_random_neg_pos_1()/15);
-raydium_sound_SetSourcePitch(son,raydium_trigo_abs(speed));
+raydium_sound_SetSourcePitch(son,raydium_math_abs(speed));
 raydium_ode_element_sound_update_name("buggy_corps",son);
 raydium_ode_element_sound_update_name("buggy_corps",son_paf);
 

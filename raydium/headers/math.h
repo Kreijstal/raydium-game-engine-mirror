@@ -1,79 +1,99 @@
-#ifndef _TRIGO_H
-#define _TRIGO_H
+#ifndef _MATH_H
+#define _MATH_H
+
+
+#define raydium_trigo_cos raydium_math_cos
+#define raydium_trigo_sin raydium_math_sin
+#define raydium_trigo_cos_inv raydium_math_cos_inv
+#define raydium_trigo_sin_inv raydium_math_sin_inv
+#define raydium_trigo_abs(a) raydium_math_abs(a)
+#define raydium_trigo_min(a,b) raydium_math_min(a,b)
+#define raydium_trigo_max(a,b) raydium_math_max(a,b)
+#define raydium_trigo_isfloat(a) raydium_math_isfloat(a)
+#define raydium_trigo_round(a) raydium_math_round(a)
+#define raydium_trigo_rotate raydium_math_rotate
+#define raydium_trigo_pos_to_matrix raydium_math_pos_to_matrix
+#define raydium_trigo_pos_get_modelview raydium_math_pos_get_modelview
+#define raydium_trigo_pow2_next raydium_math_pow2_next
 
 /*=
 Maths
 200
 */
 
-// Little introduction to trigo.c
+// Little introduction to math.c
 /**
 This section is mostly designed for internal uses, but provides some
 usefull maths functions, mostly for trigonometrical uses.
 **/
 
-__rayapi GLfloat raydium_trigo_cos (GLfloat i);
+__rayapi GLfloat raydium_math_cos (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-__rayapi GLfloat raydium_trigo_sin (GLfloat i);
+__rayapi GLfloat raydium_math_sin (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-__rayapi GLfloat raydium_trigo_cos_inv (GLfloat i);
+__rayapi GLfloat raydium_math_cos_inv (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-__rayapi GLfloat raydium_trigo_sin_inv (GLfloat i);
+__rayapi GLfloat raydium_math_sin_inv (GLfloat i);
 /**
 Obvious (degrees)
 **/
 
-#define raydium_trigo_abs(a) ( (a) < (0) ? (-(a)) : (a) )
+#define raydium_math_abs(a) ( (a) < (0) ? (-(a)) : (a) )
 /**
 Obvious
+define raydium_trigo_abs is deprecated, for compatibility only.
 **/
 
-#define raydium_trigo_min(a,b) ( (a) < (b) ? (a) : (b) )
+#define raydium_math_min(a,b) ( (a) < (b) ? (a) : (b) )
 /**
 Obvious
+define raydium_trigo_min is deprecated, for compatibility only.
 **/
 
-#define raydium_trigo_max(a,b) ( (a) > (b) ? (a) : (b) )
+#define raydium_math_max(a,b) ( (a) > (b) ? (a) : (b) )
 /**
 Obvious
+define raydium_trigo_max is deprecated, for compatibility only.
 **/
 
-#define raydium_trigo_isfloat(a) ( (!isnan(a) && !isinf(a)) ? 1 : 0)
+#define raydium_math_isfloat(a) ( (!isnan(a) && !isinf(a)) ? 1 : 0)
 /**
 Test two cases : "Not a Number" and "Infinite"
+define raydium_trigo_isfloat is deprecated, for compatibility only.
 **/
 
-#define raydium_trigo_round(a) ((int)((a)>0?((a)+0.5):((a)-0.5)))
+#define raydium_math_round(a) ((int)((a)>0?((a)+0.5):((a)-0.5)))
 /**
 Will obviously "round" ##a## instead of the default C floor behaviour
+define raydium_trigo_round is deprecated, for compatibility only.
 **/
 
-__rayapi void raydium_trigo_rotate (GLfloat * p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat * res);
+__rayapi void raydium_math_rotate (GLfloat * p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat * res);
 /**
 Rotate p (GLfloat * 3) by (rx,ry,rx) angles (degrees).
 Result is stored in res (GLfloat * 3)
 **/
 
-__rayapi void raydium_trigo_pos_to_matrix (GLfloat * pos, GLfloat * m);
+__rayapi void raydium_math_pos_to_matrix (GLfloat * pos, GLfloat * m);
 /**
 Generates a ODE style matrix (16 Glfloat) from pos (GLfloat * 3)
 **/
 
-__rayapi void raydium_trigo_pos_get_modelview (GLfloat * res);
+__rayapi void raydium_math_pos_get_modelview (GLfloat * res);
 /**
 Stores the translation part of the current OpenGL MODELVIEW matrix in res (3 GLfloat)
 **/
 
-__rayapi int raydium_trigo_pow2_next(int value);
+__rayapi int raydium_math_pow2_next(int value);
 /**
 Returns next power of two of ##value##. Ugly.
 **/

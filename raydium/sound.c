@@ -85,9 +85,9 @@ void raydium_sound_verify(char *caller)
 
 int raydium_sound_Array3IsValid(ALfloat *a)
 {
-if( !raydium_trigo_isfloat(a[0]) ||
-    !raydium_trigo_isfloat(a[1]) ||
-    !raydium_trigo_isfloat(a[2]) )
+if( !raydium_math_isfloat(a[0]) ||
+    !raydium_math_isfloat(a[1]) ||
+    !raydium_math_isfloat(a[2]) )
         {
         raydium_log("sound : ERROR: invalid 3xALfloat array provided");
         return 0;
@@ -688,7 +688,7 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
 
     now=ov_time_tell(file);
     //printf("now=%f video=%f diff=%f\n",now,videopos,now-videopos);
-    if(raydium_trigo_abs(now-videopos)>RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD)
+    if(raydium_math_abs(now-videopos)>RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD)
         {
         ov_time_seek_lap(file,videopos);
         //printf("adjusting A/V sync...\n");

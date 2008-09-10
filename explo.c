@@ -157,7 +157,7 @@ if(raydium_ode_element_find("corps")>=0)
     speed/=4;
     speed+=0.5;
     speed+=(raydium_random_neg_pos_1()/15);
-    raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
+    raydium_sound_SetSourcePitch(sound_car,raydium_math_abs(speed));
     raydium_ode_element_sound_update_name("corps",sound_car);
     }
 

@@ -8,39 +8,39 @@
 #ifndef DONT_INCLUDE_HEADERS
 #include "index.h"
 #else
-#include "headers/trigo.h"
+#include "headers/math.h"
 #endif 
 
-GLfloat raydium_trigo_cos(GLfloat i)
+GLfloat raydium_math_cos(GLfloat i)
 {
 return( (GLfloat)cos(i*PI/180) );
 }
 
-GLfloat raydium_trigo_sin(GLfloat i)
+GLfloat raydium_math_sin(GLfloat i)
 {
 return( (GLfloat)sin(i*PI/180) );
 }
 
-GLfloat raydium_trigo_cos_inv(GLfloat i)
+GLfloat raydium_math_cos_inv(GLfloat i)
 {
 return(acos(i)*180/PI);
 }
 
-GLfloat raydium_trigo_sin_inv(GLfloat i)
+GLfloat raydium_math_sin_inv(GLfloat i)
 {
 return(asin(i)*180/PI);
 }
 
-void raydium_trigo_rotate(GLfloat *p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat *res)
+void raydium_math_rotate(GLfloat *p, GLfloat rx, GLfloat ry, GLfloat rz, GLfloat *res)
 {
-res[0]= (p[0]*raydium_trigo_cos(ry)+(p[2]*raydium_trigo_cos(rx)+p[1]*raydium_trigo_sin(rx))*raydium_trigo_sin(ry))*raydium_trigo_cos(rz) + (p[1]*raydium_trigo_cos(rx)-p[2]*raydium_trigo_sin(rx))*raydium_trigo_sin(rz);
-res[1]=-(p[0]*raydium_trigo_cos(ry)+(p[2]*raydium_trigo_cos(rx)+p[1]*raydium_trigo_sin(rx))*raydium_trigo_sin(ry))*raydium_trigo_sin(rz) + (p[1]*raydium_trigo_cos(rx)-p[2]*raydium_trigo_sin(rx))*raydium_trigo_cos(rz);
-res[2]= (p[2]*raydium_trigo_cos(rx)+ p[1]*raydium_trigo_sin(rx))*raydium_trigo_cos(ry)-p[0]*raydium_trigo_sin(ry);
+res[0]= (p[0]*raydium_math_cos(ry)+(p[2]*raydium_math_cos(rx)+p[1]*raydium_math_sin(rx))*raydium_math_sin(ry))*raydium_math_cos(rz) + (p[1]*raydium_math_cos(rx)-p[2]*raydium_math_sin(rx))*raydium_math_sin(rz);
+res[1]=-(p[0]*raydium_math_cos(ry)+(p[2]*raydium_math_cos(rx)+p[1]*raydium_math_sin(rx))*raydium_math_sin(ry))*raydium_math_sin(rz) + (p[1]*raydium_math_cos(rx)-p[2]*raydium_math_sin(rx))*raydium_math_cos(rz);
+res[2]= (p[2]*raydium_math_cos(rx)+ p[1]*raydium_math_sin(rx))*raydium_math_cos(ry)-p[0]*raydium_math_sin(ry);
 }
 
 
 // pos: GLfloat[3], m: GLfloat[16]
-void raydium_trigo_pos_to_matrix(GLfloat *pos, GLfloat *m)
+void raydium_math_pos_to_matrix(GLfloat *pos, GLfloat *m)
 {
 m[0+4*0] = 1; m[0+4*1] = 0; m[0+4*2] = 0; m[0+4*3] = pos[0];
 m[1+4*0] = 0; m[1+4*1] = 1; m[1+4*2] = 0; m[1+4*3] = pos[1];
@@ -49,7 +49,7 @@ m[3+4*0] = 0; m[3+4*1] = 0; m[3+4*2] = 0; m[3+4*3] = 1;
 }
 
 // res: GLfloat[3]
-void raydium_trigo_pos_get_modelview(GLfloat *res)
+void raydium_math_pos_get_modelview(GLfloat *res)
 {
 GLfloat tmp[16];
 glGetFloatv(GL_MODELVIEW_MATRIX,tmp);
@@ -91,7 +91,7 @@ if(isnan(res[2])) res[2]=0;
 }
 */
 
-int raydium_trigo_pow2_next(int value)
+int raydium_math_pow2_next(int value)
 {
 int pows[]={0,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536};
 int pows_count=17; // 16 + first (0)
@@ -108,7 +108,7 @@ for(i=0;i<pows_count;i++)
 
 
 // should never hit this point
-raydium_log("trigo: raydium_trigo_pow2_next: ?!!");
+raydium_log("trigo: raydium_math_pow2_next: ?!!");
 return -1;
 }
 
@@ -293,7 +293,7 @@ matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,in
 
 // Our matrix_inverse seems broken. 
 // This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
-int _raydium_trigo_MatrixInverse(const float *m,float *out) {
+int _raydium_math_MatrixInverse(const float *m,float *out) {
     float   det;
     det = m[0] * m[5] * m[10];
     det += m[4] * m[9] * m[2];
@@ -322,7 +322,7 @@ int _raydium_trigo_MatrixInverse(const float *m,float *out) {
     return 1;
 }
 
-void raydium_trigo_quaternion_normalize(float *quat)
+void raydium_math_quaternion_normalize(float *quat)
 {
 float magnitude;
     
@@ -334,7 +334,7 @@ quat[3] /= magnitude;
 }
 
 #define SLERP_TO_LERP_SWITCH_THRESHOLD 0.01f
-void raydium_trigo_quaternion_slerp(float *start, float *end, float alpha,float *result)
+void raydium_math_quaternion_slerp(float *start, float *end, float alpha,float *result)
 {
 float startWeight, endWeight, difference;
      
@@ -364,5 +364,5 @@ result[0] = ((start[0] * startWeight) + (end[0] * endWeight));
 result[1] = ((start[1] * startWeight) + (end[1] * endWeight));
 result[2] = ((start[2] * startWeight) + (end[2] * endWeight));
 result[3] = ((start[3] * startWeight) + (end[3] * endWeight));
-raydium_trigo_quaternion_normalize(result);
+raydium_math_quaternion_normalize(result);
 }

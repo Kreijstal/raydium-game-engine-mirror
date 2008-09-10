@@ -197,14 +197,14 @@ if(raydium_sky_sphere_generated!=1)
     for(i=0;i<=detail;i++)
         {
         //getting the radius for each section of the sphere
-        currentradious      =   raydium_trigo_sin(180*((float)i/(float)detail));
+        currentradious      =   raydium_math_sin(180*((float)i/(float)detail));
         //getting the heights for each section of the sphere
-        z1          =   raydium_trigo_cos(180*((float)i/(float)detail));
+        z1          =   raydium_math_cos(180*((float)i/(float)detail));
         for(j=0;j<=detail;j++)
             {
             ang1        =   360*((float)j/(float)detail);
-            p[i][j][0]  =   currentradious * raydium_trigo_cos(ang1);
-            p[i][j][1]  =   currentradious * raydium_trigo_sin(ang1);
+            p[i][j][0]  =   currentradious * raydium_math_cos(ang1);
+            p[i][j][1]  =   currentradious * raydium_math_sin(ang1);
             p[i][j][2]  =   z1;
             }
         }

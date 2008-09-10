@@ -137,12 +137,12 @@ static int inboard=1;
     raydium_ode_motor_speed_name("tank_moteurD",-speedD);
     
 
-    speed=raydium_trigo_abs(speedD)+raydium_trigo_abs(speedG);
+    speed=raydium_math_abs(speedD)+raydium_math_abs(speedG);
     speed*=0.025;
     speed+=0.5;
     speed+=(raydium_random_neg_pos_1()/15);
     raydium_ode_element_sound_update_name("tank_corps",sound_car);
-    raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
+    raydium_sound_SetSourcePitch(sound_car,raydium_math_abs(speed));
 
     if(raydium_key_last==1027)
         exit(0);
@@ -195,9 +195,9 @@ static int inboard=1;
         cam_angle_x += (delta_x*3*0.1f); 
         cam_angle_y += (delta_y*3*0.1f); 
         
-        cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*speed*raydium_trigo_sin(90-cam_angle_y));
-        cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*speed*raydium_trigo_sin(90-cam_angle_y));
-        cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed);
+        cam_pos_z += (raydium_math_sin(cam_angle_x+90)*speed*raydium_math_sin(90-cam_angle_y));
+        cam_pos_x += (raydium_math_cos(cam_angle_x+90)*speed*raydium_math_sin(90-cam_angle_y));
+        cam_pos_y += (raydium_math_cos(90-cam_angle_y)*speed);
         raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
         
     }

@@ -226,7 +226,7 @@ for(y=0;y<RAYDIUM_HDR_SIZE;y++)
     for(x=0;x<RAYDIUM_HDR_SIZE;x++)
         {
         offset=(x+(RAYDIUM_HDR_SIZE*y));
-        pixel=raydium_hdr_mem[raydium_trigo_round(fx)+(raydium_window_tx*(raydium_trigo_round(fy)))];
+        pixel=raydium_hdr_mem[raydium_math_round(fx)+(raydium_window_tx*(raydium_math_round(fy)))];
         //slooooooooooooow ! (?!)
         //glReadPixels(raydium_trigo_round(fx),raydium_trigo_round(fy),1,1,GL_STENCIL_INDEX,GL_UNSIGNED_BYTE,&pixel);
         raydium_hdr_mem_hdr2[offset]=(pixel?255:0);

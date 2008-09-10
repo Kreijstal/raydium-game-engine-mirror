@@ -1508,8 +1508,8 @@ for(i=1;i<nelems;i++)
     dGeomGetAABB(raydium_ode_element[elem[i]].geom,aabb);
     for(j=0;j<6;j+=2)
         {
-        aabbR[j  ]=raydium_trigo_min(aabb[j  ],aabbR[j  ]);
-        aabbR[j+1]=raydium_trigo_max(aabb[j+1],aabbR[j+1]);
+        aabbR[j  ]=raydium_math_min(aabb[j  ],aabbR[j  ]);
+        aabbR[j+1]=raydium_math_max(aabb[j+1],aabbR[j+1]);
         }
     }
 
@@ -2861,7 +2861,7 @@ for(i=0;i<RAYDIUM_ODE_MOTOR_MAX_JOINTS;i++)
 if(n)
     {
     velf/=n;
-    if(gears) velf*=(1/raydium_trigo_abs(raydium_ode_motor[m].gears[raydium_ode_motor[m].gear]));
+    if(gears) velf*=(1/raydium_math_abs(raydium_ode_motor[m].gears[raydium_ode_motor[m].gear]));
     }
 else velf=0;
 return velf;
@@ -2964,7 +2964,7 @@ if(raydium_ode_motor[m].state!=RAYDIUM_ODE_MOTOR_ROCKET)
 raydium_ode_motor[m].rocket_orientation[0]=rx;
 raydium_ode_motor[m].rocket_orientation[1]=ry;
 raydium_ode_motor[m].rocket_orientation[2]=rz;
-raydium_trigo_rotate(dir,rx,ry,rz,res);
+raydium_math_rotate(dir,rx,ry,rz,res);
 res[0]*=raydium_ode_motor[m].speed;
 res[1]*=raydium_ode_motor[m].speed;
 res[2]*=raydium_ode_motor[m].speed;
@@ -3270,12 +3270,12 @@ if(!raydium_ode_joint_isvalid(j))
     }
 jf=dJointGetFeedback(raydium_ode_joint[j].joint);
 if(!jf) return;
-force+=raydium_trigo_abs(jf->f1[0]);
-force+=raydium_trigo_abs(jf->f1[1]);
-force+=raydium_trigo_abs(jf->f1[2]);
-force+=raydium_trigo_abs(jf->f2[0]);
-force+=raydium_trigo_abs(jf->f2[1]);
-force+=raydium_trigo_abs(jf->f2[2]);
+force+=raydium_math_abs(jf->f1[0]);
+force+=raydium_math_abs(jf->f1[1]);
+force+=raydium_math_abs(jf->f1[2]);
+force+=raydium_math_abs(jf->f2[0]);
+force+=raydium_math_abs(jf->f2[1]);
+force+=raydium_math_abs(jf->f2[2]);
 //raydium_log("%f %s",force,raydium_ode_joint[j].name);
 if(force>raydium_ode_joint[j].breakableforce)
     {
@@ -3305,7 +3305,7 @@ if( raydium_ode_element[from_element].state==RAYDIUM_ODE_STATIC ||
     return 0;
     }
 
-raydium_trigo_rotate(dir,rot[0],rot[1],rot[2],res);
+raydium_math_rotate(dir,rot[0],rot[1],rot[2],res);
 res[0]*=force;
 res[1]*=force;
 res[2]*=force;
@@ -5175,7 +5175,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                     (raydium_ode_element[i].capture_pos2[j] -
                      raydium_ode_element[i].capture_pos1[j])*diff;
 
-        raydium_trigo_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
+        raydium_math_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
 
         raydium_ode_element_move(i,pos);
         raydium_ode_element_rotateq(i,result);

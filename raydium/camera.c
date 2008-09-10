@@ -21,11 +21,11 @@ GLfloat res1[3];
 GLfloat res2[3];
 
 
-raydium_trigo_pos_get_modelview(res1); // get current position
-raydium_trigo_pos_to_matrix(front,m); // create matrix using front
+raydium_math_pos_get_modelview(res1); // get current position
+raydium_math_pos_to_matrix(front,m); // create matrix using front
 glPushMatrix();
 glMultMatrixf(m); // project front
-raydium_trigo_pos_get_modelview(res2); // get new position
+raydium_math_pos_get_modelview(res2); // get new position
 glPopMatrix();
 
 // create front vector
@@ -593,12 +593,12 @@ void raydium_camera_freemove(int move)
         dir_y*=(raydium_frame_time*60);
 
         //calculating the position (x,y,z) of the camera
-        rffp_cam_pos_z += (raydium_trigo_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-        rffp_cam_pos_x += (raydium_trigo_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_trigo_sin(90-rffp_cam_angle_y));
-        rffp_cam_pos_y += (raydium_trigo_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
+        rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_y += (raydium_math_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
 
-        rffp_cam_pos_x -= (raydium_trigo_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
-        rffp_cam_pos_z -= (raydium_trigo_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        rffp_cam_pos_x -= (raydium_math_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
         //looking where the mouse points
         rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);

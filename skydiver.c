@@ -94,7 +94,7 @@ w=wind;
 if(breaked_bones) return 0;
 if(!touching_steps) return 0;
 if(w>0) w*=2; // positive wind is harder
-score=touching_steps*raydium_trigo_abs(w); // 2000 max
+score=touching_steps*raydium_math_abs(w); // 2000 max
 
 tmp=3.f-fly_time; // fly time
 if(tmp<0) tmp=0;
@@ -218,7 +218,7 @@ dReal *pos;
 para_open=0;
 game_part=GAME_PART_TOUCHED;
 pos=raydium_ode_element_pos_get_name("body");
-dist_from_center=raydium_trigo_abs(pos[0]);
+dist_from_center=raydium_math_abs(pos[0]);
 }
 
 if(c1==&type_plane || c2==&type_plane)
@@ -520,8 +520,8 @@ switch(game_part)
     case GAME_PART_TOUCHED:
         camzoom=6;
         camz=50;
-        camx=raydium_trigo_cos(angle)*100;
-        camy=raydium_trigo_sin(angle)*100;
+        camx=raydium_math_cos(angle)*100;
+        camy=raydium_math_sin(angle)*100;
         strcpy(cam,"head");
         tip=3;
         break;  
@@ -539,8 +539,8 @@ switch(game_part)
         dBodySetGravityMode(raydium_ode_element[raydium_ode_element_find("plane 1")].body,1);
         camzoom=4;
         camz=30;
-        camx=raydium_trigo_cos(-angle)*200;
-        camy=raydium_trigo_sin(-angle)*200;
+        camx=raydium_math_cos(-angle)*200;
+        camy=raydium_math_sin(-angle)*200;
         strcpy(cam,"plane 1");
         tip=3;
         break;
@@ -627,7 +627,7 @@ if(game_part==GAME_PART_SCORE)
     }
 //else
     {
-    raydium_osd_printf(5,13,16,0.5,"font2.tga","^cWind: %s %02.1f %% | Fly-Time: %.2f | Touch Time: %.2f",(wind<0?"<-":"->"),raydium_trigo_abs(wind*100),fly_time,touching_steps/400.f);
+    raydium_osd_printf(5,13,16,0.5,"font2.tga","^cWind: %s %02.1f %% | Fly-Time: %.2f | Touch Time: %.2f",(wind<0?"<-":"->"),raydium_math_abs(wind*100),fly_time,touching_steps/400.f);
     raydium_osd_printf(5,10,16,0.5,"font2.tga","^cCenter Distance: %.2f | Breaked Bones: %i",dist_from_center,breaked_bones);    
     }
 

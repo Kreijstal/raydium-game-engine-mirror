@@ -504,8 +504,8 @@ for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
  x=raydium_vertex_x[i]-0.5;
  y=raydium_vertex_y[i]-0.5;
 
- raydium_vertex_x[i]=x*raydium_trigo_cos(angle) - y*raydium_trigo_sin(angle);
- raydium_vertex_y[i]=x*raydium_trigo_sin(angle) + y*raydium_trigo_cos(angle);
+ raydium_vertex_x[i]=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
+ raydium_vertex_y[i]=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
  raydium_vertex_x[i]+=0.5;
  raydium_vertex_y[i]+=0.5;
  }

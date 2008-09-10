@@ -221,7 +221,7 @@ if(raydium_init_cli_option("max-aniso",str))
     aniso_user=atof(str);
 else
     aniso_user=999;
-raydium_texture_filter_aniso_levels=raydium_trigo_min(aniso_user,aniso_hard);
+raydium_texture_filter_aniso_levels=raydium_math_min(aniso_user,aniso_hard);
 raydium_log("OpenGL anisotropy max level is %.2f",raydium_texture_filter_aniso_levels);
 
 if(raydium_init_cli_option("compress",NULL))
@@ -500,6 +500,7 @@ int raydium_init_load(char *filename)
         {
                 if(flag_paths==1)
                 {
+                    //TODO Allow to specify base folder.
                                 raydium_path_ext("./data/textures/","tga");
                                 raydium_path_ext("./data/fonts/","tga");
                                 raydium_path_ext("./data/shaders/","vert");

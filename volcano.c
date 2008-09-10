@@ -62,7 +62,7 @@ if(rock>=0)
     vel=raydium_ode_element_linearvelocity_get(rock);
     speed=0;
     for(i=0;i<3;i++)
-        speed+=raydium_trigo_abs(vel[i]);
+        speed+=raydium_math_abs(vel[i]);
     }
 
 

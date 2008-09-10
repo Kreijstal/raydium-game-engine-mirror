@@ -2580,7 +2580,7 @@ speed*=0.1; // wheel radius
 speed/=4;
 speed+=0.5;
 speed+=(raydium_random_neg_pos_1()/15);
-raydium_sound_SetSourcePitch(sound_car,raydium_trigo_abs(speed));
+raydium_sound_SetSourcePitch(sound_car,raydium_math_abs(speed));
 
 change_music_volume(music_volume); // since eof callback will reset volume to 1
 
