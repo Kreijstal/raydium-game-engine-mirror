@@ -354,7 +354,7 @@ __global char raydium_sky_texture_cubemap_left[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_cubemap_right[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_cubemap_bottom[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_cubemap_top[RAYDIUM_MAX_NAME_LEN];
-__global int raydium_sky_prefix_defined;
+__global int raydium_sky_name_defined;
 
 
 __global GLsizei raydium_window_tx;
