@@ -19,8 +19,7 @@ if(raydium_key_last==1027)
     exit(0);
 
 raydium_clear_frame();
-/* [ place your camera here ] */ //raydium_camera_look_at(10,-2,2,0,0,0);
-raydium_camera_freemove(1);
+/* [ place your camera here ] */ raydium_camera_look_at(10,-2,2,0,0,0);
 /* [ draw here ] */ raydium_ode_draw_all(0);
 raydium_rendering_finish();
 }
