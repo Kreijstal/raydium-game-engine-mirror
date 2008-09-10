@@ -57,12 +57,6 @@ GLfloat (z+size)=(x+5);
 GLfloat minv=(x-5);
 */
 
-if(!raydium_sky_prefix_defined)
-    {
-    raydium_sky_box_cache();
-    raydium_sky_prefix_defined=1;
-    }
-
 if(raydium_fog_enabled_tag && !raydium_sky_force) return;
 
 glDisable(GL_LIGHTING);
