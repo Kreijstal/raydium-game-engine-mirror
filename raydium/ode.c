@@ -5466,6 +5466,7 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
 
 void raydium_ode_autodisable_set(signed char autod)
 {
+int i;
 dWorldSetAutoDisableFlag(raydium_ode_world,(int)autod);   
 // dWorldSetAutoDisableAngularAverageThreshold(); 
 // dWorldSetAutoDisableAngularThreshold();
@@ -5474,6 +5475,14 @@ dWorldSetAutoDisableFlag(raydium_ode_world,(int)autod);
 // dWorldSetAutoDisableLinearThreshold();
 // dWorldSetAutoDisableSteps();
 // dWorldSetAutoDisableTime();   
+for (i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    {
+    if (!raydium_ode_element_isvalid(i))
+        continue;
+    if (raydium_ode_element[i].state!=RAYDIUM_ODE_STANDARD)
+        continue;
+    dBodySetAutoDisableFlag(raydium_ode_element[i].body,autod);
+    }
 }
 
 signed char raydium_ode_autodisable_get(void)
