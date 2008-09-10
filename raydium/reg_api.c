@@ -23,49 +23,52 @@
 PHP_v_ss(raydium_file_home_path_cpy);
 
 // light.c
-PHP_v_v(raydium_light_enable)
-PHP_v_v(raydium_light_disable)
-PHP_v_i(raydium_light_on)
-PHP_v_i(raydium_light_off)
-PHP_v_i(raydium_light_switch)
+PHP_v_v(raydium_light_enable);
+PHP_v_v(raydium_light_disable);
+PHP_v_i(raydium_light_on);
+PHP_v_i(raydium_light_off);
+PHP_v_i(raydium_light_switch);
 
 // fog.c
-PHP_v_v(raydium_fog_enable)
-PHP_v_v(raydium_fog_disable)
+PHP_v_v(raydium_fog_enable);
+PHP_v_v(raydium_fog_disable);
 
 // background.c
-PHP_v_ffff(raydium_background_color_change)
+PHP_v_ffff(raydium_background_color_change);
 
 // sound.c
-PHP_i_s(raydium_sound_load_music)
-PHP_i_if(raydium_sound_SetSourceGain)
+PHP_i_s(raydium_sound_load_music);
+PHP_i_if(raydium_sound_SetSourceGain);
 
 // render.c
-PHP_v_v(raydium_rendering_wireframe)
-PHP_v_v(raydium_rendering_normal)
-PHP_v_v(raydium_rendering_displaylists_enable)
-PHP_v_v(raydium_rendering_displaylists_disable)
-PHP_v_ffff(raydium_render_lightmap_color_4f)
+PHP_v_v(raydium_rendering_wireframe);
+PHP_v_v(raydium_rendering_normal);
+PHP_v_v(raydium_rendering_displaylists_enable);
+PHP_v_v(raydium_rendering_displaylists_disable);
+PHP_v_ffff(raydium_render_lightmap_color_4f);
 
 // window.c
-PHP_v_v(raydium_window_view_update)
+PHP_v_v(raydium_window_view_update);
 PHP_v_fff(raydium_window_view_perspective);
 
+// sky.c
+PHP_v_s(raydium_sky_box_name);
+
 // console.c
-PHP_v_s(raydium_console_exec_script)
-PHP_v_v(raydium_console_event)
+PHP_v_s(raydium_console_exec_script);
+PHP_v_v(raydium_console_event);
 
 // log.c
-PHP_v_svaria(raydium_log)
+PHP_v_svaria(raydium_log);
 
 // capture.c
-PHP_v_s(raydium_capture_frame)
+PHP_v_s(raydium_capture_frame);
 
 // key.c
-PHP_i_i(raydium_key_pressed)
+PHP_i_i(raydium_key_pressed);
 
 // mouse.c
-PHP_i_i(raydium_mouse_button_pressed)
+PHP_i_i(raydium_mouse_button_pressed);
 
 // clear.c
 PHP_v_v(raydium_clear_frame);
@@ -239,6 +242,7 @@ raydium_register_function(C2PHP(raydium_window_view_perspective),"raydium_window
 raydium_register_function(C2PHP(raydium_window_view_update),"raydium_window_view_update");
 
 // sky.c
+raydium_register_function(C2PHP(raydium_sky_box_name),"raydium_sky_box_name");
 raydium_register_variable(&raydium_sky_force,RAYDIUM_REGISTER_SCHAR,"raydium_sky_force");
 
 // console.c
