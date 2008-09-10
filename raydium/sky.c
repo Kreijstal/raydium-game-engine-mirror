@@ -14,390 +14,389 @@
 
 void raydium_sky_box_set_name(char *pref, char *ext)
 {
-    sprintf(raydium_sky_texture_cubemap_front,"%sfront.%s",pref,ext);
-    sprintf(raydium_sky_texture_cubemap_back,"%sback.%s",pref,ext);
-    sprintf(raydium_sky_texture_cubemap_left,"%sleft.%s",pref,ext);
-    sprintf(raydium_sky_texture_cubemap_right,"%sright.%s",pref,ext);
-    sprintf(raydium_sky_texture_cubemap_bottom,"%sbottom.%s",pref,ext);
-    sprintf(raydium_sky_texture_cubemap_top,"%stop.%s",pref,ext);
-    raydium_sky_prefix_defined = 1;
+sprintf(raydium_sky_texture_cubemap_front,"%sfront.%s",pref,ext);
+sprintf(raydium_sky_texture_cubemap_back,"%sback.%s",pref,ext);
+sprintf(raydium_sky_texture_cubemap_left,"%sleft.%s",pref,ext);
+sprintf(raydium_sky_texture_cubemap_right,"%sright.%s",pref,ext);
+sprintf(raydium_sky_texture_cubemap_bottom,"%sbottom.%s",pref,ext);
+sprintf(raydium_sky_texture_cubemap_top,"%stop.%s",pref,ext);
+raydium_sky_prefix_defined = 1;
 }
 
 
 void raydium_sky_box_cache(void)
 {
-    if (raydium_sky_prefix_defined==0)
+if (raydium_sky_prefix_defined==0)
     {
-            raydium_sky_box_set_name("BOX","tga");
+    raydium_sky_box_set_name("BOX","tga");
     }
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
 
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_front,1);
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_back,1);
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_left,1);
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_right,1);
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_bottom,1);
-    raydium_hdr_texture_name(raydium_sky_texture_cubemap_top,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_front,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_back,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_left,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_right,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_bottom,1);
+raydium_hdr_texture_name(raydium_sky_texture_cubemap_top,1);
 }
 
 
 void raydium_sky_box_render(GLfloat x, GLfloat y, GLfloat z)
 {
-    //GLfloat one[]={1.,1.,1.,1.};
-    #define sizeb ((raydium_projection_far-raydium_projection_near)/2.f)
-    /*
-    GLfloat (x+size)=(x+5);
-    GLfloat sizey=(x+5);
-    GLfloat (z+size)=(x+5);
-    GLfloat minv=(x-5);
-    */
+//GLfloat one[]={1.,1.,1.,1.};
+#define sizeb ((raydium_projection_far-raydium_projection_near)/2.f)
+/*
+GLfloat (x+size)=(x+5);
+GLfloat sizey=(x+5);
+GLfloat (z+size)=(x+5);
+GLfloat minv=(x-5);
+*/
 
-    if(raydium_fog_enabled_tag && !raydium_sky_force) return;
+if(raydium_fog_enabled_tag && !raydium_sky_force) return;
 
-    glDisable(GL_LIGHTING);
-    glDisable(GL_FOG);
-    //glColor4fv(raydium_background_color);
-    //glColor4fv(one);
+glDisable(GL_LIGHTING);
+glDisable(GL_FOG);
+//glColor4fv(raydium_background_color);
+//glColor4fv(one);
 
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-    glEnd();
-
-
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-    glEnd();
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_front);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+glEnd();
 
 
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-    glEnd();
-
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-    glEnd();
-
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
-    glEnd();
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_back);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+glEnd();
 
 
-    raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
-        glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
-        glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
-    glEnd();
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_right);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+glEnd();
+
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_left);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+glEnd();
+
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_top);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y+sizeb),(z+sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y+sizeb),(z+sizeb));
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y-sizeb),(z+sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y-sizeb),(z+sizeb));
+glEnd();
 
 
-    if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
-    if(raydium_fog_enabled_tag) glEnable(GL_FOG);
-    glDepthMask(GL_TRUE);
+raydium_texture_current_set_name(raydium_sky_texture_cubemap_bottom);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f((x-sizeb),(y-sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 1.0f); glVertex3f((x+sizeb),(y-sizeb),(z-sizeb));
+    glTexCoord2f(1.0f, 0.0f); glVertex3f((x+sizeb),(y+sizeb),(z-sizeb));
+    glTexCoord2f(0.0f, 0.0f); glVertex3f((x-sizeb),(y+sizeb),(z-sizeb));
+glEnd();
 
+
+if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
+if(raydium_fog_enabled_tag) glEnable(GL_FOG);
+glDepthMask(GL_TRUE);
 }
 
 void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)
 {
-    int i, j,co;
-    GLfloat currentradious,z1,z2,ang1,dx,dy,h;
-    //the next is static cause this will be used to store the vertices of the sphere.
-    //i suppose that it could be external to this function.
-    static GLfloat p[RAYDIUM_SKY_SPHERE_MAX_DETAIL][RAYDIUM_SKY_SPHERE_MAX_DETAIL][3];
+int i, j,co;
+GLfloat currentradious,z1,z2,ang1,dx,dy,h;
+//the next is static cause this will be used to store the vertices of the sphere.
+//i suppose that it could be external to this function.
+static GLfloat p[RAYDIUM_SKY_SPHERE_MAX_DETAIL][RAYDIUM_SKY_SPHERE_MAX_DETAIL][3];
 
-    //keeping safe the current matrix
-    glPushMatrix();
+//keeping safe the current matrix
+glPushMatrix();
 
-    //glPushAttrib(GL_COLOR_BUFFER_BIT); Gl attrib functions shoudn't be used
+//glPushAttrib(GL_COLOR_BUFFER_BIT); Gl attrib functions shoudn't be used
 
-    //increasing angles to simulate orbit
-    raydium_sky_sphere_angle_orbit_u += 10 * raydium_frame_time;
-    raydium_sky_sphere_angle_orbit_v += 1 * raydium_frame_time;
+//increasing angles to simulate orbit
+raydium_sky_sphere_angle_orbit_u += 10 * raydium_frame_time;
+raydium_sky_sphere_angle_orbit_v += 1 * raydium_frame_time;
 
-    //test code.
-    //the rotation speed should be changed with a function
-    raydium_sky_sphere_y_vel=0.01;
-    raydium_sky_sphere_x_vel=0.01;
+//test code.
+//the rotation speed should be changed with a function
+raydium_sky_sphere_y_vel=0.01;
+raydium_sky_sphere_x_vel=0.01;
 
-    //updating the x and y values according the speed and the framerate
-    raydium_sky_sphere_x_pos+=raydium_sky_sphere_x_vel * raydium_frame_time;
-    raydium_sky_sphere_y_pos+=raydium_sky_sphere_y_vel * raydium_frame_time;
+//updating the x and y values according the speed and the framerate
+raydium_sky_sphere_x_pos+=raydium_sky_sphere_x_vel * raydium_frame_time;
+raydium_sky_sphere_y_pos+=raydium_sky_sphere_y_vel * raydium_frame_time;
 
-    //using dx and dy to simplify the code
-    dx=raydium_sky_sphere_x_pos;
-    dy=raydium_sky_sphere_y_pos;
+//using dx and dy to simplify the code
+dx=raydium_sky_sphere_x_pos;
+dy=raydium_sky_sphere_y_pos;
 
-    //turning off "specials" for render
-    glDisable(GL_LIGHTING);
-    glDisable(GL_FOG);
-    glEnable(GL_TEXTURE_2D);
-    glColor4fv(raydium_background_color);
-    glDepthMask(GL_FALSE);
+//turning off "specials" for render
+glDisable(GL_LIGHTING);
+glDisable(GL_FOG);
+glEnable(GL_TEXTURE_2D);
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
+//glEnable(GL_BLEND);
+//glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
 
-    //MAKING THE SPHERE
+//MAKING THE SPHERE
 
-    //check if the points are already calculated.
-    //there is no reason to enter constantly.
-    if(raydium_sky_sphere_generated!=1)
+//check if the points are already calculated.
+//there is no reason to enter constantly.
+if(raydium_sky_sphere_generated!=1)
     {
-        //getting the points of the sphere, but no drawing
-        for(i=0;i<=detail;i++)
+    //getting the points of the sphere, but no drawing
+    for(i=0;i<=detail;i++)
         {
-            //getting the radius for each section of the sphere
-            currentradious      =   raydium_trigo_sin(180*((float)i/(float)detail));
-            //getting the heights for each section of the sphere
-            z1          =   raydium_trigo_cos(180*((float)i/(float)detail));
-            for(j=0;j<=detail;j++)
+        //getting the radius for each section of the sphere
+        currentradious      =   raydium_trigo_sin(180*((float)i/(float)detail));
+        //getting the heights for each section of the sphere
+        z1          =   raydium_trigo_cos(180*((float)i/(float)detail));
+        for(j=0;j<=detail;j++)
             {
-                ang1        =   360*((float)j/(float)detail);
-                p[i][j][0]  =   currentradious * raydium_trigo_cos(ang1);
-                p[i][j][1]  =   currentradious * raydium_trigo_sin(ang1);
-                p[i][j][2]  =   z1;
+            ang1        =   360*((float)j/(float)detail);
+            p[i][j][0]  =   currentradious * raydium_trigo_cos(ang1);
+            p[i][j][1]  =   currentradious * raydium_trigo_sin(ang1);
+            p[i][j][2]  =   z1;
             }
         }
-        raydium_sky_sphere_generated    =   1;
+    raydium_sky_sphere_generated    =   1;
     }
 
-    //Postioning the modelview in the pos of the camera
-    glTranslatef(x,y,z);
+//Postioning the modelview in the pos of the camera
+glTranslatef(x,y,z);
 
-    //test code
-    //the texture should be loaded with a different function
-    if(!raydium_texture_exists("SKYCLOUDS.tga"))
+//test code
+//the texture should be loaded with a different function
+if(!raydium_texture_exists("SKYCLOUDS.tga"))
     {
-        raydium_texture_load("SKYCLOUDS.tga");
+    raydium_texture_load("SKYCLOUDS.tga");
     }
-    raydium_texture_current_set_name("SKYCLOUDS.tga");
+raydium_texture_current_set_name("SKYCLOUDS.tga");
 
-    //activating texture
-    raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+//activating texture
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
-    //shutdown the DEPTH writting
-    glDepthMask(GL_FALSE);
+//shutdown the DEPTH writting
+glDepthMask(GL_FALSE);
 
-    //activating and setting fog
-    raydium_fog_enable();
-    glFogf(GL_FOG_START,0.6);
-    glFogf(GL_FOG_END,1);
-    glFogi(GL_FOG_MODE,GL_EXP2);
+//activating and setting fog
+raydium_fog_enable();
+glFogf(GL_FOG_START,0.6);
+glFogf(GL_FOG_END,1);
+glFogi(GL_FOG_MODE,GL_EXP2);
 
-    //setting h to the height of the vault
-    h=raydium_sky_sphere_heigth;
+//setting h to the height of the vault
+h=raydium_sky_sphere_heigth;
 
-    //activating the blending needed for the clouds
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_DST_COLOR,GL_ONE_MINUS_SRC_ALPHA);
+//activating the blending needed for the clouds
+glEnable(GL_BLEND);
+glBlendFunc(GL_DST_COLOR,GL_ONE_MINUS_SRC_ALPHA);
 
-    //drawing the layers of clouds
-    for(co=0;co<raydium_sky_sphere_quality;co++)
+//drawing the layers of clouds
+for(co=0;co<raydium_sky_sphere_quality;co++)
     {
-        //drawing the upper vault
+    //drawing the upper vault
+
+    glBegin(GL_TRIANGLES);
+    glColor4f(1,1,1,1*(co/raydium_sky_sphere_quality));
+    glTexCoord2f(-1+dx,1+dy);
+    glVertex3f(-1,1,0);
+    glTexCoord2f(1+dx,1+dy);
+    glVertex3f(1,1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(1+dx,1+dy);
+    glVertex3f(1,1,0);
+    glTexCoord2f(1+dx,-1+dy);
+    glVertex3f(1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(1+dx,-1+dy);
+    glVertex3f(1,-1,0);
+    glTexCoord2f(-1+dx,-1+dy);
+    glVertex3f(-1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(-1+dx,1+dy);
+    glVertex3f(-1,1,0);
+    glTexCoord2f(-1+dx,-1+dy);
+    glVertex3f(-1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    //drawing the botom vault, mirror of the upper one
+    h=-h;
+
+    //glColor4f(1,1,1,1);
+    glTexCoord2f(-1+dx,1+dy);
+    glVertex3f(-1,1,0);
+    glTexCoord2f(1+dx,1+dy);
+    glVertex3f(1,1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(1+dx,1+dy);
+    glVertex3f(1,1,0);
+    glTexCoord2f(1+dx,-1+dy);
+    glVertex3f(1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(1+dx,-1+dy);
+    glVertex3f(1,-1,0);
+    glTexCoord2f(-1+dx,-1+dy);
+    glVertex3f(-1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+
+    glTexCoord2f(-1+dx,1+dy);
+    glVertex3f(-1,1,0);
+    glTexCoord2f(-1+dx,-1+dy);
+    glVertex3f(-1,-1,0);
+    glTexCoord2f(0+dx,0+dy);
+    glVertex3f(0,0,h);
+    glEnd();
+
+    //recalculating the new heigth of the vault(a new layer)
+    h=-h*0.95;
+    }
+
+//deactivating the fog, unused
+raydium_fog_disable();
+//reactivating the previous blending
+glEnable(GL_BLEND);
+glBlendFunc(GL_ONE_MINUS_SRC_COLOR,GL_SRC_COLOR);
+
+//match the orientation of the camera with the universe
+//rotating according the orbit angles(ugly)
+glRotatef(raydium_sky_sphere_angle_orbit_v,0,0,1);
+glRotatef(raydium_sky_sphere_angle_orbit_u,1,0,0);
+
+//now drawing the sphere with the pre-obtained values
+for(i=0;i<detail;i++)
+    {
+    for(j=0;j<detail;j++)
+        {
+        //calculating colors
+        z1 = 1-sin((float)2*i/detail);
+        z2 = 1-sin((float)(2*i+2)/detail);
 
         glBegin(GL_TRIANGLES);
-        glColor4f(1,1,1,1*(co/raydium_sky_sphere_quality));
-        glTexCoord2f(-1+dx,1+dy);
-        glVertex3f(-1,1,0);
-        glTexCoord2f(1+dx,1+dy);
-        glVertex3f(1,1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
 
-        glTexCoord2f(1+dx,1+dy);
-        glVertex3f(1,1,0);
-        glTexCoord2f(1+dx,-1+dy);
-        glVertex3f(1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
+        glColor4f(z1,z1,z1,1);
+        glVertex3f(p[i][j][0],p[i][j][1],p[i][j][2]);
 
-        glTexCoord2f(1+dx,-1+dy);
-        glVertex3f(1,-1,0);
-        glTexCoord2f(-1+dx,-1+dy);
-        glVertex3f(-1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
+        glColor4f(z1,z1,z1,1);
+        glVertex3f(p[i][j+1][0],p[i][j+1][1],p[i][j+1][2]);
 
-        glTexCoord2f(-1+dx,1+dy);
-        glVertex3f(-1,1,0);
-        glTexCoord2f(-1+dx,-1+dy);
-        glVertex3f(-1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
+        glColor4f(z2,z2,z2,1);
+        glVertex3f(p[i+1][j][0],p[i+1][j][1],p[i+1][j][2]);
 
-        //drawing the botom vault, mirror of the upper one
-        h=-h;
+        glColor4f(z2,z2,z2,1);
+        glVertex3f(p[i+1][j][0],p[i+1][j][1],p[i+1][j][2]);
 
-        //glColor4f(1,1,1,1);
-        glTexCoord2f(-1+dx,1+dy);
-        glVertex3f(-1,1,0);
-        glTexCoord2f(1+dx,1+dy);
-        glVertex3f(1,1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
+        glColor4f(z2,z2,z2,1);
+        glVertex3f(p[i+1][j+1][0],p[i+1][j+1][1],p[i+1][j+1][2]);
 
-        glTexCoord2f(1+dx,1+dy);
-        glVertex3f(1,1,0);
-        glTexCoord2f(1+dx,-1+dy);
-        glVertex3f(1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
+        glColor4f(z1,z1,z1,1);
+        glVertex3f(p[i][j+1][0],p[i][j+1][1],p[i][j+1][2]);
 
-        glTexCoord2f(1+dx,-1+dy);
-        glVertex3f(1,-1,0);
-        glTexCoord2f(-1+dx,-1+dy);
-        glVertex3f(-1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
-
-        glTexCoord2f(-1+dx,1+dy);
-        glVertex3f(-1,1,0);
-        glTexCoord2f(-1+dx,-1+dy);
-        glVertex3f(-1,-1,0);
-        glTexCoord2f(0+dx,0+dy);
-        glVertex3f(0,0,h);
         glEnd();
-
-        //recalculating the new heigth of the vault(a new layer)
-        h=-h*0.95;
-    }
-
-    //deactivating the fog, unused
-    raydium_fog_disable();
-    //reactivating the previous blending
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE_MINUS_SRC_COLOR,GL_SRC_COLOR);
-
-    //match the orientation of the camera with the universe
-    //rotating according the orbit angles(ugly)
-    glRotatef(raydium_sky_sphere_angle_orbit_v,0,0,1);
-    glRotatef(raydium_sky_sphere_angle_orbit_u,1,0,0);
-
-    //now drawing the sphere with the pre-obtained values
-    for(i=0;i<detail;i++)
-    {
-        for(j=0;j<detail;j++)
-        {
-            //calculating colors
-            z1 = 1-sin((float)2*i/detail);
-            z2 = 1-sin((float)(2*i+2)/detail);
-
-            glBegin(GL_TRIANGLES);
-
-            glColor4f(z1,z1,z1,1);
-            glVertex3f(p[i][j][0],p[i][j][1],p[i][j][2]);
-
-            glColor4f(z1,z1,z1,1);
-            glVertex3f(p[i][j+1][0],p[i][j+1][1],p[i][j+1][2]);
-
-            glColor4f(z2,z2,z2,1);
-            glVertex3f(p[i+1][j][0],p[i+1][j][1],p[i+1][j][2]);
-
-            glColor4f(z2,z2,z2,1);
-            glVertex3f(p[i+1][j][0],p[i+1][j][1],p[i+1][j][2]);
-
-            glColor4f(z2,z2,z2,1);
-            glVertex3f(p[i+1][j+1][0],p[i+1][j+1][1],p[i+1][j+1][2]);
-
-            glColor4f(z1,z1,z1,1);
-            glVertex3f(p[i][j+1][0],p[i][j+1][1],p[i][j+1][2]);
-
-            glEnd();
         }
     }
 
-    //restoring previus states
-    glDisable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    if(raydium_fog_enabled_tag) glEnable(GL_FOG);
-    if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
-    glDepthMask(GL_TRUE);
-    //glPopAttrib();
-    glPopMatrix();
+//restoring previus states
+glDisable(GL_BLEND);
+glEnable(GL_TEXTURE_2D);
+glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+if(raydium_fog_enabled_tag) glEnable(GL_FOG);
+if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
+glDepthMask(GL_TRUE);
+//glPopAttrib();
+glPopMatrix();
 
 }
 
 void raydium_sky_atmosphere_enable(void)
 {
-    raydium_sky_atmosphere_enable_tag=1;
-    raydium_sky_sphere_quality=20;
-    raydium_sky_sphere_heigth=0.09;
-    //this will force to recalculate the sphere once
-    raydium_sky_sphere_generated=0;
-    raydium_log("atmosphere created with quality 20");
+raydium_sky_atmosphere_enable_tag=1;
+raydium_sky_sphere_quality=20;
+raydium_sky_sphere_heigth=0.09;
+//this will force to recalculate the sphere once
+raydium_sky_sphere_generated=0;
+raydium_log("atmosphere created with quality 20");
 }
 
 void raydium_sky_atmosphere_disable(void)
 {
-    raydium_sky_atmosphere_enable_tag=0;
+raydium_sky_atmosphere_enable_tag=0;
 }
 
 void raydium_sky_atmosphere_render( GLfloat x, GLfloat y, GLfloat z,int detail)
 {
-    if(raydium_sky_atmosphere_enable_tag)
+if(raydium_sky_atmosphere_enable_tag)
     {
-        raydium_sky_sphere_render(x,y,z,detail);
+    raydium_sky_sphere_render(x,y,z,detail);
     }
 }
 
 signed char raydium_sky_atmosphere_check(void)
 {
-    return raydium_sky_atmosphere_enable_tag;
+return raydium_sky_atmosphere_enable_tag;
 }
