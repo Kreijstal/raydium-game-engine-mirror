@@ -31,7 +31,7 @@ help:
 	@echo "	make doc	generate raydium documentation in file doc.wiki"
 	@echo "	make clean	remove compilation objects and libraries"
 
-doc: headers
+doc: $(HEADERS)
 	cd raydium/headers && ./raydoc.php > ../../doc.wiki && cd -
 
 ################################################################################
