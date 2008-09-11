@@ -11,6 +11,8 @@
 #include "headers/sprites.h"
 #endif
 
+#ifdef ODE_SUPPORT
+
 //returns the first sprite id available
 int raydium_sprite_check_available(void)
 
@@ -686,3 +688,6 @@ int raydium_sprite_get_current_frame(int id)
 {
         return raydium_sprite_current_frame[id];
 }
+
+// ODE_SUPPORT
+#endif
