@@ -1,6 +1,5 @@
 #ifndef _SPRITES_H
 #define _SPRITES_H
-#ifndef ODE_SUPPORT
 /*=
 Sprites (viewer axis aligned 2D billboards)
 2900
@@ -187,7 +186,5 @@ __rayapi int raydium_sprite_get_current_frame(int id);
 /**
 Function to get the current frame of an sprite.
 **/
+#endif
 
-// ODE_SUPPORT
-#endif
-#endif
