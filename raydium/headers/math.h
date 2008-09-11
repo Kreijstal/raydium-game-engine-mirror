@@ -3,19 +3,19 @@
 // (Linux) We had troubles with an already existing _MATH_H symbol.
 
 
-#define raydium_trigo_cos raydium_math_cos
-#define raydium_trigo_sin raydium_math_sin
-#define raydium_trigo_cos_inv raydium_math_cos_inv
-#define raydium_trigo_sin_inv raydium_math_sin_inv
+#define raydium_trigo_cos(a) raydium_math_cos(a)
+#define raydium_trigo_sin(a) raydium_math_sin(a)
+#define raydium_trigo_cos_inv(a) raydium_math_cos_inv(a)
+#define raydium_trigo_sin_inv(a) raydium_math_sin_inv(a)
 #define raydium_trigo_abs(a) raydium_math_abs(a)
 #define raydium_trigo_min(a,b) raydium_math_min(a,b)
 #define raydium_trigo_max(a,b) raydium_math_max(a,b)
 #define raydium_trigo_isfloat(a) raydium_math_isfloat(a)
 #define raydium_trigo_round(a) raydium_math_round(a)
-#define raydium_trigo_rotate raydium_math_rotate
-#define raydium_trigo_pos_to_matrix raydium_math_pos_to_matrix
-#define raydium_trigo_pos_get_modelview raydium_math_pos_get_modelview
-#define raydium_trigo_pow2_next raydium_math_pow2_next
+#define raydium_trigo_rotate(a,b,c,d,e) raydium_math_rotate(a,b,c,d,e)
+#define raydium_trigo_pos_to_matrix(a,b) raydium_math_pos_to_matrix(a,b)
+#define raydium_trigo_pos_get_modelview(a) raydium_math_pos_get_modelview(a)
+#define raydium_trigo_pow2_next(a) raydium_math_pow2_next(a)
 
 /*=
 Maths
@@ -26,6 +26,10 @@ Maths
 /**
 This section is mostly designed for internal uses, but provides some
 usefull maths functions, mostly for trigonometrical uses.
+
+Historical note: most functions here were originally named with "trigo" prefix,
+since this module was named trigo.c. Aliases are provided for compatibility
+reasons, of course. (but watch out for old bindings !)
 **/
 
 __rayapi GLfloat raydium_math_cos (GLfloat i);
