@@ -1,5 +1,6 @@
-#ifndef _MATH_H
-#define _MATH_H
+#ifndef _MATH_H_RAY
+#define _MATH_H_RAY
+// (Linux) We had troubles with an already existing _MATH_H symbol.
 
 
 #define raydium_trigo_cos raydium_math_cos
