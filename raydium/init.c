@@ -117,6 +117,24 @@ raydium_vertex_offset_triangle=0;
 
 strcpy(raydium_texture_name[0],"dummy.null");
 
+i=0;
+raydium_osd_ega[i++]=0.0f;raydium_osd_ega[i++]= 0.0f;raydium_osd_ega[i++]= 0.0f; // 0: black
+raydium_osd_ega[i++]=0.0f;raydium_osd_ega[i++]= 0.0f;raydium_osd_ega[i++]= 0.6f; // 1: blue
+raydium_osd_ega[i++]=0.0f;raydium_osd_ega[i++]= 0.6f;raydium_osd_ega[i++]= 0.0f; // 2: green
+raydium_osd_ega[i++]=0.0f;raydium_osd_ega[i++]= 0.6f;raydium_osd_ega[i++]= 0.6f; // 3: cyan
+raydium_osd_ega[i++]=0.6f;raydium_osd_ega[i++]= 0.0f;raydium_osd_ega[i++]= 0.0f; // 4: red
+raydium_osd_ega[i++]=0.6f;raydium_osd_ega[i++]= 0.0f;raydium_osd_ega[i++]= 0.6f; // 5: purple
+raydium_osd_ega[i++]=0.6f;raydium_osd_ega[i++]= 0.3f;raydium_osd_ega[i++]= 0.0f; // 6: brown
+raydium_osd_ega[i++]=0.6f;raydium_osd_ega[i++]= 0.6f;raydium_osd_ega[i++]= 0.6f; // 7: white
+raydium_osd_ega[i++]=0.3f;raydium_osd_ega[i++]= 0.3f;raydium_osd_ega[i++]= 0.3f; // 8: grey
+raydium_osd_ega[i++]=0.3f;raydium_osd_ega[i++]= 0.3f;raydium_osd_ega[i++]= 1.0f; // 9: light blue
+raydium_osd_ega[i++]=0.3f;raydium_osd_ega[i++]= 1.0f;raydium_osd_ega[i++]= 0.3f; // A: light green
+raydium_osd_ega[i++]=0.3f;raydium_osd_ega[i++]= 1.0f;raydium_osd_ega[i++]= 1.0f; // B: light cyan
+raydium_osd_ega[i++]=1.0f;raydium_osd_ega[i++]= 0.3f;raydium_osd_ega[i++]= 0.3f; // C: light red
+raydium_osd_ega[i++]=1.0f;raydium_osd_ega[i++]= 0.3f;raydium_osd_ega[i++]= 1.0f; // D: light purple
+raydium_osd_ega[i++]=1.0f;raydium_osd_ega[i++]= 1.0f;raydium_osd_ega[i++]= 0.3f; // E: light yellow
+raydium_osd_ega[i++]=1.0f;raydium_osd_ega[i++]= 1.0f;raydium_osd_ega[i++]= 1.0f;  // F: light white
+
 //raydium_texture_index=1; // no more texture loaded (0 is not a texture)
 raydium_texture_current_main=0; // sets an "invalid" current texture
 raydium_texture_current_multi=0; // sets an "invalid" current texture

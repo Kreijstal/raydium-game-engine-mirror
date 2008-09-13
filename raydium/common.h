@@ -6,23 +6,35 @@
     Released under both BSD license and Lesser GPL library license.
     See "license.txt" file.
 */
+//Win32 Build Detail
+// Build Raydium Library
+//   Define RAYDLL for Dynamic Linking
+//   Define nothing for a static library.
+// Build Raydium Application
+//   Define RAYDLL and FORCE_LIBRAYDIUM to use library and DLL
+//   Define FORCE_LIBRAYDIUM to use static library
+//   Define nothing for a full compile (application and raydium together).
 
 #define RAYDIUM_MAJOR   0
 #define RAYDIUM_MINOR   800
 
 #ifdef WIN32
 # ifdef RAYDLL
-#   ifdef MAIN_H
+#   ifndef FORCE_LIBRAYDIUM
+#       define __global __declspec(dllexport)
+#       define __rayapi __declspec(dllexport)
+#   else
 #       define __global __declspec(dllimport)
 #       define __rayapi __declspec(dllimport)
 #   endif
-#   ifdef MAIN_C
-#       define __global __declspec(dllexport)
-#       define __rayapi __declspec(dllexport)
-#   endif
 # else
-#    define __global
-#    define __rayapi
+#   ifdef FORCE_LIBRAYDIUM
+#       define __global extern
+#       define __rayapi 
+#   else
+#       define __global 
+#       define __rayapi 
+#   endif
 # endif
 #else // Not under WIN32
 # ifdef LIBRAY // (See Makefile)
@@ -643,29 +655,9 @@ __global GLfloat raydium_osd_cursor_ysize;
 __global GLfloat raydium_osd_cursor_xoffset;
 __global GLfloat raydium_osd_cursor_yoffset;
 __global GLfloat raydium_osd_color[4];
-#ifdef MAIN_C
-__global GLfloat raydium_osd_ega[]=
-         {
-         0.0f, 0.0f, 0.0f, // 0: black
-         0.0f, 0.0f, 0.6f, // 1: blue
-         0.0f, 0.6f, 0.0f, // 2: green
-         0.0f, 0.6f, 0.6f, // 3: cyan
-         0.6f, 0.0f, 0.0f, // 4: red
-         0.6f, 0.0f, 0.6f, // 5: purple
-         0.6f, 0.3f, 0.0f, // 6: brown
-         0.6f, 0.6f, 0.6f, // 7: white
-         0.3f, 0.3f, 0.3f, // 8: grey
-         0.3f, 0.3f, 1.0f, // 9: light blue
-         0.3f, 1.0f, 0.3f, // A: light green
-         0.3f, 1.0f, 1.0f, // B: light cyan
-         1.0f, 0.3f, 0.3f, // C: light red
-         1.0f, 0.3f, 1.0f, // D: light purple
-         1.0f, 1.0f, 0.3f, // E: light yellow
-         1.0f, 1.0f, 1.0f  // F: light white
-         };
-#else
+
 __global GLfloat raydium_osd_ega[48];
-#endif
+
 __global GLfloat raydium_osd_fade_color_timeleft;
 __global GLfloat raydium_osd_fade_color_increment[4];
 __global GLfloat raydium_osd_fade_color_current[4];
