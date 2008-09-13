@@ -15,9 +15,9 @@
 // proto
 void raydium_ode_init(void);
 void raydium_register_api(void);
-#ifndef WIN32
+//#ifndef WIN32
 void raydium_live_init(void);
-#endif
+//#endif
 void raydium_fog_init(void);
 void raydium_sky_init(void);
 void raydium_video_init(void);
@@ -95,9 +95,9 @@ raydium_camera_path_init_all();
 raydium_osd_fade_init();
 raydium_console_init();
 raydium_gui_init();
-#ifndef WIN32
+//#ifndef WIN32
 raydium_live_init();
-#endif
+//#endif
 raydium_video_init();
 raydium_shadow_init();
 raydium_hdr_init();
