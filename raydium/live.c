@@ -861,7 +861,8 @@ if(tex->tx != tex->hardware_tx || tex->ty != tex->hardware_ty)
                     GL_UNSIGNED_BYTE,
                     tex->data_source);
 else
-    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,tex->tx,tex->ty,
+    glTexImage2D(GL_TEXTURE_2D,0,(tex->bpp==24?GL_RGB:GL_RGBA),
+                 tex->tx,tex->ty,
                  0,(tex->bpp==24?GL_RGB:GL_RGBA),
                  GL_UNSIGNED_BYTE,tex->data_source);
 }
