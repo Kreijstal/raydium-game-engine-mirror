@@ -50,8 +50,10 @@ __rayapi  void raydium_joy_key_emul (void);
 Emulate keyboard (directional pad) with joy, if any.
 **/
 
+#ifndef __APPLE__
 #ifndef WIN32
 __rayapi  int raydium_joy_process_event (struct js_event e);
+#endif
 #endif
 __rayapi  void raydium_joy_callback (void);
 __rayapi  void raydium_joy_ff_autocenter (int perc);
