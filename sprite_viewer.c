@@ -35,8 +35,8 @@ void display(void)
     if(raydium_key_last==1000+'+') raydium_sprite_change_sprite_time_relative(spriteid,1);
     if(raydium_key_last==1000+'-') raydium_sprite_change_sprite_time_relative(spriteid,-1);
 
-    if(raydium_key[GLUT_KEY_F1])    depth+=0.033;
-    if(raydium_key[GLUT_KEY_F2])    depth+=-0.033;
+    if(raydium_key[GLUT_KEY_F1])    depth+=1.5*raydium_frame_time;
+    if(raydium_key[GLUT_KEY_F2])    depth+=-3*raydium_frame_time;
     //if the move is ommited, the bounding box will fall. Need fix????
     raydium_sprite_move_relative(spriteid,0,0,0);
     raydium_clear_frame();
