@@ -171,19 +171,20 @@ Spherical Linear Interpolation of quaternions, from ##start## to ##end##
 with alpha [0,1] as interpolation point.
 **/
 
-__rayapi float raydium_math_angle_get_from_projections(float px, float py);
+__rayapi float raydium_math_angle_from_projections(float px, float py);
 /**
-This function will return the real angle (in radians)for a pair of X
+This function will return the real angle (in radians) for a pair of X
 and Y projections of a vector.
+The returned angle will be in the range [0-2PI].
 **/
 
 __rayapi signed char raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy);
 /**
-Return the (x,y) screen coordinates for a 3D point viewed from the 
-current camera. 
+Return the (x,y) screen coordinates for a 3D point viewed from the
+current camera.
 The ##resx## and ##resy## results are in the [0..100] interval.
 This function will return ##0## if the point is behind the camera (and then,
-probably not interesting), and ##1## if the point is in the POV of the 
+probably not interesting), and ##1## if the point is in the POV of the
 camera ("in front of" is more exact).
 
 warning 1: the camera must be placed before calling this function.

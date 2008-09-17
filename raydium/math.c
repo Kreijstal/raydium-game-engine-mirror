@@ -113,7 +113,7 @@ raydium_log("trigo: raydium_math_pow2_next: ?!!");
 return -1;
 }
 
-float raydium_math_angle_get_from_projections(float px, float py)
+float raydium_math_angle_from_projections(float px, float py)
 {
 float realangle;
 //using the arccos we get the "base angle"
