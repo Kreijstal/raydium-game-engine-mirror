@@ -174,25 +174,14 @@ void raydium_osd_printf_3D(GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloa
 {
 char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
-
-GLdouble sx,sy,sz;
-GLdouble modelMatrix[16];
-GLdouble projectionMatrix[16];
-GLint   viewport[4];
+float sx,sy;
 
 va_start(argptr,format);
 vsprintf(str,format,argptr);
 va_end(argptr);
 
-raydium_camera_replace();
-glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
-glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);
-glGetIntegerv(GL_VIEWPORT, viewport);
-gluProject(x,y,z,modelMatrix,projectionMatrix,viewport,&sx,&sy,&sz);
-
-sx=sx/raydium_window_tx*100;
-sy=sy/raydium_window_ty*100;
-if(sz<=1.0) raydium_osd_printf(sx,sy,size,spacer,texture,str);
+if(raydium_math_point_unproject_3D(x,y,z,&sx,&sy))
+    raydium_osd_printf(sx,sy,size,spacer,texture,str);
 }
 
 void raydium_osd_logo(char *texture)
