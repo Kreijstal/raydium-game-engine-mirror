@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/math.h"
-#endif 
+#endif
 
 GLfloat raydium_math_cos(GLfloat i)
 {
@@ -112,6 +112,48 @@ raydium_log("trigo: raydium_math_pow2_next: ?!!");
 return -1;
 }
 
+float raydium_math_angle_get_from_projections(float px, float py)
+{
+float realangle;
+//using the arccos we get the "base angle"
+realangle = acos ( px );
+//check quadrants
+//if the Y projection is negative, the angle has to be adjusted
+if ( py < 0 )
+    realangle = ( float ) 2 * PI - realangle;
+
+return realangle;
+}
+
+void raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy)
+{
+GLdouble sx,sy,sz;
+GLdouble modelMatrix[16];
+GLdouble projectionMatrix[16];
+GLint   viewport[4];
+
+raydium_camera_replace();
+glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
+glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);
+glGetIntegerv(GL_VIEWPORT, viewport);
+gluProject(x,y,z,modelMatrix,projectionMatrix,viewport,&sx,&sy,&sz);
+
+sx=sx/raydium_window_tx*100;
+sy=sy/raydium_window_ty*100;
+
+if(sz<=1.0f)
+{
+    (*resx)=sx;
+    (*resy)=sy;
+}
+else
+{
+   (*resx)=0.0f;
+   (*resy)=0.0f;
+}
+return;
+}
+
 
 /** function which returns the determinant of a given matrix */
 double raydium_matrix_determinant(matrix4x4 matrix)
@@ -136,7 +178,7 @@ matrix4x4 raydium_matrix_inverse(matrix4x4 matrix)
 {
         matrix4x4 matrix_adj;
         double determinant;
-        
+
         determinant     =       raydium_matrix_determinant(matrix);
         matrix_adj      =       raydium_matrix_adjoint(matrix);
         return raydium_matrix_internal_inverse(matrix_adj, determinant, 4);
@@ -206,10 +248,10 @@ matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension)
     for(row = 0; row < dimension; row++)
         {
       for(col = 0; col < dimension; col++)
-          {     
+          {
                                 temp_mat_row = 0;
                                 temp_mat_col = 0;
-        
+
                                 for(orig_mat_row = 0; orig_mat_row < dimension; orig_mat_row++)
                                 {
                                         for(orig_mat_col = 0; orig_mat_col < dimension ; orig_mat_col++)
@@ -238,10 +280,10 @@ matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension)
                                 //transpose_matrix.ray[col][row] = conjugate_matrix.ray[row][col];
                                 transpose_matrix.ray[(col*dimension)+row] = conjugate_matrix.ray[(row*dimension)+col];
                         }
-                }               
+                }
         }
         return(transpose_matrix);
-  }     
+  }
 
 }
 
@@ -257,7 +299,7 @@ matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matri
   for(i=0;i<dimension;i++)
   {
     for(j=0;j<dimension;j++)
-        {       
+        {
                 //result_matrix.ray[i][j] = 0;
                 result_matrix.ray[(i*dimension)+j] = 0;
                 for(k=0;k<dimension;k++)
@@ -291,7 +333,7 @@ matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,in
 }
 
 
-// Our matrix_inverse seems broken. 
+// Our matrix_inverse seems broken.
 // This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
 int _raydium_math_MatrixInverse(const float *m,float *out) {
     float   det;
@@ -302,7 +344,7 @@ int _raydium_math_MatrixInverse(const float *m,float *out) {
     det -= m[4] * m[1] * m[10];
     det -= m[0] * m[9] * m[6];
     if(det * det < 1e-25) return 0;
-    det = 1.0 / det;    
+    det = 1.0 / det;
     out[0] =    (m[5] * m[10] - m[9] * m[6]) * det;
     out[1] =  - (m[1] * m[10] - m[9] * m[2]) * det;
     out[2] =    (m[1] * m[6] -  m[5] * m[2]) * det;
@@ -325,7 +367,7 @@ int _raydium_math_MatrixInverse(const float *m,float *out) {
 void raydium_math_quaternion_normalize(float *quat)
 {
 float magnitude;
-    
+
 magnitude = sqrt((quat[0] * quat[0]) + (quat[1] * quat[1]) + (quat[2] * quat[2]) + (quat[3] * quat[3]));
 quat[0] /= magnitude;
 quat[1] /= magnitude;
@@ -337,24 +379,24 @@ quat[3] /= magnitude;
 void raydium_math_quaternion_slerp(float *start, float *end, float alpha,float *result)
 {
 float startWeight, endWeight, difference;
-     
+
 difference = ((start[0] * end[0]) + (start[1] * end[1]) + (start[2] * end[2]) + (start[3] * end[3]));
 
-if ((1.0f - fabs(difference)) > SLERP_TO_LERP_SWITCH_THRESHOLD) 
+if ((1.0f - fabs(difference)) > SLERP_TO_LERP_SWITCH_THRESHOLD)
     {
     float theta, oneOverSinTheta;
-               
+
     theta = acos(fabs(difference));
     oneOverSinTheta = (1.0f / sin(theta));
     startWeight = (sin(theta * (1.0f - alpha)) * oneOverSinTheta);
     endWeight = (sin(theta * alpha) * oneOverSinTheta);
 
-    if (difference < 0.0f) 
+    if (difference < 0.0f)
         {
         startWeight = -startWeight;
         }
-    } 
-else 
+    }
+else
     {
     startWeight = (1.0f - alpha);
     endWeight = alpha;

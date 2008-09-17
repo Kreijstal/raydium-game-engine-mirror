@@ -105,7 +105,7 @@ Returns next power of two of ##value##. Ugly.
 
 //Matrix functions
 /**
-Here there are a few functions also designed for internal uses that aims 
+Here there are a few functions also designed for internal uses that aims
 only at matrices. Really the main objective of these functions is give support
 for the inverse function.
 The data type matrix4x4 is really an 16 double array.
@@ -125,7 +125,7 @@ Returns the ##adjoint matrix## of the given matrix.
 __rayapi matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2);
 /**
 Returns the resulting matrix of the multiplication of 2 matrices.
-Remeber that the multiplication of matrices doesn't have the conmutative 
+Remeber that the multiplication of matrices doesn't have the conmutative
 property, so is not equal ##matrix1 X matrix2## than ##matrix2 x matrix1##.
 **/
 
@@ -154,7 +154,7 @@ internal, don't use.
 
 __rayapi int _raydium_trigo_MatrixInverse(const float *m,float *out);
 /**
-Our matrix_inverse seems broken. 
+Our matrix_inverse seems broken.
 This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
 This code is not native
 **/
@@ -167,8 +167,19 @@ in ODE.
 
 __rayapi void raydium_trigo_quaternion_slerp(float *start, float *end, float alpha,float *result);
 /**
-Spherical Linear Interpolation of quaternions, from ##start## to ##end## 
+Spherical Linear Interpolation of quaternions, from ##start## to ##end##
 with alpha [0,1] as interpolation point.
+**/
+
+__rayapi float raydium_math_angle_get_from_projections(float px, float py);
+/**
+This function will return the real angle (in radians)for a pair of X
+and Y projections of a vector.
+**/
+
+__rayapi void raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy);
+/**
+Return the x,y screen coordinates for a 3D point.
 **/
 
 #endif
