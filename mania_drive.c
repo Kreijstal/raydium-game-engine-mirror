@@ -23,7 +23,13 @@ char *version="ManiaDrive 1.3custom";
 #define HISTORY_STATE_FILE      raydium_file_home_path("mania_drive.state")
 
 #define MUSIC_MENU      "mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
+#ifdef __APPLE__
+// Offer some common display resolutions for Apple Macintosh.
+// 4:3 VGA, SVGA, XGA, UGA / 5:4 SXGA / 16:10 WXGA, WUXGA
+#define RESOLUTION_LIST "640x480\n800x600\n1024x768\n1280x1024\n1440x900\n1600x1200\n1920x1200"
+#else
 #define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768\n1152x864"
+#endif
 
 #define MAX_PROPS       100
 
@@ -2677,9 +2683,17 @@ setlocale (LC_MESSAGES, "");
 bindtextdomain ("mania_drive", "locale");
 textdomain ("mania_drive");
 
+#ifdef __APPLE__
+raydium_parser_db_get("ManiaDrive-Windowed", str, "1");
+#else
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
+#endif
 windowed_mode=atoi(str);
+#ifdef __APPLE__
+raydium_parser_db_get("ManiaDrive-WindowedRes", windowed_res, "640x480");
+#else
 raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"800x600");
+#endif
 mode=(windowed_mode?RAYDIUM_RENDERING_WINDOW:RAYDIUM_RENDERING_FULLSCREEN);
 sscanf(windowed_res,"%ix%i",&full_sx_i,&full_sy_i);
 
