@@ -836,8 +836,13 @@ void raydium_joy_callback(void)
 
             // Tell the app that everything is centered.
             raydium_joy_x = 0.0;
+            raydium_joy_axis[0] = 0.0;
+
             raydium_joy_y = 0.0;
+            raydium_joy_axis[1] = 0.0;
+
             raydium_joy_z = 0.0;
+            raydium_joy_axis[2] = 0.0;
 
             return;
         }
@@ -883,9 +888,13 @@ void raydium_joy_callback(void)
             value = HIDGetElementValue(device, element);
             if (value > 1) value = 1;
             raydium_joy_button[i] = value;
-            #ifdef joy_debug
-            if (value == 1) raydium_log("joy: button %i %s", i + 1, "pressed");
-            #endif
+            if (value == 1)
+            {
+                raydium_joy_click = i + 1;
+                #ifdef joy_debug
+                raydium_log("joy: button %i %s", i + 1, "pressed");
+                #endif
+            }
             element = element->pNext;
             ++i;
         }
@@ -1155,6 +1164,8 @@ int autocenter=5;         /* default value. between 0 and 100 */
     {
         // There are no joysticks.
         raydium_log("joy: FAILED (no device found)");
+        device = NULL;
+        joystick = NULL;
         raydium_joy = 0;
         return;
     }
@@ -1212,6 +1223,16 @@ int autocenter=5;         /* default value. between 0 and 100 */
     {
         detectedDevices++;
         device = device->pNext;
+    }
+
+    if (detectedDevices < 1)
+    {
+        // There are no joysticks.
+        raydium_log("joy: FAILED (no device found)");
+        device = NULL;
+        joystick = NULL;
+        raydium_joy = 0;
+        return;
     }
 
     raydium_log("joy: OK (found %i)", detectedDevices);
