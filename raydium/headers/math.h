@@ -185,6 +185,9 @@ The ##resx## and ##resy## results are in the [0..100] interval.
 This function will return ##0## if the point is behind the camera (and then,
 probably not interesting), and ##1## if the point is in the POV of the 
 camera ("in front of" is more exact).
+
+warning 1: the camera must be placed before calling this function.
+warning 2: this function will replace the camera by itself.
 **/
 
 #endif
