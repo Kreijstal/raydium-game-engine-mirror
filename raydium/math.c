@@ -126,7 +126,7 @@ if ( py < 0 )
 return realangle;
 }
 
-void raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy)
+signed char raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy)
 {
 GLdouble sx,sy,sz;
 GLdouble modelMatrix[16];
@@ -141,18 +141,13 @@ gluProject(x,y,z,modelMatrix,projectionMatrix,viewport,&sx,&sy,&sz);
 
 sx=sx/raydium_window_tx*100;
 sy=sy/raydium_window_ty*100;
+(*resx)=sx;
+(*resy)=sy;
 
 if(sz<=1.0f)
-{
-    (*resx)=sx;
-    (*resy)=sy;
-}
-else
-{
-   (*resx)=0.0f;
-   (*resy)=0.0f;
-}
-return;
+    return 1; // above the camera
+
+return 0; // behind the camera
 }
 
 

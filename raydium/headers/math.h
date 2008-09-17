@@ -177,9 +177,14 @@ This function will return the real angle (in radians)for a pair of X
 and Y projections of a vector.
 **/
 
-__rayapi void raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy);
+__rayapi signed char raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy);
 /**
-Return the x,y screen coordinates for a 3D point.
+Return the (x,y) screen coordinates for a 3D point viewed from the 
+current camera. 
+The ##resx## and ##resy## results are in the [0..100] interval.
+This function will return ##0## if the point is behind the camera (and then,
+probably not interesting), and ##1## if the point is in the POV of the 
+camera ("in front of" is more exact).
 **/
 
 #endif
