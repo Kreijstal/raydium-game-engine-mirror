@@ -9,6 +9,7 @@
 #include "index.h"
 #else
 #include "headers/math.h"
+#include "headers/shadow.h"
 #endif
 
 GLfloat raydium_math_cos(GLfloat i)
