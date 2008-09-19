@@ -13,6 +13,7 @@ Here is a list of supported options:
 
 Graphics:
 ##window## Define window rendering.
+##window-fixed## Define window rendering.
 ##fullscreen## Define Fullscreen rendering.
 
 ##xinerama-fullscreen## Select Xinerama FullScreen render windows.
