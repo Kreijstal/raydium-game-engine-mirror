@@ -109,7 +109,7 @@ while ( PeekMessage( &msg, currWnd, 0, 0, PM_REMOVE ) )
 }
 
 void pwInit ( int x, int y, int w, int h, int multisample,
-              char *title, int border, int num_samples )
+              char *title, int border, int num_samples, int window_style )
 {
   WNDCLASS wc;
   signed char fullscn;

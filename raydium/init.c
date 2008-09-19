@@ -359,9 +359,10 @@ int raydium_init_load(char *filename)
             if(strcmp(var,"windowtype")==0)
             {
                 raydium_parser_trim(val_s);
+                tmp_windowtype=RAYDIUM_RENDERING_WINDOW;
                 if(strcmp(val_s,"fullscreen")==0) tmp_windowtype=RAYDIUM_RENDERING_FULLSCREEN;
-                    else tmp_windowtype=RAYDIUM_RENDERING_WINDOW;
-                raydium_log("Window type: %s",(tmp_windowtype)?"RAYDIUM_RENDERING_FULLSCREEN":"RAYDIUM_RENDERING_WINDOW");
+                if(strcmp(val_s,"fixed")==0) tmp_windowtype=RAYDIUM_RENDERING_WINDOW_FIXED;
+                raydium_log("Window type: %i",tmp_windowtype);
                 flag_windowtype=1;
             }
             if(strcmp(var,"title")==0)

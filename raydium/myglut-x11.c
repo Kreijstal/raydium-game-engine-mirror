@@ -95,7 +95,7 @@ PixelFormat preferred_pixel_formats [] =
 } ;
 
 void pwInit ( int x, int y, int w, int h, int multisample,
-              char *title, int border, int num_samples );
+              char *title, int border, int num_samples, int window_style );
 int raydium_init_cli_option(char *option, char *value);
 
 
@@ -242,7 +242,7 @@ void chooseVisual (PixelFormat *pf)
 
 
 void pwInit ( int x, int y, int w, int h, int multisample,
-              char *title, int border, int num_samples )
+              char *title, int border, int num_samples, int window_style )
 {
   char *displayName = NULL;
   int i;
@@ -442,7 +442,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   sizeHints.x      = x ; sizeHints.y      = y ;
   sizeHints.width  = w ; sizeHints.height = h ;
 
-  if(FullscreenFlag)
+  if(FullscreenFlag || window_style==RAYDIUM_RENDERING_WINDOW_FIXED)
     {
     // make this window unresizable
     sizeHints.flags |= PMinSize;

@@ -44,10 +44,11 @@ switch(rendering)
     case RAYDIUM_RENDERING_NONE:
         return;
     case RAYDIUM_RENDERING_WINDOW:
-        pwInit(-1,-1,tx,ty,0,name,1,0);
+    case RAYDIUM_RENDERING_WINDOW_FIXED:
+        pwInit(-1,-1,tx,ty,0,name,1,0,rendering);
         break;
     case RAYDIUM_RENDERING_FULLSCREEN:
-        pwInit(0,0,-1,-1,0,name,0,0);
+        pwInit(0,0,-1,-1,0,name,0,0,rendering);
         break;    
     }
 }

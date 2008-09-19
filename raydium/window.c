@@ -66,6 +66,7 @@ switch(rendering)
         break;    
  
     case RAYDIUM_RENDERING_WINDOW:
+    case RAYDIUM_RENDERING_WINDOW_FIXED: // not supported yet with GLUT
         glutInitWindowSize(tx,ty);
         glutCreateWindow(name);
         break;

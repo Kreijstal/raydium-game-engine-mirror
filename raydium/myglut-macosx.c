@@ -41,7 +41,7 @@ static signed char special = 0;
 static WindowPtr window = NULL;
 static AGLContext currContext = NULL;
 
-void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples );
+void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples, int window_style );
 int raydium_init_cli_option(char *option, char *value);
 char *raydium_version(void);
 
@@ -712,7 +712,7 @@ void glutInit(int *argc, char **argv)
     _glutMouseVisible=1;
 }
 
-void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples)
+void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples, int window_style)
 {
     if (initialized)
     {

@@ -20,12 +20,16 @@ __rayapi void raydium_window_create (GLuint tx, GLuint ty, signed char rendering
 You must call this function once in your program, with following arguments:
 
 1. ##tx##, ##ty##: window size, in pixel
-2. ##rendering##: window mode: ##RAYDIUM_RENDERING_*## (NONE, WINDOW, FULLSCREEN)
+2. ##rendering##: window mode: ##RAYDIUM_RENDERING_*## :
+##NONE##, ##WINDOW## (resizable), ##WINDOW_FIXED## (unresizable) and ##FULLSCREEN##.
 3. ##name##: window's name
 
-Raydium is using GLUT for window management, and GLUT fullscreen is not 
-the same between various implementations, and can fail, 
-so use a standard window size (640x480, 800x600, ...) for fullscreen mode.
+Raydium is using MyGLUT for window management, and MyGLUT fullscreen is not 
+the same between all implementations. For instance, the Linux MyGLUT does
+not resize the X screen, therefore doesn't care about ##tx## and ##ty##.
+But the win32 implementation did resize screen.
+
+This design choice allows to respect usual behaviors of operating systems.
 
 Note that user can force fullscreen using ##--fullscreen## on the command line.
 **/

@@ -187,6 +187,7 @@
 #define RAYDIUM_RENDERING_WINDOW                0
 #define RAYDIUM_RENDERING_FULLSCREEN            1
 #define RAYDIUM_RENDERING_NONE                  2
+#define RAYDIUM_RENDERING_WINDOW_FIXED          10
 
 #define RAYDIUM_PROJECTION_ORTHO                0
 #define RAYDIUM_PROJECTION_PERSPECTIVE          1
