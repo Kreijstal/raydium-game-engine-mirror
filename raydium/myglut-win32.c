@@ -166,6 +166,9 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   else
     style = WS_POPUP ;
 
+  if(window_style==RAYDIUM_RENDERING_WINDOW_FIXED)
+    style = (WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME)) | WS_CLIPCHILDREN | WS_CLIPSIBLINGS ;
+
   AdjustWindowRect( &rect, style, 0 ) ;
 
   /* Create the window */
