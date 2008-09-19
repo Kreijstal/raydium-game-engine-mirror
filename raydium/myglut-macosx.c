@@ -47,7 +47,7 @@ char *raydium_version(void);
 
 static void handleEvents(void);
 static void initialize(void);
-static bool makeWindow(int x, int y, int w, int h, char* title);
+static bool makeWindow(int x, int y, int w, int h, char* title, bool resizable);
 static void createContext(int multiSample, int numSamples, bool fullScreen);
 static void makeMenu(void);
 static void handleMenuEvent(long menuResult);
@@ -97,7 +97,7 @@ static void CtoPcpy(Str255 pstr, char* cstr)
     pstr[0] = i - 1;
 }
 
-static bool makeWindow(int x, int y, int w, int h, char* title)
+static bool makeWindow(int x, int y, int w, int h, char* title, bool resizable)
 {
     Rect wRect;
     Str255 pTitle;
@@ -105,7 +105,27 @@ static bool makeWindow(int x, int y, int w, int h, char* title)
     CtoPcpy(pTitle, title);
     SetRect(&wRect, x, y, w+x, h+y);
 
-    window = NewCWindow(nil, &wRect, pTitle, true, zoomNoGrow, (WindowPtr) - 1, true, 0);
+    if (fullScreen)
+    {
+        // RAYDIUM_RENDERING_FULLSCREEN
+        // Create a plain box, no shadow or close box for the fullscreen mode.
+        window = NewCWindow(nil, &wRect, pTitle, true, plainDBox, (WindowPtr) - 1, 0, 0);
+    }
+    else
+    {
+        if (resizable)
+        {
+            // RAYDIUM_RENDERING_WINDOW
+            // Create a standard document window, which supports all of the window manipulation elements (close box, zoom box, and size box).
+            window = NewCWindow(nil, &wRect, pTitle, true, zoomDocProc, (WindowPtr) - 1, true, 0);
+        }
+        else
+        {
+            // RAYDIUM_RENDERING_WINDOW_FIXED
+            // Create a movable window with close box, but no size box or zoom box.
+            window = NewCWindow(nil, &wRect, pTitle, true, noGrowDocProc, (WindowPtr) - 1, true, 0);
+        }
+    }
 
     if (window == NULL)
     {
@@ -120,15 +140,23 @@ static bool makeWindow(int x, int y, int w, int h, char* title)
 
 static void createContext(int multiSample, int numSamples, bool fullScreen)
 {
+    GDHandle screen;
     AGLPixelFormat aglPixFmt;
 
     // Choose pixel format.
-    GLint attrib[10];
+    GLint attrib[12];
     GLint i = 0;
+    attrib[i++] = AGL_WINDOW;
     attrib[i++] = AGL_RGBA;
+    attrib[i++] = AGL_NO_RECOVERY;
+    attrib[i++] = AGL_SINGLE_RENDERER;
     attrib[i++] = AGL_DOUBLEBUFFER;
 
-    if (fullScreen) attrib[i++] = AGL_FULLSCREEN;
+    if (fullScreen)
+    {
+        screen = GetGWorldDevice(GetWindowPort(window));
+        attrib[0] = AGL_FULLSCREEN;
+    }
 
     attrib[i++] = AGL_DEPTH_SIZE;
     attrib[i++] = 32;
@@ -142,7 +170,15 @@ static void createContext(int multiSample, int numSamples, bool fullScreen)
         attrib[i++] = AGL_SAMPLES_ARB;
         attrib[i++] = numSamples;
         attrib[i++] = AGL_NONE;
-        aglPixFmt = aglChoosePixelFormat(NULL, 0, attrib);
+
+        if (fullScreen)
+        {
+            aglPixFmt = aglChoosePixelFormat(&screen, 1, attrib);
+        }
+        else
+        {
+            aglPixFmt = aglChoosePixelFormat(NULL, 0, attrib);
+        }
 
         if (aglPixFmt == NULL)
         {
@@ -155,7 +191,14 @@ static void createContext(int multiSample, int numSamples, bool fullScreen)
 
     if (!multiSample)
     {
-        aglPixFmt = aglChoosePixelFormat(NULL, 0, attrib);
+        if (fullScreen)
+        {
+            aglPixFmt = aglChoosePixelFormat(&screen, 1, attrib);
+        }
+        else
+        {
+            aglPixFmt = aglChoosePixelFormat(NULL, 0, attrib);
+        }
     }
 
     if (aglPixFmt == NULL)
@@ -386,6 +429,28 @@ static void handleDrag(WindowPtr wd, Point mouseloc)
     SetPort(origPort);
 }
 
+static void handleResize(WindowPtr wd)
+{
+    GrafPtr origPort;
+    Rect rectPort;
+
+    GetPort(&origPort);
+    SETPORT(window);
+
+    aglSetCurrentContext(currContext);
+    aglUpdateContext(currContext);
+
+    GetWindowPortBounds(wd, &rectPort);
+
+    size[0] = rectPort.right - rectPort.left;
+    size[1] = rectPort.bottom - rectPort.top;
+
+    _glutWindowSize[0] = size[0];
+    _glutWindowSize[1] = size[1];
+
+    SetPort(origPort);
+}
+
 static void handleGoAwayBox(WindowPtr wd, Point mouseloc)
 {
     GrafPtr origPort;
@@ -511,6 +576,18 @@ static void handleEvents()
                 case inGoAway:
                 {
                     handleGoAwayBox(wd, event.where);
+                    return;
+                }
+                case inZoomOut:
+                {
+                    ZoomWindow(wd, inZoomOut, true);
+                    handleResize(wd);
+                    return;
+                }
+                case inZoomIn:
+                {
+                    ZoomWindow(wd, inZoomIn, false);
+                    handleResize(wd);
                     return;
                 }
                 case inContent:
@@ -644,9 +721,16 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
     }
 
     fullScreen = ((w < 0) || (h < 0)) ? true : false;
+    bool resizable = true;
     initialize();
     initialized = true;
     window = NULL;
+
+    if (!makeWindow(x, y, w, h, title, resizable))
+    {
+        exitFunc();
+        exit(4);
+    }
 
     // Initialize OpenGL.
     createContext(multisample, num_samples, fullScreen);
@@ -654,6 +738,8 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
     if (fullScreen)
     {
         sleepTime = 0;
+
+        raydium_log("Entering %ix%i:%i fullscreen mode", horScrSze, verScrSze, 32);
 
         aglSetCurrentContext(currContext);
         aglSetFullScreen(currContext, 0, 0, 0, 0);
@@ -666,12 +752,6 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
     }
     else
     {
-        if (!makeWindow(x, y, w, h, title))
-        {
-            exitFunc();
-            exit(4);
-        }
-
         // Attach the context to the window.
         aglSetDrawable(currContext, GetWindowPort(GRAFPTR window));
         aglSetCurrentContext(currContext);
@@ -684,9 +764,10 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
         origin[1] = y + 50;
         size[0] = w;
         size[1] = h;
+
+        MoveWindow(GRAFPTR window, origin[0], origin[1], false);
     }
 
-    MoveWindow(GRAFPTR window, origin[0], origin[1], false);
     aglUpdateContext(currContext);
 
     _glutWindowSize[0] = size[0];
@@ -729,6 +810,12 @@ void glutWarpPointer(int x, int y)
 {
     GrafPtr origPort;
     CGPoint pos;
+
+    if (fullScreen)
+    {
+        x = x - 3;
+        y = y - 3;
+    }
 
     pos.x = origin[0] + x;
     pos.y = origin[1] + y;
