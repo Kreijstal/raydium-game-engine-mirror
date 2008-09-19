@@ -41,7 +41,7 @@ static signed char special = 0;
 static WindowPtr window = NULL;
 static AGLContext currContext = NULL;
 
-void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples, int window_style );
+void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples, int window_style);
 int raydium_init_cli_option(char *option, char *value);
 char *raydium_version(void);
 
@@ -721,7 +721,7 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
     }
 
     fullScreen = ((w < 0) || (h < 0)) ? true : false;
-    bool resizable = true;
+    bool resizable = (window_style == RAYDIUM_RENDERING_WINDOW);
     initialize();
     initialized = true;
     window = NULL;
