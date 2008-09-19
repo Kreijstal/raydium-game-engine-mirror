@@ -12,53 +12,53 @@ interface of Raydium.
 Here is a list of supported options:
 
 Graphics:
-##window## Define window rendering.
-##window-fixed## Define window rendering.
-##fullscreen## Define Fullscreen rendering.
+##--window## Define window rendering.
+##--window-fixed## Define window rendering.
+##--fullscreen## Define Fullscreen rendering.
 
-##xinerama-fullscreen## Select Xinerama FullScreen render windows.
-##xinerama-screen## Select Screen for render windows. 
+##--xinerama-fullscreen## Select Xinerama FullScreen render windows.
+##--xinerama-screen## Select Screen for render windows. 
 
-##filter## Define texture filter type (##none##,##bilinear##,##trilinear##,##aniso##).
-##max-aniso## Define Anisotropic filter level to max value according to hardware capacity.
-##compress## Enable texture compression.
+##--filter## Define texture filter type (##none##,##bilinear##,##trilinear##,##aniso##).
+##--max-aniso## Define Anisotropic filter level to max value according to hardware capacity.
+##--compress## Enable texture compression.
 
 Joystick:
-##joydev## Define Jostick number used by raydium.
-##evdev## Define Force FeedBack peripherial (linux only).
+##--joydev## Define Jostick number used by raydium.
+##--evdev## Define Force FeedBack peripherial (linux only).
 
 Video / WebCam:
-##video-device## Define Video device (WebCam ...) used by live Api.
-##video-size## Define default video Size 640x480, 320x240 ...
+##--video-device## Define Video device (WebCam ...) used by live Api.
+##--video-size## Define default video Size 640x480, 320x240 ...
 
 Network:
-##name## Set player name for network application.
-##ode-rate## Set physics sample rate for networked application.
+##--name## Set player name for network application.
+##--ode-rate## Set physics sample rate for networked application.
 
 Console:
-##consoletexture## Console texture background.
-##consolefont## Console font.
+##--consoletexture## Console texture background.
+##--consolefont## Console font.
 
 Path and files:
-##home## Setting raydium global home directory.
-##path## Define list of media path.
-##write-path## Define destination directory for media file.
-##files## List all opened files.
-##logfile## Define logfile name.
-##history## Console History file name.
+##--home## Setting raydium global home directory.
+##--path## Define list of media path.
+##--write-path## Define destination directory for media file.
+##--files## List all opened files.
+##--logfile## Define logfile name.
+##--history## Console History file name.
 
 Initialisation Scripts:
-##autoexec## Php script executed just after engine initialization.
-##autoexec2## php script executed when raydium_callback is called.
+##--autoexec## Php script executed just after engine initialization.
+##--autoexec2## php script executed just before first frame rendering.
 
 Repository:
-##repository-disable## Disable getting media files form repository.
-##repository-refresh## Refresh files form repository even if local file exist.
-##repository-force## Force Repository use.
-##rayphp## Path of rayphp php scripts.
+##--repository-disable## Disable getting media files form repository.
+##--repository-refresh## Refresh files form repository even if local file exist (but older)
+##--repository-force## Force Repository use.
+##--rayphp## Path of rayphp php scripts.
 
 Misc:
-##regs## Dump registers.
+##--regs## Dump registers.
 **/
 
 __rayapi int raydium_init_cli_option(char *option, char *value);
