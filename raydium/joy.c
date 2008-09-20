@@ -1129,6 +1129,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
     CFMutableDictionaryRef hidMatchDictionary = NULL;
     recDevice* lastDevice;
     io_object_t ioHIDDeviceObject = 0;
+    int requestedDevice = 0;
 
     if (raydium_joy || gpDeviceList)
     {
@@ -1239,7 +1240,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
     // Print information about the devices.
     device = gpDeviceList;
-    int detectedDevice = 1;
+    int detectedDevice = 0;
 
     while(device)
     {
@@ -1254,8 +1255,25 @@ int autocenter=5;         /* default value. between 0 and 100 */
         device = device->pNext;
     }
 
-    // Use the first device in list.
-    device = gpDeviceList;
+    if (detectedDevices > 1)
+    {
+        // Let the user choose the device.
+        requestedDevice = atoi(name);
+        device = gpDeviceList;
+        detectedDevice = 0;
+
+        while(device)
+        {
+            if (detectedDevice == requestedDevice) break;
+            detectedDevice++;
+            device = device->pNext;
+        }
+    }
+    else
+    {
+        // Use the first device in list.
+        device = gpDeviceList;
+    }
 
     // Create and initialize the joystick.
     joystick = (IOKitJoystick*) malloc((sizeof *joystick));
@@ -1314,7 +1332,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
     raydium_joy_n_axes = device->axes;
     raydium_joy_n_buttons = device->buttons;
 
-    raydium_log("joy: using device #1 (%i elements)", device->elements);
+    raydium_log("joy: using device #%i (%i elements)", requestedDevice, device->elements);
 
     // Enable joystick/joypad support.
     raydium_joy = 1;
