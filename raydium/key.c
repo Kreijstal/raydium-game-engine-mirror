@@ -27,10 +27,15 @@ int i;
 key%=65536;
 
 // key below esc :
-// 178 (ex: fr), 176 (ex: us), 186 (ex: spa)
-if(key==178 || key==176 || key==186) raydium_console_event();
+// 178 (ex: fr), 176 (ex: us), 186 (ex: spa), 220 (ex: de)
+if(key==178 || key==176 || key==186 || key==220) raydium_console_event();
 #ifndef WIN32
 if(key==126) raydium_capture_frame_auto();
+#ifdef __APPLE__
+// Apple aluminum keyboard support for english and german layouts.
+if(key==164 || key==177) raydium_console_event();
+if(key==96) raydium_capture_frame_auto();
+#endif
 #else
 if(key==222) raydium_capture_frame_auto();
 #endif
