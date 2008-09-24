@@ -44,6 +44,22 @@ Internal use.
 Calculates and draw the sphere. Also rotate it according the angles or orbit.
 **/
 
+__rayapi void raydium_sky_enable(void);
+/**
+Allows to render the sky at background.
+**/
+
+
+__rayapi void raydium_sky_disable(void);
+/**
+Disable the render of sky at background.
+**/
+
+__rayapi int raydium_sky_check(void);
+/**
+Returns 1 if the sky is going to be drawn at background or 0 if not.
+**/
+
 //Atmosphere
 /**
 Atmosphere are series of effects that intend to make the sky and the atmosphere

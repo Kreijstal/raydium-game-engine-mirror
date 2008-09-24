@@ -185,6 +185,7 @@ raydium_file_log_fopen_index=0;
 raydium_frame_time=0;
 raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 raydium_sky_prefix_defined=0;
+raydium_sky_enabled=1;
 
 raydium_ode_timestep = (0.006f);
 raydium_ode_physics_freq = 400;
@@ -455,7 +456,10 @@ int raydium_init_load(char *filename)
                 raydium_parser_trim(val_s);
                 tmp_sky=((strcmp(val_s,"box")==0))?1:0;
                 tmp_sky=((strcmp(val_s,"none")==0))?-1:tmp_sky;
-                raydium_log("Sky type: %s. Value %d",(tmp_sky?"box":"dynamic"),tmp_sky);
+                if(tmp_sky>=0)
+                	raydium_log("Sky type: %s. Value %d",(tmp_sky?"box":"dynamic"),tmp_sky);
+                else
+                	raydium_log("Sky type: none. Value %d",tmp_sky);
                 flag_sky=1;
             }
         }
@@ -503,16 +507,18 @@ int raydium_init_load(char *filename)
                 raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);
         }
         //sky type
-        if(flag_sky)
-        {
-            if(tmp_sky!=-1)
-            {
+        if(flag_sky && tmp_sky!=-1)
+        {            
                 if(tmp_sky)
                     raydium_sky_box_cache();
                 else
-                    raydium_sky_atmosphere_enable();
-            }
+                    raydium_sky_atmosphere_enable();           
         }
+        else
+        {
+        	raydium_sky_disable();
+        	raydium_log("Sky disabled");
+		}
         //This must be placed after paths processing: Textures involved.
 
         if(flag_paths)

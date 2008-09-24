@@ -368,6 +368,7 @@ __global char raydium_sky_texture_skybox_right[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_skybox_bottom[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_skybox_top[RAYDIUM_MAX_NAME_LEN];
 __global int raydium_sky_prefix_defined;
+__global int raydium_sky_enabled;
 
 
 __global GLsizei raydium_window_tx;

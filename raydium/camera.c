@@ -109,6 +109,7 @@ if(raydium_frame_first_camera_pass)
         raydium_sky_atmosphere_render(x,y,z,RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL);
         }
     else
+    if(raydium_sky_check())
         {
         raydium_sky_box_render(x,y,z);
         }

@@ -36,6 +36,21 @@ raydium_sky_box_name(NULL);
 raydium_log("Sky: OK");
 }
 
+void raydium_sky_enable(void)
+{
+	raydium_sky_enabled=0;
+}
+
+void raydium_sky_disable(void)
+{
+	raydium_sky_enabled=1;
+}
+
+int raydium_sky_check(void)
+{
+	return raydium_sky_enabled;
+}
+
 void raydium_sky_box_cache(void)
 {
 raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
