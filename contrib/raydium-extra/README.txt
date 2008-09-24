@@ -6,7 +6,7 @@ Please note that these files are mostly unmaintained and does NOT represent
 a good/correct/clean way to use Raydium. For this, use "official" demos.
 
 To compile and run an "extra application", you can copy the source file(s)
-with other standard Raydium applications, and use your regular method.
+with other standard Raydium applications, and use your usual compilation method.
 
 Another (Linux) option is to stay in the standard Raydium applications 
 directory, and execute odyncomp.sh as follows:
@@ -16,4 +16,4 @@ You may find a README.txt file in somes directories with notes about
 compilation,  usage or particular dependencies. If not, you can have a look 
 at source file headers.
 
-There's no particular "support" for these files, there're here as-is.
+There's no particular "support" for these files, it's here as-is.

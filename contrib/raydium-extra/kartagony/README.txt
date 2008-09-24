@@ -1,7 +1,8 @@
 Kartagony is a small unreleased, unfinished, multiplayer game, where players 
-drivers small karts and use bonus to kill each others (Team Deathmatch).
+drives small karts and use items to kill each others (in Team Deathmatch mode).
 
-The "main" file is kartagony.c (and will include all others).
+The "main" file is kartagony.c: it will include all others, so you just have
+to compile this one.
 
 The game *should* (not tested since a long time) work with the regular
 generic Raydium server (tests.c).
