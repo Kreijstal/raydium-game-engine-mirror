@@ -38,12 +38,12 @@ raydium_log("Sky: OK");
 
 void raydium_sky_enable(void)
 {
-raydium_sky_enabled=0;
+raydium_sky_enabled=1;
 }
 
 void raydium_sky_disable(void)
 {
-raydium_sky_enabled=1;
+raydium_sky_enabled=0;
 }
 
 int raydium_sky_check(void)
