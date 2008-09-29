@@ -278,6 +278,7 @@ done
 
 # empty log
 rm configure.log 2>> /dev/null
+echo "- See configure.log if needed."
 
 # Test C compiler
 file='int main(void) { return 0; }'
@@ -328,12 +329,16 @@ char *r;
 glutInit(&argc,argv);
 myglutCreateWindow(320,240,RAYDIUM_RENDERING_WINDOW,"GL test");
 
+#ifdef USE_GLEW
+glewInit();
+#else
 r=(char *)glGetString(GL_RENDERER);
 if(!strcmp(r,"Mesa GLX Indirect"))
     {
     fprintf(stderr,"WARNING ! Indirect rendering detected !");
     fprintf(stdout,"WARNING ! Indirect rendering detected !");
     }
+#endif
 return 0; }
 '
     test_build "GL/GLU hardware support" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
@@ -343,12 +348,8 @@ else
 fi
 
 # GLEW ("The OpenGL Extension Wrangler Library")
-file='
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-int main(void) { glewInit(); return 0; }'
-test_build "GLEW" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
+# Using previous "file" (GL/GLU test)
+test_build "GLEW" "$file" "-DUSE_GLEW -L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
 exit_if_error "$?" "You must install libglew devel package"
 
 # Test C++ compiler
