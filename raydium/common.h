@@ -184,6 +184,7 @@
 #define RAYDIUM_TEXTURE_BLEND_CUTOUT            2
 #define RAYDIUM_TEXTURE_PHANTOM                 3
 
+// Warning, the Linux configure script duplicates these lines !
 #define RAYDIUM_RENDERING_WINDOW                0
 #define RAYDIUM_RENDERING_FULLSCREEN            1
 #define RAYDIUM_RENDERING_NONE                  2
