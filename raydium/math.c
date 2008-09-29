@@ -126,6 +126,7 @@ if ( py < 0 )
 return realangle;
 }
 
+#ifndef RAYDIUM_NETWORK_ONLY
 signed char raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy)
 {
 GLdouble sx,sy,sz;
@@ -149,7 +150,7 @@ if(sz<=1.0f)
 
 return 0; // behind the camera
 }
-
+#endif
 
 /** function which returns the determinant of a given matrix */
 double raydium_matrix_determinant(matrix4x4 matrix)

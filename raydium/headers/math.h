@@ -178,6 +178,7 @@ and Y projections of a vector.
 The returned angle will be in the range [0-2PI].
 **/
 
+#ifndef RAYDIUM_NETWORK_ONLY
 __rayapi signed char raydium_math_point_unproject_3D(GLfloat x, GLfloat y, GLfloat z, float* resx, float* resy);
 /**
 Return the (x,y) screen coordinates for a 3D point viewed from the
@@ -190,5 +191,6 @@ camera ("in front of" is more exact).
 warning 1: the camera must be placed before calling this function.
 warning 2: this function will replace the camera by itself.
 **/
+#endif
 
 #endif
