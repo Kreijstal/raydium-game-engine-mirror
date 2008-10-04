@@ -75,3 +75,7 @@
 
 // reverse values from axis ?
 #define RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
+
+//set until ODE supporting 100% cylinders
+#define DEBUG_ODE_CYLINDERS
+

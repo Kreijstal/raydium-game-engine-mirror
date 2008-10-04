@@ -773,6 +773,29 @@ automatically apply to ##ty## and ##tz##.
 Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning
 "twice the detected size".
 **/
+__rayapi int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh);
+/**
+This function will add an new "capsule"(capped cylinder) element to an 
+object (##group##).
+Arguments are the same as ##raydium_ode_object_sphere_add## (see above) but
+##tx## is used as radius and ##ty## is used for the lenght. 
+Currently EXPERIMENTAL, so don't use ##RAYDIUM_ODE_AUTODETECT##.
+Give this value only for ##tx##, this will automatically apply to ##ty##
+and ##tz##. Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, 
+meaning "twice the detected size".
+**/
+__rayapi int raydium_ode_object_cylinder_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh);
+/**
+This function will add an new "cylinder" element to an object (##group##).
+Arguments are the same as ##raydium_ode_object_sphere_add## (see above) but
+##tx## is used as radius and ##ty## is used for the lenght. 
+Currently EXPERIMENTAL, so don't use ##RAYDIUM_ODE_AUTODETECT##.
+Give this value only for ##tx##, this will automatically apply to ##ty##
+and ##tz##. Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, 
+meaning "twice the detected size".
+**/
+
+//__rayapi int raydium_ode_object_mesh_add(char *name, int group, dReal mass, char *collimesh, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh);
 
 __rayapi signed char raydium_ode_element_ray_attach(int element, dReal length, dReal dirx, dReal diry, dReal dirz);
 /**
