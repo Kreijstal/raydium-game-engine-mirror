@@ -591,7 +591,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
         raydium_ode_element[i].object==o)
             raydium_ode_element_addforce_3f(i,fx,fy,fz);
-        
+
 }
 
 void raydium_ode_object_addforce(int o, dReal *vect)
@@ -621,8 +621,8 @@ if(raydium_ode_element[a].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add force to a static element");
     return;
     }
-    
-dBodyEnable(raydium_ode_element[a].body);                
+
+dBodyEnable(raydium_ode_element[a].body);
 dBodyAddForce(raydium_ode_element[a].body,fx,fy,fz);
 }
 
@@ -656,7 +656,7 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     {
     raydium_log("ODE: Error: cannot get forces of a static element");
     return NULL;
-    }   
+    }
 return (dReal *) dBodyGetForce(raydium_ode_element[e].body);
 }
 
@@ -678,8 +678,8 @@ if(raydium_ode_element[e].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: cannot add torque to a static element");
     return;
     }
-dBodyEnable(raydium_ode_element[e].body);                
-dBodyAddTorque(raydium_ode_element[e].body,vx,vy,vz); 
+dBodyEnable(raydium_ode_element[e].body);
+dBodyAddTorque(raydium_ode_element[e].body,vx,vy,vz);
 }
 
 void raydium_ode_element_addtorque(int e, dReal *vect)
@@ -788,7 +788,7 @@ dBodySetLinearVel(raydium_ode_element[e].body,velx,vely,velz);
 }
 
 void raydium_ode_element_linearvelocity_set(int e, dReal *vel)
-{  
+{
 raydium_ode_element_linearvelocity_set_3f(e,vel[0],vel[1],vel[2]);
 }
 
@@ -818,7 +818,7 @@ dBodySetAngularVel(raydium_ode_element[e].body,avelx,avely,avelz);
 }
 
 void raydium_ode_element_angularvelocity_set(int e, dReal *avel)
-{  
+{
 raydium_ode_element_angularvelocity_set_3f(e,avel[0],avel[1],avel[2]);
 }
 
@@ -1296,8 +1296,8 @@ dMass m;
 dReal sizes[3];
 if(ty<tx*2.0f)
 {
-	raydium_log("ODE: ERROR: Impossible capsule. The full lenght has to be at least twice the radius");
-	return -1;
+    raydium_log("ODE: ERROR: Impossible capsule. The full lenght has to be at least twice the radius");
+    return -1;
 }
 
 
@@ -1322,56 +1322,56 @@ if(tag<0)
 // First element is reserved
 for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(!raydium_ode_element[i].state)
-     {
-     strcpy(raydium_ode_element[i].name,name);
-     raydium_ode_element[i].object=group;
-     raydium_ode_element[i].user_tag=tag;
-     if(strlen(mesh))
-     {
-      raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-      if(tx<0) // AUTODETECT
-         {
-         int ratio=tx;
-         raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-         tx*=(-ratio);
-         ty*=(-ratio);
-         tz*=(-ratio);
-         }
-     }
+    {
+        strcpy(raydium_ode_element[i].name,name);
+        raydium_ode_element[i].object=group;
+        raydium_ode_element[i].user_tag=tag;
+        if(strlen(mesh))
+        {
+            raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
+            if(tx<0) // AUTODETECT
+            {
+                int ratio=tx;
+                raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
+                tx*=(-ratio);
+                ty*=(-ratio);
+                tz*=(-ratio);
+            }
+        }
 
-     if(type==RAYDIUM_ODE_STANDARD)
-     {
+    if(type==RAYDIUM_ODE_STANDARD)
+    {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
         dMassSetCapsule(&m,1,1,tx,(ty-(tx*2.0f)));//3d param=direction. Trying with 1
         dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
 //      dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
-     }
-     else raydium_ode_element[i].body=0;
+    }
+    else raydium_ode_element[i].body=0;
 
-     raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty-(tx*2.0f));
-     raydium_ode_element[i].state=type;
-     dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
-     dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
-     dSpaceAdd(raydium_ode_object[group].group,raydium_ode_element[i].geom);
-     raydium_ode_element_material(i,RAYDIUM_ODE_MATERIAL_DEFAULT);
-     raydium_ode_element_slip(i,RAYDIUM_ODE_SLIP_DEFAULT);
-     raydium_ode_element[i].distant=raydium_ode_network_distant_create;
-     raydium_ode_network_distant_create=0;
-     if(!raydium_ode_network_next_local_only)
+    raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty-(tx*2.0f));
+    raydium_ode_element[i].state=type;
+    dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
+    dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
+    dSpaceAdd(raydium_ode_object[group].group,raydium_ode_element[i].geom);
+    raydium_ode_element_material(i,RAYDIUM_ODE_MATERIAL_DEFAULT);
+    raydium_ode_element_slip(i,RAYDIUM_ODE_SLIP_DEFAULT);
+    raydium_ode_element[i].distant=raydium_ode_network_distant_create;
+    raydium_ode_network_distant_create=0;
+    if(!raydium_ode_network_next_local_only)
         raydium_ode_network_element_new(i);
-     raydium_ode_network_next_local_only=0;
-     sizes[0]=tx;
-     sizes[1]=ty;
-     sizes[2]=tz;
-     raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
-     if(ty==tx*2.0f)
-		{
-			raydium_log("ODE: WARNING: Do you know this capsule (id: %d) is, in fact, an sphere? ",i);
-		}
-     return i;
-     }
+    raydium_ode_network_next_local_only=0;
+    sizes[0]=tx;
+    sizes[1]=ty;
+    sizes[2]=tz;
+    raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
+    if(ty==tx*2.0f)
+        {
+            raydium_log("ODE: WARNING: Do you know this capsule (id: %d) is, in fact, an sphere? ",i);
+        }
+    return i;
+    }
 raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
 return -1;
 
@@ -1434,11 +1434,11 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      else raydium_ode_element[i].body=0;
 
      #ifdef DEBUG_ODE_CYLINDERS
-     	raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty);
+        raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty);
      #else
-     	raydium_ode_element[i].geom=dCreateCylinder(0,tx,ty);
+        raydium_ode_element[i].geom=dCreateCylinder(0,tx,ty);
      #endif
-     
+
      raydium_ode_element[i].state=type;
      dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
      dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
@@ -1517,59 +1517,59 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      else raydium_ode_element[i].body=0;
 
     //loading the mesh
-	//static dTriMeshDataID Data;
-	//static int *Indices;
-	//static dReal *Vertices;
-	dTriMeshDataID Data;
-	int *Indices;
-	dReal *Vertices;
-	int obj;
-	float size;
-	unsigned int k,j;
-	//doing the hard part
-	obj=raydium_object_find_load(collimesh);
-	if(obj<1)
-		{
-		raydium_log("ODE: Error: cannot load mesh(%s)",collimesh);
-		raydium_log("NOTE: Don't call this function before load ground.");
-		return;
-		}
+    //static dTriMeshDataID Data;
+    //static int *Indices;
+    //static dReal *Vertices;
+    dTriMeshDataID Data;
+    int *Indices;
+    dReal *Vertices;
+    int obj;
+    float size;
+    unsigned int k,j;
+    //doing the hard part
+    obj=raydium_object_find_load(collimesh);
+    if(obj<1)
+        {
+        raydium_log("ODE: Error: cannot load mesh(%s)",collimesh);
+        raydium_log("NOTE: Don't call this function before load ground.");
+        return;
+        }
 
-	// let's transform tri file format to ODE format ...
-	size=raydium_object_end[obj]-raydium_object_start[obj];
-	Indices=malloc(size*sizeof(int));
-	Vertices=malloc(size*sizeof(dReal)*3);
-	raydium_ode_ground_mesh=obj;
+    // let's transform tri file format to ODE format ...
+    size=raydium_object_end[obj]-raydium_object_start[obj];
+    Indices=malloc(size*sizeof(int));
+    Vertices=malloc(size*sizeof(dReal)*3);
+    raydium_ode_ground_mesh=obj;
 
-	for(i=raydium_object_start[obj],j=k=0;i<raydium_object_end[obj];i+=3,j+=3)
-	{
-	Indices[j]=j;
-	Vertices[k++]=raydium_vertex_x[i];
-	Vertices[k++]=raydium_vertex_y[i];
-	Vertices[k++]=raydium_vertex_z[i];
+    for(i=raydium_object_start[obj],j=k=0;i<raydium_object_end[obj];i+=3,j+=3)
+    {
+    Indices[j]=j;
+    Vertices[k++]=raydium_vertex_x[i];
+    Vertices[k++]=raydium_vertex_y[i];
+    Vertices[k++]=raydium_vertex_z[i];
 
-	Indices[j+1]=j+1;
-	Vertices[k++]=raydium_vertex_x[i+1];
-	Vertices[k++]=raydium_vertex_y[i+1];
-	Vertices[k++]=raydium_vertex_z[i+1];
+    Indices[j+1]=j+1;
+    Vertices[k++]=raydium_vertex_x[i+1];
+    Vertices[k++]=raydium_vertex_y[i+1];
+    Vertices[k++]=raydium_vertex_z[i+1];
 
-	Indices[j+2]=j+2;
-	Vertices[k++]=raydium_vertex_x[i+2];
-	Vertices[k++]=raydium_vertex_y[i+2];
-	Vertices[k++]=raydium_vertex_z[i+2];
-	}
+    Indices[j+2]=j+2;
+    Vertices[k++]=raydium_vertex_x[i+2];
+    Vertices[k++]=raydium_vertex_y[i+2];
+    Vertices[k++]=raydium_vertex_z[i+2];
+    }
 
-	
-	// There is NO way to delete the ground, yet ...
-	Data=dGeomTriMeshDataCreate();
 
-	// with newer ODE versions, use the following:
-	dGeomTriMeshDataBuildSingle(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0],size,3*sizeof(int));
-	// and the following with ODE .039:
-	//dGeomTriMeshDataBuild(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0], size, 3*sizeof(int));
+    // There is NO way to delete the ground, yet ...
+    Data=dGeomTriMeshDataCreate();
+
+    // with newer ODE versions, use the following:
+    dGeomTriMeshDataBuildSingle(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0],size,3*sizeof(int));
+    // and the following with ODE .039:
+    //dGeomTriMeshDataBuild(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0], size, 3*sizeof(int));
 
      //creating the object
-        
+
      raydium_ode_element[i].geom=dCreateTriMesh(0,Data,0,0,0);
      raydium_ode_element[i].state=type;
      dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
@@ -1981,9 +1981,9 @@ if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
     raydium_log("ODE: Error: Cannot change mass of a static element");
     return 0;
     }
-    
+
 dBodyGetMass(raydium_ode_element[elem].body,&m);
-return (m.mass);    
+return (m.mass);
 }
 
 dReal raydium_ode_element_mass_get_name(char * elem)
@@ -4129,36 +4129,36 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 glutWireSphere(dGeomSphereGetRadius(raydium_ode_element[i].geom),10,10);
                 }
             else
-            	if(dGeomGetClass(raydium_ode_element[i].geom)==dCapsuleClass)
-            	{
-            	float cradius;
-            	float clength;
-            	GLUquadric* quadratic;
-            	dGeomCapsuleGetParams (raydium_ode_element[i].geom, &cradius, &clength);            	
-            	quadratic=gluNewQuadric();	// Create A Pointer To The Quadric Object
-				gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
-				gluQuadricTexture(quadratic, GL_FALSE);	
-				gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
-				glTranslatef(0,0,-clength/2.0f+cradius);
-				glutWireSphere(cradius,10,10);
-            	gluCylinder(quadratic,cradius,cradius,clength-cradius*2.0f,8,4); 
-            	glTranslatef(0,0,clength-cradius*2.0f);           	        
-            	glutWireSphere(cradius,10,10); 	
-				}
-			else
-            	if(dGeomGetClass(raydium_ode_element[i].geom)==dCylinderClass)
-            	{
-            	float cradius;
-            	float clength;
-            	GLUquadric* quadratic;
-            	dGeomCylinderGetParams (raydium_ode_element[i].geom, &cradius, &clength);            	
-            	quadratic=gluNewQuadric();	// Create A Pointer To The Quadric Object
-				gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
-				gluQuadricTexture(quadratic, GL_FALSE);	
-				gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
-				glTranslatef(0,0,-clength/2.0f);
-            	gluCylinder(quadratic,cradius,cradius,clength,8,4); 
-				}
+                if(dGeomGetClass(raydium_ode_element[i].geom)==dCapsuleClass)
+                {
+                float cradius;
+                float clength;
+                GLUquadric* quadratic;
+                dGeomCapsuleGetParams (raydium_ode_element[i].geom, &cradius, &clength);
+                quadratic=gluNewQuadric();  // Create A Pointer To The Quadric Object
+                gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
+                gluQuadricTexture(quadratic, GL_FALSE);
+                gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
+                glTranslatef(0,0,-clength/2.0f+cradius);
+                glutWireSphere(cradius,10,10);
+                gluCylinder(quadratic,cradius,cradius,clength-cradius*2.0f,8,4);
+                glTranslatef(0,0,clength-cradius*2.0f);
+                glutWireSphere(cradius,10,10);
+                }
+            else
+                if(dGeomGetClass(raydium_ode_element[i].geom)==dCylinderClass)
+                {
+                float cradius;
+                float clength;
+                GLUquadric* quadratic;
+                dGeomCylinderGetParams (raydium_ode_element[i].geom, &cradius, &clength);
+                quadratic=gluNewQuadric();  // Create A Pointer To The Quadric Object
+                gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
+                gluQuadricTexture(quadratic, GL_FALSE);
+                gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
+                glTranslatef(0,0,-clength/2.0f);
+                gluCylinder(quadratic,cradius,cradius,clength,8,4);
+                }
             // else TriMesh ...
 
 
@@ -4174,7 +4174,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             if(!dGeomIsEnabled(raydium_ode_element[i].geom))
                 raydium_osd_color_ega('a');
 
-            if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD && 
+            if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
                 raydium_ode_element_disable_get(i) )
                     raydium_osd_color_ega('0');
 
@@ -5807,14 +5807,14 @@ if(raydium_ode_record_play_fp && raydium_ode_record_play_factor!=0)
 void raydium_ode_autodisable_set(signed char autod)
 {
 int i;
-dWorldSetAutoDisableFlag(raydium_ode_world,(int)autod);   
-// dWorldSetAutoDisableAngularAverageThreshold(); 
+dWorldSetAutoDisableFlag(raydium_ode_world,(int)autod);
+// dWorldSetAutoDisableAngularAverageThreshold();
 // dWorldSetAutoDisableAngularThreshold();
 // dWorldSetAutoDisableAverageSamplesCount();
 // dWorldSetAutoDisableLinearAverageThreshold();
 // dWorldSetAutoDisableLinearThreshold();
 // dWorldSetAutoDisableSteps();
-// dWorldSetAutoDisableTime();   
+// dWorldSetAutoDisableTime();
 for (i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     {
     if (!raydium_ode_element_isvalid(i))
@@ -5843,7 +5843,7 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
     return -1;
     }
 
-return !dBodyIsEnabled(raydium_ode_element[elem].body);   
+return !dBodyIsEnabled(raydium_ode_element[elem].body);
 }
 
 signed char raydium_ode_element_disable_get_name(char *e)
@@ -5867,7 +5867,7 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
 if(disable_state)
     dBodyDisable(raydium_ode_element[elem].body);
 else
-    dBodyEnable(raydium_ode_element[elem].body);    
+    dBodyEnable(raydium_ode_element[elem].body);
 }
 
 void raydium_ode_element_disable_set_name(char *e, signed char disable_state)
