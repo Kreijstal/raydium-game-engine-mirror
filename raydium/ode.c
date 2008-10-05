@@ -1285,12 +1285,21 @@ return -1;
 
 }
 
-int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh)
+int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length,signed char type, int tag, char *mesh)
 {
 int i;
-float tz=0;
+float tx,ty,tz;
+tx=radius;
+ty=length;
+tz=0;//TODO:remove this and its uses
 dMass m;
 dReal sizes[3];
+if(ty<tx*2.0f)
+{
+	raydium_log("ODE: ERROR: Impossible capsule. The full lenght has to be at least twice the radius");
+	return -1;
+}
+
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1333,7 +1342,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      if(type==RAYDIUM_ODE_STANDARD)
      {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
-        dMassSetCapsule(&m,1,1,tx,ty);//3d param=direction. Trying with 1
+        dMassSetCapsule(&m,1,1,tx,(ty-(tx*2.0f)));//3d param=direction. Trying with 1
         dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
@@ -1341,7 +1350,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      }
      else raydium_ode_element[i].body=0;
 
-     raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty);
+     raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty-(tx*2.0f));
      raydium_ode_element[i].state=type;
      dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
      dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
@@ -1357,6 +1366,10 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      sizes[1]=ty;
      sizes[2]=tz;
      raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
+     if(ty==tx*2.0f)
+		{
+			raydium_log("ODE: WARNING: Do you know this capsule (id: %d) is, in fact, an sphere? ",i);
+		}
      return i;
      }
 raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
@@ -4126,10 +4139,10 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 				gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
 				gluQuadricTexture(quadratic, GL_FALSE);	
 				gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
-				glTranslatef(0,0,-clength/2.0f);
+				glTranslatef(0,0,-clength/2.0f+cradius);
 				glutWireSphere(cradius,10,10);
-            	gluCylinder(quadratic,cradius,cradius,clength,8,4); 
-            	glTranslatef(0,0,clength);           	        
+            	gluCylinder(quadratic,cradius,cradius,clength-cradius*2.0f,8,4); 
+            	glTranslatef(0,0,clength-cradius*2.0f);           	        
             	glutWireSphere(cradius,10,10); 	
 				}
 			else

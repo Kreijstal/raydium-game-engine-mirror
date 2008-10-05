@@ -773,16 +773,32 @@ automatically apply to ##ty## and ##tz##.
 Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning
 "twice the detected size".
 **/
-__rayapi int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh);
+__rayapi int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length,signed char type, int tag, char *mesh);
 /**
-This function will add an new "capsule"(capped cylinder) element to an 
+This function will add an new "capsule" (capped cylinder) element to an
 object (##group##).
-Arguments are the same as ##raydium_ode_object_sphere_add## (see above) but
-##tx## is used as radius and ##ty## is used for the lenght. 
-Currently EXPERIMENTAL, so don't use ##RAYDIUM_ODE_AUTODETECT##.
-Give this value only for ##tx##, this will automatically apply to ##ty##
-and ##tz##. Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, 
-meaning "twice the detected size".
+You must provide:
+- ##name##: **single** name for this new element.
+- ##group##: owner object id.
+- ##mass##: density of this new element. Mass will depend on radius and
+length.
+- ##radius##: radius of the cylinder and caps. EXPERIMENTAL: Raydium is NOT 
+able to detect this value with ##RAYDIUM_ODE_AUTODETECT##. Things like
+##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning "twice the detected radius".
+- ##length##: full length from extreme to extreme. Internally the radius are
+taken into account.
+- ##type##: ##RAYDIUM_ODE_STANDARD## or ##RAYDIUM_ODE_STATIC## (collide only,
+no physics).
+- ##tag##: use this integer value as you want. The important thing is that
+this value is sent to network, and will be available on every connected peer.
+This tag must be greater or equal to 0. Suitable functions are available
+to read back this value later on an element.
+- ##mesh##: 3D model used for rendering this element. Use an empty string to
+disable rendering (and not ##NULL## !), and avoid ##RAYDIUM_ODE_AUTODETECT##
+int this case.
+##IMPORTANT##: The capsules are ALWAYS CREATED IN Z AXIS. Your meshes should 
+take this into account.So, the cylinders meshes should have the length in Z 
+axis.
 **/
 __rayapi int raydium_ode_object_cylinder_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh);
 /**
