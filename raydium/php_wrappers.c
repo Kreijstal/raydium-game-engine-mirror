@@ -318,6 +318,23 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
 RETURN_LONG(fname(a,b,c,d,e,f,g));\
 }
 
+// int f(char *, int, float, float, float, int, int, char *)
+#define PHP_i_sifffiis(fname)\
+ZEND_FUNCTION(fname)\
+{\
+long s_len1;\
+long s_len2;\
+char *a;\
+long b;\
+double c,d,e;\
+long g,h;\
+char *i;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "sldddlls", &a, &s_len1, &b, &c, &d, &e, &g, &h, &i, &s_len2) == FAILURE)  return;\
+RETURN_LONG(fname(a,b,c,d,e,g,h,i));\
+}
+
+
 // int f(char *, int, float, float, float, float, int, int, char *)
 #define PHP_i_siffffiis(fname)\
 ZEND_FUNCTION(fname)\
