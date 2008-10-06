@@ -1170,21 +1170,21 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      raydium_ode_element[i].object=group;
      raydium_ode_element[i].user_tag=tag;
      if(strlen(mesh))
-     {
+      {
       raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
       if(radius<0) // AUTODETECT
          radius=raydium_object_find_dist_max(raydium_ode_element[i].mesh)*-radius;
-     }
+      }
 
      if(type==RAYDIUM_ODE_STANDARD)
-     {
+        {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
         dMassSetSphere(&m,1,radius);
         dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
 //      dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
-     }
+        }
      else raydium_ode_element[i].body=0;
 
      raydium_ode_element[i].geom=dCreateSphere(0,radius);
@@ -1243,7 +1243,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
       raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
       if(tx<0) // AUTODETECT
          {
-         int ratio=tx;
+         dReal ratio=tx;
          raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
          tx*=(-ratio);
          ty*=(-ratio);
@@ -1285,21 +1285,11 @@ return -1;
 
 }
 
-int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length,signed char type, int tag, char *mesh)
+int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh)
 {
 int i;
-float tx,ty,tz;
-tx=radius;
-ty=length;
-tz=0;//TODO:remove this and its uses
 dMass m;
 dReal sizes[3];
-if(ty<tx*2.0f)
-{
-    raydium_log("ODE: ERROR: Impossible capsule. The full lenght has to be at least twice the radius");
-    return -1;
-}
-
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1329,20 +1319,33 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         if(strlen(mesh))
         {
             raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-            if(tx<0) // AUTODETECT
+            if(radius<0) // AUTODETECT
             {
-                int ratio=tx;
+                dReal ratio=radius;
+                GLfloat tx,ty,tz;
                 raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-                tx*=(-ratio);
-                ty*=(-ratio);
-                tz*=(-ratio);
+                if(tz<tx || tz<ty)
+                    {
+                    raydium_log("ODE: Error: cannot create capsule: autodetect failed: longest side of the mesh should be Z !");
+                    return -1;
+                    }
+                radius=(raydium_math_max(tx,ty)*(-ratio))/2.f;
+                length=tz*(-ratio);
+            }
+        // ODE: "cylinder's length is not counting the caps (half-spheres)"
+        length-=(radius*2.f);
+        
+        if(radius<=0 || length<=0)
+            {
+            raydium_log("ODE: Error: cannot create capsule: invalid size: The full lenght has to be at least twice the radius (Z aligned)");
+            return -1;
             }
         }
 
     if(type==RAYDIUM_ODE_STANDARD)
     {
         raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
-        dMassSetCapsule(&m,1,1,tx,(ty-(tx*2.0f)));//3d param=direction. Trying with 1
+        dMassSetCapsule(&m,1,1,radius,length);
         dMassAdjust(&m,mass);
         dBodySetMass(raydium_ode_element[i].body,&m);
         dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
@@ -1350,7 +1353,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     }
     else raydium_ode_element[i].body=0;
 
-    raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty-(tx*2.0f));
+    raydium_ode_element[i].geom=dCreateCapsule(0,radius,length);
     raydium_ode_element[i].state=type;
     dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
     dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
@@ -1362,14 +1365,9 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(!raydium_ode_network_next_local_only)
         raydium_ode_network_element_new(i);
     raydium_ode_network_next_local_only=0;
-    sizes[0]=tx;
-    sizes[1]=ty;
-    sizes[2]=tz;
-    raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
-    if(ty==tx*2.0f)
-        {
-            raydium_log("ODE: WARNING: Do you know this capsule (id: %d) is, in fact, an sphere? ",i);
-        }
+    sizes[0]=radius;
+    sizes[1]=length;
+    raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWCAPSULE,i,sizes,mesh);
     return i;
     }
 raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
@@ -1857,7 +1855,13 @@ if(dGeomGetClass(raydium_ode_element[elem].geom)==dSphereClass)
     {
     dMassSetSphere(&m,1,dGeomSphereGetRadius(raydium_ode_element[elem].geom));
     }
-else
+if(dGeomGetClass(raydium_ode_element[elem].geom)==dCapsuleClass)
+    {
+    dVector3 size;
+    dGeomCapsuleGetParams(raydium_ode_element[elem].geom,&size[0],&size[1]);
+    dMassSetCapsule(&m,1,1,size[0],size[1]);
+    }
+if(dGeomGetClass(raydium_ode_element[elem].geom)==dBoxClass)
     {
     dVector3 size;
     dGeomBoxGetLengths(raydium_ode_element[elem].geom,size);
@@ -4051,16 +4055,17 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 float cradius;
                 float clength;
                 GLUquadric* quadratic;
-                dGeomCapsuleGetParams (raydium_ode_element[i].geom, &cradius, &clength);
-                quadratic=gluNewQuadric();  // Create A Pointer To The Quadric Object
-                gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
+                dGeomCapsuleGetParams(raydium_ode_element[i].geom, &cradius, &clength);
+                quadratic=gluNewQuadric();
+                gluQuadricNormals(quadratic, GLU_SMOOTH);
                 gluQuadricTexture(quadratic, GL_FALSE);
-                gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
-                glTranslatef(0,0,-clength/2.0f+cradius);
+                gluQuadricDrawStyle(quadratic,GLU_LINE);
+                glTranslatef(0,0,clength/2.f);
                 glutWireSphere(cradius,8,8);
-                gluCylinder(quadratic,cradius,cradius,clength-(cradius*2.0f),8,4);
-                glTranslatef(0,0,clength-cradius*2.0f);
+                glTranslatef(0,0,-clength);
+                gluCylinder(quadratic,cradius,cradius,clength,8,4);
                 glutWireSphere(cradius,8,8);
+                gluDeleteQuadric(quadratic);
                 }            
             // else TriMesh ...
 
@@ -5068,6 +5073,11 @@ if(type==RAYDIUM_ODE_RECORD_NEWBOX)
     fwrite(sizes,sizeof(dReal),3,raydium_ode_record_fp);
 if(type==RAYDIUM_ODE_RECORD_NEWSPHERE)
     fwrite(sizes,sizeof(dReal),1,raydium_ode_record_fp);
+if(type==RAYDIUM_ODE_RECORD_NEWCAPSULE)
+    {
+    sizes[1]+=(sizes[0]*2);
+    fwrite(sizes,sizeof(dReal),2,raydium_ode_record_fp);
+    }
 
 fwrite(&short_id,sizeof(short_id),1,raydium_ode_record_fp);
 fputs(mesh,raydium_ode_record_fp);
@@ -5098,6 +5108,12 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             {
             dGeomBoxGetLengths(raydium_ode_element[i].geom,sizes);
             ctype=RAYDIUM_ODE_RECORD_NEWBOX;
+            }
+        if(type==dCapsuleClass)
+            {
+            dGeomCapsuleGetParams(raydium_ode_element[i].geom,&sizes[0],&sizes[1]);
+            sizes[1]+=(sizes[0]*2);
+            ctype=RAYDIUM_ODE_RECORD_NEWCAPSULE;
             }
 
         if(ctype!=-1)
@@ -5130,6 +5146,13 @@ if(type==dBoxClass)
     event=RAYDIUM_ODE_RECORD_DELBOX;
     dGeomBoxGetLengths(raydium_ode_element[id].geom,sizes);
     }
+if(type==dCapsuleClass)
+    {
+    event=RAYDIUM_ODE_RECORD_DELCAPSULE;
+    dGeomCapsuleGetParams(raydium_ode_element[id].geom,&sizes[0],&sizes[1]);
+    sizes[1]+=(sizes[0]*2);
+    }
+
 if(type==-1)
     return;
 
@@ -5138,6 +5161,8 @@ if(event==RAYDIUM_ODE_RECORD_DELBOX)
     fwrite(sizes,sizeof(dReal),3,raydium_ode_record_fp);
 if(event==RAYDIUM_ODE_RECORD_DELSPHERE)
     fwrite(sizes,sizeof(dReal),1,raydium_ode_record_fp);
+if(event==RAYDIUM_ODE_RECORD_DELCAPSULE)
+    fwrite(sizes,sizeof(dReal),2,raydium_ode_record_fp);
 
 fwrite(&short_id,sizeof(short_id),1,raydium_ode_record_fp);
 fputs(raydium_object_name[raydium_ode_element[id].mesh],raydium_ode_record_fp);
@@ -5247,6 +5272,12 @@ do
             raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
             break;
 
+        case RAYDIUM_ODE_RECORD_DELCAPSULE:
+            // delete capsule event : 2*dReal + short + string
+            fseek(raydium_ode_record_play_fp,2*sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
+
         case RAYDIUM_ODE_RECORD_NEWBOX:
             // newbox event : 3*dReal + short + string
             fseek(raydium_ode_record_play_fp,3*sizeof(dReal)+sizeof(short),SEEK_CUR);
@@ -5254,10 +5285,17 @@ do
             break;
 
         case RAYDIUM_ODE_RECORD_NEWSPHERE:
-            // newbox event : dReal + short + string
+            // new sphere event : dReal + short + string
             fseek(raydium_ode_record_play_fp,sizeof(dReal)+sizeof(short),SEEK_CUR);
             raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
             break;
+
+        case RAYDIUM_ODE_RECORD_NEWCAPSULE:
+            // new capsule event : 2*dReal + short + string
+            fseek(raydium_ode_record_play_fp,2*sizeof(dReal)+sizeof(short),SEEK_CUR);
+            raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+            break;
+
         default:
             raydium_log("ERROR: replay playback index: unknown event type (%i) !",event);
             exit(100);
@@ -5417,7 +5455,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             pos[j]=raydium_ode_element[i].capture_pos1[j]+
                     (raydium_ode_element[i].capture_pos2[j] -
                      raydium_ode_element[i].capture_pos1[j])*diff;
-
+        
         raydium_math_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
 
         raydium_ode_element_move(i,pos);
@@ -5531,7 +5569,8 @@ int newid;
 dReal sizes[3];
 char name[RAYDIUM_MAX_NAME_LEN];
 char autoname[RAYDIUM_MAX_NAME_LEN];
-int delsphere,delbox,newsphere,newbox;
+int delsphere,delbox,delcapsule;
+int newsphere,newbox,newcapsule;
 signed char ok=0;
 
 if(!raydium_ode_record_play_fp)
@@ -5548,15 +5587,19 @@ if(sense==1)
     {
     newbox=RAYDIUM_ODE_RECORD_NEWBOX;
     newsphere=RAYDIUM_ODE_RECORD_NEWSPHERE;
+    newcapsule=RAYDIUM_ODE_RECORD_NEWCAPSULE;
     delbox=RAYDIUM_ODE_RECORD_DELBOX;
     delsphere=RAYDIUM_ODE_RECORD_DELSPHERE;
+    delcapsule=RAYDIUM_ODE_RECORD_DELCAPSULE;
     }
 else
     {
     newbox=RAYDIUM_ODE_RECORD_DELBOX;
     newsphere=RAYDIUM_ODE_RECORD_DELSPHERE;
+    newcapsule=RAYDIUM_ODE_RECORD_DELCAPSULE;
     delbox=RAYDIUM_ODE_RECORD_NEWBOX;
     delsphere=RAYDIUM_ODE_RECORD_NEWSPHERE;
+    delcapsule=RAYDIUM_ODE_RECORD_NEWCAPSULE;
     }
 
 // is a special event ?
@@ -5579,6 +5622,19 @@ if(event<100)
     if(event==delbox)
         {
         fread(sizes,sizeof(dReal),3,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        raydium_ode_element_delete(raydium_ode_record_element_mappings[short_id],1);
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
+
+    if(event==delcapsule)
+        {
+        fread(sizes,sizeof(dReal),2,raydium_ode_record_play_fp);
         fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
         raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
         if(sense==-1)
@@ -5624,6 +5680,25 @@ if(event<100)
             raydium_ode_capture_internal_read_event(sense);
         ok=1;
         }
+
+    if(event==newcapsule)
+        {
+        fread(sizes,sizeof(dReal),2,raydium_ode_record_play_fp);
+        fread(&short_id,sizeof(short_id),1,raydium_ode_record_play_fp);
+        raydium_file_binary_fgets(name,RAYDIUM_MAX_NAME_LEN-1,raydium_ode_record_play_fp);
+        raydium_ode_name_auto("REPLAY-C",autoname);
+        if(sense==-1)
+            raydium_ode_capture_internal_read_event(sense);
+        newid=raydium_ode_object_capsule_add(
+              autoname,raydium_ode_record_play_world,
+              1,sizes[0],sizes[1],RAYDIUM_ODE_STATIC,0,name);
+        raydium_ode_record_element_mappings[short_id]=newid;
+        raydium_ode_element[newid].replayed=1;
+        if(sense==1)
+            raydium_ode_capture_internal_read_event(sense);
+        ok=1;
+        }
+
 
     if(!ok)
         {

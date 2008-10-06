@@ -80,8 +80,10 @@
 #define RAYDIUM_ODE_RECORD_RATE_DEFAULT         30
 #define RAYDIUM_ODE_RECORD_NEWBOX               1
 #define RAYDIUM_ODE_RECORD_NEWSPHERE            2
+#define RAYDIUM_ODE_RECORD_NEWCAPSULE           13
 #define RAYDIUM_ODE_RECORD_DELBOX               3
 #define RAYDIUM_ODE_RECORD_DELSPHERE            4
+#define RAYDIUM_ODE_RECORD_DELCAPSULE           15
 
 __global dWorldID       raydium_ode_world;
 __global dSpaceID       raydium_ode_space;

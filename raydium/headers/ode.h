@@ -773,7 +773,7 @@ automatically apply to ##ty## and ##tz##.
 Again, Things like  ##RAYDIUM_ODE_AUTODETECT*2## are ok, meaning
 "twice the detected size".
 **/
-__rayapi int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length,signed char type, int tag, char *mesh);
+__rayapi int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh);
 /**
 This function will add an new "capsule" (capped cylinder) element to an
 object (##group##).
@@ -782,10 +782,10 @@ You must provide:
 - ##group##: owner object id.
 - ##mass##: density of this new element. Mass will depend on radius and
 length.
-- ##radius##: radius of the internal cylinder and caps. EXPERIMENTAL: 
-Raydium is NOT able to detect this value with ##RAYDIUM_ODE_AUTODETECT##.
-- ##length##: full length from extreme to extreme. Internally the radius are
-taken into account.
+- ##radius##: radius of the internal cylinder and caps. Like boxes and
+spheres, you can use ##RAYDIUM_ODE_AUTODETECT##, for radius.
+Things like ##RAYDIUM_ODE_AUTODETECT*0.5## are valid, too.
+- ##length##: full length from one end to the other (longest side).
 - ##type##: ##RAYDIUM_ODE_STANDARD## or ##RAYDIUM_ODE_STATIC## (collide only,
 no physics).
 - ##tag##: use this integer value as you want. The important thing is that
