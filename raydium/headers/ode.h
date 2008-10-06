@@ -798,6 +798,7 @@ int this case.
 ##IMPORTANT##: The capsules are ALWAYS CREATED IN Z AXIS. Your meshes should 
 take this into account.So, the capsule meshes should have the length in Z 
 axis.
+**/
 
 //__rayapi int raydium_ode_object_mesh_add(char *name, int group, dReal mass, char *collimesh, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh);
 
