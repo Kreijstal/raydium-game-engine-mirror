@@ -1377,89 +1377,6 @@ return -1;
 
 }
 
-int raydium_ode_object_cylinder_add(char *name, int group, dReal mass, dReal tx, dReal ty, signed char type, int tag, char *mesh)
-{
-int i;
-float tz=0;
-dMass m;
-dReal sizes[3];
-
-if(raydium_ode_element_find(name)>=0)
-    {
-    raydium_log("ODE: Cannot add element \"%s\": name already exists",name);
-    return -1;
-    }
-
-if(!raydium_ode_object_isvalid(group))
-    {
-    raydium_log("ODE: Error: object not found while adding \"%s\"",name);
-    return -1;
-    }
-
-if(tag<0)
-    {
-    raydium_log("ODE: Error: Element creation failed: negative tags are forbidden");
-    return -1;
-    }
-
-// First element is reserved
-for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(!raydium_ode_element[i].state)
-     {
-     strcpy(raydium_ode_element[i].name,name);
-     raydium_ode_element[i].object=group;
-     raydium_ode_element[i].user_tag=tag;
-     if(strlen(mesh))
-     {
-      raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-      if(tx<0) // AUTODETECT
-         {
-         int ratio=tx;
-         raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-         tx*=(-ratio);
-         ty*=(-ratio);
-         tz*=(-ratio);
-         }
-     }
-
-     if(type==RAYDIUM_ODE_STANDARD)
-     {
-        raydium_ode_element[i].body=dBodyCreate(raydium_ode_world);
-        dMassSetCylinder(&m,1,1,tx,ty);//3d param is direction. Trying with 1
-        dMassAdjust(&m,mass);
-        dBodySetMass(raydium_ode_element[i].body,&m);
-        dBodySetData(raydium_ode_element[i].body,&raydium_ode_element[i]);
-//      dBodySetAutoDisableSF1(raydium_ode_element[i].body,1);
-     }
-     else raydium_ode_element[i].body=0;
-
-     #ifdef DEBUG_ODE_CYLINDERS
-        raydium_ode_element[i].geom=dCreateCapsule(0,tx,ty);
-     #else
-        raydium_ode_element[i].geom=dCreateCylinder(0,tx,ty);
-     #endif
-
-     raydium_ode_element[i].state=type;
-     dGeomSetBody(raydium_ode_element[i].geom,raydium_ode_element[i].body);
-     dGeomSetData(raydium_ode_element[i].geom,&raydium_ode_element[i]);
-     dSpaceAdd(raydium_ode_object[group].group,raydium_ode_element[i].geom);
-     raydium_ode_element_material(i,RAYDIUM_ODE_MATERIAL_DEFAULT);
-     raydium_ode_element_slip(i,RAYDIUM_ODE_SLIP_DEFAULT);
-     raydium_ode_element[i].distant=raydium_ode_network_distant_create;
-     raydium_ode_network_distant_create=0;
-     if(!raydium_ode_network_next_local_only)
-        raydium_ode_network_element_new(i);
-     raydium_ode_network_next_local_only=0;
-     sizes[0]=tx;
-     sizes[1]=ty;
-     sizes[2]=tz;
-     raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWBOX,i,sizes,mesh);
-     return i;
-     }
-raydium_log("ODE: No more element slots ! aborting \"%s\" creation",name);
-return -1;
-
-}
 /*
 int raydium_ode_object_mesh_add(char *name, int group, dReal mass, char *collimesh, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
 {
@@ -4140,25 +4057,11 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 gluQuadricTexture(quadratic, GL_FALSE);
                 gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
                 glTranslatef(0,0,-clength/2.0f+cradius);
-                glutWireSphere(cradius,10,10);
-                gluCylinder(quadratic,cradius,cradius,clength-cradius*2.0f,8,4);
+                glutWireSphere(cradius,8,8);
+                gluCylinder(quadratic,cradius,cradius,clength-(cradius*2.0f),8,4);
                 glTranslatef(0,0,clength-cradius*2.0f);
-                glutWireSphere(cradius,10,10);
-                }
-            else
-                if(dGeomGetClass(raydium_ode_element[i].geom)==dCylinderClass)
-                {
-                float cradius;
-                float clength;
-                GLUquadric* quadratic;
-                dGeomCylinderGetParams (raydium_ode_element[i].geom, &cradius, &clength);
-                quadratic=gluNewQuadric();  // Create A Pointer To The Quadric Object
-                gluQuadricNormals(quadratic, GLU_SMOOTH);// Create Smooth Normals
-                gluQuadricTexture(quadratic, GL_FALSE);
-                gluQuadricDrawStyle(quadratic,GLU_LINE); //WIRE MODE
-                glTranslatef(0,0,-clength/2.0f);
-                gluCylinder(quadratic,cradius,cradius,clength,8,4);
-                }
+                glutWireSphere(cradius,8,8);
+                }            
             // else TriMesh ...
 
 
