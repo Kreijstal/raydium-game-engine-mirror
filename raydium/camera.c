@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/camera.h"
-#endif 
+#endif
 
 // res3 is GLfloat[3]
 void raydium_camera_vectors(GLfloat *res3)
@@ -70,11 +70,11 @@ if(raydium_camera_rumble_remaining>0)
     x=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
     y=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
     z=raydium_random_f(-raydium_camera_rumble_amplitude,raydium_camera_rumble_amplitude);
-        
+
     glRotatef(z,0,0,1);
     glRotatef(x,1,0,0);
     glRotatef(y,0,1,0);
-        
+
     raydium_camera_rumble_remaining-=raydium_frame_time;
     raydium_camera_rumble_amplitude+=(raydium_camera_rumble_evolution*raydium_frame_time);
     if(raydium_camera_rumble_amplitude<=0)
@@ -96,13 +96,13 @@ if(raydium_frame_first_camera_pass)
     pos[0]=x;
     pos[1]=y;
     pos[2]=z;
-    if(raydium_sound && raydium_viewport_use==-1) 
+    if(raydium_sound && raydium_viewport_use==-1)
         {
         raydium_camera_vectors(or); // get vectors
         raydium_sound_SetListenerPos(pos);
         raydium_sound_SetListenerOr(or);
         }
-    
+
     if(raydium_sky_atmosphere_check())
         {
         raydium_sky_box_render(x,y,z);
@@ -113,12 +113,12 @@ if(raydium_frame_first_camera_pass)
         {
         raydium_sky_box_render(x,y,z);
         }
-    
+
     //raydium_sky_box_render(x,y,z);
     //raydium_atmosphere_render(x,y,z,SPHERE_DEFAULT_DETAIL);
     raydium_frame_first_camera_pass=0;
     raydium_light_update_position_all();
-    
+
     glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
     glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
     glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
@@ -127,7 +127,7 @@ if(raydium_frame_first_camera_pass)
 if(!raydium_camera_pushed)
     {
     raydium_camera_pushed=1;
-    raydium_camera_x=x; 
+    raydium_camera_x=x;
     raydium_camera_y=y;
     raydium_camera_z=z;
 
@@ -141,7 +141,6 @@ else raydium_log("Warning: too many calls to camera_* ! (matrix already pushed)"
 void raydium_camera_place(GLfloat x, GLfloat y, GLfloat z,
                           GLfloat lacet, GLfloat tangage, GLfloat roulis)
 {
-//glLoadIdentity();
 raydium_camera_internal_prepare();
 glRotatef(roulis,0,0,1);
 glRotatef(tangage,1,0,0);
@@ -150,18 +149,11 @@ glTranslatef(x, y, z);
 glRotatef(90,0,0,1);
 glRotatef(90,0,1,0);
 raydium_camera_internal(z,x,-y);
-/*raydium_camera_data[0]=x;
-raydium_camera_data[1]=y;
-raydium_camera_data[2]=z;
-raydium_camera_data[3]=lacet;
-raydium_camera_data[4]=tangage;
-raydium_camera_data[5]=roulis;
-* */
 }
 
 float *raydium_camera_get_data(void)
 {
-        return (float *)raydium_camera_data;
+return (float *)raydium_camera_data;
 }
 
 void raydium_camera_look_at(float x, float y, float z,
@@ -172,12 +164,14 @@ float dist;
 float angle[3];
 
 angle[0]=angle[1]=angle[2]=0.0f;
+
 //glLoadIdentity();
 raydium_camera_internal_prepare();
 glRotatef(raydium_camera_look_at_roll,0,0,1);
 raydium_camera_look_at_roll=0;
 gluLookAt(x,y,z,z_to,x_to,-y_to,0.,0.,1.);
 raydium_camera_internal(x,y,z);
+
 //getting angles for data
 delta[0]=x_to-x;
 delta[1]=y_to-y;
@@ -212,13 +206,13 @@ if(raydium_shadow_rendering)
     }
 
 if(!raydium_camera_pushed)
- raydium_log("Warning: no camera to replace (matrix stack's empty)");
+    raydium_log("Warning: no camera to replace (matrix stack's empty)");
 else
- {
- glPopMatrix();
- glPushMatrix();
- memset(raydium_camera_cursor_place,0,3*sizeof(GLfloat));
- }
+    {
+    glPopMatrix();
+    glPushMatrix();
+    memset(raydium_camera_cursor_place,0,3*sizeof(GLfloat));
+    }
 }
 
 void raydium_camera_replace_go(GLfloat *pos, GLfloat *R)
@@ -266,8 +260,8 @@ raydium_camera_path_reset_flag=1;
 // if step is <= 0, moves will be instaneous
 // camera will be placed only if step is >=0 (negative steps are used
 // only to change internal vars)
-void raydium_camera_smooth(GLfloat px, GLfloat py, GLfloat pz, 
-                           GLfloat lx, GLfloat ly, GLfloat lz, 
+void raydium_camera_smooth(GLfloat px, GLfloat py, GLfloat pz,
+                           GLfloat lx, GLfloat ly, GLfloat lz,
                            GLfloat zoom, GLfloat roll, GLfloat step)
 {
 static GLfloat opx,opy,opz;
@@ -282,7 +276,7 @@ angle[0]=angle[1]=angle[2]=0;
 //raydium_log("camera smooth (asked): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",px,py,pz,lx,ly,lz,zoom,step);
 if (raydium_viewport_use!=-1)
     return;
-    
+
 if(step<=0 || // wow.. smells inf, do a instantaneous step. (and don't place cam)
    raydium_camera_path_reset_flag)
 {
@@ -408,14 +402,14 @@ if(p==RAYDIUM_MAX_CAMERA_PATHS)
 strcpy(raydium_camera_path[p].name,filename);
 
 while( fscanf(fp,"%f %f %f %f %f\n",&x,&y,&z,&zoom,&roll)!=EOF )
- {
-  raydium_camera_path[p].x[i]=x;
-  raydium_camera_path[p].y[i]=y;
-  raydium_camera_path[p].z[i]=z;
-  raydium_camera_path[p].zoom[i]=zoom;
-  raydium_camera_path[p].roll[i]=roll;
-  i++;
- }
+    {
+    raydium_camera_path[p].x[i]=x;
+    raydium_camera_path[p].y[i]=y;
+    raydium_camera_path[p].z[i]=z;
+    raydium_camera_path[p].zoom[i]=zoom;
+    raydium_camera_path[p].roll[i]=roll;
+    i++;
+    }
 
 raydium_camera_path[p].steps=i;
 raydium_log("camera path '%s' loaded (slot %i, %i steps)",filename,p,i);
@@ -446,7 +440,7 @@ if(p>=0 && p<RAYDIUM_MAX_CAMERA_PATHS)
     glEnd();
     if(raydium_light_enabled_tag)
         glEnable(GL_LIGHTING);
-             
+
     return;
     }
 raydium_log("camera path draw failed : invalid index");
@@ -474,7 +468,7 @@ p=raydium_camera_path_find(path);
 
 if(p==-1)
     p=raydium_camera_path_load(path);
-    
+
 if(p==-1)
     return 0;
 
@@ -544,246 +538,232 @@ raydium_camera_smooth(fx,fy,fz, ty,-tz,tx,fzoom,froll,smooth_step);
 
 void raydium_viewport_init(void)
 {
-    raydium_viewport_nb=0;
-    raydium_viewport_use=-1;
+raydium_viewport_nb=0;
+raydium_viewport_use=-1;
 }
 
 void raydium_viewport_create (char * name,int tx,int ty)
 {
-int i;    
-    if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
-    {
-        for(i=0;i<raydium_viewport_nb;i++)
-            if(!strcmp(name,raydium_viewport[i].name))
-            {
-                raydium_log ("Viewport %s already exist",name);
-                return;
-            }
-
-        if(raydium_texture_load_internal("",name,1,tx,ty,4,-1))
+int i;
+if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
+{
+    for(i=0;i<raydium_viewport_nb;i++)
+        if(!strcmp(name,raydium_viewport[i].name))
         {
-            strcpy(raydium_viewport[raydium_viewport_nb].name,name);
-            raydium_viewport[raydium_viewport_nb].tx=tx;
-            raydium_viewport[raydium_viewport_nb].ty=ty;
-            raydium_viewport_nb++;
+            raydium_log ("Viewport %s already exist",name);
+            return;
         }
+
+    if(raydium_texture_load_internal("",name,1,tx,ty,4,-1))
+    {
+        strcpy(raydium_viewport[raydium_viewport_nb].name,name);
+        raydium_viewport[raydium_viewport_nb].tx=tx;
+        raydium_viewport[raydium_viewport_nb].ty=ty;
+        raydium_viewport_nb++;
     }
+}
 }
 
 void raydium_viewport_enable(char * name)
 {
 int i;
 
-    if (raydium_viewport_use!=-1)
-    {
-        raydium_log ("An other viewport is already enabled");
-        return;
-    }
+if (raydium_viewport_use!=-1)
+{
+    raydium_log ("An other viewport is already enabled");
+    return;
+}
 
-    for(i=0;i<raydium_viewport_nb;i++)
-       if(!strcmp(name,raydium_viewport[i].name))
-       {
-            glViewport(0,0, raydium_viewport[i].tx,raydium_viewport[i].ty);
-            raydium_viewport_use=i;
-            return;
-       }
-    raydium_log("Viewport %s not found.",name);
+for(i=0;i<raydium_viewport_nb;i++)
+   if(!strcmp(name,raydium_viewport[i].name))
+   {
+        glViewport(0,0, raydium_viewport[i].tx,raydium_viewport[i].ty);
+        raydium_viewport_use=i;
+        return;
+   }
+raydium_log("Viewport %s not found.",name);
 }
 
 void raydium_viewport_save(void)
 {
-    if (raydium_viewport_use==-1)
-    {
-        raydium_log("No viewport enabled.");
-        return;
-    }
+if (raydium_viewport_use==-1)
+{
+    raydium_log("No viewport enabled.");
+    return;
+}
 
-    glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name(raydium_viewport[raydium_viewport_use].name));
-    glCopyTexSubImage2D(GL_TEXTURE_2D,0, 0,0, 0,0, raydium_viewport[raydium_viewport_use].tx, raydium_viewport[raydium_viewport_use].ty);
-    raydium_rendering_internal_restore_render_state();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glEnable(GL_STENCIL_TEST); // HDR
-    raydium_frame_first_camera_pass=1;
-    if (raydium_camera_pushed){
-        glPopMatrix();
-        raydium_camera_pushed=0;
-    }
-    raydium_viewport_use=-1;
-    glViewport(0,0, raydium_window_tx, raydium_window_ty);
+glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name(raydium_viewport[raydium_viewport_use].name));
+glCopyTexSubImage2D(GL_TEXTURE_2D,0, 0,0, 0,0, raydium_viewport[raydium_viewport_use].tx, raydium_viewport[raydium_viewport_use].ty);
+raydium_rendering_internal_restore_render_state();
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+glEnable(GL_STENCIL_TEST); // HDR
+raydium_frame_first_camera_pass=1;
+if (raydium_camera_pushed){
+    glPopMatrix();
+    raydium_camera_pushed=0;
+}
+raydium_viewport_use=-1;
+glViewport(0,0, raydium_window_tx, raydium_window_ty);
 }
 
 void raydium_viewport_draw(char * name, GLfloat tx,GLfloat ty,GLfloat sx,GLfloat sy)
 {
 int i;
 
-    for(i=0;i<raydium_viewport_nb;i++)
-       if(!strcmp(name,raydium_viewport[i].name)){
-            raydium_osd_color_ega('f');
-            raydium_osd_draw_name(name,tx,ty,tx+sx,ty+sy);
-            return;
-       }
-    raydium_log("Viewport %s not found.",name);
+for(i=0;i<raydium_viewport_nb;i++)
+    if(!strcmp(name,raydium_viewport[i].name)){
+        raydium_osd_color_ega('f');
+        raydium_osd_draw_name(name,tx,ty,tx+sx,ty+sy);
+        return;
+    }
+raydium_log("Viewport %s not found.",name);
 }
 
 void raydium_camera_freemove(int move)
 {
-    float dir_x, dir_y;
+float dir_x, dir_y;
 
-    //declaring and setting variables. Statics, to store the values betwen calls
-    static GLfloat rffp_cam_angle_x = 0;
-    static GLfloat rffp_cam_angle_y = 0;    
-    static GLfloat rffp_cam_angle_z = 0;
-    static GLfloat rffp_cam_pos_x = 0;
-    static GLfloat rffp_cam_pos_y = 0;
-    static GLfloat rffp_cam_pos_z = 0;
-    static GLint   rffp_delta_x=0;
-    static GLint   rffp_delta_y=0;
-    static int prev_state=0;
-	
-	float *data;
-	dir_x=0;
-    dir_y=0;
-        	
+//declaring and setting variables. Statics, to store the values betwen calls
+static GLfloat rffp_cam_angle_x = 0;
+static GLfloat rffp_cam_angle_y = 0;
+static GLfloat rffp_cam_angle_z = 0;
+static GLfloat rffp_cam_pos_x = 0;
+static GLfloat rffp_cam_pos_y = 0;
+static GLfloat rffp_cam_pos_z = 0;
+static GLint   rffp_delta_x=0;
+static GLint   rffp_delta_y=0;
+static int prev_state=0;
+float *data;
+dir_x=0;
+dir_y=0;
 
-    	
-    switch(move)
-    {
-    	//RAYDIUM_CAMERA_FREEMOVE_NORMAL
-    	case RAYDIUM_CAMERA_FREEMOVE_NORMAL:
-    		//get input
-			if(raydium_key[GLUT_KEY_DOWN])	dir_y=-1;
-			if(raydium_key[GLUT_KEY_UP])	dir_y=1;
-			if(raydium_key[GLUT_KEY_LEFT])	dir_x=-1;
-			if(raydium_key[GLUT_KEY_RIGHT])	dir_x=1;
-			//60=experimental value
-			dir_x *= (raydium_frame_time*60.0f);
-			dir_y *= (raydium_frame_time*60.0f);
+switch(move)
+{
+    //RAYDIUM_CAMERA_FREEMOVE_NORMAL
+    case RAYDIUM_CAMERA_FREEMOVE_NORMAL:
+        //get input
+        if(raydium_key[GLUT_KEY_DOWN])  dir_y=-1;
+        if(raydium_key[GLUT_KEY_UP])    dir_y=1;
+        if(raydium_key[GLUT_KEY_LEFT])  dir_x=-1;
+        if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+        //60=experimental value
+        dir_x *= (raydium_frame_time*60.0f);
+        dir_y *= (raydium_frame_time*60.0f);
 
-			//if the previous frame was in state 0,
-			//then when put the mouse in the middle of the screen
-			
-			if(prev_state==0)
-			{				
-				rffp_delta_x = 0;   	
-				rffp_delta_y = 0;					
-			}
-			else
-			{  
-				rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
-				rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
-			}
-			//calculating the position (x,y,z) of the camera
-			rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
-			rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
-			rffp_cam_pos_y += (raydium_math_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
+        //if the previous frame was in state 0,
+        //then when put the mouse in the middle of the screen
 
-			rffp_cam_pos_x -= (raydium_math_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
-			rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        if(prev_state==0)
+        {
+            rffp_delta_x = 0;
+            rffp_delta_y = 0;
+        }
+        else
+        {
+            rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
+            rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
+        }
+        //calculating the position (x,y,z) of the camera
+        rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+        rffp_cam_pos_y += (raydium_math_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
 
-			//looking where the mouse points
-			//rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
-			rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f); 
+        rffp_cam_pos_x -= (raydium_math_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+        rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
-			//rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
-			rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f); 
+        //looking where the mouse points
+        //rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
+        rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f);
 
-			
-			//putting the mouse in the middle of the screen, the read the next data of the mouse correctly
-			raydium_mouse_move(raydium_window_tx/2.0f, raydium_window_ty/2.0f);
-			prev_state=1;
-			
-			//raydium_camera_place(rffp_cam_pos_y,-rffp_cam_pos_z,rffp_cam_pos_x,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
-			
-			raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
-			
-    	break;    	
-    	
-    	//RAYDIUM_CAMERA_FREEMOVE_FIXED
-    	case RAYDIUM_CAMERA_FREEMOVE_FIXED:
-    		//setting state 0
-    		prev_state=0;
-    		
-    		//Feeding freemove with camera values
-			data=raydium_camera_get_data();			
-			/*rffp_cam_pos_x=data[1];
-			rffp_cam_pos_y=-data[2];
-			rffp_cam_pos_z=data[0];
-			rffp_cam_angle_x=data[3];
-			rffp_cam_angle_y=data[4];
-			rffp_cam_angle_z=data[5];*/
-			rffp_cam_pos_z=data[0];
-			rffp_cam_pos_x=data[1];
-			rffp_cam_pos_y=-data[2];
-			rffp_cam_angle_x=data[3];
-			rffp_cam_angle_y=data[4];
-			rffp_cam_angle_z=data[5];
-			//place camera			
-			raydium_camera_place(data[1],-data[2],data[0],data[3],data[4],data[5]);
-			//storing camera values
-			/*raydium_camera_data[0]=rffp_cam_pos_z;
-			raydium_camera_data[1]=rffp_cam_pos_x;
-			raydium_camera_data[2]=-rffp_cam_pos_y;	
-			raydium_camera_data[3]=rffp_cam_angle_x;
-			raydium_camera_data[4]=rffp_cam_angle_y;
-			raydium_camera_data[5]=rffp_cam_angle_z;
-			* */
-			return;
-		break;
-	}
-	raydium_camera_data[2]=-rffp_cam_pos_y;
-	raydium_camera_data[0]=rffp_cam_pos_z;
-	raydium_camera_data[1]=rffp_cam_pos_x;	
-	raydium_camera_data[3]=rffp_cam_angle_x;
-	raydium_camera_data[4]=rffp_cam_angle_y;
-	raydium_camera_data[5]=rffp_cam_angle_z;
+        //rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
+        rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f);
+
+
+        //putting the mouse in the middle of the screen, the read the next data of the mouse correctly
+        raydium_mouse_move(raydium_window_tx/2.0f, raydium_window_ty/2.0f);
+        prev_state=1;
+
+        //raydium_camera_place(rffp_cam_pos_y,-rffp_cam_pos_z,rffp_cam_pos_x,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
+
+        raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
+
+    break;
+
+    //RAYDIUM_CAMERA_FREEMOVE_FIXED
+    case RAYDIUM_CAMERA_FREEMOVE_FIXED:
+        //setting state 0
+        prev_state=0;
+
+        //Feeding freemove with camera values
+        data=raydium_camera_get_data();
+        rffp_cam_pos_z=data[0];
+        rffp_cam_pos_x=data[1];
+        rffp_cam_pos_y=-data[2];
+        rffp_cam_angle_x=data[3];
+        rffp_cam_angle_y=data[4];
+        rffp_cam_angle_z=data[5];
+        //place camera
+        raydium_camera_place(data[1],-data[2],data[0],data[3],data[4],data[5]);
+        return;
+    break;
+}
+raydium_camera_data[2]=-rffp_cam_pos_y;
+raydium_camera_data[0]=rffp_cam_pos_z;
+raydium_camera_data[1]=rffp_cam_pos_x;
+raydium_camera_data[3]=rffp_cam_angle_x;
+raydium_camera_data[4]=rffp_cam_angle_y;
+raydium_camera_data[5]=rffp_cam_angle_z;
 }
 
 
 void raydium_camera_orbitmove( float x_to, float y_to, float z_to)
-{  
-    static float delta_x,delta_y;
-    float delta[3];
-    float angle[3];
-    float dist;
-    float mult=0.05f;
-    static float zoom=10.0f; //really is the distance, not zoom
-	float Matrix[16];
-    raydium_mouse_move(raydium_window_tx/2.0f, raydium_window_ty/2.0f);
-    delta_x+= raydium_mouse_x - (raydium_window_tx/2.0f);
-    delta_y+= raydium_mouse_y - (raydium_window_ty/2.0f);
-    //TODO:NOT YET SUPPORT FOR MOUSE WHEEL
-    /*
-    if(raydium_mouse_button_pressed(4) || raydium_key[GLUT_DOWN])
-    {    	
-    	zoom+=1.0;
-	}
-	if(raydium_mouse_button_pressed(6) || raydium_key[GLUT_UP])
-	{		
-		zoom-=1.0;
-	}
-	*/	
-	if(raydium_key[GLUT_KEY_UP])if(zoom>0)zoom-=0.1;
-	if(raydium_key[GLUT_KEY_DOWN])zoom+=0.1;
-	if(zoom<=0)zoom=0.001;
-	
-    raydium_camera_internal_prepare();
-    glRotatef(raydium_camera_look_at_roll,0,0,1);
-    raydium_camera_look_at_roll=0;
+{
+static float delta_x,delta_y;
+float delta[3];
+float angle[3];
+float dist;
+float mult=0.05f;
+static float zoom=10.0f; //really is the distance, not zoom
+float Matrix[16];
 
-    gluLookAt(1*zoom,0,0,0,0,0,0.,0.,1.);
-	
-    glRotatef(delta_y*mult,0,1,0);
-    glRotatef(delta_x*mult,0,0,1);
-	
-    glTranslatef(-x_to,-y_to,-z_to);
-    glGetFloatv(GL_MODELVIEW_MATRIX, Matrix);	
-    //feeding camera data
-	raydium_camera_internal(Matrix[2]*zoom+x_to,Matrix[6]*zoom+y_to,Matrix[10]*zoom+z_to);
-	raydium_camera_data[0]=Matrix[2]*zoom+x_to;
-	raydium_camera_data[1]=Matrix[6]*zoom+y_to;
-	raydium_camera_data[2]=Matrix[10]*zoom+z_to;
-	raydium_camera_data[3]=180+delta_x*mult;
-	raydium_camera_data[4]=delta_y*mult;
-	raydium_camera_data[5]=0;	
+raydium_mouse_move(raydium_window_tx/2.0f, raydium_window_ty/2.0f);
+
+delta_x+= raydium_mouse_x - (raydium_window_tx/2.0f);
+delta_y+= raydium_mouse_y - (raydium_window_ty/2.0f);
+//TODO:NOT YET SUPPORT FOR MOUSE WHEEL
+/*
+if(raydium_mouse_button_pressed(4) || raydium_key[GLUT_DOWN])
+{
+    zoom+=1.0;
+}
+if(raydium_mouse_button_pressed(6) || raydium_key[GLUT_UP])
+{
+    zoom-=1.0;
+}
+*/
+if(raydium_key[GLUT_KEY_UP])if(zoom>0)zoom-=0.1;
+if(raydium_key[GLUT_KEY_DOWN])zoom+=0.1;
+if(zoom<=0)zoom=0.001;
+
+raydium_camera_internal_prepare();
+glRotatef(raydium_camera_look_at_roll,0,0,1);
+raydium_camera_look_at_roll=0;
+
+gluLookAt(1*zoom,0,0,0,0,0,0.,0.,1.);
+
+glRotatef(delta_y*mult,0,1,0);
+glRotatef(delta_x*mult,0,0,1);
+
+glTranslatef(-x_to,-y_to,-z_to);
+glGetFloatv(GL_MODELVIEW_MATRIX, Matrix);
+
+//feeding camera data
+raydium_camera_internal(Matrix[2]*zoom+x_to,Matrix[6]*zoom+y_to,Matrix[10]*zoom+z_to);
+raydium_camera_data[0]=Matrix[2]*zoom+x_to;
+raydium_camera_data[1]=Matrix[6]*zoom+y_to;
+raydium_camera_data[2]=Matrix[10]*zoom+z_to;
+raydium_camera_data[3]=180+delta_x*mult;
+raydium_camera_data[4]=delta_y*mult;
+raydium_camera_data[5]=0;
 }
 
