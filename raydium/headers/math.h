@@ -174,7 +174,8 @@ with alpha [0,1] as interpolation point.
 __rayapi float raydium_math_angle_from_projections(float px, float py);
 /**
 This function will return the real angle (in radians) for a pair of X
-and Y projections of a vector.
+and Y projections of a vector. The vector has to be normalized, this is
+, with the values betwen -1 and 1;
 The returned angle will be in the range [0-2PI].
 **/
 
