@@ -388,12 +388,12 @@ void raydium_gui_button_draw(int w, int window)
 
     if (strlen(b->caption)>0)
     {
-        fxy[0]=xy[0]+(xy[2]-xy[0])/2;
-        fxy[1]=xy[1]+(xy[3]-xy[1])/2;
+        fxy[0]=xy[0]+(xy[2]-xy[0])/2.0f;
+        fxy[1]=xy[1]+(xy[3]-xy[1])/2.0f;
         if (strlen(b->caption)>1)
         {
             tmp=raydium_gui_windows[window].widgets[w].font_size/RAYDIUM_OSD_FONT_SIZE_FACTOR;
-            tmp=((strlen(b->caption)-1)*tmp)/2;
+            tmp=((strlen(b->caption)-1)*tmp)/2.0f;
         }
         else
             tmp=0;
@@ -604,8 +604,8 @@ void raydium_gui_track_draw(int w, int window)
            (raydium_gui_windows[window].widgets[w].size[1]*rcfactor[1]);
 
     cdec[0]=(rxy[2]-rxy[0]) * ((float)(t->current - t->min)/(t->max - t->min));
-    cdec[0]-=(cxy[2]-cxy[0])/2;
-    cdec[1]=(cxy[3]-cxy[1])/2 - (rxy[3]-rxy[1])/2;
+    cdec[0]-=(cxy[2]-cxy[0])/2.0f;
+    cdec[1]=(cxy[3]-cxy[1])/2.0f - (rxy[3]-rxy[1])/2.0f;
 
     cxy[0]+=cdec[0];
     cxy[2]+=cdec[0];
@@ -677,7 +677,7 @@ void raydium_gui_label_draw(int w, int window)
         if (strlen(l->caption)>1)
         {
             tmp=raydium_gui_windows[window].widgets[w].font_size/RAYDIUM_OSD_FONT_SIZE_FACTOR;
-            tmp=((strlen(l->caption)-1)*tmp)/2;
+            tmp=((strlen(l->caption)-1)*tmp)/2.0f;
         }
         else
             tmp=0;
@@ -757,7 +757,7 @@ void raydium_gui_edit_draw(int w, int window)
     len=strlen(e->text);
 
     fxy[0]=xy[0];
-    fxy[1]=xy[1]+(xy[3]-xy[1])/2;
+    fxy[1]=xy[1]+(xy[3]-xy[1])/2.0f;
     tmp=raydium_gui_windows[window].widgets[w].font_size/RAYDIUM_OSD_FONT_SIZE_FACTOR;
     tmp2=(xy[2]-xy[0])-tmp;
     tmp2/=tmp;
@@ -788,7 +788,7 @@ void raydium_gui_edit_draw(int w, int window)
                        0.5,raydium_gui_theme_current.font,"%s",zone);
 
     if (style==RAYDIUM_GUI_FOCUS)
-        raydium_osd_printf(fxy[0]+tmp+(tmp*e->cursor)-(tmp/2)-(e->offset*tmp),fxy[1],
+        raydium_osd_printf(fxy[0]+tmp+(tmp*e->cursor)-(tmp/2.0f)-(e->offset*tmp),fxy[1],
                            raydium_gui_windows[window].widgets[w].font_size,
                            0.5,raydium_gui_theme_current.font,"|");
 // end of "printf"
@@ -918,7 +918,7 @@ void raydium_gui_check_draw(int w, int window)
     if (strlen(c->caption)>0)
     {
         fxy[0]=xy[0]+(xy[2]-xy[0]);
-        fxy[1]=xy[1]+(xy[3]-xy[1])/2;
+        fxy[1]=xy[1]+(xy[3]-xy[1])/2.0f;
         raydium_osd_color_change(scol[0],scol[1],scol[2]);
         raydium_osd_printf(fxy[0],fxy[1],
                            raydium_gui_windows[window].widgets[w].font_size,
@@ -1027,7 +1027,7 @@ void raydium_gui_combo_draw(int w, int window)
     if (c->current>=0 && c->current<nitems)
     {
         fxy[0]=xy[0];
-        fxy[1]=xy[1]+(xy[3]-xy[1])/2;
+        fxy[1]=xy[1]+(xy[3]-xy[1])/2.0f;
         tmp=raydium_gui_windows[window].widgets[w].font_size/RAYDIUM_OSD_FONT_SIZE_FACTOR;
         tmp2=(xy[2]-xy[0])-tmp;
         tmp2/=tmp;
@@ -1227,7 +1227,7 @@ void raydium_gui_combo_draw(int w, int window)
                 } // end if arrow
 
                 fxy[0]=xy[0];
-                fxy[1]=xy[1]+(xy[3]-xy[1])/2;
+                fxy[1]=xy[1]+(xy[3]-xy[1])/2.0f;
                 tmp=raydium_gui_windows[window].widgets[w].font_size/RAYDIUM_OSD_FONT_SIZE_FACTOR;
                 tmp2=(xy[2]-xy[0])-tmp;
                 tmp2/=tmp;
