@@ -665,7 +665,8 @@ __rayapi signed char raydium_ode_element_aabb_get (int element, dReal * aabb);
 AABB means Axis-Aligned Bounding Box. This function will return element's
 bounding box on X, Y and Z axis.
 
-##aabb## is a pointer to an array of 6 x dReal.
+##aabb## is a pointer to an array of 6 x dReal. The aabb array has 
+elements (minx, maxx, miny, maxy, minz, maxz).
 No memory allocation is done.
 Will return 0 (false) in case of failure.
 **/
