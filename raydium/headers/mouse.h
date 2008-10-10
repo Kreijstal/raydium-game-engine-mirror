@@ -8,7 +8,7 @@ Mouse
 // Introduction
 /**
 Mouse API is almost explainded at the top of this guide, but here it 
-is some other usefull functions (macros, in facts)
+is some other usefull functions (macros, in fact).
 **/
 
 
@@ -54,5 +54,22 @@ __rayapi int raydium_mouse_button_pressed (int button);
 /**
 returns ##button## state. (See first part of this document)
 **/
+
+// Mouse Wheel
+/**
+To get the mouse wheel status you have to check directly the variable 
+##raydium_mouse_click##. 
+ -Value 4 means "mouse wheel up". 
+ -Value 5 means "mouse wheel down".
+Usage example:
+%%(c)
+if (raydium_mouse_click==4)
+	zoom*=1.1f;
+if (raydium_mouse_click==5)
+	zoom*=0.9f;
+%%
+This piece of code will change the value of zoom according mouse wheel.
+**/
+
 
 #endif
