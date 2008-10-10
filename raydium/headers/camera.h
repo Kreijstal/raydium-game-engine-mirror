@@ -244,8 +244,7 @@ __rayapi void raydium_camera_orbitmove(float x_to, float y_to, float z_to);
 /**
 EXPERIMENTAL: This functions allows to rotate (in fact orbit) around a 
 certain point (x_to,y_to,z_to). The distance of the point to the camera
- can be changed with the up/down keys.NOTE: This behavior is temporal. It
-will be managed with mouse wheel.
+ can be changed with the up/down keys and with the mouse wheel.
 
 **/
 

@@ -730,19 +730,11 @@ raydium_mouse_move(raydium_window_tx/2.0f, raydium_window_ty/2.0f);
 
 delta_x+= raydium_mouse_x - (raydium_window_tx/2.0f);
 delta_y+= raydium_mouse_y - (raydium_window_ty/2.0f);
-//TODO:NOT YET SUPPORT FOR MOUSE WHEEL
-/*
-if(raydium_mouse_button_pressed(4) || raydium_key[GLUT_DOWN])
-{
-    zoom+=1.0;
-}
-if(raydium_mouse_button_pressed(6) || raydium_key[GLUT_UP])
-{
-    zoom-=1.0;
-}
-*/
+
 if(raydium_key[GLUT_KEY_UP])if(zoom>0)zoom-=0.1;
 if(raydium_key[GLUT_KEY_DOWN])zoom+=0.1;
+if(raydium_mouse_click==4)zoom-=1;
+if(raydium_mouse_click==5)zoom+=1;
 if(zoom<=0)zoom=0.001;
 
 raydium_camera_internal_prepare();
