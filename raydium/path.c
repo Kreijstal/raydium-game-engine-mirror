@@ -201,6 +201,7 @@ if(mode=='r')
     // ok ... file does not exists, search paths
     raydium_file_ext(ext,in);
     for(i=0;i<RAYDIUM_MAX_PATHS;i++)
+        {
         if( raydium_path_paths[i].state && 
             raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
             {
@@ -213,6 +214,16 @@ if(mode=='r')
                 {
                 strcpy(out,path);
                 return;
+                }
+            }
+            if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
+                {
+                sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
+                if(raydium_file_readable(path))
+                    {
+                    strcpy(out,path);
+                    return;
+                    }
                 }
             }
 

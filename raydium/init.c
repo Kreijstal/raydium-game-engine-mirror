@@ -506,6 +506,32 @@ int raydium_init_load(char *filename)
         {
                 raydium_background_color_change(tmp_background[0], tmp_background[1],tmp_background[2],tmp_background[3]);
         }
+        
+        //This must be placed after paths processing: Textures involved.
+        // Allow skybox load from local foldered path
+
+        if(flag_paths)
+            {
+            if(flag_paths==1)
+                {
+                //TODO Allow to specify base folder.
+                raydium_path_ext("./data/textures/","tga");
+                raydium_path_ext("./data/fonts/","tga");
+                raydium_path_ext("./data/shaders/","vert");
+                raydium_path_ext("./data/shaders/","frag");
+                raydium_path_ext("./data/meshes/","tri");
+                raydium_path_ext("./data/themes/","gui");
+                raydium_path_ext("./data/particles/","prt");
+                //raydium_path_ext("./data/cars/","car");
+                raydium_path_ext("./data/cams/","cam");
+                raydium_path_ext("./data/sprites/","sprite");
+                raydium_path_ext("./data/music/","wav");
+                raydium_path_ext("./data/music/","ogg");
+                raydium_path_ext("./","tga");
+                //raydium_path_ext("./data/levels/","goals");
+                //raydium_path_ext("./data/levels/","terrain");
+                }
+            }        
         //sky type
         if(flag_sky && tmp_sky!=-1)
         {            
@@ -521,28 +547,6 @@ int raydium_init_load(char *filename)
 		}
         //This must be placed after paths processing: Textures involved.
 
-        if(flag_paths)
-        {
-                if(flag_paths==1)
-                {
-                    //TODO Allow to specify base folder.
-                                raydium_path_ext("./data/textures/","tga");
-                                raydium_path_ext("./data/fonts/","tga");
-                                raydium_path_ext("./data/shaders/","vert");
-                                raydium_path_ext("./data/shaders/","frag");
-                                raydium_path_ext("./data/meshes/","tri");
-                                raydium_path_ext("./data/themes/","gui");
-                                raydium_path_ext("./data/particles/","prt");
-                                //raydium_path_ext("./data/cars/","car");
-                                raydium_path_ext("./data/cams/","cam");
-                                raydium_path_ext("./data/sprites/","sprite");
-                                raydium_path_ext("./data/music/","wav");
-                                raydium_path_ext("./data/music/","ogg");
-                                raydium_path_ext("./","tga");
-                                //raydium_path_ext("./data/levels/","goals");
-                                //raydium_path_ext("./data/levels/","terrain");
-                        }
-                }
 
         if(flag_hdr && tmp_hdr)
         {
