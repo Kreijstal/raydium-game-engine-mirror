@@ -38,15 +38,18 @@ FILE *file;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
 unsigned char *data;
 GLuint tx,ty,bpp,id;
-GLuint i,j,k,GLbpp=0,GLbppi;
+GLuint i,ii,j,jj,k,GLbpp=0,GLbppi;
 GLuint texsize=0;
 char blended=0,filter=0,cutout=0,simulate=0;
 char rgb;
-GLfloat r,g,b;
+GLfloat r,g,b,rrf;
 signed char reflect=0;
 GLint compressed=0;
 char comp_str[128];
 int flipped=0;
+char compress=0; // Handle compressed tga texture
+GLuint chunkid;
+char rle;
 
 // "as" is duplicated ?
 //check if the filename of the texture is already loaded
@@ -98,13 +101,15 @@ if(!rgb && !faked)
   }
 
  fread(temp,1,12,file);
- if(temp[2]!=2 && temp[2]!=3)
+ if(temp[2]!=2 && temp[2]!=3 && temp[2]!=10 && temp[2]!=11)
  {
      fclose(file);
-     raydium_log("%s is not an uncompressed TGA RGB or grayscale file (type %i)",filename,temp[2]);
-     return 0; //not a: uncompressed TGA RGB file
+     raydium_log("%s is not an TGA RGB or grayscale file (type %i)",filename,temp[2]);
+     return 0; //not a:  TGA RGB file
  }
-
+ if (temp[2]==10 || temp[2]==11)
+    compress=1;
+    
  fread(temp,1,6,file);
 
  tx = temp[1] * 256 + temp[0]; // highbyte*256+lowbyte
@@ -160,28 +165,71 @@ if(!rgb && !faked)
  fclose(file);
  raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
  return 0; }
+ 
+
+     chunkid=0;
+     rle=0;
+     
  //reading the image data in the file
- for(j=0; j<ty; j++)
- for(i=0; i<tx; i++)
+ for(jj=0; jj<ty; jj++)
+ for(ii=0; ii<tx; ii++)
  {
- if(fread(temp,1,bpp,file)!=bpp)
- { free(data); fclose(file);
- raydium_log("Invalid data in %s",filename);
- return 0; }
+ if (!compress) // Crossing finger about indent ;o)
+     {
+     if(fread(temp,1,bpp,file)!=bpp)
+     { free(data); fclose(file);
+     raydium_log("Invalid data in %s",filename);
+     return 0; }
+     i=ii;
+     j=jj;
+     }
+ else
+    {
+    if (chunkid==0) //Begin of a data chunk
+        {
+        if(fread(&chunkid,sizeof(GLubyte), 1,file)==0) //Read data chunk identification
+        { free(data); fclose(file);
+        raydium_log("Not enough data in %s",filename);
+        return 0; }
+        if (chunkid <128) // Normal raw pixel data
+            {
+            rle=0; // Not rle
+            chunkid++; // Number of chunks datas
+            }
+        else
+            {
+            rle=1; //Rle smae pixel repeated
+            chunkid=chunkid-127; // Number of pixels
+            if(fread(temp,1,bpp,file)!=bpp) // Read rle data
+            { free(data); fclose(file);
+            raydium_log("Invalid data in %s",filename);
+            return 0; }
+            }
+        }
+    if (!rle) // Not compressed data, reading pixel
+        {
+        if(fread(temp,1,bpp,file)!=bpp)
+        { free(data); fclose(file);
+        raydium_log("Invalid data in %s",filename);
+        return 0; }    
+        }
+    chunkid--;
+    i=ii;
+    j=ty-jj-1;
+    }
+ // Normal pixel handling.
  k=(( (ty-j-1) *tx)+i)*bpp;
  if(bpp == 1) data[k]=temp[0];
  else // no greyscale
   {
    if(reflect)
-    {
-    temp[0]*=RAYDIUM_RENDER_REFLECTION_FACT;
-    temp[1]*=RAYDIUM_RENDER_REFLECTION_FACT;
-    temp[2]*=RAYDIUM_RENDER_REFLECTION_FACT;
-    }
+    rrf=RAYDIUM_RENDER_REFLECTION_FACT;
+   else
+    rrf=1.0f;
 
-   data[k]=temp[2];
-   data[k+1]=temp[1];
-   data[k+2]=temp[0];
+   data[k]=temp[2]*rrf;
+   data[k+1]=temp[1]*rrf;
+   data[k+2]=temp[0]*rrf;
    if(bpp == 4)
     {
     data[k+3]=temp[3];
@@ -191,8 +239,7 @@ if(!rgb && !faked)
         cutout=1;
     }
   }
- }
-
+ }     
  fclose(file);
  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 } //end !rgb && !faked
