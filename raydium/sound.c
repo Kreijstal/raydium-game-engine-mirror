@@ -241,7 +241,7 @@ int raydium_sound_SetSourcePitch(int src, ALfloat p)
    p=2.0;//CLIPPING
    if(first)
         {
-        raydium_log("sound: Pitch Overflow, clipped to 2. Message will not be repeated !");
+        raydium_log("sound: Pitch (%f) Overflow, clipped to 2. Message will not be repeated !",p);
         first=0;
         }
   }
