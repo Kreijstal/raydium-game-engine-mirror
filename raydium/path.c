@@ -215,14 +215,14 @@ if(mode=='r')
                 strcpy(out,path);
                 return;
                 }
-            }
-        if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
-            {
-            sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
-            if(raydium_file_readable(path))
+            if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
                 {
-                strcpy(out,path);
-                return;
+                sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
+                if(raydium_file_readable(path))
+                    {
+                    strcpy(out,path);
+                    return;
+                    }
                 }
             }
         }
