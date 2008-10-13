@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/path.h"
-#endif 
+#endif
 
 #include "path.h"
 
@@ -155,7 +155,7 @@ int i;
 
 out[0]=0;
 for(i=0;i<RAYDIUM_MAX_PATHS;i++)
-    if( raydium_path_paths[i].state && 
+    if( raydium_path_paths[i].state &&
         raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
             {
             strcat(out,raydium_path_paths[i].path);
@@ -164,7 +164,7 @@ for(i=0;i<RAYDIUM_MAX_PATHS;i++)
                 strcat(out,"/*.");
                 strcat(out,raydium_path_paths[i].ext);
                 }
-            
+
             strcat(out,":");
             }
 
@@ -202,7 +202,7 @@ if(mode=='r')
     raydium_file_ext(ext,in);
     for(i=0;i<RAYDIUM_MAX_PATHS;i++)
         {
-        if( raydium_path_paths[i].state && 
+        if( raydium_path_paths[i].state &&
             raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
             {
             if(raydium_path_paths[i].ext[0] &&
@@ -216,16 +216,16 @@ if(mode=='r')
                 return;
                 }
             }
-            if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
+        if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
+            {
+            sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
+            if(raydium_file_readable(path))
                 {
-                sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
-                if(raydium_file_readable(path))
-                    {
-                    strcpy(out,path);
-                    return;
-                    }
+                strcpy(out,path);
+                return;
                 }
             }
+        }
 
     // ok, if we're here, the file does not exists at all, let's
     // prepare R3S job:
@@ -297,7 +297,7 @@ if(!ok)
 if(ok)
     {
     raydium_path_write(path);
-    raydium_path_add(path);    
+    raydium_path_add(path);
     raydium_log("path: OK");
     }
 else
