@@ -93,8 +93,9 @@ void display(void)
 /////////////////////////////////////////////
 // create reflection
 glViewport(0,0, water_textures_size, water_textures_size);
+glScalef(1.0, 1.0, -1.0);
 raydium_sky_box_render(raydium_camera_x,raydium_camera_y,raydium_camera_z);// glClear ok ...
-raydium_camera_replace();
+raydium_camera_replace(); // cancels the glScalef ...
 glTranslatef(0.0f, 0.0f, water_height*2.0f);
 glScalef(1.0, 1.0, -1.0);
 glPushMatrix();
