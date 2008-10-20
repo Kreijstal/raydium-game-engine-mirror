@@ -46,7 +46,7 @@ GLfloat r,g,b,rrf;
 signed char reflect=0;
 GLint compressed=0;
 char comp_str[128];
-int flipped=0;
+int flipx=0,flipy=0;
 char compress=0; // Handle compressed tga texture
 GLuint chunkid;
 char rle;
@@ -109,23 +109,25 @@ if(!rgb && !faked)
  }
  if (temp[2]==10 || temp[2]==11)
     compress=1;
-    
+
  fread(temp,1,6,file);
 
  tx = temp[1] * 256 + temp[0]; // highbyte*256+lowbyte
  ty = temp[3] * 256 + temp[2]; // highbyte*256+lowbyte
 
-//Checking vertical flipping.
-//if the 6th bit of the descriptor(temp[5]) is on, then the image is
-// flipped.
-//We take this into account to prevent the newer patch flip the old
-//cursors (bad coded). So don't remove or we'll lost  backward compability
-//Looks like all raydium textures are inversed (According the rest of
-//the people in the world) so we use negative logic.
- if(!(temp[5] & 0x20))
-    flipped=1;
+ if (temp[5] & 0x10)
+     flipx=1;
  else
-    flipped=0;
+     flipx=0;
+
+ if (temp[5] & 0x20)
+     flipy=1;
+ else
+     flipy=0;
+
+// It seem's that all texture are inverted, the inverted bit seem's insignifiant     
+//flipy=1;
+     
  //checking if you can use NPOT textures
  if(!raydium_texture_use_npot_textures)
  {
@@ -180,8 +182,6 @@ if(!rgb && !faked)
      { free(data); fclose(file);
      raydium_log("Invalid data in %s",filename);
      return 0; }
-     i=ii;
-     j=jj;
      }
  else
     {
@@ -214,11 +214,17 @@ if(!rgb && !faked)
         return 0; }    
         }
     chunkid--;
-    i=ii;
-    j=ty-jj-1;
     }
+ if (flipx)
+     i=tx-ii-1;
+ else    
+     i=ii;
+ if (flipy)
+     j=ty-jj-1;
+ else
+     j=jj;    
  // Normal pixel handling.
- k=(( (ty-j-1) *tx)+i)*bpp;
+ k=((j*tx)+i)*bpp;
  if(bpp == 1) data[k]=temp[0];
  else // no greyscale
   {
@@ -264,9 +270,6 @@ if((int)id==-1)
     raydium_log("texture: No more texture slots left ! (%i max)", RAYDIUM_MAX_TEXTURES);
     return 0;
 }
-
-//if we are loading a new image file, we apply the flip (if needed)
-if(!rgb && !faked) raydium_texture_flipped_vertical[id]=flipped;
 
 strcpy(raydium_texture_name[id],as);
 
@@ -440,12 +443,12 @@ if(!simulate)
   else
     strcpy(comp_str,"");
 
- raydium_log("Texture num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i f%i)%s",
+ raydium_log("Tex. num %i (%s) %s: %ix%i, %i Bpp (b%i lm%i hdr%i fx%i fy%i)%s",
              id,raydium_texture_name[id],
              (faked?"FAKED":"loaded"),
              tx,ty,bpp,
              blended,raydium_texture_islightmap[id],
-             raydium_texture_hdr[id],flipped,comp_str);
+             raydium_texture_hdr[id],flipx,flipy,comp_str);
  free(data);
 } else /* is rgb color */
 {
@@ -516,7 +519,6 @@ raydium_texture_rgb[1][id]=-1.f;
 raydium_texture_rgb[2][id]=-1.f;
 raydium_texture_rgb[3][id]=1.f;
 raydium_texture_hdr[id]=0;
-raydium_texture_flipped_vertical[id]=0;
 raydium_texture_used[id]=0;
 
 //rest the memory of this texture to the total

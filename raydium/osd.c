@@ -197,13 +197,13 @@ if(raydium_osd_logo_angle>90) raydium_osd_logo_angle=-90;
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 glBegin(GL_QUADS);
 glTexCoord2f(0,0);
-glVertex3f(-10,5,0);
-glTexCoord2f(1,0);
-glVertex3f(10,5,0);
-glTexCoord2f(1,1);
-glVertex3f(10,-5,0);
-glTexCoord2f(0,1);
 glVertex3f(-10,-5,0);
+glTexCoord2f(1,0);
+glVertex3f(10,-5,0);
+glTexCoord2f(1,1);
+glVertex3f(10,5,0);
+glTexCoord2f(0,1);
+glVertex3f(-10,5,0);
 glEnd();
 //raydium_rendering_internal_restore_render_state();
 
@@ -242,15 +242,11 @@ glTranslatef((((((GLfloat)raydium_mouse_x)/raydium_window_tx))*100.f) +raydium_o
 raydium_texture_current_set(raydium_osd_cursor_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
-//checking if the texture is vertically flipped (old raydium cursors)
-//Patch for keeping backwards compatibliby
-flip=raydium_texture_flipped_vertical[raydium_osd_cursor_texture];
-
 glBegin(GL_QUADS); 
-    glTexCoord2f(0,flip);glVertex3f(0,-raydium_osd_cursor_ysize,0); 
-    glTexCoord2f(1,flip);glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0); 
-    glTexCoord2f(1,!flip);glVertex3f(raydium_osd_cursor_xsize,0,0);
-    glTexCoord2f(0,!flip);glVertex3f(0,0,0);
+    glTexCoord2f(0,0);glVertex3f(0,-raydium_osd_cursor_ysize,0); 
+    glTexCoord2f(1,0);glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0); 
+    glTexCoord2f(1,1);glVertex3f(raydium_osd_cursor_xsize,0,0);
+    glTexCoord2f(0,1);glVertex3f(0,0,0);
 glEnd();
 raydium_rendering_internal_restore_render_state();
 
