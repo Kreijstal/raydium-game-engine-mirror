@@ -358,7 +358,7 @@ int main(int argc, char **argv)
     raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Volcano - Shaders and Particles");
     raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
     raydium_projection_near=0.1;
-    raydium_projection_far=400;
+    raydium_projection_far=600;
     raydium_projection_fov=60;
     raydium_fog_disable();
     raydium_fog_volumetric_support();
