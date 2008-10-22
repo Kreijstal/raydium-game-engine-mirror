@@ -372,6 +372,25 @@ quat[2] /= magnitude;
 quat[3] /= magnitude;
 }
 
+void raydium_math_quaternion_multiply(float *q1, float *q2, float *res)
+{
+float A, B, C, D, E, F, G, H;
+
+A = (q1[3] + q1[0])*(q2[3] + q2[0]);
+B = (q1[2] - q1[1])*(q2[1] - q2[2]);
+C = (q1[3] - q1[0])*(q2[1] + q2[2]); 
+D = (q1[1] + q1[2])*(q2[3] - q2[0]);
+E = (q1[0] + q1[2])*(q2[0] + q2[1]);
+F = (q1[0] - q1[2])*(q2[0] - q2[1]);
+G = (q1[3] + q1[1])*(q2[3] - q2[2]);
+H = (q1[3] - q1[1])*(q2[3] + q2[2]);
+
+res[3] = B + (-E - F + G + H)/2.0f;//w
+res[0] = A - ( E + F + G + H)/2.0f;//x 
+res[1] = C + ( E - F + G - H)/2.0f;//y 
+res[2] = D + ( E - F - G + H)/2.0f;//z
+}
+
 #define SLERP_TO_LERP_SWITCH_THRESHOLD 0.01f
 void raydium_math_quaternion_slerp(float *start, float *end, float alpha,float *result)
 {
