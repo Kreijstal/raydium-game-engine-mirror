@@ -232,6 +232,32 @@ glUseProgramObjectARB(curr);
 return ret;
 }
 
+signed char raydium_shader_var_fv(int var_id, int num,float value[])
+{
+if(!raydium_shader_support)
+    return 0;
+
+glUniform1fvARB(var_id,num,value);
+return 1;
+}
+
+signed char raydium_shader_var_fv_name(char *shader, char *variable, int num, float value[])
+{
+signed char ret;
+GLhandleARB curr;
+int sid;
+
+if(!raydium_shader_support)
+    return 0;
+
+curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+sid=raydium_shader_find(shader);
+if(sid>=0) glUseProgramObjectARB(raydium_shader_shaders[sid].prog);
+ret=raydium_shader_var_fv(raydium_shader_variable(sid,variable),num,value);
+glUseProgramObjectARB(curr);
+return ret;
+}
+
 signed char raydium_shader_var_f(int var_id, float value)
 {
 if(!raydium_shader_support)

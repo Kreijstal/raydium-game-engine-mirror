@@ -167,4 +167,19 @@ __rayapi void raydium_shader_internal_vertex_attributes(int i);
 Internal. Per vertex "callback" from render.c for shader attributes.
 **/
 
+__rayapi signed char raydium_shader_var_fv(int var_id, int num, float value[]);
+/**
+This function will change the array of ##num## ##values## of the variable ##var_id## of
+the current shader.
+Value is a float array.
+Num is an integer.
+**/
+
+__rayapi signed char raydium_shader_var_fv_name(char *shader, char *variable, int num, float value[]);
+/**
+Same as above, but using shader's name and variable's name. This function is
+able to change the ##variable##'s ##value## even if the ##shader## is not
+the current one.
+**/
+
 #endif
