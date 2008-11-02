@@ -41,7 +41,7 @@ class source:
 		self.filename=filename
 		self.file=open(filename,"r")
 
-	def readFaces(self):
+	def readFaces(self,meshname):
 		
 		lines = self.file.readlines();
 		p = Blender.sys.dirname(self.filename)
@@ -49,7 +49,8 @@ class source:
 		print "CWD is now %s" % (p)
 		scene=Blender.Scene.GetCurrent()
 		
-		mesh = Blender.Mesh.New()
+		print "Creating %s Mesh" % meshname
+		mesh = Blender.Mesh.New(meshname)
 		
 		words = lines[0].split()
 		if len(words) <>1 :
@@ -205,7 +206,9 @@ def importTRI(filename):
 	t=sys.time()
 	if filename.find('.tri', -4) <= 0: filename += '.tri'
 	obj=source(filename)
-	ret = obj.readFaces()
+	file = Blender.sys.basename(filename)
+	meshname = file.split('.')
+	ret = obj.readFaces(meshname[0])
 	obj.close
 	if ret>0:
 		print "Imported."
