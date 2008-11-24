@@ -7,48 +7,48 @@ Timecalls
 
 // Concept
 /**
-As you may already know, in a real time application (as a game), you need 
+As you may already know, in a real time application (as a game), you need
 to control in-game time evolution.
-For example, you cannot increment a car position by 1 at each frame since 
-it will generate an irregular scrolling (a frame is never rendered within 
+For example, you cannot increment a car position by 1 at each frame since
+it will generate an irregular scrolling (a frame is never rendered within
 the same time as the previous or the next one).
 
-Raydium supports timecalls, wich are a great solution for this problem. 
-Usage is very simple: write a simple function, and ask Raydium to call it 
+Raydium supports timecalls, wich are a great solution for this problem.
+Usage is very simple: write a simple function, and ask Raydium to call it
 at the desired rate.
 **/
 
 // Constraints
 /**
 There is an important risk with timecalls: infinite loops.
-If a callback is long, it may take more CPU time than ig should, as in this
+If a callback is long, it may take more CPU time than it should, as in this
 very simple example:
 
-foo() is a function, taking 200 ms for his own execution. If you ask for 
-a 6 Hz execution, Raydium will execute foo() six times on the first frame, 
-taking 1200 ms. On the next frame, Raydium will need to execute foo() 7 
-times (the asked 6 times, and one more for the 200 ms lost during the last 
+foo() is a function, taking 200 ms for his own execution. If you ask for
+a 6 Hz execution, Raydium will execute foo() six times on the first frame,
+taking 1200 ms. On the next frame, Raydium will need to execute foo() 7
+times (the asked 6 times, and one more for the 200 ms lost during the last
 frame), taking 1400 ms, so 8 times will be needed for the next frame, then 9, ...
 
-So you need to create callbacks as short as possible, since long callbacks 
+So you need to create callbacks as short as possible, since long callbacks
 may cause a game freeze on slower machines than yours. (1 FPS syndrom)
 **/
 
 // Hardware devices and methods
 /**
 Raydium must use a very accurate system timer, and will try many methods:
-##/dev/rtc## , ##gettimeofday()## (Linux only) and 
+##/dev/rtc## , ##gettimeofday()## (Linux only) and
 ##QueryPerformanceCounter## for win32.
 
-##gettimeofday()## will use a CPU counter and is extremely accurate. 
+##gettimeofday()## will use a CPU counter and is extremely accurate.
 It's far the best method. (0.001 ms accuracy is possible)
 
-##/dev/rtc## is quite good, and Raydium will try to configure RTC at 
-##RAYDIUM_TIMECALL_FREQ_PREFERED## rate (8192 Hz by default), but may 
+##/dev/rtc## is quite good, and Raydium will try to configure RTC at
+##RAYDIUM_TIMECALL_FREQ_PREFERED## rate (8192 Hz by default), but may
 require a "##/proc/sys/dev/rtc/max-user-freq##" modification:
 ##echo 8192 > /proc/sys/dev/rtc/max-user-freq##
 
-You may want to look at common.c for interesting defines about timecalls. 
+You may want to look at common.c for interesting defines about timecalls.
 **/
 
 #ifdef WIN32
@@ -126,8 +126,8 @@ raydium_timecall_add(function,800);
 %%(c)
 raydium_timecall_add(function,-80);
 %%
-##void function(float step)## will be called for each frame, with a 
-"##step## factor" as argument. In the above example, a 160 Hz game will call 
+##void function(float step)## will be called for each frame, with a
+"##step## factor" as argument. In the above example, a 160 Hz game will call
 function with step = 0.5, but step = 2.0 for a 40 Hz game.
 
 A standard timecall will use ##void(void)## function and a positive ##hertz##

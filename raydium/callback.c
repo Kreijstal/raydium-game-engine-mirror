@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/callback.h"
-#endif 
+#endif
 
 void raydium_osd_cursor_draw(void);
 void raydium_console_draw(void);
@@ -115,7 +115,7 @@ if(raydium_init_cli_option("autoexec2",autoexec))
 #endif
 raydium_callback_loop=loop;
 glutDisplayFunc(raydium_callback_internal_loop_wrapper);
-glutIdleFunc(raydium_callback_internal_loop_wrapper);    
+glutIdleFunc(raydium_callback_internal_loop_wrapper);
 }
 
 void raydium_loop(void){
