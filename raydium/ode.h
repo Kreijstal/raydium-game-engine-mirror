@@ -53,7 +53,7 @@
 
 #define RAYDIUM_ODE_SLIP_ICE                    5.f
 #define RAYDIUM_ODE_SLIP_PLAYER                 10.f
-#define RAYDIUM_ODE_SLIP_NORMAL                 0.4f            
+#define RAYDIUM_ODE_SLIP_NORMAL                 0.4f
 #define RAYDIUM_ODE_SLIP_DEFAULT                RAYDIUM_ODE_SLIP_NORMAL
 
 #define RAYDIUM_ODE_TAG_EXPLOSION               -1
@@ -94,6 +94,7 @@ __global void *         raydium_ode_CollideCallback; // signed char f(int,int,dC
 __global void *         raydium_ode_StepCallback; // void f(void)
 __global void *         raydium_ode_ObjectNearCollide; // signed char f(int,int)
 __global void *         raydium_ode_RayCallback; // signed char f(int,int,dContact*)
+__global void *         raydium_ode_PickCallback; // CallBack for mouse Picking
 __global signed char    raydium_ode_network_distant_create;
 __global signed char    raydium_ode_network_next_local_only;
 __global signed char    raydium_ode_network_explosion_create;
@@ -187,7 +188,7 @@ typedef struct raydium_ode_Ray
     // nearest contact
     dReal   min_dist;
     int     min_elem;
-    dReal   min_pos[3];    
+    dReal   min_pos[3];
 } raydium_ode_Ray;
 
 typedef struct raydium_ode_Element
@@ -208,7 +209,7 @@ typedef struct raydium_ode_Element
     dGeomID geom;
     dBodyID body;
     dReal   erp;
-    dReal   cfm;    
+    dReal   cfm;
     void *  user_data; // point to user data
     int     user_tag; // tag reseverd to user (this tag is networked)
     raydium_ode_ElementInternalSave *fixed_elements[RAYDIUM_ODE_ELEMENT_MAX_FIXING];

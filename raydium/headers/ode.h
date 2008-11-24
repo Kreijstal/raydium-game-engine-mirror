@@ -665,7 +665,7 @@ __rayapi signed char raydium_ode_element_aabb_get (int element, dReal * aabb);
 AABB means Axis-Aligned Bounding Box. This function will return element's
 bounding box on X, Y and Z axis.
 
-##aabb## is a pointer to an array of 6 x dReal. The aabb array has 
+##aabb## is a pointer to an array of 6 x dReal. The aabb array has
 elements (minx, maxx, miny, maxy, minz, maxz).
 No memory allocation is done.
 Will return 0 (false) in case of failure.
@@ -796,8 +796,8 @@ to read back this value later on an element.
 - ##mesh##: 3D model used for rendering this element. Use an empty string to
 disable rendering (and not ##NULL## !), and avoid ##RAYDIUM_ODE_AUTODETECT##
 int this case.
-##IMPORTANT##: The capsules are ALWAYS CREATED IN Z AXIS. Your meshes should 
-take this into account.So, the capsule meshes should have the length in Z 
+##IMPORTANT##: The capsules are ALWAYS CREATED IN Z AXIS. Your meshes should
+take this into account.So, the capsule meshes should have the length in Z
 axis.
 **/
 
@@ -1815,6 +1815,8 @@ __rayapi int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth);
 Mouse picking function. Return raydium_element pointed by mouse on the screen.
 ##dist## is maximal detection distance (range).
 ##pos## Global 3D position of pointed point. ##depth## distance from point of view.
+Use ##raydium_ode_PickCallback## (as signed char f(int,int,dContact*)) to filter
+contacts points. Uses as other collide callback but is specific to Pick function.
 **/
 
 __rayapi void raydium_ode_set_physics_freq (GLfloat freq);
@@ -1930,7 +1932,7 @@ Internal frame callback for capture playing.
 __rayapi void raydium_ode_autodisable_set(signed char autod);
 /**
 RayODE can automatically disable resting elements.
-This is useful for physical solver. It don't have to reserve space in 
+This is useful for physical solver. It don't have to reserve space in
 the solver matrix and compute solution for this element.
 
 This can greatly speed up the program, but may cause some strange

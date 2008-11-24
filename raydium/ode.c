@@ -1334,7 +1334,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             }
         // ODE: "cylinder's length is not counting the caps (half-spheres)"
         length-=(radius*2.f);
-        
+
         if(radius<=0 || length<=0)
             {
             raydium_log("ODE: Error: cannot create capsule: invalid size: The full lenght has to be at least twice the radius (Z aligned)");
@@ -4066,7 +4066,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 gluCylinder(quadratic,cradius,cradius,clength,8,4);
                 glutWireSphere(cradius,8,8);
                 gluDeleteQuadric(quadratic);
-                }            
+                }
             // else TriMesh ...
 
 
@@ -4938,7 +4938,7 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
     dContact pt;
     signed char (*f)(int,int, dContact *);
 
-    f=raydium_ode_CollideCallback;
+    f=raydium_ode_PickCallback;
 
     // Get mouse pointed coordinate
     gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
@@ -5455,7 +5455,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             pos[j]=raydium_ode_element[i].capture_pos1[j]+
                     (raydium_ode_element[i].capture_pos2[j] -
                      raydium_ode_element[i].capture_pos1[j])*diff;
-        
+
         raydium_math_quaternion_slerp(raydium_ode_element[i].capture_rot1,raydium_ode_element[i].capture_rot2,diff,result);
 
         raydium_ode_element_move(i,pos);
