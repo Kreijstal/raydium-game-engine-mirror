@@ -31,11 +31,17 @@ float raydium_timecall_internal_w32_detect_modulo(int div)
 {
  LARGE_INTEGER t;
  unsigned long mx;
- 
+
  QueryPerformanceFrequency(&t);
  t.QuadPart >>= div;
- mx=(0xFFFFFFFF / t.LowPart); 
- return mx/60.f;
+ if (t.HighPart>0)
+    {
+    //Handle to high clock frequency
+    //Raydium can't handle this.
+    return 0.0f;
+    }
+ mx=(0xFFFFFFFF / t.LowPart); // Max 32 bit time period
+ return mx/60.f; // Return max time count in minutes
 }
 
 
@@ -44,6 +50,8 @@ int raydium_timecall_internal_w32_divmodulo_find(void)
 float modulo_time;
 int div;
 
+// Find a correct divide to have at least RAYDIUM_TIMECALL_W32_MODULO_MIN minutes
+// before an overflow occurs.
 div=-1;
 do{
 div++;
@@ -80,7 +88,7 @@ if(ret>0)
         raydium_log("timecall: ERROR: reading /dev/rtc failed at runtime");
         perror("system");
         }
-        else 
+        else
         {
         // read first 3 bytes only
         missed=(data & 0xffffff00UL)>>8;
@@ -88,7 +96,7 @@ if(ret>0)
 //      raydium_log("%i",raydium_timecall_devrtc_clocks);
         }
  }
- 
+
 return raydium_timecall_devrtc_clocks;
 #else
 return 0;
@@ -112,6 +120,7 @@ if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
     LARGE_INTEGER t;
     if(!QueryPerformanceCounter(&t))raydium_log("TIMECALL ERROR: Your system can not provide data(high resolution timer) to QueryPerformanceCounter function. Please tell us about this in the raydium forum.Thanks");
     t.QuadPart>>=raydium_timecall_w32_divmodulo;
+// Originaly return t.LowPart<<1; Why does this is multiplied by 2 ?
     return t.LowPart;
   }
  #else
@@ -166,7 +175,7 @@ unsigned long raydium_timecall_devrtc_init(void)
 #ifndef WIN32
  unsigned long freq;
  raydium_timecall_devrtc_clocks=0;
- 
+
  if((raydium_timecall_devrtc_handle = open ("/dev/rtc", O_RDONLY)) == -1 )
  {
   raydium_log("timecall: ERROR: /dev/rtc unavailable ! (chmod a+rx /dev/rtc ?)");
@@ -191,11 +200,11 @@ unsigned long raydium_timecall_devrtc_init(void)
    if(!raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED)) return 0;
    else freq=RAYDIUM_TIMECALL_FREQ_PREFERED; // need to verify this new value ?
   }
- 
+
  if(freq<RAYDIUM_TIMECALL_FREQ_PREFERED)
   {
    raydium_log("timecall: /dev/rtc rate (%i Hz) is low (prefered: %i)",freq,RAYDIUM_TIMECALL_FREQ_PREFERED);
-   if(raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED)) 
+   if(raydium_timecall_devrtc_rate_change(RAYDIUM_TIMECALL_FREQ_PREFERED))
       freq=RAYDIUM_TIMECALL_FREQ_PREFERED; // need to verify this new value ?
   }
 
@@ -252,7 +261,7 @@ i++;
 second=raydium_timecall_clock();
 }
 
-raydium_log("timer: detection: %li iterations: diff: %li steps (%li/sec)",i,second-first,raydium_timecall_clocks_per_sec);
+raydium_log("timer: detection: %i iterations: diff: %li steps (%li/sec)",i,second-first,raydium_timecall_clocks_per_sec);
 accu=((second-first)/(float)raydium_timecall_clocks_per_sec)*1000;
 max=1.0/(accu/1000);
 raydium_log("timecall: method accuracy = %.3f ms (%.2f Hz)",accu,max);
@@ -303,12 +312,15 @@ if(tmp) {
 
 if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
 {
-raydium_log("timecall: Using basic gettimeofday() method");
-raydium_timecall_clocks_per_sec=__GETTIMEOFDAY_USEC;
+
 #ifdef WIN32
 //QueryPerformanceFrequency(&t);
+raydium_log("timecall: Using Win32 QueryPerformanceCounter method");
 raydium_timecall_clocks_per_sec=t.LowPart;
 //printf("%i %i %i\n",t.LowPart,t.HighPart,t.QuadPart);
+#else
+raydium_log("timecall: Using basic gettimeofday() method");
+raydium_timecall_clocks_per_sec=__GETTIMEOFDAY_USEC;
 #endif
 
 }
@@ -388,7 +400,7 @@ if(last>now)
     {
     raydium_log("timecall: warning: time modulo detected: workarounding");
     for(i=0;i<raydium_timecall_index;i++)
-        if(!raydium_timecall_soft_call[i] && 
+        if(!raydium_timecall_soft_call[i] &&
             raydium_timecall_interval[i])
             {
               // reset timecall next value
@@ -403,7 +415,7 @@ for(i=0;i<raydium_timecall_index;i++)
  {
  now=raydium_timecall_clock();
 
-   if(!raydium_timecall_soft_call[i] && (time_t)now>=raydium_timecall_next[i] && raydium_timecall_interval[i])
+   if(!raydium_timecall_soft_call[i] && now>=raydium_timecall_next[i] && raydium_timecall_interval[i])
     {
     steps=((now-raydium_timecall_next[i])/raydium_timecall_interval[i])+1;
     phase=(now-raydium_timecall_next[i])-((steps-1)*raydium_timecall_interval[i]);
@@ -413,8 +425,8 @@ for(i=0;i<raydium_timecall_index;i++)
     if(steps>1000) { // DEBUG ! need to calculate this value
                     steps=100;
                     raydium_log("WARNING: timecall's too long");
-                 }    
-    
+                 }
+
 //    raydium_log("debug: need %i steps",steps);
     f=raydium_timecall_funct[i];
 

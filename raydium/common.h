@@ -30,10 +30,10 @@
 # else
 #   ifdef FORCE_LIBRAYDIUM
 #       define __global extern
-#       define __rayapi 
+#       define __rayapi
 #   else
-#       define __global 
-#       define __rayapi 
+#       define __global
+#       define __rayapi
 #   endif
 # endif
 #else // Not under WIN32
@@ -690,8 +690,8 @@ __global int            raydium_timecall_devrtc_handle;
 __global unsigned long  raydium_timecall_devrtc_clocks;
 __global void *         raydium_timecall_funct[RAYDIUM_MAX_TIMECALLS];
 __global GLint          raydium_timecall_soft_call[RAYDIUM_MAX_TIMECALLS];
-__global clock_t        raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
-__global clock_t        raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
+__global unsigned long  raydium_timecall_interval[RAYDIUM_MAX_TIMECALLS];
+__global unsigned long  raydium_timecall_next[RAYDIUM_MAX_TIMECALLS];
 __global int            raydium_timecall_w32_divmodulo;
 __global unsigned long  raydium_timecall_debug_movie;
 
