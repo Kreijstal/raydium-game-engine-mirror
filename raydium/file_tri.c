@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/file_tri.h"
-#endif 
+#endif
 
 // WARNING: most functions of this file are not part of Raydium yet !
 // So, be carefull with functions without "raydium_file" prefix.
@@ -57,8 +57,8 @@ for(bl=0;bl<2;bl++)
   else
   strcpy(text,raydium_texture_name[raydium_vertex_texture[i]]);
 
-#ifdef DONT_SAVE_DUMMY_TEXTURE 
-  if(raydium_vertex_texture[i]) 
+#ifdef DONT_SAVE_DUMMY_TEXTURE
+  if(raydium_vertex_texture[i])
 #endif
   fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
   raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
@@ -148,7 +148,7 @@ if(sep_env)
   for(i=0;name[i];i++)
         if(name[i]==ENVMAP_SEP)
            count++;
-        
+
   if(count>=RAYDIUM_RENDER_MAX_TEXUNITS)
         {
         raydium_log("ERROR: file_tri: this file request %i texunits, only %i are available here",count+1,RAYDIUM_RENDER_MAX_TEXUNITS);
@@ -165,10 +165,10 @@ if(sep_env)
   while(raydium_parser_cut(todo,part1,part2,'#'))
         {
         raydium_texture_current_env[count++]=raydium_texture_find_by_name(part1);
-        strcpy(todo,part2);          
+        strcpy(todo,part2);
         }
   raydium_texture_current_env[count++]=raydium_texture_find_by_name(todo);
-  
+
   return 3;
 }
 
@@ -185,8 +185,8 @@ if(sep && sep2)
   raydium_texture_current_set_name(name);
   *sep=MULTI_SEP;
   return 2;
-} 
- 
+}
+
 
 // 2 textures, but 0 uv
 if(sep && !sep2)
@@ -198,11 +198,11 @@ if(sep && !sep2)
   raydium_texture_current_multi_u=-99999;
   raydium_texture_current_multi_v=-99999;
   return 1;
-} 
-  
+}
+
 // 1 texture and 0 uv
 if(!sep && !sep2)
-{ 
+{
   raydium_texture_current_multi=0;
   raydium_texture_current_set_name(name);
   return 0;
@@ -213,7 +213,7 @@ return -1; // should never reach this
 
 
 
-void read_vertex_from(char *filename)
+int read_vertex_from(char *filename)
 {
 GLfloat x,y,z,nx,ny,nz,u,v;
 int i,ii;
@@ -224,7 +224,7 @@ FILE *fp;
 char name[RAYDIUM_MAX_NAME_LEN];
 
 fp=raydium_file_fopen(filename,"rt");
-if(!fp) { printf("cannot read from file \"%s\", fopen() failed\n",filename); return; }
+if(!fp) { printf("cannot read from file \"%s\", fopen() failed\n",filename); return 0; }
 fscanf(fp,"%i\n",&visu);
 
 
@@ -235,13 +235,13 @@ if(visu==2)
     {
     int j,k;
     fscanf(fp,"%i %i\n",&j,&k);
-    
+
     if(j>RAYDIUM_MAX_OBJECT_ANIMS)
         {
         raydium_log("object: too much anims for this file ! (%i max)",RAYDIUM_MAX_OBJECT_ANIMS);
         j=RAYDIUM_MAX_OBJECT_ANIMS; // will no work ;) (fixme)
         }
-    
+
     raydium_object_anims[raydium_object_index]=j;
     raydium_object_anim_len[raydium_object_index]=k;
     raydium_object_anim_instance_current[raydium_object_index]=0;
@@ -311,7 +311,7 @@ else if(visu<0)
 
 }
 
-if(i%3) 
+if(i%3)
     {
     printf("ERROR with object %s ... must be *3 !",filename);
     // and generate dummy vertices ?
@@ -322,4 +322,5 @@ fclose(fp);
 raydium_texture_current_multi=0;
 raydium_texture_current_set(save);
 //printf("loaded.\n");
+return 1;
 }

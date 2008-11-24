@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/object.h"
-#endif 
+#endif
 
 GLint raydium_object_find(char *name)
 {
@@ -39,16 +39,20 @@ raydium_object_anims[o]=0;
 
 int raydium_object_load(char *filename)
 {
+int ret;
 if(raydium_object_find(filename)>=0)
     {
     raydium_log("ERROR: object: %s already loaded",filename);
     return -1;
     }
 raydium_object_start[raydium_object_index]=raydium_vertex_index;
-read_vertex_from(filename);
+ret=read_vertex_from(filename);
 raydium_object_end[raydium_object_index]=raydium_vertex_index;
 strcpy(raydium_object_name[raydium_object_index],filename);
-return(raydium_object_index++);
+if (ret)
+    return(raydium_object_index++);
+else
+    return -1;
 }
 
 GLint raydium_object_find_load(char *name)
@@ -110,7 +114,7 @@ if(raydium_render_displaylists_tag && !raydium_shadow_rendering)
 else raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
 
 #else
-// No display lists, draw 
+// No display lists, draw
 raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
 #endif
 }
@@ -121,8 +125,8 @@ GLint i;
 
 i=raydium_object_find(name);
 
-if(i>=0) raydium_object_draw(i); 
-else 
+if(i>=0) raydium_object_draw(i);
+else
 raydium_object_draw(raydium_object_load(name));
 }
 
@@ -141,7 +145,7 @@ for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
     raydium_vertex_x[i]-=tx;
     raydium_vertex_y[i]-=ty;
     raydium_vertex_z[i]-=tz;
-    }   
+    }
 }
 
 void raydium_object_deform(GLuint obj,GLfloat ampl)
@@ -177,8 +181,8 @@ for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
     nz=oz+raydium_random_neg_pos_1()*ampl;
 
     for(j=i;j<raydium_object_end[obj];j++)
-        if(raydium_vertex_x[j]==ox && 
-           raydium_vertex_y[j]==oy && 
+        if(raydium_vertex_x[j]==ox &&
+           raydium_vertex_y[j]==oy &&
            raydium_vertex_z[j]==oz)
         {
         raydium_vertex_x[j]=nx;
@@ -408,7 +412,7 @@ anim_frame_current=raydium_object_anim_frame_current[object][instance];
 
 // How many frames for the current anim ?
 anim_frames=
-    raydium_object_anim_end[object][anim_current] - 
+    raydium_object_anim_end[object][anim_current] -
     raydium_object_anim_start[object][anim_current];
 
 flag=0;
@@ -450,7 +454,7 @@ if( ((int)anim_frame_current) >= anim_frames)
             raydium_object_anim_len[object]) +
             raydium_object_anim_len[object];
     }
-else    
+else
     frame_b=frame_a+raydium_object_anim_len[object];
 
 
@@ -480,13 +484,13 @@ if(raydium_object_anim_previous[object][instance]>=0)
         anim_frame_current=raydium_object_anim_frame_previous[object][instance];
 
         anim_frames=
-            raydium_object_anim_end[object][anim_current] - 
+            raydium_object_anim_end[object][anim_current] -
             raydium_object_anim_start[object][anim_current];
 
         // slow ... :( (any good idea to make a modulo on a float ?)
         while(anim_frame_current>(anim_frames+1))
             anim_frame_current-=(anim_frames+1);
-        
+
         //printf(" with %i (%f)\n",anim_current,anim_frame_current);
 
         factor=(raydium_object_anim_frame_current[object][instance]-raydium_object_anim_frame_previous_timeout[object][instance]);
@@ -498,7 +502,7 @@ if(raydium_object_anim_previous[object][instance]>=0)
             raydium_object_anim_len[object]) +
             raydium_object_anim_len[object];
         }
-    
+
     //printf("refresh from %i/%i (a) and %i/%i (b), factor = %.2f (%i af)\n",frame_a,frame_a/raydium_object_anim_len[object],frame_b,frame_b/raydium_object_anim_len[object],factor,anim_frames);
     }
 
@@ -550,7 +554,7 @@ if(!raydium_object_isvalid(object))
 if(anim<0 || anim>=raydium_object_anims[object])
     {
     raydium_log("object: anim: ERROR: id or name is invalid for animation");
-    return;    
+    return;
     }
 
 if(raydium_object_anim_current[object][instance]==anim)
@@ -599,7 +603,7 @@ if(!raydium_object_isvalid(object))
 if(anim<0 || anim>=raydium_object_anims[object])
     {
     raydium_log("object: anim_automatic: ERROR: id or name is invalid for animation");
-    return;    
+    return;
     }
 
 //printf("%i %i %f\n",object,anim,factor);
@@ -623,11 +627,11 @@ int o,i;
 
 for(o=0;o<raydium_object_index;o++)
     if(raydium_object_anims[o]>0)
-        for(i=0;i<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;i++)    
+        for(i=0;i<RAYDIUM_MAX_OBJECT_ANIM_INSTANCES;i++)
             {
             f=raydium_frame_time * raydium_object_anim_time_factor *
               raydium_object_anim_automatic_factor[o][raydium_object_anim_current[o][i]];
-            raydium_object_anim_frame_current[o][i]+=f;    
+            raydium_object_anim_frame_current[o][i]+=f;
             }
 }
 
@@ -643,7 +647,7 @@ if(!raydium_object_isvalid(object))
 if(anim<0 || anim>=raydium_object_anims[object])
     {
     raydium_log("object: anim_default: ERROR: id or name is invalid for animation");
-    return;    
+    return;
     }
 
 raydium_object_anim_default_anim[object]=anim;
@@ -678,7 +682,7 @@ if(!raydium_object_isvalid(object))
 if(anim<0 || anim>=raydium_object_anims[object])
     {
     raydium_log("object: anim_punctually: ERROR: id or name is invalid for animation");
-    return;    
+    return;
     }
 
 raydium_object_anim(object,instance,anim);

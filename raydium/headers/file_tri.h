@@ -18,9 +18,9 @@ available (see ##object.c##).
 
 1. version 1: providing normals and uv texture mapping informations.
 2. version 0: providing uv texture mapping.
-3. version -1: only providing vertices. 
+3. version -1: only providing vertices.
 4. version 2: mesh animation support
-         
+
 Version 1 example file:
 %%
 1
@@ -29,10 +29,10 @@ Version 1 example file:
 5.0 11.75 -3.82 0.0000 0.0000 -1.0000 0.5158 0.5365 rgb(0.5,0.5,0.5)
 ...
 %%
-              
+
 You can find the file version on first line, and then data.
 Next lines: vertex position (x,y,z), normal (x,y,z), texture mapping (u,v)
-and texture (string). 
+and texture (string).
 
 Version 2 files are a bit different, as showed below:
 %%
@@ -77,9 +77,10 @@ This function analyze texture filename, and search for extended multitexturing
 informations (u,v and another texture).
 **/
 
-__rayapi void read_vertex_from (char *filename);
+__rayapi int read_vertex_from (char *filename);
 /**
 Loads filename. Again, avoid use of this function.
+return 0 if filename access error/ 1 if load successfull
 **/
 
 #endif
