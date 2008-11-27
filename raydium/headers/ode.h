@@ -285,7 +285,7 @@ __rayapi int raydium_ode_ground_dTriCallback (dGeomID TriMesh, dGeomID RefObject
 Internal. Unsupported.
 **/
 
-__rayapi void raydium_ode_ground_set_name (char *name);
+__rayapi int raydium_ode_ground_set_name (char *name);
 /**
 ##ground## is a primitive for RayODE interface. You only have to set ground
 mesh ##name## (.tri file). You may call this function many times, if needed,
@@ -592,6 +592,23 @@ Sets ##OnDelete## to ##NULL## if you want to disable this callback.
 __rayapi void raydium_ode_element_OnDelete_name (char *e, void *OnDelete);
 /**
 Same as above, but using element's name.
+**/
+
+__rayapi void raydium_ode_object_OnDelete (int o, void *OnDelete);
+/**
+OnDelete callback is fired when someone or something tries to delete an object.
+This callback can cancel deletion, if needed.
+
+##OnDelete## callback must follow this prototype :
+##int object_delete(int obj)##
+##obj## is the object id. Return 1 (true) to confirm deletion, of 0 to cancel.
+
+Sets ##OnDelete## to ##NULL## if you want to disable this callback.
+**/
+
+__rayapi void raydium_ode_object_OnDelete_name (char *o, void *OnDelete);
+/**
+Same as above, but using object's name.
 **/
 
 __rayapi void raydium_ode_element_gravity (int e, signed char enable);
@@ -1119,6 +1136,27 @@ allows you to get back the tag's value, even on "distant" elements.
 __rayapi int raydium_ode_element_tag_get_name (char *e);
 /**
 Same as above, but using element's name.
+**/
+
+__rayapi void raydium_ode_object_data_set (int o, void *data);
+/**
+You may want to link some data to any object. If so, use this function
+and provide a pointer to your ##data## for element ##e##.
+**/
+
+__rayapi void raydium_ode_object_data_set_name (char *o, void *data);
+/**
+Same as above, but using object's name.
+**/
+
+__rayapi void *raydium_ode_object_data_get (int e);
+/**
+This function will return a pointer to your linked data, if any (see above).
+**/
+
+__rayapi void *raydium_ode_object_data_get_name (char *e);
+/**
+Same as above, but using object's name.
 **/
 
 __rayapi void raydium_ode_joint_suspension (int j, dReal erp, dReal cfm);

@@ -37,6 +37,8 @@ raydium_ode_object[i].name[0]=0;
 raydium_ode_object[i].state=0;
 raydium_ode_object[i].colliding=0;
 raydium_ode_object[i].group=NULL;
+raydium_ode_object[i].user_data=NULL;
+raydium_ode_object[i].OnDelete=NULL;
 }
 
 
@@ -329,7 +331,7 @@ raydium_vertex_tag[TriangleIndex*3]=1;
 return 1;
 }
 
-void raydium_ode_ground_set_name(char *name)
+int raydium_ode_ground_set_name(char *name)
 {
 unsigned int i,j,k;
 int obj,size;
@@ -353,7 +355,7 @@ if(raydium_ode_ground_mesh>=0)
     dGeomTriMeshDataDestroy(Data);
     /*
     Data=dGeomTriMeshDataCreate();
-     dGeomTriMeshDataBuildSingle(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0],size,3*sizeof(int));
+    dGeomTriMeshDataBuildSingle(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0],size,3*sizeof(int));
     geom=dCreateTriMesh(raydium_ode_space, Data, 0, 0, 0);
     */
     free(Indices);
@@ -364,7 +366,7 @@ obj=raydium_object_find_load(name);
 if(obj<0)
     {
     raydium_log("ODE: Error: cannot load ground (%s)",name);
-    return;
+    return 0;
     }
 
 // let's transform tri file format to ODE format ...
@@ -424,6 +426,7 @@ dGeomSetData(geom,&raydium_ode_element[0]);
 //dGeomTriMeshSetCallback(geom,raydium_ode_ground_dTriCallback);
 
 raydium_shadow_ground_change(obj); // send new ground to shadow system
+return 1;
 }
 
 
@@ -2068,6 +2071,51 @@ int raydium_ode_element_tag_get_name(char *e)
 return raydium_ode_element_tag_get(raydium_ode_element_find(e));
 }
 
+void raydium_ode_object_data_set(int o, void *data)
+{
+if(!raydium_ode_object_isvalid(o))
+    {
+    raydium_log("ODE: Error: Cannot set object data: invalid index or name");
+    return;
+    }
+raydium_ode_object[o].user_data=data;
+}
+
+void *raydium_ode_object_data_get(int o)
+{
+if(!raydium_ode_object_isvalid(o))
+    {
+    raydium_log("ODE: Error: Cannot get object data: invalid index or name");
+    return NULL;
+    }
+return raydium_ode_object[o].user_data;
+}
+
+void *raydium_ode_object_data_get_name(char *o)
+{
+return raydium_ode_object_data_get(raydium_ode_object_find(o));
+}
+
+void raydium_ode_object_data_set_name(char *o, void *data)
+{
+raydium_ode_object_data_set(raydium_ode_object_find(o),data);
+}
+
+void raydium_ode_object_OnDelete(int o, void *OnDelete)
+{
+if(!raydium_ode_object_isvalid(o))
+    {
+    raydium_log("ODE: Error: cannot set OnDelete callback: invalid name or index");
+    return;
+    }
+raydium_ode_object[o].OnDelete=OnDelete;
+}
+
+void raydium_ode_object_OnDelete_name(char *o, void *OnDelete)
+{
+raydium_ode_object_OnDelete(raydium_ode_object_find(o),OnDelete);
+}
+
 // move object elements to pos (pos is used for the LAST element of your object)
 void raydium_ode_object_move(int obj, dReal *pos)
 {
@@ -3387,6 +3435,7 @@ return raydium_ode_element_delete(raydium_ode_element_find(name),deletejoints);
 signed char raydium_ode_object_delete(int obj)
 {
 int i;
+int (*f)(int);
 //raydium_ode_Element *e;
 
 if(!raydium_ode_object_isvalid(obj))
@@ -3400,6 +3449,9 @@ if(obj == raydium_ode_object_find("GLOBAL"))
     raydium_log("ODE: Error: Cannot delete special \"GLOBAL\" object");
     return 0;
     }
+
+f=raydium_ode_object[obj].OnDelete;
+    if(f && !f(obj)) return 0; // user cancel
 
 for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
     if(raydium_ode_motor[i].state &&

@@ -243,8 +243,10 @@ typedef struct raydium_ode_Object
 {
     int      id;
     char     name[RAYDIUM_MAX_NAME_LEN];
+    void *   user_data; // point to user data
     signed char     state;
     signed char     colliding; // elements of this objet can collide each other
+    void *   OnDelete;
     dSpaceID group;
 //    dGeomID group;
 } raydium_ode_Object;
@@ -323,4 +325,5 @@ void raydium_ode_network_element_trajectory_correct(int elem);
 
 // (#ifdef RAY_ODE_H)
 #endif
+
 
