@@ -213,6 +213,9 @@ dWorldSetContactMaxCorrectingVel(raydium_ode_world,10);
 // wow ! This is my first init dependance ;)
 raydium_ode_object_create("GLOBAL");
 raydium_ode_network_init();
+#ifndef VERSION
+#define VERSION "Unknow Ode version (config.h)"
+#endif
 raydium_log("physics: ODE (%s)",VERSION);
 raydium_log("physics: ODE Net: %i element(s)/packet",raydium_ode_network_MaxElementsPerPacket());
 raydium_log("physics: OK");
