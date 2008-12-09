@@ -16,7 +16,7 @@ void raydium_sky_box_name(char *name)
 {
 char c_name[RAYDIUM_MAX_NAME_LEN];
 
-if(!name)
+if(!name || strlen(name)==0)
     strcpy(c_name,"");
 else
     sprintf(c_name,"_%s_",name);
