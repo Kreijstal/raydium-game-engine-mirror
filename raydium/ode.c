@@ -177,6 +177,7 @@ raydium_ode_element_delete_LOCK=0;
 
 raydium_ode_record_fp=NULL;
 raydium_ode_record_play_fp=NULL;
+raydium_ode_record_play_ghost_tag=0;
 
 for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
     raydium_ode_init_object(i);
@@ -4273,6 +4274,10 @@ if(dGeomIsSpace (o1) || dGeomIsSpace (o2))
     oo2=dGeomGetData(o2);
     g=raydium_ode_ObjectNearCollide;
     if(g && !g(oo1->id,oo2->id)) return;
+    if(raydium_ode_record_play_fp && raydium_ode_record_play_ghost_tag && 
+       (raydium_ode_record_play_world==oo1->id || 
+        raydium_ode_record_play_world==oo2->id ))
+        return;
     dSpaceCollide2 (o1,o2,data,&raydium_ode_near_callback);
     return;
     }
@@ -5419,6 +5424,11 @@ fclose(fp);
 fseek(raydium_ode_record_play_fp,old_pos,SEEK_SET);
 
 raydium_log("ODE: replay: playback: index: %i step(s) and %i event(s)",raydium_ode_record_index_size,n_events);
+}
+
+void raydium_ode_record_play_ghost(signed char ghost)
+{
+raydium_ode_record_play_ghost_tag=(ghost?1:0);
 }
 
 void raydium_ode_capture_play(char *rrp_filename, signed char change_ground)

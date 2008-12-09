@@ -1914,6 +1914,12 @@ __rayapi void raydium_ode_capture_play_internal_index_build(void);
 Internal. Builds index, needed for RRP playing.
 **/
 
+__rayapi void raydium_ode_record_play_ghost(signed char ghost);
+/**
+Set ##ghost## to true (1) if you want to avoid all collisions between "your"
+elements and replay ones. Default is false (0).
+**/
+
 __rayapi void raydium_ode_capture_play(char *rrp_filename, signed char change_ground);
 /**
 This function will play ##rrp_filename## file, and default speed.

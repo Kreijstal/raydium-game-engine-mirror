@@ -300,6 +300,7 @@ __global unsigned int *raydium_ode_record_index_moves;
 __global raydium_ode_record_play_Index *raydium_ode_record_index_forward;
 __global raydium_ode_record_play_Index *raydium_ode_record_index_backward;
 __global unsigned int raydium_ode_record_index_size;
+__global signed char raydium_ode_record_play_ghost_tag;
 
 /*
 void raydium_ode_callback(void);
