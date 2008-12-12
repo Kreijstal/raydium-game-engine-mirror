@@ -22,6 +22,7 @@
 #define RAYDIUM_GUI_CHECK       5
 #define RAYDIUM_GUI_COMBO       6
 #define RAYDIUM_GUI_ZONE        7
+#define RAYDIUM_GUI_COLORPICK   8
 
 #define RAYDIUM_GUI_NORMAL      1
 #define RAYDIUM_GUI_FOCUS       2
@@ -50,6 +51,14 @@ typedef struct raydium_gui_Zone
     GLfloat  col_hover[4];
     int      tag;
 } raydium_gui_Zone;
+
+typedef struct raydium_gui_Colorpick
+{
+    raydium_gui_Zone *  zone;
+    signed char         expanded;
+    GLfloat             picker_zoom_factor;
+    unsigned int        picker_texture;
+} raydium_gui_Colorpick;
 
 typedef struct raydium_gui_Label
 {
@@ -136,7 +145,7 @@ typedef struct raydium_gui_Window
 
 typedef struct raydium_gui_Theme
 {
-    signed char     loaded;
+    signed char loaded;
     char     filename[RAYDIUM_MAX_NAME_LEN];
     int      texture;
     int      texture_size[2];

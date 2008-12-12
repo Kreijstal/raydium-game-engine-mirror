@@ -25,9 +25,9 @@ First, compile ##mk_jpgs##: example: ##gcc mk_jpgs.c -o mk_jpgs## or any other
 standard build command.
 Then, generate JPEG pictures (using a temporary directory, if possible), with
 something like mplayer, for example:
-##mplayer movie.avi -vo jpeg:quality=50 -vf scale=256:256##, where you may
-change quality factor and output size. Use "hardware friendly" sizes (64,
-128,256,...) !
+##mplayer movie.avi -vo jpeg:quality=50 -vf scale=256:256 -nosound -fps 1000##, 
+where you may change quality factor and output size. Use "hardware friendly" 
+sizes (64, 128,256,...) !
 You can now build JPGS file:
 ##./mk_jpgs 25 256 256 video.jpgs## (fps, size x, size y, output file)
 If you want to extract the audio, use this:

@@ -13,7 +13,7 @@ Graphic User Interfaces
 Raydium provides a support for simple GUI definitions thru a set of
 functions (RayPHP interface is available).
 Raydium's GUI are themable, using ".gui" theme text files. A default "full"
-theme is provided as "theme-raydium2.gui" (and suitable ".tga" file) on the 
+theme is provided as "theme-raydium3.gui" (and suitable ".tga" file) on the 
 data repository.
 Complete informations about theme building are readable in this file.
 **/
@@ -145,6 +145,11 @@ __rayapi void raydium_gui_zone_draw(int w, int window);
 Internal use.
 **/
 
+__rayapi void raydium_gui_colorpick_draw(int w, int window);
+/**
+Internal use.
+**/
+
 __rayapi void raydium_gui_window_draw(int window);
 /**
 Internal use.
@@ -218,6 +223,11 @@ Internal use. Combo write accessor.
 __rayapi int raydium_gui_zone_read(int window, int widget, char *str);
 /**
 Internal use. Zone read accessor.
+**/
+
+__rayapi int raydium_gui_colorpick_read(int window, int widget, char *str);
+/**
+Internal use. Color picker accessor.
 **/
 
 __rayapi void raydium_gui_show(void);
@@ -344,13 +354,18 @@ Unit for position (##px## and ##py##): percents (**window**)
 __rayapi int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, int tag, void *OnClick);
 /**
 This function will create a "zone" with ##name## and with ##window## for
-parent. A zone will act like a button, but  will highlight a rectangular area 
+parent. A zone will act like a button, but will highlight a rectangular area 
 of the window.
 
 This widget will return its ##tag## when you'll read it, and will 
 update ##raydium_gui_button_clicked()## value when clicked.
 
 Unit for position/size (##px##, ##py##, ##sx## and ##sy##): percents (**window**)
+**/
+
+__rayapi int raydium_gui_colorpick_create(char *name, int window, GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, GLfloat r, GLfloat g, GLfloat b);
+/**
+Need doc here !
 **/
 
 __rayapi int raydium_gui_read(int window, int widget, char *str);
@@ -423,6 +438,26 @@ Sets focus on ##widget## for ##window##.
 __rayapi void raydium_gui_widget_focus_name(char *widget, char *window);
 /**
 Same as above, but using widget and window names
+**/
+
+__rayapi signed char raydium_gui_colorpick_hex2rgb(char *hex_string, GLfloat *rgb);
+/**
+...
+**/
+
+__rayapi signed char raydium_gui_colorpick_rgb2hex(GLfloat *rgb, char *hex_string);
+/**
+...
+**/
+
+__rayapi void raydium_gui_internal_colorpick_click(raydium_gui_Object *obj);
+/**
+Internal use.
+**/
+
+__rayapi void raydium_gui_internal_colorpick_color(raydium_gui_Colorpick *cp, GLfloat r, GLfloat g, GLfloat b);
+/**
+Internal use.
 **/
 
 #endif

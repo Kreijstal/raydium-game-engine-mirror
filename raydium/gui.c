@@ -295,9 +295,6 @@ void raydium_gui_widget_draw_internal(GLfloat *uv, GLfloat *xy)
     raydium_rendering_internal_prepare_texture_render(raydium_gui_theme_current.texture);
 
     glBegin(GL_QUADS);
-
-
-
         glTexCoord2f(uv[0],uv[3]);glVertex3f(xy[0],xy[1],0);
         glTexCoord2f(uv[2],uv[3]);glVertex3f(xy[2],xy[1],0);
         glTexCoord2f(uv[2],uv[1]);glVertex3f(xy[2],xy[3],0);
@@ -515,6 +512,76 @@ void raydium_gui_zone_draw(int w, int window)
     }
 }
 
+void raydium_gui_colorpick_draw(int w, int window)
+{
+raydium_gui_Colorpick *cp;
+GLfloat uv[4];
+GLfloat xy[4];
+GLfloat mxy[2];
+GLfloat wfactor[2];
+GLfloat max_size;
+GLfloat screen_ratio;
+GLfloat dec;
+unsigned int ptex;
+
+if (!raydium_gui_window_isvalid(window))
+    return;
+if (!raydium_gui_widget_isvalid(w,window))
+    return;
+
+cp=raydium_gui_windows[window].widgets[w].widget;
+if(!cp->expanded)
+    return;
+
+if(!cp->picker_texture)
+    return;
+
+mxy[0]=    ((float)raydium_mouse_x/raydium_window_tx)*100;
+mxy[1]=100-((float)raydium_mouse_y/raydium_window_ty)*100;
+
+wfactor[0]=raydium_gui_windows[window].size[0]/100.;
+wfactor[1]=raydium_gui_windows[window].size[1]/100.;
+
+max_size=raydium_math_max(raydium_gui_windows[window].widgets[w].size[0],
+                          raydium_gui_windows[window].widgets[w].size[1]);
+screen_ratio=(float)raydium_window_tx/(float)raydium_window_ty;
+dec=(max_size*cp->picker_zoom_factor)/2.f;
+
+xy[0]=raydium_gui_windows[window].pos[0]+
+      (raydium_gui_windows[window].widgets[w].pos[0]*wfactor[0]);
+xy[1]=raydium_gui_windows[window].pos[1]+
+      (raydium_gui_windows[window].widgets[w].pos[1]*wfactor[1]);
+xy[2]=raydium_gui_windows[window].pos[0] +
+      (raydium_gui_windows[window].widgets[w].pos[0]*wfactor[0]) +
+      max_size*cp->picker_zoom_factor;
+xy[3]=raydium_gui_windows[window].pos[1] +
+      (raydium_gui_windows[window].widgets[w].pos[1]*wfactor[1]) +
+      max_size*cp->picker_zoom_factor*screen_ratio;
+
+xy[0]-=dec;
+xy[1]-=dec;
+xy[2]-=dec;
+xy[3]-=dec;
+
+uv[0]=0;
+uv[1]=0;
+uv[2]=1;
+uv[3]=1;
+
+raydium_osd_start();
+raydium_texture_current_set(cp->picker_texture);
+raydium_rendering_internal_prepare_texture_render(cp->picker_texture);
+
+glBegin(GL_QUADS);
+    glTexCoord2f(uv[0],uv[3]);glVertex3f(xy[0],xy[1],0);
+    glTexCoord2f(uv[2],uv[3]);glVertex3f(xy[2],xy[1],0);
+    glTexCoord2f(uv[2],uv[1]);glVertex3f(xy[2],xy[3],0);
+    glTexCoord2f(uv[0],uv[1]);glVertex3f(xy[0],xy[3],0);
+glEnd();
+
+raydium_osd_stop();
+
+}
 
 void raydium_gui_track_draw(int w, int window)
 {
@@ -1327,7 +1394,7 @@ void raydium_gui_window_draw(int window)
                 break;
             }
 
-// draw combos last (overlay all components)
+// draw combos and color pickers last (overlay all components)
     for (i=0;i<RAYDIUM_GUI_MAX_OBJECTS;i++)
         if (raydium_gui_widget_isvalid(i,window))
             switch (raydium_gui_windows[window].widgets[i].type)
@@ -1335,7 +1402,11 @@ void raydium_gui_window_draw(int window)
             case RAYDIUM_GUI_COMBO:
                 raydium_gui_combo_draw(i,window);
                 break;
+            case RAYDIUM_GUI_COLORPICK:
+                raydium_gui_colorpick_draw(i,window);
+                break;
             }
+
 
 // unfocus component
     if (raydium_mouse_click==1)
@@ -1585,6 +1656,30 @@ int raydium_gui_zone_read(int window, int widget, char *str)
     return z->tag;
 }
 
+int raydium_gui_colorpick_read(int window, int widget, char *str)
+{
+    raydium_gui_Colorpick *c;
+
+    if (!raydium_gui_widget_isvalid(widget,window))
+    {
+        raydium_log("gui: error: cannot read widget value: invalid name or index");
+        return 0;
+    }
+
+    c=raydium_gui_windows[window].widgets[widget].widget;
+    sprintf(str,"%X%X%X",c->zone->col_normal[0],
+                         c->zone->col_normal[1],
+                         c->zone->col_normal[2]);
+    return c->zone->col_normal[0]*256*256+
+           c->zone->col_normal[1]*256+
+           c->zone->col_normal[2]*1; // should take care of (un)signed return :/
+}
+
+// !!!! must update header doc, too !
+int raydium_gui_colorpick_write(int window, int widget, char *str)
+{
+return 0;
+}
 
 ////////////////////////////
 // "public" GUI functions //
@@ -2357,6 +2452,93 @@ int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLf
 
 }
 
+int raydium_gui_colorpick_create(char *name, int window, GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, GLfloat r, GLfloat g, GLfloat b)
+{
+    int wid;
+    int zone_id;
+    raydium_gui_Colorpick *c;
+    raydium_gui_Zone *zone;
+    char zone_name[RAYDIUM_MAX_NAME_LEN];
+    GLfloat sx_org,sy_org;
+// used for parsing
+    FILE *fp;
+    int ret;
+    char var[RAYDIUM_MAX_NAME_LEN];
+    char val_s[RAYDIUM_MAX_NAME_LEN];
+    GLfloat val_f[4];
+    int size;
+
+    c=malloc(sizeof(raydium_gui_Colorpick));
+    if (!c)
+    {
+        raydium_log("GUI: Error: Cannot create \"%s\" color picker: malloc failed",name);
+        return -1;
+    }
+
+    fp=raydium_file_fopen(raydium_gui_theme_current.filename,"rt");
+    if (!fp)
+    {
+        raydium_log("gui: ERROR: Cannot open current theme file");
+        return -1;
+    }
+
+    sx_org=sx;
+    sy_org=sy;
+    if (raydium_gui_window_isvalid(window))
+    {
+        sx*=raydium_gui_windows[window].size[0]/100.;
+        sy*=raydium_gui_windows[window].size[1]/100.;
+    }
+
+    while ( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
+    {
+        if (!strcasecmp(var,"colorpick_texture"))
+        {
+            if (ret!=RAYDIUM_PARSER_TYPE_STRING)
+            {
+                raydium_log("gui: parser: colorpick_texture: wrong type");
+                continue;
+            }
+            c->picker_texture=raydium_texture_find_by_name(val_s);
+            if(!c->picker_texture)
+                raydium_log("gui: ERROR: invalid colorpick_texture (%s)", c->picker_texture);
+        }
+        if (!strcasecmp(var,"colorpick_picker_zoom_factor"))
+        {
+            if (ret!=RAYDIUM_PARSER_TYPE_FLOAT || size!=1)
+            {
+                raydium_log("gui: parser: picker_zoom_factor: wrong type");
+                continue;
+            }
+            c->picker_zoom_factor=val_f[0];
+        }
+    }
+    fclose(fp);
+
+    wid=raydium_gui_internal_object_create(name,window,RAYDIUM_GUI_COLORPICK,px,py,sx,sy,0);
+    if (wid<0)
+        {
+        raydium_log("GUI: Error: early init failed for color picker '%s'",name);
+        return -1;
+        }
+
+    sprintf(zone_name,"%s_zone",name);
+    zone_id=raydium_gui_zone_create(zone_name,window,px,py,sx_org,sy_org,
+                                    wid,raydium_gui_internal_colorpick_click);
+
+    if(zone_id<0)    
+        {
+        raydium_log("GUI: Error: color picker: cannot create (sub)zone '%s'",zone_name);
+        return -1;
+        }
+    
+    c->zone=raydium_gui_windows[window].widgets[zone_id].widget;
+    c->expanded=0;
+    raydium_gui_internal_colorpick_color(c,r,g,b);
+    raydium_gui_windows[window].widgets[wid].widget=c;
+    return wid;
+}
+
 // str may be big !
 int raydium_gui_read(int window, int widget, char *str)
 {
@@ -2378,6 +2560,8 @@ int raydium_gui_read(int window, int widget, char *str)
             return raydium_gui_combo_read(window,widget,str);
         case RAYDIUM_GUI_ZONE:
             return raydium_gui_zone_read(window,widget,str);
+        case RAYDIUM_GUI_COLORPICK:
+            return raydium_gui_colorpick_read(window,widget,str);
         }
     }
     else
@@ -2428,6 +2612,8 @@ signed char raydium_gui_write(int window, int widget, char *str, int value)
         return raydium_gui_combo_write(window,widget,value);
 //case RAYDIUM_GUI_ZONE:
         // ...
+    case RAYDIUM_GUI_COLORPICK:
+        return raydium_gui_colorpick_write(window,widget,str);
     }
 
     return -1; // nothing was done
@@ -2470,4 +2656,60 @@ int raydium_gui_list_id(char *item, char *list)
             start=i+1;
         }
     return -1;
+}
+
+signed char raydium_gui_colorpick_hex2rgb(char *hex_string, GLfloat *rgb)
+{
+return 0;
+}
+
+signed char raydium_gui_colorpick_rgb2hex(GLfloat *rgb, char *hex_string)
+{
+return 0;
+}
+
+
+void raydium_gui_internal_colorpick_click(raydium_gui_Object *obj)
+{
+// Love this one. Readability is everything !
+int tag;
+raydium_gui_Colorpick *cp;
+
+tag=((raydium_gui_Zone *)(obj->widget))->tag; 
+cp=raydium_gui_windows[obj->window].widgets[tag].widget;
+cp->expanded=(cp->expanded?0:1);
+}
+
+
+void raydium_gui_internal_colorpick_color(raydium_gui_Colorpick *cp, GLfloat r, GLfloat g, GLfloat b)
+{
+#define RAY_COLORPICK_SEL_COL_OFFSET 0.1
+GLfloat val_f[4];
+val_f[0]=r;
+val_f[1]=g;
+val_f[2]=b;
+val_f[3]=1.0;
+memcpy(cp->zone->col_normal,val_f,sizeof(GLfloat)*4);
+
+if(r+RAY_COLORPICK_SEL_COL_OFFSET<1)
+    r+=RAY_COLORPICK_SEL_COL_OFFSET;
+else
+    r-=RAY_COLORPICK_SEL_COL_OFFSET;
+
+if(g+RAY_COLORPICK_SEL_COL_OFFSET<1)
+    g+=RAY_COLORPICK_SEL_COL_OFFSET;
+else
+    g-=RAY_COLORPICK_SEL_COL_OFFSET;
+
+if(b+RAY_COLORPICK_SEL_COL_OFFSET<1)
+    b+=RAY_COLORPICK_SEL_COL_OFFSET;
+else
+    b-=RAY_COLORPICK_SEL_COL_OFFSET;
+
+val_f[0]=r;
+val_f[1]=g;
+val_f[2]=b;
+
+memcpy(cp->zone->col_focus,val_f,sizeof(GLfloat)*4);
+memcpy(cp->zone->col_hover,val_f,sizeof(GLfloat)*4);
 }
