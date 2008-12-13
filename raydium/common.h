@@ -239,7 +239,7 @@
 
 #define RAYDIUM_SOUND_NUM_BUFFERS               30
 #define RAYDIUM_SOUND_NUM_SOURCES               30
-#define RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD      0.01 // 10 ms
+#define RAYDIUM_SOUND_VIDEO_SYNC_THRESHOLD      0.1 // 100 ms
 #define SOUNDDATASIZE                           (4096*20)
 //#define RAYDIUM_SOUND_NUM_ENVIRONMENTS                1
 

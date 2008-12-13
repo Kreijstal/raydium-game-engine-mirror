@@ -16,6 +16,16 @@ raydium_joy_key_emul();
 if(raydium_key_last==1027)
     exit(0);
 
+if(raydium_key_last==100)
+    raydium_video_seek_rel_name("video",-10);
+if(raydium_key_last==102)
+    raydium_video_seek_rel_name("video",10);
+if(raydium_key_last==103)
+    raydium_video_seek_rel_name("video",-60);
+if(raydium_key_last==101)
+    raydium_video_seek_rel_name("video",60);
+
+
 raydium_clear_frame();
 raydium_live_texture_mask_name("video",1);
 raydium_rendering_finish();

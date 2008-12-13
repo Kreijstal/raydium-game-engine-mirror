@@ -138,5 +138,37 @@ __rayapi void raydium_video_fps_change_name(char *name, float fps);
 Same as above, using video name.
 **/
 
+__rayapi float raydium_video_elapsed(int id);
+/**
+Will return, in seconds, the elapsed time for the video ##id##.
+**/
+
+__rayapi float raydium_video_elapsed_name(char *name);
+/**
+Same as above, using video name.
+**/
+
+
+__rayapi signed char raydium_video_seek(int id, float time);
+/**
+Will jump at ##time## (in seconds) in the ##id## video.
+**/
+
+__rayapi signed char raydium_video_seek_name(char *name, float time);
+/**
+Same as above, using video name.
+**/
+
+__rayapi signed char raydium_video_seek_rel(int id, float time);
+/**
+Will seek from ##time## seconds in the video ##id## from the current elasped
+time. It's a relative jump, in other words.
+You can use negative values for forward jumps.
+**/
+
+__rayapi signed char raydium_video_seek_rel_name(char *name, float time);
+/**
+Same as above, using video name.
+**/
 
 #endif

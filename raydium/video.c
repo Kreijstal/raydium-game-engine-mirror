@@ -324,3 +324,51 @@ void raydium_video_fps_change_name(char *name, float fps)
 raydium_video_fps_change(raydium_video_find(name),fps);
 }
 
+float raydium_video_elapsed(int id)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot get video elapsed time: invalid index or name");
+    return 0;
+    }
+
+return raydium_video_video[id].elapsed;
+}
+
+float raydium_video_elapsed_name(char *name)
+{
+return raydium_video_elapsed(raydium_video_find(name));
+}
+
+signed char raydium_video_seek(int id, float time)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot seek video: invalid index or name");
+    return 0;
+    }
+
+raydium_video_video[id].elapsed=time;
+return 1;
+}
+
+signed char raydium_video_seek_name(char *name, float time)
+{
+return raydium_video_seek(raydium_video_find(name),time);
+}
+
+signed char raydium_video_seek_rel(int id, float time)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot (relative) seek video: invalid index or name");
+    return 0;
+    }
+
+return raydium_video_seek(id,raydium_video_elapsed(id)+time);
+}
+
+signed char raydium_video_seek_rel_name(char *name, float time)
+{
+return raydium_video_seek_rel(raydium_video_find(name),time);
+}
