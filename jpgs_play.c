@@ -57,6 +57,7 @@ if(raydium_video_open_with_sound(video,"video",sound) < 0)
     exit(0);
     }
 
+raydium_render_fps_limit(120);
 raydium_callback(&display);
 return(0);
 }
