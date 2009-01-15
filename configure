@@ -242,6 +242,10 @@ php_install()
 
 ####### Main
 
+if [ "`uname`" = "Darwin" ]; then
+    exit_if_error 1 "This script does not include support for your target. Please use the iCompile script from the SDK to build the samples (e. g. \"./iCompile test6.c\")."
+fi
+
 for i in "$@"; do
     if [ $i = "--help" ]; then
 	usage_print
