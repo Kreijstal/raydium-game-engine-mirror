@@ -760,8 +760,8 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
         makeMenu();
 
         // Initialise origin and size of the window.
-        origin[0] = x + 16;
-        origin[1] = y + 50;
+        origin[0] = (horScrSze/2)-(w/2);
+        origin[1] = (verScrSze/2)-(h/2);
         size[0] = w;
         size[1] = h;
 
