@@ -301,7 +301,7 @@ msgstr "Beeindruckend! Schneller als der Autor!"
 
 #: mania_drive.c:1626
 msgid "Right ! You got it."
-msgstr "So ist es richtig! Du hasst es geschafft."
+msgstr "So ist es richtig! Du hast es geschafft."
 
 #: mania_drive.c:1634
 msgid "- Try again (press space key) -"
