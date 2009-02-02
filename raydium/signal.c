@@ -13,7 +13,19 @@
 
 void raydium_signal_handler(int sig)
 {
-raydium_log("signal %i disabled.",sig);
+static signed char already=0;
+
+if(!already)
+    {
+    raydium_log("Signal %i disabled. Call it again to confirm.",sig);
+    already=1;
+    }
+else
+    {
+    // May be called multiple times (when an atexit fails, for instance)
+    raydium_log("Accepting signal %i, exiting.");
+    exit(1);
+    }
 }
 
 void raydium_signal_install_trap(void)
