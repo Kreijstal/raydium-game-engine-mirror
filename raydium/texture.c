@@ -125,9 +125,9 @@ if(!rgb && !faked)
  else
      flipy=0;
 
-// It seem's that all texture are inverted, the inverted bit seem's insignifiant     
+// It seem's that all texture are inverted, the inverted bit seem's insignifiant
 //flipy=1;
-     
+
  //checking if you can use NPOT textures
  if(!raydium_texture_use_npot_textures)
  {
@@ -167,11 +167,11 @@ if(!rgb && !faked)
  fclose(file);
  raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
  return 0; }
- 
+
 
      chunkid=0;
      rle=0;
-     
+
  //reading the image data in the file
  for(jj=0; jj<ty; jj++)
  for(ii=0; ii<tx; ii++)
@@ -211,18 +211,18 @@ if(!rgb && !faked)
         if(fread(temp,1,bpp,file)!=bpp)
         { free(data); fclose(file);
         raydium_log("Invalid data in %s",filename);
-        return 0; }    
+        return 0; }
         }
     chunkid--;
     }
  if (flipx)
      i=tx-ii-1;
- else    
+ else
      i=ii;
  if (flipy)
      j=ty-jj-1;
  else
-     j=jj;    
+     j=jj;
  // Normal pixel handling.
  k=((j*tx)+i)*bpp;
  if(bpp == 1) data[k]=temp[0];
@@ -245,7 +245,7 @@ if(!rgb && !faked)
         cutout=1;
     }
   }
- }     
+ }
  fclose(file);
  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 } //end !rgb && !faked
@@ -460,12 +460,12 @@ if(!simulate)
  if(r<0 && g<0 && b<0)
     {
     raydium_texture_blended[id]=RAYDIUM_TEXTURE_PHANTOM;
-    raydium_log("Texture num %i is Phantom (depth buffer only)",id);
+    raydium_log("Tex. num %i is Phantom (depth buffer only)",id);
     }
  else
  {
     raydium_texture_blended[id]=0;
-    raydium_log("Texture num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
+    raydium_log("Tex. num %i, rgb(%f,%f,%f) is RGB Color",id,r,g,b);
  }
 }
 if(id>0)raydium_texture_used[id]=TRUE;
