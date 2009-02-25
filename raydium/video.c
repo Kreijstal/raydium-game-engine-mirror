@@ -340,6 +340,22 @@ float raydium_video_elapsed_name(char *name)
 return raydium_video_elapsed(raydium_video_find(name));
 }
 
+float raydium_video_duration(int id)
+{
+if(!raydium_video_isvalid(id))
+    {
+    raydium_log("video: ERROR: cannot get video duration: invalid index or name");
+    return 0;
+    }
+
+return raydium_video_video[id].frames_total/raydium_video_video[id].fps;
+}
+
+float raydium_video_duration_name(char *name)
+{
+return raydium_video_duration(raydium_video_find(name));
+}
+
 signed char raydium_video_seek(int id, float time)
 {
 if(!raydium_video_isvalid(id))

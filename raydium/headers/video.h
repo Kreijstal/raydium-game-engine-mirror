@@ -148,6 +148,15 @@ __rayapi float raydium_video_elapsed_name(char *name);
 Same as above, using video name.
 **/
 
+__rayapi float raydium_video_duration(int id);
+/**
+Will return, in seconds, the total duration for the video ##id##.
+**/
+
+__rayapi float raydium_video_duration_name(char *name);
+/**
+Same as above, using video name.
+**/
 
 __rayapi signed char raydium_video_seek(int id, float time);
 /**
