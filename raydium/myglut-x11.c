@@ -125,7 +125,7 @@ _glutMouseVisible=1;
 
 
 
-void mylgutCloseWindow(void)
+void myglutCloseWindow(void)
 {
   glXDestroyContext ( currDisplay, currContext ) ;
   XDestroyWindow    ( currDisplay, currHandle  ) ;

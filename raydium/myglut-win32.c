@@ -40,7 +40,7 @@ _glutMouseVisible=1;
 }
 
 
-void mylgutCloseWindow(void)
+void myglutCloseWindow(void)
 {
 wglMakeCurrent ( NULL, NULL ) ;
 wglDeleteContext ( currGLRC ) ;

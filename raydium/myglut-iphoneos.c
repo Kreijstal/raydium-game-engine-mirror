@@ -76,7 +76,7 @@ void myglutGetEvents(void)
     }
 }
 
-void mylgutCloseWindow(void)
+void myglutCloseWindow(void)
 {
     exit(0);
 }

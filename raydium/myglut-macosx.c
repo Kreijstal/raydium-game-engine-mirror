@@ -241,7 +241,7 @@ void makeMenu()
 
 static void exitFunc ()
 {
-    mylgutCloseWindow();
+    myglutCloseWindow();
 }
 
 static void aboutBox()
@@ -847,11 +847,11 @@ void myglutGetEvents(void)
     handleEvents();
 }
 
-void mylgutCloseWindow(void)
+void myglutCloseWindow(void)
 {
     if (!initialized)
     {
-        raydium_log("(my)glut: call to mylgutCloseWindow without call to pwInit");
+        raydium_log("(my)glut: call to myglutCloseWindow without call to pwInit");
         return;
     }
 
