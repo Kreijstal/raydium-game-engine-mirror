@@ -24,6 +24,12 @@ void raydium_window_close(void)
 // TODO: need to exit form game mode if enabled !
 void raydium_window_create(GLuint tx, GLuint ty, signed char rendering, char *name)
 {
+// There is only one possible resolution available for the iPhone OS.
+// The content will be rotated to landscape mode.
+#ifdef IPHONEOS
+tx=320;
+ty=480;
+#endif
 char mode[RAYDIUM_MAX_NAME_LEN];
 #ifndef MYGLUT
 GLuint gtx,gty;
@@ -138,6 +144,10 @@ gluPerspective(raydium_projection_fov,(GLfloat)Width/(GLfloat)Height,
                raydium_projection_near,raydium_projection_far);
 
 
+// Rotate the content to fit the landscape mode on the iPhone OS.
+#ifdef IPHONEOS
+glRotatef(-90,0,0,1);
+#endif
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
 

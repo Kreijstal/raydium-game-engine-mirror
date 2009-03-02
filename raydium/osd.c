@@ -55,6 +55,11 @@ glLoadIdentity();
 
 //glViewport(0, 0, raydium_window_tx, raydium_window_ty);
 glOrtho(0,100, 0,100, -100,100);
+// Rotate and translate the OSD to fit the landscape mode on the iPhone OS.
+#ifdef IPHONEOS
+glRotatef(-90,0,0,1);
+glTranslatef(-100,0,0);
+#endif
 
 //glPushMatrix();
 raydium_rendering_internal_prepare_texture_render(0);

@@ -235,7 +235,7 @@ switch(c)
         break;
     default:
         raydium_log("mni_gen: invalid track file (block type '%c' unknown)",c);
-        #ifdef __APPLE__
+        #ifdef APPLE
         // Interrupt generation progress, because we'll run into a genesis loop otherwise.
         fclose(in);
         fclose(tri);

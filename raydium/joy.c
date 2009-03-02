@@ -14,7 +14,7 @@
 // Need to add winmm lib to windows dll build
 #include <mmsystem.h>
 #endif
-#ifdef __APPLE__
+#ifdef MACOSX
 #include <unistd.h>
 #include <ctype.h>
 #include <sysexits.h>
@@ -58,13 +58,14 @@ int raydium_init_cli_option_default(char *option, char *value, char *default_val
 //struct input_event stop;
 //struct ff_effect effect;
 int raydium_joy_event_handle;
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
 struct ff_effect effect_tremble;
 #else
 int raydium_joy_win_id;
 #endif
 #else
+#ifdef MACOSX
 struct recElement
 {
     // Unique value which identifies element.
@@ -180,6 +181,7 @@ IOKitJoystick *joystick = NULL;
 // Number of detected devices.
 int detectedDevices = 0;
 #endif
+#endif
 char effect_tremble_state=0;
 unsigned long last_event;
 
@@ -206,7 +208,7 @@ if(raydium_key[GLUT_KEY_RIGHT]) raydium_joy_x=1.f;
 //buttons
 }
 
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
 int raydium_joy_process_event(struct js_event e)
 {
@@ -299,6 +301,7 @@ int raydium_joy_process_event(struct js_event e)
 }
 #endif
 #else
+#ifdef MACOSX
 static void HIDReportErrorNum(char* strError, long numError)
 {
     raydium_log("joy: %s (%i)", strError, numError);
@@ -754,10 +757,11 @@ static recDevice* HIDDisposeDevice(recDevice** ppDevice)
     return pDeviceNext;
 }
 #endif
+#endif
 
 void raydium_joy_callback(void)
 {
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
  struct js_event e;                     //structure for storing an event
  
@@ -812,6 +816,7 @@ void raydium_joy_callback(void)
         dwButtons = ActualPos.dwButtons;
 #endif
 #else
+#ifdef MACOSX
     if (!raydium_joy)
     {
         raydium_joy_init_vars();
@@ -984,12 +989,26 @@ void raydium_joy_callback(void)
         }
     }
 #endif
+#ifdef IPHONEOS
+    if (!raydium_joy)
+    {
+        raydium_joy_init_vars();
+        return;
+    }
+    
+    raydium_joy_click = 0;
+    
+    raydium_joy_axis[0] = raydium_joy_x = myglutGetAcceleration(0);
+    raydium_joy_axis[1] = raydium_joy_y = myglutGetAcceleration(1);
+    raydium_joy_axis[2] = raydium_joy_z = myglutGetAcceleration(2);
+#endif
+#endif
 //raydium_log("Joy x=%f,y=%f,z=%f",raydium_joy_x,raydium_joy_y,raydium_joy_z);
 }
 
 void raydium_joy_ff_autocenter(int perc)
 {
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
 struct input_event ie;
 
@@ -1015,7 +1034,7 @@ void raydium_joy_init(void)
 int autocenter=5;         /* default value. between 0 and 100 */
 
         raydium_joy_init_vars();
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
     
     raydium_init_cli_option_default("joydev",name,"/dev/js0");
@@ -1121,6 +1140,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
     }
 #endif
 #else
+#ifdef MACOSX
     raydium_init_cli_option_default("joydev", name, "0");
 
     IOReturn result = kIOReturnSuccess;
@@ -1337,6 +1357,11 @@ int autocenter=5;         /* default value. between 0 and 100 */
     // Enable joystick/joypad support.
     raydium_joy = 1;
 #endif
+#ifdef IPHONEOS
+    raydium_log("joy: OK (using internal multi-axis accelerometer motion sensor)");
+    raydium_joy = 1;
+#endif
+#endif
 }
 
 void raydium_joy_close(void)
@@ -1401,7 +1426,7 @@ void raydium_joy_ff(void)
 
 void raydium_joy_ff_tremble_set(GLfloat period, GLfloat force)
 {
-#ifndef __APPLE__
+#ifndef APPLE
 #ifndef WIN32
 struct input_event play;
 struct input_event stop;

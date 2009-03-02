@@ -307,21 +307,33 @@ if(!rgb)
  if(bpp==1)
     {
     GLbpp=GL_ALPHA;
+#ifndef IPHONEOS
     GLbppi=GL_ALPHA8;
+#else
+    GLbppi=GL_ALPHA;
+#endif
     blended=1;
     }
 
  if(bpp==3)
     {
     GLbpp=GL_RGB;
+#ifndef IPHONEOS
     GLbppi=GL_RGBA8; // force RGBA (since ATI cards needs it)
+#else
+    GLbppi=GL_RGB;
+#endif
     texsize += tx * ty;
     }
 
  if(bpp==4)
     {
     GLbpp=GL_RGBA;
+#ifndef IPHONEOS
     GLbppi=GL_RGBA8;
+#else
+    GLbppi=GL_RGBA;
+#endif
     }
 
  if(raydium_texture_compression_enabled && !faked)
@@ -610,6 +622,11 @@ if(raydium_init_cli_option("filter",force))
     if(!strcmp(force,"aniso")) filter=RAYDIUM_TEXTURE_FILTER_ANISO;
     }
 
+// Only none and bilinear filtering modes are supported for now because of iGLU.
+#ifdef IPHONEOS
+if(filter!=RAYDIUM_TEXTURE_FILTER_NONE)
+    filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
+#endif
 raydium_texture_filter=filter;
 
 // too ... dangerous

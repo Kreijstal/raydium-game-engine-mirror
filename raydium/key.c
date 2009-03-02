@@ -31,7 +31,7 @@ key%=65536;
 if(key==178 || key==176 || key==186 || key==220) raydium_console_event();
 #ifndef WIN32
 if(key==126) raydium_capture_frame_auto();
-#ifdef __APPLE__
+#ifdef APPLE
 // Apple aluminum keyboard support for english and german layouts.
 if(key==164 || key==177) raydium_console_event();
 if(key==96) raydium_capture_frame_auto();

@@ -144,6 +144,11 @@ if(raydium_init_cli_option("logfile",logfile))
     if(!raydium_log_file) raydium_log("init: Warning: cannot open logfile (%s) with rw mode",logfile);
     }
 else raydium_log_file=NULL;
+// Write a log file on the iPhone OS by default, because the user is not able to see the output neither to specify program parameters.
+#ifdef IPHONEOS
+if(!raydium_log_file)
+    raydium_log_file=fopen("/User/Raydium.log","wt");
+#endif
 
 raydium_log("version %s",raydium_version());
 raydium_log("command line args: OK");

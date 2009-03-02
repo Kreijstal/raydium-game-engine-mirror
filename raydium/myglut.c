@@ -24,8 +24,13 @@ signed char _glutMouseVisible;
 #ifdef WIN32
 #include "myglut-win32.c"
 #else
-#ifdef __APPLE__
+#ifdef APPLE
+#ifdef MACOSX
 #include "myglut-macosx.c"
+#endif
+#ifdef IPHONEOS
+#include "myglut-iphoneos.c"
+#endif
 #else
 #include "myglut-x11.c"
 #endif
@@ -81,6 +86,8 @@ do{
 // glutWireSphere
 void glutWireSphere(GLdouble radius, GLint slices, GLint stacks)
 {
+// Undeclared in iGLU, because of OpenGL ES (GLUquadricObj, GLU_LINE, GLU_SMOOTH).
+#ifndef IPHONEOS
   static GLUquadricObj *quadObj=NULL;
 
   if(!quadObj)
@@ -89,6 +96,7 @@ void glutWireSphere(GLdouble radius, GLint slices, GLint stacks)
   gluQuadricDrawStyle(quadObj, GLU_LINE);
   gluQuadricNormals(quadObj, GLU_SMOOTH);
   gluSphere(quadObj, radius, slices, stacks);
+#endif
 }
 
 //glutGet

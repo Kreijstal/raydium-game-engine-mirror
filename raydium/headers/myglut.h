@@ -28,8 +28,13 @@ MyGLUT is heavily based on PW, the PLIB windowing library
 #ifndef MYGLUT
 #define MYGLUT
 
-#ifdef __APPLE__
+#ifdef APPLE
+#ifdef MACOSX
 #include <OpenGL/gl.h>
+#endif
+#ifdef IPHONEOS
+#include <OpenGLES/ES1/gl.h>
+#endif
 #include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>

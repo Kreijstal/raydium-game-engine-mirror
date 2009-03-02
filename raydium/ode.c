@@ -146,7 +146,7 @@ for(j=0;j<3;j++)
 
 void raydium_ode_init(void)
 {
-#ifdef __APPLE__
+#ifdef APPLE
     dInitODE();
 #endif
 int i;
@@ -4107,6 +4107,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             else
                 if(dGeomGetClass(raydium_ode_element[i].geom)==dCapsuleClass)
                 {
+// Undeclared in iGLU, because of OpenGL ES (GLUquadric, GLU_SMOOTH, GLU_LINE).
+#ifndef IPHONEOS
                 float cradius;
                 float clength;
                 GLUquadric* quadratic;
@@ -4121,6 +4123,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                 gluCylinder(quadratic,cradius,cradius,clength,8,4);
                 glutWireSphere(cradius,8,8);
                 gluDeleteQuadric(quadratic);
+#endif
                 }
             // else TriMesh ...
 

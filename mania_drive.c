@@ -23,10 +23,16 @@ char *version="ManiaDrive 1.3custom";
 #define HISTORY_STATE_FILE      raydium_file_home_path("mania_drive.state")
 
 #define MUSIC_MENU      "mania_music/i_got_it_bad_-_The_Napoleon_Blown_Aparts.ogg"
-#ifdef __APPLE__
+#ifdef APPLE
 // Offer some common display resolutions for Apple Macintosh.
 // 4:3 VGA, SVGA, XGA, UGA / 5:4 SXGA / 16:10 WXGA, WUXGA
+#ifdef MACOSX
 #define RESOLUTION_LIST "640x480\n800x600\n1024x768\n1280x1024\n1440x900\n1600x1200\n1920x1200"
+#endif
+// There is only one possible resolution available for the iPhone OS.
+#ifdef IPHONEOS
+#define RESOLUTION_LIST "480x320"
+#endif
 #else
 #define RESOLUTION_LIST "320x240\n640x480\n800x600\n1024x768\n1152x864"
 #endif
@@ -2683,14 +2689,19 @@ setlocale (LC_MESSAGES, "");
 bindtextdomain ("mania_drive", "locale");
 textdomain ("mania_drive");
 
-#ifdef __APPLE__
-raydium_parser_db_get("ManiaDrive-Windowed", str, "1");
+#ifdef MACOSX
+raydium_parser_db_get("ManiaDrive-Windowed",str,"1");
 #else
 raydium_parser_db_get("ManiaDrive-Windowed",str,"0");
 #endif
 windowed_mode=atoi(str);
-#ifdef __APPLE__
-raydium_parser_db_get("ManiaDrive-WindowedRes", windowed_res, "640x480");
+#ifdef APPLE
+#ifdef MACOSX
+raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"640x480");
+#endif
+#ifdef IPHONEOS
+raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"480x320");
+#endif
 #else
 raydium_parser_db_get("ManiaDrive-WindowedRes",windowed_res,"800x600");
 #endif

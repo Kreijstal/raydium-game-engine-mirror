@@ -12,7 +12,7 @@
 // ugly workaround to avoid odemath.h ...
 #define _ODE_ODEMATH_H_
 #endif
-#ifdef __APPLE__
+#ifdef APPLE
 #include "ode/include/ode/ode.h"
 #else
 #include "../ode/include/ode/ode.h"

@@ -50,6 +50,18 @@
 #       define __rayapi
 #    endif
 # endif
+# ifdef __APPLE__
+#    define APPLE
+#    ifndef __arm__
+#       define MACOSX
+#    else
+#       define IPHONEOS
+#       define OPENGLES
+#       define main(c, v) raydium_main(c, v)
+#       define DEBUG_RENDER_DISABLE_DISPLAYLISTS
+#       define NO_SOUND_DEBUG
+#    endif
+# endif
 #endif
 
 #ifdef SWIG
@@ -65,8 +77,14 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <GL/glew.h>
-#ifdef __APPLE__
+#ifdef APPLE
+#ifdef MACOSX
 #include <OpenGL/gl.h>
+#endif
+#ifdef IPHONEOS
+#include <OpenGLES/ES1/gl.h>
+#include "wrapper-opengles.c"
+#endif
 #include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
@@ -80,7 +98,7 @@
 #include <signal.h>
 #include <stdarg.h>
 
-#ifdef __APPLE__
+#ifdef APPLE
 #include <OpenAL/al.h>
 #else
 #include <AL/al.h>
@@ -95,11 +113,11 @@
 
 // need to separate LINUX & others, using glut for joystick..
 #ifndef WIN32
-#ifndef __APPLE__
+#ifndef APPLE
 #include <linux/joystick.h>
 #endif
 #include <sys/ioctl.h>
-#ifndef __APPLE__
+#ifndef APPLE
 #include <linux/rtc.h>
 #endif
 #include <sys/socket.h>
@@ -274,7 +292,11 @@
 
 #define RAYDIUM_RENDER_MULTITEX_AUTO_UV_FACT    (50.f)
 #define RAYDIUM_RENDER_REFLECTION_FACT          (0.1f)
+#ifdef IPHONEOS
+#define RAYDIUM_RENDER_MAX_TEXUNITS             2
+#else
 #define RAYDIUM_RENDER_MAX_TEXUNITS             4
+#endif
 
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL           30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL       25

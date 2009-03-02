@@ -312,6 +312,8 @@ if(raydium_texture_used[tex])
         glColor4f(1.f,1.f,1.f,1.f);
 #endif    
 
+// TODO: Find out what exactly causes the application to terminate on the iPhone OS.
+#ifndef IPHONEOS
     for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
             if(raydium_vertex_texture_env[j][i])
                 {
@@ -356,6 +358,7 @@ if(raydium_texture_used[tex])
         }
     }
     else
+#endif
     {
         // cancel previous multitexturing settings
         if(multi_prepared)

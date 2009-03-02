@@ -14,7 +14,7 @@
 #define LIVE_H
 
 #ifndef WIN32
-#ifndef __APPLE__
+#ifndef APPLE
 #include <linux/types.h>
 #include <linux/videodev.h>
 #include <sys/mman.h>
@@ -41,7 +41,7 @@
 typedef struct raydium_live_Device 
 {
 #ifndef WIN32
-#ifndef __APPLE__
+#ifndef APPLE
   int fd;
   struct video_capability cap;
   struct video_window win;
