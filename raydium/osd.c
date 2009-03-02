@@ -236,7 +236,6 @@ raydium_osd_cursor_yoffset=yoffset;
 
 void raydium_osd_cursor_draw(void)
 {
-char flip;
 if(!raydium_osd_cursor_texture || !raydium_window_tx) return;
 
 raydium_osd_start();
