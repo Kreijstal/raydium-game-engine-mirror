@@ -35,7 +35,7 @@ void raydium_callback_image(void)
 {
 raydium_timecall_callback();
 raydium_light_callback();
-raydium_particle_draw_all();
+//raydium_particle_draw_all();
 raydium_hdr_map_apply();
 raydium_particle_callback();
 raydium_osd_fade_callback();

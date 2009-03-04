@@ -39,16 +39,16 @@ int i;
 #define ROTFRICTION     0.001 //#define ROTFRICTION     0.05
 
 
-    
-        raydium_ode_object_delete_name("TANK");
 
-  a=raydium_ode_object_create("TANK");
+    raydium_ode_object_delete_name("TANK");
+
+    a=raydium_ode_object_create("TANK");
     raydium_ode_object_box_add("tank_corps",a,10,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"t80b.tri");
     //raydium_ode_element_move_name_3f("tank_corps",-2,0,0+0.5);
 
     raydium_ode_motor_create("tank_moteurG",a,RAYDIUM_ODE_MOTOR_ENGINE);
     raydium_ode_motor_power_max_name("tank_moteurG",1);
-    
+
     raydium_ode_motor_create("tank_moteurD",a,RAYDIUM_ODE_MOTOR_ENGINE);
     raydium_ode_motor_power_max_name("tank_moteurD",1);
 
@@ -62,9 +62,9 @@ int i;
         raydium_ode_element_move_name_3f(&c[1],0.930-((1.030+0.760)/6.0)*i,0.425,-0.240);
         raydium_ode_joint_attach_hinge_name(c,"tank_corps",&c[1],0.930-((1.030+0.760)/6.0)*i,0.425,-0.240,RAYDIUM_ODE_JOINT_AXE_Y);
         raydium_ode_motor_attach_name("tank_moteurG",c,0);
-        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);        
+        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);
     }
-    
+
     c[0]='H';
     c[1]='D';
     c[3]=0;
@@ -74,10 +74,10 @@ int i;
         raydium_ode_element_rotfriction_name(&c[1],ROTFRICTION);
         raydium_ode_element_move_name_3f(&c[1],0.930-((1.030+0.760)/6.0)*i,-0.425,-0.240);
         raydium_ode_joint_attach_hinge_name(c,"tank_corps",&c[1],0.930-((1.030+0.760)/6.0)*i,-0.425,-0.240,RAYDIUM_ODE_JOINT_AXE_Y);
-        raydium_ode_motor_attach_name("tank_moteurD",c,0);       
-        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);         
+        raydium_ode_motor_attach_name("tank_moteurD",c,0);
+        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);
     }
-    
+
     raydium_ode_object_box_add("tank_tour",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"t80t.tri");
     raydium_ode_element_move_name_3f("tank_tour",0,0,0.4);
 
@@ -85,7 +85,7 @@ int i;
     raydium_ode_joint_hinge_limits_name("pivot",-2.5,2.5);
     raydium_ode_motor_create("pivot_motor",a,RAYDIUM_ODE_MOTOR_ANGULAR);
     raydium_ode_motor_attach_name("pivot_motor","pivot",0);
-    raydium_ode_motor_power_max_name("pivot_motor",1);
+    raydium_ode_motor_power_max_name("pivot_motor",10);
 
     raydium_ode_object_box_add("tank_canon",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"t80c.tri");
     raydium_ode_element_move_name_3f("tank_canon",1,0,0.30);
@@ -95,7 +95,9 @@ int i;
     raydium_ode_motor_create("truk_motor",a,RAYDIUM_ODE_MOTOR_ANGULAR);
     raydium_ode_motor_attach_name("truk_motor","trukatach",0);
     raydium_ode_motor_power_max_name("truk_motor",1);
-    
+
+    raydium_ode_element_particle_offset_name_3f("tank_corps","smoke.prt",-1,0.5,0);
+
     raydium_ode_object_move_name_3f("TANK",1,0,0.2);
 }
 
@@ -112,14 +114,14 @@ unsigned char dir;
 static int inboard=1;
 
     raydium_joy_key_emul();
-        
+
     speedD=speedG=0;
     dir=0;
     if(raydium_key[GLUT_KEY_UP]) dir|=1;
     if(raydium_key[GLUT_KEY_RIGHT]) dir|=2;
     if(raydium_key[GLUT_KEY_DOWN]) dir|=4;
     if(raydium_key[GLUT_KEY_LEFT]) dir|=8;
-    
+
     switch (dir) {
         case 1: speedG=1;speedD=1;break;
         case 2: speedG=1;speedD=-1;break;
@@ -135,7 +137,7 @@ static int inboard=1;
     speedG*=10;
     raydium_ode_motor_speed_name("tank_moteurG",-speedG);
     raydium_ode_motor_speed_name("tank_moteurD",-speedD);
-    
+
 
     speed=raydium_math_abs(speedD)+raydium_math_abs(speedG);
     speed*=0.025;
@@ -158,26 +160,26 @@ static int inboard=1;
     raydium_clear_frame();
 
     if(!raydium_key[GLUT_KEY_F2]){
-        
+
         raydium_viewport_enable("camera2");
-        
+
         raydium_ode_element_camera_inboard_name("tank_tour",0.2,0,0.1,2,0,0);
 
         raydium_sky_box_render(raydium_camera_x,raydium_camera_y,raydium_camera_z);
         raydium_camera_replace();
         raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
         raydium_viewport_save();
+        raydium_clear_frame();
     }
-    raydium_clear_frame();
 
 
     delta_x = raydium_mouse_x - (raydium_window_tx/2);
-    delta_y = raydium_mouse_y - (raydium_window_ty/2);    
-    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);    
-    
+    delta_y = raydium_mouse_y - (raydium_window_ty/2);
+    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
+
     if (inboard){
         static GLfloat speed=0;
-        
+
         if (raydium_mouse_button[2]) {
             if (speed==0)
                 speed=0.1;
@@ -185,27 +187,27 @@ static int inboard=1;
         }
             else
         speed=0;
-        
+
         if (raydium_mouse_click==4)
             speed=0.05;
         if (raydium_mouse_click==5)
             speed=-0.05;
-            
 
-        cam_angle_x += (delta_x*3*0.1f); 
-        cam_angle_y += (delta_y*3*0.1f); 
-        
+
+        cam_angle_x += (delta_x*3*0.1f);
+        cam_angle_y += (delta_y*3*0.1f);
+
         cam_pos_z += (raydium_math_sin(cam_angle_x+90)*speed*raydium_math_sin(90-cam_angle_y));
         cam_pos_x += (raydium_math_cos(cam_angle_x+90)*speed*raydium_math_sin(90-cam_angle_y));
         cam_pos_y += (raydium_math_cos(90-cam_angle_y)*speed);
         raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
-        
+
     }
     else {
-        raydium_ode_motor_angle_name("pivot_motor",raydium_ode_motor_angle_get_name("pivot_motor",0)+delta_x*0.1f);
-        
-        raydium_ode_motor_angle_name("truk_motor",raydium_ode_motor_angle_get_name("truk_motor",0)-delta_y*0.01f);
-        
+        raydium_ode_motor_angle_name("pivot_motor",raydium_ode_motor_angle_get_name("pivot_motor",0)+delta_x*10.0f);
+
+        raydium_ode_motor_angle_name("truk_motor",raydium_ode_motor_angle_get_name("truk_motor",0)-delta_y*10.0f);
+
         raydium_ode_element_camera_inboard_name("tank_corps",0.7,0,0.2,2,0,0);
     }
 
@@ -215,11 +217,11 @@ static int inboard=1;
     raydium_ode_draw_all(0);
     raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
     raydium_camera_replace();
-    
+
     if(raydium_key[GLUT_KEY_F1])
         raydium_ode_draw_all(1);
     raydium_camera_replace();
-    
+
 
     if(!raydium_key[GLUT_KEY_F2])
         raydium_viewport_draw("camera2",20,70,60,30);

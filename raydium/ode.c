@@ -4230,7 +4230,9 @@ if(names==RAYDIUM_ODE_DRAW_NORMAL) // but not RAYDIUM_ODE_DRAW_NORMAL_NO_POST
     {
     raydium_hdr_map(); // create HDR map
     raydium_shadow_map_render();
+    raydium_particle_draw_all ();
     }
+
 }
 
 // This function is probaby slow like hell but is used near inner core of
@@ -4277,8 +4279,8 @@ if(dGeomIsSpace (o1) || dGeomIsSpace (o2))
     oo2=dGeomGetData(o2);
     g=raydium_ode_ObjectNearCollide;
     if(g && !g(oo1->id,oo2->id)) return;
-    if(raydium_ode_record_play_fp && raydium_ode_record_play_ghost_tag && 
-       (raydium_ode_record_play_world==oo1->id || 
+    if(raydium_ode_record_play_fp && raydium_ode_record_play_ghost_tag &&
+       (raydium_ode_record_play_world==oo1->id ||
         raydium_ode_record_play_world==oo2->id ))
         return;
     dSpaceCollide2 (o1,o2,data,&raydium_ode_near_callback);
