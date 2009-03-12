@@ -59,7 +59,6 @@
 #       define OPENGLES
 #       define main(c, v) raydium_main(c, v)
 #       define DEBUG_RENDER_DISABLE_DISPLAYLISTS
-#       define NO_SOUND_DEBUG
 #    endif
 # endif
 #endif

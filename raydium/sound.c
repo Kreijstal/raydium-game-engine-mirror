@@ -671,7 +671,16 @@ int BufferData(ALuint buffer,OggVorbis_File *file,vorbis_info *ogginfo)
     {
     double now;
 
+/*
+    Sample rates higher than 8000 Hz with 16-bit PCM Ogg/Vorbis files heavily
+    slow down the system, cause high respond times and stop the application
+    on the iPhone OS.
+*/
+#ifndef IPHONEOS
     videopos+=((float)SOUNDDATASIZE/2/2/44100); // buffer length
+#else
+    videopos+=((float)SOUNDDATASIZE/2/2/8000); // buffer length
+#endif
 
     now=ov_time_tell(file);
     //printf("now=%f video=%f diff=%f\n",now,videopos,now-videopos);

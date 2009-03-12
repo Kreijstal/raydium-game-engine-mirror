@@ -7,6 +7,8 @@
 
 #include "raydium/index.c"
 
+int sound_plane,sound_touched;
+
 void display(void)
 {
     if(!raydium_joy)
@@ -23,6 +25,9 @@ void display(void)
     
     if(raydium_mouse_x>raydium_window_tx/2&&raydium_mouse_y>raydium_window_ty/2)
         raydium_sky_box_name("siege");
+    
+    if(raydium_mouse_click>0)
+        raydium_sound_SourcePlay(sound_touched);
     
     raydium_clear_frame();
     
@@ -54,6 +59,18 @@ int main(int argc, char **argv)
     raydium_sky_box_cache();
     raydium_osd_cursor_set("logo_raydium.tga",14,20);
     raydium_ode_ground_set_name("plane.tri");
+    
+    sound_touched=raydium_sound_LoadWav("touched.wav");
+    raydium_sound_SetSourceLoop(sound_touched,0);
+    sound_plane=raydium_sound_LoadWav("plane.wav");
+    raydium_sound_SourcePlay(sound_plane);
+    
+    /*
+        Sample rates higher than 8000 Hz with 16-bit PCM Ogg/Vorbis files
+        heavily slow down the system, cause high respond times and stop the
+        application on the iPhone OS.
+    */
+    // raydium_sound_load_music("memak5.ogg");
     
     raydium_render_fps_limit(30);
     
