@@ -246,7 +246,7 @@ glViewport(0, 0, raydium_window_tx, raydium_window_ty);
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 raydium_camera_replace();
 raydium_sky_box_render(raydium_camera_x,raydium_camera_y,raydium_camera_z);
-raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL_NO_POST);
 //raydium_ode_draw_all(RAYDIUM_ODE_DRAW_DEBUG);
 raydium_rendering_internal_restore_render_state();
 
@@ -334,6 +334,7 @@ if(raydium_key[GLUT_KEY_F12])
     raydium_osd_draw_name("refraction",80,0,100,20);
     }
 
+raydium_ode_draw_all_post();
 raydium_osd_draw_name("logo_raydium.tga",85,5,95,20);
 raydium_rendering_finish();
 
@@ -393,6 +394,7 @@ int main(int argc, char **argv)
     water_textures_size=tmp/2;
     raydium_texture_load_internal("","reflection",1,water_textures_size,water_textures_size,4,-1);
     raydium_texture_load_internal("","refraction",1,water_textures_size,water_textures_size,4,-1);
+    raydium_hdr_texture_name("reflection",1);
     raydium_shader_load("water","water.vert","water.frag");
     raydium_shader_var_i_name("water","reflection",0);
     raydium_shader_var_i_name("water","refraction",1);

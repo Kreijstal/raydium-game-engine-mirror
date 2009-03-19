@@ -1713,17 +1713,25 @@ __rayapi void raydium_ode_element_camera_inboard_name (char *name, dReal px, dRe
 Same as above, but using element's name.
 **/
 
-__rayapi void raydium_ode_draw_all (signed char names);
+__rayapi void raydium_ode_draw_all_post(void);
+/**
+This function is called automatically when you render the frame with RayODE
+using ##raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL)##.
+Currently, it will generate and apply HDR map and render particles.
+**/
+
+__rayapi void raydium_ode_draw_all(signed char names);
 /**
 This function will draw all RayODE scene. You must call this function
 by yourself.
-Sets ##names## to ##RAYDIUM_ODE_DRAW_NORMAL## for normal rendering.
+Set ##names## to ##RAYDIUM_ODE_DRAW_NORMAL## for normal rendering.
 Other ##names## values will:
 - draw only elements, joints and motors names and elements bounding boxes
 with ##RAYDIUM_ODE_DRAW_DEBUG##
 - draw only objets AABB (Axis-Aligned Bounding Box) with ##RAYDIUM_ODE_DRAW_AABB##
 - draw only element rays (if any) with ##RAYDIUM_ODE_DRAW_RAY##
-
+- do the same as regular rendering, but will not apply post-rendering to the 
+frame with the value ##RAYDIUM_ODE_DRAW_NORMAL_NO_POST## (see previous function)
 ... so you may need multiple call to this function each frame.
 **/
 

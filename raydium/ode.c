@@ -3850,6 +3850,13 @@ raydium_ode_element_camera_inboard(raydium_ode_element_find(name),px,py,pz,lookx
 }
 
 
+void raydium_ode_draw_all_post(void)
+{
+raydium_hdr_map(); // create HDR map
+raydium_shadow_map_render();
+raydium_particle_draw_all();
+}
+
 void raydium_ode_draw_all(signed char names)
 {
 int i,j;
@@ -4227,11 +4234,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      }
 
 if(names==RAYDIUM_ODE_DRAW_NORMAL) // but not RAYDIUM_ODE_DRAW_NORMAL_NO_POST
-    {
-    raydium_hdr_map(); // create HDR map
-    raydium_shadow_map_render();
-    raydium_particle_draw_all ();
-    }
+    raydium_ode_draw_all_post();
 
 }
 
