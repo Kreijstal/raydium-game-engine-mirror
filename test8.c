@@ -5,13 +5,13 @@
     See "license.txt" file.
 */
 
-// Small demo of Raydium embedded PHP scripting, building a train
-// using train.php script.
-
 char *version="version 0.1";
 
 #include "raydium/index.c"
 
+
+#define GROUND_SLIP		0.1f
+#define TANK_TRACK_SLIP 	0.1f
 
 GLfloat cam_angle_x = 0;
 GLfloat cam_angle_y = 90;
@@ -62,7 +62,7 @@ int i;
         raydium_ode_element_move_name_3f(&c[1],0.930-((1.030+0.760)/6.0)*i,0.425,-0.240);
         raydium_ode_joint_attach_hinge_name(c,"tank_corps",&c[1],0.930-((1.030+0.760)/6.0)*i,0.425,-0.240,RAYDIUM_ODE_JOINT_AXE_Y);
         raydium_ode_motor_attach_name("tank_moteurG",c,0);
-        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);
+        raydium_ode_element_slip_name (&c[1],TANK_TRACK_SLIP);
     }
 
     c[0]='H';
@@ -75,7 +75,7 @@ int i;
         raydium_ode_element_move_name_3f(&c[1],0.930-((1.030+0.760)/6.0)*i,-0.425,-0.240);
         raydium_ode_joint_attach_hinge_name(c,"tank_corps",&c[1],0.930-((1.030+0.760)/6.0)*i,-0.425,-0.240,RAYDIUM_ODE_JOINT_AXE_Y);
         raydium_ode_motor_attach_name("tank_moteurD",c,0);
-        raydium_ode_element_slip_name (&c[1],RAYDIUM_ODE_SLIP_NORMAL);
+        raydium_ode_element_slip_name (&c[1],TANK_TRACK_SLIP);
     }
 
     raydium_ode_object_box_add("tank_tour",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"t80t.tri");
@@ -259,6 +259,7 @@ int main(int argc, char **argv)
 
 
     raydium_ode_ground_set_name("cocorobix.tri");
+    raydium_ode_element_slip_name("ground",GROUND_SLIP);
 
     raydium_sound_DefaultReferenceDistance=4.f;
     sound_car=raydium_sound_LoadWav("murcielago.wav");
