@@ -12,6 +12,19 @@
 
 #define ALPHA_SECONDS   3
 float alpha=0;
+float unzoom;
+
+float ratio_str2float(char *str)
+{
+char p1[RAYDIUM_MAX_NAME_LEN];
+char p2[RAYDIUM_MAX_NAME_LEN];
+int i1,i2;
+
+raydium_parser_cut(str,p1,p2,'/');
+i1=atoi(p1);
+i2=atoi(p2);
+return i1/(float)i2;
+}
 
 void alpha_set(void)
 {
@@ -72,7 +85,7 @@ if(raydium_key_last==1032)
 
 
 raydium_clear_frame();
-raydium_live_texture_mask_name("video",1);
+raydium_osd_draw_name("video",0,100-unzoom,100,unzoom);
 
 if(alpha>0)
     {
@@ -88,6 +101,7 @@ if(alpha<0)
 
 
 
+raydium_osd_color_rgba(1,1,1,1);
 raydium_rendering_finish();
 }
 
@@ -96,26 +110,36 @@ int main(int argc, char **argv)
 {
 char video[RAYDIUM_MAX_NAME_LEN];
 char sound[RAYDIUM_MAX_NAME_LEN];
+char ratio[RAYDIUM_MAX_NAME_LEN];
+float screen_ratio;
+float video_ratio;
 
 raydium_init_args(argc,argv);
 
 if(!raydium_init_cli_option("file",video))
     {
-    printf("******* Usage: jpgs_play --file file.jpgs [--sound file.ogg]\n");
+    printf("******* Usage: jpgs_play --file file.jpgs [--sound file.ogg] [--ratio 4/3]\n");
+    printf("******* Ratio is video ratio, not screen one (square screen pixels required for this to work)\n");
     exit(0);
     }
 
-sound[0]=0;
-raydium_init_cli_option("sound",sound);
+raydium_init_cli_option_default("sound",sound,"");
+raydium_init_cli_option_default("ratio",ratio,"4/3");
 
 raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"JPGS movie player");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
+raydium_background_color_change(0,0,0,1);
 
 if(raydium_video_open_with_sound(video,"video",sound) < 0)
     {
     printf("******* Unable to open '%s'\n",video);
     exit(0);
     }
+
+// compute some boring stuff about screen and video ratio ...
+screen_ratio=raydium_window_tx/(float)raydium_window_ty;
+video_ratio=ratio_str2float(ratio);
+unzoom=(100.f-(100.f/(video_ratio/screen_ratio)))/2.f;
 
 raydium_render_fps_limit(120);
 raydium_callback(&display);
