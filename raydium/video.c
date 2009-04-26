@@ -364,6 +364,9 @@ if(!raydium_video_isvalid(id))
     return 0;
     }
 
+if(time<0) 
+    time=0;
+
 raydium_video_video[id].elapsed=time;
 return 1;
 }
