@@ -27,8 +27,8 @@ int i;
 key%=65536;
 
 // key below esc :
-// 178 (ex: fr), 176 (ex: us), 186 (ex: spa), 220 (ex: de)
-if(key==178 || key==176 || key==186 || key==220) raydium_console_event();
+// 178 (ex: fr), 176 (ex: us), 186 (ex: spa), 220 (ex: de), 167 (ex: swe/fin)
+if(key==178 || key==176 || key==186 || key==220 || key==167) raydium_console_event();
 #ifndef WIN32
 if(key==126) raydium_capture_frame_auto();
 #ifdef APPLE
