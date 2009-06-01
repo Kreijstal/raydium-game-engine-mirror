@@ -150,10 +150,10 @@ switch(cursor)
                  XCreateFontCursor ( currDisplay, currCursor ) ) ;
         _glutMouseVisible=1;
         break;
-    case GLUT_CURSOR_NONE:      
+    case GLUT_CURSOR_NONE:
     default:
         memset(blank_cursor,0,16*16);
-      
+
         pix = XCreateBitmapFromData ( currDisplay,
                                       rootWindow,
                                       blank_cursor, 16, 16 ) ;
@@ -215,16 +215,16 @@ void chooseVisual (PixelFormat *pf)
 
   switch ( pf->z_bits )
   {
-    case  1 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] =  1 ; break ; 
-    case 16 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 16 ; break ; 
+    case  1 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] =  1 ; break ;
+    case 16 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 16 ; break ;
     case 24 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 24 ; break ;
     case 32 : attribs [n++] = GLX_DEPTH_SIZE ; attribs [n++] = 32 ; break ;
   }
 
   switch ( pf->stencil_bits )
   {
-    case  1 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 1 ; break ; 
-    case  8 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 8 ; break ; 
+    case  1 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 1 ; break ;
+    case  8 : attribs [n++] = GLX_STENCIL_SIZE ; attribs [n++] = 8 ; break ;
   }
 
   if ( pf->num_samples > 0 )
@@ -258,7 +258,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   PixelFormat               pf ;
 
   int interval, prefer_blank, allow_exp, timeout;
-  
+
 #ifdef HAVE_XINERAMA
   int i_d1, i_d2;
 #endif
@@ -298,7 +298,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   DispY = DisplayHeight ( currDisplay, currScreen ) ;
 
 #ifdef HAVE_XINERAMA
-  if(XineramaQueryExtension( currDisplay, &i_d1, &i_d2 ) 
+  if(XineramaQueryExtension( currDisplay, &i_d1, &i_d2 )
   && XineramaIsActive( currDisplay ) )
   {
   XineramaScreenInfo *screens;
@@ -306,7 +306,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   int selected;
   char str[RAYDIUM_MAX_NAME_LEN];
 
-  
+
   screens = XineramaQueryScreens(currDisplay,&num_screens);
   raydium_log("Xinerama detected with %i screens:",num_screens);
 
@@ -531,7 +531,7 @@ void myglutGetEvents (void)
       case ClientMessage   : exit(0) ; break ;
       case DestroyNotify   : exit(0) ; break ;
 
-      case ConfigureNotify :      
+      case ConfigureNotify :
         if ( currHandle == event.xconfigure.window &&
               ( size[0] != event.xconfigure.width ||
                 size[1] != event.xconfigure.height ) )
@@ -580,7 +580,7 @@ void myglutGetEvents (void)
 
       case KeyRelease      :
         updown = GLUT_UP ;
-        // FALLTHROUGH 
+        // FALLTHROUGH
 
       case KeyPress        :
 
@@ -589,7 +589,14 @@ void myglutGetEvents (void)
         result = -1 ;
 
         if( len > 0 )
-          result = keySym;
+		{
+		// be sure to capture "Return" and "KP_Enter" (some laptops sends the
+		// same code for the regular Enter key and the numeric pad Enter key)
+		if(len==1 && asciiCode[0]==0x0d)
+			result = 0x0d;
+		else
+        	result = keySym;
+		}
         else
         {
         special=1;
@@ -643,7 +650,7 @@ void myglutGetEvents (void)
             if (ahead.type == KeyPress && event.type == KeyRelease
                 && ahead.xkey.window == event.xkey.window
                 && ahead.xkey.keycode == event.xkey.keycode
-                && ahead.xkey.time == event.xkey.time) 
+                && ahead.xkey.time == event.xkey.time)
                 {
                 // repeating key. Discard event.
                 break;
@@ -661,7 +668,7 @@ void myglutGetEvents (void)
             // normal
             if(!special && updown==GLUT_DOWN && glutKeyboardFuncCB)
                 glutKeyboardFuncCB(result,event.xkey.x, event.xkey.y);
-            
+
             }
 
         break ;
