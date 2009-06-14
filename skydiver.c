@@ -206,13 +206,13 @@ char *c1,*c2;
 c1=raydium_ode_element_data_get(e1);
 c2=raydium_ode_element_data_get(e2);
 
-    if(((c1==&type_para && c2==&type_lander) || 
+    if(((c1==&type_para && c2==&type_lander) ||
         (c2==&type_para && c1==&type_lander)  ) && game_part<GAME_PART_SCORE)
         {
         touching=1;
         }
 
-if((c1==&type_para || c2==&type_para) && (game_part==GAME_PART_PARA || game_part==GAME_PART_JUMP)) 
+if((c1==&type_para || c2==&type_para) && (game_part==GAME_PART_PARA || game_part==GAME_PART_JUMP))
 {
 dReal *pos;
 para_open=0;
@@ -251,7 +251,7 @@ int i;
 dJointID joint;
 
 i=raydium_ode_joint_find("shoulder");
-if(i<0) 
+if(i<0)
     {
     //raydium_log("not found");
     return;
@@ -303,7 +303,7 @@ a=raydium_ode_object_create(obj);
 
 void create_para(char *plane)
 {
-#define BONE_BREAK 40
+#define BONE_BREAK 80
 dReal *pos;
 dReal mypos[3];
 int a;
@@ -312,7 +312,7 @@ int a;
     raydium_ode_object_sphere_add("head",a,0.1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"p_head.tri");
     raydium_ode_element_data_set_name("head",&type_para);
     raydium_ode_element_move_name_3f("head",5,0,1);
-    
+
     raydium_ode_object_box_add("body",a,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_body.tri");
     raydium_ode_element_data_set_name("body",&type_para);
     raydium_ode_element_move_name_3f("body",5,0,0.66);
@@ -384,7 +384,7 @@ int a;
     raydium_ode_joint_hinge_limits_name("elbow",0,2);
     raydium_ode_joint_break_force_name("elbow",BONE_BREAK);
     raydium_ode_joint_delete_callback_name("elbow",bone_break);
-    
+
     raydium_ode_object_box_add("l_arm2",a,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_l_arm2.tri");
     raydium_ode_element_data_set_name("l_arm2",&type_para);
     raydium_ode_element_move_name_3f("l_arm2",5.20,-0.05,0.45);
@@ -442,7 +442,7 @@ angle+=last_frame_step/5;
 
 raydium_joy_key_emul();
 
-if(raydium_key_last==1027) 
+if(raydium_key_last==1027)
     game_part=GAME_PART_QUIT;
 
 if(raydium_key_last==1)
@@ -471,7 +471,7 @@ if(raydium_key_last==1032)
         create_para("plane 1");
         game_part=GAME_PART_JUMP;
         }
-    else        
+    else
     if(game_part==GAME_PART_JUMP)
         {
         para_open=1;
@@ -511,7 +511,7 @@ switch(game_part)
         camzoom=5;
         strcpy(cam,"body");
         tip=1;
-        break;  
+        break;
     case GAME_PART_PARA:
         camzoom=15;
         strcpy(cam,"body");
@@ -524,7 +524,7 @@ switch(game_part)
         camy=raydium_math_sin(angle)*100;
         strcpy(cam,"head");
         tip=3;
-        break;  
+        break;
     case GAME_PART_QUIT:
         camx=camy=1;
         camz+=(camz*last_frame_step)/60;
@@ -532,7 +532,7 @@ switch(game_part)
         strcpy(cam,"ground");
         tip=4;
         if(camz>500) exit(0);
-        break;    
+        break;
     case GAME_PART_SCORE:
         if(raydium_ode_object_find("PLANE 1")<0)
             create_plane(1);
@@ -584,10 +584,10 @@ if(fp_view>0 && game_part<GAME_PART_SCORE)
     from=raydium_ode_element_find("body");
     to=raydium_ode_element_find("ground");
     if(from<0) from=raydium_ode_element_find("plane 1");
-    
+
     from_p=raydium_ode_element_pos_get(from);
     to_p=raydium_ode_element_pos_get(to);
-    
+
     if(game_part>=GAME_PART_TOUCHED)
         camera(to_p[0]-0.3,to_p[1]-0.3,to_p[2]+0.5,from_p[1],-from_p[2],from_p[0],80);
     else
@@ -628,7 +628,7 @@ if(game_part==GAME_PART_SCORE)
 //else
     {
     raydium_osd_printf(5,13,16,0.5,"font2.tga","^cWind: %s %02.1f %% | Fly-Time: %.2f | Touch Time: %.2f",(wind<0?"<-":"->"),raydium_math_abs(wind*100),fly_time,touching_steps/400.f);
-    raydium_osd_printf(5,10,16,0.5,"font2.tga","^cCenter Distance: %.2f | Breaked Bones: %i",dist_from_center,breaked_bones);    
+    raydium_osd_printf(5,10,16,0.5,"font2.tga","^cCenter Distance: %.2f | Breaked Bones: %i",dist_from_center,breaked_bones);
     }
 
 raydium_osd_printf(75,95,16,0.5,"font2.tga","^fBest score: ^9% 5i",best_score);
@@ -739,7 +739,7 @@ raydium_object_load("parachute.tri");
 // ... and start a new game :
 
 if(raydium_init_cli_option("server",server))
-     if(!raydium_network_client_connect_to(server)) 
+     if(!raydium_network_client_connect_to(server))
         exit(1);
 
 create_game();
