@@ -13,7 +13,71 @@
 
 #include "live.h"
 
+// From univision. Untested yet.
+// http://sourceforge.net/projects/univision/
+void uyvy2rgb24( unsigned char *dest, unsigned char *source, size_t pixels )
+{
+	size_t i;
+	int dest_offset = 0;
 
+
+	for( i = 0; i < (pixels*2); i+=4 )
+	{
+		unsigned char *r, *b, *g;
+		unsigned char *y1, *y2, *u, *v;
+
+		double fr, fg, fb;
+		double fy1, fy2, fu, fv;
+
+		r = dest + dest_offset;
+		g = r + 1;
+		b = g + 1;
+
+		u = source + i;
+		y1 = u + 1;
+		v = y1 + 1;
+		y2 = v + 1;
+
+		fu = *u;
+		fv = *v;
+		fy1= *y1;
+		fy2= *y2;
+
+		//printf("u=%.1f v=%.1f",fu,fv);
+
+/* 		fr = fy1 + ( 1.4075f * ( fv - 128.0f ) ); */
+/* 		fg = fy1 - ( 0.3455f * ( fu - 128.0f ) - ( 0.7169f * ( fv - 128.0f ) ) ); */
+/* 		fb = fy1 + ( 1.7790f * ( fu - 128.0f ) ); */
+		fr = fy1 - 0.0009267 * ( fu - 128 ) + 1.4016868 * ( fv - 128 );
+		fg = fy1 - 0.3436954 * ( fu - 128 ) - 0.7141690 * ( fv - 128 );
+		fb = fy1 + 1.7721604 * ( fu - 128 ) + 0.0009902 * ( fv - 128 );
+
+		*r = (unsigned char) ( fr > 255 ? 255 : ( fr < 0 ? 0 : fr ) );
+		*g = (unsigned char) ( fg > 255 ? 255 : ( fg < 0 ? 0 : fg ) );
+		*b = (unsigned char) ( fb > 255 ? 255 : ( fb < 0 ? 0 : fb ) );
+
+
+		dest_offset += 3;
+
+		r = dest + dest_offset;
+		g = r + 1;
+		b = g + 1;
+
+/* 		fr = fy2 + ( 1.4075f * ( fv - 128.0f ) ); */
+/* 		fg = fy2 - ( 0.3455f * ( fu - 128.0f ) - ( 0.7169f * ( fv - 128.0f ) ) ); */
+/* 		fb = fy2 + ( 1.7790f * ( fu - 128.0f ) ); */
+		fr = fy2 - 0.0009267 * ( fu - 128 ) + 1.4016868 * ( fv - 128 );
+		fg = fy2 - 0.3436954 * ( fu - 128 ) - 0.7141690 * ( fv - 128 );
+		fb = fy2 + 1.7721604 * ( fu - 128 ) + 0.0009902 * ( fv - 128 );
+
+		*r = (unsigned char) ( fr > 255 ? 255 : ( fr < 0 ? 0 : fr ) );
+		*g = (unsigned char) ( fg > 255 ? 255 : ( fg < 0 ? 0 : fg ) );
+		*b = (unsigned char) ( fb > 255 ? 255 : ( fb < 0 ? 0 : fb ) );
+
+		dest_offset += 3;
+	}
+
+}
 
 
 // YUV420P to RGB code (next 2 functions) from:
@@ -490,10 +554,16 @@ else
                 dev->vpic.depth=24;
                 if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
                     {
-                    raydium_log("live: ERROR: cannot found suitable color palette");
-                    close(dev->fd);
-                    return -1;
-                    }
+					strcpy(palette,"YUYV, 24 bpp");
+					dev->vpic.palette=VIDEO_PALETTE_YUYV;
+					dev->vpic.depth=24;
+					if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
+						{
+						raydium_log("live: ERROR: cannot found suitable color palette");
+						close(dev->fd);
+						return -1;
+						}
+					}
                 }
             }
         }
@@ -531,7 +601,7 @@ if(dev->cap.type & VID_TYPE_CAPTURE)
     if(ioctl(dev->fd,VIDIOCGMBUF,&dev->gb_buffers)==-1)
         {
         perror("VIDIOCGMBUF");
-        raydium_log("live: ERROR: hardware refuse our mmap capture style (but is claiming this feature ...)");
+        raydium_log("live: ERROR: hardware refuse mmap capture style");
         force_read=1;
         break;
         }
@@ -563,6 +633,7 @@ if(dev->cap.type & VID_TYPE_CAPTURE)
 
 if(force_read)
     {
+	// should test READ support !
     raydium_log("live: fallback to read method. MAY BE SLOW !");
     }
 
@@ -570,10 +641,10 @@ if( (!(dev->cap.type & VID_TYPE_CAPTURE)) || force_read )
     {
     capture_style=RAYDIUM_LIVE_CAPTURE_READ;
 
-    dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth); // /8 no ?
+    dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth/8);
     if (!dev->buffer)
         {
-        raydium_log("live: ERROR: buffer2: out of memory (!?)");
+        raydium_log("live: ERROR: buffer: out of memory (!?)");
         close(dev->fd);
         return -1;
         }
@@ -600,7 +671,7 @@ return id;
     capCaptureSequenceNoFile(dev->hWnd_WC);
 
     }
-raydium_log("live: First attempt to support on Win32");
+raydium_log("live: first Win32 support attempt");
 return id;
 #endif
 #endif
@@ -643,7 +714,22 @@ dev->src = dev->buffer;
 
 if(dev->capture_style==RAYDIUM_LIVE_CAPTURE_READ)
     {
-    read(dev->fd, dev->buffer, dev->win.width * dev->win.height * dev->vpic.depth);
+	size_t count;
+    // trouble ... dev->vpic.depth is not always the same four in and out !
+	// example : YUYV 16 bits -> RGB 24 bits ... Seems to work, but
+	// it must be fixed
+	count=read(dev->fd, dev->buffer, dev->win.width * dev->win.height * dev->vpic.depth/8);
+	if(count==(size_t)-1)
+		{
+		static signed char first=1;
+		if(first)
+			{
+			raydium_log("live: ERROR: can't read() from device !");
+			raydium_log("*** Device may no support this method, nor v4l1 MMAP (broken compat for VIDIOCGMBUF ioctl)");
+			first=0;
+			}
+		return 0;
+		}
     }
 else
     {
@@ -665,12 +751,15 @@ else
 
 if(dev->vpic.palette==VIDEO_PALETTE_YUV420P)
     {
-    // YUV420P style
     v4l_yuv420p2rgb (dev->buffer2,dev->src,dev->win.width,dev->win.height,dev->vpic.depth);
+    }
+else if(dev->vpic.palette==VIDEO_PALETTE_YUYV)
+    {
+	uyvy2rgb24(dev->buffer2,dev->src, dev->win.width*dev->win.height);
     }
 else
     {
-    // RGB style
+    // all RGB palettes ...
     unsigned int i,j;
     int r,g,b;
     for (i = j = 0; i < dev->win.width * dev->win.height; i++)
