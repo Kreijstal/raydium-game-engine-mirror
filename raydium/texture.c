@@ -293,13 +293,13 @@ if(faked)
 
     texsize = tx * ty * bpp;
     data=malloc(texsize);
-    memset(data,0,texsize);
     if(!data)
         {
         fclose(file);
         raydium_log("texture: ERROR ! malloc for %s failed ! (%i bytes needed)",filename,tx*ty*bpp);
         return 0;
         }
+    memset(data,0,texsize);
     }
 
 if(!rgb)
