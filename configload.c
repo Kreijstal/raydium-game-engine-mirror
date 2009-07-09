@@ -10,9 +10,9 @@
 void display(void)
 {
     if(raydium_key_last==1027)
-        exit(0);           
-    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
+        exit(0);
     raydium_clear_frame();
+    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
     /* [ draw here ] */ raydium_ode_draw_all(0);
     raydium_rendering_finish();
 }
@@ -20,10 +20,10 @@ void display(void)
 int main(int argc, char **argv)
 {
     raydium_init_args(argc,argv);
-    raydium_init_load("exampleconfig.txt");
+    raydium_init_load("exampleconfig.conf");
     /* [ place base scene here ] */ raydium_ode_ground_set_name("cocorobix.tri");
     raydium_callback(&display);
-    
+
     return(0);
 }
 
