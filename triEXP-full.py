@@ -17,8 +17,8 @@ except:
 
 import Blender,bpy
 from Blender import Window,sys
-import math 
 from Blender.sys import *
+import math 
 from math import *
 
 path=''
@@ -87,6 +87,7 @@ def conv_tga(image):
 
 
 def valid_texture(image,texture_list):
+	#print "Valid texture %s" % image
 	file_name=basename(image.filename)
 	#already managed
 	if file_name in texture_list:
@@ -132,7 +133,7 @@ def export():
 	global allobj
 
 	Window.WaitCursor(1) 
-	t = sys.time()
+	tinit = sys.time()
 		
 	print "Export begin"
 	Blender.Window.EditMode(0)
@@ -210,12 +211,21 @@ def export():
 			ob2=quadToTri(object,scene)
 			mesh = ob2.getData(mesh=1)
 		
+		l=len(mesh.faces)/10
+		li=0
+		lp=0
+		ti=0
 		for face in mesh.faces:
 			if len(face)!=3:
 				print "ERROR: NOT A TRIANGLE ONLY MESH ! (select all vertices and use CTRL+T)"
 				if autotri:
 					print "This is normaly impossible "
 				#continue
+			li=li+1
+			if li>l:
+				lp+=10
+				print "%d" % lp
+				li=0
 				
 			for i in range(3): #triangles only ! (CTRL+T) 
 				indx=face.v[i].index
@@ -240,19 +250,24 @@ def export():
 					cpt=0 # layers counter
 					if(len(layers)>1):
 						org=mesh.activeUVLayer
-						texture=texture+';'
+						# texture=texture+';'
 						# loop on layers and append uv and name to a string
+						#print len(layers)
 						for layer in layers:
 							mesh.activeUVLayer=layer
 							uu=face.uv[i][0]
 							vv=face.uv[i][1]
-							t=Blender.sys.basename(face.image.filename)
-							valid_texture(t,texture_list)					 
+							ti=ti+1
+							# handle vertex with only one texture defined on a mesh multitextured
+							if not(face.image):
+								continue
+							valid_texture(face.image,texture_list)
+							t=Blender.sys.basename(face.image.filename)					 
 							if(t!=but):
 								#if(cpt>0):
 								#   texture=texture+'|'
 								#   cpt=cpt+1
-								texture=texture+str(uu)+'|'+str(vv)+'|'+t
+								texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
 						mesh.activeUVLayer=org
 					file.write("%f %f %s\n" % (u,v,texture))
 				else:
@@ -272,7 +287,8 @@ def export():
 	if(saveposrot):	
 		gfich.flush()
 		gfich.close()
-	print 'Export Script finished in %.2f seconds\n' % (sys.time()-t) 
+	
+	print 'Export Script finished in %.2f seconds\n' % (sys.time()-tinit)
 	print ' '
 	Window.WaitCursor(0) 
 	
