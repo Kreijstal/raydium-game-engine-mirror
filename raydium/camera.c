@@ -736,9 +736,6 @@ raydium_camera_data[5]=rffp_cam_angle_z;
 void raydium_camera_orbitmove( float x_to, float y_to, float z_to)
 {
 static float delta_x,delta_y;
-float delta[3];
-float angle[3];
-float dist;
 float mult=0.05f;
 static float zoom=10.0f; //really is the distance, not zoom
 float Matrix[16];
