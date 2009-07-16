@@ -1,3 +1,4 @@
+//!NOBINDINGS
 /*
     Raydium - CQFD Corp.
     http://raydium.org/

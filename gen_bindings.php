@@ -244,7 +244,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.4/ $raycomp";
+echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.6/ $raycomp";
 echo "\n\n";
 echo "You may need to adapt python devel lib path\n";
 }
