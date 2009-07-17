@@ -2,7 +2,7 @@
 // this file is used by ManiaDrive to get
 // track list from CQFD Corp website.
 $libfile="rayphp/libfile.php";
-$a=file($libfile);
+$a=@file($libfile);
 if ($a==FALSE)
 {
     $libfile="../raydium/rayphp/libfile.php"; 
