@@ -46,9 +46,12 @@ fclose(fp);
 return ret;
 }
 
-signed char is_jpg(char *name)
+int is_jpg(const struct dirent *ent)
 {
 int l,m;
+const char *name;
+
+name=ent->d_name;
 l=strlen(EXT);
 m=strlen(name);
 
@@ -71,15 +74,15 @@ int sx,sy,total;
 char out[512];
 char head[100];
 FILE *fpo;
-DIR *dir;
-struct dirent *tmp;
+struct dirent **namelist;
+int i;
 long offset;
 
 if(argc!=5)
     {
     printf("This program will create a movie file (JPGS) for Raydium 3D Game Engine\n");
     printf("using all jpg files in the current directory.\n");
-    printf("usage: %s fps sizex sizey output\n",argv[0]);
+    printf("usage: %s fps sizex sizey output.jpgs\n",argv[0]);
     exit(0);
     }
 
@@ -95,50 +98,31 @@ if(!fpo)
     exit(1);
     }
 
-
-if (!(dir = opendir(".")))
+total=scandir(".", &namelist, is_jpg, alphasort);
+if(total<0)
     {
-    printf("cannot list current dir\n");
-    exit(2);
+    perror("scandir");
+    exit(15);
     }
 
-total=0;
-while ((tmp = readdir(dir)))
-    {
-    if(is_jpg(tmp->d_name))
-        total++;
-    }
-
+printf("%i files found, creating header ...\n",total);
 offset=0;
 sprintf(head,"%f %i %i %i|",fps,sx,sy,total);
 fprintf(fpo,"%s",head);
 
 // header, second part
 offset=0;
-rewinddir(dir);
-
-while ((tmp = readdir(dir)))
+for(i=0;i<total;i++)
     {
-    if(!is_jpg(tmp->d_name))
-        {
-        continue;
-        }
-
     fprintf(fpo,"%i|",offset);
-    offset+=filesize(tmp->d_name);
+    offset+=filesize(namelist[i]->d_name);
     }
 
 // body
-rewinddir(dir);
-
-while ((tmp = readdir(dir)))
+printf("creating file ...\n");
+for(i=0;i<total;i++)
     {
-    if(!is_jpg(tmp->d_name))
-        {
-        continue;
-        }
-
-    copy(tmp->d_name,fpo);
+    copy(namelist[i]->d_name,fpo);
     }
 
 fclose(fpo);
