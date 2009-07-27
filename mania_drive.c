@@ -2426,9 +2426,11 @@ if(raydium_key_last==1032)
 if(raydium_key_last==1008)
     network_ask_restart();
 
+/*
 if(raydium_key_last==1097) { raydium_ode_time_change(0); }
 if(raydium_key_last==1122) { raydium_ode_time_change(10); }
 if(raydium_key_last==1101) { raydium_ode_time_change(100); }
+*/
 
 if(raydium_key_last==1000+'c')
     {
