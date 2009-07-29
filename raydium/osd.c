@@ -122,6 +122,7 @@ char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
 int i,texsave;
 GLfloat dx=0;
+GLfloat dy=0;
 unsigned char ligne,offset;
 GLfloat u,v;
 char c;
@@ -142,13 +143,23 @@ glTranslatef(x,y,0);
 // strlen is slooow :)
 for( i=0; str[i]; i++ )
  {
- if(str[i]=='\n' || str[i]=='\t') continue;
- if(str[i]=='^' && i+1<RAYDIUM_MAX_NAME_LEN && str[i+1]!=0) {
-                 // oh ! ... you cannot draw '^' char since i'm
-                 // too lazy to code it for now :)
-                 raydium_osd_color_ega(str[++i]);
-                 continue;
-                 }
+ if(str[i]=='\r' || str[i]=='\t') continue;
+
+ if(str[i]=='^' && i+1<RAYDIUM_MAX_NAME_LEN && str[i+1]!=0)
+ 	{
+	// oh ! ... you cannot draw '^' char since i'm
+	// too lazy to code it for now :)
+	raydium_osd_color_ega(str[++i]);
+	continue;
+	}
+
+ if(str[i]=='\n')
+ 	{
+	dx=0;
+	dy+=(size*2*(spacer*2));
+	continue;
+	}
+
  c=str[i]; // c=str[i]-32;
  ligne=c/16;
  offset=c-(ligne*16);
@@ -160,10 +171,10 @@ for( i=0; str[i]; i++ )
 
 
 
- glTexCoord2f(u,v-(1/16.f)); glVertex3f(-size+dx,-size,0);
- glTexCoord2f(u+(1/16.f),v-(1/16.f));glVertex3f(size+dx,-size,0);
- glTexCoord2f(u+(1/16.f),v);glVertex3f(size+dx,size,0);
- glTexCoord2f(u,v);glVertex3f(-size+dx,size,0);
+ glTexCoord2f(u,v-(1/16.f)); glVertex3f(-size+dx,-size-dy,0);
+ glTexCoord2f(u+(1/16.f),v-(1/16.f));glVertex3f(size+dx,-size-dy,0);
+ glTexCoord2f(u+(1/16.f),v);glVertex3f(size+dx,size-dy,0);
+ glTexCoord2f(u,v);glVertex3f(-size+dx,size-dy,0);
  glEnd();
  dx+=(size*2*spacer);
 
@@ -186,7 +197,7 @@ vsprintf(str,format,argptr);
 va_end(argptr);
 
 if(raydium_math_point_unproject_3D(x,y,z,&sx,&sy))
-    raydium_osd_printf(sx,sy,size,spacer,texture,str);
+    raydium_osd_printf(sx,sy,size,spacer,texture,"%s",str);
 }
 
 void raydium_osd_logo(char *texture)
@@ -246,9 +257,9 @@ glTranslatef((((((GLfloat)raydium_mouse_x)/raydium_window_tx))*100.f) +raydium_o
 raydium_texture_current_set(raydium_osd_cursor_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
-glBegin(GL_QUADS); 
-    glTexCoord2f(0,0);glVertex3f(0,-raydium_osd_cursor_ysize,0); 
-    glTexCoord2f(1,0);glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0); 
+glBegin(GL_QUADS);
+    glTexCoord2f(0,0);glVertex3f(0,-raydium_osd_cursor_ysize,0);
+    glTexCoord2f(1,0);glVertex3f(raydium_osd_cursor_xsize,-raydium_osd_cursor_ysize,0);
     glTexCoord2f(1,1);glVertex3f(raydium_osd_cursor_xsize,0,0);
     glTexCoord2f(0,1);glVertex3f(0,0,0);
 glEnd();
