@@ -313,7 +313,9 @@ else if(visu<0)
 
 if(i%3)
     {
-    printf("ERROR with object %s ... must be *3 !",filename);
+    raydium_log("ERROR: file: tri: object %s ... must be *3 !",filename);
+    raydium_log("This object is invalid, and current engine state undefined.");
+	raydium_log("***********************************************************");
     // and generate dummy vertices ?
     }
 
