@@ -14,6 +14,18 @@
 // proto
 char * raydium_file_home_path(char *file);
 
+// Trims end of string, only for spaces and line feeds
+void raydium_parser_trim_right(char *org)
+{
+int i;
+
+for(i=strlen(org);i>=0;i--)
+    if(org[i]!=' ' && org[i]!='\n' && org[i]!='\r' && org[i]!='\t' && org[i]!=0)
+        break;
+
+org[i+1]=0; // tailing chars: ok
+}
+
 // Trims string (left and right), removing ' ' and '\n' and ';'
 void raydium_parser_trim(char *org)
 {
@@ -53,7 +65,7 @@ for(i=0;i<len+1;i++)
     if(str[i]==separator)
         break;
 
-if(i==len+1) 
+if(i==len+1)
     {
     strcpy(part1,str);
     part2[0]=0;
@@ -104,7 +116,7 @@ if(val_s[0]=='[') // is raw data (RAYDIUM_MAX_NAME_LEN limit !)
     {
     int offset=0;
     int len;
-    
+
     do {
         str[0]=0;
         ret=fgets(str,RAYDIUM_MAX_NAME_LEN-1,fp);
@@ -116,7 +128,7 @@ if(val_s[0]=='[') // is raw data (RAYDIUM_MAX_NAME_LEN limit !)
         memcpy(val_s+offset,str,len);
         offset+=len;
     } while(1);
-    
+
     val_s[offset]=0;
     *size=offset;
     return RAYDIUM_PARSER_TYPE_RAWDATA;
@@ -162,7 +174,7 @@ if(val_s[0]=='{') // is a float array
     {
     char extracted[RAYDIUM_MAX_NAME_LEN];
     char next[RAYDIUM_MAX_NAME_LEN];
-    
+
     *size=0;
     raydium_parser_replace(val_s,'{',' ');
     raydium_parser_trim(val_s);
@@ -176,13 +188,13 @@ if(val_s[0]=='{') // is a float array
     val_f[*size]=atof(val_s);
     (*size)++;
     val_s[0]=0;
-    return RAYDIUM_PARSER_TYPE_FLOAT;    
+    return RAYDIUM_PARSER_TYPE_FLOAT;
     }
 
 // is a float
 *val_f=atof(val_s);
 *size=1;
-return RAYDIUM_PARSER_TYPE_FLOAT;    
+return RAYDIUM_PARSER_TYPE_FLOAT;
 
 }
 

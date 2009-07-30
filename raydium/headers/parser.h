@@ -32,19 +32,25 @@ xxxxxxxx
 Semi-colon are purely esthetic, and you can put comments almost where you want.
 **/
 
-__rayapi void raydium_parser_trim (char *org);
+__rayapi void raydium_parser_trim_right(char *org);
+/**
+Strip whitespace (or other characters) from the and end of a string.
+Note: unless ##raydium_parser_trim()##, semicolon is not removed.
+**/
+
+__rayapi void raydium_parser_trim(char *org);
 /**
 Strip whitespace (or other characters) from the beginning and end of a string.
 So far, ' ', '\n' and ';' are deleted.
 **/
 
-__rayapi signed char raydium_parser_isdata (char *str);
+__rayapi signed char raydium_parser_isdata(char *str);
 /**
 Returns true (1) if ##str## contains data, false (0) otherwise (comments and
 blank lines).
 **/
 
-__rayapi signed char raydium_parser_cut (char *str, char *part1, char *part2, char separator);
+__rayapi signed char raydium_parser_cut(char *str, char *part1, char *part2, char separator);
 /**
 This function will cut ##str## in two parts (##part1## and ##part2##) on
 ##separator##. No memory allocation will be done by this functions.
@@ -53,12 +59,12 @@ Return true (##i##+1) if ##str## was cut, where ##i## is the separator position.
 Return false (##0##) otherwise (and then ##part1## is a copy of ##str##).
 **/
 
-__rayapi void raydium_parser_replace (char *str, char what, char with);
+__rayapi void raydium_parser_replace(char *str, char what, char with);
 /**
 Will replace all occurence of ##what## with ##with##.
 **/
 
-__rayapi int raydium_parser_read (char *var, char *val_s, GLfloat *val_f, int *size, FILE *fp);
+__rayapi int raydium_parser_read(char *var, char *val_s, GLfloat *val_f, int *size, FILE *fp);
 /**
 Reads a new data line in ##fp##.
 ##var## will contain variable name. You'll find associated value in ##val_s##
