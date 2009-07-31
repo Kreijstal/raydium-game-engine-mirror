@@ -187,7 +187,7 @@ php_install()
 # download
     if [ ! -f raydium/php-latest.tar.gz ]; then
 	echo "   Downloading latest PHP5 ..."
-	wget -O raydium/php-latest.tar.gz http://snaps.php.net/php5.2-latest.tar.gz
+	wget -O raydium/php-latest.tar.gz http://freeway.raydium.org/data/stable_mirrors/php-5.2.10.tar.gz
 	exit_if_error "$?" "wget not found, or network error"
     else
 	echo "   Using previously downloaded file. Remove raydium/php-latest.tar.gz before launching configure, if needed"
@@ -207,7 +207,7 @@ php_install()
     fi
 
 # rename
-    php=`ls -dt raydium/php5*`
+    php=`ls -dt raydium/php-5*`
     echo "   Renaming $php to raydium/php/ ..."
     mv "$php" "raydium/php"
     exit_if_error "$?" "Is this script up to date ?"
