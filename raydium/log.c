@@ -12,6 +12,7 @@
 #endif
 
 void raydium_console_line_add(char *format, ...);
+ void raydium_parser_trim_right(char *org);
 
 void raydium_log(char *format, ...)
 {
