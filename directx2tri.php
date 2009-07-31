@@ -8,6 +8,11 @@
 
 // v0.6
 
+//////
+// THIS FILE IS NOW DEPRECATED !
+// To import 3DS/X files, see http://wiki.raydium.org/wiki/Convert3dsTri
+//////
+
 $in=file($argv[1]);
 set_time_limit(0);
 $no_normals=false; // there is an autodetect feature.
