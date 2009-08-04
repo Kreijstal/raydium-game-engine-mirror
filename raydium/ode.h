@@ -85,6 +85,8 @@
 #define RAYDIUM_ODE_RECORD_DELSPHERE            4
 #define RAYDIUM_ODE_RECORD_DELCAPSULE           15
 
+#define RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX		64
+
 __global dWorldID       raydium_ode_world;
 __global dSpaceID       raydium_ode_space;
 __global dJointGroupID  raydium_ode_contactgroup;
@@ -314,6 +316,10 @@ char raydium_ode_element_delete(int e, char deletejoints);
 void raydium_ode_element_move(int elem, dReal *pos);
 dReal *raydium_ode_element_pos_get(int j);
 */
+
+__global int raydium_ode_contact_feedback_request;
+__global dJointFeedback raydium_ode_contact_feedbacks[RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX];
+
 
 void raydium_ode_network_init(void);
 void raydium_ode_network_element_delete(int e);

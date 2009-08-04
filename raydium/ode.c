@@ -2,7 +2,7 @@
     Raydium - CQFD Corp.
     http://raydium.org/
     Released under both BSD license and Lesser GPL library license.
-    See "license.txt" file.
+    See "license.txt" file.r
 */
 
 #ifndef DONT_INCLUDE_HEADERS
@@ -4462,6 +4462,8 @@ e2=dGeomGetData(o2);
                 continue;
             }
 
+		raydium_ode_contact_feedback_request=-1;
+
         // raydium_ode_CollideCallback
         if(f)
             {
@@ -4478,6 +4480,15 @@ e2=dGeomGetData(o2);
         //printf("%s <-> %s\n",e1->name,e2->name); // let's flood :)
         c = dJointCreateContact (raydium_ode_world,raydium_ode_contactgroup,&contact[i]);
         dJointAttach (c,dGeomGetBody(contact[i].geom.g1),dGeomGetBody(contact[i].geom.g2));
+
+		// The user requested a feedback on this joint (during CollideCallback)
+		if(raydium_ode_contact_feedback_request>=0)
+			{
+			if(raydium_ode_contact_feedback_request>=RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX)
+				raydium_log("ODE: Error: contact request id is out of bounds (%i, max=%i",raydium_ode_contact_feedback_request,RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX);
+			else
+				dJointSetFeedback(c,&raydium_ode_contact_feedbacks[raydium_ode_contact_feedback_request]);
+			}
     }
   }
 }
@@ -5923,6 +5934,23 @@ else
 void raydium_ode_element_disable_set_name(char *e, signed char disable_state)
 {
 raydium_ode_element_disable_set(raydium_ode_element_find(e),disable_state);
+}
+
+void raydium_ode_contact_feedback_save(int custom_id)
+{
+// checking is done during raydium_ode_near_callback()
+raydium_ode_contact_feedback_request=custom_id;
+}
+
+dJointFeedback *raydium_ode_contact_feedback_get(int custom_id)
+{
+if(custom_id<0 || custom_id>=RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX)
+	{
+	raydium_log("ODE: Error: can't get contact feedback : id is out of bounds (%i, max=%i",custom_id,RAYDIUM_ODE_CONTACTS_FEEDBACK_MAX);
+	return NULL;
+	}
+
+return &raydium_ode_contact_feedbacks[custom_id];
 }
 
 
