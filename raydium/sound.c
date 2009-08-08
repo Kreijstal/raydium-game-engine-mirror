@@ -106,8 +106,10 @@ void raydium_sound_InitSource(int src)
    raydium_sound_verify("setting source pitch");
  alSourcef(raydium_sound_source[src],AL_GAIN,1.0f);                 //SETS SOURCE GAIN
    raydium_sound_verify("setting source gain");
- alSourcef(raydium_sound_source[src],AL_REFERENCE_DISTANCE,raydium_sound_DefaultReferenceDistance);
+ alSourcef(raydium_sound_source[src],AL_REFERENCE_DISTANCE,1.f);
    raydium_sound_verify("setting source reference distance");
+ alSourcef(raydium_sound_source[src],AL_ROLLOFF_FACTOR,1.f/raydium_sound_DefaultReferenceDistance);
+   raydium_sound_verify("setting source rolloff factor");
  alSourcefv(raydium_sound_source[src],AL_POSITION,srcPos);          //SETS SOURCE POSITION
    raydium_sound_verify("setting source position");
  alSourcefv(raydium_sound_source[src],AL_VELOCITY,srcVel);          //SETS SOURCE VELOCITY
