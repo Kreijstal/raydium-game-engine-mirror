@@ -292,6 +292,22 @@ int raydium_sound_SetSourceGain(int src, ALfloat g)
  return(result);
 }
 
+int raydium_sound_SetSourceRefDist(int src, ALfloat distance)
+{
+ int result=raydium_sound_SourceVerify(src);
+ if(result==0)
+ {
+  if(distance<0.0)
+  {
+   distance=0.0;
+   raydium_log("sound: Tried to set negative reference distance , clipped to 0");
+  }
+  alSourcef(raydium_sound_source[src],AL_ROLLOFF_FACTOR,1.f/distance);
+  raydium_sound_verify("setting source reference distance");
+ }
+ return(result);
+}
+
 //SETS SOURCE POSITION
 //TAKES A SOURCE NUMBER AND AN ALfloat ARRAY {x,y,z}
 int raydium_sound_SetSourcePos(int src, ALfloat Pos[])

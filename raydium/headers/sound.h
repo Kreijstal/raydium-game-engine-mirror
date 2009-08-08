@@ -7,16 +7,16 @@ Sound and music
 
 // Introduction
 /**
-The Raydium sound API is pretty easy to use and there's only need to use a 
+The Raydium sound API is pretty easy to use and there's only need to use a
 few functions to make your program ouput sounds or music.
 
 On top of this, there are a bunch of functions to modify the sound behavior.
 
-Raydium uses OpenAL and OggVorbis for its sounds and musics, for a basic 
-use of our sound API you only need to know one thing: OpenAL uses buffers 
+Raydium uses OpenAL and OggVorbis for its sounds and musics, for a basic
+use of our sound API you only need to know one thing: OpenAL uses buffers
 for its sounds and you need to be able to address the sounds separately.
 For this we use ALuint in our code. Each buffer is associated to a source,
-we have an array of all available sources and then, you only need to have 
+we have an array of all available sources and then, you only need to have
 a simple int that acts as an index in this array. See below for more
 informations.
 
@@ -58,7 +58,7 @@ Internal use.
 
 __rayapi int raydium_sound_LoadWav (const char *fname);
 /**
-This function tries to load the ##fname## wav file into a buffer, if 
+This function tries to load the ##fname## wav file into a buffer, if
 successful, it returns the source id, else 0.
 **/
 
@@ -69,7 +69,7 @@ Internal id checks.
 
 __rayapi int raydium_sound_SetSourceLoop (int src, signed char loop);
 /**
-Modifies the ##loop## property of the ##src## source (loops if loop is non-zero, 
+Modifies the ##loop## property of the ##src## source (loops if loop is non-zero,
 default value for a source is "true").
 Returns 0 if ok, -1 if error.
 **/
@@ -82,7 +82,7 @@ Returns current pitch for ##src## source.
 __rayapi int raydium_sound_SetSourcePitch (int src, ALfloat p);
 /**
 Sets pitch for ##src## source.
-Current OpenAL spec is not clear about pitch's limits. Raydium will 
+Current OpenAL spec is not clear about pitch's limits. Raydium will
 clamp values to to ]0,2] interval.
 **/
 
@@ -98,6 +98,12 @@ Current OpenAL spec is not clear about pitch's limits. Raydium do not allows
 negative values, but no upper limit is set.
 Warning: some OpenAL implementations will provide strange gain curves. More
 work is needed on this issue.
+**/
+
+__rayapi int raydium_sound_SetSourceRefDist(int src, ALfloat distance);
+/**
+Sets reference distance for source ##src##. The reference distance is
+the distance where the sound will be half-volume.
 **/
 
 __rayapi int raydium_sound_SetSourcePos (int src, ALfloat Pos[]);
