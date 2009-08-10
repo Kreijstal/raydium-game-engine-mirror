@@ -3594,12 +3594,11 @@ raydium_math_rotate(dir,rot[0],rot[1],rot[2],res);
 res[0]*=force;
 res[1]*=force;
 res[2]*=force;
+
 dBodyVectorToWorld(raydium_ode_element[from_element].body,res[0],res[1],res[2],final);
 initial=(dReal *)dBodyGetLinearVel(raydium_ode_element[from_element].body);
-final[0]+=initial[0];
-final[1]+=initial[1];
-final[2]+=initial[2];
 raydium_ode_element_addforce_3f(element,final[0],final[1],final[2]);
+dBodySetLinearVel(raydium_ode_element[element].body,initial[0],initial[1],initial[2]);
 return 1;
 }
 
