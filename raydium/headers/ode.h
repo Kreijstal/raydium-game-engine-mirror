@@ -1418,6 +1418,16 @@ __rayapi void raydium_ode_motor_gear_change_name (char *m, int gear);
 Same as above, but using motor's name.
 **/
 
+__rayapi dReal raydium_ode_motor_gear_ratio(int m);
+/**
+Returns the current gear ratio for motor ##m##.
+**/
+
+__rayapi dReal raydium_ode_motor_gear_ratio_name(char *m);
+/**
+Same as above, but using motor's name.
+**/
+
 __rayapi dReal *raydium_ode_element_pos_get (int j);
 /**
 This function will return element ##j##'s current position, as an array of

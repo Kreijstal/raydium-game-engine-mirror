@@ -2891,6 +2891,20 @@ void raydium_ode_motor_gear_change_name(char *m, int gear)
 raydium_ode_motor_gear_change(raydium_ode_motor_find(m),gear);
 }
 
+dReal raydium_ode_motor_gear_ratio(int m)
+{
+if(raydium_ode_motor_isvalid(m))
+	return raydium_ode_motor[m].gears[raydium_ode_motor[m].gear];
+
+raydium_log("ODE: Error: motor: cannot get current gear ratio: invalid index or name");
+return 0;
+}
+
+dReal raydium_ode_motor_gear_ratio_name(char *m)
+{
+return raydium_ode_motor_gear_ratio(raydium_ode_motor_find(m));
+}
+
 dReal *raydium_ode_element_pos_get(int j)
 {
 if(raydium_ode_element_isvalid(j))
