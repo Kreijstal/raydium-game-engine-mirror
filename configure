@@ -212,14 +212,23 @@ php_install()
     mv "$php" "raydium/php"
     exit_if_error "$?" "Is this script up to date ?"
 
+# check for 64bits
+	
+	CHECK64=`uname -m|grep x86_64|wc -l`	
+	if [ "$CHECK64" -eq "1" ];
+	then
+		CONFIGEXTRA=" --with-pic "
+	fi
+	
 # configure
     echo "   Configuring PHP ..."
     echo "Configuring PHP" >> configure.log
     echo "===============" >> configure.log
     cd raydium/php
-    ./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl \
-    --disable-simplexml --disable-xmlreader --disable-xmlwriter --enable-soap \
+	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl \
+    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \ 
     >>../../configure.log 2>>../../configure.log
+
     ret=$?
     cd - > /dev/null
     exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"

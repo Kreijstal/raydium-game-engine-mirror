@@ -12,11 +12,16 @@ OTHER_LIBS =  raydium/ode/ode/src/libode.a raydium/php/libs/libphp5.a
 INCLUDE_PATH =  -Iraydium/ode/include/ -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
 CFLAGS=-W
+
 COMPILE_OPTIONS=-g -D LIBRAY
+ARC64 := $(shell uname -m)
+ifeq ($(ARC64),x86_64)
+	COMPILE_OPTIONS+= -fPIC 
+endif
+
 LDFLAGS=
 LINKING_OPTIONS=-Wl,-soname,libraydium.so.0
 AR_OPTIONS=
-
 HEADERS=raydium/headers/background.h raydium/headers/callback.h raydium/headers/camera.h raydium/headers/capture.h raydium/headers/clear.h raydium/headers/console.h raydium/headers/file.h raydium/headers/file_tri.h raydium/headers/fog.h raydium/headers/init.h raydium/headers/cli.h raydium/headers/internal.h raydium/headers/joy.h raydium/headers/key.h raydium/headers/land.h raydium/headers/light.h raydium/headers/log.h raydium/headers/main.h raydium/headers/mouse.h raydium/headers/network.h raydium/headers/normal.h raydium/headers/object.h raydium/headers/ode.h raydium/headers/osd.h raydium/headers/parser.h raydium/headers/particle2.h raydium/headers/php.h raydium/headers/profile.h raydium/headers/random.h raydium/headers/rayphp.h raydium/headers/register.h raydium/headers/render.h raydium/headers/signal.h raydium/headers/sky.h raydium/headers/sound.h raydium/headers/texture.h raydium/headers/timecall.h raydium/headers/math.h raydium/headers/vertex.h raydium/headers/window.h raydium/headers/reg_api.h raydium/headers/gui.h raydium/headers/live.h raydium/headers/video.h raydium/headers/shadow.h raydium/headers/myglut.h raydium/headers/web.h raydium/headers/hdr.h raydium/headers/shader.h raydium/headers/atexit.h raydium/headers/path.h raydium/headers/sprites.h
 
 OBJECTS      = $(HEADERS:raydium/headers/%.h=raydium/compile/%.o)

@@ -158,7 +158,7 @@
 #include "fopen_wrappers.h"
 #include "ext/standard/php_standard.h"
 #endif
-
+#include <X11/Xmd.h>
 #include <jpeglib.h>
 
 #define PI                                      (3.1415926535f)
