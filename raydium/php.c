@@ -27,6 +27,8 @@ void ***tsrm_ls;
 
 // proto
 void raydium_file_ext(char *dest, char *from);
+signed char raydium_file_isdir(char *path);
+
 
 static int sapi_raydium_send_headers(sapi_headers_struct *sapi_headers TSRMLS_DC)
 {
