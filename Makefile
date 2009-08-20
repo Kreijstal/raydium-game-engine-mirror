@@ -12,10 +12,10 @@ OTHER_LIBS =  raydium/ode/ode/src/libode.a raydium/php/libs/libphp5.a
 INCLUDE_PATH =  -Iraydium/ode/include/ -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
 CFLAGS=-Wall
-COMPILE_OPTIONS=-g -D LIBRAY -O2
+COMPILE_OPTIONS=-g -DLIBRAY -O2
 ARC64 := $(shell uname -m)
 ifeq ($(ARC64),x86_64)
-	COMPILE_OPTIONS+= -fPIC 
+	COMPILE_OPTIONS+= -fPIC
 endif
 
 LDFLAGS=

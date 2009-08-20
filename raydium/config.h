@@ -14,6 +14,10 @@
 #define PHP_INI_PATH "./"
 #endif
 
+// You may define this during compilation (-DRAYPHP_PATH=\"...\")
+#ifndef RAYPHP_PATH
+#define RAYPHP_PATH "rayphp"
+#endif
 
 #ifndef NO_ODE_SUPPORT
 // Enable ODE physics support
@@ -59,7 +63,7 @@
 // debug ODE Network interface (verbose !)
 //#define DEBUG_ODENET
 
-// enable movie linear framerate (1/x sec) 
+// enable movie linear framerate (1/x sec)
 // press F11 and see movie/ subdir [or create it]
 //#define DEBUG_MOVIE 25
 
