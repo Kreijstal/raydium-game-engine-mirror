@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/file.h"
-#endif 
+#endif
 
 // proto
 void raydium_path_resolv(char *in, char *out, char mode);
@@ -43,7 +43,7 @@ int n;
 c=strrchr(from,'/'); // Unix
 if(!c)
     c=strrchr(from,'\\'); // win32
-      
+
 if(!c)
     {
     strcpy(dest,from);
@@ -73,6 +73,18 @@ if( (c=strrchr(name,'.')) )
         strcpy(dest,c+1);
 }
 
+signed char raydium_file_isdir(char *path)
+{
+DIR * rphp;
+rphp=opendir(path);
+
+if (rphp)
+	{
+	closedir(rphp);
+	return 1;
+	}
+return 0;
+}
 
 signed char raydium_file_directory_writable(char *path)
 {
@@ -143,7 +155,7 @@ if(strchr(mode,'w'))
     return fopen(file2,mode);
     }
 
-if( !raydium_init_cli_option("repository-refresh",NULL) && 
+if( !raydium_init_cli_option("repository-refresh",NULL) &&
     !raydium_init_cli_option("repository-force",NULL) )
 {
  fp=fopen(file2,mode);

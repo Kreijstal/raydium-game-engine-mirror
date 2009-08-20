@@ -34,6 +34,11 @@ Return the extension of ##from## filename (can be a complete path), without
 the . (dot), or an empty string if extension is not found.
 **/
 
+__rayapi signed char raydium_file_isdir(char *path);
+/**
+Return **1** if ##path## is a (readable) directory, **0** otherwise.
+**/
+
 __rayapi signed char raydium_file_directory_writable(char *path);
 /**
 Return **1** if ##path## directory is writable, **0** otherwise.
@@ -57,9 +62,9 @@ Raydium wrapper to libc's ##fopen## function.
 This function will:
 - Update some stats
 - Try to download the file from repositories if no local version is found, or
-will try to update the file if asked (##--repository-refresh## or 
+will try to update the file if asked (##--repository-refresh## or
 ##repository-force##). See R3S on Raydium's Wiki.
-- You can disable R3S client (for a "local only" file) adding a 'l' 
+- You can disable R3S client (for a "local only" file) adding a 'l'
 in ##mode## ("rl" or "rbl" for example).
 - Use Raydium paths (see suitable chapter)
 **/
@@ -85,7 +90,7 @@ See ##raydium_file_fopen()## for more informations about ##mode##.
 __rayapi char * raydium_file_home_path(char *file);
 /**
 This function will return an absolute file path for ##file## in the home
-directory of the current user. 
+directory of the current user.
 Returned value is a pointer to static memory. Do not free this memory and use
 it before any other call to this function, since it will be overwritten.
 Example:
@@ -100,7 +105,7 @@ Same as above, but you must provide memory with ##dest##.
 
 __rayapi char *raydium_file_load(char *filename);
 /**
-This function loads ##filename## (as a binary file under win32, no matter 
+This function loads ##filename## (as a binary file under win32, no matter
 under Linux) in a string, and returns its address. **You** must free this
 memory when finished.
 **/
@@ -108,7 +113,7 @@ memory when finished.
 __rayapi int raydium_file_binary_fgets(char *dest, int max, FILE *stream);
 /**
 Binary version of LIBC's fgets. Read a maximum of ##max## bytes from
-##stream##, including terminating 0 character, to ##dest## buffer, and stops 
+##stream##, including terminating 0 character, to ##dest## buffer, and stops
 at the first 0 found or at EOF.
 No memory allocation is done, and string is always terminated by a 0.
 Returns the length of the readed string (without terminating 0).
