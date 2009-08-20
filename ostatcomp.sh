@@ -8,7 +8,7 @@
 
 ulimit -c 0
 rm test
-gcc -g $1 -Wall -o test -static-libgcc \
+gcc -g $1 -Wall -O2 -o test -static-libgcc \
 -Wl,-dynamic-linker=/lib/ld-linux.so.2 -Wl,-Bstatic -L/usr/X11R6/lib/ \
 -lm -lXi -ljpeg \
 -Iraydium/ode/include/ raydium/ode/ode/src/libode.a \

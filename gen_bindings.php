@@ -120,7 +120,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Perl5:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/raydium.so -I/usr/lib/perl5/5.8.3/i386-linux-thread-multi/CORE/ -D_REENTRANT -D_GNU_SOURCE -DTHREADS_HAVE_PIDS -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/include/gdbm $raycomp";
+echo "gcc -g -Wall -O2 -shared raydium/swig/raydium_wrap.c -o raydium/swig/raydium.so -I/usr/lib/perl5/5.8.3/i386-linux-thread-multi/CORE/ -D_REENTRANT -D_GNU_SOURCE -DTHREADS_HAVE_PIDS -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/include/gdbm $raycomp";
 echo "\n";
 }
 
@@ -177,7 +177,7 @@ if(chdir("raydium/swig")===false)
 
 $fp=fopen("raydium.i","rt");
 $contents = '';
-while (!feof($fp)) 
+while (!feof($fp))
     {
     $contents .= fread($fp, 8192);
     }
@@ -200,12 +200,12 @@ arglist = Py_BuildValue("()");
 
 result=PyEval_CallObject(MainLoopPython,arglist);
 Py_DECREF(arglist);
-if (result == Py_None) 
+if (result == Py_None)
     {
     return;
     }
 
-if (result) 
+if (result)
     {
     Py_DECREF(result);
     }
@@ -244,7 +244,7 @@ if($ret!=0)
 
 chdir("../..");
 echo "Compile example (see ocomp.sh for up to date gcc args) for Python:\n";
-echo "gcc -g -Wall -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.6/ $raycomp";
+echo "gcc -g -Wall -O2 -shared raydium/swig/raydium_wrap.c -o raydium/swig/_raydium.so -I/usr/include/python2.6/ $raycomp";
 echo "\n\n";
 echo "You may need to adapt python devel lib path\n";
 }
@@ -303,7 +303,7 @@ if(chdir("raydium/swig")===false)
 
 @mkdir("org",0755);
 @mkdir("org/raydium",0755);
-    
+
 $fp=fopen("raydium.i","rt");
 $contents = '';
 while (!feof($fp))
@@ -311,7 +311,7 @@ while (!feof($fp))
     $contents .= fread($fp, 8192);
     }
 fclose($fp);
-                
+
 $fp=fopen("org/raydium/raydium.i","wt");
 fwrite($fp,$maps."\n".$contents);
 fclose($fp);
@@ -327,7 +327,7 @@ chdir("../..");
 echo "--------------------------------------------------\n";
 echo "You must now compile the native Raydium lib.\n";
 echo "Compile example (see ocomp.sh for up to date gcc args) for Java:\n";
-echo "gcc -g -Wall -shared raydium/swig/org/raydium/raydium_wrap.c -o raydium/swig/libraydium.so -I/opt/java_ee_sdk-5_02/jdk/include/ -I/opt/java_ee_sdk-5_02/jdk/include/linux $raycomp";
+echo "gcc -g -Wall -O2 -shared raydium/swig/org/raydium/raydium_wrap.c -o raydium/swig/libraydium.so -I/opt/java_ee_sdk-5_02/jdk/include/ -I/opt/java_ee_sdk-5_02/jdk/include/linux $raycomp";
 echo "\n\n";
 echo "You must probably change the two endings Java include paths (-I...) in this command line.\n";
 echo "\n";
@@ -360,7 +360,7 @@ switch($arg1)
         generate_interface_file();
         swig_wrappers_java();
     break;
-    
+
     default:
         echo "error: invalid argument '$arg1'\n";
     }
