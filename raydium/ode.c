@@ -4727,7 +4727,7 @@ if(raydium_ode_record_fp)
     int ground_elem_id;
 
     ground_elem_id=raydium_ode_element_find("ground");
-    raydium_ode_record_countdown=(raydium_ode_physics_freq/raydium_ode_record_rate)-raydium_ode_record_countdown;
+    raydium_ode_record_countdown=(raydium_ode_physics_freq/raydium_ode_record_rate)+raydium_ode_record_countdown-1;
 
     // It may be an good idea to find a quicker way to do this ... :)
     for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)

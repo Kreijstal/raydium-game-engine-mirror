@@ -282,7 +282,7 @@ __global raydium_ode_Explosion raydium_ode_explosion[RAYDIUM_ODE_MAX_EXPLOSIONS]
 // replays recording
 __global FILE *raydium_ode_record_fp;
 __global int raydium_ode_record_rate;
-__global int raydium_ode_record_countdown;
+__global float raydium_ode_record_countdown;
 
 // replays reading (separate vars so we can play and record at the same time)
 
