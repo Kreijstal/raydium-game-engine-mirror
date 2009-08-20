@@ -129,6 +129,7 @@
 #ifdef linux
 #include <linux/if.h>
 #include <linux/sockios.h>
+#include <X11/Xmd.h>
 #endif
 
 #include <errno.h>
@@ -158,7 +159,7 @@
 #include "fopen_wrappers.h"
 #include "ext/standard/php_standard.h"
 #endif
-#include <X11/Xmd.h>
+
 #include <jpeglib.h>
 
 #define PI                                      (3.1415926535f)
