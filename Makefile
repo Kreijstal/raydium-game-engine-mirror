@@ -11,7 +11,7 @@ SYSTEM_LIBS =  -lGL -lGLU -lXinerama -lm -ljpeg -lopenal -lalut -lvorbis -lvorbi
 OTHER_LIBS =  raydium/ode/ode/src/libode.a raydium/php/libs/libphp5.a
 INCLUDE_PATH =  -Iraydium/ode/include/ -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
-CFLAGS=-W
+CFLAGS=-Wall
 COMPILE_OPTIONS=-g -D LIBRAY -O2
 ARC64 := $(shell uname -m)
 ifeq ($(ARC64),x86_64)
