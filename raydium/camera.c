@@ -632,16 +632,10 @@ static GLfloat rffp_cam_pos_y = 0;
 static GLfloat rffp_cam_pos_z = 0;
 GLint rffp_delta_x=0;
 GLint rffp_delta_y=0;
-GLint border;
-static GLint   old_x;
-static GLint   old_y;
-static int prev_state=0;
 float *data;
 
 dir_x=0;
 dir_y=0;
-
-border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
 
 switch(move)
 {
@@ -656,21 +650,8 @@ switch(move)
         dir_x *= (raydium_frame_time*60.0f);
         dir_y *= (raydium_frame_time*60.0f);
 
-        //if the previous frame was in state 0,
-        //then when put the mouse in the middle of the screen
+		raydium_mouse_grab_delta(&rffp_delta_x,&rffp_delta_y);
 
-        if(prev_state==0)
-        {
-            rffp_delta_x = 0;
-            rffp_delta_y = 0;
-        }
-        else
-        {
-            rffp_delta_x = raydium_mouse_x - old_x;
-            rffp_delta_y = raydium_mouse_y - old_y;
-			old_x = raydium_mouse_x;
-			old_y = raydium_mouse_y;
-        }
         //calculating the position (x,y,z) of the camera
         rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
         rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
@@ -680,27 +661,8 @@ switch(move)
         rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
         //looking where the mouse points
-        //rffp_delta_x = raydium_mouse_x - (raydium_window_tx/2);
         rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f);
-
-        //rffp_delta_y = raydium_mouse_y - (raydium_window_ty/2);
         rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f);
-
-
-        //putting the mouse in the middle of the screen, the read the next data of the mouse correctly
-		// xf: small update, we now only move the mouse when it's needed, allow
-		// a smoother handling of odd screen resolutions
-		if(raydium_mouse_x < border || raydium_mouse_x > raydium_window_tx-border ||
-		   raydium_mouse_y < border || raydium_mouse_y > raydium_window_ty-border ||
-		   prev_state==0)
-		   	{
-			old_x=raydium_window_tx/2.0f;
-			old_y=raydium_window_ty/2.0f;
-        	raydium_mouse_move(old_x, old_y);
-			}
-        prev_state=1;
-
-        //raydium_camera_place(rffp_cam_pos_y,-rffp_cam_pos_z,rffp_cam_pos_x,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
 
         raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
 
@@ -708,8 +670,6 @@ switch(move)
 
     //RAYDIUM_CAMERA_FREEMOVE_FIXED
     case RAYDIUM_CAMERA_FREEMOVE_FIXED:
-        //setting state 0
-        prev_state=0;
 
         //Feeding freemove with camera values
         data=raydium_camera_get_data();
@@ -736,27 +696,14 @@ raydium_camera_data[5]=rffp_cam_angle_z;
 void raydium_camera_orbitmove( float x_to, float y_to, float z_to)
 {
 static float delta_x,delta_y;
+int x,y;
 float mult=0.05f;
 static float zoom=10.0f; //really is the distance, not zoom
 float Matrix[16];
-static int old_x;
-static int old_y;
-int border;
 
-border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
-
-delta_x += raydium_mouse_x - old_x;
-delta_y += raydium_mouse_y - old_y;
-old_x = raydium_mouse_x;
-old_y = raydium_mouse_y;
-
-if(raydium_mouse_x < border || raydium_mouse_x > raydium_window_tx-border ||
-   raydium_mouse_y < border || raydium_mouse_y > raydium_window_ty-border )
-	{
-	old_x=raydium_window_tx/2.0f;
-	old_y=raydium_window_ty/2.0f;
-	raydium_mouse_move(old_x, old_y);
-	}
+raydium_mouse_grab_delta(&x,&y);
+delta_x+=x;
+delta_y+=y;
 
 if(raydium_key[GLUT_KEY_UP])if(zoom>0)zoom-=0.1;
 if(raydium_key[GLUT_KEY_DOWN])zoom+=0.1;

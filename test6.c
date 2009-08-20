@@ -162,7 +162,7 @@ if(explo>=0)
      raydium_ode_element_OnBlow(explo,blow_touched);
      // play a random "bong"
      i=raydium_random_i(0,SOUND_MAX_BONGS-1);
-     raydium_sound_SourcePlay(son_bong[i]); 
+     raydium_sound_SourcePlay(son_bong[i]);
      raydium_ode_element_sound_update(explo,son_bong[i]);
      raydium_particle_generator_enable(raydium_ode_element[explo].particle,0);
      }
@@ -239,8 +239,8 @@ void create_game(char alive)
 #define BREAK_FORCE     130
 #define ROTFRICTION     0.0005
 int a;
-    
-    
+
+
 if(!alive)
 {
 dQuaternion q;
@@ -269,10 +269,10 @@ return;
 }
 
 raydium_ode_object_delete_name("BUGGY");
-    
+
   a=raydium_ode_object_create("BUGGY");
     raydium_ode_object_box_add("buggy_corps",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"buggy.tri");
-    
+
 
     raydium_ode_object_sphere_add("buggy_pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"buggy_r.tri");
     raydium_ode_element_rotfriction_name("buggy_pneu_ag",ROTFRICTION);
@@ -299,7 +299,7 @@ raydium_ode_object_delete_name("BUGGY");
     raydium_ode_joint_attach_hinge2_name("buggy_suspet_rd","buggy_corps","buggy_pneu_rd",RAYDIUM_ODE_JOINT_SUSP_DEFAULT_AXES);
     raydium_ode_joint_hinge2_block_name("buggy_suspet_rd",1);
     raydium_ode_joint_break_force_name("buggy_suspet_rd",BREAK_FORCE);
-    
+
     raydium_ode_motor_create("buggy_moteur",a,RAYDIUM_ODE_MOTOR_ENGINE);
     raydium_ode_motor_attach_name("buggy_moteur","buggy_suspet_ag",1);
     raydium_ode_motor_attach_name("buggy_moteur","buggy_suspet_ad",1);
@@ -307,7 +307,7 @@ raydium_ode_object_delete_name("BUGGY");
     raydium_ode_motor_gears_set_name("buggy_moteur",gears,6);
     raydium_ode_motor_gear_change_name("buggy_moteur",gear);
 
-    
+
     raydium_ode_motor_create("buggy_direction",a,RAYDIUM_ODE_MOTOR_ANGULAR);
     raydium_ode_motor_attach_name("buggy_direction","buggy_suspet_ag",0);
     raydium_ode_motor_attach_name("buggy_direction","buggy_suspet_ad",0);
@@ -324,7 +324,7 @@ raydium_ode_object_delete_name("BUGGY");
 
 /*
 raydium_ode_object_delete_name("TANK");
-    
+
   a=raydium_ode_object_create("TANK");
     raydium_ode_object_box_add("tank_corps",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"t80b.tri");
     raydium_ode_element_move_name_3f("tank_corps",-2,0,0);
@@ -553,13 +553,13 @@ if(raydium_key_last==1109 && 0)  // disabled
  elems[0]=raydium_ode_element_find("buggy_corps");
  elems[1]=raydium_ode_element_find("buggy_pneu_ag");
  elems[2]=raydium_ode_element_find("buggy_pneu_ad");
- elems[3]=raydium_ode_element_find("buggy_pneu_rd"); 
- elems[4]=raydium_ode_element_find("buggy_pneu_rg"); 
+ elems[3]=raydium_ode_element_find("buggy_pneu_rd");
+ elems[4]=raydium_ode_element_find("buggy_pneu_rg");
  raydium_ode_element_fix("merged_elem",elems,5,0);
  }
 
 
-//if(raydium_key_last==1098) 
+//if(raydium_key_last==1098)
 
 if(raydium_key_last==5)
 {
@@ -568,14 +568,14 @@ raydium_projection_near=10;
 raydium_projection_fov=2;
 raydium_window_view_update();
 }
-                                                                                 
+
 if(raydium_key_last==6)
 {
 vue=6;
 raydium_projection_near=0.05 ;
 raydium_projection_fov=60;
 raydium_window_view_update();
-                                                                                 
+
 }
 
 if(raydium_key_last==4)
@@ -584,7 +584,7 @@ vue=4;
 raydium_projection_near=0.05;
 raydium_projection_fov=40;
 raydium_window_view_update();
-                                                                                 
+
 }
 
 if(raydium_key_last==7)
@@ -619,22 +619,23 @@ raydium_projection_fov=120;
 raydium_window_view_update();
 }
 
-//if(raydium_key_last==1100) 
+//if(raydium_key_last==1100)
 //    raydium_ode_element_moveto_name("buggy_pneu_ag","GLOBAL",1);
 
 
 if(mouse_grab==1 && vue!=9)
 {
- float delta_x;
- float delta_y;
+ float delta_x,delta_y;
+ int x,y;
  float zoomfact=1;
  zoomfact=raydium_projection_fov/70;
- delta_x = (raydium_mouse_x - (raydium_window_tx/2.f))*sensivity*zoomfact;
- delta_y = (raydium_mouse_y - (raydium_window_ty/2.f))*sensivity*zoomfact;
+ raydium_mouse_grab_delta(&x,&y);
+ delta_x=x*sensivity*zoomfact;
+ delta_y=y*sensivity*zoomfact;
  cam_angle_h += (delta_x*0.008f); // rads
  if(life>0)
   cam_angle_v += (delta_y*0.458f); // degs
- raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
+
  raydium_ode_element_player_angle_name("player",cam_angle_h);
  if(cam_angle_v<1) cam_angle_v=1;
  if(cam_angle_v>179) cam_angle_v=179;
@@ -689,7 +690,7 @@ if(vue==9) raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_FIXED);
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
 raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
 
-if(draw_debug==1) 
+if(draw_debug==1)
     {
     raydium_ode_draw_all(RAYDIUM_ODE_DRAW_DEBUG);
     raydium_ode_draw_all(RAYDIUM_ODE_DRAW_AABB);
@@ -702,7 +703,7 @@ raydium_osd_printf(2,4,12,0.5,"font2.tga","^fcar speed: %f",speed);
 raydium_joy_ff_autocenter(speed/2.f);
 
 speed=raydium_ode_motor_speed_get_name("buggy_moteur",1);
-if(vue!=7) 
+if(vue!=7)
     {
     raydium_osd_printf(10,10,30,0.5,"font2.tga","%i",gear);
     raydium_osd_printf(13,10,15,0.5,"font2.tga","%.1f",speed);
@@ -731,7 +732,7 @@ if(vue==9 || vue==8) {
     dReal pos[3];
     dReal dist;
     int id;
-    
+
     id = raydium_ode_mouse_pick(100,pos,&dist);
     raydium_osd_printf((100.0f*raydium_mouse_x)/raydium_window_tx,100-(100.0f*raydium_mouse_y)/raydium_window_ty,16,0.5,"font2.tga","+ %d %.3f %.3f %.3f %.3f",id,pos[0],pos[1],pos[2],dist);
     if (raydium_mouse_button[0] && id>0){
@@ -779,7 +780,7 @@ if(life<=0)
 
 
 //raydium_osd_mask_texture_name("shadowmap",1);
-    
+
 //raydium_osd_network_stat_draw(5,30,20);
 raydium_osd_logo("logo6.tga");
 memset(raydium_vertex_tag,0,RAYDIUM_MAX_VERTICES);
@@ -815,7 +816,7 @@ raydium_light_update_all(0);
 raydium_shadow_enable();
 
 if(raydium_init_cli_option("server",server))
-     if(!raydium_network_client_connect_to(server)) 
+     if(!raydium_network_client_connect_to(server))
         exit(1);
 
 raydium_sound_DefaultReferenceDistance=4.f;

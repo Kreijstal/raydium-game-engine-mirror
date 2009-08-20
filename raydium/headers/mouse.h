@@ -7,7 +7,7 @@ Mouse
 
 // Introduction
 /**
-Mouse API is almost explainded at the top of this guide, but here it 
+Mouse API is almost explainded at the top of this guide, but here it
 is some other usefull functions (macros, in fact).
 **/
 
@@ -25,7 +25,7 @@ Shows mouse cursor.
 __rayapi void raydium_mouse_move(int x, int y);
 /**
 Moves cursor to (##x##,##y##) position (in pixel).
-Example if you want to move cursor at window's center: 
+Example if you want to move cursor at window's center:
 %%(c)raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);%%
 **/
 
@@ -57,9 +57,9 @@ returns ##button## state. (See first part of this document)
 
 // Mouse Wheel
 /**
-To get the mouse wheel status you have to check directly the variable 
-##raydium_mouse_click##. 
- -Value 4 means "mouse wheel up". 
+To get the mouse wheel status you have to check directly the variable
+##raydium_mouse_click##.
+ -Value 4 means "mouse wheel up".
  -Value 5 means "mouse wheel down".
 Usage example:
 %%(c)
@@ -71,5 +71,17 @@ if (raydium_mouse_click==5)
 This piece of code will change the value of zoom according mouse wheel.
 **/
 
+__rayapi void raydium_mouse_grab_delta(int *x, int *y);
+/**
+This function will "grab" the mouse and return mouse moves since last call.
+Output parameters ##x## and ##y## will gives you the delta.
+
+You can yse this function for any "FPS like" mouse look controls, or any other
+situation where you need to known how far the user moves the mouse since
+the last frame.
+
+This function now use a box model, so its compliant with all window sizes,
+even odd ones.
+**/
 
 #endif
