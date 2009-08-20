@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/php.h"
-#endif 
+#endif
 
 // PHP support for Raydium
 // Known bug: recursive Ray/PHP calls are fatal (segfault in zend core).
@@ -32,7 +32,7 @@ static int sapi_raydium_send_headers(sapi_headers_struct *sapi_headers TSRMLS_DC
 {
 return SAPI_HEADER_SENT_SUCCESSFULLY;
 }
- 
+
 static void sapi_raydium_send_header(sapi_header_struct *sapi_header, void *server_context TSRMLS_DC)
 {
 }
@@ -47,14 +47,14 @@ static void sapi_raydium_register_variables(zval *track_vars_array TSRMLS_DC)
 {
 // Here for future reference:
 //php_register_variable("NAME", "value", vars_array TSRMLS_CC);
-} 
+}
 
 void raydium_php_error(int type, const char *msg, ...)
 {
 raydium_log("^cERROR type %i",type);
 }
 
-int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)  
+int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)
 {
  if(str_length>=RAYDIUM_MAX_NAME_LEN-15)
     {
@@ -67,11 +67,11 @@ int raydium_php_uwrite(const char *str, uint str_length TSRMLS_DC)
 }
 
 // Ref: main/SAPI.h in PHP source tree
-static sapi_module_struct raydium_sapi_module = 
+static sapi_module_struct raydium_sapi_module =
 {
         "RayHandler",                   /* name */
         "Raydium PHP Handler",          /* pretty name */
-                                                                        
+
 // Since PHP@Win32 is dirty... :
         php_dummy,             /* startup */
         php_dummy,             /* shutdown */
@@ -96,7 +96,7 @@ static sapi_module_struct raydium_sapi_module =
         sapi_raydium_register_variables,/* register server variables */
         NULL,                           /* Log message */
         NULL,                           /* Get Request Time */
-        
+
         NULL,                           /* INI Path (changed later) */
 
         NULL,                           /* Block interruptions */
@@ -108,24 +108,24 @@ static sapi_module_struct raydium_sapi_module =
         NULL,
 // 245:         char *executable_location;
         NULL,
-// 246: 
+// 246:
 // 247:         int php_ini_ignore;
         0,
-// 248: 
+// 248:
 // 249:         int (*get_fd)(int *fd TSRMLS_DC);
         NULL,
-// 250: 
+// 250:
 // 251:         int (*force_http_10)(TSRMLS_D);
         NULL,
-// 252: 
+// 252:
 // 253:         int (*get_target_uid)(uid_t * TSRMLS_DC);
         NULL,
 // 254:         int (*get_target_gid)(gid_t * TSRMLS_DC);
         NULL,
-// 255: 
+// 255:
 // 256:         unsigned int (*input_filter)(int arg, char *var, char **val, unsigned int val_len, unsigned int *new_val_len TSRMLS_DC);
         NULL,
-// 257:         
+// 257:
 // 258:         void (*ini_defaults)(HashTable *configuration_hash);
         NULL,
 // 259:         int phpinfo_as_text;
@@ -152,11 +152,11 @@ SG(server_context) = NULL;
 }
 
 
-int raydium_php_exec(char *name)  
+int raydium_php_exec(char *name)
 {
     FILE *fp;
     char suffix[32];
-    zval *vars[RAYDIUM_MAX_REG_VARIABLES]; 
+    zval *vars[RAYDIUM_MAX_REG_VARIABLES];
     zend_file_handle file_handle;
     zend_llist global_vars;
     int i,nvars;
@@ -209,7 +209,7 @@ int raydium_php_exec(char *name)
     file_handle.type = ZEND_HANDLE_FP;
     file_handle.free_filename = 0;
     file_handle.opened_path = NULL;
-    
+
 
 //    if(php_request_startup(CLS_C ELS_CC PLS_CC SLS_CC) == FAILURE) {
     if(php_request_startup(TSRMLS_C) == FAILURE) {
@@ -251,7 +251,7 @@ int raydium_php_exec(char *name)
         ZVAL_STRING(vars[i],(char *)raydium_register_variable_addr[i],1); // 1 means "duplicate string"
         ZEND_SET_SYMBOL(&EG(symbol_table), raydium_register_variable_name[i], vars[i]);
         }
-     
+
     if(raydium_register_variable_type[i]==RAYDIUM_REGISTER_ICONST)
         {
         zend_register_long_constant(raydium_register_variable_name[i],
@@ -300,7 +300,7 @@ int raydium_php_exec(char *name)
             if(vars[i]->type == IS_DOUBLE)
                 *(float *)raydium_register_variable_addr[i]=vars[i]->value.dval;
             else if(vars[i]->type == IS_LONG)
-                *(float *)raydium_register_variable_addr[i]=vars[i]->value.lval;                
+                *(float *)raydium_register_variable_addr[i]=vars[i]->value.lval;
             else raydium_log("php: (float)%s type have changed ! Cannot read new value.",raydium_register_variable_name[i]);
          }
 
@@ -350,7 +350,7 @@ raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,"");
 
 if (!strlen(raydium_php_rayphp_path)){
     DIR * rphp;
-    
+
     rphp=opendir("../raydium/rayphp");
     if (rphp){
         closedir(rphp);
