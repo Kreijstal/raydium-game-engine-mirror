@@ -34,10 +34,10 @@ return 0;
 
 GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake)
 {
-FILE *file;
+FILE *file=NULL;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
-unsigned char *data;
-GLuint tx,ty,bpp,id;
+unsigned char *data=NULL;
+GLuint tx=0,ty=0,bpp=0,id;
 GLuint i,ii,j,jj,k,GLbpp=0,GLbppi;
 GLuint texsize=0;
 char blended=0,filter=0,cutout=0,simulate=0;

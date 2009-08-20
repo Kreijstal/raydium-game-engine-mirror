@@ -761,7 +761,7 @@ else
     {
     // all RGB palettes ...
     unsigned int i,j;
-    int r,g,b;
+    int r=0,g=0,b=0;
     for (i = j = 0; i < dev->win.width * dev->win.height; i++)
         {
         READ_VIDEO_PIXEL(dev->src, dev->vpic.palette, dev->vpic.depth, r, g, b);

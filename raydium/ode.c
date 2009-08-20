@@ -2296,7 +2296,9 @@ switch(type)
         dJointSetUniversalParam(raydium_ode_joint[j].joint,dParamStopCFM2,cfm);
         return;
         break;
-    default: raydium_log("ODE: ERROR: suspension: joint type not supported!");
+    default:
+		raydium_log("ODE: ERROR: suspension: joint type not supported!");
+		return;
     }
 f(raydium_ode_joint[j].joint,dParamSuspensionERP,erp);
 f(raydium_ode_joint[j].joint,dParamSuspensionCFM,cfm);
@@ -2712,8 +2714,8 @@ if(raydium_ode_motor_isvalid(j))
         {
         void (*SetParam)(dJointID,int,dReal);
         dReal (*GetAngle)(dJointID);
-        int vel;
-        int fmax;
+        int vel=0;
+        int fmax=0;
         int type;
         char cancel=0;
 
@@ -3922,7 +3924,12 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
     dMatrix3 r;
     int type;
     char col;
+
+	f1=NULL;
+	f2=NULL;
+	col='0';
     dRSetIdentity(r);
+
     type=dJointGetType(raydium_ode_joint[i].joint);
     switch(type)
         {
@@ -5066,7 +5073,7 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
 
 
             if (o1==ray || o2==ray) {
-                raydium_ode_Element *e1,*e2;
+                raydium_ode_Element *e1;
 
                 //Should never exist, but in case of swap o2 ray, o1 object
                 if (o2!=ray){
@@ -5093,7 +5100,7 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
                         if (contact[i].geom.depth<min_dist){
                             min_dist=contact[i].geom.depth;
                                 memcpy(&pt,&contact[i],sizeof(dContact));
-                            id = e2->id;
+                            id = e1->id;
                         }
 
                     if (contact[i].geom.g2==ray)
@@ -5315,6 +5322,8 @@ if(!raydium_ode_record_play_fp)
 
 raydium_log("ODE: replay: playback: building index ...");
 
+last_event.fpos=0;
+last_event.index=0;
 raydium_ode_record_index_size=0; // number of steps in the file
 
 old_pos=ftell(raydium_ode_record_play_fp);

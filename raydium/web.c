@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/web.h"
-#endif 
+#endif
 
 #include "web.h"
 
@@ -57,9 +57,9 @@ void raydium_web_request(int fd)
         static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
         static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
         signed char (*handler)(char *,char *, int);
-    
+
     ret=recv(fd,buffer,RAYDIUM_WEB_BUFSIZE,0);
-    
+
     if(ret == 0 || ret == -1)
             {
             /* read failure stop now */
@@ -70,7 +70,7 @@ void raydium_web_request(int fd)
 
         if(ret > 0 && ret < RAYDIUM_WEB_BUFSIZE)        /* return code is valid chars */
             buffer[ret]=0;                              /* terminate the buffer */
-        else 
+        else
             buffer[0]=0;
 
         for(i=0;i<ret;i++)      /* remove CR and LF characters */
@@ -85,8 +85,8 @@ void raydium_web_request(int fd)
             return;
             }
 
-        for(i=4;i<RAYDIUM_WEB_BUFSIZE;i++) 
-        { 
+        for(i=4;i<RAYDIUM_WEB_BUFSIZE;i++)
+        {
         /* null terminate after the second space to ignore extra stuff */
         if(buffer[i] == ' ')
             {
@@ -115,7 +115,7 @@ void raydium_web_request(int fd)
         buflen=strlen(buffer);
         fstr = (char *)0;
         handler=NULL;
-        for(i=0;i<raydium_web_extension_count;i++) 
+        for(i=0;i<raydium_web_extension_count;i++)
             {
             len = strlen(raydium_web_extensions[i].ext);
             if( !strncmp(&buffer[buflen-len], raydium_web_extensions[i].ext, len))
@@ -142,7 +142,7 @@ void raydium_web_request(int fd)
                 raydium_web_answer("error: Handler denied this request",fd);
                 return;
                 }
-            
+
             // if there's no filetype, use web_answer
             if(!strlen(fstr))
                 raydium_web_answer(answer,fd);
@@ -197,7 +197,7 @@ if(raydium_web_active)
     }
 
 raydium_log("web: starting Raydium HTTP server on port %i",RAYDIUM_NETWORK_PORT);
-        
+
 if((raydium_web_listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
     {
     raydium_log("web: error: socket failed");
@@ -367,7 +367,7 @@ char complete[RAYDIUM_MAX_NAME_LEN];
 struct sockaddr_in serv_addr;
 struct hostent *hst;
 int chunk;
-FILE *fp;
+FILE *fp=NULL;
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_CLIENT)
     {
@@ -392,7 +392,7 @@ if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <0)
     return 0;
     }
 
-sprintf(req,"GET /%s \r\n",filename);                   
+sprintf(req,"GET /%s \r\n",filename);
 send(sockfd,req,strlen(req),0);
 
 chunk=0;
@@ -423,14 +423,14 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
             return 0;
             }
 
-        // ok, now search for \r\n\r\n  
+        // ok, now search for \r\n\r\n
         for(x=12;x<i;x++)
-            if(buffer[x-3]=='\r' && 
-               buffer[x-2]=='\n' && 
-               buffer[x-1]=='\r' && 
+            if(buffer[x-3]=='\r' &&
+               buffer[x-2]=='\n' &&
+               buffer[x-1]=='\r' &&
                buffer[x-0]=='\n')
                 break;
-        
+
         if(x==i)
             {
             raydium_log("web: client: error: cannot found header end");
@@ -438,23 +438,23 @@ while( (i=recv(sockfd,buffer,RAYDIUM_WEB_BUFSIZE,0)) > 0)
             return 0;
             }
         // found, adjust offset 1 byte after
-        x++;    
+        x++;
         data+=x;
         i-=x;
-        
+
         fp=fopen(RAYDIUM_WEB_CLIENT_TEMP,"wb");
         if(!fp)
             {
             raydium_log("web: client: error: cannot create temporary file");
             raydium_network_socket_close(sockfd);
             return 0;
-            }   
+            }
         }
 
     fwrite(data,i,1,fp);
     chunk++;
     }
-                        
+
 fclose(fp);
 raydium_network_socket_close(sockfd);
 
@@ -463,7 +463,7 @@ raydium_path_resolv(filename,complete,'w');
 // compare files and rename if not the same
 if(raydium_file_sum_simple_mode(complete,"rbl")!=
    raydium_file_sum_simple_mode(RAYDIUM_WEB_CLIENT_TEMP,"rbl"))
-    {    
+    {
     unlink(complete);
     if(rename(RAYDIUM_WEB_CLIENT_TEMP,complete)==-1)
         {

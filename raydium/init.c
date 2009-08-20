@@ -325,8 +325,8 @@ int raydium_init_load(char *filename)
     char var[255],val_s[255];
     float val_f[255];
     int size;
-    int tmp_width,tmp_height,tmp_windowtype,tmp_filter,tmp_fog,tmp_lighting,tmp_hdr,tmp_sky;
-    float tmp_light[8],tmp_background[4],tmp_fov,tmp_far,tmp_near;
+    int tmp_width=0,tmp_height=0,tmp_windowtype=0,tmp_filter=0,tmp_fog=0,tmp_lighting=0,tmp_hdr=0,tmp_sky=0;
+    float tmp_light[8],tmp_background[4],tmp_fov=0,tmp_far=0,tmp_near=0;
     char tmp_title[255];
 
     //flags

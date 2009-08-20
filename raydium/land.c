@@ -95,8 +95,8 @@ raydium_vertex_index=vertex_index_save;
 GLfloat raydium_land_surface(GLfloat x, GLfloat y, GLfloat *nx, GLfloat *ny, GLfloat *nz)
 {
 //int cx,cy;
-GLint n;
-GLfloat dx,dy;
+GLint n=0;
+//GLfloat dx,dy;
 GLfloat a,b,c,d;
 //cx=x/FACT;
 //cy=y/FACT;
@@ -105,7 +105,7 @@ GLfloat a,b,c,d;
 //dy=x-(float)(cx*FACT);
 //dx=y-(float)(cy*FACT);
 
-if(dy>=dx) n+=3;
+//if(dy>=dx) n+=3;
 
 #define Ax raydium_vertex_x[n]
 #define Bx raydium_vertex_x[n+1]

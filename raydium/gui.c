@@ -377,6 +377,8 @@ void raydium_gui_button_draw(int w, int window)
     case RAYDIUM_GUI_HOVER:
         suv=b->uv_hover;
         break;
+	default:
+        suv=b->uv_normal;
     }
 
     uv[0]=  suv[0]/raydium_gui_theme_current.texture_size[0];
@@ -455,8 +457,6 @@ void raydium_gui_zone_draw(int w, int window)
           (raydium_gui_windows[window].widgets[w].pos[1]*wfactor[1]) +
           raydium_gui_windows[window].widgets[w].size[1];
 
-//printf("%f %f\n",
-
     style=RAYDIUM_GUI_NORMAL;
 
     if (raydium_gui_windows[window].focused_widget==w)
@@ -479,6 +479,8 @@ void raydium_gui_zone_draw(int w, int window)
     case RAYDIUM_GUI_HOVER:
         col=z->col_hover;
         break;
+	default :
+        col=z->col_normal;
     }
 
     raydium_osd_start();
@@ -582,6 +584,8 @@ void raydium_gui_track_draw(int w, int window)
     case RAYDIUM_GUI_FOCUS:
         cuv=t->uv_cursor_focus;
         break;
+	default:
+        cuv=t->uv_cursor_normal;
     }
 
     uv[0]=  cuv[0]/raydium_gui_theme_current.texture_size[0];
