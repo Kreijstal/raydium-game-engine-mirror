@@ -5486,7 +5486,7 @@ raydium_ode_record_play_ground[0]=0;
 raydium_ode_record_play_fp=raydium_file_fopen(rrp_filename,"rb");
 if(!raydium_ode_record_play_fp)
     {
-    raydium_log("ERROR: cannot play replay: unable to open '%'",rrp_filename);
+    raydium_log("ERROR: cannot play replay: unable to open '%s'",rrp_filename);
     return;
     }
 
