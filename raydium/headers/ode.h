@@ -1922,6 +1922,12 @@ You can play another RRP file while recording.
 WARNING: experimental feature ! API may change.
 **/
 
+__rayapi void raydium_ode_capture_record_rate(char *rrp_filename, int rate_hz);
+/**
+Same as above, but allowing you to select the recording rate.
+Valid range is [1,400] Hz.
+**/
+
 __rayapi void raydium_ode_capture_record_stop(void);
 /**
 Stops the recording. Not needed to get a valid record.

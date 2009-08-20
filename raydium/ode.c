@@ -5269,7 +5269,7 @@ fputc(0,raydium_ode_record_fp);
 
 
 // options ? (particles, sound, ...)
-void raydium_ode_capture_record(char *rrp_filename)
+void raydium_ode_capture_record_rate(char *rrp_filename, int rate_hz)
 {
 unsigned char version=1;
 
@@ -5282,18 +5282,29 @@ if(raydium_ode_record_fp)
 raydium_ode_record_fp=raydium_file_fopen(rrp_filename,"wb");
 if(!raydium_ode_record_fp)
     {
-    raydium_log("ERROR: cannot record replay: unable to create '%'",rrp_filename);
+    raydium_log("ERROR: cannot record replay: unable to create '%s'",rrp_filename);
     return;
     }
 
+if(rate_hz<=0 || rate_hz>400)
+	{
+    raydium_log("ERROR: cannot record replay: invalid rate '%i' (range: [1,400])",rate_hz);
+	return;
+	}
+
 raydium_ode_record_countdown=0;
-raydium_ode_record_rate=RAYDIUM_ODE_RECORD_RATE_DEFAULT;
+raydium_ode_record_rate=rate_hz;
 fwrite(&version,sizeof(version),1,raydium_ode_record_fp);
 fwrite(&raydium_ode_record_rate,sizeof(int),1,raydium_ode_record_fp);
 fputs(raydium_object_name[raydium_ode_ground_mesh],raydium_ode_record_fp);
 fputc(0,raydium_ode_record_fp);
 raydium_ode_capture_internal_create_all();
 raydium_log("ODE: capture: recording to '%s'",rrp_filename);
+}
+
+void raydium_ode_capture_record(char *rrp_filename)
+{
+raydium_ode_capture_record_rate(rrp_filename,RAYDIUM_ODE_RECORD_RATE_DEFAULT);
 }
 
 void raydium_ode_capture_record_stop(void)
