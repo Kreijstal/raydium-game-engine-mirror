@@ -152,184 +152,6 @@ return 0; // behind the camera
 }
 #endif
 
-/** function which returns the determinant of a given matrix */
-double raydium_matrix_determinant(matrix4x4 matrix)
-{
-        return raydium_matrix_internal_determinant(matrix,4);
-}
-
-/**  function which returns the adjoint of a given matrix.      */
-matrix4x4 raydium_matrix_adjoint(matrix4x4 matrix)
-{
-        return raydium_matrix_internal_adjoint(matrix,4);
-}
-/* Function to find the product of two matrices   */
-/* beware: the order is important. matrix1xmatrix2 != matrix2xmatrix1*/
-matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2)
-{
-        return raydium_matrix_internal_multiply(matrix1,matrix2,4);
-}
-
-/*  Function to find the inverse of a given matrix */
-matrix4x4 raydium_matrix_inverse(matrix4x4 matrix)
-{
-        matrix4x4 matrix_adj;
-        double determinant;
-
-        determinant     =       raydium_matrix_determinant(matrix);
-        matrix_adj      =       raydium_matrix_adjoint(matrix);
-        return raydium_matrix_internal_inverse(matrix_adj, determinant, 4);
-}
-
-/** Function which returns the determinant of a given matrix */
-double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension)
-{
-        static int tot;
-  int    i, orig_mat_row, orig_mat_col, temp_mat_row, temp_mat_col;
-  double det;
-
-  matrix4x4 temp_matrix;
-
-  if(dimension == 2)
-  {
-    //det = ( (matrix.ray[0][0]) * (matrix.ray[1][1]) ) - ( (matrix.ray[0][1]) * (matrix.ray[1][0]) );
-          det = ( (matrix.ray[0]) * (matrix.ray[3]) ) - ( (matrix.ray[1]) * (matrix.ray[2]) );
-    return(det);
-  }
-
-  else {
-    for( i = 0; i <= dimension - 1; i++ ) {
-      temp_mat_row = 0;
-      temp_mat_col = 0;
-      for(orig_mat_row = 1; orig_mat_row <= dimension - 1; orig_mat_row++) {
-                                for(orig_mat_col = 0; orig_mat_col <= dimension - 1; orig_mat_col++) {
-                                if( orig_mat_col != i ) {
-                                //temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
-                                        temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
-                                temp_mat_col++;
-                                  }
-                                }
-                                temp_mat_row++;
-                                temp_mat_col = 0;
-      }
-      //det = (matrix.ray[0][i] * determinant(temp_matrix,dimension-1));
-          det = (matrix.ray[(0*dimension)+i] * raydium_matrix_internal_determinant(temp_matrix,dimension-1));
-      tot = tot + det * pow(-1,i+1);
-    }
-    return(-1 * tot);
-  }
-
-}
-
-
-/**  Function which returns the adjoint of a given matrix.      */
-matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension)
-{
-  int row, col, orig_mat_row, orig_mat_col, temp_mat_row, temp_mat_col;
-  matrix4x4 temp_matrix, conjugate_matrix, transpose_matrix;
-
-  if(dimension == 2) {
-    //conjugate_matrix.ray[0][0] = matrix.ray[1][1];
-          conjugate_matrix.ray[0] = matrix.ray[3];
-    //conjugate_matrix.ray[0][1] = -1 * matrix.ray[0][1];
-          conjugate_matrix.ray[1] = -1 * matrix.ray[1];
-    //conjugate_matrix.ray[1][0] = -1 * matrix.ray[1][0];
-          conjugate_matrix.ray[2] = -1 * matrix.ray[2];
-    //conjugate_matrix.ray[1][1] = matrix.ray[0][0];
-          conjugate_matrix.ray[3] = matrix.ray[0];
-
-    return(conjugate_matrix);
-  }
-  else
-  {
-    for(row = 0; row < dimension; row++)
-        {
-      for(col = 0; col < dimension; col++)
-          {
-                                temp_mat_row = 0;
-                                temp_mat_col = 0;
-
-                                for(orig_mat_row = 0; orig_mat_row < dimension; orig_mat_row++)
-                                {
-                                        for(orig_mat_col = 0; orig_mat_col < dimension ; orig_mat_col++)
-                                        {
-                                        if(orig_mat_row != row && orig_mat_col != col)
-                                                {
-                                                //temp_matrix.ray[temp_mat_row][temp_mat_col] = matrix.ray[orig_mat_row][orig_mat_col];
-                                                        temp_matrix.ray[(temp_mat_row*dimension)+temp_mat_col] = matrix.ray[(orig_mat_row*dimension)+orig_mat_col];
-                                                temp_mat_col++;
-                                                }
-                                        }
-                                        if( temp_mat_col > (dimension - 2) )
-                                        {
-                                        temp_mat_row++;
-                                        temp_mat_col = 0;
-                                        }
-                                }
-                                //conjugate_matrix.ray[row][col] = determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
-                                conjugate_matrix.ray[(row*dimension)+col] = raydium_matrix_internal_determinant(temp_matrix,dimension - 1) * pow(-1,row+col+2);
-      }
-
-        for(row = 0; row < dimension; row++)
-                {
-                for(col = 0; col < dimension; col++)
-                        {
-                                //transpose_matrix.ray[col][row] = conjugate_matrix.ray[row][col];
-                                transpose_matrix.ray[(col*dimension)+row] = conjugate_matrix.ray[(row*dimension)+col];
-                        }
-                }
-        }
-        return(transpose_matrix);
-  }
-
-}
-
-
-
-/* Function to find the product of two matrices   */
-
-matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension)
-{
-  matrix4x4 result_matrix;
-  int i,j,k;
-
-  for(i=0;i<dimension;i++)
-  {
-    for(j=0;j<dimension;j++)
-        {
-                //result_matrix.ray[i][j] = 0;
-                result_matrix.ray[(i*dimension)+j] = 0;
-                for(k=0;k<dimension;k++)
-                {
-                        //result_matrix.ray[i][j] = result_matrix.ray[i][j] + ( matrix_one.ray[i][k] * matrix_two.ray[k][j] );
-                        result_matrix.ray[(i*dimension)+j] = result_matrix.ray[(i*dimension)+j] + ( matrix_one.ray[(i*dimension)+k] * matrix_two.ray[(k*dimension)+j] );
-                }
-    }
-  }
-  return(result_matrix);
-}
-
-
-
-/*  Function to find the inverse of a given matrix */
-// Fixme: code should be modified to take an ordinary matrix and call adjoint function itself.
-
-matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,int dimension)
-{
-  int row, col;
-  matrix4x4 inverse_matrix;
-
-  for(row = 0; row < dimension; row++)
-    for(col = 0; col < dimension; col++)
-        {
-      //inverse_matrix.ray[row][col] = (adjoint_matrix.ray[row][col]) / det ;
-          //beware ¡¡¡
-                inverse_matrix.ray[(row*dimension)+col] =  (adjoint_matrix.ray[(row*dimension)+col]) / det ;
-        }
-  return(inverse_matrix);
-}
-
-
 // Our matrix_inverse seems broken.
 // This code works, thanks to Alexander Zaprjagaev (frustum@public.tsu.ru)
 int _raydium_math_MatrixInverse(const float *m,float *out) {
@@ -378,7 +200,7 @@ float A, B, C, D, E, F, G, H;
 
 A = (q1[3] + q1[0])*(q2[3] + q2[0]);
 B = (q1[2] - q1[1])*(q2[1] - q2[2]);
-C = (q1[3] - q1[0])*(q2[1] + q2[2]); 
+C = (q1[3] - q1[0])*(q2[1] + q2[2]);
 D = (q1[1] + q1[2])*(q2[3] - q2[0]);
 E = (q1[0] + q1[2])*(q2[0] + q2[1]);
 F = (q1[0] - q1[2])*(q2[0] - q2[1]);
@@ -386,8 +208,8 @@ G = (q1[3] + q1[1])*(q2[3] - q2[2]);
 H = (q1[3] - q1[1])*(q2[3] + q2[2]);
 
 res[3] = B + (-E - F + G + H)/2.0f;//w
-res[0] = A - ( E + F + G + H)/2.0f;//x 
-res[1] = C + ( E - F + G - H)/2.0f;//y 
+res[0] = A - ( E + F + G + H)/2.0f;//x
+res[1] = C + ( E - F + G - H)/2.0f;//y
 res[2] = D + ( E - F - G + H)/2.0f;//z
 }
 

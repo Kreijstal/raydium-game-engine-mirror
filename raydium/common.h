@@ -758,12 +758,5 @@ __global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN
 __global int raydium_file_log_fopen_index;
 
 
-
-
-typedef struct matrix4x4
-{
-  double  ray[16];
-} matrix4x4;
-
 #endif
 // EOF

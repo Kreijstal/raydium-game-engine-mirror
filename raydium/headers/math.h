@@ -103,55 +103,6 @@ __rayapi int raydium_math_pow2_next(int value);
 Returns next power of two of ##value##. Ugly.
 **/
 
-//Matrix functions
-/**
-Here there are a few functions also designed for internal uses that aims
-only at matrices. Really the main objective of these functions is give support
-for the inverse function.
-The data type matrix4x4 is really an 16 double array.
-**/
-
-
-__rayapi double raydium_matrix_determinant(matrix4x4 matrix);
-/**
-Returns the ##determinant## of the given matrix.
-**/
-
-__rayapi matrix4x4 raydium_matrix_adjoint(matrix4x4 matrix);
-/**
-Returns the ##adjoint matrix## of the given matrix.
-**/
-
-__rayapi matrix4x4 raydium_matrix_multiply(matrix4x4 matrix1, matrix4x4 matrix2);
-/**
-Returns the resulting matrix of the multiplication of 2 matrices.
-Remeber that the multiplication of matrices doesn't have the conmutative
-property, so is not equal ##matrix1 X matrix2## than ##matrix2 x matrix1##.
-**/
-
-__rayapi matrix4x4 raydium_matrix_inverse(matrix4x4 matrix);
-/**
-Returns the inverse matrix of a given matrix.
-**/
-
-__rayapi double raydium_matrix_internal_determinant(matrix4x4 matrix, int dimension);
-/**
-internal, don't use.
-**/
-
-__rayapi matrix4x4 raydium_matrix_internal_adjoint(matrix4x4 matrix, int dimension);
-/**
-internal, don't use.
-**/
-__rayapi matrix4x4 raydium_matrix_internal_multiply(matrix4x4 matrix_one, matrix4x4 matrix_two, int dimension);
-/**
-internal, don't use.
-**/
-__rayapi matrix4x4 raydium_matrix_internal_inverse(matrix4x4 adjoint_matrix,double det,int dimension);
-/**
-internal, don't use.
-**/
-
 __rayapi int _raydium_math_MatrixInverse(const float *m,float *out);
 /**
 Our matrix_inverse seems broken.
@@ -174,7 +125,7 @@ with alpha [0,1] as interpolation point.
 
 void raydium_math_quaternion_multiply(float *q1, float *q2, float *result);
 /**
-Multiply two quaternions and fill the ##result## with the resulting 
+Multiply two quaternions and fill the ##result## with the resulting
 quaternion.
 Quite usefull for making rotations over quaternions.
 Here a list of common quaternions:
@@ -188,7 +139,7 @@ Here a list of common quaternions:
  sqrt(0.5),0,0,sqrt(0.5)	90' rotation around Z axis
  sqrt(0.5),-sqrt(0.5),0,0	-90' rotation around X axis
  sqrt(0.5),0,-sqrt(0.5),0	-90' rotation around Y axis
- sqrt(0.5),0,0,-sqrt(0.5)	-90' rotation around Z axis 
+ sqrt(0.5),0,0,-sqrt(0.5)	-90' rotation around Z axis
 TODO: Those could be added like defines
 **/
 
