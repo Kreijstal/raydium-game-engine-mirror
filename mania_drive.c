@@ -4,7 +4,7 @@ char *version="ManiaDrive 1.3custom";
 
 #include "raydium/index.c"
 
-#include <libintl.h> 
+#include <libintl.h>
 #include <locale.h>
 
 #include "mania.h"
@@ -65,7 +65,7 @@ float scroll=-1;
 
 dReal cam_pos[3]={0,0,0};
 
-signed char camera_alternate; 
+signed char camera_alternate;
 signed char camera_lag;
 float camera_lag_speed;
 signed char shadow_support;
@@ -366,7 +366,7 @@ if(ret==0)
 
     if(simple_mni)
         exit(1);
-    
+
     return 0;
     }
 
@@ -510,8 +510,8 @@ if(raydium_video_find("video_beg")>=0)
     if(!raydium_video_isplaying_name("video_beg"))
         alpha-=raydium_frame_time;
 
-    raydium_live_texture_draw_name("video_beg",alpha,px,py,px+size,py+size);    
-    
+    raydium_live_texture_draw_name("video_beg",alpha,px,py,px+size,py+size);
+
     if(alpha<=0)
         raydium_video_delete_name("video_beg");
     }
@@ -1030,7 +1030,7 @@ FILE *fp;
 strcpy(file,filename);
 
 fp=raydium_file_fopen(file,"rt");
-if(!fp) 
+if(!fp)
     {
     raydium_log("ERROR: cannot find story file ! abording ...");
     exit(1);
@@ -1102,7 +1102,7 @@ if(completed)
     raydium_gui_widget_sizes(0,0,16);
     raydium_video_open("begend.jpgs","video_beg");
     raydium_video_loop_name("video_beg",0);
-    raydium_gui_AfterGuiDrawCallback=after_gui;    
+    raydium_gui_AfterGuiDrawCallback=after_gui;
     raydium_gui_window_OnDelete_name("menu",video_beg_delete);
     raydium_gui_label_create("lblOkBeg",handle,27,45,gettext("Beginners mode completed !"),0,0,0);
     }
@@ -1178,7 +1178,7 @@ raydium_gui_widget_sizes(25,4,18);
 raydium_gui_edit_create("edtPlayerName",handle,47,87,raydium_network_name_local);
 
 raydium_gui_widget_sizes(4,4,18);
-raydium_gui_check_create("chkCameraAlternate",handle,10,77," Alternate camera behavior",camera_alternate); 
+raydium_gui_check_create("chkCameraAlternate",handle,10,77," Alternate camera behavior",camera_alternate);
 
 raydium_gui_widget_sizes(4,4,18);
 raydium_gui_check_create("chkCameraLag",handle,10,70,gettext(" Camera lagging support"),camera_lag);
@@ -1310,7 +1310,7 @@ if(fp)
             {
             raydium_log("message is wrong type, must be RAWDATA.");
             continue;
-            }                                                   
+            }
         if(count!=id)
             {
             count++;
@@ -1334,9 +1334,9 @@ if(found)
     float width;
     float heigth;
     int mx;
-    
+
     len=strlen(val_s);
-    
+
     mx=0;
     for(i=0;i<len;i++)
         if(val_s[i]=='\n')
@@ -1351,9 +1351,9 @@ if(found)
 
     width=mx*1.6;
     heigth=(nlines+2)*5;
-    
+
     if(width<20) width=40;
-    
+
     handle=raydium_gui_window_create("menu",((float)100-width)/2,((float)100-heigth)/2,width,heigth);
     raydium_gui_widget_sizes(0,0,18);
     for(i=0;i<nlines;i++)
@@ -1442,7 +1442,7 @@ while(fscanf(fp,"%f %f %f %f %f %f %i\n",&box[j].x,
     // MUST sets this object as "local only"
     raydium_ode_network_next_local_only=1;
     box[j].id=raydium_ode_object_box_add(name,a,1,box[j].tx,box[j].ty,box[j].tz,RAYDIUM_ODE_STATIC,box[j].type,"");
-    raydium_ode_element_move_name_3f(name,box[j].x,box[j].y,box[j].z);        
+    raydium_ode_element_move_name_3f(name,box[j].x,box[j].y,box[j].z);
 
     j++;
     if(j==MAX_ELEMS)
@@ -1576,7 +1576,7 @@ if(old>0 && partytime==0) // end of this party
 
 if(game_state==GAME_GAME)
     timer+=step;
-    
+
 if(game_state==GAME_COUNTDOWN && strlen(trackdata.message_file)==0)
     {
     if(step<1) // wow .. this a a "track loading" lag
@@ -1600,9 +1600,9 @@ if(type==GAME_END)
     char score[64];
     hms(timer,&h,&m,&s,&ms);
     sprintf(score,"%i:%02i:%02i:%03i",h,m,s,ms);
-    
 
-    if((timer<best_score[raydium_network_uid].time || 
+
+    if((timer<best_score[raydium_network_uid].time ||
         best_score[raydium_network_uid].time==-1) &&
         raydium_network_uid>=0)
         {
@@ -1630,7 +1630,7 @@ if(type==GAME_END)
                 strcpy(message,gettext("Impressive ! Quicker than the author !"));
             else
                 strcpy(message,gettext("Right ! You got it."));
-            
+
             // (add score to local database)
             post_score_local(mni_current,timer);
             }
@@ -1649,7 +1649,7 @@ if(type==GAME_END)
             sprintf(message,gettext("Your place: %i"),p);
         else
             sprintf(message,gettext("(unofficial track or connection failure)"));
-        
+
         }
     }
 
@@ -1710,10 +1710,10 @@ if(mode==MODE_MULTI)
 else
     {
     int off=0;
-    
+
     if(mode==MODE_NET || simple_mni)
         off=10;
-        
+
     hms(yourbest,&h2,&m2,&s2,&ms2);
     raydium_osd_color_change(0.89,0.85,0.66);
     raydium_osd_printf(20-off,4,12,0.5,"font-impact.tga",gettext("  your best:"));
@@ -1726,7 +1726,7 @@ if(mode==MODE_SOLO)
     raydium_osd_color_change(0.89,0.85,0.66);
     raydium_osd_printf(20,7,12,0.5,"font-impact.tga",gettext("  gold time:"));
     raydium_osd_printf(33,7,12,0.7,"font-lcdmono.tga","^e%i:%02i:%02i:%03i",h2,m2,s2,ms2);
-    }    
+    }
 }
 
 void draw_best_score(void)
@@ -1760,6 +1760,7 @@ pos=90;
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
     {
     bestid=-1;
+	best=0;
     for(j=0;j<RAYDIUM_NETWORK_MAX_CLIENTS;j++)
         if(!ok[j] && (best_score[j].time<best || bestid==-1))
         {
@@ -1912,7 +1913,7 @@ switch(id)
     case TYPE_END:
         if(game_state!=GAME_GAME)
             return;
-            
+
         n=m=0;
         for(i=0;i<MAX_ELEMS;i++)
             if(box[i].state && box[i].type==TYPE_CHECKPOINT)
@@ -1978,7 +1979,7 @@ switch(id)
     case TYPE_TURBO_W:
     case TYPE_TURBO_N:
     case TYPE_TURBO_S:
-    return 1;    
+    return 1;
     }
 return 0;
 }
@@ -1998,7 +1999,7 @@ if( (i1==TYPE_CAR || IS_CAR_BODY(i1)) && (i2==TYPE_CAR || IS_CAR_BODY(i2) ) )
 #endif
 
 
-if( (i1==TYPE_CAR || IS_CAR_BODY(i1)) && 
+if( (i1==TYPE_CAR || IS_CAR_BODY(i1)) &&
     is_box(i2) && !raydium_ode_network_element_isdistant(e1))
     {
     col_car_box(e1,e2);
@@ -2009,7 +2010,7 @@ if( (i2==TYPE_CAR|| IS_CAR_BODY(i2)) &&
     is_box(i1) && !raydium_ode_network_element_isdistant(e2))
     {
     col_car_box(e2,e1);
-    return 0;    
+    return 0;
     }
 
 if(is_box(i1)) return 0;
@@ -2052,7 +2053,7 @@ for(i=0;i<MAX_ELEMS;i++)
     *x=box[i].x;
     *y=box[i].y;
     *z=box[i].z;
-    
+
     if(box[i].type==TYPE_START_E)
         {
         *dir='e';
@@ -2178,14 +2179,14 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_joint_hinge2_block_name("suspet_rd",1);
     raydium_ode_joint_break_force_name("suspet_rd",BREAK_FORCE);
     raydium_ode_joint_suspension_name("suspet_rd",ERP_CFM);
-    
+
     raydium_ode_motor_create("moteur",a,RAYDIUM_ODE_MOTOR_ENGINE);
     raydium_ode_motor_attach_name("moteur","suspet_ag",1);
     raydium_ode_motor_attach_name("moteur","suspet_ad",1);
 //    raydium_ode_motor_power_max_name("moteur",0.1);
 //    raydium_ode_motor_gears_set_name("moteur",gears,6);
 //    raydium_ode_motor_gear_change_name("moteur",gear);
-    
+
     raydium_ode_motor_create("direction",a,RAYDIUM_ODE_MOTOR_ANGULAR);
     raydium_ode_motor_attach_name("direction","suspet_ag",0);
     raydium_ode_motor_attach_name("direction","suspet_ad",0);
@@ -2269,13 +2270,13 @@ if(scroll>=0)
     {
     int i,cpt;
     float y,tmp;
-    
+
     if(scroll!=99999)
         scroll+=raydium_frame_time*10; // must #define factor
 
     if(raydium_key_last==1027)
         credits_stop();
-    
+
     raydium_clear_frame();
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
 
@@ -2306,7 +2307,7 @@ if(scroll>=0)
     if(cpt==0 && scroll!=99999)
         {
         GLfloat from[4]={0,0,0,0};
-        GLfloat to[4]={0,0,0,1};        
+        GLfloat to[4]={0,0,0,1};
         scroll=99999; // ugly :)
         raydium_osd_fade_from(from,to,1,credits_stop);
         }
@@ -2320,7 +2321,7 @@ if(scroll>=0)
 if(strlen(mni_current)==0)
     {
     if(raydium_key_last==1027) exit(0);
-    
+
     raydium_clear_frame();
     raydium_camera_look_at(0.1,0.1,0,0,1,0);
 
@@ -2354,14 +2355,14 @@ if(strlen(mni_current)==0)
             }
         }
 
-    
+
     return;
     }
 
 if(raydium_key_last==1027)
     {
     if(simple_mni)
-        exit(0);    
+        exit(0);
     leave();
     return;
     }
@@ -2450,13 +2451,13 @@ raydium_projection_near=10;
 raydium_projection_fov=2;
 raydium_window_view_update();
 }
-                                                                                 
+
 if(raydium_key_last==6)
 {
 vue=6;
 raydium_projection_near=0.05 ;
 raydium_projection_fov=60;
-raydium_window_view_update();                                                                 
+raydium_window_view_update();
 }
 
 if(raydium_key_last==3 && vue!=3)
@@ -2464,7 +2465,7 @@ if(raydium_key_last==3 && vue!=3)
 vue=3;
 raydium_projection_near=0.05 ;
 raydium_projection_fov=70;
-raydium_window_view_update();                                                                 
+raydium_window_view_update();
 raydium_camera_path_reset();
 }
 
@@ -2473,7 +2474,7 @@ if(raydium_key_last==4)
 vue=4;
 raydium_projection_near=0.05;
 raydium_projection_fov=40;
-raydium_window_view_update();                                                                                 
+raydium_window_view_update();
 }
 
 /*
@@ -2506,13 +2507,13 @@ if(pos[2]<track_bottom)
 
 // camera + drawing
 tmp=raydium_ode_element_pos_get_name(cam);
-if(vue==3) 
+if(vue==3)
     {
     dReal mpos[3];
     dReal *vel;
     dReal cam[3];
         dReal dist_vector[3];
-    dReal car_to_cam_distance; 
+    dReal car_to_cam_distance;
     // get element position
     pos=raydium_ode_element_pos_get_name("corps");
     vel=raydium_ode_element_linearvelocity_get_name("corps");
@@ -2526,7 +2527,7 @@ if(vue==3)
     mpos[0]=pos[0]+vel[0];
     mpos[1]=pos[1]+vel[1];
     mpos[2]=pos[2]+vel[2];
-    
+
     // calculate the alternate camera position
     dist_vector[0] = cam_pos[0]-pos[0];
     dist_vector[1] = cam_pos[1]-pos[1];
@@ -2538,7 +2539,7 @@ if(vue==3)
     cam_pos[0] = pos[0] + (dist_vector[0]/car_to_cam_distance);
     cam_pos[1] = pos[1] + (dist_vector[1]/car_to_cam_distance);
     cam_pos[2] = pos[2] + (dist_vector[2]/car_to_cam_distance);
-    
+
     if(camera_alternate) {
        cam[0] = cam_pos[0];
        cam[1] = cam_pos[1];
@@ -2559,7 +2560,7 @@ if(vue==5) raydium_camera_look_at(camx,camy,camz,tmp[1],-tmp[2],tmp[0]);
 if(vue==6) raydium_ode_element_camera_inboard_name("corps",0.2,0,0.1,2,0,0);
 
 raydium_ode_draw_all(0);
-if(draw_debug==1) 
+if(draw_debug==1)
     {
     raydium_osd_network_stat_draw(5,30,20);
     raydium_ode_draw_all(1);
@@ -2659,7 +2660,7 @@ int main(int argc, char **argv)
 //char server[RAYDIUM_MAX_NAME_LEN];
 int i;
 char str[RAYDIUM_MAX_NAME_LEN];
-char altCamActive[RAYDIUM_MAX_NAME_LEN]; 
+char altCamActive[RAYDIUM_MAX_NAME_LEN];
 char lagActive[RAYDIUM_MAX_NAME_LEN];
 char lagSpeed[RAYDIUM_MAX_NAME_LEN];
 
@@ -2669,10 +2670,10 @@ int mode;
 raydium_init_args_name(argc,argv,"mania_drive");
 
 //initializing the internationalization
-//WARNING: never use the next line. Let here for advise 
+//WARNING: never use the next line. Let here for advise
 //setlocale (LC_ALL, "");
 //TODO:
-//This stuff should be in a new function 
+//This stuff should be in a new function
 //like raydium_enable_i18n("mania_drive","locale")
 
 #ifdef WIN32
@@ -2685,7 +2686,7 @@ sprintf(lang,"LANG=%s",locale);
 putenv(lang);
 }
 #endif
-        
+
 setlocale (LC_CTYPE, "");
 setlocale (LC_MESSAGES, "");
 bindtextdomain ("mania_drive", "locale");
@@ -2716,7 +2717,7 @@ raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
-raydium_projection_far=1000;    
+raydium_projection_far=1000;
 raydium_projection_fov=70;
 //raydium_light_disable();
 raydium_fog_disable();
@@ -2735,7 +2736,7 @@ raydium_window_view_update();
 
 /*
 if(raydium_init_cli_option("server",server))
-     if(!raydium_network_client_connect_to(server)) 
+     if(!raydium_network_client_connect_to(server))
         exit(1);
 */
 
@@ -2746,7 +2747,7 @@ raydium_sound_SetSourceGain(sound_car,0.1);  // Engine Gain
 
 sound_checkpoint=raydium_sound_LoadWav("touched.wav");
 raydium_sound_SetSourceLoop(sound_checkpoint,0);
-                                                                                
+
 sound_owww=raydium_sound_LoadWav("owww.wav");
 raydium_sound_SetSourceLoop(sound_owww,0);
 
