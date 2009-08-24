@@ -14,7 +14,7 @@
 // PHP support for Raydium
 // Known bug: recursive Ray/PHP calls are fatal (segfault in zend core).
 
-#include "php_wrappers.c"
+#include "php_wrappers.h"
 
 // Dirty globals... (needed for WIN32 PHP support)
 #ifdef ZTS

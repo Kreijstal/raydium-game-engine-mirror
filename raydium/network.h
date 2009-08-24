@@ -12,7 +12,7 @@
 #define NETWORK_H
 #ifdef RAYDIUM_NETWORK_ONLY
 
-#include "php_wrappers.c"
+#include "php_wrappers.h"
 
 #ifndef RAYDLL
 void raydium_init_args(int argc, char **argv);
@@ -61,7 +61,7 @@ raydium_php_init();
 // part 2
 raydium_register_function(C2PHP(raydium_parser_db_get),"raydium_parser_db_get");
 raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
-        
+
 #endif
 raydium_network_init();
 raydium_network_server_create();

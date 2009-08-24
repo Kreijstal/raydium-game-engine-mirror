@@ -19,7 +19,7 @@ You may have a look the "Data Registration" chapter to know how "share"
 data between your application and your PHP scripts.
 **/
 
-#include "../php_wrappers.c"
+#include "../php_wrappers.h"
 // use this macro when registering your functions
 #define C2PHP ZEND_FN
 
