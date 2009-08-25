@@ -70,6 +70,8 @@ PHP_i_i(raydium_key_pressed);
 
 // mouse.c
 PHP_i_i(raydium_mouse_button_pressed);
+PHP_v_v(raydium_mouse_hide);
+PHP_v_v(raydium_mouse_show);
 
 // clear.c
 PHP_v_v(raydium_clear_frame);
@@ -269,6 +271,8 @@ raydium_register_variable(&raydium_mouse_x,RAYDIUM_REGISTER_INT,"raydium_mouse_x
 raydium_register_variable(&raydium_mouse_y,RAYDIUM_REGISTER_INT,"raydium_mouse_y");
 raydium_register_variable(&raydium_mouse_click,RAYDIUM_REGISTER_INT,"raydium_mouse_click");
 raydium_register_function(C2PHP(raydium_mouse_button_pressed),"raydium_mouse_button_pressed");
+raydium_register_function(C2PHP(raydium_mouse_hide),"raydium_mouse_hide");
+raydium_register_function(C2PHP(raydium_mouse_show),"raydium_mouse_show");
 
 // clear.c
 raydium_register_function(C2PHP(raydium_clear_frame),"raydium_clear_frame");
@@ -420,7 +424,7 @@ done=1;
 }
 
 #else
-void raydium_register_api(void) 
+void raydium_register_api(void)
 {
 /* no PHP */
 raydium_log("RegAPI: DISABLED (No PHP support)");
