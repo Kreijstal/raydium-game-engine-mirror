@@ -1,4 +1,8 @@
 ## Makefile for Raydium dynamic compiled apps.
+
+SHARE="."
+-include configure.conf
+
 EXT_H = .h
 ROOT = ./
 RAYDIUM_DIR = raydium/
@@ -12,9 +16,9 @@ OTHER_LIBS =  raydium/ode/ode/src/libode.a raydium/php/libs/libphp5.a
 INCLUDE_PATH =  -Iraydium/ode/include/ -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
 CFLAGS=-Wall
-COMPILE_OPTIONS=-g -DLIBRAY -O2
-ARC64 := $(shell uname -m)
-ifeq ($(ARC64),x86_64)
+COMPILE_OPTIONS=-g -DLIBRAY -O2 -DRAYPHP_PATH=\"$(SHARE)/rayphp\"
+ARC := $(shell uname -m)
+ifeq ($(ARC),x86_64)
 	COMPILE_OPTIONS+= -fPIC
 endif
 
@@ -34,9 +38,14 @@ help:
 	@echo "	make all	create libraries"
 	@echo "	make doc	generate raydium documentation in file doc.wiki"
 	@echo "	make clean	remove compilation objects and libraries"
+	@echo "	make install	install libraries, includes and RayPHP shared files"
 
 doc: $(HEADERS)
 	cd raydium/headers && ./raydoc.php > ../../doc.wiki && cd -
+
+install: all
+	@echo "Installing ..."
+	@./install.sh
 
 ################################################################################
 # Create libraries

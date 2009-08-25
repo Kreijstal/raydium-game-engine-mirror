@@ -63,6 +63,11 @@ exit_if_error()
 usage_print()
 {
     echo "Quick configure script for Raydium 3D Game Engine"
+    echo "  --prefix=PREFIX      install files in PREFIX [/usr/local]"
+    echo "  --bindir=DIR         binaries install directory [PREFIX/bin]"
+    echo "  --libdir=DIR         libraries install directory [PREFIX/lib]"
+    echo "  --incdir=DIR         includes install directory [PREFIX/include]"
+    echo "  --sharedir=DIR       shared files (RayPHP) install directory [PREFIX/share]"
     echo "  --help               this text"
     echo "  --force-ode-install  Force ODE local reinstall"
     echo "  --force-php-install  Force PHP 5 local reinstall"
@@ -289,9 +294,53 @@ for i in "$@"; do
     fi
 done
 
+PREFIX="/usr/local"
+for i in "$@"; do
+    if echo "$i" | grep -- "^--prefix=" > /dev/null ; then
+        PREFIX=`echo "$i" | sed 's/^--prefix=//'`
+    fi
+done
+
+LIBDIR="$PREFIX/lib/"
+for i in "$@"; do
+    if echo "$i" | grep -- "^--libdir=" > /dev/null ; then
+        LIBDIR=`echo "$i" | sed 's/^--libdir=//'`
+    fi
+done
+
+BINDIR="$PREFIX/bin/"
+for i in "$@"; do
+    if echo "$i" | grep -- "^--bindir=" > /dev/null ; then
+        BINDIR=`echo "$i" | sed 's/^--bindir=//'`
+    fi
+done
+
+INCDIR="$PREFIX/include/"
+for i in "$@"; do
+    if echo "$i" | grep -- "^--incdir=" > /dev/null ; then
+        INCDIR=`echo "$i" | sed 's/^--incdir=//'`
+    fi
+done
+
+SHAREDIR="$PREFIX/share/"
+for i in "$@"; do
+    if echo "$i" | grep -- "^--sharedir=" > /dev/null ; then
+        SHAREDIR=`echo "$i" | sed 's/^--sharedir=//'`
+    fi
+done
+
+
 # empty log
 rm configure.log 2>> /dev/null
 echo "- See configure.log if needed."
+
+# generate configure.conf
+tmp="configure.conf"
+echo "PREFIX=\"$PREFIX\"" > $tmp
+echo "BINS=\"$BINDIR\"" >> $tmp
+echo "LIBS=\"$LIBDIR\"" >> $tmp
+echo "INCLUDES=\"$INCDIR\"" >> $tmp
+echo "SHARE=\"$SHAREDIR/raydium\"" >> $tmp
 
 # Test C compiler
 file='int main(void) { return 0; }'

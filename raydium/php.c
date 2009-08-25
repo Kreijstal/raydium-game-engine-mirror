@@ -350,10 +350,22 @@ raydium_atexit(raydium_php_close);
 
 raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,RAYPHP_PATH);
 
+// Linux default
+if(!raydium_file_isdir(raydium_php_rayphp_path) &&
+    raydium_file_isdir("rayphp"))
+		strcpy(raydium_php_rayphp_path,"rayphp");
+
+// win32 SDK default
 if(!raydium_file_isdir(raydium_php_rayphp_path) &&
     raydium_file_isdir("../raydium/rayphp"))
 		strcpy(raydium_php_rayphp_path,"../raydium/rayphp");
 
+if(!raydium_file_isdir(raydium_php_rayphp_path))
+	{
+	raydium_log("*** Error: PHP R3S scripts not found !");
+	raydium_log("*** Search was: '%s', './rayphp' and '../raydium/rayphp'",raydium_php_rayphp_path);
+	exit(10);
+	}
 
 raydium_log("PHP R3S scripts path: %s",raydium_php_rayphp_path);
 raydium_log("PHP support: OK");
