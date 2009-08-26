@@ -3,6 +3,13 @@
 #include <string.h>
 #include <dirent.h>
 
+// Raydium JPGS video generator (from a big bunch of JPEG files)
+// See Raydium doc for examples.
+
+// Compilation can be done with:
+// - gcc atm_gen.c -lm -o atm_gen
+// - ... or regular tools (odyncomp, Raydium SDK, ...)
+
 char EXT[]=".jpg";
 #define BUFFSIZE  4096
 
@@ -114,7 +121,7 @@ fprintf(fpo,"%s",head);
 offset=0;
 for(i=0;i<total;i++)
     {
-    fprintf(fpo,"%i|",offset);
+    fprintf(fpo,"%li|",offset);
     offset+=filesize(namelist[i]->d_name);
     }
 
@@ -127,4 +134,5 @@ for(i=0;i<total;i++)
 
 fclose(fpo);
 printf("%s created\n",out);
+return 0;
 }
