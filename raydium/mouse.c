@@ -103,11 +103,18 @@ else
 
 
 //putting the mouse in the middle of the screen, then read the next data of the mouse correctly
+
+#ifndef WIN32
+#ifndef APPLE
 // xf: small update, we now only move the mouse when it's needed, allow
 // a smoother handling of odd screen resolutions
+// This "box" model is only enabled for X11, since win32 & OSX seems to have
+// issues (somewhere in the message queue, probably)
 if(raydium_mouse_x < border || raydium_mouse_x > raydium_window_tx-border ||
    raydium_mouse_y < border || raydium_mouse_y > raydium_window_ty-border ||
    prev_state==0)
+#endif
+#endif
 	{
 	old_x=raydium_window_tx/2.0f;
 	old_y=raydium_window_ty/2.0f;
