@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/rayphp.h"
-#endif 
+#endif
 
 // proto
 signed char raydium_file_readable(char *filename);
@@ -115,9 +115,9 @@ if(status)
     {
     int i,len;
     int last=0;
-    
+
     len=strlen(res);
-    
+
     for(i=0;i<len;i++)
         {
         if(res[i]=='\n')
@@ -143,6 +143,29 @@ int status=0;
 
 raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
 raydium_php_exec(raydium_php_internal_rayphp_path("httptest.php"));
+raydium_register_variable_unregister_last();
+
+return status;
+}
+
+signed char raydium_rayphp_zip_extract(char *file, char *to)
+{
+char dest[RAYDIUM_MAX_DIR_LEN];
+char ifile[RAYDIUM_MAX_DIR_LEN];
+int status=0;
+
+// should test the file before ? (and download it if needed)
+// probably done by the caller itself ...
+
+strcpy(dest,to);
+strcpy(ifile,file);
+
+raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
+raydium_register_variable(dest,RAYDIUM_REGISTER_STR,"dest");
+raydium_register_variable(ifile,RAYDIUM_REGISTER_STR,"file");
+raydium_php_exec(raydium_php_internal_rayphp_path("zip_extract.php"));
+raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
 raydium_register_variable_unregister_last();
 
 return status;

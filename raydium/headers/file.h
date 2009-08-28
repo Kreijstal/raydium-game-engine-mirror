@@ -119,4 +119,22 @@ No memory allocation is done, and string is always terminated by a 0.
 Returns the length of the readed string (without terminating 0).
 **/
 
+__rayapi int raydium_file_utime(const char *filename, struct utimbuf *times);
+/**
+Portable version of utime(), since win32 version of this function is unable
+to deal with directories.
+From man page: This function shall set the access and modification times of
+the file ##filename##.
+Upon successful completion, 0 shall be returned. Otherwise, -1. Errno is set.
+**/
+
+__rayapi signed char raydium_file_rm_rf(char *path);
+/**
+This a RECURSIVE rmdir function, deleting ALL FILES in ##path## directory,
+and the directory himself. Of course, this function is not interactive, and
+will delete all in a blink of an eye, even if you ask "/" deletetion.
+You should not use this function, in facts.
+Note that the code is symlink aware and quite error proof. (sort of. perhaps.)
+**/
+
 #endif

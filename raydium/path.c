@@ -185,8 +185,11 @@ void raydium_path_resolv(char *in, char *out, char mode)
 
 strcpy(out,in); // this is the default behavior
 
-if(strchr(in,'/'))
-    return;
+// Seems than it's better to allow this "feature", in the risk
+// of conflicts (example: ask for "foo/bar.txt" while a such file exists at the
+// same time in foo/ (current dir) and data/foo (data/ being a search path)
+//if(strchr(in,'/'))
+//    return;
 
 if(mode=='r')
     {
@@ -261,6 +264,7 @@ for(i=0;i<RAYDIUM_MAX_PATHS;i++)
 void raydium_path_init(void)
 {
 char path[1024];
+char packages[1024];
 signed char ok;
 
 raydium_path_reset();
@@ -294,6 +298,17 @@ if(!ok)
     else ok=1;
     }
 
+strcpy(packages,raydium_file_home_path("packages"));
+if(!raydium_file_directory_writable(packages))
+	{
+	mkdir(packages,0755);
+	if(!raydium_file_directory_writable(packages))
+		raydium_log("ERROR: path: cannot create '%s'",packages);
+	else
+		raydium_log("path: created '%s'",packages);
+	}
+
+
 if(ok)
     {
     raydium_path_write(path);
@@ -308,3 +323,106 @@ void raydium_path_write_local_deny(signed char deny)
 {
 raydium_path_write_local_dir_allowed=(deny?0:1);
 }
+
+signed char raydium_path_package_cache_clear(void)
+{
+char path[RAYDIUM_MAX_DIR_LEN];
+
+// let's use the easy and secure way: delete the whole 'packages' directory.
+raydium_file_home_path_cpy("packages",path);
+if(!raydium_file_rm_rf(path))
+	{
+	raydium_log("ERROR: path: packages: can't delete '%s'.",path);
+	return 0;
+	}
+
+// We'll let the next startup create the directory again (easy, I said)
+raydium_log("path: packages: cache cleared. Exiting !");
+exit(0);
+return 1;
+}
+
+signed char raydium_path_package_register(char *file)
+{
+char tmp[RAYDIUM_MAX_NAME_LEN];
+char filename[RAYDIUM_MAX_NAME_LEN];
+char extract_path[RAYDIUM_MAX_DIR_LEN];
+char file_path[RAYDIUM_MAX_DIR_LEN];
+struct stat extract_stat;
+struct stat file_stat;
+signed char extract=0;
+FILE *fp;
+
+// should test ".zip" suffix ?
+
+raydium_file_basename(filename,file);
+sprintf(tmp,"packages/%s",filename);
+strcpy(extract_path,raydium_file_home_path(tmp));
+
+// let's try to fopen the file (R3S call)
+fp=raydium_file_fopen(file,"r");
+if(!fp)
+	{
+	raydium_log("ERROR: path: package '%s' not found, can't register.",file);
+	return 0;
+	}
+fclose(fp);
+
+// must revolv "file" path when calling raydium_rayphp_zip_extract()
+raydium_path_resolv(file,file_path, 'r');
+
+if(stat(file_path,&file_stat)==-1)
+	{
+	raydium_log("ERROR: path: can't stat / resolv '%s'",file);
+	perror("stat");
+	return 0;
+	}
+
+if(!raydium_file_isdir(extract_path))
+	extract=1;
+else
+	{
+	// already exists ... Is the same ?
+	if(stat(extract_path,&extract_stat)==-1)
+		{
+		raydium_log("ERROR: path: can't stat '%s'.",extract_path);
+		perror("stat");
+		return 0;
+		}
+
+	if(extract_stat.st_mtime!=file_stat.st_mtime)
+		{
+		extract=1;
+		// Whatever "svn blame" says, it's not me who erased your hard drive.
+		if(!raydium_file_rm_rf(extract_path))
+			{
+			raydium_log("ERROR: path: can't delete '%s'.",extract_path);
+			return 0;
+			}
+		}
+	else
+		raydium_log("path: package '%s' already in cache",filename);
+	}
+
+if(extract)
+	{
+	struct utimbuf time;
+
+	time.actime=file_stat.st_mtime;
+	time.modtime=file_stat.st_mtime;
+
+	if(!raydium_rayphp_zip_extract(file_path,extract_path))
+		return 0;
+
+	if(raydium_file_utime(extract_path,&time))
+		{
+		raydium_log("ERROR: path: can't change '%s' mtime.",extract_path);
+		perror("utime");
+		return 0;
+		}
+	}
+
+raydium_path_add(extract_path);
+return 1;
+}
+

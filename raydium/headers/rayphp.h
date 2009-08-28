@@ -50,6 +50,15 @@ Test if Internet connection is available using Raydium website.
 (0 means 'not available', 1 means 'OK')
 **/
 
+__rayapi signed char raydium_rayphp_zip_extract(char *file, char *to);
+/**
+Will extract ##file## zip to the ##to## directory. (must have write
+access to this directory, of course)
+The ##file## path is used as-is. No R3S download, no search path, ...
+Returns 1 when OK, 0 when fails.
+Use PHP ZipArchive class.
+**/
+
 __rayapi signed char raydium_rayphp_repository_defaults(char *def);
 /**
 Gives the default repositories for this application.

@@ -189,6 +189,12 @@ php_install()
     xml2-config --version > /dev/null 2>&1
     exit_if_error "$?" "xml2-config not found in path. Please install 'libxml2-devel' to compile PHP"
 
+# test zlib
+    file='#include <stdio.h>
+    int main(void) { return 0; }'
+    test_build "zlib" "$file" "-lz"
+    exit_if_error "$?" "zlib not found in path. Please install 'zlib-devel' to compile PHP"
+
 # download
     if [ ! -f raydium/php-latest.tar.gz ]; then
 	echo "   Downloading latest PHP5 ..."
@@ -230,7 +236,7 @@ php_install()
     echo "Configuring PHP" >> configure.log
     echo "===============" >> configure.log
     cd raydium/php
-	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl \
+	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
     --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \ 
     >>../../configure.log 2>>../../configure.log
 

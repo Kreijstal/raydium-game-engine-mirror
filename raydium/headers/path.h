@@ -16,11 +16,16 @@ directory is writable. If this is not the case, Raydium will try to write the
 file in the user home directory (~/.appname/data/), and will create it if
 needed.
 For reading, Raydium will also use the current directory **first**, and then
-will search in a list of directories of your choice (see example below). 
+will search in a list of directories of your choice (see example below).
 The user home directory is registered by default in this list.
 
-If the '/' character is present in the requested filename, the path system
-is disabled and regular fopen() behavior is used.
+Now, the search patch system is able to work even if the '/' character is
+present in the requested filename, so you can use subdirectories if needed.
+
+Raydium now features a data package system, so you can store some files in
+a regular ZIP file (with subdirectories if you want) and then register this
+package in your application. Raydium will then automatically search files
+in the ZIP.
 **/
 
 // Example of directory registering:
@@ -73,7 +78,7 @@ provided formated string. Here it is an example for such string:
 ./media/cams/X.cam:./media%%
 (do not include line feeds and replace 'X' by '*')
 
-This string is based an the example at the top of this chapter.
+This string is based on the example at the top of this chapter.
 **/
 
 __rayapi int raydium_path_string_to(char *out);
@@ -99,15 +104,40 @@ You should probably better use ##raydium_path_string_from()##.
 
 __rayapi void raydium_path_write_local_deny(signed char deny);
 /**
-By default, Raydium always tries to write in the local directory (binary's 
+By default, Raydium always tries to write in the local directory (binary's
 directory, in other words), and if it's not possible, did it in the registered
-writing directory. Using this function (with deny=1) will force Raydium to use 
+writing directory. Using this function (with deny=1) will force Raydium to use
 the second option each time. Then Raydium will never write to local directory.
 **/
 
 __rayapi void raydium_path_init(void);
 /**
 Internal.
+**/
+
+__rayapi signed char raydium_path_package_register(char *file);
+/**
+Call this function to register a new ZIP package (note that you can change
+the file extension if you want). All files in the archive will be available
+to the application with no other change !
+
+This feature is R3S compliant, so the ZIP file may be downloaded automatically.
+
+There's no persistence, you should register your packages at every run. A cache
+system makes the proccess very quick, as file access. Any change made to the
+registered ZIP file discards the cache automatically.
+
+Files in the ZIP should be readed only. Any modification will be lost (and you
+don't know when, because of the cache).
+**/
+
+__rayapi signed char raydium_path_package_cache_clear(void);
+/**
+This function will clear the packages cache, and exit the application (for
+some reasons, including laziness).
+**There's no reason to call this function**, cache is managed by Raydium itself.
+But you can use it to clear all old useless cache entries and get a bit more
+free disk space, why not.
 **/
 
 #endif

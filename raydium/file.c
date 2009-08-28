@@ -273,3 +273,125 @@ do {
 return i;
 }
 
+#ifdef WIN32
+BOOL filetime_from_time(PFILETIME pFileTime, time_t Time)
+{
+    struct tm *pTM = localtime(&Time);
+    SYSTEMTIME SystemTime;
+    FILETIME LocalTime;
+
+    if (pTM == NULL)
+	return FALSE;
+
+    SystemTime.wYear   = pTM->tm_year + 1900;
+    SystemTime.wMonth  = pTM->tm_mon + 1;
+    SystemTime.wDay    = pTM->tm_mday;
+    SystemTime.wHour   = pTM->tm_hour;
+    SystemTime.wMinute = pTM->tm_min;
+    SystemTime.wSecond = pTM->tm_sec;
+    SystemTime.wMilliseconds = 0;
+
+    return SystemTimeToFileTime(&SystemTime, &LocalTime) &&
+           LocalFileTimeToFileTime(&LocalTime, pFileTime);
+}
+
+// win32 utime() is unable to deal with directories.
+// Using Perl workaround.
+int raydium_file_utime(const char *filename, struct utimbuf *times)
+{
+    //dTHX;
+    HANDLE handle;
+    FILETIME ftCreate;
+    FILETIME ftAccess;
+    FILETIME ftWrite;
+    struct utimbuf TimeBuffer;
+    int rc;
+
+    //filename = PerlDir_mapA(filename);
+    rc = utime(filename, times);
+
+    /* EACCES: path specifies directory or readonly file */
+    if (rc == 0 || errno != EACCES /* || !IsWinNT() */)
+	return rc;
+
+    if (times == NULL) {
+	times = &TimeBuffer;
+	time(&times->actime);
+	times->modtime = times->actime;
+    }
+
+    /* This will (and should) still fail on readonly files */
+    handle = CreateFileA(filename, GENERIC_READ | GENERIC_WRITE,
+                         FILE_SHARE_READ | FILE_SHARE_DELETE, NULL,
+                         OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+    if (handle == INVALID_HANDLE_VALUE)
+	return rc;
+
+    if (GetFileTime(handle, &ftCreate, &ftAccess, &ftWrite) &&
+	filetime_from_time(&ftAccess, times->actime) &&
+	filetime_from_time(&ftWrite, times->modtime) &&
+	SetFileTime(handle, &ftCreate, &ftAccess, &ftWrite))
+    {
+	rc = 0;
+    }
+
+    CloseHandle(handle);
+    return rc;
+}
+#else
+int raydium_file_utime(const char *filename, struct utimbuf *times)
+{
+return utime(filename,times);
+}
+#endif
+
+
+signed char raydium_file_rm_rf(char *path)
+{
+DIR* dir;
+struct dirent *ent;
+struct stat stat;
+char full_path[RAYDIUM_MAX_DIR_LEN];
+
+dir=opendir(path);
+if (dir)
+	{
+	while( (ent=readdir(dir)) )
+		{
+		sprintf(full_path,"%s/%s",path,ent->d_name);
+		if(lstat(full_path,&stat)==-1)
+			{
+			perror("lstat");
+			return 0;
+			}
+
+		if(S_ISDIR(stat.st_mode))
+ 			{
+			if(strcmp(".",(ent->d_name)) && strcmp("..",(ent->d_name)))
+				if(!raydium_file_rm_rf(full_path)) // error
+					return 0;
+			}
+		else
+			{
+			if(unlink(full_path)==-1)
+				{
+				perror("unlink");
+				return 0;
+				}
+			}
+		}
+	}
+else
+	{
+	perror("opendir");
+	return 0;
+	}
+
+closedir(dir);
+if(rmdir(path)==-1)
+	{
+	perror("rmdir");
+	return 0;
+	}
+return 1;
+}
