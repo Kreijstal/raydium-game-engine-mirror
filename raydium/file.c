@@ -350,7 +350,7 @@ signed char raydium_file_rm_rf(char *path)
 {
 DIR* dir;
 struct dirent *ent;
-struct stat stat;
+struct stat s_stat;
 char full_path[RAYDIUM_MAX_DIR_LEN];
 
 dir=opendir(path);
@@ -359,13 +359,13 @@ if (dir)
 	while( (ent=readdir(dir)) )
 		{
 		sprintf(full_path,"%s/%s",path,ent->d_name);
-		if(lstat(full_path,&stat)==-1)
+		if(lstat(full_path,&s_stat)==-1)
 			{
 			perror("lstat");
 			return 0;
 			}
 
-		if(S_ISDIR(stat.st_mode))
+		if(S_ISDIR(s_stat.st_mode))
  			{
 			if(strcmp(".",(ent->d_name)) && strcmp("..",(ent->d_name)))
 				if(!raydium_file_rm_rf(full_path)) // error
