@@ -94,6 +94,7 @@
 #include <memory.h>
 #include <string.h>
 #include <sys/types.h>
+#include <dirent.h>
 #include <signal.h>
 #include <stdarg.h>
 
