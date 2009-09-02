@@ -215,6 +215,9 @@ def export():
 		li=0
 		lp=0
 		ti=0
+		org=mesh.activeUVLayer
+		layers=mesh.getUVLayerNames()
+		mesh.activeUVLayer=layers[1]
 		for face in mesh.faces:
 			if len(face)!=3:
 				print "ERROR: NOT A TRIANGLE ONLY MESH ! (select all vertices and use CTRL+T)"
@@ -236,14 +239,14 @@ def export():
 				else:
 					nv=face.no
 				#writing vertex normal
-				file.write ("%f %f %f " % (nv[0],nv[1],nv[2]))								  
+				file.write ("%f %f %f " % (nv[0],nv[1],nv[2]))
 				#if face is textured
+				mesh.activeUVLayer=layers[0]
 				if(mesh.faceUV and face.image):
 					u=face.uv[i][0]
 					v=face.uv[i][1]
 					#number of uv layers (multitexturing)
 					layers=mesh.getUVLayerNames()
-					org=mesh.activeUVLayer
 					mesh.activeUVLayer=layers[0]
 					#get current texture image name
 					valid_texture(face.image,texture_list)
@@ -255,14 +258,16 @@ def export():
 						# loop on layers and append uv and name to a string
 						#print len(layers)
 						for layer in layers:
+							mesh.activeUVLayer=layer
 							if (layer.find("#")>=0):
-								texture=texture+layer
+								if (face.image):
+									texture=texture+layer
 							else:
-								mesh.activeUVLayer=layer
 								uu=face.uv[i][0]
 								vv=face.uv[i][1]
 								ti=ti+1
-								# handle vertex with only one texture defined on a mesh multitextured
+								# handle vertex with only one texture defined on a 
+								#mesh multitextured
 								if not(face.image):
 									continue
 								valid_texture(face.image,texture_list)
@@ -270,12 +275,12 @@ def export():
 								if(t!=but):
 									texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
 					file.write("%f %f %s\n" % (u,v,texture))
-					mesh.activeUVLayer=org
 				else:
 					if(mesh.vertexColors and len(face.col)>0):
 						file.write("0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
 					else:
 						file.write("0 0 rgb(0.6,0.6,0.6)\n")
+		mesh.activeUVLayer=org
 		if multfile:
 			file.flush()
 			file.close()
