@@ -243,33 +243,34 @@ def export():
 					v=face.uv[i][1]
 					#number of uv layers (multitexturing)
 					layers=mesh.getUVLayerNames()
+					org=mesh.activeUVLayer
+					mesh.activeUVLayer=layers[0]
 					#get current texture image name
 					valid_texture(face.image,texture_list)
 					texture=Blender.sys.basename(face.image.filename)
 					but=texture
 					cpt=0 # layers counter
 					if(len(layers)>1):
-						org=mesh.activeUVLayer
 						# texture=texture+';'
 						# loop on layers and append uv and name to a string
 						#print len(layers)
 						for layer in layers:
-							mesh.activeUVLayer=layer
-							uu=face.uv[i][0]
-							vv=face.uv[i][1]
-							ti=ti+1
-							# handle vertex with only one texture defined on a mesh multitextured
-							if not(face.image):
-								continue
-							valid_texture(face.image,texture_list)
-							t=Blender.sys.basename(face.image.filename)					 
-							if(t!=but):
-								#if(cpt>0):
-								#   texture=texture+'|'
-								#   cpt=cpt+1
-								texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
-						mesh.activeUVLayer=org
+							if (layer.find("#")>=0):
+								texture=texture+layer
+							else:
+								mesh.activeUVLayer=layer
+								uu=face.uv[i][0]
+								vv=face.uv[i][1]
+								ti=ti+1
+								# handle vertex with only one texture defined on a mesh multitextured
+								if not(face.image):
+									continue
+								valid_texture(face.image,texture_list)
+								t=Blender.sys.basename(face.image.filename)
+								if(t!=but):
+									texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
 					file.write("%f %f %s\n" % (u,v,texture))
+					mesh.activeUVLayer=org
 				else:
 					if(mesh.vertexColors and len(face.col)>0):
 						file.write("0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
