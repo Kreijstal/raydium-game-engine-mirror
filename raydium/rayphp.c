@@ -11,9 +11,6 @@
 #include "headers/rayphp.h"
 #endif
 
-// proto
-signed char raydium_file_readable(char *filename);
-
 
 void raydium_php_rayphp_path_change(char *path)
 {

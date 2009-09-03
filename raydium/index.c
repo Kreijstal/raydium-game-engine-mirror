@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#define DONT_INCLUDE_HEADERS 
+#define DONT_INCLUDE_HEADERS
 
 #include "main.c"
 
@@ -63,17 +63,17 @@ extern "C" {
 #include "hdr.c"
 #include "shader.c"
 #include "register.c"
+#include "file.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
 #include "rayphp.c"
 #endif
+#include "path.c"
 #include "console.c"
 #include "gui.c"
 #include "land.c"
 #include "sky.c"
 #include "internal.c"
-#include "file.c"
-#include "path.c"
 #include "file_tri.c"
 #include "camera.c"
 #include "object.c"
@@ -100,13 +100,13 @@ extern "C" {
 #include "parser.c"
 #include "cli.c"
 #include "network.c"
-#include "file.c"
-#include "path.c"
 #include "register.c"
+#include "file.c"
 #ifdef PHP_SUPPORT
 #include "php.c"
 #include "rayphp.c"
 #endif
+#include "path.c"
 #include "console.c"
 #include "web.c"
 #endif

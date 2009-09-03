@@ -25,10 +25,6 @@ sapi_globals_struct *sapi_globals;
 void ***tsrm_ls;
 #endif
 
-// proto
-void raydium_file_ext(char *dest, char *from);
-signed char raydium_file_isdir(char *path);
-
 
 static int sapi_raydium_send_headers(sapi_headers_struct *sapi_headers TSRMLS_DC)
 {
