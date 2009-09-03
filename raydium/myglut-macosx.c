@@ -144,7 +144,7 @@ static void createContext(int multiSample, int numSamples, bool fullScreen)
     AGLPixelFormat aglPixFmt;
 
     // Choose pixel format.
-    GLint attrib[12];
+    GLint attrib[14];
     GLint i = 0;
     attrib[i++] = AGL_WINDOW;
     attrib[i++] = AGL_RGBA;
@@ -160,6 +160,8 @@ static void createContext(int multiSample, int numSamples, bool fullScreen)
 
     attrib[i++] = AGL_DEPTH_SIZE;
     attrib[i++] = 32;
+    attrib[i++] = AGL_STENCIL_SIZE;
+    attrib[i++] = 8;
     attrib[i++] = AGL_NONE;
 
     if (multiSample)
