@@ -27,6 +27,7 @@ from Blender.Mathutils import *
 # Do not supports multitexturing yet.
 # Python puxxor :)
 
+
 def fileExists(f):
 	try:
 		file = open(f)
@@ -35,6 +36,17 @@ def fileExists(f):
 	else:
 		exists = 1
 	return exists
+
+def selectUVLayer(mesh,k):
+	ntexname = "tex.%d" % (k)	
+	try:
+		mesh.activeUVLayer = ntexname
+	except:
+		print "Add UV Layer %s" % ntexname
+		mesh.addUVLayer(ntexname)
+		
+	mesh.activeUVLayer = ntexname
+	return
 
 class source:
 	def __init__(self,filename):
@@ -91,13 +103,17 @@ class source:
 			if version==1:
 				lvertn.append(Vector(float(words[3]),float(words[4]),float(words[5])))
 				vbuv.append(Vector(float(words[6]),float(words[7])))
-				ltexname.append(words[8])
+			
 			if version==0:
 				vbuv.append(Vector(float(words[3]),float(words[4])))
-				ltexname.append(words[5])
+				
 					
 			if (vi%3)==0:
 				faces.append([vi-3,vi-2,vi-1])
+				if version==1:
+					ltexname.append(words[8])
+				if version==0:
+					ltexname.append(words[5])
 				fi=fi+1
 				
 		print "Done Read %d vertices %d faces" % (vi,fi)
@@ -120,10 +136,12 @@ class source:
 		for i in range(fi):
 			if (i % (fi/10))==0:
 				print (i*100/fi)+1
+				
 			for j in range(3):
-				ij = i*3+j
+				ij=i*3+j
 				face = mesh.faces[i]
-				texname=ltexname[ij]
+				texname=ltexname[i]
+				#rgb texture 
 				if texname[0:4] == "rgb(":
 					
 					try:
@@ -140,11 +158,18 @@ class source:
 					face.col[j].g=int(float(couls[1])*255)
 					face.col[j].b=int( float(couls[2])*255)
 					face.col[j].a=255
-					
+				#image textured	
 				else:
 					filename = texname.split(";")
 					for k in range(len(filename)):
-						file = filename[k]
+						file=filename[k]
+						if (file.find("#")>=0): #Using special caracter for environnement mapping
+							lfile=file.split("#")
+							filename[k]=lfile[0] # first field for normal image file
+							filename.insert(k+1,"#"+lfile[1])	
+							
+					for k in range(len(filename)):
+						file = filename[k]				
 						param = file.split("|")
 						if (len(param)==1):
 							texname = param[0]
@@ -156,15 +181,14 @@ class source:
 							texname = param[2]
 							buv = [float(param[0]),float(param[1])]
 						
-						ntexname = "tex.%d" % (k)	
-						try:
-							mesh.activeUVLayer = ntexname
-						except:
-							print "Add UV Layer %s" % ntexname
-							mesh.addUVLayer(ntexname)
-							
-						mesh.activeUVLayer = ntexname							
+						selectUVLayer(mesh,k)
 						
+						if (texname[0]=="#"): #special texture
+							texname=texname[1:]
+							env_map=1
+						else:
+							env_map=0
+													
 						found =-1	
 						for l  in range(len(nimages)):
 							if texname == nimages[l]:
@@ -185,6 +209,7 @@ class source:
 						face.image = limages[found]
 						face.mode |= Blender.Mesh.FaceModes['TEX']
 						face.mode |= Blender.Mesh.FaceModes['TWOSIDE']
+						face.image.reflect=env_map
 
 						if (len(buv)>0):
 							face.uv[j][0] = buv[0];face.uv[j][1] = buv[1];

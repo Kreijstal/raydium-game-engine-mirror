@@ -64,7 +64,7 @@ def conv_tga(image):
 	fxs=float(sz[0])/isx;fys=float(sz[1])/isy
 	xo=0;yo=0
 	#image rescale to have power of 2 texture
-	#x,y in result image, xo,yo in original image
+	#x,y in result image,	 xo,yo in original image
 	
 	for y in range(isy):
 		yoi=int(yo);xo=0;dxf=1
@@ -214,10 +214,9 @@ def export():
 		l=len(mesh.faces)/10
 		li=0
 		lp=0
-		ti=0
 		org=mesh.activeUVLayer
 		layers=mesh.getUVLayerNames()
-		mesh.activeUVLayer=layers[1]
+		mesh.activeUVLayer=layers[0]
 		for face in mesh.faces:
 			if len(face)!=3:
 				print "ERROR: NOT A TRIANGLE ONLY MESH ! (select all vertices and use CTRL+T)"
@@ -242,12 +241,9 @@ def export():
 				file.write ("%f %f %f " % (nv[0],nv[1],nv[2]))
 				#if face is textured
 				mesh.activeUVLayer=layers[0]
-				if(mesh.faceUV and face.image):
+				if(mesh.faceUV):
 					u=face.uv[i][0]
 					v=face.uv[i][1]
-					#number of uv layers (multitexturing)
-					layers=mesh.getUVLayerNames()
-					mesh.activeUVLayer=layers[0]
 					#get current texture image name
 					valid_texture(face.image,texture_list)
 					texture=Blender.sys.basename(face.image.filename)
@@ -258,27 +254,38 @@ def export():
 						# loop on layers and append uv and name to a string
 						#print len(layers)
 						for layer in layers:
+							if (layer==layers[0]):
+								continue #already used first texture layer
 							mesh.activeUVLayer=layer
-							if (layer.find("#")>=0):
-								if (face.image):
-									texture=texture+layer
-							else:
-								uu=face.uv[i][0]
-								vv=face.uv[i][1]
-								ti=ti+1
-								# handle vertex with only one texture defined on a 
-								#mesh multitextured
-								if not(face.image):
-									continue
+							#Not textured layer skipping
+							# handle vertex with only one texture defined on a 
+							# mesh multitextured							
+							if not(face.image):
+								continue
+							#tex flag inactive, face is not textured, skipping
+							if not(face.mode and Blender.Mesh.FaceModes['TEX']):
+								continue
+							#Face image flagged as reflective
+							if (face.image.reflect):
+								#Found a face mapped on environnement using .tri file # syntax
 								valid_texture(face.image,texture_list)
 								t=Blender.sys.basename(face.image.filename)
-								if(t!=but):
-									texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
+								texture=texture+"#"+t
+							else: #face image is not flagged as reflection so normal script behavior
+								uu=face.uv[i][0]
+								vv=face.uv[i][1]
+								valid_texture(face.image,texture_list)
+								t=Blender.sys.basename(face.image.filename)
+								texture=texture+';'+str(uu)+'|'+str(vv)+'|'+t
+						#end of layer multitexturing loop
 					file.write("%f %f %s\n" % (u,v,texture))
+				#face has no face UV informations
 				else:
+					#Face has vertex color assigned, using them.
 					if(mesh.vertexColors and len(face.col)>0):
 						file.write("0 0 rgb(%3.3f,%3.3f,%3.3f)\n" % (face.col[i].r/255.0,face.col[i].g/255.0,face.col[i].b/255.0))
 					else:
+					#No information, defaulting to gray face
 						file.write("0 0 rgb(0.6,0.6,0.6)\n")
 		mesh.activeUVLayer=org
 		if multfile:
