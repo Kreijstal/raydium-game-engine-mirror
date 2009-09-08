@@ -18,9 +18,17 @@ as texture name, where r, g and b are 0 <= x <= 1 (floats).
 With 3 negative values, you will generate a "phantom texture". Phantom textures
 are only drawn into the z-buffer (and not color buffer).
 Texture clamping and advanced multitexturing effects are supported by Raydium, 
-but not documented here for now. If you're interested, have a look at source 
-code, or take a look at the Wiki. Tips: "BOX", "ENV", "HDR", ";", "|".
+but not fully documented here for now. 
+A few quick tips:
+ - "BOX" filename prefix (ex: BOX_foo.tga) is used as a clamp-to-edge attribute.
+ - "HDR" prefix is used to set a texture as a "light emitter" (sky, lamp, ...)
+ - "ENV" prefix is used for environment (sphere) mapping.
+ - "ATM" prefix is used for "Alpha-Tested Magnification" vector textures.
+ - ";" operator is used for basic multitexturing in TRI files.
+ - "|" operator for UV coords with multitextured lines in TRI files.
+ - "#" operator is used for environnement mapped multitexturing in TRI files.
 
+A few things about the last operator, "#":
 Effective environment mapping (one pass, two texture units) is available using
 a special filename separator for texture field in TRI files : #
 See this example:
@@ -31,8 +39,10 @@ file ##common.h## if you want reflection to be more or less visible.
 
 This separator can also be used for shaders, to load multiple textures in the
 hardware (up to RAYDIUM_RENDER_MAX_TEXUNITS on the same line of the tri file).
-**/
 
+For more informations about other operators and prefixes, you may have a look
+at the Wiki or at engine's source code.
+**/
 
 __rayapi signed char raydium_texture_size_is_correct (GLuint size);
 /**

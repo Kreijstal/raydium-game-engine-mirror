@@ -240,7 +240,7 @@ if(!rgb && !faked)
     {
     data[k+3]=temp[3];
     if(temp[3]>0 && temp[3]<255)
-        blended=1;
+        blended=RAYDIUM_TEXTURE_BLEND_BLENDED;
     if(temp[3]==0)
         cutout=1;
     }
@@ -312,7 +312,7 @@ if(!rgb)
 #else
     GLbppi=GL_ALPHA;
 #endif
-    blended=1;
+    blended=RAYDIUM_TEXTURE_BLEND_BLENDED;
     }
 
  if(bpp==3)
@@ -346,12 +346,12 @@ if(!rgb)
 
  raydium_texture_blended[id]=0;
  if(blended)
-    raydium_texture_blended[id]=1;
+    raydium_texture_blended[id]=RAYDIUM_TEXTURE_BLEND_BLENDED;
 
  if(cutout && !blended)
     {
-    raydium_texture_blended[id]=2;
-    blended=2;
+    raydium_texture_blended[id]=RAYDIUM_TEXTURE_BLEND_CUTOUT;
+    blended=RAYDIUM_TEXTURE_BLEND_CUTOUT;
     }
 
 
@@ -374,9 +374,16 @@ if(!simulate)
 
  memcpy(temp,filename,3);                                               // TEMP !!
  temp[3]=0;                                                             // TEMP !!
+
+ if(!strcmp("ATM",(char *)temp))                                // TEMP !!
+    {
+    raydium_texture_blended[id]=RAYDIUM_TEXTURE_BLEND_ATM;
+    blended=RAYDIUM_TEXTURE_BLEND_ATM;
+    }
+
  if(!simulate)
  {
-  if(!strcmp("BOX",(char *)temp) || faked)                              // TEMP !!
+  if(!strcmp("BOX",(char *)temp) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
   {                                                                     // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!

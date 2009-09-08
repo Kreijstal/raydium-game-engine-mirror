@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/render.h"
-#endif 
+#endif
 
 void raydium_callback_image(void);
 void raydium_timecall_callback(void);
@@ -52,7 +52,7 @@ if(first)
     {
     int i;
     for(i=0;i<RAYDIUM_RENDER_MAX_TEXUNITS;i++)
-        texunit_state[i]=0;    
+        texunit_state[i]=0;
 
     first=0;
     }
@@ -79,21 +79,21 @@ if(tui>0)
 {
  glEnd(); // ugly, but we must close all shapes, if any
  glActiveTextureARB(tu);
- 
+
 #ifndef RENDER_ALLOW_LIGHTING_FOR_LIGHTMAPS
  if(raydium_texture_islightmap[tex])
  {
- glDisable(GL_LIGHTING); 
+ glDisable(GL_LIGHTING);
  }
  else if(raydium_light_enabled_tag)
         glEnable(GL_LIGHTING);
-#endif 
+#endif
 
  glDisable(GL_TEXTURE_GEN_S);
  glDisable(GL_TEXTURE_GEN_T);
  //glDisable(GL_BLEND);
 
- 
+
  if(tex)
  {
   glEnable(GL_TEXTURE_2D);
@@ -104,7 +104,7 @@ if(tui>0)
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP); 
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
     glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_EXT, 1);
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
     glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_ADD);
@@ -119,12 +119,12 @@ if(tui>0)
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
     glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
     glTexEnvi(GL_TEXTURE_ENV, GL_RGB_SCALE_EXT, 2);
-  } 
- } 
- else 
+  }
+ }
+ else
  {
  glDisable(GL_TEXTURE_2D);
-// glBindTexture(GL_TEXTURE_2D,0); 
+// glBindTexture(GL_TEXTURE_2D,0);
  }
  glActiveTextureARB(GL_TEXTURE0_ARB);
 }
@@ -167,6 +167,15 @@ else // "standard" textunit
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   }
 
+  if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_ATM)
+  {
+  //glEnable(GL_BLEND);
+  glDepthMask(GL_TRUE);
+  glAlphaFunc(GL_GREATER,0.5);
+  glEnable (GL_ALPHA_TEST);
+  glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  }
+
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_NONE)
   {
   glDisable(GL_BLEND);
@@ -195,7 +204,7 @@ else // "standard" textunit
     rgb=raydium_render_rgb_force;
   else
     rgb=raydium_texture_rgb[tex];
-  
+
   glDisable(GL_TEXTURE_2D);
   glColor4f(rgb[0],rgb[1],rgb[2],1.f);
    if(raydium_light_enabled_tag)
@@ -204,7 +213,7 @@ else // "standard" textunit
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, rgb);
    }
   }
-  else 
+  else
   {
   glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, one);
   glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, zero);
@@ -282,7 +291,7 @@ if(raydium_shadow_rendering)
 for(tex=1;tex<RAYDIUM_MAX_TEXTURES;tex++)
 if(raydium_texture_used[tex])
 {
-    
+
   // prepare first texture unit
   raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,tex);
   // ... and reset next ones
@@ -290,7 +299,7 @@ if(raydium_texture_used[tex])
         raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);
 
   glBegin(GL_TRIANGLES);
-  
+
 
   for(i=from,j=0;i<to;i+=3)
   if(raydium_vertex_texture[i]==tex)
@@ -302,7 +311,7 @@ if(raydium_texture_used[tex])
         continue;
 #endif
 
-    
+
 #ifdef RENDER_DEBUG_TAG
     if(raydium_vertex_tag[i  ] ||
        raydium_vertex_tag[i+1] ||
@@ -310,7 +319,7 @@ if(raydium_texture_used[tex])
         glColor4f(1.f,0.f,1.f,1.f);
     else
         glColor4f(1.f,1.f,1.f,1.f);
-#endif    
+#endif
 
 // TODO: Find out what exactly causes the application to terminate on the iPhone OS.
 #ifndef IPHONEOS
@@ -320,7 +329,7 @@ if(raydium_texture_used[tex])
                 env=1;
                 break;
                 }
-    
+
     if(env || raydium_vertex_texture_multi[i])
     {
         if(raydium_vertex_texture_multi[i] && raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,raydium_vertex_texture_multi[i]))
@@ -446,7 +455,7 @@ glutSwapBuffers();
 raydium_shadow_map_generate();
 raydium_key_last=0;
 raydium_mouse_click=0;
-raydium_camera_pushed=0; 
+raydium_camera_pushed=0;
 glPopMatrix();
 if(raydium_timecall_clock() > last + raydium_timecall_clocks_per_sec)
     {
