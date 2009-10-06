@@ -168,6 +168,29 @@ raydium_register_variable_unregister_last();
 return status;
 }
 
+signed char raydium_rayphp_zip_add(char *zip_file, char *file)
+{
+char zfile[RAYDIUM_MAX_DIR_LEN];
+char nfile[RAYDIUM_MAX_DIR_LEN];
+int status=0;
+
+// should test the file before ? (and download it if needed)
+// probably done by the caller itself ...
+
+strcpy(zfile,zip_file);
+strcpy(nfile,file);
+
+
+raydium_register_variable(&status,RAYDIUM_REGISTER_INT,"status");
+raydium_register_variable(zfile,RAYDIUM_REGISTER_STR,"zip_file");
+raydium_register_variable(nfile,RAYDIUM_REGISTER_STR,"file_full_path");
+raydium_php_exec(raydium_php_internal_rayphp_path("zip_add.php"));
+raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
+raydium_register_variable_unregister_last();
+
+return status;
+}
 signed char raydium_rayphp_repository_defaults(char *def)
 {
 char *head="# This file was created by the application. You can change\n\
