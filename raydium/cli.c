@@ -10,7 +10,7 @@
 #else
 #include "headers/cli.h"
 
-#endif 
+#endif
 
 char *raydium_version(void);
 
@@ -67,7 +67,7 @@ char *str2;
 #ifdef WIN32
 char *empty="";
 #endif
-        
+
 raydium_homedir[0]=0;
 #ifndef WIN32
 str=getenv("HOME");
@@ -127,6 +127,7 @@ void raydium_init_args_name_hack(int argc, char **argv, char *app_name)
 {
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
+char tmp[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_argc=argc;
 raydium_init_argv=malloc(argc*sizeof(char *));
@@ -137,6 +138,41 @@ for(i=0;i<argc;i++)
     strcpy(raydium_init_argv[i],argv[i]);
     }
 raydium_log("Raydium 3D Game Engine");
+if (raydium_init_cli_option("help",tmp))
+    {
+    raydium_log("**********************");
+    raydium_log("Command line switches:");
+    raydium_log("--autoexec name          php script run at engine init");
+    raydium_log("--autoexec2 name         php script run after engine init");
+    raydium_log("--compress               enable texture compression");
+    raydium_log("--consolefont file       set console font name");
+    raydium_log("--consoletexture file    set console background texture");
+    raydium_log("--evdev name             alternate joystick forefeedback name (linux)");
+    raydium_log("--files                  list opened files when exiting");
+    raydium_log("--filter name            texture filter(none,bilinear,trilinear,aniso)");
+    raydium_log("--fullscreen             force fullscrenn render");
+    raydium_log("--help                   this page");
+    raydium_log("--history file           console history filename");
+    raydium_log("--home dir               set raydium home directory");
+    raydium_log("--joydev name            alternate joystick device name (linux)");
+    raydium_log("--logfile file           logfile name");
+    raydium_log("--max-aniso int          set anisotropic filter maximum level");
+    raydium_log("--name name              network player name");
+    raydium_log("--path dir               add dir to path search");
+    raydium_log("--ray_php dir            php script directory");
+    raydium_log("--regs                   dump php registrations when exiting");
+    raydium_log("--repositoy-disable      disable repository access");
+    raydium_log("--repository-force       force use of repository for media files");
+    raydium_log("--repository-refresh     refresh file from repository if needed");
+    raydium_log("--video-device name      input VideoDevice name (linux)");
+    raydium_log("--video-size hhxll       video size format ex:320x240");
+    raydium_log("--window                 force window rendering");
+    raydium_log("--window-fixed           window rendering not resizeable");
+    raydium_log("--write_path dir         writing directory");
+    raydium_log("--zip_package file       collect all mediafile in zip package file name");
+    raydium_log("\n check for application's specific command line switches");
+    exit(0);
+    }
 
 if(raydium_init_cli_option("logfile",logfile))
     {
@@ -158,7 +194,7 @@ raydium_file_dirname(raydium_init_wd,raydium_init_argv[0]);
 if(chdir(raydium_init_wd)!=-1)
     raydium_log("chdir to '%s': OK",raydium_init_wd);
 else
-    perror("chdir");    
+    perror("chdir");
 #endif
 
 // Find user's home directory

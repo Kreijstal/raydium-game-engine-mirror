@@ -74,12 +74,12 @@ if(t1==ROCK_TAG || t2==ROCK_TAG)
         {
         int i;
         dReal op[3];
-        
+
         sprintf(name,"water-%i-%i",e1,e2);
         if(raydium_particle_generator_find(name)>=0)
             return 0;
 
-        //printf("%f\n",speed); 
+        //printf("%f\n",speed);
         if(speed>4)
             {
             raydium_particle_generator_load("volcano_e_water.prt",name);
@@ -89,7 +89,7 @@ if(t1==ROCK_TAG || t2==ROCK_TAG)
 
         for(i=0;i<3;i++)
             op[i]=vel[i]*-1;
-        raydium_ode_element_addforce(rock,op);  
+        raydium_ode_element_addforce(rock,op);
 
         needed_water_volume+=speed/100;
 /*      if(!raydium_sound_IsPlaying(sound_water) && speed>5)
@@ -168,10 +168,10 @@ if(countdown<=0 && raydium_random_i(0,15)==0)
         raydium_light_position[0][2]=200;
     if(raydium_key_last==7)
         raydium_light_position[0][2]=300;
-    
+
 
     raydium_clear_frame();
-    
+
 //    raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
     raydium_camera_smooth_path_to_path(CAM_FILE,secs,CAM_FILE2,secs,raydium_frame_time*2);
     raydium_shader_var_4f_name("water","cameraPos",raydium_camera_x,raydium_camera_y,raydium_camera_z,1.0f);
@@ -283,11 +283,11 @@ raydium_shader_current_name("water");
         // Move the water by our global speed
         //printf("%f\n",raydium_frame_time);
         move += (g_WaterFlow*raydium_frame_time);
-        
+
 glBegin(GL_QUADS);
 
 // The back left vertice for the water
- glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, g_WaterUV);                                // Reflection texture                           
+ glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, g_WaterUV);                                // Reflection texture
  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, refrUV - move);                    // Refraction texture
  glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0.0f, normalUV + move2);         // Normal map texture
  glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);                                           // DUDV map texture
@@ -330,7 +330,7 @@ raydium_rendering_prepare_texture_unit(GL_TEXTURE3_ARB,0);
 
 if(raydium_key[GLUT_KEY_F12])
     {
-    raydium_osd_draw_name("reflection",0,0,20,20);
+    raydium_osd_draw_name("reflection",0,0,40,40);
     raydium_osd_draw_name("refraction",80,0,100,20);
     }
 
@@ -354,7 +354,7 @@ int main(int argc, char **argv)
 {
     int tmp;
     raydium_init_args(argc,argv);
-    
+
     // window creation
     raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"Volcano - Shaders and Particles");
     raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
@@ -364,7 +364,7 @@ int main(int argc, char **argv)
     raydium_fog_disable();
     raydium_fog_volumetric_support();
     raydium_window_view_update();
-    
+
     raydium_light_enable();
     raydium_light_on(0);
     memcpy(raydium_light_color[0],light_color,raydium_internal_size_vector_float_4);
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
     raydium_light_position[0][2]=200;
     raydium_light_position[0][3]=1.0;
     raydium_light_update_all(0);
-    
+
     raydium_sky_box_cache();
     raydium_shadow_enable();
 
@@ -382,10 +382,10 @@ int main(int argc, char **argv)
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);
 
     raydium_ode_CollideCallback=collide;
-    
+
     tmp=1;
-    while(tmp<=raydium_window_tx && 
-           tmp<=raydium_window_ty && 
+    while(tmp<=raydium_window_tx &&
+           tmp<=raydium_window_ty &&
            tmp<=raydium_texture_size_max)
                 {
                 tmp*=2;
@@ -399,7 +399,7 @@ int main(int argc, char **argv)
     raydium_shader_var_i_name("water","reflection",0);
     raydium_shader_var_i_name("water","refraction",1);
     raydium_shader_var_i_name("water","normalMap",2);
-    raydium_shader_var_i_name("water","dudvMap",3);                
+    raydium_shader_var_i_name("water","dudvMap",3);
     raydium_shader_var_4f_name("water","waterColor", water_color[0], water_color[1], water_color[2], water_color[3]);
     strcpy(model,"paradise.tri");
     raydium_init_cli_option("model",model);
@@ -419,7 +419,7 @@ int main(int argc, char **argv)
     raydium_sound_SourcePlay(sound_water);
     raydium_sound_SetSourceGain(sound_water,0);
     raydium_sound_SetSourceLoop(sound_rock,0);
-    
+
 
     raydium_callback(&display);
     return(0);
