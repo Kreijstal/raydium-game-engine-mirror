@@ -147,6 +147,7 @@ if (raydium_init_cli_option("help",tmp))
     raydium_log("--compress               enable texture compression");
     raydium_log("--consolefont file       set console font name");
     raydium_log("--consoletexture file    set console background texture");
+    raydium_log("--create_package file    collect all mediafile in zip file");
     raydium_log("--evdev name             alternate joystick forefeedback name (linux)");
     raydium_log("--files                  list opened files when exiting");
     raydium_log("--filter name            texture filter(none,bilinear,trilinear,aniso)");
@@ -169,7 +170,6 @@ if (raydium_init_cli_option("help",tmp))
     raydium_log("--window                 force window rendering");
     raydium_log("--window-fixed           window rendering not resizeable");
     raydium_log("--write_path dir         writing directory");
-    raydium_log("--zip_package file       collect all mediafile in zip package file name");
     raydium_log("\n check for application's specific command line switches");
     exit(0);
     }
