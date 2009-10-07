@@ -191,6 +191,7 @@ raydium_register_variable_unregister_last();
 
 return status;
 }
+
 signed char raydium_rayphp_repository_defaults(char *def)
 {
 char *head="# This file was created by the application. You can change\n\

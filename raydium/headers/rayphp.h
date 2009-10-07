@@ -61,8 +61,7 @@ Use PHP ZipArchive class.
 
 __rayapi signed char raydium_rayphp_zip_add(char *zip_file, char *file);
 /**
-Add ##file## to ##zip_file## package file. Used to collect all media file in
-an zip package file. package zip filename is defined with --zip_package command line.
+Add ##file## to ##zip_file## package file. Returns 1 when OK, 0 when fails.
 **/
 
 __rayapi signed char raydium_rayphp_repository_defaults(char *def);

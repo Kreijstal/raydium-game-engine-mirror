@@ -17,7 +17,7 @@ Graphics:
 ##--fullscreen## Define Fullscreen rendering.
 
 ##--xinerama-fullscreen## Select Xinerama FullScreen render windows.
-##--xinerama-screen## Select Screen for render windows. 
+##--xinerama-screen## Select Screen for render windows.
 
 ##--filter## Define texture filter type (##none##,##bilinear##,##trilinear##,##aniso##).
 ##--max-aniso## Define Anisotropic filter level to max value according to hardware capacity.
@@ -46,6 +46,7 @@ Path and files:
 ##--files## List all opened files.
 ##--logfile## Define logfile name.
 ##--history## Console History file name.
+##--create-package## Generate a ZIP package with all media files.
 
 Initialisation Scripts:
 ##--autoexec## Php script executed just after engine initialization.
@@ -92,7 +93,7 @@ Internal use.
 #ifndef RAYDLL
 __rayapi void raydium_init_args(int argc, char **argv);
 /**
-You must use this function, wich send application arguments to Raydium 
+You must use this function, wich send application arguments to Raydium
 and external libs (GLUT, OpenAL, ...).
 This must be done **before** any other call to Raydium.
 Example:

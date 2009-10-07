@@ -123,7 +123,7 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 
 }
 
-FILE *raydium_file_fopen_internal(char *file, char *mode,char * full_path)
+FILE *raydium_file_fopen_internal(char *file, char *mode, char *full_path)
 {
 FILE *fp;
 int i;
@@ -182,7 +182,7 @@ f=raydium_file_fopen_internal(file,mode,full_path);
 if (!f)
     return NULL;
 #ifdef PHP_SUPPORT
-if (raydium_init_cli_option( "zip_package",zip_file))
+if (raydium_init_cli_option("create-package",zip_file))
     raydium_rayphp_zip_add(zip_file,full_path);
 #endif
 return f;
