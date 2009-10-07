@@ -50,6 +50,7 @@ raydium_ode_element[i].name[0]=0;
 raydium_ode_element[i].state=0;
 raydium_ode_element[i].object=-1;
 raydium_ode_element[i].mesh=-1;
+raydium_ode_element[i].mesh_scale=1;
 raydium_ode_element[i]._touched=0;
 raydium_ode_element[i]._movesfrom=-1;
 raydium_ode_element[i].isplayer=0;
@@ -2029,6 +2030,21 @@ void raydium_ode_element_rotate_direction_name(char *e, signed char Force0OrVel1
 raydium_ode_element_rotate_direction(raydium_ode_element_find(e),Force0OrVel1);
 }
 
+void raydium_ode_element_mesh_scale(int elem, float scale_factor)
+{
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: Cannot scale element's mesh: invalid index or name");
+    return;
+    }
+raydium_ode_element[elem].mesh_scale=scale_factor;
+}
+
+void raydium_ode_element_mesh_scale_name(char *e, float scale_factor)
+{
+raydium_ode_element_mesh_scale(raydium_ode_element_find(e),scale_factor);
+}
+
 void raydium_ode_element_data_set(int e, void *data)
 {
 if(!raydium_ode_element_isvalid(e))
@@ -3987,6 +4003,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             continue;
 
         raydium_camera_replace_go((dReal *)dGeomGetPosition(raydium_ode_element[i].geom), (dReal *)dGeomGetRotation(raydium_ode_element[i].geom));
+		glScalef(raydium_ode_element[i].mesh_scale,raydium_ode_element[i].mesh_scale,raydium_ode_element[i].mesh_scale);
         if(raydium_ode_element[i].mesh>=0)
             {
             if(raydium_shadow_rendering)

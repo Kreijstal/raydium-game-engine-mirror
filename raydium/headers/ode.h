@@ -1106,6 +1106,18 @@ __rayapi void raydium_ode_element_rotate_direction_name (char *e, signed char Fo
 Same as above, but using element's name.
 **/
 
+__rayapi void raydium_ode_element_mesh_scale(int elem, float scale_factor);
+/**
+Allows to rescale the mesh of element ##elem##. This only applies to the mesh,
+the physical properties are not modified (geometry size, mass, ...)
+Shadows are rescaled, too.
+**/
+
+__rayapi void raydium_ode_element_mesh_scale_name(char *e, float scale_factor);
+/**
+Same as above, but using element's name.
+**/
+
 __rayapi void raydium_ode_element_data_set (int e, void *data);
 /**
 You may want to link some data to any element. If so, use this function
