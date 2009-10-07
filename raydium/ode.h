@@ -200,7 +200,7 @@ typedef struct raydium_ode_Element
     signed char    state;
     int     object;
     int     mesh;
-	float	mesh_scale;
+    float   mesh_scale;
     signed char    _touched;    // touched during very last timestep
     signed char    _movesfrom;  // is leaving this object to "object" member
     signed char    _avoidedcol; // is any collision was avoided because of this move ?
