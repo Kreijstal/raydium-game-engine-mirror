@@ -127,7 +127,6 @@ void raydium_init_args_name_hack(int argc, char **argv, char *app_name)
 {
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
-char tmp[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_argc=argc;
 raydium_init_argv=malloc(argc*sizeof(char *));
@@ -137,40 +136,70 @@ for(i=0;i<argc;i++)
     raydium_init_argv[i]=malloc(strlen(argv[i])+1);
     strcpy(raydium_init_argv[i],argv[i]);
     }
+
 raydium_log("Raydium 3D Game Engine");
-if (raydium_init_cli_option("help",tmp))
+
+if (raydium_init_cli_option("help",NULL))
     {
-    raydium_log("**********************");
-    raydium_log("Command line switches:");
-    raydium_log("--autoexec name          php script run at engine init");
-    raydium_log("--autoexec2 name         php script run after engine init");
-    raydium_log("--compress               enable texture compression");
-    raydium_log("--consolefont file       set console font name");
-    raydium_log("--consoletexture file    set console background texture");
-    raydium_log("--create_package file    collect all mediafile in zip file");
-    raydium_log("--evdev name             alternate joystick forefeedback name (linux)");
-    raydium_log("--files                  list opened files when exiting");
-    raydium_log("--filter name            texture filter(none,bilinear,trilinear,aniso)");
-    raydium_log("--fullscreen             force fullscrenn render");
-    raydium_log("--help                   this page");
-    raydium_log("--history file           console history filename");
-    raydium_log("--home dir               set raydium home directory");
-    raydium_log("--joydev name            alternate joystick device name (linux)");
-    raydium_log("--logfile file           logfile name");
-    raydium_log("--max-aniso int          set anisotropic filter maximum level");
-    raydium_log("--name name              network player name");
-    raydium_log("--path dir               add dir to path search");
-    raydium_log("--ray_php dir            php script directory");
-    raydium_log("--regs                   dump php registrations when exiting");
-    raydium_log("--repositoy-disable      disable repository access");
-    raydium_log("--repository-force       force use of repository for media files");
-    raydium_log("--repository-refresh     refresh file from repository if needed");
-    raydium_log("--video-device name      input VideoDevice name (linux)");
-    raydium_log("--video-size hhxll       video size format ex:320x240");
-    raydium_log("--window                 force window rendering");
-    raydium_log("--window-fixed           window rendering not resizeable");
-    raydium_log("--write_path dir         writing directory");
-    raydium_log("\n check for application's specific command line switches");
+    fprintf(stdout,"%s\n","----------------------");
+    fprintf(stdout,"%s\n","Command line switches:");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--consolefont file       set console font name");
+    fprintf(stdout,"  %s\n","--consoletexture file    set console background texture");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--filter name            texture filter (none,bilinear,trilinear,aniso)");
+    fprintf(stdout,"  %s\n","--compress               enable texture compression");
+    fprintf(stdout,"  %s\n","--max-aniso int          set anisotropic filter maximum level");
+    fprintf(stdout,"  %s\n","--joydev name            define joystick device (Linux)");
+    fprintf(stdout,"  %s\n","--evdev name             define joystick forefeedback device (Linux)");
+    fprintf(stdout,"  %s\n","--help                   this page");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--name name              network player name");
+    fprintf(stdout,"  %s\n","--ode-rate int           ODE physics network refresh rate");
+
+    fprintf(stdout,"  %s\n","");
+
+    fprintf(stdout,"  %s\n","--repositoy-disable      disable R3S repositories access");
+    fprintf(stdout,"  %s\n","--repository-force       force downloading from R3S for every file");
+    fprintf(stdout,"  %s\n","--repository-refresh     check for newer files from R3S repositories");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--video-device name      input v4l device (Linux)");
+    fprintf(stdout,"  %s\n","--video-size wwxhh       video size format (ex: 320x240)");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--fullscreen             force fullscreen render");
+    fprintf(stdout,"  %s\n","--window                 force window rendering");
+    fprintf(stdout,"  %s\n","--window-fixed           fixed size window rendering (not resizeable)");
+    fprintf(stdout,"  %s\n","--xinerama-fullscreen    use all Xinerama screens for fullscreen (Linux)");
+    fprintf(stdout,"  %s\n","--xinerama-screen int    use a specific Xinerama screen (Linux)");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--autoexec file.php      run PHP script right after engine init");
+    fprintf(stdout,"  %s\n","--autoexec2 file.php     run PHP script before first frame");
+    fprintf(stdout,"  %s\n","--home dir               set raydium home directory");
+    fprintf(stdout,"  %s\n","--write-path dir         writing directory");
+    fprintf(stdout,"  %s\n","--path dir               add dir to path search");
+    fprintf(stdout,"  %s\n","--rayphp dir             php script directory");
+    fprintf(stdout,"  %s\n","--create-package file    create a zip package file with all media files");
+    fprintf(stdout,"  %s\n","--files                  list all opened files (at exit)");
+    fprintf(stdout,"  %s\n","--regs                   dump php registrations (at exit)");
+    fprintf(stdout,"  %s\n","--history file           console history filename");
+    fprintf(stdout,"  %s\n","--logfile file           generate a logfile");
+
+    fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"%s\n","Unknown switches will be ignored.");
+    fprintf(stdout,"%s\n","You may also check application specific command line switches.");
     exit(0);
     }
 
