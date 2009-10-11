@@ -103,6 +103,10 @@ PHP_v_v(raydium_shadow_disable);
 PHP_v_v(raydium_hdr_enable);
 PHP_v_v(raydium_hdr_disable);
 
+// lensflare.c
+PHP_v_v(raydium_lensflare_enable);
+PHP_v_v(raydium_lensflare_disable);
+
 // parser.c
 PHP_i_ss(raydium_parser_db_set);
 PHP_i_sss(raydium_parser_db_get);
@@ -308,6 +312,10 @@ raydium_register_function(C2PHP(raydium_shadow_disable),"raydium_shadow_disable"
 // hdr.c
 raydium_register_function(C2PHP(raydium_hdr_enable),"raydium_hdr_enable");
 raydium_register_function(C2PHP(raydium_hdr_disable),"raydium_hdr_disable");
+
+// lensflare.c
+raydium_register_function(C2PHP(raydium_lensflare_enable),"raydium_lensflare_enable");
+raydium_register_function(C2PHP(raydium_lensflare_disable),"raydium_lensflare_disable");
 
 // gui.c
 raydium_register_function(C2PHP(raydium_gui_theme_load),"raydium_gui_theme_load");

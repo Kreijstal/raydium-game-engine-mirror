@@ -55,6 +55,7 @@ extern "C" {
 #include "headers/vertex.h"
 #include "headers/osd.h"
 #include "headers/hdr.h"
+#include "headers/lensflare.h"
 #include "headers/shader.h"
 #include "headers/register.h"
 #ifdef PHP_SUPPORT

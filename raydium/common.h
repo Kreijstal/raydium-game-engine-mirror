@@ -315,6 +315,10 @@
 #define RAYDIUM_HDR_PASS                        8
 #define RAYDIUM_HDR_EYE_SPEED_DEFAULT           0.1f
 
+#define RAYDIUM_MAX_LENSFLARES                  32
+#define RAYDIUM_LENSFLARE_MAX_TEXTURES          6
+#define RAYDIUM_LENSFLARE_MAX_FX                8
+
 #define RAYDIUM_FOG_MODE_LINEAR                 GL_LINEAR
 #define RAYDIUM_FOG_MODE_EXP                    GL_EXP
 #define RAYDIUM_FOG_MODE_EXP2                   GL_EXP2
@@ -738,6 +742,17 @@ __global unsigned char *raydium_hdr_mem;
 __global unsigned char *raydium_hdr_mem_hdr;
 __global unsigned char *raydium_hdr_mem_hdr2;
 __global unsigned char *raydium_hdr_mem_hdr3;
+
+__global signed char raydium_lensflare_enabled_tag;
+__global int         raydium_lensflare_index;
+__global char        raydium_lensflare_name[RAYDIUM_MAX_LENSFLARES][RAYDIUM_MAX_NAME_LEN];
+__global signed char raydium_lensflare_internal_state[RAYDIUM_MAX_LENSFLARES];
+__global int         raydium_lensflare_texture_id[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_TEXTURES];
+__global float       raydium_lensflare_position[RAYDIUM_MAX_LENSFLARES][3];
+__global int         raydium_lensflare_fx_internal_state[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX];
+__global float       raydium_lensflare_fx_size[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX];
+__global float       raydium_lensflare_fx_color[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX][4];
+__global float       raydium_lensflare_fx_velocity[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX];
 
 __global int    raydium_register_variable_index;
 __global int    raydium_register_function_index;

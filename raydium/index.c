@@ -61,6 +61,7 @@ extern "C" {
 #include "vertex.c"
 #include "osd.c"
 #include "hdr.c"
+#include "lensflare.c"
 #include "shader.c"
 #include "register.c"
 #include "file.c"

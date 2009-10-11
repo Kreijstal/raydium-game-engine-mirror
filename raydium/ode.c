@@ -3886,6 +3886,7 @@ void raydium_ode_draw_all_post(void)
 raydium_hdr_map(); // create HDR map
 raydium_shadow_map_render();
 raydium_particle_draw_all();
+raydium_lensflare_draw_all();
 }
 
 void raydium_ode_draw_all(signed char names)

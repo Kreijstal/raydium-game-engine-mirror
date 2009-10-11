@@ -25,6 +25,7 @@ void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
 void raydium_hdr_init(void);
 void raydium_hdr_texture_reset(void);
+void raydium_lensflare_init(void);
 void raydium_shader_init(void);
 void raydium_web_init(void);
 
@@ -101,6 +102,7 @@ raydium_live_init();
 raydium_video_init();
 raydium_shadow_init();
 raydium_hdr_init();
+raydium_lensflare_init();
 raydium_shader_init();
 raydium_web_init();
 
@@ -499,6 +501,7 @@ int raydium_init_load(char *filename)
                 raydium_path_ext("./data/meshes/","tri");
                 raydium_path_ext("./data/themes/","gui");
                 raydium_path_ext("./data/particles/","prt");
+                raydium_path_ext("./data/lensflares/","lf");
                 raydium_path_ext("./data/cams/","cam");
                 raydium_path_ext("./data/sprites/","sprite");
                 raydium_path_ext("./data/music/","wav");

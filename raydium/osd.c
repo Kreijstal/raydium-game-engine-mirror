@@ -115,6 +115,42 @@ void raydium_osd_draw_name(char *tex ,GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 raydium_osd_draw(raydium_texture_find_by_name(tex),x1,y1,x2,y2);
 }
 
+void raydium_osd_draw_quad(int tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat angle)
+{
+float tx,ty;
+
+raydium_osd_start();
+
+tx=x1+((x2-x1)/2.0f);
+ty=y1+((y2-y1)/2.0f);
+
+raydium_texture_current_set(tex);
+raydium_rendering_internal_prepare_texture_render(tex);
+glColor4fv(raydium_osd_color);
+
+glTranslatef(tx,ty,0);
+glRotatef(angle,0,0,1);
+
+glBegin(GL_QUADS);
+glTexCoord2f(0,0);glVertex3f(tx-x1,ty-y1,0);
+glTexCoord2f(1,0);glVertex3f(tx-x2,ty-y1,0);
+glTexCoord2f(1,1);glVertex3f(tx-x2,ty-y2,0);
+glTexCoord2f(0,1);glVertex3f(tx-x1,ty-y2,0);
+glEnd();
+
+glRotatef(-angle,0,0,1);
+glTranslatef(-tx,-ty,0);
+
+raydium_rendering_internal_restore_render_state();
+
+raydium_osd_stop();
+}
+
+void raydium_osd_draw_quad_name(char *tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat angle)
+{
+raydium_osd_draw_quad(raydium_texture_find_by_name(tex),x1,y1,x2,y2,angle);
+}
+
 // need to be secured
 void raydium_osd_printf(GLfloat x, GLfloat y, GLfloat size, GLfloat spacer,char *texture, char *format, ...)
 {

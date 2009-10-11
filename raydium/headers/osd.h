@@ -86,6 +86,17 @@ __rayapi void raydium_osd_draw_name (char *tex, GLfloat x1, GLfloat y1, GLfloat 
 Same as above, but using texture filename.
 **/
 
+__rayapi void raydium_osd_draw_quad(int tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat angle);
+/**
+Will draw ##tex## texture using (##x1##,##y1##) and (##x2##,##y2##) points
+with ##angle## rotation.
+**/
+
+__rayapi void raydium_osd_draw_quad_name(char *tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat angle);
+/**
+Same as above, but using texture filename.
+**/
+
 __rayapi void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
 This function is an OpenGL equivalent to the standard "printf" C function.
