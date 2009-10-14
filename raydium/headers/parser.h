@@ -59,9 +59,19 @@ Return true (##i##+1) if ##str## was cut, where ##i## is the separator position.
 Return false (##0##) otherwise (and then ##part1## is a copy of ##str##).
 **/
 
-__rayapi void raydium_parser_replace(char *str, char what, char with);
+__rayapi int raydium_parser_replace(char *str, char what, char with);
 /**
-Will replace all occurence of ##what## with ##with##.
+Will replace all occurences of character ##what## with ##with##.
+Returns the number of replaced characters.
+Warning, the string is actually modified: don't apply this on static strings,
+consts, function arguments that shouldn't be modified, ...
+**/
+
+__rayapi int raydium_parser_remove(char *str, char what);
+/**
+Remove all occurences of character ##what## in the ##str# string.
+Returns the number of removed characters.
+String is modified, see the warning above.
 **/
 
 __rayapi int raydium_parser_read(char *var, char *val_s, GLfloat *val_f, int *size, FILE *fp);

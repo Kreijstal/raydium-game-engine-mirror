@@ -80,18 +80,40 @@ raydium_parser_trim(part2);
 return i+1;
 }
 
-void raydium_parser_replace(char *str,char what, char with)
+int raydium_parser_replace(char *str, char what, char with)
 {
-int len,i;
+int len,i,total;
 
 len=strlen(str);
+total=0;
 
 for(i=0;i<len;i++)
     if(str[i]==what)
+        {
         str[i]=with;
+        total++;
+        }
 
+return total;
 }
 
+int raydium_parser_remove(char *str, char what)
+{
+int len,i,offset;
+
+len=strlen(str);
+offset=0;
+
+for(i=0;i<len;i++)
+    {
+    while(str[i+offset]==what)
+        offset++;
+
+    str[i]=str[i+offset];
+    }
+
+return offset;
+}
 
 int raydium_parser_read(char *var, char *val_s, GLfloat *val_f, int *size, FILE *fp)
 {
