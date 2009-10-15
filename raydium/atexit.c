@@ -9,18 +9,24 @@
 #include "index.h"
 #else
 #include "headers/atexit.h"
-#endif 
+#endif
 
 #include "atexit.h"
 
 int raydium_atexit(void (*func)(void))
 {
+int i;
 if(raydium_atexit_index==RAYDIUM_MAX_ATEXIT_FUNCTIONS)
     {
     raydium_log("atexit: no more free handlers (%i max)",RAYDIUM_MAX_ATEXIT_FUNCTIONS);
     return -1;
     }
-
+for (i=0;i<RAYDIUM_MAX_ATEXIT_FUNCTIONS;i++)
+    if (raydium_atexit_functions[i]==func)
+        {
+            raydium_log("atexit: attempt to register twice the same function.");
+            return -1;
+        }
 raydium_atexit_functions[raydium_atexit_index++]=func;
 return 0;
 }
