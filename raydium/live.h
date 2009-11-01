@@ -21,7 +21,7 @@
 #endif
 #else
 #include <vfw.h>
-#include "rayvfw.h" // Extra define for vfw missing in standart ming headers
+//#include "rayvfw.h" // Extra define for vfw missing in standart ming headers
 #endif
 
 

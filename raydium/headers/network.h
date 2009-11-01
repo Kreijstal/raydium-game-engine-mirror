@@ -306,8 +306,8 @@ Nothing interesting unless you're creating a console server (using the
 inits by yourself...
 example :
 %%(c)
-#define RAYDIUM_NETWORK_ONLY
-#include "raydium/index.c"
+.#define RAYDIUM_NETWORK_ONLY
+.#include "raydium/index.c"
 
 ...
 
