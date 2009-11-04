@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/register.h"
-#endif 
+#endif
 
 // script registering: varibles and functions
 
@@ -28,7 +28,7 @@ signed char raydium_register_name_isvalid(char *name)
 {
 int i;
 for(i=0;i<(int)strlen(name);i++)
-    if(! ((name[i]>='a' && name[i]<='z') || 
+    if(! ((name[i]>='a' && name[i]<='z') ||
           (name[i]>='A' && name[i]<='Z') ||
            name[i]=='_') )
            return 0; // this char is not valid
@@ -139,8 +139,18 @@ return i;
 
 void raydium_register_variable_unregister_last(void)
 {
+int type;
+
 if(raydium_register_variable_index)
+    {
     raydium_register_variable_index--;
+
+    // registered constants should be freed.
+    type=raydium_register_variable_type[raydium_register_variable_index];
+    if(type==RAYDIUM_REGISTER_ICONST ||
+       type==RAYDIUM_REGISTER_FCONST )
+        free(raydium_register_variable_addr[raydium_register_variable_index]);
+    }
 else
     raydium_log("register: cannot unregister last variable: stack empty");
 }
