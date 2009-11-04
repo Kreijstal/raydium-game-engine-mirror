@@ -520,10 +520,12 @@ sky=\"box\";\n\
 
         //light
         if(flag_lighting)
+        {
             if(tmp_lighting)
                 raydium_light_enable();
             else
                 raydium_light_disable();
+	}
 
         if(flag_light && flag_lighting && tmp_lighting)
             {
