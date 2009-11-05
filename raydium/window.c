@@ -31,7 +31,7 @@ tx=320;
 ty=480;
 #endif
 char mode[RAYDIUM_MAX_NAME_LEN];
-#ifndef MYGLUT
+#ifndef MYGLUT_H
 GLuint gtx,gty;
 #endif
 
@@ -44,7 +44,7 @@ if(raydium_init_cli_option("fullscreen",NULL) && rendering!=RAYDIUM_RENDERING_NO
     rendering=RAYDIUM_RENDERING_FULLSCREEN;
 
 raydium_window_mode=rendering;
-if(rendering==RAYDIUM_RENDERING_NONE) 
+if(rendering==RAYDIUM_RENDERING_NONE)
     {
     raydium_init_engine();
     return;
@@ -53,7 +53,7 @@ if(rendering==RAYDIUM_RENDERING_NONE)
 sprintf(mode,"%ix%i:32",tx,ty);
 raydium_log("Requesting %s mode",mode);
 
-#ifndef MYGLUT
+#ifndef MYGLUT_H
 #ifndef WIN32
 // prefered under Linux
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -66,13 +66,13 @@ glutInitDisplayString("rgb>=4 double depth>=16");
 switch(rendering)
     {
     case RAYDIUM_RENDERING_FULLSCREEN:
-    
+
         glutGameModeString(mode);
         if(!glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
             raydium_log("cannot fullscreen to %s mode",mode);
         glutEnterGameMode(); // GLUT will use a "fake" Fullscreen if real one's not possible
-        break;    
- 
+        break;
+
     case RAYDIUM_RENDERING_WINDOW:
     case RAYDIUM_RENDERING_WINDOW_FIXED: // not supported yet with GLUT
         glutInitWindowSize(tx,ty);
@@ -92,7 +92,7 @@ gty=glutGet(GLUT_WINDOW_HEIGHT);
 if(gtx==0 && gty==0)
     {
     glutInitWindowSize(tx,ty);
-    glutCreateWindow(name);    
+    glutCreateWindow(name);
     gtx=glutGet(GLUT_WINDOW_WIDTH);
     gty=glutGet(GLUT_WINDOW_HEIGHT);
     }
@@ -108,7 +108,7 @@ myglutCreateWindow(tx,ty,rendering,name);
 raydium_atexit(raydium_window_close);
 raydium_log("using %s, from %s (version %s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR),glGetString(GL_VERSION));
 raydium_init_engine();
-#ifndef MYGLUT
+#ifndef MYGLUT_H
 raydium_window_tx=tx;
 raydium_window_ty=ty;
 #else

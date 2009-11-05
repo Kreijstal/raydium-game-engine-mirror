@@ -16,7 +16,7 @@
 
 #ifdef DEBUG_PROFILE
 
-unsigned long raydium_profile_timer;
+__global unsigned long raydium_profile_timer;
 
 void raydium_profile_start(void)
 {

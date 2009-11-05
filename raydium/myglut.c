@@ -14,12 +14,11 @@
 #include "headers/myglut.h"
 #endif
 
+#include "myglut.h"
+
 #ifndef raydium_log
 void raydium_log(char *format, ...);
 #endif
-
-int _glutWindowSize[2];
-signed char _glutMouseVisible;
 
 #ifdef WIN32
 #include "myglut-win32.c"
@@ -54,7 +53,7 @@ switch(rendering)
         break;
     case RAYDIUM_RENDERING_FULLSCREEN:
         pwInit(0,0,-1,-1,0,name,0,0,rendering);
-        break;    
+        break;
     }
 }
 
@@ -78,8 +77,8 @@ myglutGetEvents();
 //glutMainLoop
 void glutMainLoop(void)
 {
-do{ 
- glutManualLoop(); 
+do{
+ glutManualLoop();
  }while(1);
 }
 
