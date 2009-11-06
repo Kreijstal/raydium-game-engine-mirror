@@ -16,8 +16,6 @@
 
 #ifdef DEBUG_PROFILE
 
-__global unsigned long raydium_profile_timer;
-
 void raydium_profile_start(void)
 {
 raydium_profile_timer=raydium_timecall_clock();

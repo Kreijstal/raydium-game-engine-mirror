@@ -451,8 +451,8 @@ __global GLuint raydium_object_anim_end[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_
 #ifndef SWIG
 __global char   raydium_object_anim_names[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS][RAYDIUM_MAX_NAME_LEN]; // anims name array
 #endif
-__global GLuint raydium_object_anim_default_anim[RAYDIUM_MAX_OBJECTS];
-__global GLuint raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // current "rendering" instance
+__global GLuint  raydium_object_anim_default_anim[RAYDIUM_MAX_OBJECTS];
+__global GLuint  raydium_object_anim_instance_current[RAYDIUM_MAX_OBJECTS]; // current "rendering" instance
 __global GLfloat raydium_object_anim_automatic_factor[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS]; // frame automatic factor
 __global GLfloat raydium_object_anim_time_factor;
 // states
@@ -498,12 +498,12 @@ __global GLfloat raydium_internal_vertex_next_nx;
 __global GLfloat raydium_internal_vertex_next_ny;
 __global GLfloat raydium_internal_vertex_next_nz;
 
-__global signed char     raydium_frame_first_camera_pass;
+__global signed char    raydium_frame_first_camera_pass;
 __global float   raydium_frame_time;
 __global GLfloat raydium_camera_x;
 __global GLfloat raydium_camera_y; // read only, undocumented.
 __global GLfloat raydium_camera_z;
-__global signed char     raydium_camera_pushed;
+__global signed char    raydium_camera_pushed;
 __global GLfloat  raydium_camera_cursor_place[3];
 __global GLfloat  raydium_camera_look_at_roll;
 __global GLfloat  raydium_camera_rumble_amplitude;
@@ -547,18 +547,17 @@ __global int raydium_viewport_use;
 
 __global int    raydium_network_socket;
 __global int    raydium_network_uid;
-__global signed char    raydium_network_mode;
-__global signed char    raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
+__global signed char raydium_network_mode;
+__global signed char raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_start;
-__global struct sockaddr
-        raydium_network_client_addr[RAYDIUM_NETWORK_MAX_CLIENTS];
+__global struct sockaddr raydium_network_client_addr[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_keepalive[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global char   raydium_network_name_local[RAYDIUM_MAX_NAME_LEN];
 __global char   raydium_network_name[RAYDIUM_NETWORK_MAX_CLIENTS][RAYDIUM_MAX_NAME_LEN];
 __global char   raydium_network_connected_server[RAYDIUM_MAX_NAME_LEN];
 __global int    raydium_network_netcall_type[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global void * raydium_network_netcall_func[RAYDIUM_NETWORK_MAX_NETCALLS];
-__global signed char   raydium_network_netcall_tcp[RAYDIUM_NETWORK_MAX_NETCALLS];
+__global signed char raydium_network_netcall_tcp[RAYDIUM_NETWORK_MAX_NETCALLS];
 __global void * raydium_network_on_connect;
 __global void * raydium_network_on_disconnect;
 __global int    raydium_network_stat_rx;
@@ -588,7 +587,7 @@ __global int            raydium_network_tcpid_index;
 
 __global unsigned long raydium_netwok_queue_ack_delay_client;
 __global unsigned long raydium_netwok_queue_ack_delay_server[RAYDIUM_NETWORK_MAX_CLIENTS];
-__global signed char           raydium_network_write_notcp;
+__global signed char   raydium_network_write_notcp;
 
 typedef struct raydium_network_Propag
     {
@@ -624,32 +623,6 @@ __global char raydium_network_beacon[RAYDIUM_NETWORK_PACKET_SIZE];
 __global int  raydium_network_beacon_info_offset;
 __global raydium_network_BeaconSearch raydium_network_beacon_search;
 
-//__global float  raydium_spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
-__global int    raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
-__global int    raydium_current_sprite;
-__global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
-__global float  raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
-__global int    raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
-#ifndef SWIG
-__global float  raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
-#endif
-__global float  raydium_sprite_time[RAYDIUM_MAX_SPRITES];
-__global float  raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_total_frames[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_group_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
-__global int    raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
-__global float  raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
-__global int    raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_collision_element_id[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
-__global int    raydium_sprite_type[RAYDIUM_MAX_SPRITES];
-__global int    raydium_sprite_status[RAYDIUM_MAX_SPRITES];
-__global char   raydium_sprite_name[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_NAME_LEN];
-__global char   raydium_sprite_stopped[RAYDIUM_MAX_SPRITES];
-
 #ifdef linux
 #define RAYDIUM_NETWORK_BROADCAST_INTERFACE_MAX 8
 __global int raydium_network_broadcast_interface_index;
@@ -677,6 +650,34 @@ typedef struct raydium_sound_music_Info {
 } raydium_sound_music_Info;
 
 __global raydium_sound_music_Info raydium_sound_music_info;
+
+
+//__global float  raydium_spritecoord[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][8];
+__global int    raydium_sprite_frames[RAYDIUM_MAX_SPRITES];
+__global int    raydium_current_sprite;
+__global float  raydium_sprite_size[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_used[RAYDIUM_MAX_SPRITES];
+__global float  raydium_sprite_pos[RAYDIUM_MAX_SPRITES][3];
+__global int    raydium_sprite_textureid[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+#ifndef SWIG
+__global float  raydium_sprite_coords[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE][4];
+#endif
+__global float  raydium_sprite_time[RAYDIUM_MAX_SPRITES];
+__global float  raydium_sprite_timer[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_current_frame[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_total_frames[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_FRAMES_PER_SPRITE];
+__global int    raydium_sprite_group_current[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_start_frame[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS];
+__global float  raydium_sprite_collision_box[RAYDIUM_MAX_SPRITES][3];
+__global int    raydium_sprite_collision_box_id[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_collision_element_id[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_group_jump[RAYDIUM_MAX_SPRITES][RAYDIUM_SPRITE_MAX_GROUPS]; //-2=no jump, -1=stop, number=group to jump
+__global int    raydium_sprite_type[RAYDIUM_MAX_SPRITES];
+__global int    raydium_sprite_status[RAYDIUM_MAX_SPRITES];
+__global char   raydium_sprite_name[RAYDIUM_MAX_SPRITES][RAYDIUM_MAX_NAME_LEN];
+__global char   raydium_sprite_stopped[RAYDIUM_MAX_SPRITES];
+
 
 __global GLfloat raydium_osd_logo_angle;
 __global GLuint  raydium_osd_cursor_texture;
@@ -771,9 +772,10 @@ __global ZFE raydium_register_function_list[RAYDIUM_MAX_REG_FUNCTION];
 __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 
 __global FILE *raydium_log_file;
-__global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
-__global int raydium_file_log_fopen_index;
+__global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
+__global int   raydium_file_log_fopen_index;
 
+__global unsigned long raydium_profile_timer;
 
 #endif
 // EOF
