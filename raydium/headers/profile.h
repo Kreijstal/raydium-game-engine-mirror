@@ -14,7 +14,6 @@ For anything else than a quick time measure, use real profiling tools.
 Note: Use only one "profiler" at a time.
 **/
 
-__rayapi unsigned long raydium_profile_timer;
 __rayapi void raydium_profile_start(void);
 /**
 Starts measure.
