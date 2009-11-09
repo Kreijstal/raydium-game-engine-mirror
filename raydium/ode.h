@@ -24,6 +24,7 @@
 #define RAYDIUM_ODE_MAX_MOTORS                  64
 #define RAYDIUM_ODE_MAX_EXPLOSIONS              32
 #define RAYDIUM_ODE_MAX_RAYS                    4       // per element ...
+#define RAYDIUM_ODE_MAX_LENSFLARE               6       // per element ...
 #define RAYDIUM_ODE_MOTOR_MAX_JOINTS            10
 #define RAYDIUM_ODE_MOTOR_MAX_GEARS             10
 #define RAYDIUM_ODE_ELEMENT_MAX_FIXING          10
@@ -225,6 +226,8 @@ typedef struct raydium_ode_Element
     int     ttl; // time to live, -1 for infinite (default)
     int     particle;
     dReal   particle_offset[3];
+    int     lensflare[RAYDIUM_ODE_MAX_LENSFLARE];
+    dReal   lensflare_offset[RAYDIUM_ODE_MAX_LENSFLARE][3];
     unsigned long net_last_time;
     dReal         net_last_pos1[3];
     dReal         net_last_pos2[3];

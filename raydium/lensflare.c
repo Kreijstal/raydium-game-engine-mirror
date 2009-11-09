@@ -5,6 +5,14 @@
     See "license.txt" file.
 */
 
+// TOFIX:
+
+// 1 - internal load return should be "signed char" (state), not "int" (id).
+// Perhaps some other functions should be updated the same way, didn't check yet.
+
+// 2 - slot management is broken (shouldn't use an index but a find-free-slot
+// system). For instance raydium_lensflare_index is never decremented.
+
 #ifndef DONT_INCLUDE_HEADERS
 #include "index.h"
 #else

@@ -74,6 +74,11 @@ raydium_ode_element[i].OnDelete=NULL;
 raydium_ode_element[i].ttl=-1; // infinite
 raydium_ode_element[i].particle=-1;
 memset(raydium_ode_element[i].particle_offset,0,sizeof(dReal)*3);
+for(j=0;j<RAYDIUM_ODE_MAX_LENSFLARE;j++)
+    {
+    raydium_ode_element[i].lensflare[j]=-1;
+    memset(raydium_ode_element[i].lensflare_offset[j],0,sizeof(dReal)*3);
+    }
 raydium_ode_element[i].ground_texture=0;
 memset(raydium_ode_element[i].net_last_pos1,0,sizeof(dReal)*3);
 memset(raydium_ode_element[i].net_last_pos2,0,sizeof(dReal)*3);
@@ -3453,9 +3458,12 @@ for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
        raydium_ode_motor[i].rocket_element==e)
         raydium_ode_motor_delete(i);
 
-
 if(raydium_ode_element[e].particle>=0)
     raydium_particle_generator_delete(raydium_ode_element[e].particle);
+
+for(i=0;i<RAYDIUM_ODE_MAX_LENSFLARE;i++)
+    if(raydium_ode_element[e].lensflare[i]>=0)
+        raydium_lensflare_reset(raydium_ode_element[e].lensflare[i]);
 
 raydium_ode_init_element(e);
 return 1;
@@ -4028,6 +4036,22 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 
             raydium_particle_generator_move(raydium_ode_element[i].particle,res);
             }
+
+        if(names!=RAYDIUM_ODE_DRAW_SHADOWERS)
+            for(j=0;j<RAYDIUM_ODE_MAX_LENSFLARE;j++)
+                if(raydium_ode_element[i].lensflare[j]>=0)
+                    {
+                    dReal in[3];
+                    dVector3 res;
+
+                    in[0]=raydium_ode_element[i].lensflare_offset[j][0];
+                    in[1]=raydium_ode_element[i].lensflare_offset[j][1];
+                    in[2]=raydium_ode_element[i].lensflare_offset[j][2];
+
+                    raydium_ode_element_rel2world(i,in,res);
+
+                    raydium_lensflare_move(raydium_ode_element[i].lensflare[j],res);
+                    }
 
         for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
           if(raydium_ode_element[i].fixed_elements[j])
@@ -4851,6 +4875,46 @@ raydium_particle_generator_move(p,pos);
 void raydium_ode_element_particle_point_name(char *elem, char *filename)
 {
 raydium_ode_element_particle_point(raydium_ode_element_find(elem),filename);
+}
+
+int raydium_ode_element_lensflare_offset(int elem, char *flare_name, char *filename, dReal *offset)
+{
+int i;
+int id;
+
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: Cannot attach lensflare: invalid element index or name");
+    return -1;
+    }
+
+for(i=0;i<RAYDIUM_ODE_MAX_LENSFLARE;i++)
+    if(raydium_ode_element[elem].lensflare[i]<0)
+        {
+        id=raydium_lensflare_create(flare_name,filename);
+        if(id==-1)
+            return -1;
+        raydium_ode_element[elem].lensflare[i]=id;
+        memcpy(raydium_ode_element[elem].lensflare_offset[i],offset,sizeof(dReal)*3);
+        return id;
+        }
+
+raydium_log("ODE: Error: Cannot attach lensflare: no more free lensflare slot for this element (max: %i)",RAYDIUM_ODE_MAX_LENSFLARE);
+return -1;
+}
+
+int raydium_ode_element_lensflare_offset_name(char *elem, char *flare_name, char *filename, dReal *offset)
+{
+return raydium_ode_element_lensflare_offset(raydium_ode_element_find(elem),flare_name,filename,offset);
+}
+
+int raydium_ode_element_lensflare_offset_name_3f(char *elem, char *flare_name, char *filename, dReal offx, dReal offy, dReal offz)
+{
+dReal off[3];
+off[0]=offx;
+off[1]=offy;
+off[2]=offz;
+return raydium_ode_element_lensflare_offset_name(elem,flare_name,filename,off);
 }
 
 // smooth camera related functions

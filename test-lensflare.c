@@ -132,14 +132,17 @@ if(raydium_key_last==GLUT_KEY_F5)
     raydium_ode_object_box_add("fiesta",obj,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STATIC,0,"fiesta.tri");
     raydium_ode_object_move_3f(obj,0,0,-1.05);
 
-    raydium_lensflare_create("headlight_left","lamp.lf");
+    /*raydium_lensflare_create("headlight_left","lamp.lf");
     raydium_lensflare_create("headlight_right","lamp.lf");
 
     lf1=raydium_lensflare_find("headlight_left");
     lf2=raydium_lensflare_find("headlight_right");
 
     raydium_lensflare_move_3f(lf1,0.55,-0.15,-1.1);
-    raydium_lensflare_move_3f(lf2,0.55,0.15,-1.1);
+    raydium_lensflare_move_3f(lf2,0.55,0.15,-1.1);*/
+
+    lf1=raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_left","lamp.lf",0.55,-0.15,-0.05);
+    lf2=raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_right","lamp.lf",0.55,0.15,-0.05);
     }
 
 // Starry sky

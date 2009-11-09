@@ -1739,7 +1739,7 @@ __rayapi void raydium_ode_draw_all_post(void);
 /**
 This function is called automatically when you render the frame with RayODE
 using ##raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL)##.
-Currently, it will generate and apply HDR map and render particles.
+Currently, it will generate and apply HDR map, render particles and lensflares.
 **/
 
 __rayapi void raydium_ode_draw_all(signed char names);
@@ -1818,6 +1818,24 @@ void raydium_ode_internal_particle_genetator_deleted_callback(int gen);
 /**
 Internal callback.
 **/
+
+__rayapi int raydium_ode_element_lensflare_offset(int elem, char *flare_name, char *filename, dReal *offset);
+/**
+This function will attach a lensflare to element ##elem## at desired ##offset##.
+Even if this function will load the lensflare by itslef, you should have a look
+to ##raydium_lensflare_create()## for more informations about lensflares.
+**/
+
+__rayapi int raydium_ode_element_lensflare_offset_name(char *elem, char *flare_name, char *filename, dReal *offset);
+/**
+Same as above, using element's name.
+**/
+
+__rayapi int raydium_ode_element_lensflare_offset_name_3f(char *elem, char *flare_name, char *filename, dReal offx, dReal offy, dReal offz);
+/**
+Same as above, but using 3 dReal values for offset.
+**/
+
 
 __rayapi void raydium_camera_smooth_path_to_element (char *path, int element, GLfloat path_step, GLfloat smooth_step);
 /**
