@@ -4017,38 +4017,16 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 
         if(raydium_ode_element[i].particle>=0 && names!=RAYDIUM_ODE_DRAW_SHADOWERS)
             {
+            dReal in[3];
             dVector3 res;
 
-            // if element is static, fake a temporary body
-            if(raydium_ode_element[i].state==RAYDIUM_ODE_STATIC)
-            {
-             dBodyID body;
-             dReal *pos;
-             dQuaternion rot;
-             body=dBodyCreate(raydium_ode_world);
-             pos=raydium_ode_element_pos_get(i);
-             raydium_ode_element_rotq_get(i,rot);
-             dBodySetPosition(body,pos[0],pos[1],pos[2]);
-             dBodySetQuaternion(body,rot);
-             dBodyGetRelPointPos(body,
-                                raydium_ode_element[i].particle_offset[0],
-                                raydium_ode_element[i].particle_offset[1],
-                                raydium_ode_element[i].particle_offset[2],
-                                res);
-             dBodyDestroy(body);
-            }
-            else
-            if(raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD)
-            {
-             dBodyGetRelPointPos(raydium_ode_element[i].body,
-                                raydium_ode_element[i].particle_offset[0],
-                                raydium_ode_element[i].particle_offset[1],
-                                raydium_ode_element[i].particle_offset[2],
-                                res);
-            }
+            in[0]=raydium_ode_element[i].particle_offset[0];
+            in[1]=raydium_ode_element[i].particle_offset[1];
+            in[2]=raydium_ode_element[i].particle_offset[2];
 
-            raydium_particle_generator_move(
-                raydium_ode_element[i].particle,res);
+            raydium_ode_element_rel2world(i,in,res);
+
+            raydium_particle_generator_move(raydium_ode_element[i].particle,res);
             }
 
         for(j=0;j<RAYDIUM_ODE_ELEMENT_MAX_FIXING;j++)
