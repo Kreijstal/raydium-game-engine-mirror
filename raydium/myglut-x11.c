@@ -658,11 +658,11 @@ void myglutGetEvents (void)
             }
 
             // special down
-            if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !raydium_key[result])
+            if(special && updown==GLUT_DOWN && glutSpecialFuncCB && !raydium_key[result%RAYDIUM_KEYBOARD_SIZE])
                 glutSpecialFuncCB(result,event.xkey.x, event.xkey.y);
 
             // special up
-            if(special && updown==GLUT_UP && glutSpecialUpFuncCB && raydium_key[result])
+            if(special && updown==GLUT_UP && glutSpecialUpFuncCB && raydium_key[result%RAYDIUM_KEYBOARD_SIZE])
                 glutSpecialUpFuncCB(result,event.xkey.x, event.xkey.y);
 
             // normal

@@ -24,7 +24,7 @@ void raydium_console_history_next(void);
 void raydium_key_normal_callback(GLuint key, int x, int y)
 {
 int i;
-key%=65536;
+key%=RAYDIUM_KEYBOARD_SIZE;
 
 // key below esc :
 // 178 (ex: fr), 176 (ex: us), 186 (ex: spa), 220 (ex: de), 167 (ex: swe/fin)
@@ -40,9 +40,9 @@ if(key==96) raydium_capture_frame_auto();
 if(key==222) raydium_capture_frame_auto();
 #endif
 
-if(raydium_console_pos && ( (key>=32 && key<127) 
-                       || key==8 
-                       || key==9 
+if(raydium_console_pos && ( (key>=32 && key<127)
+                       || key==8
+                       || key==9
                        || key==13) )
  {
  i=strlen(raydium_console_get_string);
@@ -63,10 +63,10 @@ if(raydium_console_pos && ( (key>=32 && key<127)
   raydium_console_exec_last_command();
   return;
   }
- 
+
  if(key==8) // delete last char
-    { 
-    if(i>0) i--; 
+    {
+    if(i>0) i--;
     key=0;
     }
 
@@ -79,7 +79,7 @@ if(raydium_console_pos && ( (key>=32 && key<127)
  if(i<RAYDIUM_MAX_NAME_LEN-3)
   {
   raydium_console_get_string[i]=key;
-  raydium_console_get_string[i+1]=0; 
+  raydium_console_get_string[i+1]=0;
   raydium_console_cursor_blink=1;
   }
  }
@@ -107,7 +107,7 @@ if(raydium_console_pos && key==GLUT_KEY_DOWN)
     return;
     }
 
-key%=65536;
+key%=RAYDIUM_KEYBOARD_SIZE;
 raydium_key[key]=2;
 raydium_key_last=key;
 if(raydium_key_trace)
@@ -116,7 +116,7 @@ if(raydium_key_trace)
 
 void raydium_key_special_up_callback(GLuint key, int x, int y)
 {
-key%=65536;
+key%=RAYDIUM_KEYBOARD_SIZE;
 raydium_key[key]=0;
 if(raydium_key_trace)
     raydium_log("special key %i up",key);
