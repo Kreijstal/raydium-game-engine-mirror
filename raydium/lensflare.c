@@ -5,14 +5,6 @@
     See "license.txt" file.
 */
 
-// TOFIX:
-
-// 1 - internal load return should be "signed char" (state), not "int" (id).
-// Perhaps some other functions should be updated the same way, didn't check yet.
-
-// 2 - slot management is broken (shouldn't use an index but a find-free-slot
-// system). For instance raydium_lensflare_index is never decremented.
-
 #ifndef DONT_INCLUDE_HEADERS
 #include "index.h"
 #else
@@ -41,7 +33,7 @@ void raydium_lensflare_disable(void)
 raydium_lensflare_enabled_tag=0;
 }
 
-int raydium_lensflare_isvalid(int lf)
+signed char raydium_lensflare_isvalid(int lf)
 {
 if(lf<0||lf>RAYDIUM_MAX_LENSFLARES-1)
     return(0);
@@ -57,6 +49,8 @@ float pos[3]={0,0,0};
 if(!raydium_lensflare_isvalid(lf))return;
 
 raydium_lensflare_off(lf);
+raydium_lensflare_internal_created[lf]=0;
+raydium_lensflare_name[lf][0]=0;
 
 for(tex=0;tex<RAYDIUM_LENSFLARE_MAX_TEXTURES;tex++)
     raydium_lensflare_texture_id[lf][tex]=-1;
@@ -166,7 +160,7 @@ raydium_lensflare_position[lf][1]+=y;
 raydium_lensflare_position[lf][2]+=z;
 }
 
-int raydium_lensflare_fx_isvalid(int fx)
+signed char raydium_lensflare_fx_isvalid(int fx)
 {
 if(fx<0||fx>RAYDIUM_LENSFLARE_MAX_FX-1)
     return(0);
@@ -236,7 +230,7 @@ if(!raydium_lensflare_fx_isvalid(fx))return;
 raydium_lensflare_fx_velocity[lf][fx]=v;
 }
 
-int raydium_lensflare_internal_load(int lf, char *filename)
+signed char raydium_lensflare_internal_load(int lf, char *filename)
 {
 FILE *fp; // file handle
 char v[RAYDIUM_MAX_NAME_LEN]; // variable name
@@ -334,7 +328,7 @@ int raydium_lensflare_find(char *name)
 {
 int lf;
 
-for(lf=0;lf<raydium_lensflare_index;lf++)
+for(lf=0;lf<RAYDIUM_MAX_LENSFLARES;lf++)
     if(!strcmp(raydium_lensflare_name[lf],name))
         return(lf);
 
@@ -343,14 +337,33 @@ return(-1);
 
 int raydium_lensflare_create(char *name, char *filename)
 {
-int lf=raydium_lensflare_find(name);
+int lf,i;
 
-if(lf<0)lf=raydium_lensflare_index;
+if(!name || !strlen(name))
+    return -1;
+
+lf=raydium_lensflare_find(name);
+
+if(lf<0)
+    {
+    // search for free slot
+    for(i=0;i<RAYDIUM_MAX_LENSFLARES;i++)
+        if(!raydium_lensflare_internal_created[i])
+            {
+            lf=i;
+            break;
+            }
+    if(i==RAYDIUM_MAX_LENSFLARES)
+        {
+        raydium_log("ERROR: lensflare: cannot create, no more free slots");
+        return -1;
+        }
+    }
 
 if(raydium_lensflare_internal_load(lf,filename))
     {
+    raydium_lensflare_internal_created[lf]=1;
     strcpy(raydium_lensflare_name[lf],name);
-    if(lf==raydium_lensflare_index)raydium_lensflare_index++;
     }
 else
     return(-1);
@@ -358,7 +371,7 @@ else
 return(lf);
 }
 
-int raydium_lensflare_internal_point_is_occluded(float x, float y, float z)
+signed char raydium_lensflare_internal_point_is_occluded(float x, float y, float z)
 {
 GLint viewport[4];
 GLdouble mvmatrix[16],projmatrix[16];

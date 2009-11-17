@@ -72,7 +72,7 @@ __rayapi void raydium_lensflare_disable(void);
 Disables the lens flare effect system.
 **/
 
-__rayapi int raydium_lensflare_isvalid(int lf);
+__rayapi signed char raydium_lensflare_isvalid(int lf);
 /**
 Internal use, but you can call this function to verify if ##lf## lens flare
 has a valid id inside array range, see ##RAYDIUM_MAX_LENSFLARES##.
@@ -136,7 +136,7 @@ __rayapi void raydium_lensflare_move_relative_3f(int lf, float x, float y, float
 Same as above, but using relative coordinates. Useful for ingame displacements.
 **/
 
-__rayapi int raydium_lensflare_fx_isvalid(int fx);
+__rayapi signed char raydium_lensflare_fx_isvalid(int fx);
 /**
 Internal use, but you can call this function to verify if ##fx## FX group
 has a valid id inside array range, see ##RAYDIUM_LENSFLARE_MAX_FX##.
@@ -182,7 +182,7 @@ __rayapi void raydium_lensflare_fx_velocity_change(int lf, int fx, float v);
 Sets ##v## velocity of ##fx## FX group within ##lf## lens flare effect.
 **/
 
-__rayapi int raydium_lensflare_internal_load(int lf, char *filename);
+__rayapi signed char raydium_lensflare_internal_load(int lf, char *filename);
 /**
 Internal use, load ##lf## lens flare values from ##filename## configuration.
 **/
@@ -195,15 +195,15 @@ Resolves lens flare id from its ##name##.
 __rayapi int raydium_lensflare_create(char *name, char *filename);
 /**
 Builds a new lens flare effect with ##name## using the values from the
-##filename## configuration and returnes the new lens flare id or -1 on error.
+##filename## configuration and returns the new lens flare id or -1 on error.
 
 You can also call this function several times with the same ##name## to
 overwrite the lens flare values with different ##filename## configurations.
 
-There are ##RAYDIUM_MAX_LENSFLARES## slots available.
+There are ##RAYDIUM_MAX_LENSFLARES## slots available at the same time.
 **/
 
-__rayapi int raydium_lensflare_internal_point_is_occluded(float x, float y, float z);
+__rayapi signed char raydium_lensflare_internal_point_is_occluded(float x, float y, float z);
 /**
 Internal use.
 **/
