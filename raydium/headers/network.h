@@ -284,7 +284,7 @@ If you sets the ##tcp## flag to true (1), your packet will use "TCP style"
 network protocol (see a the top of this chapter).
 **/
 
-__rayapi void raydium_network_netcall_exec (int type, char *buff);
+__rayapi signed char raydium_network_netcall_exec (int type, char *buff);
 /**
 Internal callback for "netcall" receiving.
 **/

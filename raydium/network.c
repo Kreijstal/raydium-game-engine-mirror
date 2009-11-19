@@ -485,12 +485,13 @@ if(i==RAYDIUM_NETWORK_MAX_NETCALLS)
 return 1;
 }
 
-
-void raydium_network_netcall_exec(int type,char *buff)
+// returns 1 if a netcall was found, 0 otherwise
+signed char raydium_network_netcall_exec(int type,char *buff)
 {
 char tmpbuff[RAYDIUM_NETWORK_PACKET_SIZE];
 int i;
 void (*f)(int, char*);
+signed char done=0;
 
 if(type >= 0)
   for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
@@ -499,7 +500,9 @@ if(type >= 0)
       memcpy(tmpbuff,buff,RAYDIUM_NETWORK_PACKET_SIZE);
       f=raydium_network_netcall_func[i];
       f(type,tmpbuff);
+      done=1;
    }
+return done;
 }
 
 signed char raydium_network_timeout_check(void)
@@ -814,7 +817,8 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
 
- raydium_network_netcall_exec(*type,buff);
+ if(raydium_network_netcall_exec(*type,buff))
+    return RAYDIUM_NETWORK_DATA_NONE;
 
  if( raydium_network_mode==RAYDIUM_NETWORK_MODE_SERVER && (*id>=0) && (*id<RAYDIUM_NETWORK_MAX_CLIENTS) )
     time(&raydium_network_keepalive[(*id)]); // update keepalive
@@ -837,7 +841,6 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
         raydium_network_propag_refresh_all(); // spread propags to this new client
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
-
 
  return(RAYDIUM_NETWORK_DATA_OK);
  }
