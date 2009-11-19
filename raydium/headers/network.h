@@ -7,16 +7,16 @@ Network
 
 // Bases of Raydium's networking API
 /**
-Raydium supports networking via UDP/IP, providing high level functions 
+Raydium supports networking via UDP/IP, providing high level functions
 for multiplayer game development.
 Raydium servers are limited to 256 clients for now.
 
-You will find in network.c a set of "low level" functions and vars dedicated to 
-networked games: players names, event callbacks, UDP sockets, 
-broadcasts, ... 
+You will find in network.c a set of "low level" functions and vars dedicated to
+networked games: players names, event callbacks, UDP sockets,
+broadcasts, ...
 See a few chapters below for higher level functions.
 
-All this is ready to use. As it's not done in the introduction of this 
+All this is ready to use. As it's not done in the introduction of this
 guide, We will explain here some variables defined in common.h.
 
 %%(c)
@@ -30,16 +30,16 @@ guide, We will explain here some variables defined in common.h.
 #define RAYDIUM_NETWORK_MODE_SERVER   2
 %%
 
-Here, we can find network port declaration (Raydium will use only one 
-port, allowing easy port forwarding management, if needed), default timeout 
+Here, we can find network port declaration (Raydium will use only one
+port, allowing easy port forwarding management, if needed), default timeout
 (unit: second), and the three mode possible for a Raydium application.
 
-But there is also two other very important defines: packet size 
-(unit: byte) and max number of clients.. This is important because 
-Raydium uses UDP sockets, and UDP sockets required fixed 
-length packets, and as you need to set packet size as small as possible 
-(for obvious speed reasons), you must calculate you maximum 
-information packet size (players position, for example), multiply 
+But there is also two other very important defines: packet size
+(unit: byte) and max number of clients.. This is important because
+Raydium uses UDP sockets, and UDP sockets required fixed
+length packets, and as you need to set packet size as small as possible
+(for obvious speed reasons), you must calculate you maximum
+information packet size (players position, for example), multiply
 it by ##RAYDIUM_NETWORK_MAX_CLIENTS##,and add ##RAYDIUM_NETWORK_PACKET_OFFSET##
 wich represent the required header of the packet.
 
@@ -68,9 +68,9 @@ if(raydium_network_read_flushed(&id,&type,buff)==RAYDIUM_NETWORK_DATA_OK)
 
 %%(c) #define RAYDIUM_NETWORK_PACKET_BASE 20 %%
 
-In most network functions, you will find a "type" argument, used to 
-determine packet goal. This type is 8 bits long (256 possible values), 
-but Raydium is already using some of them. So you can use 
+In most network functions, you will find a "type" argument, used to
+determine packet goal. This type is 8 bits long (256 possible values),
+but Raydium is already using some of them. So you can use
 ##RAYDIUM_NETWORK_PACKET_BASE## as a base for your own types:
 
 %%(c)
@@ -93,7 +93,7 @@ read only: ##signed char raydium_network_mode;##
 Boolean used to determine client state (connected or not), read only:
 ##signed char raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];##
 
-example: 
+example:
 %%(c)
 if(raydium_network_client[4])
     draw_player(4);
@@ -109,7 +109,7 @@ Players names, read only:
 ##void * raydium_network_on_connect;
 void * raydium_network_on_disconnect;##
 
-You can place your owns callbacks (##void(int)##) on these events, as in 
+You can place your owns callbacks (##void(int)##) on these events, as in
 this example:
 
 %%(c)
@@ -130,7 +130,7 @@ raydium_network_on_connect=new_client;
 
 // Reliablility versus Speed
 /**
-As explained above, Raydium is using UDP network packets, and as 
+As explained above, Raydium is using UDP network packets, and as
 you may know, UDP is not a reliable protocol, aiming speed before all.
 This system is interesting for sending non-sensible data, as player positions,
 for example.
@@ -149,9 +149,9 @@ more information about this system.
 Another available mechanism is called Propags, and allows you to "share"
 variables over the network (scores, game state, ...) in a very few steps.
 You only need to "create" a type, and link a variable to it (any C type or
-structure is allowed). After each modification of this (local copy of the) 
-variable, just call ##raydium_network_propag_refresh*## and that's it. If 
-any other client (or the server) is applying a modification to this "type", 
+structure is allowed). After each modification of this (local copy of the)
+variable, just call ##raydium_network_propag_refresh*## and that's it. If
+any other client (or the server) is applying a modification to this "type",
 your local copy is automatically updated.
 **/
 
@@ -270,8 +270,8 @@ false (0) otherwise.
 __rayapi signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
 /**
 This function will register a new Network Callback ("netcall").
-With Raydium, you can read the main data stream with 
-##raydium_network_read_flushed()##, and configure netcalls on random 
+With Raydium, you can read the main data stream with
+##raydium_network_read_flushed()##, and configure netcalls on random
 events (using packet type).
 
 Netcalls signature is: ##void(int type, char *buff)##
@@ -325,34 +325,34 @@ raydium_network_server_create();
 __rayapi void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);
 /**
 Obviously, this function will send data.
-If you're a client, you don't need to determine to field, as the only 
-destination is the server, so you can use ##NULL##, for example. If you're 
+If you're a client, you don't need to determine to field, as the only
+destination is the server, so you can use ##NULL##, for example. If you're
 a server, you can use ##raydium_network_client_addr[]## array.
 
 As a client, ##from## argument is generally your own uid (##raydium_network_uid##),
 but you can use any other player number if needed.
-As a server, ##from## field is useless, since you are the only machine able 
+As a server, ##from## field is useless, since you are the only machine able
 to send data to clients.
 
 As you may expect, ##type## field is used to determine packet's type.
 You can use any (8 bits) value greater or equal to ##RAYDIUM_NETWORK_PACKET_BASE##.
 
-Finally, ##buff## is a pointer to data's buffer. This buffer 
-must be ##RAYDIUM_NETWORK_PACKET_SIZE## long, and can be cleared 
+Finally, ##buff## is a pointer to data's buffer. This buffer
+must be ##RAYDIUM_NETWORK_PACKET_SIZE## long, and can be cleared
 or re-used after this call.
 **/
 
 __rayapi void raydium_network_broadcast (signed char type, char *buff);
 /**
 Sends data over network.
-Obviously, from network point of vue, only a server can broadcast 
+Obviously, from network point of vue, only a server can broadcast
 (to his clients).
 
-When a client needs to broadcast (from the game point of vue) some 
+When a client needs to broadcast (from the game point of vue) some
 informations (his own position, for example), he must send this information
 to server, and the server will broadcast it.
 
-This function uses the same arguments as previous one, except ##to## and 
+This function uses the same arguments as previous one, except ##to## and
 ##from##, not needed here.
 **/
 
@@ -360,7 +360,7 @@ This function uses the same arguments as previous one, except ##to## and
 __rayapi signed char raydium_network_read (int *id, signed char *type, char *buff);
 /**
 Reads next packet from network (FIFO) stack.
-This function uses the same arguments as previous ones, and returns 
+This function uses the same arguments as previous ones, and returns
 data availability: ##RAYDIUM_NETWORK_DATA_OK##, ##RAYDIUM_NETWORK_DATA_NONE##
 or ##RAYDIUM_NETWORK_DATA_ERROR##.
 **/
@@ -371,8 +371,8 @@ Reads last packet from network stack.
 All previous packets will be ignored, only the newest packet will
 be read (if any).
 
-As you may miss some important informations, you can use netcalls 
-(see above) if you want to capture packets with a particular 
+As you may miss some important informations, you can use netcalls
+(see above) if you want to capture packets with a particular
 type, even with flushed reading.
 **/
 
@@ -389,7 +389,7 @@ __rayapi signed char raydium_network_server_broadcast(char *name, char *app_or_m
 This function will start to broadcast a server to the LAN.
 You must provide a party ##name##, the application or mod name (##app_or_mod##)
 and a "protocol" version of you choice.
-The server is going to broadcast a "beacon" packet  to the LAN 
+The server is going to broadcast a "beacon" packet  to the LAN
 every ##RAYDIUM_NETWORK_BEACON_DELAY##.
 Any client in "discovery mode" with the same ##app_or_mod## and ##version##
 will see this beacon.
@@ -409,7 +409,7 @@ Internal use.
 
 __rayapi signed char raydium_network_server_create (void);
 /**
-Will transform you application into a server, accepting new clients 
+Will transform you application into a server, accepting new clients
 instantaneously.
 See also the ##RAYDIUM_NETWORK_ONLY## directive if you want to create console
 servers.
@@ -417,13 +417,13 @@ servers.
 
 __rayapi signed char raydium_network_client_connect_to (char *server);
 /**
-This function will try to connect your application to ##server## (hostname or 
+This function will try to connect your application to ##server## (hostname or
 ip address).
 WARNING: For now, this call could be endless ! (server failure while connecting).
 This function will succed returning 1 or 0 otherwise.
-You are connected instantaneously, and you must start sending data 
+You are connected instantaneously, and you must start sending data
 before server timeout (defined by ##RAYDIUM_NETWORK_TIMEOUT##).
-You player number can be found with ##raydium_network_uid## variable, 
+You player number can be found with ##raydium_network_uid## variable,
 as said before.
 **/
 
@@ -442,13 +442,13 @@ can fetch all "detected" servers in the LAN.
 This function will return :
  - -1 : "not in discovery mode". See ##raydium_network_client_discover()##.
  - 0 : no server detected (yet ... try during next frame)
- - more : total number of compatible servers (same game/application 
+ - more : total number of compatible servers (same game/application
  and protocol version)
 **/
 
 __rayapi signed char raydium_network_discover_getserver(int num, char *name, char *ip, char *info, int *player_count, int *player_max);
 /**
-Use this function with the help of ##raydium_network_discover_numservers()##, 
+Use this function with the help of ##raydium_network_discover_numservers()##,
 with something like :
 %%(c)
 int i;
