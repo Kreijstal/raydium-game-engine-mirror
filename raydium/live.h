@@ -7,8 +7,7 @@
 
 // Live textures functions
 
-// TODO:
-// 4 bpp live textures support
+// TODO: 4 bpp live textures support
 
 #ifndef LIVE_H
 #define LIVE_H
@@ -38,7 +37,7 @@
 #define RAYDIUM_LIVE_CAPTURE_MMAP       2
 
 
-typedef struct raydium_live_Device 
+typedef struct raydium_live_Device
 {
 #ifndef WIN32
 #ifndef APPLE
@@ -50,7 +49,7 @@ typedef struct raydium_live_Device
   // for mmap captures
   struct video_mbuf gb_buffers;
   struct video_mmap gb_buf;
-  
+
 #endif
 #else
     HWND        hWnd_WC;
@@ -60,12 +59,12 @@ typedef struct raydium_live_Device
     CAPSTATUS  capture_status;
     BITMAPINFO capture_video_format;
     BITMAPINFO capture_video_format_original;
-    
+
     HIC    compressor;
 
     struct video_window  // Linux structure to keep source compatable
     {
-        unsigned int   width,height;          
+        unsigned int   width,height;
     }win;
     struct video_picture
     {
@@ -155,7 +154,7 @@ __global raydium_live_Texture raydium_live_texture[RAYDIUM_MAX_LIVE_TEXTURES];
                 default:                                                \
                         raydium_log("live: error: palette unknown");    \
         }                                                               \
-}                                               
+}
 
 
 // endif LIVE_H
