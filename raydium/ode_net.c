@@ -9,6 +9,9 @@
 // This .c file is included from ode.c, so there's no includes here.
 
 void raydium_ode_network_element_new(int e);
+signed char raydium_network_netcall_add (void *ptr, int type, signed char tcp);
+void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);
+signed char raydium_network_read (int *id, signed char *type, char *buff);
 
 
 int raydium_ode_network_MaxElementsPerPacket(void)
