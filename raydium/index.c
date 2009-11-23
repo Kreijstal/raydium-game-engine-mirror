@@ -79,11 +79,11 @@ extern "C" {
 #include "camera.c"
 #include "object.c"
 #include "cli.c"
+#include "network.c"
+#include "init.c"
 #ifdef ODE_SUPPORT
 #include "ode.c"
 #endif
-#include "network.c"
-#include "init.c"
 #include "sprites.c"
 #include "live.c"
 #include "video.c"

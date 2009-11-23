@@ -649,11 +649,7 @@ raydium_network_write_notcp=0;
 
 raydium_network_stat_tx+=RAYDIUM_NETWORK_PACKET_SIZE;
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT)
-    {
     ret=send(raydium_network_socket, buff, RAYDIUM_NETWORK_PACKET_SIZE, 0);
-    if (from>=0)
-        time(&raydium_network_keepalive[raydium_network_uid]);
-    }
 
 else if(raydium_network_mode==RAYDIUM_NETWORK_MODE_SERVER)
     ret=sendto(raydium_network_socket, buff, RAYDIUM_NETWORK_PACKET_SIZE, 0, to, sizeof(struct sockaddr));
@@ -717,7 +713,6 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
  *type=buff[0];
  *id=buff[1];
  raydium_network_stat_rx+=RAYDIUM_NETWORK_PACKET_SIZE;
- //raydium_log("<- Type:%d Id:%d",*type,*id);
 
  memcpy(&tcpid,buff+2,sizeof(unsigned short));
 
@@ -1146,19 +1141,10 @@ if (raydium_network_read(&empty,&type,str)!=RAYDIUM_NETWORK_DATA_OK)
 
 if(type==RAYDIUM_NETWORK_PACKET_ATTRIB_UID)
     {
-    int i;
     raydium_network_uid=str[RAYDIUM_NETWORK_PACKET_OFFSET];
     raydium_log("network: accepted as client %i",raydium_network_uid);
     raydium_network_set_socket_block(0);
     strcpy(raydium_network_connected_server,server);
-#ifndef RAYDIUM_NETWORK_ONLY
-    raydium_log("Affecting uid");
-    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-        if (raydium_ode_element[i].state && !raydium_ode_element[i].distant && raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD )
-            if(raydium_ode_element[i].nid>=0)
-                raydium_log("New nid:%d",raydium_ode_element[i].nid=(raydium_network_uid+1)*1000+i);
-    raydium_log("done");
-#endif
     return(1);
     }
 

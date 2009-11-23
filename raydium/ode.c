@@ -1209,10 +1209,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      raydium_ode_element[i].distant=raydium_ode_network_distant_create;
      raydium_ode_network_distant_create=0;
      if(!raydium_ode_network_next_local_only)
-        {
-        raydium_ode_element[i].nid=i;
         raydium_ode_network_element_new(i);
-        }
      raydium_ode_network_next_local_only=0;
      raydium_ode_capture_internal_create(RAYDIUM_ODE_RECORD_NEWSPHERE,i,&radius,mesh);
      return i;
@@ -1287,10 +1284,7 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      raydium_ode_element[i].distant=raydium_ode_network_distant_create;
      raydium_ode_network_distant_create=0;
      if(!raydium_ode_network_next_local_only)
-        {
-        raydium_ode_element[i].nid=i;
         raydium_ode_network_element_new(i);
-        }
      raydium_ode_network_next_local_only=0;
      sizes[0]=tx;
      sizes[1]=ty;
@@ -1380,11 +1374,8 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     raydium_ode_element_slip(i,RAYDIUM_ODE_SLIP_DEFAULT);
     raydium_ode_element[i].distant=raydium_ode_network_distant_create;
     raydium_ode_network_distant_create=0;
-     if(!raydium_ode_network_next_local_only)
-        {
+    if(!raydium_ode_network_next_local_only)
         raydium_ode_network_element_new(i);
-        raydium_ode_element[i].nid=i;
-        }
     raydium_ode_network_next_local_only=0;
     sizes[0]=radius;
     sizes[1]=length;
@@ -4738,7 +4729,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state  &&
-       raydium_ode_element[i].nid>=1000  &&
+       raydium_ode_element[i].nid>=0  &&
        raydium_ode_element[i].distant)
             raydium_ode_network_element_trajectory_correct(i);
 

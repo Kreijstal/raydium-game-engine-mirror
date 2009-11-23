@@ -230,7 +230,7 @@
 #define RAYDIUM_NETWORK_MAX_PROPAGS             32
 #define RAYDIUM_NETWORK_ACK_DELAY_MAX           2
 #define RAYDIUM_NETWORK_PROPAG_HEAD             sizeof(int)
-#define RAYDIUM_NETWORK_BEACON_DELAY            1
+#define RAYDIUM_NETWORK_BEACON_DELAY            5
 #define RAYDIUM_NETWORK_BEACON_DEFAULT_TTL      15
 #define RAYDIUM_NETWORK_BEACON_INFO_MAX_LEN     100
 #define RAYDIUM_NETWORK_MODE_NONE               0
@@ -250,7 +250,6 @@
 #define RAYDIUM_NETWORK_PACKET_INFO_NAME                5
 #define RAYDIUM_NETWORK_PACKET_ACK                      6
 #define RAYDIUM_NETWORK_PACKET_SERVER_BEACON            7
-#define RAYDIUM_NETWORK_PACKET_KEEP_ALIVE_CLIENT        8
 #define RAYDIUM_NETWORK_PACKET_ODE_DATA                 10
 #define RAYDIUM_NETWORK_PACKET_ODE_NEWELEM              11
 #define RAYDIUM_NETWORK_PACKET_ODE_REMELEM              12
@@ -328,9 +327,6 @@
 #define RAYDIUM_MAX_FRAMES_PER_SPRITE           256
 #define RAYDIUM_SPRITE_DEBUG                    0
 #define RAYDIUM_SPRITE_MAX_GROUPS               64
-
-#define RAYDIUM_FILE_LOG_FOUND                  1
-#define RAYDIUM_FILE_LOG_NOTFOUND               0
 
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -776,9 +772,8 @@ __global ZFE raydium_register_function_list[RAYDIUM_MAX_REG_FUNCTION];
 __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 
 __global FILE *raydium_log_file;
-__global char raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
-__global char raydium_file_log_fopen_status[RAYDIUM_MAX_LOG_FOPEN];
-__global int raydium_file_log_fopen_index;
+__global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
+__global int   raydium_file_log_fopen_index;
 
 __global unsigned long raydium_profile_timer;
 
