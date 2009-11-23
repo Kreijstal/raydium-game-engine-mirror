@@ -87,6 +87,7 @@ PHP_v_s(raydium_object_draw_name);
 
 // network.c
 //PHP_i_v(raydium_network_internet_test);
+PHP_i_s(raydium_network_client_connect_to);
 
 // particle2.c
 PHP_i_ss(raydium_particle_generator_load);
@@ -297,6 +298,7 @@ raydium_register_function(C2PHP(raydium_object_draw_name),"raydium_object_draw_n
 
 // network.c
 //raydium_register_function(C2PHP(raydium_network_internet_test),"raydium_network_internet_test");
+raydium_register_function(C2PHP(raydium_network_client_connect_to),"raydium_network_client_connect_to");
 
 // particle2.c
 raydium_register_function(C2PHP(raydium_particle_state_dump),"raydium_particle_state_dump");
