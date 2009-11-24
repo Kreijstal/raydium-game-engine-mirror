@@ -11,10 +11,10 @@ RayODE network layer
 Physics engines are extremely powerful tools, but it turns to nightmares when
 the application must be networked. RayODE API provides its own network layer,
 using Raydium lower level network API. And the great thing is that you've
-almost anything to do !
+almost nothing to do !
 Just choose the best "send" function and let Raydium do the rest.
 
-RayODE Net will use udp streams, netcall (RPC), smart timeouts, predictions, 
+RayODE Net will use udp streams, netcall (RPC), smart timeouts, predictions,
 dead reckoning, and many others voodoo things. Just trust.
 
 A few things about internals:
@@ -28,11 +28,11 @@ default, this value is ##RAYDIUM_ODE_NETWORK_MAXFREQ##, but you can use
 - See ##config.h## if you want to disable prediction (##ODE_PREDICTION##) or
 to debug RayODE Net (##DEBUG_ODENET##, **very** verbose !).
 - Explosions are also automatically managed by RayODE Net.
-- **Do NOT use** Raydium lower level network API when using RayODE Net. Use 
+- **Do NOT use** Raydium lower level network API when using RayODE Net. Use
 netcalls, propags and so on.
 
 Nothing is said here about how to create a RayODE Net server. There's only
-a few more things to do if you already have a standard server, but since it's 
+a few more things to do if you already have a standard server, but since it's
 unsupported for now, you must have a look to existing RayODE Net servers.
 **/
 
@@ -88,27 +88,27 @@ Almost internal. Will return 1 (true) if it's time to send a new packet, using
 
 __rayapi void raydium_ode_network_element_send (short nelems, int *e);
 /**
-Will send all elements of ##e## array to network. You must provide array lenght 
+Will send all elements of ##e## array to network. You must provide array lenght
 using ##nelems##.
-To "time to send ?" test is done, you'll probably have to do it yourself.
+No "time to send ?" test is done, you'll probably have to do it yourself.
 **/
 
 __rayapi void raydium_ode_network_element_send_all (void);
 /**
 Will try to send all elements to network. Warning, packet size may be to
-small to send all elements !..
+small to send all elements !.. See next functions, more suitable.
 **/
 
 __rayapi void raydium_ode_network_element_send_random (int nelems);
 /**
-Will send randomly chosen elements to network. You must provide how many 
+Will send randomly chosen elements to network. You must provide how many
 elements you want with ##nelems##, but RAYDIUM_ODE_NETWORK_OPTIMAL is
 available.
 **/
 
 __rayapi void raydium_ode_network_element_send_iterative (int nelems);
 /**
-Will send elements to network, iteratively chose. You must provide how many 
+Will send elements to network, iteratively chose. You must provide how many
 elements you want with ##nelems##, but RAYDIUM_ODE_NETWORK_OPTIMAL is
 available.
 **/
