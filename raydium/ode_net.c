@@ -80,6 +80,10 @@ if(type==RAYDIUM_NETWORK_PACKET_ODE_NEWELEM)
             raydium_ode_network_distant_create=1;
             elem=raydium_ode_object_box_add(name,group,1,get[0],get[1],get[2],RAYDIUM_ODE_STATIC,tag,mesh);
             break;
+        case dCapsuleClass:
+            raydium_ode_network_distant_create=1;
+            elem=raydium_ode_object_capsule_add(name,group,1,get[0],get[1],RAYDIUM_ODE_STATIC,tag,mesh);
+            break;
         }
     raydium_ode_element[elem].distant_owner=buff[1];
     raydium_ode_element[elem].nid=nid;
@@ -484,6 +488,10 @@ switch(i)
         break;
     case dBoxClass:
         dGeomBoxGetLengths(raydium_ode_element[e].geom,set);
+        break;
+    case dCapsuleClass:
+        dGeomCapsuleGetParams(raydium_ode_element[e].geom,&set[0],&set[1]);
+        set[2]=0;
         break;
     }
 memcpy(data+dec,set,sizeof(dReal)*3);
