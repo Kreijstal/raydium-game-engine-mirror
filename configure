@@ -382,6 +382,7 @@ if [ $disable_x = "no" ]; then
 #define RAYDIUM_RENDERING_FULLSCREEN            1
 #define RAYDIUM_RENDERING_NONE                  2
 #define RAYDIUM_RENDERING_WINDOW_FIXED          10
+#define RAYDIUM_KEYBOARD_SIZE                   256
 
 #define DONT_INCLUDE_HEADERS
 #define raydium_log printf
