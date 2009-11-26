@@ -126,12 +126,12 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 void raydium_file_cache_flush(void)
 {
 int i,j;
-char tmp[RAYDIUM_MAX_NAME_LEN];
 
 i=j=0;
 for(j=0;j<raydium_file_log_fopen_index;j++)
     {
     if (raydium_log_file_fopen_status[j]==RAYDIUM_FILE_FOUND)
+    	{
         if (j==i)
             i++; // Nothing to copy.
         else
@@ -140,6 +140,7 @@ for(j=0;j<raydium_file_log_fopen_index;j++)
             raydium_log_file_fopen_status[i]=raydium_log_file_fopen_status[j];
             i++;
             }
+	}
     }
 raydium_file_log_fopen_index=i;
 }
