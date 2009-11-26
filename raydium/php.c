@@ -338,7 +338,7 @@ sapi_globals = ts_resource(sapi_globals_id);
 tsrm_ls = ts_resource(0);
 #endif
 //raydium_sapi_module.phpinfo_as_text=1;
-path=malloc(strlen(PHP_INI_PATH));
+path=malloc(strlen(PHP_INI_PATH)+1);
 strcpy(path,PHP_INI_PATH);
 raydium_sapi_module.php_ini_path_override=path;
 sapi_startup(&raydium_sapi_module);
