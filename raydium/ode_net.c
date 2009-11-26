@@ -52,11 +52,11 @@ if(type==RAYDIUM_NETWORK_PACKET_ODE_NEWELEM)
     int group;
 
 //    raydium_log("ode_net: NEWELEM event, from %i",buff[1]);
-    
+
     // if we already have this element, refresh it
-    if(elem>=0) 
+    if(elem>=0)
         raydium_ode_element_delete(elem,1);
-    
+
     memcpy(&type,buff+dec,sizeof(int));
     dec+=sizeof(int);
 
@@ -235,6 +235,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
  if(raydium_ode_element_isvalid(i) &&
     raydium_ode_element[i].nid>=0 )
         {
+        if (raydium_ode_element[i].nid<1000)
+            raydium_ode_element[i].nid=(raydium_network_uid+1)*1000+i;
         e[n]=i;
         n++;
         }
@@ -262,6 +264,8 @@ while(i<nelems)
     n=raydium_random_i(0,RAYDIUM_ODE_MAX_ELEMENTS);
     if(raydium_ode_element[n].state && raydium_ode_element[n].nid>=0 && !done[n])
         {
+        if (raydium_ode_element[n].nid<1000)
+            raydium_ode_element[n].nid=(raydium_network_uid+1)*1000+n;
         done[n]=1;
         e[i]=n;
         i++;
@@ -291,6 +295,8 @@ while(i<nelems)
     if(curr>=RAYDIUM_ODE_MAX_ELEMENTS) curr=0;
     if(raydium_ode_element[curr].state && raydium_ode_element[curr].nid>=0)
         {
+        if (raydium_ode_element[curr].nid<1000)
+            raydium_ode_element[curr].nid=(raydium_network_uid+1)*1000+curr;
         e[i]=curr;
         i++;
         }
@@ -322,7 +328,7 @@ dReal *pos;
 dReal Pcross[3];
 
 elem=raydium_network_nid_element_find(ev->nid);
-if(elem<0) 
+if(elem<0)
     {
     // ask for this nid:
     raydium_ode_network_nidwho(ev->nid);
@@ -343,7 +349,7 @@ if(!before || raydium_timecall_interval[raydium_ode_timecall]==0)
 {
     raydium_ode_element_move(elem,ev->pos);
     memcpy(raydium_ode_element[elem].netvel,ev->vel,sizeof(dReal)*3);
-#ifdef DEBUG_ODENET    
+#ifdef DEBUG_ODENET
     raydium_log("%i elem's first update (or 0 hz ODE callback)",elem);
 #endif
 }
@@ -428,7 +434,7 @@ if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_CLIENT)
     return;
 
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
-    if(raydium_ode_element[i].nid>=0 && 
+    if(raydium_ode_element[i].nid>=1000 &&
        raydium_ode_element[i].distant &&
        (time(NULL)>raydium_ode_element[i].lastnetupdate+RAYDIUM_NETWORK_TIMEOUT))
             {
@@ -440,9 +446,9 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 if(raydium_network_read(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
 //if(raydium_network_read_flushed(&id,&type,data)!=RAYDIUM_NETWORK_DATA_OK)
     return;
-    
+
 #ifndef ODE_NETWORK_GHOSTS
-if(id==raydium_network_uid) 
+if(id==raydium_network_uid)
     return; // do not update our elements !
 #endif
 
@@ -466,7 +472,7 @@ dReal set[3];
 
 if(raydium_network_mode!=RAYDIUM_NETWORK_MODE_CLIENT)
     return;
-    
+
 if(!raydium_ode_element_isvalid(e)) return;
 if(raydium_ode_element[e].distant) return;
 
