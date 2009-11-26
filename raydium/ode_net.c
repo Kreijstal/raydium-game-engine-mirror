@@ -195,6 +195,7 @@ for(i=0;i<nelems;i++)
  if(!raydium_ode_element_isvalid(e[i])) continue;
  if(raydium_ode_element[e[i]].nid<0) continue;
  if(raydium_ode_element[e[i]].distant) continue;
+ if(raydium_ode_element[e[i]].state!=RAYDIUM_ODE_STANDARD) continue;
  //Ignore at a level of 99% disabled body // Not accurate need to be tested more deeply.
 // if( raydium_ode_element_disable_get(e[i]) && raydium_random_0_x(1)>0.01) continue;
 
