@@ -96,7 +96,7 @@ if(!rgb && !faked)
  file=raydium_file_fopen(filename,"rb");
  if(!file)
   {
-    raydium_log("Cannot open %s texture",filename);
+    //raydium_log("Cannot open %s texture",filename);
     return 0;
   }
 

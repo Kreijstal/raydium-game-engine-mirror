@@ -56,6 +56,11 @@ Display (console) all filenames that were opened before the call.
 exit, closed or not.
 **/
 
+__rayapi void raydium_file_cache_flush(void);
+/**
+Flush files not found from log cache. Allow new attempt to open the file.
+**/
+
 __rayapi FILE *raydium_file_fopen(char *file, char *mode);
 /**
 Raydium wrapper to libc's ##fopen## function.

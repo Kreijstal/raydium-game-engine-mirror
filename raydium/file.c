@@ -119,13 +119,34 @@ int i;
 raydium_log("List of all opended files:");
 
 for(i=0;i<raydium_file_log_fopen_index;i++)
-    raydium_log("%s",raydium_file_log_fopen[i]);
+    raydium_log("%s %s",(raydium_log_file_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i]);
 
+}
+
+void raydium_file_cache_flush(void)
+{
+int i,j;
+char tmp[RAYDIUM_MAX_NAME_LEN];
+
+i=j=0;
+for(j=0;j<raydium_file_log_fopen_index;j++)
+    {
+    if (raydium_log_file_fopen_status[j]==RAYDIUM_FILE_FOUND)
+        if (j==i)
+            i++; // Nothing to copy.
+        else
+            {
+            strcpy(raydium_file_log_fopen[i],raydium_file_log_fopen[j]);
+            raydium_log_file_fopen_status[i]=raydium_log_file_fopen_status[j];
+            i++;
+            }
+    }
+raydium_file_log_fopen_index=i;
 }
 
 FILE *raydium_file_fopen_internal(char *file, char *mode, char *full_path)
 {
-FILE *fp;
+FILE *fp=NULL;
 int i;
 char found=0;
 char file2[RAYDIUM_MAX_DIR_LEN];
@@ -133,42 +154,60 @@ char file2[RAYDIUM_MAX_DIR_LEN];
 if(!file || !strlen(file))
     return NULL;
 
-for(i=0;i<raydium_file_log_fopen_index;i++)
+for(i=0;i<raydium_file_log_fopen_index;i++) //TODO Exit if already not found
     if(!strcmp(raydium_file_log_fopen[i],file))
         {
+        if ( raydium_log_file_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
+            return NULL;
         found=1;
         break;
         }
 
-if(!found) strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index++],file);
-
 // use paths
 raydium_path_resolv(file,file2,mode[0]);
 
-// local mode ?
-if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
+do
     {
-    strcpy(full_path,file2);
-    return fopen(file2,mode);
-    }
+    // local mode ?
+    if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
+        {
+        strcpy(full_path,file2);
+        fp= fopen(file2,mode);
+        break;
+        }
 
-if(strchr(mode,'w'))
-    {
-    strcpy(full_path,file2);
-    return fopen(file2,mode);
-    }
+    if(strchr(mode,'w'))
+        {
+        strcpy(full_path,file2);
+        fp= fopen(file2,mode);
+        break;
+        }
 
-if( !raydium_init_cli_option("repository-refresh",NULL) &&
-    !raydium_init_cli_option("repository-force",NULL) )
-{
+    if( !raydium_init_cli_option("repository-refresh",NULL) &&
+        !raydium_init_cli_option("repository-force",NULL) )
+        {
+        strcpy(full_path,file2);
+        fp=fopen(file2,mode);
+        if(fp) break;
+        }
+    raydium_rayphp_repository_file_get(file2);
     strcpy(full_path,file2);
     fp=fopen(file2,mode);
-    if(fp) return fp;
-}
-raydium_rayphp_repository_file_get(file2);
-strcpy(full_path,file2);
-fp=fopen(file2,mode);
+    }
+while(0);
 
+if(!found)
+    {
+    strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index],file);
+    if (fp)
+        raydium_log_file_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_FOUND;
+    else
+        {
+        raydium_log_file_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_NOT_FOUND;
+        raydium_log("Error: Cannot Open %s file",file);
+        }
+    raydium_file_log_fopen_index++;
+    }
 return fp;
 }
 

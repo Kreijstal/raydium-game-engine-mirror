@@ -328,6 +328,9 @@
 #define RAYDIUM_SPRITE_DEBUG                    0
 #define RAYDIUM_SPRITE_MAX_GROUPS               64
 
+#define RAYDIUM_FILE_NOT_FOUND                  0
+#define RAYDIUM_FILE_FOUND                      1
+
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
@@ -773,6 +776,7 @@ __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 
 __global FILE *raydium_log_file;
 __global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
+__global char  raydium_log_file_fopen_status[RAYDIUM_MAX_LOG_FOPEN];
 __global int   raydium_file_log_fopen_index;
 
 __global unsigned long raydium_profile_timer;

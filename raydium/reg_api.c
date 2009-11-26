@@ -21,6 +21,7 @@
 
 // file.c
 PHP_v_ss(raydium_file_home_path_cpy);
+PHP_v_v(raydium_file_cache_flush);
 
 // path.c
 PHP_i_v(raydium_path_package_cache_clear);
@@ -222,6 +223,7 @@ if(done)
 
 // file.c
 raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
+raydium_register_function(C2PHP(raydium_file_cache_flush),"raydium_file_cache_flush");
 
 // path.c
 raydium_register_function(C2PHP(raydium_path_package_cache_clear),"raydium_path_package_cache_clear");
