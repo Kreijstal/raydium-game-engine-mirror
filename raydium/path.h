@@ -13,6 +13,12 @@
 #define RAYDIUM_PATH_MODE_READ  1
 #define RAYDIUM_PATH_MODE_WRITE 2 // not used yet
 
+#define RAYDIUM_PATH_PACKAGE_NOT_FOUND  -1
+
+#define RAYDIUM_PATH_PACKAGE_READONLY       4
+#define RAYDIUM_PATH_PACKAGE_READWRITE      8
+
+
 typedef struct raydium_path_Path
 {
 signed char state;

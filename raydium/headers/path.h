@@ -115,6 +115,11 @@ __rayapi void raydium_path_init(void);
 Internal.
 **/
 
+__rayapi int raydium_path_package_find(char *name);
+/**
+Return path index associated with package name ##name##.
+**/
+
 __rayapi signed char raydium_path_package_register(char *file);
 /**
 Call this function to register a new ZIP package (note that you can change
@@ -129,6 +134,13 @@ registered ZIP file discards the cache automatically.
 
 Files in the ZIP should be readed only. Any modification will be lost (and you
 don't know when, because of the cache).
+**/
+
+__rayapi unsigned char raydium_path_package_mode(char * name,unsigned char mode);
+/**
+Define package mode: RAYDIUM_PACKAGE_READONLY / RAYDIUM_PACKAGE_READWRITE
+All opened files are automaticaly added/refreshed in paclage at application exit.
+Package mode is written in package file.
 **/
 
 __rayapi signed char raydium_path_package_cache_clear(void);

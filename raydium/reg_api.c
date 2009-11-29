@@ -25,6 +25,8 @@ PHP_v_v(raydium_file_cache_flush);
 
 // path.c
 PHP_i_v(raydium_path_package_cache_clear);
+//PHP_i_s(raydium_path_package_register); // Crash non reentrent php calls not supported
+PHP_i_si(raydium_path_package_mode);
 
 // light.c
 PHP_v_v(raydium_light_enable);
@@ -227,6 +229,10 @@ raydium_register_function(C2PHP(raydium_file_cache_flush),"raydium_file_cache_fl
 
 // path.c
 raydium_register_function(C2PHP(raydium_path_package_cache_clear),"raydium_path_package_cache_clear");
+//raydium_register_function(C2PHP(raydium_path_package_register),"raydium_path_package_register");
+raydium_register_function(C2PHP(raydium_path_package_mode),"raydium_path_package_mode");
+raydium_register_variable_const_i(RAYDIUM_PATH_PACKAGE_READONLY,"RAYDIUM_PATH_PACKAGE_READONLY");
+raydium_register_variable_const_i(RAYDIUM_PATH_PACKAGE_READWRITE,"RAYDIUM_PATH_PACKAGE_READWRITE");
 
 // light.c
 raydium_register_function(C2PHP(raydium_light_enable),"raydium_light_enable");

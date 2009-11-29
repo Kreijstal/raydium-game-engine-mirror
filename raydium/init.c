@@ -28,6 +28,7 @@ void raydium_hdr_texture_reset(void);
 void raydium_lensflare_init(void);
 void raydium_shader_init(void);
 void raydium_web_init(void);
+void raydium_path_package_update(void);
 
 char *raydium_version(void)
 {
@@ -296,6 +297,7 @@ raydium_callback_set();
 raydium_php_init();
 #endif
 
+raydium_atexit(raydium_path_package_update); // As atexit are called in inverse order must be called before disabling php
 raydium_atexit(raydium_sound_close);
 raydium_atexit(raydium_joy_close);
 raydium_atexit(raydium_network_close);
@@ -316,6 +318,8 @@ raydium_log("Engine is now ready.\n\t ------------------------------------------
 if(raydium_init_cli_option("autoexec",autoexec))
     raydium_php_exec(autoexec);
 #endif
+if (raydium_init_cli_option("package",str))
+    raydium_path_package_register(str);
 }
 
 //Still needs a check of void parameters.

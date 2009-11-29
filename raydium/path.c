@@ -13,7 +13,23 @@
 
 #include "path.h"
 
+void raydium_path_package_update(void);
 
+int raydium_path_package_find(char *name)
+{
+int i;
+int l;
+
+for (i=0;i<RAYDIUM_MAX_PATHS;i++)
+    {
+    if (!raydium_path_paths[i].state)
+        continue;
+    l=strlen(raydium_path_paths[i].path)-strlen(name);
+    if (strcmp(&raydium_path_paths[i].path[l],name)==0)
+        return i;
+    }
+return RAYDIUM_PATH_PACKAGE_NOT_FOUND;
+}
 
 int raydium_path_find_free(void)
 {
@@ -269,6 +285,7 @@ signed char ok;
 
 raydium_path_reset();
 raydium_atexit(raydium_path_dump);
+//raydium_atexit(raydium_path_package_update); // Must be defined after php atexit as we need php to be active there.
 raydium_path_write_local_dir_allowed=1;
 
 if(raydium_init_cli_option("path",path))
@@ -362,10 +379,12 @@ strcpy(extract_path,raydium_file_home_path(tmp));
 // let's try to fopen the file (R3S call)
 fp=raydium_file_fopen(file,"r");
 if(!fp)
-	{
-	raydium_log("ERROR: path: package '%s' not found, can't register.",file);
-	return 0;
-	}
+    {
+    raydium_log("Registering Empty package %s.",file);
+    raydium_path_add(extract_path);
+    raydium_path_package_mode(file,RAYDIUM_PATH_PACKAGE_READONLY);
+    return 0;
+    }
 fclose(fp);
 
 // must revolv "file" path when calling raydium_rayphp_zip_extract()
@@ -423,6 +442,69 @@ if(extract)
 	}
 
 raydium_path_add(extract_path);
+raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READONLY);
+sprintf(tmp,"%s/RAYDIUM_PACKAGE_READWRITE",extract_path);
+fp=fopen(tmp,"r");
+if (fp)
+    {
+    fclose(fp);
+    raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READWRITE);
+    }
 return 1;
 }
 
+void raydium_path_package_update(void)
+{
+int i;
+int pindex=-1;
+char package_name[RAYDIUM_MAX_NAME_LEN];
+char full_file_name[RAYDIUM_MAX_NAME_LEN];
+
+raydium_log("********* Path package update");
+
+for (i=0;i<RAYDIUM_MAX_PATHS;i++)
+    {
+    if (!raydium_path_paths[i].state)
+        continue;
+    if (raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READWRITE)
+        {
+        char tmp[RAYDIUM_MAX_NAME_LEN];
+        raydium_file_basename(package_name,raydium_path_paths[i].path);
+        strcpy(tmp,"RAYDIUM_PACKAGE_READWRITE");
+        raydium_rayphp_zip_add(package_name,tmp);
+        if (pindex==-1)
+            pindex=i;
+        }
+    if (raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READONLY)
+        {
+        raydium_file_basename(package_name,raydium_path_paths[i].path);
+        raydium_rayphp_zip_add(package_name,"RAYDIUM_PACKAGE_READONLY");
+        }
+    }
+
+if (pindex!=-1) // No package to update exiting
+    {
+    raydium_file_basename(package_name,raydium_path_paths[pindex].path);
+    raydium_log("Updating %s package file",package_name);
+    for(i=0;i<raydium_file_log_fopen_index;i++)
+        {
+        if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
+            continue;
+        if (!strcmp(&raydium_file_log_fopen[i][strlen(raydium_file_log_fopen[i])-4],".zip"))
+            continue;
+        raydium_path_resolv(raydium_file_log_fopen[i],full_file_name,'r');
+        //raydium_log("File:%s",full_file_name);
+        raydium_rayphp_zip_add(package_name,full_file_name);
+        }
+    }
+raydium_log("********* End of Path package update");
+}
+
+unsigned char raydium_path_package_mode(char * name,unsigned char mode)
+{
+int pindex;
+
+pindex=raydium_path_package_find(name);
+if (pindex!=RAYDIUM_PATH_PACKAGE_NOT_FOUND)
+    raydium_path_paths[pindex].mode=mode;
+}

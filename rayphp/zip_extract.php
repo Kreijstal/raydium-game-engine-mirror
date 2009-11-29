@@ -19,3 +19,5 @@ $zip->close();
 
 $status=1;
 echo "'$file' extracted to '$dest'";
+
+?>

@@ -190,7 +190,7 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"  %s\n","--write-path dir         writing directory");
     fprintf(stdout,"  %s\n","--path dir               add dir to path search");
     fprintf(stdout,"  %s\n","--rayphp dir             php script directory");
-    fprintf(stdout,"  %s\n","--create-package file    create a zip package file with all media files");
+    fprintf(stdout,"  %s\n","--package file           register package file");
     fprintf(stdout,"  %s\n","--files                  list all opened files (at exit)");
     fprintf(stdout,"  %s\n","--regs                   dump php registrations (at exit)");
     fprintf(stdout,"  %s\n","--history file           console history filename");

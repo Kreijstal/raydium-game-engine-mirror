@@ -119,7 +119,7 @@ int i;
 raydium_log("List of all opended files:");
 
 for(i=0;i<raydium_file_log_fopen_index;i++)
-    raydium_log("%s %s",(raydium_log_file_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i]);
+    raydium_log("%s %s",(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i]);
 
 }
 
@@ -130,14 +130,14 @@ int i,j;
 i=j=0;
 for(j=0;j<raydium_file_log_fopen_index;j++)
     {
-    if (raydium_log_file_fopen_status[j]==RAYDIUM_FILE_FOUND)
+    if (raydium_file_log_fopen_status[j]==RAYDIUM_FILE_FOUND)
     	{
         if (j==i)
             i++; // Nothing to copy.
         else
             {
             strcpy(raydium_file_log_fopen[i],raydium_file_log_fopen[j]);
-            raydium_log_file_fopen_status[i]=raydium_log_file_fopen_status[j];
+            raydium_file_log_fopen_status[i]=raydium_file_log_fopen_status[j];
             i++;
             }
 	}
@@ -158,7 +158,7 @@ if(!file || !strlen(file))
 for(i=0;i<raydium_file_log_fopen_index;i++) //TODO Exit if already not found
     if(!strcmp(raydium_file_log_fopen[i],file))
         {
-        if ( raydium_log_file_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
+        if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
             return NULL;
         found=1;
         break;
@@ -201,10 +201,10 @@ if(!found)
     {
     strcpy(raydium_file_log_fopen[raydium_file_log_fopen_index],file);
     if (fp)
-        raydium_log_file_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_FOUND;
+        raydium_file_log_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_FOUND;
     else
         {
-        raydium_log_file_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_NOT_FOUND;
+        raydium_file_log_fopen_status[raydium_file_log_fopen_index]=RAYDIUM_FILE_NOT_FOUND;
         raydium_log("Error: Cannot Open %s file",file);
         }
     raydium_file_log_fopen_index++;
