@@ -197,8 +197,9 @@ for(i=0;i<nelems;i++)
  if(raydium_ode_element[e[i]].distant) continue;
  if(raydium_ode_element[e[i]].state!=RAYDIUM_ODE_STANDARD) continue;
  //Ignore at a level of 99% disabled body // Not accurate need to be tested more deeply.
-// if( raydium_ode_element_disable_get(e[i]) && raydium_random_0_x(1)>0.01) continue;
-
+ // if( raydium_ode_element_disable_get(e[i]) && raydium_random_0_x(1)>0.01) continue;
+ if (raydium_ode_element[e[i]].nid<1000)
+    raydium_ode_element[e[i]].nid=(raydium_network_uid+1)*1000+e[i];
  set.nid=raydium_ode_element[e[i]].nid;
 
  p=raydium_ode_element_pos_get(e[i]);
@@ -236,8 +237,6 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
  if(raydium_ode_element_isvalid(i) &&
     raydium_ode_element[i].nid>=0 )
         {
-        if (raydium_ode_element[i].nid<1000)
-            raydium_ode_element[i].nid=(raydium_network_uid+1)*1000+i;
         e[n]=i;
         n++;
         }
@@ -265,8 +264,6 @@ while(i<nelems)
     n=raydium_random_i(0,RAYDIUM_ODE_MAX_ELEMENTS);
     if(raydium_ode_element[n].state && raydium_ode_element[n].nid>=0 && !done[n])
         {
-        if (raydium_ode_element[n].nid<1000)
-            raydium_ode_element[n].nid=(raydium_network_uid+1)*1000+n;
         done[n]=1;
         e[i]=n;
         i++;
@@ -296,8 +293,6 @@ while(i<nelems)
     if(curr>=RAYDIUM_ODE_MAX_ELEMENTS) curr=0;
     if(raydium_ode_element[curr].state && raydium_ode_element[curr].nid>=0)
         {
-        if (raydium_ode_element[curr].nid<1000)
-            raydium_ode_element[curr].nid=(raydium_network_uid+1)*1000+curr;
         e[i]=curr;
         i++;
         }
