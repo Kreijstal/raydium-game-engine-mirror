@@ -145,7 +145,7 @@ for(j=0;j<raydium_file_log_fopen_index;j++)
 raydium_file_log_fopen_index=i;
 }
 
-FILE *raydium_file_fopen_internal(char *file, char *mode, char *full_path)
+FILE *raydium_file_fopen(char *file, char *mode)
 {
 FILE *fp=NULL;
 int i;
@@ -172,14 +172,12 @@ do
     // local mode ?
     if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
         {
-        strcpy(full_path,file2);
         fp= fopen(file2,mode);
         break;
         }
 
     if(strchr(mode,'w'))
         {
-        strcpy(full_path,file2);
         fp= fopen(file2,mode);
         break;
         }
@@ -187,12 +185,10 @@ do
     if( !raydium_init_cli_option("repository-refresh",NULL) &&
         !raydium_init_cli_option("repository-force",NULL) )
         {
-        strcpy(full_path,file2);
         fp=fopen(file2,mode);
         if(fp) break;
         }
     raydium_rayphp_repository_file_get(file2);
-    strcpy(full_path,file2);
     fp=fopen(file2,mode);
     }
 while(0);
@@ -210,23 +206,6 @@ if(!found)
     raydium_file_log_fopen_index++;
     }
 return fp;
-}
-
-FILE *raydium_file_fopen(char *file, char *mode)
-{
-FILE *f;
-char full_path[RAYDIUM_MAX_DIR_LEN];
-char zip_file[RAYDIUM_MAX_DIR_LEN];
-
-f=raydium_file_fopen_internal(file,mode,full_path);
-if (!f)
-    return NULL;
-#ifdef PHP_SUPPORT
-if (raydium_init_cli_option("create-package",zip_file))
-    raydium_rayphp_zip_add(zip_file,full_path);
-#endif
-return f;
-
 }
 
 unsigned long raydium_file_sum_simple_mode(char *filename,char *mode)
