@@ -41,8 +41,12 @@ for(i=0;i<RAYDIUM_MAX_PATHS;i++)
 return -1;
 }
 
+signed char raydium_path_ext(char *dir,char *ext)
+{
+    return raydium_path_ext_priority(dir,ext,2);// 2 is default user priority
+}
 
-signed char raydium_path_ext(char *dir, char *ext)
+signed char raydium_path_ext_priority(char *dir, char *ext,int priority)
 {
 int id;
 
@@ -76,11 +80,16 @@ if(dir[strlen(dir)-1]=='/')
 
 raydium_path_paths[id].mode=RAYDIUM_PATH_MODE_READ;
 raydium_path_paths[id].state=1;
+raydium_path_paths[id].priority=priority;
 return 1;
 }
 
-
 signed char raydium_path_add(char *dir)
+{
+    return raydium_path_add_priority(dir,2); // Default high priority for user path adds
+}
+
+signed char raydium_path_add_priority(char *dir,int priority)
 {
 int id;
 
@@ -104,7 +113,7 @@ if(strchr(dir,'*'))
 
     raydium_file_dirname(path,dir);
     raydium_file_basename(ext,dir);
-    return raydium_path_ext(path,ext);
+    return raydium_path_ext_priority(path,ext,priority);
     }
 
 strcpy(raydium_path_paths[id].path,dir);
@@ -114,6 +123,7 @@ if(dir[strlen(dir)-1]=='/')
 raydium_path_paths[id].mode=RAYDIUM_PATH_MODE_READ;
 raydium_path_paths[id].state=1;
 raydium_path_paths[id].ext[0]=0;
+raydium_path_paths[id].priority=priority; // High priority for user added path.
 return 1;
 }
 
@@ -158,7 +168,7 @@ do
 
     strncpy(part,str,end);
     part[end]=0;
-    raydium_path_add(part);
+    raydium_path_add_priority(part,2);
     str+=(end+1);
  } while(!last);
 
@@ -198,7 +208,8 @@ signed char raydium_path_delete(char *path)
 
 void raydium_path_resolv(char *in, char *out, char mode)
 {
-
+int cur_priority;
+int found;
 strcpy(out,in); // this is the default behavior
 
 // Seems than it's better to allow this "feature", in the risk
@@ -219,10 +230,14 @@ if(mode=='r')
 
     // ok ... file does not exists, search paths
     raydium_file_ext(ext,in);
+    found=0;
+    cur_priority=1000; // Hope it is high enough.
     for(i=0;i<RAYDIUM_MAX_PATHS;i++)
         {
         if( raydium_path_paths[i].state &&
-            raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ )
+            (raydium_path_paths[i].mode==RAYDIUM_PATH_MODE_READ ||
+             raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READONLY ||
+             raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READWRITE ))
             {
             if(raydium_path_paths[i].ext[0] &&
                strcmp(raydium_path_paths[i].ext,ext))
@@ -231,20 +246,31 @@ if(mode=='r')
             sprintf(path,"%s/%s",raydium_path_paths[i].path,in);
             if(raydium_file_readable(path))
                 {
-                strcpy(out,path);
-                return;
+                if (raydium_path_paths[i].priority<cur_priority)
+                    {
+                    cur_priority=raydium_path_paths[i].priority;
+                    strcpy(out,path);
+                    found=1;
+                    }
+                continue;
                 }
             if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
                 {
                 sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
                 if(raydium_file_readable(path))
                     {
-                    strcpy(out,path);
-                    return;
+                    if (raydium_path_paths[i].priority<cur_priority)
+                        {
+                        cur_priority=raydium_path_paths[i].priority;
+                        strcpy(out,path);
+                        found=1;
+                        }
+                    continue;
                     }
                 }
             }
         }
+    if (found) return;
 
     // ok, if we're here, the file does not exists at all, let's
     // prepare R3S job:
@@ -329,7 +355,7 @@ if(!raydium_file_directory_writable(packages))
 if(ok)
     {
     raydium_path_write(path);
-    raydium_path_add(path);
+    raydium_path_add_priority(path,7);
     raydium_log("path: OK");
     }
 else
@@ -381,7 +407,7 @@ fp=raydium_file_fopen(file,"r");
 if(!fp)
     {
     raydium_log("Registering Empty package %s.",file);
-    raydium_path_add(extract_path);
+    raydium_path_add_priority(extract_path,5);
     raydium_path_package_mode(file,RAYDIUM_PATH_PACKAGE_READONLY);
     return 0;
     }
@@ -441,7 +467,7 @@ if(extract)
 		}
 	}
 
-raydium_path_add(extract_path);
+raydium_path_add_priority(extract_path,5);
 raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READONLY);
 sprintf(tmp,"%s/RAYDIUM_PACKAGE_READWRITE",extract_path);
 fp=fopen(tmp,"r");
@@ -488,13 +514,24 @@ if (pindex!=-1) // No package to update exiting
     raydium_log("Updating %s package file",package_name);
     for(i=0;i<raydium_file_log_fopen_index;i++)
         {
+        char base_name[RAYDIUM_MAX_NAME_LEN];
+        int base_name_len;
+
         if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
             continue;
         if (!strcmp(&raydium_file_log_fopen[i][strlen(raydium_file_log_fopen[i])-4],".zip"))
             continue;
+
         raydium_path_resolv(raydium_file_log_fopen[i],full_file_name,'r');
         //raydium_log("File:%s",full_file_name);
-        raydium_rayphp_zip_add(package_name,full_file_name);
+        raydium_file_basename(base_name,full_file_name);
+        base_name_len=strlen(base_name);
+        base_name_len+=1; // Skip /
+        base_name_len=base_name_len+strlen(package_name);
+        base_name_len=strlen(full_file_name)-base_name_len;
+
+        if (strncmp(&full_file_name[base_name_len],package_name,strlen(package_name))!=0)
+            raydium_rayphp_zip_add(package_name,full_file_name);
         }
     }
 raydium_log("********* End of Path package update");

@@ -22,6 +22,12 @@ The user home directory is registered by default in this list.
 Now, the search patch system is able to work even if the '/' character is
 present in the requested filename, so you can use subdirectories if needed.
 
+Each path can have a ##priority## (lower is better).
+Application local directory have highest structural priority.
+Path add by user have default 2 priority.
+Packages have a priority of 5. Packages files are searched just after local directory.
+~/.appname/data have lowest priority of 7
+
 Raydium now features a data package system, so you can store some files in
 a regular ZIP file (with subdirectories if you want) and then register this
 package in your application. Raydium will then automatically search files
@@ -55,9 +61,23 @@ Register ##dir## directory for files with ##ext## extension.
 Return 0 when it fails.
 **/
 
+__rayapi signed char raydium_path_ext_priority(char *dir,char *ext,int priority);
+/**
+Register ##dir## directory for files with ##ext## extension.
+Can spécify path ##priority## (##1## is ##highest## priority).
+Return 0 when if fails.
+**/
+
 __rayapi signed char raydium_path_add(char *dir);
 /**
 Register ##dir## directory.
+Return 0 when it fails.
+**/
+
+__rayapi signed char raydium_path_add_priority(char *dir, int priority);
+/**
+Register ##dir## directory.
+Can spécify ##priority## (##1## is ##highest## priority).
 Return 0 when it fails.
 **/
 

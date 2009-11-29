@@ -24,7 +24,7 @@ typedef struct raydium_path_Path
 signed char state;
 char path[RAYDIUM_MAX_DIR_LEN];
 char ext[RAYDIUM_MAX_NAME_LEN];
-int  priority; // not used yet, see path deletion
+int  priority;
 signed char mode;
 } raydium_path_Path;
 

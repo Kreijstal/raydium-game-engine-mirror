@@ -548,19 +548,19 @@ sky=\"box\";\n\
             if(flag_paths==1)
                 {
                 //TODO Allow to specify base folder.
-                raydium_path_ext("./data/textures/","tga");
-                raydium_path_ext("./data/fonts/","tga");
-                raydium_path_ext("./data/shaders/","vert");
-                raydium_path_ext("./data/shaders/","frag");
-                raydium_path_ext("./data/meshes/","tri");
-                raydium_path_ext("./data/themes/","gui");
-                raydium_path_ext("./data/particles/","prt");
-                raydium_path_ext("./data/lensflares/","lf");
-                raydium_path_ext("./data/cams/","cam");
-                raydium_path_ext("./data/sprites/","sprite");
-                raydium_path_ext("./data/music/","wav");
-                raydium_path_ext("./data/music/","ogg");
-                raydium_path_ext("./","tga");
+                raydium_path_ext_priority("./data/textures/","tga",7);
+                raydium_path_ext_priority("./data/fonts/","tga",7);
+                raydium_path_ext_priority("./data/shaders/","vert",7);
+                raydium_path_ext_priority("./data/shaders/","frag",7);
+                raydium_path_ext_priority("./data/meshes/","tri",7);
+                raydium_path_ext_priority("./data/themes/","gui",7);
+                raydium_path_ext_priority("./data/particles/","prt",7);
+                raydium_path_ext_priority("./data/lensflares/","lf",7);
+                raydium_path_ext_priority("./data/cams/","cam",7);
+                raydium_path_ext_priority("./data/sprites/","sprite",7);
+                raydium_path_ext_priority("./data/music/","wav",7);
+                raydium_path_ext_priority("./data/music/","ogg",7);
+                raydium_path_ext_priority("./","tga",7);
                 }
             }
         //sky type
