@@ -10,10 +10,18 @@
 // Reset to initial state.
 void reset(void)
 {
-int lf;
+int lf,ufo;
+char name[RAYDIUM_MAX_NAME_LEN];
 
 for(lf=0;lf<RAYDIUM_MAX_LENSFLARES;lf++)
     raydium_lensflare_reset(lf);
+
+for(ufo=0;ufo<3;ufo++)
+    {
+    sprintf(name,"ufo%i",ufo);
+    if(raydium_ode_object_isvalid(raydium_ode_object_find(name)))
+        raydium_ode_object_delete_name(name);
+    }
 
 if(raydium_ode_object_isvalid(raydium_ode_object_find("CAR")))
     raydium_ode_object_delete_name("CAR");
@@ -60,6 +68,9 @@ for(lf=0;lf<RAYDIUM_MAX_LENSFLARES;lf++)
 
 void display(void)
 {
+int ufo;
+char name[RAYDIUM_MAX_NAME_LEN];
+
 raydium_joy_key_emul();
 
 switch(raydium_key_last)
@@ -124,7 +135,7 @@ if(raydium_key_last==GLUT_KEY_F4)
 // Headlights
 if(raydium_key_last==GLUT_KEY_F5)
     {
-    int obj,lf1,lf2;
+    int obj;
 
     reset();
 
@@ -132,17 +143,8 @@ if(raydium_key_last==GLUT_KEY_F5)
     raydium_ode_object_box_add("fiesta",obj,0.2,1.2,0.6,0.4,RAYDIUM_ODE_STATIC,0,"fiesta.tri");
     raydium_ode_object_move_3f(obj,0,0,-1.05);
 
-    /*raydium_lensflare_create("headlight_left","lamp.lf");
-    raydium_lensflare_create("headlight_right","lamp.lf");
-
-    lf1=raydium_lensflare_find("headlight_left");
-    lf2=raydium_lensflare_find("headlight_right");
-
-    raydium_lensflare_move_3f(lf1,0.55,-0.15,-1.1);
-    raydium_lensflare_move_3f(lf2,0.55,0.15,-1.1);*/
-
-    lf1=raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_left","lamp.lf",0.55,-0.15,-0.05);
-    lf2=raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_right","lamp.lf",0.55,0.15,-0.05);
+    raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_left","lamp.lf",0.55,-0.15,-0.05);
+    raydium_ode_element_lensflare_offset_name_3f("fiesta","headlight_right","lamp.lf",0.55,0.15,-0.05);
     }
 
 // Starry sky
@@ -173,23 +175,38 @@ if(raydium_key_last==GLUT_KEY_F6)
 // UFO invasion
 if(raydium_key_last==GLUT_KEY_F7)
     {
-    int ufo;
-    char name[RAYDIUM_MAX_NAME_LEN];
+    int obj;
 
     reset();
 
     for(ufo=0;ufo<3;ufo++)
         {
         sprintf(name,"ufo%i",ufo);
-        raydium_lensflare_move_3f(
-            raydium_lensflare_create(name,"6-bladed.lf"),
-            raydium_random_f(-10.0,10.0),
-            raydium_random_f(-10.0,10.0),
-            raydium_random_f(25.0,30.0));
+        obj=raydium_ode_object_create(name);
+        raydium_ode_object_box_add(name,obj,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STATIC,0,"ufo.tri");
+        raydium_ode_object_move_3f(obj,
+            raydium_random_f(-ufo*3,ufo*3),
+            raydium_random_f(-ufo*3,ufo*3),
+            raydium_random_f(3+ufo*3,5+ufo*5));
+        raydium_ode_element_lensflare_offset_name_3f(name,name,"6-bladed.lf",0,0,-0.3);
         }
 
     raydium_sky_box_name("starfield");
     raydium_sky_box_cache();
+    }
+
+// Rotate UFOs
+for(ufo=0;ufo<3;ufo++)
+    {
+    sprintf(name,"ufo%i",ufo);
+    if(raydium_ode_object_isvalid(raydium_ode_object_find(name)))
+        {
+        static float rot[3]={0,0,0};
+
+        rot[2]+=raydium_frame_time/5;
+        if(rot[2]>2*M_PI)rot[2]=0;
+        raydium_ode_object_rotate_name(name,rot);
+        }
     }
 
 raydium_clear_frame();
