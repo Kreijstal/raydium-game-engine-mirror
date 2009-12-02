@@ -475,7 +475,10 @@ if (fp)
     {
     fclose(fp);
     raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READWRITE);
+    raydium_log("Package %s mode: READWRITE",filename);
     }
+else
+    raydium_log("Package %s mode: READONLY",filename);
 return 1;
 }
 
