@@ -64,7 +64,7 @@ Return 0 when it fails.
 __rayapi signed char raydium_path_ext_priority(char *dir,char *ext,int priority);
 /**
 Register ##dir## directory for files with ##ext## extension.
-Can spécify path ##priority## (##1## is ##highest## priority).
+Can specify path ##priority## (##1## is ##highest## priority).
 Return 0 when if fails.
 **/
 
@@ -77,7 +77,7 @@ Return 0 when it fails.
 __rayapi signed char raydium_path_add_priority(char *dir, int priority);
 /**
 Register ##dir## directory.
-Can spécify ##priority## (##1## is ##highest## priority).
+Can specify ##priority## (##1## is ##highest## priority).
 Return 0 when it fails.
 **/
 
@@ -152,14 +152,15 @@ There's no persistence, you should register your packages at every run. A cache
 system makes the proccess very quick, as file access. Any change made to the
 registered ZIP file discards the cache automatically.
 
-Files in the ZIP should be readed only. Any modification will be lost (and you
-don't know when, because of the cache).
+Package have a default 'Middle' priority of ##5## -> File are first searched
+in local directory, then in path added explicitly by user and then in ##package## file.
+
 **/
 
-__rayapi unsigned char raydium_path_package_mode(char * name,unsigned char mode);
+__rayapi void raydium_path_package_mode(char * name,unsigned char mode);
 /**
 Define package mode: RAYDIUM_PACKAGE_READONLY / RAYDIUM_PACKAGE_READWRITE
-All opened files are automaticaly added/refreshed in paclage at application exit.
+All opened files are automaticaly added/refreshed in package at application exit.
 Package mode is written in package file.
 **/
 

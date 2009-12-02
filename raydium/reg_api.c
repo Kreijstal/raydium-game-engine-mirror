@@ -26,7 +26,7 @@ PHP_v_v(raydium_file_cache_flush);
 // path.c
 PHP_i_v(raydium_path_package_cache_clear);
 //PHP_i_s(raydium_path_package_register); // Crash non reentrent php calls not supported
-PHP_i_si(raydium_path_package_mode);
+PHP_v_si(raydium_path_package_mode);
 
 // light.c
 PHP_v_v(raydium_light_enable);

@@ -123,7 +123,7 @@ if(dir[strlen(dir)-1]=='/')
 raydium_path_paths[id].mode=RAYDIUM_PATH_MODE_READ;
 raydium_path_paths[id].state=1;
 raydium_path_paths[id].ext[0]=0;
-raydium_path_paths[id].priority=priority; // High priority for user added path.
+raydium_path_paths[id].priority=priority;
 return 1;
 }
 
@@ -486,8 +486,6 @@ int pindex=-1;
 char package_name[RAYDIUM_MAX_NAME_LEN];
 char full_file_name[RAYDIUM_MAX_NAME_LEN];
 
-raydium_log("********* Path package update");
-
 for (i=0;i<RAYDIUM_MAX_PATHS;i++)
     {
     if (!raydium_path_paths[i].state)
@@ -534,10 +532,9 @@ if (pindex!=-1) // No package to update exiting
             raydium_rayphp_zip_add(package_name,full_file_name);
         }
     }
-raydium_log("********* End of Path package update");
 }
 
-unsigned char raydium_path_package_mode(char * name,unsigned char mode)
+void raydium_path_package_mode(char * name,unsigned char mode)
 {
 int pindex;
 
