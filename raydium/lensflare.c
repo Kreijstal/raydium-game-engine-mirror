@@ -56,6 +56,7 @@ for(tex=0;tex<RAYDIUM_LENSFLARE_MAX_TEXTURES;tex++)
     raydium_lensflare_texture_id[lf][tex]=-1;
 
 raydium_lensflare_move(lf,pos);
+raydium_lensflare_appearance[lf]=0;
 
 for(fx=0;fx<RAYDIUM_LENSFLARE_MAX_FX;fx++)
     {
@@ -542,7 +543,7 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
     float posx,posy;
     float effect[3],color[4];
     float dist;
-    static float pt;
+    float pt;
     static float giro=0;
 
     giro+=4*raydium_frame_time;
@@ -559,9 +560,10 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
             // Store OSD color.
             memcpy(color,(char*)raydium_osd_color,4*sizeof(float));
 
-            pt+=raydium_frame_time*7.0;
+            raydium_lensflare_appearance[lf]+=raydium_frame_time*7.0;
 
-            if(pt>=1)pt=1;
+            if(raydium_lensflare_appearance[lf]>1)raydium_lensflare_appearance[lf]=1;
+            pt=raydium_lensflare_appearance[lf];
 
             // Center of screen.
             cx=cy=50;
@@ -632,7 +634,7 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
             memcpy(raydium_osd_color,color,4*sizeof(float));
             }
         else
-            pt=0;
+            raydium_lensflare_appearance[lf]=0;
         }
     }
 }
