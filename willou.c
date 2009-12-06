@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     
     // window creation
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Willou's test");
-    raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
+    raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
     raydium_projection_near=0.01;
     raydium_projection_far=2500;
     raydium_projection_fov=60;

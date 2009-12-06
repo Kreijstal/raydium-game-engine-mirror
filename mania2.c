@@ -1038,7 +1038,7 @@ raydium_window_create(700,700,RAYDIUM_RENDERING_WINDOW,window);
 
 raydium_background_color_change(0,0,0,1);
 raydium_rendering_displaylists_disable();
-raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
+raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 
 // place here all available objets:
 load_all_in("mania.cfg");

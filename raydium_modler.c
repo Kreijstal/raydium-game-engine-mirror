@@ -806,7 +806,7 @@ raydium_background_color_change(0,0,0,1);
 raydium_console_gets_callback=prompt;
 
 raydium_mouse_show();
-raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
+raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 //raydium_texture_current=1;
 
 raydium_light_on(0);

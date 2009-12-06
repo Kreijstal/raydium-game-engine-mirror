@@ -255,7 +255,7 @@ int main(int argc, char **argv)
     
     // window creation
     raydium_window_create(800,600,RAYDIUM_RENDERING_WINDOW,"willou.c based water shader effect");
-    raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_TRILINEAR;
+    raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
     raydium_projection_near=0.01;
     raydium_projection_far=2500;
     raydium_projection_fov=60;
