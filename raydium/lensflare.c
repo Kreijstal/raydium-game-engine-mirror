@@ -541,33 +541,43 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
     float cx,cy;
     float vx,vy;
     float posx,posy;
-    float effect[3],color[4];
+    float color[4];
     float dist;
     float pt;
     static float giro=0;
+    signed char appear=1;
 
-    giro+=4*raydium_frame_time;
-
-    // Get 2D projection of the point.
-    effect[0]=raydium_lensflare_position[lf][0];
-    effect[1]=raydium_lensflare_position[lf][1];
-    effect[2]=raydium_lensflare_position[lf][2];
-
-    if(raydium_math_point_unproject_3D(effect[0],effect[1],effect[2],&posx,&posy))
+    // Check for POV of the camera visibility on the screen and test the appearance of the lens flare effect.
+    if(raydium_math_point_unproject_3D(raydium_lensflare_position[lf][0],raydium_lensflare_position[lf][1],raydium_lensflare_position[lf][2],&posx,&posy)&&!raydium_lensflare_internal_point_is_occluded(raydium_lensflare_position[lf][0],raydium_lensflare_position[lf][1],raydium_lensflare_position[lf][2])&&posx<100&&posx>0&&posy<100&&posy>0)
         {
-        if(!raydium_lensflare_internal_point_is_occluded(effect[0],effect[1],effect[2])&&posx<100&&posx>0&&posy<100&&posy>0)
+        // Lens flare appears.
+        raydium_lensflare_appearance[lf]+=raydium_frame_time*7.0;
+        if(raydium_lensflare_appearance[lf]>1)raydium_lensflare_appearance[lf]=1;
+        }
+    else
+        {
+        // Lens flare disappears.
+        if(raydium_lensflare_appearance[lf]>0)
             {
-            // Store OSD color.
-            memcpy(color,(char*)raydium_osd_color,4*sizeof(float));
+            raydium_lensflare_appearance[lf]-=raydium_frame_time*4.0;
+            appear=0;
+            }
 
-            raydium_lensflare_appearance[lf]+=raydium_frame_time*7.0;
+        if(raydium_lensflare_appearance[lf]<0)raydium_lensflare_appearance[lf]=0;
+        }
 
-            if(raydium_lensflare_appearance[lf]>1)raydium_lensflare_appearance[lf]=1;
-            pt=raydium_lensflare_appearance[lf];
+    // Draw the lens flare effect.
+    if(raydium_lensflare_appearance[lf]>0&&raydium_lensflare_appearance[lf]<=1)
+        {
+        // Store OSD color.
+        memcpy(color,(char*)raydium_osd_color,4*sizeof(float));
 
-            // Center of screen.
-            cx=cy=50;
+        pt=raydium_lensflare_appearance[lf];
+        cx=cy=50;
+        giro+=4*raydium_frame_time;
 
+        if(appear)
+            {
             // Get vector.
             vx=((float)posx-(float)cx);
             vy=((float)posy-(float)cy);
@@ -577,26 +587,44 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
             vx=vx/dist;
             vy=vy/dist;
 
-            glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+            // Remember last 2D screen position for the disappearance effect.
+            raydium_lensflare_position[lf][3]=dist;
+            raydium_lensflare_position[lf][4]=vx;
+            raydium_lensflare_position[lf][5]=vy;
+            }
+        else
+            {
+            // Restore last 2D screen position from the appearance effect.
+            dist=raydium_lensflare_position[lf][3];
+            vx=raydium_lensflare_position[lf][4];
+            vy=raydium_lensflare_position[lf][5];
+            }
 
-            // #1 Big main glow far away.
-            raydium_lensflare_fx_internal_draw(lf,0,1,0,dist,cx,cy,vx,vy,giro,pt);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 
-            // #2 First ray rotation clockwise.
-            raydium_lensflare_fx_internal_draw(lf,1,2,4,dist,cx,cy,vx,vy,giro,pt);
-            // #3 Second ray rotation counter clockwise.
-            raydium_lensflare_fx_internal_draw(lf,1,3,4,dist,cx,cy,vx,vy,giro,pt);
-            // #4 Third ray rotation clockwise.
-            raydium_lensflare_fx_internal_draw(lf,1,4,4,dist,cx,cy,vx,vy,giro,pt);
-            // #5 Fourth ray rotation counter clockwise.
-            raydium_lensflare_fx_internal_draw(lf,1,5,4,dist,cx,cy,vx,vy,giro,pt);
+        // #1 Big main glow far away.
+        raydium_lensflare_fx_internal_draw(lf,0,1,0,dist,cx,cy,vx,vy,giro,pt);
 
-            // #6 Big streaks far away.
-            raydium_lensflare_fx_internal_draw(lf,2,6,2,dist,cx,cy,vx,vy,giro,pt);
+        // #2 First ray rotation clockwise.
+        raydium_lensflare_fx_internal_draw(lf,1,2,4,dist,cx,cy,vx,vy,giro,pt);
+        // #3 Second ray rotation counter clockwise.
+        raydium_lensflare_fx_internal_draw(lf,1,3,4,dist,cx,cy,vx,vy,giro,pt);
+        // #4 Third ray rotation clockwise.
+        raydium_lensflare_fx_internal_draw(lf,1,4,4,dist,cx,cy,vx,vy,giro,pt);
+        // #5 Fourth ray rotation counter clockwise.
+        raydium_lensflare_fx_internal_draw(lf,1,5,4,dist,cx,cy,vx,vy,giro,pt);
 
-            // #7 Big halo far away.
-            raydium_lensflare_fx_internal_draw(lf,3,7,3,dist,cx,cy,vx,vy,giro,pt);
+        // #6 Big streaks far away.
+        raydium_lensflare_fx_internal_draw(lf,2,6,2,dist,cx,cy,vx,vy,giro,pt);
 
+        // #7 Big halo far away.
+        raydium_lensflare_fx_internal_draw(lf,3,7,3,dist,cx,cy,vx,vy,giro,pt);
+
+        // Draw the next effects only when the lens flare appears.
+        // We don't see near effects during the lens flare disappearance time,
+        // so we only need to show a kind of residual effect in the retina of the eyes here.
+        if(appear)
+            {
             // #8 First middle distance orb.
             raydium_lensflare_fx_internal_draw(lf,4,8,3,dist,cx,cy,vx,vy,giro,pt);
             // #9 Second middle distance orb.
@@ -626,15 +654,13 @@ if(raydium_lensflare_enabled_tag&&raydium_lensflare_internal_state[lf])
             raydium_lensflare_fx_internal_draw(lf,7,19,5,dist,cx,cy,vx,vy,giro,pt);
             // #20 Slim anamorphic far away.
             raydium_lensflare_fx_internal_draw(lf,7,20,5,dist,cx,cy,vx,vy,giro,pt);
-
-            // Restore blend function.
-            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-            // Restore OSD color.
-            memcpy(raydium_osd_color,color,4*sizeof(float));
             }
-        else
-            raydium_lensflare_appearance[lf]=0;
+
+        // Restore blend function.
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+        // Restore OSD color.
+        memcpy(raydium_osd_color,color,4*sizeof(float));
         }
     }
 }

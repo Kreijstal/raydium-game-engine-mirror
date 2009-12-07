@@ -752,7 +752,7 @@ __global char        raydium_lensflare_name[RAYDIUM_MAX_LENSFLARES][RAYDIUM_MAX_
 __global signed char raydium_lensflare_internal_created[RAYDIUM_MAX_LENSFLARES];
 __global signed char raydium_lensflare_internal_state[RAYDIUM_MAX_LENSFLARES];
 __global int         raydium_lensflare_texture_id[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_TEXTURES];
-__global float       raydium_lensflare_position[RAYDIUM_MAX_LENSFLARES][3];
+__global float       raydium_lensflare_position[RAYDIUM_MAX_LENSFLARES][6];
 __global float       raydium_lensflare_appearance[RAYDIUM_MAX_LENSFLARES];
 __global signed char raydium_lensflare_fx_internal_state[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX];
 __global float       raydium_lensflare_fx_size[RAYDIUM_MAX_LENSFLARES][RAYDIUM_LENSFLARE_MAX_FX];
