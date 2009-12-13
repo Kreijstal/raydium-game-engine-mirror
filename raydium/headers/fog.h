@@ -9,14 +9,14 @@ Fog
 /**
 Fog is usefull for two major reasons:
 
-1. Realism: Just try, and you'll understand: 
+1. Realism: Just try, and you'll understand:
 amazing depth impression, no ?
 
-2. Speed: For a correct fog effect (i'm talking 
+2. Speed: For a correct fog effect (i'm talking
 about estetic aspect), you must bring near_clipping to a closer value,
-reducing the overall number of triangles displayed at the same time. 
+reducing the overall number of triangles displayed at the same time.
 
-There are 3 types of fog. They are: 
+There are 3 types of fog. They are:
 * Linear: fog = (Far-z) / (Far-Near)
 * Exp: fog = e^(-density*z)
 * Exp2: fog = e^((-density*z)^2)
@@ -38,30 +38,30 @@ Obvious
 
 __rayapi void raydium_fog_color_update (void);
 /**
-If you have modified ##raydium_background_color## array, you must 
+If you have modified ##raydium_background_color## array, you must
 call this function, applying the specified color to hardware.
 See also: ##raydium_background_color_change##
 **/
 
 __rayapi void raydium_fog_mode(GLuint mode);
 /**
-The fog mode can be change with this function. There are 3 different ways 
+The fog mode can be change with this function. There are 3 different ways
 to apply the fog:
 
-1. ##RAYDIUM_FOG_MODE_LINEAR## - Used by default, the fog is directly applied 
-according the distance. Not real world fog, but used to avoid drawing 
+1. ##RAYDIUM_FOG_MODE_LINEAR## - Used by default, the fog is directly applied
+according the distance. Not real world fog, but used to avoid drawing
 too distant objects.
-##IMPORTANT##: EXP mode ignores the ##density## value, 
+##IMPORTANT##: LINEAR mode ignores the ##density## value,
 only uses ##near## and ##far##.
 
-2. ##RAYDIUM_FOG_MODE_EXP## - The fog grows exponentially with the distance. 
-Usual mist in the real world. 
-##IMPORTANT##: EXP mode ignores the ##near## and ##far## values, 
+2. ##RAYDIUM_FOG_MODE_EXP## - The fog grows exponentially with the distance.
+Usual mist in the real world.
+##IMPORTANT##: EXP mode ignores the ##near## and ##far## values,
 only uses the ##density##.
 
-3. ##RAYDIUM_FOG_MODE_EXP2## - The fog grows twice exponentially with the 
+3. ##RAYDIUM_FOG_MODE_EXP2## - The fog grows twice exponentially with the
 distance. Used when the observer is inside a cloud/mist.
-##IMPORTANT##: EXP2 mode ignores the ##near## and ##far## values, 
+##IMPORTANT##: EXP2 mode ignores the ##near## and ##far## values,
 only uses the ##density##.
 **/
 
@@ -86,16 +86,16 @@ Useless if you are using EXP or EXP2 modes.
 __rayapi void raydium_fog_apply(void);
 /**
 Used to apply changes in your setup of fog.
-Also is used to continue a previously stopped fog. 
+Also is used to continue a previously stopped fog.
 See: ##raydium_fog_wait()## below.
 **/
 
 __rayapi void raydium_fog_wait(void);
 /**
 With this function you can deactivate TEMPORALY the fog, but the internal state
-of the fog in Raydium won't change, so when you use raydium_fog_apply, the fog 
+of the fog in Raydium won't change, so when you use raydium_fog_apply, the fog
 will continue like it was before being stoped.
-It's very usefull for certain rendering effects that need to 
+It's very usefull for certain rendering effects that need to
 stop the fog temporaly.
 **/
 
