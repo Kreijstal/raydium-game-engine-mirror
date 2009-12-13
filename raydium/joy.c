@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/joy.h"
-#endif 
+#endif
 #ifdef WIN32
 // Need to add winmm lib to windows dll build
 #include <mmsystem.h>
@@ -239,7 +239,7 @@ int raydium_joy_process_event(struct js_event e)
                     raydium_log("Axis Moved: %i",e.value);
                     #endif
                     raydium_joy_axis[e.number]=e.value/(float)32767;
-                    //here we invert values from the y axis: we want 
+                    //here we invert values from the y axis: we want
                     //1 for up and -1 for down
                         if(e.value<0)
                         {
@@ -362,7 +362,7 @@ static IOReturn HIDCreateOpenDeviceInterface(io_object_t hidDevice, recDevice* p
     HRESULT plugInResult = S_OK;
     SInt32 score = 0;
     IOCFPlugInInterface** ppPlugInInterface = NULL;
-    
+
     if (NULL == pDevice->interface)
     {
         result = IOCreatePlugInInterfaceForService(hidDevice,
@@ -380,7 +380,7 @@ static IOReturn HIDCreateOpenDeviceInterface(io_object_t hidDevice, recDevice* p
             if (S_OK != plugInResult)
                 HIDReportErrorNum("could not query HID class device interface from plugInInterface",
                                   plugInResult);
-            
+
             (*ppPlugInInterface)->Release(ppPlugInInterface);
         }
         else
@@ -389,7 +389,7 @@ static IOReturn HIDCreateOpenDeviceInterface(io_object_t hidDevice, recDevice* p
                               result);
         }
     }
-    
+
     if (NULL != pDevice->interface)
     {
         result = (*(pDevice->interface))->open(pDevice->interface, 0);
@@ -403,7 +403,7 @@ static IOReturn HIDCreateOpenDeviceInterface(io_object_t hidDevice, recDevice* p
                                                         pDevice, pDevice);
         }
     }
-    
+
     return result;
 }
 
@@ -479,7 +479,7 @@ static void HIDAddElement(CFTypeRef refElement, recDevice* pDevice)
             || (elementType == kIOHIDElementTypeInput_Axis))
         {
             if (refUsagePage
-                && CFNumberGetValue(refUsagePage, kCFNumberLongType, &usagePage) 
+                && CFNumberGetValue(refUsagePage, kCFNumberLongType, &usagePage)
                 && refUsage
                 && CFNumberGetValue(refUsage, kCFNumberLongType, &usage))
             {
@@ -764,7 +764,7 @@ void raydium_joy_callback(void)
 #ifndef APPLE
 #ifndef WIN32
  struct js_event e;                     //structure for storing an event
- 
+
         if(!raydium_joy) { raydium_joy_init_vars(); return; }
         raydium_joy_click=0;
 
@@ -778,10 +778,10 @@ void raydium_joy_callback(void)
         int i;
         unsigned int mask=1;
         static DWORD dwButtons=0; // saves buttons state between calls
-        
+
         if(!raydium_joy) { raydium_joy_init_vars(); return; }
         raydium_joy_click=0;
-        
+
         memset(&ActualPos,0,sizeof(JOYINFOEX));
         ActualPos.dwSize = sizeof(JOYINFOEX);
         ActualPos.dwFlags = JOY_RETURNALL;
@@ -790,7 +790,7 @@ void raydium_joy_callback(void)
         raydium_joy_x=(ActualPos.dwXpos/(float)32768-1);
         raydium_joy_y=(ActualPos.dwYpos/(float)32768-1)*-1;
         raydium_joy_z=(ActualPos.dwZpos/(float)32768-1)*-1;
-        
+
         // "raw" values
         raydium_joy_axis[0]=ActualPos.dwXpos/(float)32768-1;
         raydium_joy_axis[1]=ActualPos.dwYpos/(float)32768-1;
@@ -798,7 +798,7 @@ void raydium_joy_callback(void)
         raydium_joy_axis[3]=ActualPos.dwRpos/(float)32768-1;
         raydium_joy_axis[4]=ActualPos.dwUpos/(float)32768-1;
         raydium_joy_axis[4]=ActualPos.dwVpos/(float)32768-1;
-        
+
         for (i=0;i<RAYDIUM_JOY_MAX_BUTTONS;i++)
         {
             if (ActualPos.dwButtons & mask)
@@ -806,11 +806,11 @@ void raydium_joy_callback(void)
                 if(!(dwButtons & mask))
                         raydium_joy_click=i+1;
                 raydium_joy_button[i]=1;
-                
+
             }
             else
                 raydium_joy_button[i]=0;
-                
+
             mask=mask<<1;
         }
         dwButtons = ActualPos.dwButtons;
@@ -874,10 +874,10 @@ void raydium_joy_callback(void)
                 default:
                     raydium_joy_x = 0.0;
                     raydium_joy_axis[0] = 0.0;
-                    
+
                     raydium_joy_y = 0.0;
                     raydium_joy_axis[1] = 0.0;
-                    
+
                     raydium_joy_z = 0.0;
                     raydium_joy_axis[2] = 0.0;
                     break;
@@ -995,9 +995,9 @@ void raydium_joy_callback(void)
         raydium_joy_init_vars();
         return;
     }
-    
+
     raydium_joy_click = 0;
-    
+
     raydium_joy_axis[0] = raydium_joy_x = myglutGetAcceleration(0);
     raydium_joy_axis[1] = raydium_joy_y = myglutGetAcceleration(1);
     raydium_joy_axis[2] = raydium_joy_z = myglutGetAcceleration(2);
@@ -1028,7 +1028,11 @@ if (write(raydium_joy_event_handle, &ie, sizeof(ie)) == -1)
 
 void raydium_joy_init(void)
 {
+#ifndef APPLE
+#ifndef WIN32
  int ret;                                       //test var for ioctls
+#endif
+#endif
  char name[128];                                //driver String (and temp things)
 
 int autocenter=5;         /* default value. between 0 and 100 */
@@ -1036,14 +1040,14 @@ int autocenter=5;         /* default value. between 0 and 100 */
         raydium_joy_init_vars();
 #ifndef APPLE
 #ifndef WIN32
-    
+
     raydium_init_cli_option_default("joydev",name,"/dev/js0");
     raydium_joy=open(name,O_RDONLY|O_NONBLOCK);
     if(raydium_joy==-1)
     {
             raydium_joy=open("/dev/input/js0",O_RDONLY|O_NONBLOCK);
         }
-        
+
     if(raydium_joy==-1)
         {
                 raydium_log("joy: FAILED (cannot open %s)",name);
@@ -1053,16 +1057,16 @@ int autocenter=5;         /* default value. between 0 and 100 */
         {
                 raydium_log("joy: OK (found)");
         }
-        
+
         raydium_init_cli_option_default("evdev",name,"/dev/input/event0");
-            
+
         raydium_joy_event_handle = open(name, O_RDWR);
-        if(raydium_joy_event_handle==-1) 
+        if(raydium_joy_event_handle==-1)
           raydium_log("%s: cannot open (rw), no Force Feedback.",name);
         last_event=raydium_timecall_clock();
 
         raydium_joy_ff_autocenter(autocenter);
-        
+
 
 
         if(raydium_joy)
@@ -1101,7 +1105,6 @@ int autocenter=5;         /* default value. between 0 and 100 */
         }
 #else
     {
-        int i;
         JOYINFO structtmp;
 
         raydium_init_cli_option_default("joydev",name,"0");
@@ -1116,14 +1119,14 @@ int autocenter=5;         /* default value. between 0 and 100 */
             raydium_log ("Joystick %d not connected",raydium_joy_win_id);
             return;
         }
-            
+
         raydium_joy_ff_autocenter(autocenter);
         raydium_log("joy: OK (found %d)",raydium_joy_win_id);
 
         if(raydium_joy)
         {
             JOYCAPS InfoCaps;
-        
+
             if (joyGetDevCaps(raydium_joy_win_id, &InfoCaps, sizeof(JOYCAPS)) == JOYERR_NOERROR)
             {
                 raydium_log("Joystick: %s", InfoCaps.szPname);
@@ -1131,7 +1134,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
                 raydium_joy_n_axes=InfoCaps.wNumAxes;
                 raydium_log("This joystick has %d axes",raydium_joy_n_axes);
-                
+
 
                 raydium_joy_n_buttons=InfoCaps.wNumButtons;
                 raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
@@ -1226,7 +1229,7 @@ int autocenter=5;         /* default value. between 0 and 100 */
         }
 
         // Add device to the end of the list.
-        if (lastDevice) 
+        if (lastDevice)
             lastDevice->pNext = device;
         else
             gpDeviceList = device;
@@ -1401,8 +1404,8 @@ void raydium_joy_ff(void)
     effect.u.periodic.period=50;
     effect.u.periodic.magnitude=16000;
     effect.u.periodic.direction=0x4000;*/
-    
-        
+
+
 
 
 

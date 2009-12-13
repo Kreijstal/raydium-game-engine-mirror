@@ -105,7 +105,9 @@ return 0;
 
 unsigned long raydium_timecall_clock(void)
 {
+#ifndef WIN32
 struct timeval tv;
+#endif
 
 #ifdef DEBUG_MOVIE
     return (float)(raydium_timecall_debug_movie*100);

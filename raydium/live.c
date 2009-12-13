@@ -208,7 +208,7 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
     int i,j;
     BYTE * pin , * pout;
     raydium_live_Device *dev;
-    BITMAPINFO * bmi_in, * bmi_out;
+    BITMAPINFO * bmi_in;
     pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
 
@@ -242,14 +242,16 @@ int raydium_live_video_open(char *device, int sizex, int sizey)
 #ifndef APPLE
 char *default_device=RAYDIUM_LIVE_DEVICE_DEFAULT;
 int id;
+#ifndef WIN32
 int capture_style = RAYDIUM_LIVE_FREE;
+#endif
 char palette[128];
 raydium_live_Device *dev;
+#ifndef WIN32
 char force_read=0;
-char cli_device[RAYDIUM_MAX_NAME_LEN];
-#ifdef WIN32
-int bmisize;
 #endif
+char cli_device[RAYDIUM_MAX_NAME_LEN];
+
 
 strcpy(palette,"(none)");
 
@@ -283,7 +285,7 @@ if (dev->fd<0)
         HDC hDC;
         char webcam_name_list[RAYDIUM_MAX_NAME_LEN];
         char webcam_drv_list[RAYDIUM_MAX_NAME_LEN];
-        int i;
+
 
 
         hWnd = GetDesktopWindow();
@@ -671,7 +673,7 @@ return id;
     capCaptureSequenceNoFile(dev->hWnd_WC);
 
     }
-raydium_log("live: first Win32 support attempt");
+raydium_log("live: Win32 support");
 return id;
 #endif
 #endif
