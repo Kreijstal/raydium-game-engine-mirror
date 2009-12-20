@@ -344,7 +344,8 @@ raydium_sapi_module.php_ini_path_override=path;
 sapi_startup(&raydium_sapi_module);
 raydium_atexit(raydium_php_close);
 
-raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,RAYPHP_PATH);
+if(raydium_php_rayphp_path[0]==0) // raydium_php_rayphp_path_change() ?
+    raydium_init_cli_option_default("rayphp",raydium_php_rayphp_path,RAYPHP_PATH);
 
 // Linux default
 if(!raydium_file_isdir(raydium_php_rayphp_path) &&

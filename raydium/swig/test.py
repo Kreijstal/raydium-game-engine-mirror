@@ -86,8 +86,8 @@ def display():
 
 
 raydium.raydium_init_args(sys.argv);
-raydium.raydium_window_create(640,480,raydium.RAYDIUM_RENDERING_WINDOW,"Physics test");
 raydium.raydium_php_rayphp_path_change("../../rayphp"); # Test only. You should better move your .py files with other Raydium demo (and remove this line)
+raydium.raydium_window_create(640,480,raydium.RAYDIUM_RENDERING_WINDOW,"Physics test");
 raydium.raydium_texture_filter_change(raydium.RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium.cvar.raydium_projection_near=0.01;
 raydium.cvar.raydium_projection_far=1000;

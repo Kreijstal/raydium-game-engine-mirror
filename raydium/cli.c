@@ -228,6 +228,7 @@ else
 
 // Find user's home directory
 raydium_init_internal_homedir_find(app_name);
+raydium_php_rayphp_path[0]=0; // see raydium_php_init() / raydium_php_rayphp_path_change()
 raydium_atexit_init();
 }
 

@@ -24,7 +24,9 @@ __rayapi void raydium_php_rayphp_path_change(char *path);
 By default, Raydium search for a "rayphp/" subdirectory in the application
 directory. It's possible to change this using a --rayphp command line
 switch, or using this function. You must call the function as soon as possible,
-before any use of RayPHP.
+**before window creation**, but after ##raydium_init_args*()##.
+You should probably avoid this function, since it disables the regular 'rayphp'
+scripts automatic search.
 **/
 
 __rayapi int raydium_rayphp_repository_file_get (char *path);
