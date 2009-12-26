@@ -1,4 +1,4 @@
-<?
+<?php
 // This file is a binding generation demo, using SWIG:
 // http://www.swig.org/
 // You may generate bindings for many languages, such as

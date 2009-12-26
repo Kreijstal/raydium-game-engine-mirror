@@ -1,4 +1,4 @@
-<?
+<?php
 // ManiaDrive, CQFD Corp.
 // Generates story track list for ingame menu
 

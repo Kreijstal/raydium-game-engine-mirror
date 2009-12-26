@@ -1,4 +1,4 @@
-<?
+<?php
 // Converts DirectX mesh file format (.x) to Raydium file format (.tri).
 
 // This script assume (for now) that indexes for normals 

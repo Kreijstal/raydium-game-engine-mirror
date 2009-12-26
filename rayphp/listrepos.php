@@ -1,4 +1,4 @@
-<?
+<?php
 // lists files from the first valid repository
 
 // params: $filter (string, input), $size (integer, input)

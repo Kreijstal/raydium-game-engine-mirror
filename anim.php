@@ -1,4 +1,4 @@
-<?
+<?php
 // This script is able to extract only needed anims from a animated
 // tri file and to reverse any anim (for backward run, for example).
 

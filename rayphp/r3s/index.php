@@ -1,4 +1,4 @@
-<?
+<?php
 // Raydium Server Side repository script
 // name this file "index.php", and place data in $data_dir directory.
 require("config.inc.php");

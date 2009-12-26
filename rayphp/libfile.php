@@ -1,4 +1,4 @@
-<?
+<?php
 // set the proxy according to the configuration database
 $proxy = str_pad('', 128);
 raydium_parser_db_get("Generic-Proxy", $proxy, "");

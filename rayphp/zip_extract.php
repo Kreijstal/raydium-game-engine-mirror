@@ -1,4 +1,4 @@
-<?
+<?php
 // Extract a zip file to the specified directory
 
 // params: $file (string, input), $dest (string, input), $status (integer, output)

@@ -1,4 +1,4 @@
-<?
+<?php
 // Raydium Server Side repository Scripts (R3S) configuration file.
 
 // files directory:

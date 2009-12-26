@@ -1,4 +1,4 @@
-<?
+<?php
 /*
     Raydium - CQFD Corp.
     http://raydium.org/

@@ -1,4 +1,4 @@
-<?
+<?php
 // this file is used by ManiaDrive to get
 // track list from CQFD Corp website.
 $libfile="rayphp/libfile.php";

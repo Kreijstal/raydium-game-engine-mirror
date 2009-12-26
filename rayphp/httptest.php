@@ -1,4 +1,4 @@
-<?
+<?php
 // Test if Internet connection is available using Raydium website
 
 // params: $status (integer, output)

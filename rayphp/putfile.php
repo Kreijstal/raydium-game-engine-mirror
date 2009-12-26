@@ -1,4 +1,4 @@
-<?
+<?php
 // gets file from repositories listed in repositories.list
 
 // params: $filename (string, input), $depends (integer, input)

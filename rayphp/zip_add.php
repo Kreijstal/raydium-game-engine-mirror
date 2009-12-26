@@ -1,4 +1,4 @@
-<?
+<?php
 // Add a file to the specified zip package
 
 // params: $file (string, input), $zip_file (string, input), $status (integer, output)

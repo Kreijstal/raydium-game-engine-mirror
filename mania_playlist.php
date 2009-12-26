@@ -1,4 +1,4 @@
-<?
+<?php
 // place anything you want here to modify $raydium_ogg_file 
 // with the desired file (or empty string to stop music playback)
 
