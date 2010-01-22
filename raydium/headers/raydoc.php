@@ -90,11 +90,11 @@ return trim(getMain($filename,1));
 function getHeaders($directory)
 {
 $res=array();
-if (is_dir($directory)) 
+if (is_dir($directory))
     {
-        if ($dh = opendir($directory)) 
+        if ($dh = opendir($directory))
         {
-            while (($file = readdir($dh)) !== false) 
+            while (($file = readdir($dh)) !== false)
             {
                 if(substr($file,-2)==".h")
                 {
@@ -171,7 +171,7 @@ for($i=0;$i<count($files);$i++)
     $p=getPriority($file);
     if($p==-1)
         $p=999000+$i;
-        
+
     while(isset($sorted[$p]))
         $p++;
     $sorted[$p]=$file;
@@ -189,14 +189,14 @@ for($i=0;$i<count($sorted);$i++)
     $file=$sorted[$i];
     $title=getTitle($file);
 
-    if($title==-1) 
+    if($title==-1)
         {
         h1(($i+1)." no documentation for $file");
         continue;
         }
-    
+
     h1(($i+1)." $title");
-    
+
     $f=file($file);
     $last=0;
     $n=0;
@@ -205,7 +205,7 @@ for($i=0;$i<count($sorted);$i++)
         $title=trim($f[$l-1]);
         if($title=="")
             $title="// unknown item";
-            
+
         // types:
         // 1 - Comment (//)
         // 2 - Macro (#)
@@ -232,7 +232,7 @@ for($i=0;$i<count($sorted);$i++)
                 $title=substr($title,0,$pos+1);
                 }
             $title=trim(str_replace("#define ","",$title))." (macro)";
-            
+
             }
 
         if($type==3)
@@ -245,22 +245,22 @@ for($i=0;$i<count($sorted);$i++)
                 $title=substr($title,0,-1);
             $title=trim(str_replace("**","* *",$title));
             }
-        
+
         if($type==2 || $type==3)
             $id=addToIndex($title);
-        
+
         h2('""'."<a name=$id></a>".'""'.($i+1).".".($n+1)." $title");
-        
+
         $last=$l+1;
         $end=getTagLine("**/",$f,$last);
         if($end==-1)
             die("expected '**/' (started line $l)");
-        
+
         unset($body);
 /*      for($j=$l+1;$j<$end;$j++)
             {
             $lj=trim($f[$j]);
-            if($lj=="") 
+            if($lj=="")
                 $lj="\n\n";
             else
                 $lj.=" ";
@@ -274,7 +274,7 @@ for($i=0;$i<count($sorted);$i++)
             }
         $str=@implode("\n",$body);
         body($str);
-        
+
         $last=$end+1;
         $n++;
         }
