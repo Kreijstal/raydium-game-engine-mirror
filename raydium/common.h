@@ -214,7 +214,7 @@
 #define RAYDIUM_PROJECTION_PERSPECTIVE          1
 
 #define RAYDIUM_KEYBOARD_SIZE                   256
-#define RAYDIUM_JOY_MAX_BUTTONS                 16
+#define RAYDIUM_JOY_MAX_BUTTONS                 32
 #define RAYDIUM_JOY_MAX_AXIS                    8
 
 #define RAYDIUM_NETWORK_PORT                    29104
