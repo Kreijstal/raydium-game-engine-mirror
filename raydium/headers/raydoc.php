@@ -31,6 +31,20 @@ use RaydiumApiReferenceComments for any need.
 ";
 
 
+function cleanName($str)
+{
+$res="";
+$allowed="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+
+$str=explode('(',$str);
+$str=$str[0];
+
+for($i=0;$i<strlen($str);$i++)
+    if(strpos($allowed,$str[$i])!==false)
+        $res.=$str[$i];
+
+return $res;
+}
 
 function getTagLine($tag,$lines,$from=0)
 {
@@ -110,14 +124,13 @@ return $res;
 
 
 $chapters=array();
-function h1($str,$addchap=true)
+function h1($str,$addchap,$file="")
 {
 global $chapters;
-static $i=1;
 if($addchap)
     {
-    echo '""'."<a name=chap$i></a>".'""';
-    $chapters[$i]=$str;
+    echo '""'."<a name=\"$file\"></a>".'""';
+    $chapters[$file]=$str;
     $i++;
     }
 echo "\n=====$str:=====\n";
@@ -143,7 +156,6 @@ echo $str;
 $index=array();
 function addToIndex($f)
 {
-static $i=0;
 global $index;
 
 $p=strpos($f,"raydium_");
@@ -152,8 +164,9 @@ if($p!==false)
 else
     $f="unsupported - $f";
 
-$index[$i]=$f."|$i";
-return $i++;
+$cf=cleanName($f);
+$index[$cf]=$f."|$cf";
+return $cf;
 }
 
 // Main
@@ -191,11 +204,11 @@ for($i=0;$i<count($sorted);$i++)
 
     if($title==-1)
         {
-        h1(($i+1)." no documentation for $file");
+        h1(($i+1)." no documentation for $file",true,$file);
         continue;
         }
 
-    h1(($i+1)." $title");
+    h1(($i+1)." $title",true,$file);
 
     $f=file($file);
     $last=0;
@@ -249,7 +262,7 @@ for($i=0;$i<count($sorted);$i++)
         if($type==2 || $type==3)
             $id=addToIndex($title);
 
-        h2('""'."<a name=$id></a>".'""'.($i+1).".".($n+1)." $title");
+        h2('""'."<a name=\"$id\"></a>".'""'.($i+1).".".($n+1)." $title");
 
         $last=$l+1;
         $end=getTagLine("**/",$f,$last);
@@ -284,16 +297,16 @@ for($i=0;$i<count($sorted);$i++)
 h1('""<a name=chapters></a>""Chapters',false);
 foreach($chapters as $key => $val)
     {
-    echo('====""'."<a href=$page#chap$key>$val</a>".'""====')."\n";
+    echo('====""'."<a href=\"$page#$key\">$val</a>".'""====')."\n";
     }
 
 sort($index);
-h1('""<a name=index></a>""Index');
+h1('""<a name=index></a>""Index',false);
 for($i=0;$i<count($index);$i++)
     {
     $j=explode("|",$index[$i]);
     $k=$j[0];
     $l=$j[1];
-    echo '""'."<a href=$page#$l><tt>$k</tt></a>".'""'."\n";
+    echo '""'."<a href=\"$page#$l\"><tt>$k</tt></a>".'""'."\n";
     }
 
