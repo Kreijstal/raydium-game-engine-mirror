@@ -69,7 +69,7 @@ consts, function arguments that shouldn't be modified, ...
 
 __rayapi int raydium_parser_remove(char *str, char what);
 /**
-Remove all occurences of character ##what## in the ##str# string.
+Remove all occurences of character ##what## in the ##str## string.
 Returns the number of removed characters.
 String is modified, see the warning above.
 **/
