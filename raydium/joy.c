@@ -212,6 +212,7 @@ if(raydium_key[GLUT_KEY_RIGHT]) raydium_joy_x=1.f;
 #ifndef WIN32
 int raydium_joy_process_event(struct js_event e)
 {
+    e.type &= ~JS_EVENT_INIT;
     switch(e.type)
     {
         case JS_EVENT_BUTTON:
@@ -292,10 +293,6 @@ int raydium_joy_process_event(struct js_event e)
                         }
                 }
                 break;
-        case JS_EVENT_INIT:
-                    //raydium_log("Joystick returned its initial state\n");
-                    break;
-
     }
     return(e.type);
 }
