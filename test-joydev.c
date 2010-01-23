@@ -19,7 +19,7 @@ raydium_clear_frame();
 
 if(raydium_joy)
     {
-    int a,b,c;
+    int a,b;
     int x,y;
 
     // General device information.
