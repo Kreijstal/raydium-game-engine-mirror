@@ -794,7 +794,7 @@ void raydium_joy_callback(void)
         raydium_joy_axis[2]=ActualPos.dwZpos/(float)32768-1;
         raydium_joy_axis[3]=ActualPos.dwRpos/(float)32768-1;
         raydium_joy_axis[4]=ActualPos.dwUpos/(float)32768-1;
-        raydium_joy_axis[4]=ActualPos.dwVpos/(float)32768-1;
+        raydium_joy_axis[5]=ActualPos.dwVpos/(float)32768-1;
 
         for (i=0;i<RAYDIUM_JOY_MAX_BUTTONS;i++)
         {
