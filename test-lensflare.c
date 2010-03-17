@@ -10,18 +10,13 @@
 // Reset to initial state.
 void reset(void)
 {
-int lf,ufo;
-char name[RAYDIUM_MAX_NAME_LEN];
+int lf;
 
 for(lf=0;lf<RAYDIUM_MAX_LENSFLARES;lf++)
     raydium_lensflare_reset(lf);
 
-for(ufo=0;ufo<3;ufo++)
-    {
-    sprintf(name,"ufo%i",ufo);
-    if(raydium_ode_object_isvalid(raydium_ode_object_find(name)))
-        raydium_ode_object_delete_name(name);
-    }
+if(raydium_ode_object_isvalid(raydium_ode_object_find("UFO")))
+    raydium_ode_object_delete_name("UFO");
 
 if(raydium_ode_object_isvalid(raydium_ode_object_find("CAR")))
     raydium_ode_object_delete_name("CAR");
@@ -173,18 +168,31 @@ if(raydium_key_last==GLUT_KEY_F6)
     }
 
 // UFO invasion
+#define UFO_SPEED 50
+#define UFO_REL_SPEED 5
 if(raydium_key_last==GLUT_KEY_F7)
     {
     int obj;
+    float vect[3];
 
     reset();
 
+    vect[0]=raydium_random_f(-UFO_SPEED,UFO_SPEED);
+    vect[1]=raydium_random_f(-UFO_SPEED,UFO_SPEED);
+    vect[2]=0;
+
+    obj=raydium_ode_object_create("UFO");
     for(ufo=0;ufo<3;ufo++)
         {
         sprintf(name,"ufo%i",ufo);
-        obj=raydium_ode_object_create(name);
-        raydium_ode_object_box_add(name,obj,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STATIC,0,"ufo.tri");
-        raydium_ode_object_move_3f(obj,
+        raydium_ode_object_box_add(name,obj,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"ufo.tri");
+        raydium_ode_element_gravity_name(name,0);
+        raydium_ode_element_addforce_name_3f(name,
+            vect[0]+raydium_random_f(-UFO_REL_SPEED,UFO_REL_SPEED),
+            vect[1]+raydium_random_f(-UFO_REL_SPEED,UFO_REL_SPEED),
+            0);
+
+        raydium_ode_element_move_name_3f(name,
             raydium_random_f(-ufo*3,ufo*3),
             raydium_random_f(-ufo*3,ufo*3),
             raydium_random_f(3+ufo*3,5+ufo*5));
