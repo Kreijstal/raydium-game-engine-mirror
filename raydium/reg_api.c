@@ -223,6 +223,10 @@ if(done)
     return;
     }
 
+// common.c
+raydium_register_variable_const_i(RAYDIUM_MAJOR,"RAYDIUM_MAJOR");
+raydium_register_variable_const_i(RAYDIUM_MINOR,"RAYDIUM_MINOR");
+
 // file.c
 raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
 raydium_register_function(C2PHP(raydium_file_cache_flush),"raydium_file_cache_flush");

@@ -5227,6 +5227,7 @@ if(!raydium_ode_record_fp)
     return;
 
 // no need to record invisible things :)
+// (see internal_delete, too)
 if(mesh==NULL || !strcmp(mesh,""))
     return;
 
@@ -5321,6 +5322,11 @@ if(type==dCapsuleClass)
     }
 
 if(type==-1)
+    return;
+
+// no need to record invisible things :)
+// (see internal_create, too)
+if(raydium_ode_element[id].mesh==-1)
     return;
 
 fwrite(&event,sizeof(event),1,raydium_ode_record_fp);
