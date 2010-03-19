@@ -246,3 +246,18 @@ result[2] = ((start[2] * startWeight) + (end[2] * endWeight));
 result[3] = ((start[3] * startWeight) + (end[3] * endWeight));
 raydium_math_quaternion_normalize(result);
 }
+
+void raydium_math_hms(double t, int *h, int *m, int *s, int *ms)
+{
+(*h)=t/3600;
+t-=(*h)*3600;
+
+(*m)=t/60;
+t-=(*m)*60;
+
+(*s)=t;
+t-=(*s)*1;
+
+(*ms)=t*1000;
+}
+

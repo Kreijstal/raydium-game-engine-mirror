@@ -167,4 +167,9 @@ warning 2: this function will replace the camera by itself.
 **/
 #endif
 
+__rayapi void raydium_math_hms(double t, int *h, int *m, int *s, int *ms);
+/**
+Converts a duration (in seconds) to H:M:S:MS format.
+**/
+
 #endif
