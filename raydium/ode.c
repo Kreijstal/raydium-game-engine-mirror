@@ -5379,7 +5379,13 @@ raydium_log("ODE: capture: recording to '%s'",rrp_filename);
 
 void raydium_ode_capture_record(char *rrp_filename)
 {
-raydium_ode_capture_record_rate(rrp_filename,RAYDIUM_ODE_RECORD_RATE_DEFAULT);
+char opt[128];
+int rate;
+
+rate=RAYDIUM_ODE_RECORD_RATE_DEFAULT;
+if(raydium_init_cli_option("capture-rate",opt))
+    rate=atoi(opt);
+raydium_ode_capture_record_rate(rrp_filename,rate);
 }
 
 void raydium_ode_capture_record_stop(void)
@@ -5561,6 +5567,7 @@ raydium_ode_record_play_ghost_tag=(ghost?1:0);
 void raydium_ode_capture_play(char *rrp_filename, signed char change_ground)
 {
 unsigned char version;
+int h,m,s,ms;
 
 if(raydium_ode_record_play_fp)
     {
@@ -5608,7 +5615,10 @@ if(raydium_ode_record_play_world==-1)
     raydium_ode_record_play_fp=NULL;
     return;
     }
-raydium_log("ODE: replay: playing '%s' (%i Hz accuracy)",rrp_filename,raydium_ode_record_play_rate);
+
+raydium_math_hms(raydium_ode_record_index_size/raydium_ode_record_play_rate,&h,&m,&s,&ms);
+raydium_log("ODE: replay: playing '%s' (%i:%02i, %i Hz accuracy)",
+    rrp_filename,h*60+m,s,raydium_ode_record_play_rate);
 
 if(change_ground)
     raydium_ode_ground_set_name(raydium_ode_record_play_ground);
