@@ -9,6 +9,7 @@
 
 #include "raydium/index.c"
 
+signed char help_show=1;
 signed char attached=0; // is camera attached to something ?
 int attached_id; // if yes, which element is it ?
 dReal attached_pos[3]; // and where the camera is ? (relative to this element)
@@ -26,6 +27,9 @@ if(raydium_key_last==1027)
 
 if(raydium_key_last==1032)
     playing=(playing?0:1);
+
+if(raydium_key_last==1000+'h')
+    help_show=(help_show?0:1);
 
 if(raydium_key[GLUT_KEY_F2])
     raydium_ode_capture_speed(10);
@@ -49,7 +53,7 @@ if(raydium_mouse_click==1)
     dReal dist;
 
     id = raydium_ode_mouse_pick(100,pos,&dist);
-    
+
     if(id>=0)
         {
         // attached_pos (camera pos to element's space)
@@ -61,7 +65,7 @@ if(raydium_mouse_click==1)
         raydium_ode_element_world2rel(id,pos,attached_lookat);
         attached_id=id;
         attached=1;
-        }    
+        }
     }
   else // is alread attached
     {
@@ -71,7 +75,7 @@ if(raydium_mouse_click==1)
 
 if(attached && !raydium_ode_element_isvalid(attached_id))
     attached=0;
-    
+
 raydium_clear_frame();
 
 if(!attached)
@@ -80,11 +84,15 @@ else
     raydium_ode_element_camera_inboard(attached_id,
                     attached_pos[0],attached_pos[1],attached_pos[2],
                     attached_lookat[0],attached_lookat[1],attached_lookat[2]);
-    
+
 
 raydium_ode_draw_all(0);
-raydium_osd_printf(2,98,18,0.5,"font2.tga","^CSPACE^F: start/stop  ^CF1/F2^F: -10x/10x  ^CF3/F4^F: -0.1x/0.1x");
-raydium_osd_printf(2,94,18,0.5,"font2.tga","^CLeft Click^F: Attach/detach camera to targeted element");
+if(help_show)
+    {
+    raydium_osd_printf(2,98,18,0.5,"font2.tga","^CSPACE^F: start/stop  ^CF1/F2^F: -10x/10x  ^CF3/F4^F: -0.1x/0.1x");
+    raydium_osd_printf(2,94,18,0.5,"font2.tga","^CLeft Click^F: Attach/detach camera to targeted element");
+    raydium_osd_printf(2,90,18,0.5,"font2.tga","^CH^F: Show/hide this message");
+    }
 raydium_rendering_finish();
 }
 
@@ -107,7 +115,7 @@ raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"RRP player");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_window_view_perspective(60,0.01,2500); // fov 60 + near and far planes
 
-raydium_fog_disable();    
+raydium_fog_disable();
 raydium_light_enable();
 raydium_light_on(0);
 
