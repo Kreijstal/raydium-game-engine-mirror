@@ -9,15 +9,15 @@ $zip = new ZipArchive;
 
 $res=$zip->open($file);
 if($res!==TRUE)
-	die("FAILED: Unable to open $file from RayPHP");
+	die("packages: ERROR: Unable to open $file from RayPHP");
 
 $res=$zip->extractTo($dest);
 if(!$res)
-	die("FAILED: Unable to extract '$file' to '$dest'");
+	die("packages: ERROR: Unable to extract '$file' to '$dest'");
 
 $zip->close();
 
 $status=1;
-echo "'$file' extracted to '$dest'";
+echo "packages: '$file' extracted to '$dest'";
 
 ?>

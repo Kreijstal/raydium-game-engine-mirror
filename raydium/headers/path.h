@@ -140,6 +140,12 @@ __rayapi int raydium_path_package_find(char *name);
 Return path index associated with package name ##name##.
 **/
 
+__rayapi int raydium_path_package_find_free(void);
+/**
+Return free package slot.
+Return -1 if ##RAYDIUM_MAX_PACKAGES_FILES## already registered.
+**/
+
 __rayapi signed char raydium_path_package_register(char *file);
 /**
 Call this function to register a new ZIP package (note that you can change
@@ -157,11 +163,16 @@ in local directory, then in path added explicitly by user and then in ##package#
 
 **/
 
+__rayapi signed char raydium_path_package_internal_add(char * file);
+/** Internal. Add a package to list of registered package.**/
+
 __rayapi void raydium_path_package_mode(char * name,unsigned char mode);
 /**
-Define package mode: RAYDIUM_PACKAGE_READONLY / RAYDIUM_PACKAGE_READWRITE
-All opened files are automaticaly added/refreshed in package at application exit.
+Define package mode: ##RAYDIUM_PACKAGE_READONLY## / ##RAYDIUM_PACKAGE_READWRITE##
+With ##RAYDIUM_PACKAGE_READWRITE## all opened files are automaticaly added/refreshed
+in package at application exit.
 Package mode is written in package file.
+To modify package mode use console within the application.
 **/
 
 __rayapi signed char raydium_path_package_cache_clear(void);

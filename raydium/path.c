@@ -5,6 +5,7 @@
     See "license.txt" file.
 */
 
+
 #ifndef DONT_INCLUDE_HEADERS
 #include "index.h"
 #else
@@ -15,28 +16,21 @@
 
 void raydium_path_package_update(void);
 
-int raydium_path_package_find(char *name)
-{
-int i;
-int l;
-
-for (i=0;i<RAYDIUM_MAX_PATHS;i++)
-    {
-    if (!raydium_path_paths[i].state)
-        continue;
-    l=strlen(raydium_path_paths[i].path)-strlen(name);
-    if (strcmp(&raydium_path_paths[i].path[l],name)==0)
-        return i;
-    }
-return RAYDIUM_PATH_PACKAGE_NOT_FOUND;
-}
-
 int raydium_path_find_free(void)
 {
 int i;
 
 for(i=0;i<RAYDIUM_MAX_PATHS;i++)
     if(!raydium_path_paths[i].state)
+        return i;
+return -1;
+}
+
+int raydium_path_package_find_free(void)
+{
+int i;
+for(i=0;i<RAYDIUM_MAX_PACKAGES_FILES;i++)
+    if(raydium_path_package_mode_internal[i]==RAYDIUM_PATH_PACKAGE_FREE)
         return i;
 return -1;
 }
@@ -301,6 +295,9 @@ int i;
 
 for(i=0;i<RAYDIUM_MAX_PATHS;i++)
     raydium_path_paths[i].state=0;
+
+for(i=0;i<RAYDIUM_MAX_PACKAGES_FILES;i++)
+    raydium_path_package_mode_internal[i]=RAYDIUM_PATH_PACKAGE_FREE;
 }
 
 void raydium_path_init(void)
@@ -330,7 +327,7 @@ if(!ok)
         if(!raydium_file_directory_writable(path))
             {
             ok=0;
-            raydium_log("ERROR: path: cannot create '%s'",path);
+            raydium_log("path: ERROR: cannot create '%s'",path);
             }
         else
             {
@@ -346,9 +343,9 @@ if(!raydium_file_directory_writable(packages))
 	{
 	mkdir(packages,0755);
 	if(!raydium_file_directory_writable(packages))
-		raydium_log("ERROR: path: cannot create '%s'",packages);
+		raydium_log("packages: ERROR: cannot create '%s'",packages);
 	else
-		raydium_log("path: created '%s'",packages);
+		raydium_log("packages: created '%s'",packages);
 	}
 
 
@@ -359,7 +356,7 @@ if(ok)
     raydium_log("path: OK");
     }
 else
-    raydium_log("ERROR: path: unable to find a writable path. Try using --write-path");
+    raydium_log("path: ERROR: unable to find a writable path. Try using --write-path");
 }
 
 void raydium_path_write_local_deny(signed char deny)
@@ -375,14 +372,28 @@ char path[RAYDIUM_MAX_DIR_LEN];
 raydium_file_home_path_cpy("packages",path);
 if(!raydium_file_rm_rf(path))
 	{
-	raydium_log("ERROR: path: packages: can't delete '%s'.",path);
+	raydium_log("packages: ERROR: can't delete '%s'.",path);
 	return 0;
 	}
 
 // We'll let the next startup create the directory again (easy, I said)
-raydium_log("path: packages: cache cleared. Exiting !");
+raydium_log("packages: cache cleared. Exiting !");
 exit(0);
 return 1;
+}
+
+signed char raydium_path_package_internal_add(char * file)
+{
+int i;
+i=raydium_path_package_find_free();
+if(i>=0)
+    {
+    strcpy(raydium_path_package_file[i],file);
+    raydium_path_package_mode_internal[i]=RAYDIUM_PATH_PACKAGE_READONLY;
+    }
+else
+    raydium_log("package: ERROR: Too many packages (%d) already registered. Can't register %s",RAYDIUM_MAX_PACKAGES_FILES,file);
+return i;
 }
 
 signed char raydium_path_package_register(char *file)
@@ -406,9 +417,8 @@ strcpy(extract_path,raydium_file_home_path(tmp));
 fp=raydium_file_fopen(file,"r");
 if(!fp)
     {
-    raydium_log("Registering Empty package %s.",file);
-    raydium_path_add_priority(extract_path,5);
-    raydium_path_package_mode(file,RAYDIUM_PATH_PACKAGE_READONLY);
+    raydium_log("packages: Registering Empty package %s.",file);
+    raydium_path_package_internal_add(file);
     return 0;
     }
 fclose(fp);
@@ -418,7 +428,7 @@ raydium_path_resolv(file,file_path, 'r');
 
 if(stat(file_path,&file_stat)==-1)
 	{
-	raydium_log("ERROR: path: can't stat / resolv '%s'",file);
+	raydium_log("packages: ERROR: can't stat / resolv '%s'",file);
 	perror("stat");
 	return 0;
 	}
@@ -430,7 +440,7 @@ else
 	// already exists ... Is the same ?
 	if(stat(extract_path,&extract_stat)==-1)
 		{
-		raydium_log("ERROR: path: can't stat '%s'.",extract_path);
+		raydium_log("path: ERROR: can't stat '%s'.",extract_path);
 		perror("stat");
 		return 0;
 		}
@@ -441,12 +451,12 @@ else
 		// Whatever "svn blame" says, it's not me who erased your hard drive.
 		if(!raydium_file_rm_rf(extract_path))
 			{
-			raydium_log("ERROR: path: can't delete '%s'.",extract_path);
+			raydium_log("packages: ERROR: can't delete '%s'.",extract_path);
 			return 0;
 			}
 		}
 	else
-		raydium_log("path: package '%s' already in cache",filename);
+		raydium_log("packages: '%s' already in cache",filename);
 	}
 
 if(extract)
@@ -461,24 +471,25 @@ if(extract)
 
 	if(raydium_file_utime(extract_path,&time))
 		{
-		raydium_log("ERROR: path: can't change '%s' mtime.",extract_path);
+		raydium_log("packages: ERROR: can't change '%s' mtime.",extract_path);
 		perror("utime");
 		return 0;
 		}
 	}
 
+raydium_path_package_internal_add(file);
 raydium_path_add_priority(extract_path,5);
-raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READONLY);
 sprintf(tmp,"%s/RAYDIUM_PACKAGE_READWRITE",extract_path);
 fp=fopen(tmp,"r");
 if (fp)
     {
     fclose(fp);
-    raydium_path_package_mode(filename,RAYDIUM_PATH_PACKAGE_READWRITE);
-    raydium_log("Package %s mode: READWRITE",filename);
+    raydium_path_package_mode(file,RAYDIUM_PATH_PACKAGE_READWRITE);
+    //raydium_log("packages: Register %s mode: READWRITE",file);
     }
-else
-    raydium_log("Package %s mode: READONLY",filename);
+else{
+    //raydium_log("packages: Register %s mode: READONLY",file);
+    }
 return 1;
 }
 
@@ -486,36 +497,37 @@ void raydium_path_package_update(void)
 {
 int i;
 int pindex=-1;
+char full_package_name[RAYDIUM_MAX_NAME_LEN];
 char package_name[RAYDIUM_MAX_NAME_LEN];
 char full_file_name[RAYDIUM_MAX_NAME_LEN];
+char file_name[RAYDIUM_MAX_NAME_LEN];
 
-for (i=0;i<RAYDIUM_MAX_PATHS;i++)
+for (i=0;i<RAYDIUM_MAX_PACKAGES_FILES;i++)
     {
-    if (!raydium_path_paths[i].state)
+    if (raydium_path_package_mode_internal[i]==RAYDIUM_PATH_PACKAGE_FREE)
         continue;
-    if (raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READWRITE)
+    if (raydium_path_package_mode_internal[i]==RAYDIUM_PATH_PACKAGE_READWRITE)
         {
-        char tmp[RAYDIUM_MAX_NAME_LEN];
-        raydium_file_basename(package_name,raydium_path_paths[i].path);
-        strcpy(tmp,"RAYDIUM_PACKAGE_READWRITE");
-        raydium_rayphp_zip_add(package_name,tmp);
+        raydium_path_resolv(raydium_path_package_file[i],full_package_name,'w');
+        raydium_rayphp_zip_add(full_package_name,"RAYDIUM_PACKAGE_READWRITE","");
         if (pindex==-1)
             pindex=i;
         }
-    if (raydium_path_paths[i].mode==RAYDIUM_PATH_PACKAGE_READONLY)
+    if (raydium_path_package_mode_internal[i]==RAYDIUM_PATH_PACKAGE_READONLY)
         {
-        raydium_file_basename(package_name,raydium_path_paths[i].path);
-        raydium_rayphp_zip_add(package_name,"RAYDIUM_PACKAGE_READONLY");
+        raydium_path_resolv(raydium_path_package_file[i],full_package_name,'w');
+        raydium_rayphp_zip_add(full_package_name,"RAYDIUM_PACKAGE_READONLY","");
         }
     }
 
 if (pindex!=-1) // No package to update exiting
     {
-    raydium_file_basename(package_name,raydium_path_paths[pindex].path);
-    raydium_log("Updating %s package file",package_name);
+    raydium_path_resolv(raydium_path_package_file[pindex],full_package_name,'w');
+    raydium_file_basename(package_name,raydium_path_package_file[pindex]);
+    raydium_log("packages: Updating %s package file",raydium_path_package_file[pindex]);
+    raydium_log("----------------------------------------------");
     for(i=0;i<raydium_file_log_fopen_index;i++)
         {
-        char base_name[RAYDIUM_MAX_NAME_LEN];
         int base_name_len;
 
         if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
@@ -523,16 +535,16 @@ if (pindex!=-1) // No package to update exiting
         if (!strcmp(&raydium_file_log_fopen[i][strlen(raydium_file_log_fopen[i])-4],".zip"))
             continue;
 
-        raydium_path_resolv(raydium_file_log_fopen[i],full_file_name,'r');
+        strcpy(file_name,raydium_file_log_fopen[i]);
+        raydium_path_resolv(file_name,full_file_name,'r');
         //raydium_log("File:%s",full_file_name);
-        raydium_file_basename(base_name,full_file_name);
-        base_name_len=strlen(base_name);
+        base_name_len=strlen(file_name);
         base_name_len+=1; // Skip /
         base_name_len=base_name_len+strlen(package_name);
         base_name_len=strlen(full_file_name)-base_name_len;
 
         if (strncmp(&full_file_name[base_name_len],package_name,strlen(package_name))!=0)
-            raydium_rayphp_zip_add(package_name,full_file_name);
+            raydium_rayphp_zip_add(full_package_name,full_file_name,file_name);
         }
     }
 }
@@ -540,8 +552,24 @@ if (pindex!=-1) // No package to update exiting
 void raydium_path_package_mode(char * name,unsigned char mode)
 {
 int pindex;
+char basen1[RAYDIUM_MAX_DIR_LEN];
+char basen2[RAYDIUM_MAX_DIR_LEN];
 
-pindex=raydium_path_package_find(name);
-if (pindex!=RAYDIUM_PATH_PACKAGE_NOT_FOUND)
-    raydium_path_paths[pindex].mode=mode;
+raydium_file_basename(basen1,name);
+for(pindex=0;pindex<RAYDIUM_MAX_PACKAGES_FILES;pindex++)
+    {
+    if (!strcmp(name,raydium_path_package_file[pindex]))
+        break;
+    raydium_file_basename(basen2,raydium_path_package_file[pindex]);
+    if(!strcmp(basen1,basen2))
+        break;
+    }
+if (pindex>=RAYDIUM_MAX_PACKAGES_FILES)
+    {
+    raydium_log("packages: ERROR: %s not found.",name);
+    return;
+    }
+raydium_path_package_mode_internal[pindex]=mode;
+raydium_log("packages: %s mode: %s",raydium_path_package_file[pindex],(mode==RAYDIUM_PATH_PACKAGE_READONLY)?"READONLY":"READWRITE");
+
 }

@@ -61,9 +61,10 @@ Returns 1 when OK, 0 when fails.
 Use PHP ZipArchive class.
 **/
 
-__rayapi signed char raydium_rayphp_zip_add(char *zip_file, char *file);
+__rayapi signed char raydium_rayphp_zip_add(char * zip_file, char * full_file_name,char * file_name);
 /**
-Add ##file## to ##zip_file## package file. Returns 1 when OK, 0 when fails.
+Add ##file_name## to ##zip_file## package file, file is read according to ##full_file_name## path.
+Returns 1 when OK, 0 when fails.
 **/
 
 __rayapi signed char raydium_rayphp_repository_defaults(char *def);

@@ -115,11 +115,16 @@ return 1;
 void raydium_file_log_fopen_display(void)
 {
 int i;
+char tmp[RAYDIUM_MAX_DIR_LEN];
 
-raydium_log("List of all opended files:");
+raydium_log("List of all opened files:");
+raydium_log("-------------------------");
 
 for(i=0;i<raydium_file_log_fopen_index;i++)
-    raydium_log("%s %s",(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i]);
+    {
+    raydium_path_resolv(raydium_file_log_fopen[i],tmp,'r');
+    raydium_log("%s %s from %s",(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i],tmp);
+    }
 
 }
 
@@ -155,7 +160,7 @@ char file2[RAYDIUM_MAX_DIR_LEN];
 if(!file || !strlen(file))
     return NULL;
 
-for(i=0;i<raydium_file_log_fopen_index;i++) //TODO Exit if already not found
+for(i=0;i<raydium_file_log_fopen_index;i++)
     if(!strcmp(raydium_file_log_fopen[i],file))
         {
         if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
