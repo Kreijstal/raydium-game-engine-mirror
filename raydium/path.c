@@ -419,6 +419,7 @@ if(!fp)
     {
     raydium_log("packages: Registering Empty package %s.",file);
     raydium_path_package_internal_add(file);
+    raydium_path_package_mode(file,RAYDIUM_PATH_PACKAGE_READWRITE);
     return 0;
     }
 fclose(fp);
