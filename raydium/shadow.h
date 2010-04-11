@@ -10,13 +10,19 @@
 
 #define RAYDIUM_SHADOW_OPACITY          0.5
 #define RAYDIUM_SHADOW_TEXTURE          "shadowmap"
+#define RAYDIUM_SHADOW_BOX_SIZE         10
 
+#define RAYDIUM_SHADOW_MODE_FULLSCENE   10
+#define RAYDIUM_SHADOW_MODE_CAMERABOX   20
+
+__global char raydium_shadow_mode_current;
 __global GLuint raydium_shadow_map_size;
 __global GLuint raydium_shadow_texture;
 __global int raydium_shadow_light;
 __global GLfloat raydium_shadow_ground_modelsize;
 __global GLfloat raydium_shadow_ground_center_factor_x;
 __global GLfloat raydium_shadow_ground_center_factor_y;
+__global GLfloat raydium_shadow_camerabox_size_current;
 
 // proto
 void raydium_camera_replace(void);

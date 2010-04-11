@@ -102,6 +102,8 @@ PHP_i_s(raydium_particle_state_restore);
 // shadow.c
 PHP_v_v(raydium_shadow_enable);
 PHP_v_v(raydium_shadow_disable);
+PHP_v_i(raydium_shadow_mode);
+PHP_v_f(raydium_shadow_camerabox_size);
 
 // hdr.c
 PHP_v_v(raydium_hdr_enable);
@@ -322,6 +324,10 @@ raydium_register_function(C2PHP(raydium_particle_generator_move_name_3f),"raydiu
 // shadow.c
 raydium_register_function(C2PHP(raydium_shadow_enable),"raydium_shadow_enable");
 raydium_register_function(C2PHP(raydium_shadow_disable),"raydium_shadow_disable");
+raydium_register_function(C2PHP(raydium_shadow_mode),"raydium_shadow_mode");
+raydium_register_function(C2PHP(raydium_shadow_camerabox_size),"raydium_shadow_camerabox_size");
+raydium_register_variable_const_i(RAYDIUM_SHADOW_MODE_FULLSCENE,"RAYDIUM_SHADOW_MODE_FULLSCENE");
+raydium_register_variable_const_i(RAYDIUM_SHADOW_MODE_CAMERABOX,"RAYDIUM_SHADOW_MODE_CAMERABOX");
 
 // hdr.c
 raydium_register_function(C2PHP(raydium_hdr_enable),"raydium_hdr_enable");

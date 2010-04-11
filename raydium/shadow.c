@@ -9,9 +9,19 @@
 #include "index.h"
 #else
 #include "headers/shadow.h"
-#endif 
+#endif
 
 #include "shadow.h"
+
+void raydium_shadow_camerabox_size(GLfloat size)
+{
+raydium_shadow_camerabox_size_current=size/2.f;
+}
+
+void raydium_shadow_mode(char mode)
+{
+raydium_shadow_mode_current=mode;
+}
 
 void raydium_shadow_init(void)
 {
@@ -19,6 +29,8 @@ raydium_shadow_tag=0;
 raydium_shadow_ground_mesh=-1;
 raydium_shadow_rendering=0;
 raydium_shadow_light=0;
+raydium_shadow_mode_current=RAYDIUM_SHADOW_MODE_CAMERABOX;
+raydium_shadow_camerabox_size(RAYDIUM_SHADOW_BOX_SIZE);
 raydium_log("shadow: OK");
 }
 
@@ -75,8 +87,8 @@ if(raydium_texture_exists(RAYDIUM_SHADOW_TEXTURE)!=-1)
     return;
 
 tmp=1;
-while(tmp<=raydium_window_tx && 
-      tmp<=raydium_window_ty && 
+while(tmp<=raydium_window_tx &&
+      tmp<=raydium_window_ty &&
       tmp<=raydium_texture_size_max)
       {
       tmp*=2;
@@ -93,8 +105,9 @@ glTexGenfv(GL_Q,GL_EYE_PLANE,Q);
 glPopMatrix();
 
 raydium_shadow_texture=raydium_texture_load_internal("",RAYDIUM_SHADOW_TEXTURE,1,raydium_shadow_map_size,raydium_shadow_map_size,4,-1);
-//raydium_shadow_texture=raydium_texture_load("shadowmap1.tga"); // debug
-
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, 0);
 }
 
 void raydium_shadow_disable(void)
@@ -156,15 +169,29 @@ if(!raydium_shadow_tag || raydium_shadow_ground_mesh<0)
 glViewport(0,0,raydium_shadow_map_size,raydium_shadow_map_size);
 glClearColor(0,0,0,1);
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
 glMatrixMode(GL_PROJECTION);
 glPushMatrix();
 glLoadIdentity();
 
-glTranslatef((raydium_shadow_ground_center_factor_x-0.5)*2,(raydium_shadow_ground_center_factor_y-0.5)*2,0);
-glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-        -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-        -1000,1000); // should probably use far clipping
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_FULLSCENE)
+    {
+    glTranslatef((raydium_shadow_ground_center_factor_x-0.5)*2,
+                 (raydium_shadow_ground_center_factor_y-0.5)*2,0);
+    glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+            -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+            -1000,1000); // should probably use far clipping
+    }
+
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_CAMERABOX)
+    {
+    glTranslatef(-raydium_camera_x/(float)raydium_shadow_camerabox_size_current,
+                 -raydium_camera_y/(float)raydium_shadow_camerabox_size_current,0);
+    glOrtho(-raydium_shadow_camerabox_size_current,raydium_shadow_camerabox_size_current,
+            -raydium_shadow_camerabox_size_current,raydium_shadow_camerabox_size_current,
+            -1000,1000); // should probably use far clipping
+    }
+
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
 gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
@@ -173,12 +200,12 @@ gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
 
 glDisable(GL_LIGHTING);
 glDisable(GL_TEXTURE_2D);
-    
+
 glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1);
 
 raydium_shadow_rendering=1;
 glPushMatrix();
-#ifdef ODE_SUPPORT 
+#ifdef ODE_SUPPORT
 //raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
 raydium_ode_draw_all(4);
 #endif
@@ -194,9 +221,9 @@ glutSwapBuffers();
 
 glBindTexture(GL_TEXTURE_2D,raydium_shadow_texture);
 glCopyTexSubImage2D(GL_TEXTURE_2D,0,0,0,0,0,raydium_shadow_map_size,raydium_shadow_map_size);
-    
+
 glColor4f(1,1,1,1);
-    
+
 glViewport(0,0,raydium_window_tx,raydium_window_ty);
 glEnable(GL_TEXTURE_2D);
 
@@ -229,12 +256,29 @@ _raydium_math_MatrixInverse(mview,imview);
 
 glMatrixMode(GL_TEXTURE);
 glLoadIdentity();
-glTranslatef(raydium_shadow_ground_center_factor_x,raydium_shadow_ground_center_factor_y,0);
+
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_FULLSCENE)
+    glTranslatef(raydium_shadow_ground_center_factor_x,raydium_shadow_ground_center_factor_y,0);
+
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_CAMERABOX)
+    {
+    glTranslatef(-raydium_camera_x/raydium_shadow_camerabox_size_current/2.f,
+                 -raydium_camera_y/raydium_shadow_camerabox_size_current/2.f,0);
+
+    glTranslatef(0.5,0.5,1);
+    }
 glScalef(0.5,0.5,1.0);
 glColor4f(1,1,1,1);
-glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-        -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
-        -1,1);
+
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_FULLSCENE)
+    glOrtho(-raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+            -raydium_shadow_ground_modelsize,raydium_shadow_ground_modelsize,
+            -1,1);
+
+if(raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_CAMERABOX)
+    glOrtho(-raydium_shadow_camerabox_size_current,raydium_shadow_camerabox_size_current,
+            -raydium_shadow_camerabox_size_current,raydium_shadow_camerabox_size_current,
+            -1,1);
 
 gluLookAt(raydium_light_position[raydium_shadow_light][0]*0,
           raydium_light_position[raydium_shadow_light][1]*0,
@@ -247,13 +291,13 @@ glEnable(GL_TEXTURE_2D);
 glEnable(GL_BLEND);
 glBlendFunc(GL_ZERO,GL_ONE_MINUS_SRC_COLOR);
 glBindTexture(GL_TEXTURE_2D,raydium_shadow_texture);
-//glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("shadowmap1.tga")); // debug
+//glBindTexture(GL_TEXTURE_2D,raydium_texture_find_by_name("BOXshadowmap1.tga")); // debug
 
 raydium_shadow_object_draw(raydium_shadow_ground_mesh);
 
 glDisable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    
+
 glMatrixMode(GL_TEXTURE);
 glLoadIdentity(); // reset GL_TEXTURE matrix
 glMatrixMode(GL_MODELVIEW);

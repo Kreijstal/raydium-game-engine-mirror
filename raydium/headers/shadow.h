@@ -11,16 +11,13 @@ Shadows
 /**
 Raydium provides a simple support for shadowing, on top of the RayODE API.
 
-Please, note this support is still experimental, since some work is planned
-to increase accuracy of shadows.
-
 This shadowing system will draw all RayODE elements to a shadow map, from
 light point of vue. This map will then be projected to the RayODE ground.
 
-This method have a lot of drawbacks (shadow accuracy will decrease as the
-ground size increase, shadows are projected all over Z axis [floor-and-ceiling
-shadows], ...) but have the huge advantage to be very fast, even on lew-end
-hardware, and requires no particular tuning or setup.
+This method have some drawbacks (shadows are projected all over
+Z axis [floor-and-ceiling shadows], one frame lag, ...) but have the huge
+advantage to be very fast, even on lew-end hardware, and requires no
+particular tuning or setup.
 
 Short story: see ##raydium_shadow_enable()## (available in the console).
 **/
@@ -29,6 +26,24 @@ Short story: see ##raydium_shadow_enable()## (available in the console).
 __rayapi void raydium_shadow_init(void);
 /**
 Internal use.
+**/
+
+__rayapi void raydium_shadow_mode(char mode);
+/**
+Raydium now features more accurate shadowmaps, rendering shadows only
+around the camera. See ##raydium_shadow_camerabox_size()## if you want to
+change the size of the bounding box.
+This mode is now the default (##RAYDIUM_SHADOW_MODE_CAMERABOX##), but the old
+behavior is available with ##RAYDIUM_SHADOW_MODE_FULLSCENE##, and you can
+switch from one mode to the other anytime.
+**/
+
+__rayapi void raydium_shadow_camerabox_size(GLfloat size);
+/**
+Defines the size of the box around the camera where the shadows are generated
+and rendered.
+Of course, current shadow mode should be ##RAYDIUM_SHADOW_MODE_CAMERABOX##.
+Default value is ##RAYDIUM_SHADOW_BOX_SIZE## (see shadow.h)
 **/
 
 __rayapi void raydium_shadow_enable(void);
