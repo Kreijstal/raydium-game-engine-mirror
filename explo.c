@@ -22,7 +22,7 @@ int a;
 #define ERP_CFM         0.3,0.8
 
 raydium_ode_object_delete_name("WATURE");
-                                                                                                                            
+
 a=raydium_ode_object_create("WATURE");
 raydium_ode_object_box_add("corps",a,1,1.2,0.6,0.4,RAYDIUM_ODE_STANDARD,0,"clio.tri");
 raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
@@ -62,7 +62,7 @@ raydium_ode_motor_attach_name("moteur","suspet_ag",1);
 raydium_ode_motor_attach_name("moteur","suspet_ad",1);
 raydium_ode_motor_power_max_name("moteur",0.1);
 //raydium_ode_motor_gears_set_name("moteur",gears,7);
-                                                                                                                            
+
 raydium_ode_motor_create("direction",a,RAYDIUM_ODE_MOTOR_ANGULAR);
 raydium_ode_motor_attach_name("direction","suspet_ag",0);
 raydium_ode_motor_attach_name("direction","suspet_ad",0);
@@ -79,7 +79,7 @@ dQuaternion rot;
 dReal *pos;
 
 if(raydium_ode_element_find("corps")<0) return;
-                                                                                                                        
+
 a=raydium_ode_object_create("WATURE2");
 
 raydium_ode_object_box_add("top",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"clio_xp_top.tri");
@@ -139,10 +139,10 @@ raydium_ode_element_sound_update_name("body",sound_boom);
 void display(void)
 {
 float speed,direct;
-dReal *pos; 
+dReal *pos;
 dReal def[]={0,0,0};
 raydium_joy_key_emul();
- 
+
 direct=raydium_joy_x*0.3;
 speed=raydium_joy_y*55;
 
@@ -164,7 +164,7 @@ if(raydium_ode_element_find("corps")>=0)
 
 if(raydium_key_last==1032) create_car2();
 if(raydium_key_last==1008) create_car();
- 
+
 
 if(raydium_key_last==1097) raydium_ode_time_change(0);
 if(raydium_key_last==1122) raydium_ode_time_change(10);
@@ -211,7 +211,7 @@ raydium_light_update_all(0);
 raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 
 raydium_fog_disable();
-
+raydium_shadow_enable();
 
 raydium_sound_DefaultReferenceDistance=4.f;
 sound_car=raydium_sound_LoadWav("murcielago.wav");

@@ -39,8 +39,8 @@ char collide(int e1, int e2, dContact *n)
 {
 int t1,t2;
 int rock,i;
-dReal *vel;
-float speed;
+dReal *vel=NULL;
+float speed=0;
 
 
 t1=raydium_ode_element_tag_get(e1);
@@ -377,6 +377,7 @@ int main(int argc, char **argv)
 
     raydium_sky_box_cache();
     raydium_shadow_enable();
+    raydium_shadow_mode(RAYDIUM_SHADOW_MODE_FULLSCENE);
 
     raydium_window_view_update();
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);

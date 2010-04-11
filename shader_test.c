@@ -39,7 +39,7 @@ raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Small shader test");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_window_view_perspective(60,0.01,2500); // fov 60 + near and far planes
 
-raydium_fog_disable();    
+raydium_fog_disable();
 raydium_light_enable();
 raydium_light_on(0);
 
@@ -96,6 +96,7 @@ raydium_shader_attach_texture_name("shader2","derhead_normal.tga");
 raydium_shader_attach_texture_name("shader3","wallNormalMap.tga");
 
 raydium_shadow_enable();
+raydium_shadow_camerabox_size(5);
 
 raydium_callback(&display);
 return 0;
