@@ -83,6 +83,20 @@ signed char raydium_path_add(char *dir)
     return raydium_path_add_priority(dir,2); // Default high priority for user path adds
 }
 
+signed char raydium_path_find (char *dir)
+{	
+int a;
+
+for(a=0;a<RAYDIUM_MAX_PATHS;a++)
+    {
+    if(!strcmp(raydium_path_paths[a].path,dir))
+        {			
+        return 1;
+        }
+    }
+return 0;
+}
+
 signed char raydium_path_add_priority(char *dir,int priority)
 {
 int id;
@@ -98,6 +112,12 @@ if(dir==NULL || strlen(dir)==0)
     {
     raydium_log("path: ERROR: directory name is not valid");
     return 0;
+    }
+
+if(raydium_path_find(dir)) //check for duplicated path
+    {
+    raydium_log("path: ERROR: Directory already in the PATH. Not adding.");
+	return 0;
     }
 
 if(strchr(dir,'*'))

@@ -74,6 +74,12 @@ Register ##dir## directory.
 Return 0 when it fails.
 **/
 
+__rayapi signed char raydium_path_find(char *pathfolder);
+/**
+Returns 1 if the indicated folder is already in the path.
+**/ 
+
+
 __rayapi signed char raydium_path_add_priority(char *dir, int priority);
 /**
 Register ##dir## directory.
