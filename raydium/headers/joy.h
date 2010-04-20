@@ -7,11 +7,12 @@ Joysticks, pads and force feedback
 
 // Introduction
 /**
-Raydium supports Joysticks, joypads, steering wheels, force feedback devices, 
-keyboard emulation, for Linux only.
+Raydium supports Joysticks, joypads, steering wheels, force feedback devices,
+keyboard emulation.
 
-Since API could change during Win32 integration, there is no particular 
-documentation about this subject.
+Please note that this API may change in the future, mainly about force feedback,
+that only (barely) works with Linux currently. Some support for "user control
+setup" will be added, too.
 
 Interesting variables:
 %%(c)
@@ -47,7 +48,9 @@ __rayapi  void raydium_joy_init_vars (void);
 
 __rayapi  void raydium_joy_key_emul (void);
 /**
-Emulate keyboard (directional pad) with joy, if any.
+Emulate joy with keyboard (directional pad), so you can always use
+raydium_joy_x and y variables, even if no joystick was detected.
+This function has no effect if a joy is detected.
 **/
 
 #ifndef APPLE
@@ -66,7 +69,7 @@ __rayapi  void raydium_joy_close (void);
 __rayapi  void raydium_joy_ff (void);
 __rayapi  void raydium_joy_ff_tremble_set (GLfloat period, GLfloat force);
 /**
-Send tremble effect to Force Feedback device for a determined period, 
+Send tremble effect to Force Feedback device for a determined period,
 at a particular force. (no units yet).
 **/
 
