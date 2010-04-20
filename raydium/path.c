@@ -86,11 +86,11 @@ signed char raydium_path_add(char *dir)
 signed char raydium_path_find (char *dir)
 {	
 int a;
-
+if(!dir) return 0; //return  0 or 1?
 for(a=0;a<RAYDIUM_MAX_PATHS;a++)
     {
-    if(!strcmp(raydium_path_paths[a].path,dir))
-        {			
+	if(raydium_path_paths[a].state && !strcmp(raydium_path_paths[a].path,dir))
+	    {			
         return 1;
         }
     }
@@ -101,6 +101,12 @@ signed char raydium_path_add_priority(char *dir,int priority)
 {
 int id;
 
+if(raydium_path_find(dir)) //check for duplicated path
+    {
+    raydium_log("path: ERROR: Directory already in the PATH. Not adding.");
+	return 0;
+    }
+    
 id=raydium_path_find_free();
 if(id<0)
     {
@@ -114,11 +120,7 @@ if(dir==NULL || strlen(dir)==0)
     return 0;
     }
 
-if(raydium_path_find(dir)) //check for duplicated path
-    {
-    raydium_log("path: ERROR: Directory already in the PATH. Not adding.");
-	return 0;
-    }
+
 
 if(strchr(dir,'*'))
     {
