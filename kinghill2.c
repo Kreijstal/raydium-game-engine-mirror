@@ -5,7 +5,7 @@
 #include "raydium/index.c"
 
 void create_car(void);
- 
+
 GLfloat sun[]={1.0,0.9,0.9,1.0};
 int son_moteur;
 int game_state;
@@ -21,6 +21,10 @@ GLfloat static_camera[3];
 GLfloat partytime=0;
 short scores[RAYDIUM_NETWORK_MAX_CLIENTS];
 char camera_file[128];
+
+#define ATM_TEXTURE_1           "ATM_rlogo3.tga"
+#define ATM_TEXTURE_2           "ATM_rlogo4.tga"
+float atm_zoom=-1;
 
 #define GAME_MENU               1
 #define GAME_GAME               2
@@ -76,6 +80,24 @@ sprintf(camera_file,"%s.cam",root);
 } PHP_v_s(set_world)
 
 
+void atm_zoom_fx(void)
+{
+float rzoom;
+
+if(atm_zoom<0)
+    return;
+
+rzoom=atm_zoom*atm_zoom*atm_zoom;
+
+if(rzoom>800)
+    atm_zoom=-1;
+
+raydium_osd_draw_name(ATM_TEXTURE_1,50-rzoom,50-rzoom,50+rzoom,50+rzoom);
+raydium_osd_draw_name(ATM_TEXTURE_2,50-rzoom,50-rzoom,50+rzoom,50+rzoom);
+
+atm_zoom+=(raydium_frame_time*15);
+}
+
 
 void game_state_change(int state)
 {
@@ -100,7 +122,7 @@ switch(state)
     i=raydium_random_i(0,2);
     raydium_sound_SourcePlay(son_fall[i]);
     raydium_sound_SetSourcePosCamera(i);
-    
+
         i=raydium_network_uid;
         if(i<0) i=0;
         scores[i]++;
@@ -127,7 +149,7 @@ char draw_element_after(int elem)
 {
 int type;
 dReal *pos;
-                                                                                
+
 type=raydium_ode_element_tag_get(elem);
 if(type==TYPE_CORPS && raydium_ode_network_element_isdistant(elem))
     {
@@ -181,7 +203,7 @@ if(!raydium_network_client_connect_to(server))
 
 game_state_change(GAME_GAME);
 }
-                        
+
 
 void create_menu(void)
 {
@@ -212,14 +234,14 @@ void create_car(void)
 {
 int a;
 int respawn;
- 
+
 //#define BREAK_FORCE     130
 #define BREAK_FORCE     0
 #define ROTFRICTION     0.0005
 #define ERP_CFM         0.1,1.0
- 
+
 raydium_ode_object_delete_name("WATURE");
- 
+
 a=raydium_ode_object_create("WATURE");
 raydium_ode_object_box_add("corps",a,0.5,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,TYPE_CORPS,"jeepch.tri");
 raydium_ode_element_slip_name("corps",RAYDIUM_ODE_SLIP_ICE);
@@ -228,7 +250,7 @@ raydium_ode_network_next_local_only=1;
 raydium_ode_object_box_add("balancier",a,1.8,0.1,0.1,0.1,RAYDIUM_ODE_STANDARD,TYPE_BALANCIER,"");
 raydium_ode_element_move_name_3f("balancier",0,0,-0.5);
 raydium_ode_joint_attach_fixed_name("balanfixed","corps","balancier");
- 
+
 raydium_ode_object_sphere_add("pneu_ag",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"roue_barbare.tri");
 //raydium_ode_element_rotfriction_name("pneu_ag",ROTFRICTION);
 raydium_ode_element_move_name_3f("pneu_ag",0.42,0.453,-0.180);
@@ -250,7 +272,7 @@ raydium_ode_joint_attach_hinge2_name("suspet_rg","corps","pneu_rg",RAYDIUM_ODE_J
 raydium_ode_joint_hinge2_block_name("suspet_rg",1);
 raydium_ode_joint_break_force_name("suspet_rg",BREAK_FORCE);
 raydium_ode_joint_suspension_name("suspet_rg",ERP_CFM);
- 
+
 raydium_ode_object_sphere_add("pneu_rd",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"roue_barbare.tri");
 //raydium_ode_element_rotfriction_name("pneu_rd",ROTFRICTION);
 raydium_ode_element_move_name_3f("pneu_rd",-0.444,-0.453,-0.180);
@@ -258,14 +280,14 @@ raydium_ode_joint_attach_hinge2_name("suspet_rd","corps","pneu_rd",RAYDIUM_ODE_J
 raydium_ode_joint_hinge2_block_name("suspet_rd",1);
 raydium_ode_joint_break_force_name("suspet_rd",BREAK_FORCE);
 raydium_ode_joint_suspension_name("suspet_rd",ERP_CFM);
- 
+
 raydium_ode_motor_create("moteur",a,RAYDIUM_ODE_MOTOR_ENGINE);
 raydium_ode_motor_attach_name("moteur","suspet_ag",1);
 raydium_ode_motor_attach_name("moteur","suspet_ad",1);
 raydium_ode_motor_attach_name("moteur","suspet_rg",1);
 raydium_ode_motor_attach_name("moteur","suspet_rd",1);
 //raydium_ode_motor_power_max_name("moteur",0.2);
- 
+
 raydium_ode_motor_create("direction",a,RAYDIUM_ODE_MOTOR_ANGULAR);
 raydium_ode_motor_attach_name("direction","suspet_ag",0);
 raydium_ode_motor_attach_name("direction","suspet_ad",0);
@@ -287,6 +309,7 @@ raydium_ode_object_rotate(a,respawns[respawn]+3);
                                   respawns[respawn][3],
                                   respawns[respawn][4],
                                   respawns[respawn][5]);*/
+atm_zoom=1;
 }
 
 
@@ -330,7 +353,7 @@ void display_all(void)
 raydium_ode_draw_all(0);
 if(raydium_key[GLUT_KEY_F1]) raydium_ode_draw_all(1);
 }
- 
+
 void display(void)
 {
 float speed=0,direct=0;
@@ -348,11 +371,11 @@ raydium_clear_frame();
 
 
 switch(game_state)
-    { 
+    {
     case GAME_GAME:
 
         raydium_joy_key_emul();
- 
+
         direct=raydium_joy_x*0.3;
 
         if(raydium_joy_y>0.3)
@@ -374,10 +397,10 @@ switch(game_state)
                 speed=0;
                 raydium_ode_motor_power_max_name("moteur",0.05);
             }
- 
+
         raydium_ode_motor_speed_name("moteur",-speed);
         raydium_ode_motor_angle_name("direction",direct);
-  
+
         // get element position
         pos=raydium_ode_element_pos_get_name("corps");
 
@@ -388,7 +411,7 @@ switch(game_state)
             // raydium_log("toto");
             game_state_change(GAME_OUT);
             }
-#endif  
+#endif
 
 
         // get position of camera in world coords
@@ -396,7 +419,7 @@ switch(game_state)
 
         // correct z pos (always at top of the car, for example)
         cam[2]=pos[2]+0.5;
-    
+
         // standard smooth lookat camera
         raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],
                               70,0,raydium_frame_time*3);
@@ -405,7 +428,7 @@ switch(game_state)
         static_camera[0]=cam[0];
         static_camera[1]=cam[1];
         static_camera[2]=cam[2];
- 
+
         display_all();
         raydium_osd_printf(3.4,96.6,35,0.5,"font2.tga","^0- %s -",raydium_network_name_local);
         raydium_osd_printf(3,97,35,0.5,"font2.tga","^f- %s -",raydium_network_name_local);
@@ -423,6 +446,8 @@ switch(game_state)
         speed+=0.5;
         speed+=(raydium_random_neg_pos_1()/15);
         raydium_sound_SetSourcePitch(son_moteur,raydium_math_abs(speed));
+
+        atm_zoom_fx();
     break;
 
 
@@ -440,8 +465,8 @@ switch(game_state)
 
         pos=raydium_ode_element_pos_get_name("corps");
         raydium_camera_smooth(static_camera[0],
-                              static_camera[1], 
-                              static_camera[2], 
+                              static_camera[1],
+                              static_camera[2],
                               pos[1],-pos[2],pos[0],
                               90,0,raydium_frame_time*3);
 
@@ -459,9 +484,9 @@ switch(game_state)
         secs+=raydium_frame_time;
         raydium_camera_smooth_path_to_pos(camera_file,0,0,0,secs,2*raydium_frame_time);
         display_all();
-        raydium_osd_printf(47,93,15,0.5,"font2.tga","^f[ ^cSCORES^f ]");        
+        raydium_osd_printf(47,93,15,0.5,"font2.tga","^f[ ^cSCORES^f ]");
         z=85;
-        
+
         for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
         {
             if(raydium_network_name[i][0])
@@ -470,7 +495,7 @@ switch(game_state)
             z-=10;
             }
         }
-    break;      
+    break;
 
     }
 
@@ -482,8 +507,8 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
         dReal *pos;
         dReal posc[3];
         dReal t;
-        
-        
+
+
         pos=raydium_ode_element_pos_get_name("corps");
         torque = raydium_ode_element_angularvelocity_get_name("corps");
         t=(torque[0]*torque[0]+torque[1]*torque[1]+torque[2]*torque[2]);
@@ -494,7 +519,7 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
         if(t>300)
             {
             raydium_log("LIMITS !!!! %f %f %f",pos[0],pos[1],pos[2]);
-//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body,0,0,0);      
+//          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("corps")].body,0,0,0);
 //          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ag")].body,0,0,0);
 //          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_ad")].body,0,0,0);
 //          dBodySetAngularVel(raydium_ode_element[raydium_ode_element_find("pneu_rg")].body,0,0,0);
@@ -505,7 +530,7 @@ if(game_state==GAME_GAME || game_state==GAME_OUT)
 //          pos=raydium_ode_element_pos_get_name("corps");
 //          raydium_log("%f %f %f",pos[0],pos[1],pos[2]);
             }
-        
+
         if(raydium_network_uid>=0)
             draw_timer();
         }
@@ -525,7 +550,7 @@ partytime=f;
 //raydium_log("time synced");
 }
 
- 
+
 int main(int argc, char **argv)
 {
 int i;
@@ -542,26 +567,28 @@ raydium_light_on(0);
 raydium_shadow_enable();
 memcpy(raydium_light_color[0],sun,raydium_internal_size_vector_float_4);
 raydium_light_intensity[0]=1000000;
- 
+
 raydium_light_position[0][0]=50;
 raydium_light_position[0][1]=150;
 raydium_light_position[0][2]=200;
- 
+
 raydium_light_update_all(0);
 raydium_background_color_change(sun[0],sun[1],sun[2],sun[3]);
 raydium_fog_disable();
- 
+
 raydium_ode_CollideCallback=collide;
 raydium_ode_AfterElementDrawCallback=draw_element_after;
 
 raydium_register_function(C2PHP(set_world),"set_world");
 
 if(raydium_init_cli_option("world",world))
-    set_world(world);    
+    set_world(world);
 else
     set_world("jeep_hangarl");
 //set_world("jeep_hangarl");
 
+raydium_texture_find_by_name(ATM_TEXTURE_1);
+raydium_texture_find_by_name(ATM_TEXTURE_2);
 
 raydium_sound_DefaultReferenceDistance=4.f;
 son_moteur=raydium_sound_LoadWav("jeepch.wav");
@@ -587,7 +614,7 @@ raydium_network_netcall_add(netcall_remaining_time,NET_REMAINING,1);
 game_state_change(GAME_MENU);
 
 raydium_callback(&display);
- 
+
 return 0;
 }
 
