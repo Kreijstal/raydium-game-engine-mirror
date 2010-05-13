@@ -72,8 +72,8 @@ lz=pz;
 if(modl_view==VIEW_XY) { (*x)=lx; (*y)=ly; (*z)=lz; }
 if(modl_view==VIEW_ZY) { (*x)=lz; (*y)=ly; (*z)=lx; }
 if(modl_view==VIEW_XZ) { (*x)=lx; (*y)=lz; (*z)=ly; }
- 
- 
+
+
 }
 
 
@@ -87,25 +87,24 @@ GLfloat zdiff=z2-z1;
 
 
 for(i=0;i<raydium_vertex_index;i++)
-if(raydium_vertex_texture[i]==raydium_texture_current_main)
-     if(raydium_vertex_normal_z[i]<-0.5 ||
-     raydium_vertex_normal_z[i]>0.5 )
+  if(raydium_vertex_texture[i]==raydium_texture_current_main)
+    {
+     if(raydium_vertex_normal_z[i]<-0.5 || raydium_vertex_normal_z[i]>0.5 )
      {
      raydium_vertex_texture_u[i]=(raydium_vertex_x[i]-x1)/xdiff;
      raydium_vertex_texture_v[i]=(raydium_vertex_y[i]-y1)/ydiff;
      }
-else if(raydium_vertex_normal_x[i]<-0.5 ||
-     raydium_vertex_normal_x[i]>0.5 )
+    else if(raydium_vertex_normal_x[i]<-0.5 || raydium_vertex_normal_x[i]>0.5 )
      {
      raydium_vertex_texture_u[i]=(raydium_vertex_z[i]-z1)/zdiff;
      raydium_vertex_texture_v[i]=(raydium_vertex_y[i]-y1)/ydiff;
      }
-else
+    else
      {
      raydium_vertex_texture_u[i]=(raydium_vertex_x[i]-x1)/xdiff;
      raydium_vertex_texture_v[i]=(raydium_vertex_z[i]-z1)/zdiff;
      }
-   
+    }
 
 }
 
@@ -298,7 +297,7 @@ raydium_vertex_z[i]=y*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 void size_n_(int n, GLfloat *min, GLfloat *max, int start, int end)
 {
 int i;
-GLfloat *tbl;
+GLfloat *tbl=NULL;
 
 if(!raydium_vertex_index) return;
 
@@ -314,13 +313,17 @@ switch(n)
         tbl=raydium_vertex_z;
         break;
 }
+
+if(!tbl)
+    return;
+
 (*max)=(*min)=tbl[start];
 
 for(i=start+1;i<end;i++)
-{
-if(tbl[i]>(*max)) (*max)=tbl[i];
-if(tbl[i]<(*min)) (*min)=tbl[i];
-}
+    {
+    if(tbl[i]>(*max)) (*max)=tbl[i];
+    if(tbl[i]<(*min)) (*min)=tbl[i];
+    }
 
 }
 
@@ -332,7 +335,6 @@ size_n_(n,min,max,0,raydium_vertex_index);
 
 void size(void)
 {
-int i;
 GLfloat min,max;
 
 size_n(0,&min,&max);
@@ -405,7 +407,7 @@ if(raydium_object_anims[0]>0)
     raydium_log("This is an animated object, I'll center frame by frame");
     raydium_log("Use \"*\" char to allow an anim to be centered. example: *jump");
     len=raydium_object_anim_len[0];
-    cpt=raydium_object_anim_len[0];    
+    cpt=raydium_object_anim_len[0];
     for(i=0;i<raydium_object_anims[0];i++)
       for(j=0;j<raydium_object_anim_end[0][i]-raydium_object_anim_start[0][i];j++)
         {
@@ -580,7 +582,7 @@ return n; else return 0;
 
 void prompt(char *entry)
 {
-int argc,i;
+int argc;
 
 //entry[strlen(entry)-1]=0;
 argc=cutcut(entry);
@@ -593,7 +595,7 @@ if(!strcmp(arg[0],"help")) modl_help();
 if(!strcmp(arg[0],"map") && argc>=2)
     if(!strcmp(arg[1],"u") && argc>=4) map_u(atof(arg[2]),atof(arg[3]));
     else if(!strcmp(arg[1],"v") && argc>=4) map_v(atof(arg[2]),atof(arg[3]));
-*/    
+*/
 if(!strcmp(arg[0],"contour") && argc==1) generate_contour(CONTOUR_EXTRUDE);
 if(!strcmp(arg[0],"contour") && argc>=2)
       if(!strcmp(arg[1],"gather")) generate_contour(CONTOUR_GATHER);
@@ -606,15 +608,15 @@ if(!strcmp(arg[0],"contour") && argc>=2)
       if(argc==4) contour_circle(atof(arg[2]),atof(arg[3]));
       }
 if(!strcmp(arg[0],"light"))
-      if(argc>=2 && !strcmp(arg[1],"on")) modl_light=1; else modl_light=0;
+      { if(argc>=2 && !strcmp(arg[1],"on")) modl_light=1; else modl_light=0; }
 if(!strcmp(arg[0],"wire"))
-      if(argc>=2 && !strcmp(arg[1],"on")) modl_wire=1; else modl_wire=0;
+      { if(argc>=2 && !strcmp(arg[1],"on")) modl_wire=1; else modl_wire=0; }
 if(!strcmp(arg[0],"grid"))
-      if(argc>=2 && !strcmp(arg[1],"off")) modl_grid=0; else modl_grid=1;
+      { if(argc>=2 && !strcmp(arg[1],"off")) modl_grid=0; else modl_grid=1; }
 if(!strcmp(arg[0],"axe") || !strcmp(arg[0],"axes"))
-      if(argc>=2 && !strcmp(arg[1],"off")) modl_axes=0; else modl_axes=1;
+      { if(argc>=2 && !strcmp(arg[1],"off")) modl_axes=0; else modl_axes=1; }
 if(!strcmp(arg[0],"texture") || !strcmp(arg[0],"tex"))
-      if(argc>=2 && !strcmp(arg[1],"off")) modl_tex=0; else modl_tex=1;
+      { if(argc>=2 && !strcmp(arg[1],"off")) modl_tex=0; else modl_tex=1; }
 if(!strcmp(arg[0],"z") && argc==2) pz=atof(arg[1]);
 if(!strcmp(arg[0],"resize") && argc==2) resize(atof(arg[1]),atof(arg[1]),atof(arg[1]));
 if(!strcmp(arg[0],"resize") && argc==4) resize(atof(arg[1]),atof(arg[2]),atof(arg[3]));
@@ -636,8 +638,8 @@ if(!strcmp(arg[0],"list") && argc==1) raydium_rayphp_repository_file_list("");
 if(!strcmp(arg[0],"list") && argc==2) raydium_rayphp_repository_file_list(arg[1]);
 if(!strcmp(arg[0],"savea") && argc==2) dump_vertex_to_alpha(arg[1]);
 if(!strcmp(arg[0],"load")  && argc==2) read_vertex_from(arg[1]);
-if(!strcmp(arg[0],"bind")  && argc==2) raydium_texture_load(arg[1]); 
-if(!strcmp(arg[0],"bind")  && argc==3 && !strcmp(arg[1],"erase")) raydium_texture_load_erase(arg[2],raydium_texture_current_main); 
+if(!strcmp(arg[0],"bind")  && argc==2) raydium_texture_load(arg[1]);
+if(!strcmp(arg[0],"bind")  && argc==3 && !strcmp(arg[1],"erase")) raydium_texture_load_erase(arg[2],raydium_texture_current_main);
 if(!strcmp(arg[0],"cam") && argc==2) strcpy(cam_file,arg[1]);
 if(!strcmp(arg[0],"center")) center();
 }
@@ -652,7 +654,7 @@ if(raydium_key_last==1032) { map_uv(-modl_zoom,modl_zoom,-modl_zoom,modl_zoom,-m
 if(raydium_key_last==1045)  modl_zoom--;
 if(raydium_key_last==1043)  modl_zoom++;
 if(raydium_key_last==1027)  modl_exit();
-/*if(raydium_key_last==1)*/  
+/*if(raydium_key_last==1)*/
 //prompt();
 if(raydium_key_last==108) modl_view=VIEW_XY;
 if(raydium_key_last==106) modl_view=VIEW_ZY;
@@ -666,7 +668,7 @@ if(raydium_key_last==8) raydium_normal_smooth_all();
 if(raydium_key_last==9) raydium_normal_regenerate_all();
 if(raydium_key_last==10) raydium_normal_restore_all();
 
-if(raydium_mouse_button[0]) 
+if(raydium_mouse_button[0])
 {
 rotx=((float)raydium_mouse_x-((float)raydium_window_tx/(float)2)) * ((float)360/(float)raydium_window_tx);
 roty=((float)raydium_mouse_y-((float)raydium_window_ty/(float)2)) * ((float)360/(float)raydium_window_ty);
@@ -675,7 +677,7 @@ roty=((float)raydium_mouse_y-((float)raydium_window_ty/(float)2)) * ((float)360/
  glRotatef(roty,1,0,0);
  glRotatef(rotx,0,1,0);
  }
- 
+
  if(modl_view==VIEW_ZY)
  {
  glRotatef(roty,0,0,1);
