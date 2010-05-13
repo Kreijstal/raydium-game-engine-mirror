@@ -201,6 +201,7 @@ if(!raydium_network_client_connect_to(server))
     return;
     }
 
+raydium_parser_db_set("KingHill2-LastServer",server);
 game_state_change(GAME_GAME);
 }
 
@@ -208,6 +209,9 @@ game_state_change(GAME_GAME);
 void create_menu(void)
 {
 int handle;
+char lastserver[RAYDIUM_MAX_NAME_LEN];
+
+raydium_parser_db_get("KingHill2-LastServer",lastserver,"127.0.0.1");
 
 raydium_gui_theme_load("theme-raydium2.gui");
 
@@ -220,7 +224,7 @@ raydium_gui_edit_create("edtPlayerName",handle,47,75,raydium_network_name_local)
 raydium_gui_widget_sizes(0,0,18);
 raydium_gui_label_create("lblServer",handle,32.5,55,"Server :",0,0,0);
 raydium_gui_widget_sizes(25,4,18);
-raydium_gui_edit_create("edtServer",handle,47,45,"172.17.237.20");
+raydium_gui_edit_create("edtServer",handle,47,45,lastserver);
 
 raydium_gui_widget_sizes(15,5,18);
 raydium_gui_button_create("btnTraining",handle,5,15,"Training",btnTrainingClick);
