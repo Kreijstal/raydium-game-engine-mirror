@@ -7,11 +7,98 @@
 // See Raydium doc for examples.
 
 // Compilation can be done with:
-// - gcc atm_gen.c -lm -o atm_gen
+// - gcc mk_jpgs.c -lm -o mk_jpgs
 // - ... or regular tools (odyncomp, Raydium SDK, ...)
 
 char EXT[]=".jpg";
 #define BUFFSIZE  4096
+
+// Until our MinGW supports scandir and alpha sort, let's use this hack.
+// (Badly) ported from Sparc64 release of MinGW ...
+#ifdef WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+
+/*
+ * The DIRSIZ macro gives the minimum record length which will hold
+ * the directory entry.  This requires the amount of space in struct dirent
+ * without the d_name field, plus enough space for the name with a terminating
+ * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.
+ */
+#undef DIRSIZ
+#define DIRSIZ(dp) \
+    ((sizeof (struct dirent) - (_MAX_FNAME+1)) + (((dp)->d_namlen+1 + 3) &~ 3))
+
+#ifndef __P
+#define __P(args) ()
+#endif
+
+int
+scandir(dirname, namelist, select, dcomp)
+	const char *dirname;
+	struct dirent ***namelist;
+	int (*select) __P((struct dirent *));
+	int (*dcomp) __P((const void *, const void *));
+{
+	register struct dirent *d, *p, **names;
+	register size_t nitems;
+	struct stat stb;
+	long arraysz;
+	DIR *dirp;
+
+	if ((dirp = opendir(dirname)) == NULL)
+		return(-1);
+
+	/*
+	 * estimate the array size by taking the size of the directory file
+	 * and dividing it by a multiple of the minimum size entry. 
+	 */
+	arraysz = (stb.st_size / 24);
+	names = (struct dirent **)malloc(arraysz * sizeof(struct dirent *));
+	if (names == NULL)
+		return(-1);
+
+	nitems = 0;
+	while ((d = readdir(dirp)) != NULL) {
+		if (select != NULL && !(*select)(d))
+			continue;	/* just selected names */
+		/*
+		 * Make a minimum size copy of the data
+		 */
+		p = (struct dirent *)malloc(DIRSIZ(d));
+		if (p == NULL)
+			return(-1);
+		p->d_ino = d->d_ino;
+		p->d_reclen = d->d_reclen;
+		p->d_namlen = d->d_namlen;
+		strncpy(p->d_name, d->d_name,p->d_namlen + 1);
+		/*
+		 * Check to make sure the array has space left and
+		 * realloc the maximum size.
+		 */
+		if (++nitems >= arraysz) {
+			arraysz = stb.st_size / 12;
+			names = (struct dirent **)realloc((char *)names,
+				arraysz * sizeof(struct dirent *));
+			if (names == NULL)
+				return(-1);
+		}
+		names[nitems-1] = p;
+	}
+	closedir(dirp);
+	if (nitems && dcomp != NULL)
+		qsort(names, nitems, sizeof(struct dirent *), dcomp);
+	*namelist = names;
+	return(nitems);
+}
+
+int
+alphasort(const void *d1, const void *d2)
+{
+	return (strcmp((*(const struct dirent *const *)d1)->d_name,
+	    (*(const struct dirent *const *)d2)->d_name));
+}
+#endif
 
 void copy(char *name,FILE *fpo)
 {
