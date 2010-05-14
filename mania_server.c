@@ -50,7 +50,7 @@ raydium_register_variable_unregister_last();
 
 if(! (fp=raydium_file_fopen(track,"rt")) )
     {
-    raydium_log("ERROR ! cannot switch to track '%s' !",track);    
+    raydium_log("ERROR ! cannot switch to track '%s' !",track);
     return 0;
     }
 fclose(fp);
@@ -152,13 +152,13 @@ if(!strcmp("data.dyn",req))
     for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
         if(raydium_network_client[i])
             sprintf(response+strlen(response),"<tr><td>%s</td></tr>",raydium_network_name[i]);
-    
+
     sprintf(response+strlen(response),"</table><br/>");
     sprintf(response+strlen(response),"<center><a href=\"http://maniadrive.raydium.org/index.php?scores=track&track=%s\">\
     You can find bests online scores for '%s' track here !</a></center>\
     ",track,track);
     sprintf(response+strlen(response),"<a href=\"/\">Back</a>");
-    
+
     return 1;
     }
 
@@ -167,7 +167,7 @@ if(!strcmp("console.dyn",req))
     {
     char *hist[RAYDIUM_CONSOLE_MAX_LINES];
     int i,n;
-    
+
     n=raydium_console_history_read(hist);
 
     sprintf(response,"Server Console\n\
@@ -223,7 +223,9 @@ loop();
 #ifndef WIN32
 usleep(1); // MUST disable this with real servers
 #else
-Sleep(0);
+// Now 1ms, trouble detected with Win7 64 bits, where Sleep(0) was
+// making the time stop decreasing correctly ... :/
+Sleep(1);
 #endif
 //printf(".\n");
 }while(1);
