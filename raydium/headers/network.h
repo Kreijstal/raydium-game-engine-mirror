@@ -432,7 +432,7 @@ __rayapi signed char raydium_network_client_discover(char *game,int version);
 This function will set client in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode.
 While using this mode, a client will search every LAN server with the
 same ##game## (or mod name) and ##version## as itself.
-Then, you can access to this server list using above functions.
+Then, you can access to this server list using following functions.
 **/
 
 __rayapi int raydium_network_discover_numservers(void);
