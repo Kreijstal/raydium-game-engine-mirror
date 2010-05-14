@@ -432,7 +432,7 @@ __rayapi signed char raydium_network_client_discover(char *game,int version);
 This function will set client in ##RAYDIUM_NETWORK_MODE_DISCOVER## mode.
 While using this mode, a client will search every LAN server with the
 same ##game## (or mod name) and ##version## as itself.
-Then, you can access to this server list using [undocumented yet].
+Then, you can access to this server list using above functions.
 **/
 
 __rayapi int raydium_network_discover_numservers(void);
@@ -463,14 +463,13 @@ for(i=0;i<raydium_network_discover_numservers();i++)
     raydium_network_discover_getserver(i,name,ip,info,&player_count,&player_max);
     raydium_log("server %02i: %s (%s)",i,name,ip);
     }
-
+%%
 No memory allocation is done for ##name## and ##ip##. It's your job.
 
 This function will return :
  - -1 : "not in discovery mode". See ##raydium_network_client_discover()##.
  - 0 : invalid ##num##.
  - 1 : OK.
-%%
 **/
 
 __rayapi void raydium_network_client_disconnect(void);
