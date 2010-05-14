@@ -72,7 +72,9 @@ loop();
 #ifndef WIN32
 usleep(1); // MUST disable this with real servers
 #else
-Sleep(0);
+// Now 1ms, trouble detected with Win7 64 bits, where Sleep(0) was 
+// making the time stop decreasing correctly ... :/
+Sleep(1);
 #endif
 }while(1);
 
