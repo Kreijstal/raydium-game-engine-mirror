@@ -1296,7 +1296,7 @@ socklen=sizeof(struct sockaddr);
  strcpy(raydium_network_name[n],name);
  raydium_netwok_queue_ack_delay_server[n]=raydium_timecall_clocks_per_sec; // 1sec default delay
 
- raydium_log("network: client %i connected as %s"/*,inet_ntoa(from->sin_addr)*/,n,name);
+ raydium_log("network: client %i connected as %s (%s)",n,name,inet_ntoa(((struct sockaddr_in *)from)->sin_addr));
 
  /* send uid to client */
  str[RAYDIUM_NETWORK_PACKET_OFFSET]=n;
