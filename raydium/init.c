@@ -353,6 +353,7 @@ int raydium_init_load(char *filename)
         raydium_log("ERROR loading configuration file.");
         if (filename!=NULL)
             {
+            raydium_file_cache_flush();
             fp=raydium_file_fopen(filename,"w");
             if (fp)
                 {
@@ -390,8 +391,8 @@ paths=\"default\";\n\
 //Sky type: \"box\" or \"none\" (currently)\n\
 sky=\"box\";\n\
 ");
+                fclose(fp);
                 }
-            fclose(fp);
             }
         fp=raydium_file_fopen(filename,"rtl"); // Trying to open new created conf file
         }
