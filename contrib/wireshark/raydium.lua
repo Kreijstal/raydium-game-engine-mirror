@@ -29,6 +29,9 @@ function raydium_proto.dissector(buffer,pinfo,tree)
 		type_str="ERROR_NO_MORE_PLACE"
 	elseif type==3 then
 		type_str="ATTRIB_UID"
+		local id=buffer(PACKET_OFFSET,1):uint()
+		data_str="ID: " .. id
+		display_from=false
 	elseif type==4 then
 		type_str="PACKET_REQUEST_UID"
 		local name=buffer(PACKET_OFFSET):string()
@@ -37,6 +40,10 @@ function raydium_proto.dissector(buffer,pinfo,tree)
 		display_from=false
 	elseif type==5 then
 		type_str="INFO_NAME"
+		local id=buffer(PACKET_OFFSET,1):uint()
+		local name=buffer(PACKET_OFFSET+1):string()
+		data_str="NAME: " .. name .. " is ID " .. id
+		data_len=string.len(name)+2
 	elseif type==6 then
 		type_str="ACK"
 		data_str="ACK for " .. buffer(PACKET_OFFSET,2):le_uint()
@@ -45,12 +52,48 @@ function raydium_proto.dissector(buffer,pinfo,tree)
 		type_str="SERVER_BEACON"
 	elseif type==10 then
 		type_str="ODE_DATA"
+		local n=buffer(PACKET_OFFSET,2):le_uint()
+		data_str=n .. " element(s) refreshed"
+		data_len=2+n*(4 + 3*4 + 4*4 + 3*4);
 	elseif type==11 then
 		type_str="ODE_NEWELEM"
+		local dec=0
+		local nid=buffer(PACKET_OFFSET+dec,4):le_uint()
+		dec=dec+4
+		local shape=buffer(PACKET_OFFSET+dec,4):le_uint()
+		dec=dec+4
+		if shape==0 then
+			shape_str="dSphereClass"
+		elseif shape==1 then
+			shape_str="dBoxClass"
+		elseif shape==2 then
+			shape_str="dCapsuleClass"
+		else
+			shape_str="unknown_class[" .. shape .. "]"
+		end
+		local s1=buffer(PACKET_OFFSET+dec,4):float() -- ?
+		dec=dec+4
+		local s2=buffer(PACKET_OFFSET+dec,4):float() -- ?
+		dec=dec+4
+		local s3=buffer(PACKET_OFFSET+dec,4):float() -- ?
+		dec=dec+4
+		-- shape_str=shape_str .. "(" .. s1 .. "," .. s2 .. "," .. s3 ..")"
+
+		local tag=buffer(PACKET_OFFSET+dec,4):le_uint()
+		dec=dec+4
+
+		local mesh=buffer(PACKET_OFFSET+dec):string()
+		data_str="'" .. mesh .. "'" .. " " .. shape_str .. " with NID=" .. nid .. " and user_tag=" .. tag
+		data_len=dec + string.len(mesh) + 1
 	elseif type==12 then
 		type_str="ODE_REMELEM"
+		local nid=buffer(PACKET_OFFSET,4):le_uint()
+		data_str="Delete NID=" .. nid
 	elseif type==13 then
 		type_str="ODE_NIDWHO"
+		local nid=buffer(PACKET_OFFSET,4):le_uint()
+		data_str="Who is NID=" .. nid
+		data_len=4
 	elseif type==14 then
 		type_str="ODE_EXPLOSION"
 	elseif type>=20 then
