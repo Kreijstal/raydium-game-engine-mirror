@@ -11,18 +11,6 @@
 //#define CAM_FILE "water_cam1.cam"
 #define CAM_FILE "cam.cam"
 
-GLfloat cam_angle_x = 0;
-GLfloat cam_angle_y = 90;
-
-GLfloat cam_pos_x = 0;
-GLfloat cam_pos_y = 0;
-GLfloat cam_pos_z = 0;
-
-GLfloat speed = 0.1;
-GLint sensibilite = 3;
-
-GLint lacet = 0;
-
 GLint water_textures_size;
 GLfloat water_height=-0.5;
 float water_color[4]={0.5f, 0.6f, 0.6f, 1.0f};
@@ -41,16 +29,8 @@ void display(void)
     double plane_reflection[4] = {0.0, 0.0, 1.0, -water_height};
     static GLfloat secs=0;
 
-    int delta_x, delta_y;
     raydium_joy_key_emul();
 
-    cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-    cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
-    cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
-    
-    cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
-    cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
-    
     if(raydium_key_last==1027)
 	exit(0);
 
@@ -66,14 +46,6 @@ void display(void)
 	raydium_light_enable();
 
     
-    delta_x = raydium_mouse_x - (raydium_window_tx/2);
-    cam_angle_x += (delta_x*sensibilite*0.1f); 
-
-    delta_y = raydium_mouse_y - (raydium_window_ty/2);
-    cam_angle_y += (delta_y*sensibilite*0.1f); 
-
-    raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
-    
     if(raydium_key_last==5)
         raydium_light_position[0][2]=100;
     if(raydium_key_last==6)
@@ -85,7 +57,8 @@ void display(void)
 
     raydium_clear_frame();
     
-    raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
+//    raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
+    raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 //    raydium_camera_smooth_path_to_path(CAM_FILE,secs,CAM_FILE,secs+1,raydium_frame_time*2);
     raydium_shader_var_4f_name("water","cameraPos",raydium_camera_x,raydium_camera_y,raydium_camera_z,1.0f);
     raydium_shader_var_4f_name("water","lightPos",raydium_light_position[0][0],raydium_light_position[0][1],raydium_light_position[0][2],1.0f);
@@ -278,8 +251,6 @@ int main(int argc, char **argv)
     raydium_window_view_update();
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);
 
-    raydium_register_variable(&speed, RAYDIUM_REGISTER_FLOAT, "speed");
-    
     tmp=1;
     while(tmp<=raydium_window_tx && 
            tmp<=raydium_window_ty && 
@@ -296,7 +267,7 @@ int main(int argc, char **argv)
     raydium_shader_var_i_name("water","reflection",0);
     raydium_shader_var_i_name("water","refraction",1);
     raydium_shader_var_i_name("water","normalMap",2);
-    raydium_shader_var_i_name("water","dudvMap",3);                
+    raydium_shader_var_i_name("water","dudvMap",3);
     raydium_shader_var_4f_name("water","waterColor", water_color[0], water_color[1], water_color[2], water_color[3]);
     strcpy(model,"cocorobix.tri");
     raydium_init_cli_option("model",model);
