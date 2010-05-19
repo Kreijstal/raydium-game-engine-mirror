@@ -44,6 +44,7 @@ function raydium_proto.dissector(buffer,pinfo,tree)
         local name=buffer(PACKET_OFFSET+1):string()
         data_str="NAME: " .. name .. " is ID " .. id
         data_len=string.len(name)+2
+        display_from=false
     elseif type==6 then
         type_str="ACK"
         data_str="ACK for " .. buffer(PACKET_OFFSET,2):le_uint()
@@ -71,13 +72,13 @@ function raydium_proto.dissector(buffer,pinfo,tree)
         else
             shape_str="unknown_class[" .. shape .. "]"
         end
-        local s1=buffer(PACKET_OFFSET+dec,4):float() -- ?
+        local s1=buffer(PACKET_OFFSET+dec,4):le_float() -- ?
         dec=dec+4
-        local s2=buffer(PACKET_OFFSET+dec,4):float() -- ?
+        local s2=buffer(PACKET_OFFSET+dec,4):le_float() -- ?
         dec=dec+4
-        local s3=buffer(PACKET_OFFSET+dec,4):float() -- ?
+        local s3=buffer(PACKET_OFFSET+dec,4):le_float() -- ?
         dec=dec+4
-        -- shape_str=shape_str .. "(" .. s1 .. "," .. s2 .. "," .. s3 ..")"
+        shape_str=shape_str .. "(" .. s1 .. "," .. s2 .. "," .. s3 ..")"
 
         local tag=buffer(PACKET_OFFSET+dec,4):le_uint()
         dec=dec+4
@@ -103,8 +104,8 @@ function raydium_proto.dissector(buffer,pinfo,tree)
     end
 
 
-    if pinfo.dst_port==29104 then where="FROM server" end
-    if pinfo.src_port==29104 then where="TO server" end
+    if pinfo.src_port==29104 then where="FROM server" end
+    if pinfo.dst_port==29104 then where="TO server" end
 
     local subtree = tree:add(raydium_proto,buffer(),"Raydium Network Protocol")
     subtree:add(buffer(0,1),"Packet type: " .. type_str .. " (" .. where .. ")")
