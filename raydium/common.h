@@ -781,6 +781,7 @@ __global FILE *raydium_log_file;
 __global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global char  raydium_file_log_fopen_status[RAYDIUM_MAX_LOG_FOPEN];
 __global int   raydium_file_log_fopen_index;
+__global signed char raydium_file_log_time;
 
 __global unsigned long raydium_profile_timer;
 

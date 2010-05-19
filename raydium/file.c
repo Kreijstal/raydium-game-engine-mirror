@@ -122,8 +122,16 @@ raydium_log("-------------------------");
 
 for(i=0;i<raydium_file_log_fopen_index;i++)
     {
-    raydium_path_resolv(raydium_file_log_fopen[i],tmp,'r');
-    raydium_log("%s %s from %s",(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_FOUND)?"":"**MISSING**",raydium_file_log_fopen[i],tmp);
+    if(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_FOUND)
+    	{
+    	raydium_path_resolv(raydium_file_log_fopen[i],tmp,'r');
+	if(strcmp(raydium_file_log_fopen[i],tmp))
+	    raydium_log("> %s (%s)",raydium_file_log_fopen[i],tmp);
+	else
+	    raydium_log("> %s",raydium_file_log_fopen[i]);
+	}
+    else
+    	raydium_log("> %s (**MISSING**)",raydium_file_log_fopen[i],tmp);
     }
 
 }

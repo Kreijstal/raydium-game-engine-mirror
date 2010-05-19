@@ -196,6 +196,7 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"  %s\n","--regs                   dump php registrations (at exit)");
     fprintf(stdout,"  %s\n","--history file           console history filename");
     fprintf(stdout,"  %s\n","--logfile file           generate a logfile");
+    fprintf(stdout,"  %s\n","--log-time               add time to logs (seconds since launch)");
 
     fprintf(stdout,"%s\n","");
 
@@ -203,6 +204,14 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"%s\n","You may also check application specific command line switches.");
     exit(0);
     }
+
+if(raydium_init_cli_option("log-time",NULL))
+    {
+    raydium_file_log_time=1;
+    raydium_timecall_clocks_per_sec=0; // until real init (we need it in log system)
+    }
+else
+    raydium_file_log_time=0;
 
 if(raydium_init_cli_option("logfile",logfile))
     {

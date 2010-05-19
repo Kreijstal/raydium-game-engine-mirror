@@ -184,11 +184,11 @@ raydium_osd_logo_angle=0;
 raydium_osd_cursor_texture=0;
 raydium_register_variable_index=0;
 raydium_register_function_index=0;
-raydium_file_log_fopen_index=0;
 raydium_frame_time=0;
 raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 raydium_sky_prefix_defined=0;
 raydium_sky_enabled=1;
+raydium_file_log_fopen_index=0;
 
 raydium_ode_timestep = (0.006f);
 raydium_ode_physics_freq = 400;
@@ -525,12 +525,12 @@ sky=\"box\";\n\
 
         //light
         if(flag_lighting)
-        {
+            {
             if(tmp_lighting)
                 raydium_light_enable();
             else
                 raydium_light_disable();
-	}
+            }
 
         if(flag_light && flag_lighting && tmp_lighting)
             {
