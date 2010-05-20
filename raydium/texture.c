@@ -79,15 +79,9 @@ if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
     simulate=1;
 
 /* is RGB color ? (or texture) */
-strcpy((char *)temp,filename);
-temp[4]=0;
-if(!strcmp("rgb(",(char *)temp)) rgb=1; else rgb=0;
+if(!strncmp("rgb(",filename,4)) rgb=1; else rgb=0;
 
-//copying the filename in temp
-strcpy((char *)temp,filename);
-temp[3]=0;
-//has reflection ENV string?
-if(!strcmp("ENV",(char *)temp)) reflect=1;
+if(!strncmp("ENV",filename,3)) reflect=1;
 
 /* is a texture image file ? */
 if(!rgb && !faked)
@@ -372,10 +366,7 @@ if(!simulate)
  if(strstr(filename,".tri."))
     raydium_texture_islightmap[id]=1;
 
- memcpy(temp,filename,3);                                               // TEMP !!
- temp[3]=0;                                                             // TEMP !!
-
- if(!strcmp("ATM",(char *)temp))                                // TEMP !!
+ if(!strncmp("ATM",filename,3))                                // TEMP !!
     {
     raydium_texture_blended[id]=RAYDIUM_TEXTURE_BLEND_ATM;
     blended=RAYDIUM_TEXTURE_BLEND_ATM;
@@ -383,7 +374,7 @@ if(!simulate)
 
  if(!simulate)
  {
-  if(!strcmp("BOX",(char *)temp) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
+  if(!strncmp("BOX",filename,3) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
   {                                                                     // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
@@ -397,7 +388,7 @@ if(!simulate)
 
  filter=raydium_texture_filter;
 
- if(!strcmp("HDR",(char *)temp))                                // TEMP !!
+ if(!strncmp("HDR",filename,3))                                // TEMP !!
     {
     raydium_texture_hdr[id]=1;
     raydium_texture_nolight[id]=1;
