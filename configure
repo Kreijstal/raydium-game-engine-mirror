@@ -358,7 +358,7 @@ file='
 #include <GL/gl.h>
 int main(void) { if(0) glVertex3f(0,0,0); return 0; }'
 test_build "OpenGL" "$file" "-L/usr/X11R6/lib/ -lGL"
-exit_if_error "$?" "You must install opengl-devel package"
+exit_if_error "$?" "You must install opengl devel package (GL/gl.h)"
 
 # Test GLU
 file='#include <GL/gl.h>
