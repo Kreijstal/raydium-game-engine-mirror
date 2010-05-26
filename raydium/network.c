@@ -25,6 +25,21 @@
 //void raydium_network_write(struct sockaddr *to, int from, char type,char *buff);
 //char raydium_network_netcall_add(void *ptr, int type, char tcp);
 
+// utility function to workaround strict-aliasing rules
+void *get_in_addr(struct sockaddr *sa)
+{
+    union {
+        struct sockaddr     *sa;
+        struct sockaddr_in  *sa_in;
+        struct sockaddr_in6 *sa_in6;
+    } u;
+    u.sa = sa;
+    if (sa->sa_family == AF_INET)
+        return &(u.sa_in->sin_addr);
+    else
+        return &(u.sa_in6->sin6_addr);
+}
+
 
 int raydium_network_propag_find(int type)
 {
@@ -809,7 +824,7 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
         raydium_network_server_list[slot].id=id;
         raydium_network_server_list[slot].when=now;
         strcpy(raydium_network_server_list[slot].name,name);
-        strcpy(raydium_network_server_list[slot].ip,inet_ntoa(((struct sockaddr_in *)(&from))->sin_addr));
+        strcpy(raydium_network_server_list[slot].ip,inet_ntoa(*(struct in_addr *)get_in_addr(&from))); // not IPv6 ready ...
         strcpy(raydium_network_server_list[slot].info,info);
         raydium_network_server_list[slot].player_count=player_count;
         raydium_network_server_list[slot].player_max=player_max;
