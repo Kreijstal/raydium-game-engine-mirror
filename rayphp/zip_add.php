@@ -52,7 +52,7 @@ if($status==0)
     if($statz==FALSE)
         {
         $res=$zip->addFile($file_full_path,$file_name);
-        echo "packages: ".$file_name."package: Added to '$zip_file'";
+        echo "packages: ".$file_name." package: Added to '$zip_file'";
         if(!$res)
             die("packages: ERROR: Unable to add '$file_name' to '$zip_file'");
         }
