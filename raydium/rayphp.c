@@ -36,6 +36,8 @@ if(strlen(path)==0)
     return 0;
     }
 
+raydium_render_loading();
+
 strcpy(file,path);
 
 if(raydium_init_cli_option("repository-force",NULL)) force=1;
@@ -61,6 +63,8 @@ int raydium_rayphp_repository_file_put(char *path, int depends)
 {
 char file[RAYDIUM_MAX_NAME_LEN];
 int status;
+
+raydium_render_loading();
 
 strcpy(file,path);
 raydium_register_variable(file,RAYDIUM_REGISTER_STR,"filename");

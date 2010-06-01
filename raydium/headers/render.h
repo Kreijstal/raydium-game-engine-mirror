@@ -7,15 +7,15 @@ Rendering
 
 // Introduction
 /**
-render.c contains Raydium rendering core, so only "public" and 
+render.c contains Raydium rendering core, so only "public" and
 interesting function will be documented.
 
 A few variable may be very useful here. First, you can see how many frames
-were rendered during last second, reading ##raydium_render_fps## (interger, 
-read only). This variable is refreshed every second. If you need a 
+were rendered during last second, reading ##raydium_render_fps## (interger,
+read only). This variable is refreshed every second. If you need a
 instantaneous measure, see below.
 
-You may also read ##raydium_frame_time## (float, read only) since it gives you 
+You may also read ##raydium_frame_time## (float, read only) since it gives you
 the elasped time during the last frame ! (in seconds). This a very easy way
 to make framerate independent things. See this example, featuring two different
 uses of this variable:
@@ -37,8 +37,8 @@ Note that you can have instantaneous framerate with, for instance:
 float fps=(1.f)/raydium_frame_time;
 %%
 
-As a note, I must said that it' obvious for me that many parts of render.c 
-have to be rewritten (tips: slow, buggy, old, ... :) 
+As a note, I must said that it' obvious for me that many parts of render.c
+have to be rewritten (tips: slow, buggy, old, ... :)
 **/
 
 __rayapi void raydium_render_lightmap_color(GLfloat *color);
@@ -136,11 +136,17 @@ __rayapi void raydium_render_fps_limit(float maxfps);
 /**
 This function changes the maximum number of frames per second.
 Sometimes is wanted to reduce the consumption of cpu cycles by our application.
-In this situations we can use a method for delay each frame of the game 
-until a desired framerate. In that way the residual frames won't be processed 
+In this situations we can use a method for delay each frame of the game
+until a desired framerate. In that way the residual frames won't be processed
 and a "lot" of cpu cycles will be saved.
 Also can be used to increase the stability in certains systems.
 Set ##maxfps## to 0 if you want to disable this limit (this is the default).
+**/
+
+__rayapi void raydium_render_loading(void);
+/**
+Internal. Display a "low level and cheap" loading screen, useful when
+R3S is downloading things from network.
 **/
 
 #endif
