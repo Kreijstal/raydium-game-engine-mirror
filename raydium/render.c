@@ -652,7 +652,7 @@ static int fake_sy=16;
 
 static signed char first=1;
 static float color=1;
-static float color_evo=-0.1;
+static float color_evo=-0.2;
 
 if(first && raydium_texture_exists(fake_texture)==-1)
     {
@@ -666,6 +666,11 @@ if(first && raydium_texture_exists(fake_texture)==-1)
                  GL_ALPHA,GL_UNSIGNED_BYTE,texture_data);
 
     first=0;
+    // bug: message is not displayed the first time during the very first frame
+    // on early init with some applications (test6, shader_test, ...)
+    // strange fix: need to call this here, even if osd_draw function
+    // will do the same right after ... (?)
+    raydium_window_resize_callback(raydium_window_tx, raydium_window_ty);
     }
 
 // render a black screen with fake_texture in the bottom right:
@@ -677,7 +682,7 @@ glutSwapBuffers();
 
 color+=color_evo;
 if(color>1) { color=1; color_evo*=-1; }
-if(color<0.4) { color=0.4; color_evo*=-1; }
+if(color<0.41) { color=0.4; color_evo*=-1; }
 
 raydium_clear_color_update(); // restore clear color
 }
