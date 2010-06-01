@@ -331,6 +331,10 @@
 #define RAYDIUM_FILE_NOT_FOUND                  0
 #define RAYDIUM_FILE_FOUND                      1
 
+#define RAYDIUM_LOG_MODE_STDOUT                 1
+#define RAYDIUM_LOG_MODE_STERR                  2
+#define RAYDIUM_LOG_MODE_NONE                   255
+
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
@@ -781,6 +785,7 @@ __global FILE *raydium_log_file;
 __global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global char  raydium_file_log_fopen_status[RAYDIUM_MAX_LOG_FOPEN];
 __global int   raydium_file_log_fopen_index;
+__global int   raydium_file_log_mode;
 __global signed char raydium_file_log_time;
 
 __global unsigned long raydium_profile_timer;

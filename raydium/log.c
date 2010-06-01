@@ -22,6 +22,7 @@ char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
 int retlen;
 int i,offset;
+FILE *stream;
 
 static unsigned long start;
 unsigned long now;
@@ -42,14 +43,20 @@ va_end(argptr);
 if(retlen < 0) retlen = 0;
 str[retlen] = '\0';
 
+stream=NULL;
+if(raydium_file_log_mode==RAYDIUM_LOG_MODE_STDOUT)
+    stream=stdout;
+if(raydium_file_log_mode==RAYDIUM_LOG_MODE_STERR)
+    stream=stderr;
+
 if(raydium_file_log_time)
     {
-    printf("[%.6f] %s\n",elapsed,str);
+    if(stream) fprintf(stream,"[%.6f] %s\n",elapsed,str);
     if(raydium_log_file) fprintf(raydium_log_file,"[%.6f] %s\n",elapsed,str);
     }
 else
     {
-    printf("Raydium: %s\n",str);
+    if(stream) fprintf(stream,"Raydium: %s\n",str);
     if(raydium_log_file) fprintf(raydium_log_file,"%s\n",str);
     }
 

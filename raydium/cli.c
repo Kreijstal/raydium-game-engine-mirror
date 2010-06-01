@@ -127,6 +127,7 @@ void raydium_init_args_name_hack(int argc, char **argv, char *app_name)
 {
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
+char logmode[RAYDIUM_MAX_NAME_LEN];
 
 raydium_init_argc=argc;
 raydium_init_argv=malloc(argc*sizeof(char *));
@@ -197,6 +198,7 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"  %s\n","--history file           console history filename");
     fprintf(stdout,"  %s\n","--logfile file           generate a logfile");
     fprintf(stdout,"  %s\n","--log-time               add time to logs (seconds since launch)");
+    fprintf(stdout,"  %s\n","--log-mode mode          standard log mode (stdout, stderr, none)");
 
     fprintf(stdout,"%s\n","");
 
@@ -212,6 +214,15 @@ if(raydium_init_cli_option("log-time",NULL))
     }
 else
     raydium_file_log_time=0;
+
+raydium_file_log_mode=RAYDIUM_LOG_MODE_STDOUT;
+if(raydium_init_cli_option("log-mode",logmode))
+    {
+    if(!strcmp("stderr",logmode))
+        raydium_file_log_mode=RAYDIUM_LOG_MODE_STERR;
+    if(!strcmp("none",logmode))
+        raydium_file_log_mode=RAYDIUM_LOG_MODE_NONE;
+    }
 
 if(raydium_init_cli_option("logfile",logfile))
     {
