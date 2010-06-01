@@ -651,6 +651,8 @@ static int fake_sx=128;
 static int fake_sy=16;
 
 static signed char first=1;
+static float color=1;
+static float color_evo=-0.1;
 
 if(first && raydium_texture_exists(fake_texture)==-1)
     {
@@ -669,8 +671,13 @@ if(first && raydium_texture_exists(fake_texture)==-1)
 // render a black screen with fake_texture in the bottom right:
 glClearColor(0,0,0,1);
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+raydium_osd_color_change(color,color,color); // should restore here too ?
 raydium_osd_draw_name(fake_texture,75,0,100,5);
 glutSwapBuffers();
+
+color+=color_evo;
+if(color>1) { color=1; color_evo*=-1; }
+if(color<0.4) { color=0.4; color_evo*=-1; }
 
 raydium_clear_color_update(); // restore clear color
 }
