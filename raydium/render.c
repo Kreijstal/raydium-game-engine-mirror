@@ -17,6 +17,7 @@ void raydium_hdr_block(signed char blocking);
 signed char raydium_shader_current(int shader);
 void raydium_shader_internal_vertex_attributes(int i);
 void raydium_osd_draw_name (char *tex, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+void raydium_osd_color_change (GLfloat r, GLfloat g, GLfloat b);
 
 // color is a GLfloat[4] (RGBA)
 void raydium_render_lightmap_color(GLfloat *color)
