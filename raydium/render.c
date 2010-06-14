@@ -654,6 +654,7 @@ static int fake_sy=16;
 static signed char first=1;
 static float color=1;
 static float color_evo=-0.2;
+int texsave;
 
 if(first && raydium_texture_exists(fake_texture)==-1)
     {
@@ -678,7 +679,13 @@ if(first && raydium_texture_exists(fake_texture)==-1)
 glClearColor(0,0,0,1);
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 raydium_osd_color_change(color,color,color); // should restore here too ?
+
+// draw with our texture, without breaking too much things (display lists, texture units, ...)
+texsave=raydium_texture_current_main;
 raydium_osd_draw_name(fake_texture,75,0,100,5);
+raydium_texture_current_set(texsave);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+
 glutSwapBuffers();
 
 color+=color_evo;
