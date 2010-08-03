@@ -62,7 +62,7 @@ if [ $ret -ne 0 ]; then
 fi
 
 if [ -z "$DISABLE_AUTORUN" ]; then
-    export LD_LIBRARY_PATH=.
+    export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
     shift
     ./test "$@"
 fi
