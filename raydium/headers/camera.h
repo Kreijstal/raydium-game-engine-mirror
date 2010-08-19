@@ -28,9 +28,9 @@ Some camera functions are provided by physics module, see suitable chapter.
 
 __rayapi void raydium_camera_vectors (GLfloat * res3);
 /**
-This function will return two vectors (2 * 3 * GLfloat), giving the camera 
-orientation (front vector and up vector). At this day, the up vector is 
-always the same as the world up vector, even if the camera is rotated 
+This function will return two vectors (2 * 3 * GLfloat), giving the camera
+orientation (front vector and up vector). At this day, the up vector is
+always the same as the world up vector, even if the camera is rotated
 or upside down (and yes, this MUST be corrected :).
 
 Designed for internal uses, before all.
@@ -48,7 +48,7 @@ Internal use. (post)
 
 __rayapi void raydium_camera_place (GLfloat x, GLfloat y, GLfloat z, GLfloat lacet, GLfloat tangage, GLfloat roulis);
 /**
-Sets the camera at (x,y,z) position, and using (lacet,tangage,roulis) 
+Sets the camera at (x,y,z) position, and using (lacet,tangage,roulis)
 as rotation angles.
 **/
 
@@ -66,7 +66,7 @@ raydium_log("pos: %f %f %f rotation: %f %f %f",camdata[0],camdata[1],
  camdata[2],camdata[3],camdata[4],camdata[5]);
 ...
 %%
-Returned data is related to the current frame. 
+Returned data is related to the current frame.
 **/
 
 
@@ -80,17 +80,17 @@ __rayapi void raydium_camera_replace (void);
 You'll need to reset camera position and orientation after each object drawing.
 If this is unclear to you, read the "example" section, below.
 
-You will need to make your own 3D transformations (GLRotate, GLTranslate, 
+You will need to make your own 3D transformations (GLRotate, GLTranslate,
 ...) to draw your objects, or you can use the following function.
 **/
 
 __rayapi void raydium_camera_replace_go (GLfloat * pos, GLfloat * R);
 /**
 This function will replace the camera, as ##raydium_camera_replace()##,
-but will place "3D drawing cursor" at position ##pos## (3 GLfloat) with 
+but will place "3D drawing cursor" at position ##pos## (3 GLfloat) with
 rotation ##R## (4 GLfloat quaternion).
 
-No eulers (rotx, roty, rotz) version of this function is provided for now.. 
+No eulers (rotx, roty, rotz) version of this function is provided for now..
 Do you really need it ?
 **/
 
@@ -150,7 +150,7 @@ Obvious : use this function to load a camera path.
 
 __rayapi void raydium_camera_path_draw (int p);
 /**
-Draws ##p## camera path, as red lines. This must be done at each frame. 
+Draws ##p## camera path, as red lines. This must be done at each frame.
 **/
 
 __rayapi void raydium_camera_path_draw_name (char *path);
@@ -174,8 +174,8 @@ Next smooth call will be instantaneous.
 __rayapi void raydium_camera_smooth_path_to_pos (char *path, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat path_step, GLfloat smooth_step);
 /**
 "Camera on path looking at a point".
-Simple ##raydium_camera_smooth## version: give a path name, a "look_at" 
-point (##lx,ly,lz##), a current ##step##, anda ##smooth_step## time 
+Simple ##raydium_camera_smooth## version: give a path name, a "look_at"
+point (##lx,ly,lz##), a current ##step##, anda ##smooth_step## time
 factor (see ##raydium_camera_smooth## example above).
 **/
 
@@ -193,14 +193,14 @@ Same style as previous functions.
 
 __rayapi void raydium_viewport_init(void);
 /**
-Init of raydium_viewport array to support up to 
+Init of raydium_viewport array to support up to
 ##RAYDIUM_VIEWPORT_MAX## viewport
 **/
 
 __rayapi void raydium_viewport_create (char * name,int tx,int ty);
 /**
 Create a texture for saving viewport display
-Texture size ##tx## and ##ty## must be related with final displayed 
+Texture size ##tx## and ##ty## must be related with final displayed
 viewport size.
 **/
 
@@ -208,7 +208,7 @@ __rayapi void raydium_viewport_enable(char * name);
 /**
 Direct all render operations to dedicated viewport.
 Advanced camera feature as sound/rumble are desactivated during viewport render.
-**/ 
+**/
 
 __rayapi void raydium_viewport_save(void);
 /**
@@ -221,20 +221,29 @@ __rayapi void raydium_viewport_draw(char * name, GLfloat tx,GLfloat ty,GLfloat s
 Draw contents of ##name## viewport to screen
 ##tx##,##ty## are lower left corner in screen percents.
 ##sx##,##sy## are size in screen percents.
+You can create mirrors by using a negative ##sx## (and update ##tx##).
+Example:
+%%(c)
+// this is the mirror:
+raydium_viewport_draw("camera2",80,70,-60,30);
+
+// ... of this:
+raydium_viewport_draw("camera2",20,70,60,30);
+%%
 **/
 
 
 
 __rayapi void raydium_camera_freemove(int move);
 /**
-This function is a fast & easy way to create a working camera that can move 
-with keys and can be rotated with the mouse, like a usual camera in a 
+This function is a fast & easy way to create a working camera that can move
+with keys and can be rotated with the mouse, like a usual camera in a
 First Person Shooter(FPS) game.
 Its sources could be also interesting as an example of implementation of this
 kind of camera, since this function can be a bit limited if you want to do
 complex things.
-You can modify the global variables ##raydium_camera_freemove_sensibility## 
-and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and 
+You can modify the global variables ##raydium_camera_freemove_sensibility##
+and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and
 movement speed (0.1 default) respectively.
 If ##move## is ##RAYDIUM_CAMERA_FREEMOVE_FIXED##, camera is only placed and fixed.
 Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and orientation are updated with Mouse/Keyboard.
@@ -242,7 +251,7 @@ Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and orien
 
 __rayapi void raydium_camera_orbitmove(float x_to, float y_to, float z_to);
 /**
-EXPERIMENTAL: This functions allows to rotate (in fact orbit) around a 
+EXPERIMENTAL: This functions allows to rotate (in fact orbit) around a
 certain point (x_to,y_to,z_to). The distance of the point to the camera
  can be changed with the up/down keys and with the mouse wheel.
 
