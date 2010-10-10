@@ -114,7 +114,7 @@ def exp_pos_rot(ob,gfich):
 	chout = chout + " %f,%f,%f" % (pos[0],pos[1],pos[2])
 	rot = ob.getEuler('worldspace')
 	chout = chout + ",%f,%f,%f" % (-rot[0],-rot[1],-rot[2])
-	print chout
+	#print chout
 	gfich.write(chout)
 	gfich.write("\n")
 	
@@ -187,8 +187,10 @@ def export():
 		#Hidden mesh can be used to save hinge pos and rot without needed
 		#to generate mesh .tri file
 		#need to be documented
+		#print mesh.name
 		if mesh.name[0]=='.':
 			#hidden mesh
+			print "%s is an hidden mesh" % (mesh.name)
 			continue
 			
 		if mesh.name in mesh_list:
@@ -216,7 +218,8 @@ def export():
 		lp=0
 		org=mesh.activeUVLayer
 		layers=mesh.getUVLayerNames()
-		mesh.activeUVLayer=layers[0]
+		if (len(layers)>0):
+			mesh.activeUVLayer=layers[0]
 		for face in mesh.faces:
 			if len(face)!=3:
 				print "ERROR: NOT A TRIANGLE ONLY MESH ! (select all vertices and use CTRL+T)"
@@ -240,8 +243,8 @@ def export():
 				#writing vertex normal
 				file.write ("%f %f %f " % (nv[0],nv[1],nv[2]))
 				#if face is textured
-				mesh.activeUVLayer=layers[0]
 				if(mesh.faceUV):
+					mesh.activeUVLayer=layers[0]					
 					u=face.uv[i][0]
 					v=face.uv[i][1]
 					#get current texture image name
@@ -287,7 +290,8 @@ def export():
 					else:
 					#No information, defaulting to gray face
 						file.write("0 0 rgb(0.6,0.6,0.6)\n")
-		mesh.activeUVLayer=org
+		if (org):
+			mesh.activeUVLayer=org
 		if multfile:
 			file.flush()
 			file.close()
