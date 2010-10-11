@@ -24,9 +24,6 @@ void glutInit(int *argc, char **argv)
 void pwInit(int x, int y, int w, int h, int multisample, char *title, int border, int num_samples, int window_style)
 {
     myglutMakeCurrent();
-    
-    _glutWindowSize[0]=320;
-    _glutWindowSize[1]=480;
 }
 
 void glutSetCursor(int c)

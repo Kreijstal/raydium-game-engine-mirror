@@ -18,6 +18,7 @@
 static int raydium_argc;
 static char **raydium_argv;
 extern int raydium_main(int argc, char **argv);
+extern int _glutWindowSize[2];
 
 jmp_buf raydium_environment;
 extern jmp_buf *raydium_jump_environment();
@@ -66,6 +67,20 @@ static int MyGLUTTouch[3];
 
 - (id) initWithFrame: (CGRect) frame
 {
+
+    int w=480;
+    int h=320;
+    float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(ver>3.2)
+        {
+        UIScreen* mainscr = [UIScreen mainScreen];
+        w = mainscr.currentMode.size.height;
+        h = mainscr.currentMode.size.width;
+        }
+
+    _glutWindowSize[0]=h;
+    _glutWindowSize[1]=w;
+
     self = [super initWithFrame: frame];
     
     if (self != nil)
@@ -73,7 +88,8 @@ static int MyGLUTTouch[3];
         CAEAGLLayer *MyGLUTLayer = (CAEAGLLayer*) [self layer];
         MyGLUTLayer.opaque = YES;
         MyGLUTLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool: NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGB565, kEAGLDrawablePropertyColorFormat, nil];
-        
+        if(_glutWindowSize[0]==640)
+            MyGLUTLayer.contentsScale=2;
         context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES1];
         [EAGLContext setCurrentContext: context];
         MyGLUTContext = context;
@@ -81,7 +97,8 @@ static int MyGLUTTouch[3];
         [self createFramebuffer];
         [context renderbufferStorage: GL_RENDERBUFFER_OES fromDrawable: MyGLUTLayer];
     }
-    
+
+
     self.userInteractionEnabled = YES;
     self.multipleTouchEnabled = NO;
     self.exclusiveTouch = YES;
@@ -143,12 +160,16 @@ static int MyGLUTTouch[3];
 {
     UITouch *touch = touches.anyObject;
     CGPoint touchPosition = [touch locationInView: self];
+    double fact;
     
     MyGLUTTouch[0] = 1;
+
+    // iPhone 4 retina screen factor
+    fact=_glutWindowSize[0]/320;
     
     // Swap the axes, because the content of the screen is in landscape mode.
-    MyGLUTTouch[1] = (int)((int)touchPosition.y*320/480);
-    MyGLUTTouch[2] = (int)(abs((int)touchPosition.x-320)*480/320);
+    MyGLUTTouch[1] = (int)((int)touchPosition.y*320/480*fact);
+    MyGLUTTouch[2] = (int)(abs((int)touchPosition.x-320)*480/320*fact);
 }
 
 - (void) touchesEnded: (NSSet*) touches withEvent: (UIEvent*) event
