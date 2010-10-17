@@ -16,7 +16,7 @@ It now provide a few functions about tangent vectors smoothing.
 __rayapi void raydium_normal_generate_lastest_triangle (int default_visu);
 /**
 Generate normals for the last created triangle (see ##raydium_vertex_index##)
-if ##default_visu## is true ( != 0 ), this function will restore "visu" 
+if ##default_visu## is true ( != 0 ), this function will restore "visu"
 normals too.
 **/
 
@@ -33,11 +33,11 @@ This function restore visu normals with standard ones (##raydium_vertex_normal_*
 
 __rayapi void raydium_normal_regenerate_all (void);
 /**
-This function will regenerate standard and visu normals for the whole 
+This function will regenerate standard and visu normals for the whole
 scene (ground, objects, ...).
 **/
 
-__rayapi void raydium_normal_internal_smooth_generic(char *type,GLuint from, GLuint to,GLfloat *in_x, GLfloat *in_y, GLfloat *in_z,GLfloat *out_x, GLfloat *out_y, GLfloat *out_z);
+__rayapi void raydium_normal_internal_smooth_generic(char *type,GLuint from, GLuint to,GLfloat *in,GLfloat *out);
 /**
 Internal. Generic smoothing function.
 **/

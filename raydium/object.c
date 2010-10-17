@@ -142,9 +142,9 @@ if(!raydium_object_isvalid(obj))
 
 for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
     {
-    raydium_vertex_x[i]-=tx;
-    raydium_vertex_y[i]-=ty;
-    raydium_vertex_z[i]-=tz;
+    raydium_vertex_x(i)-=tx;
+    raydium_vertex_y(i)-=ty;
+    raydium_vertex_z(i)-=tz;
     }
 }
 
@@ -160,9 +160,9 @@ if(!raydium_object_isvalid(obj))
 
 for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
     {
-    raydium_vertex_x[i]+=raydium_random_neg_pos_1()*ampl;
-    raydium_vertex_y[i]+=raydium_random_neg_pos_1()*ampl;
-    raydium_vertex_z[i]+=raydium_random_neg_pos_1()*ampl;
+    raydium_vertex_x(i)+=raydium_random_neg_pos_1()*ampl;
+    raydium_vertex_y(i)+=raydium_random_neg_pos_1()*ampl;
+    raydium_vertex_z(i)+=raydium_random_neg_pos_1()*ampl;
     }
 
 /*
@@ -225,9 +225,9 @@ else
 
 for(i=start;i<end;i++)
     {
-    val=sqrt((raydium_vertex_x[i]*raydium_vertex_x[i])+
-             (raydium_vertex_y[i]*raydium_vertex_y[i])+
-            (raydium_vertex_z[i]*raydium_vertex_z[i]) );
+    val=sqrt((raydium_vertex_x(i)*raydium_vertex_x(i))+
+             (raydium_vertex_y(i)*raydium_vertex_y(i))+
+             (raydium_vertex_z(i)*raydium_vertex_z(i)) );
     if(val>max) max=val;
     }
 return max;
@@ -261,9 +261,9 @@ else
 
 for(i=start;i<end;i++)
     {
-    if(raydium_math_abs(raydium_vertex_x[i])>*tx) *tx=raydium_math_abs(raydium_vertex_x[i]);
-    if(raydium_math_abs(raydium_vertex_y[i])>*ty) *ty=raydium_math_abs(raydium_vertex_y[i]);
-    if(raydium_math_abs(raydium_vertex_z[i])>*tz) *tz=raydium_math_abs(raydium_vertex_z[i]);
+    if(raydium_math_abs(raydium_vertex_x(i))>*tx) *tx=raydium_math_abs(raydium_vertex_x(i));
+    if(raydium_math_abs(raydium_vertex_y(i))>*ty) *ty=raydium_math_abs(raydium_vertex_y(i));
+    if(raydium_math_abs(raydium_vertex_z(i))>*tz) *tz=raydium_math_abs(raydium_vertex_z(i));
     }
 *tx*=2;
 *ty*=2;
@@ -296,25 +296,25 @@ else
     end=raydium_object_end[obj];
     }
 
-min[0]=max[0]=raydium_vertex_x[start];
-min[1]=max[1]=raydium_vertex_y[start];
-min[2]=max[2]=raydium_vertex_z[start];
+min[0]=max[0]=raydium_vertex_x(start);
+min[1]=max[1]=raydium_vertex_y(start);
+min[2]=max[2]=raydium_vertex_z(start);
 
 for(i=start+1;i<end;i++)
     {
-    if(raydium_vertex_x[i]<min[0])
-        min[0]=raydium_vertex_x[i];
-    if(raydium_vertex_y[i]<min[1])
-        min[1]=raydium_vertex_y[i];
-    if(raydium_vertex_z[i]<min[2])
-        min[2]=raydium_vertex_z[i];
+    if(raydium_vertex_x(i)<min[0])
+        min[0]=raydium_vertex_x(i);
+    if(raydium_vertex_y(i)<min[1])
+        min[1]=raydium_vertex_y(i);
+    if(raydium_vertex_z(i)<min[2])
+        min[2]=raydium_vertex_z(i);
 
-    if(raydium_vertex_x[i]>max[0])
-        max[0]=raydium_vertex_x[i];
-    if(raydium_vertex_y[i]>max[1])
-        max[1]=raydium_vertex_y[i];
-    if(raydium_vertex_z[i]>max[2])
-        max[2]=raydium_vertex_z[i];
+    if(raydium_vertex_x(i)>max[0])
+        max[0]=raydium_vertex_x(i);
+    if(raydium_vertex_y(i)>max[1])
+        max[1]=raydium_vertex_y(i);
+    if(raydium_vertex_z(i)>max[2])
+        max[2]=raydium_vertex_z(i);
     }
 /*tx=(max[0]-min[0]);
 *ty=(max[1]-min[1]);
@@ -511,16 +511,16 @@ if(raydium_object_anim_previous[object][instance]>=0)
 
 for(i=0;i<raydium_object_anim_len[object];i++)
     {
-    raydium_vertex_x[raydium_object_start[object]+i]=_pondavg(raydium_vertex_x[frame_a+i],raydium_vertex_x[frame_b+i],factor);
-    raydium_vertex_y[raydium_object_start[object]+i]=_pondavg(raydium_vertex_y[frame_a+i],raydium_vertex_y[frame_b+i],factor);
-    raydium_vertex_z[raydium_object_start[object]+i]=_pondavg(raydium_vertex_z[frame_a+i],raydium_vertex_z[frame_b+i],factor);
+    raydium_vertex_x(raydium_object_start[object]+i)=_pondavg(raydium_vertex_x(frame_a+i),raydium_vertex_x(frame_b+i),factor);
+    raydium_vertex_y(raydium_object_start[object]+i)=_pondavg(raydium_vertex_y(frame_a+i),raydium_vertex_y(frame_b+i),factor);
+    raydium_vertex_z(raydium_object_start[object]+i)=_pondavg(raydium_vertex_z(frame_a+i),raydium_vertex_z(frame_b+i),factor);
 
-    raydium_vertex_normal_visu_x[raydium_object_start[object]+i]=_pondavg(raydium_vertex_normal_visu_x[frame_a+i],raydium_vertex_normal_visu_x[frame_b+i],factor);
-    raydium_vertex_normal_visu_y[raydium_object_start[object]+i]=_pondavg(raydium_vertex_normal_visu_y[frame_a+i],raydium_vertex_normal_visu_y[frame_b+i],factor);
-    raydium_vertex_normal_visu_z[raydium_object_start[object]+i]=_pondavg(raydium_vertex_normal_visu_z[frame_a+i],raydium_vertex_normal_visu_z[frame_b+i],factor);
+    raydium_vertex_normal_visu_x(raydium_object_start[object]+i)=_pondavg(raydium_vertex_normal_visu_x(frame_a+i),raydium_vertex_normal_visu_x(frame_b+i),factor);
+    raydium_vertex_normal_visu_y(raydium_object_start[object]+i)=_pondavg(raydium_vertex_normal_visu_y(frame_a+i),raydium_vertex_normal_visu_y(frame_b+i),factor);
+    raydium_vertex_normal_visu_z(raydium_object_start[object]+i)=_pondavg(raydium_vertex_normal_visu_z(frame_a+i),raydium_vertex_normal_visu_z(frame_b+i),factor);
 
-    raydium_vertex_texture_u[raydium_object_start[object]+i]=_pondavg(raydium_vertex_texture_u[frame_a+i],raydium_vertex_texture_u[frame_b+i],factor);
-    raydium_vertex_texture_v[raydium_object_start[object]+i]=_pondavg(raydium_vertex_texture_v[frame_a+i],raydium_vertex_texture_v[frame_b+i],factor);
+    raydium_vertex_texture_u(raydium_object_start[object]+i)=_pondavg(raydium_vertex_texture_u(frame_a+i),raydium_vertex_texture_u(frame_b+i),factor);
+    raydium_vertex_texture_v(raydium_object_start[object]+i)=_pondavg(raydium_vertex_texture_v(frame_a+i),raydium_vertex_texture_v(frame_b+i),factor);
 
     raydium_vertex_texture[raydium_object_start[object]+i]=raydium_vertex_texture[frame_a+i];
     }

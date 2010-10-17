@@ -415,24 +415,37 @@ __global GLuint  raydium_vertex_index;
 __global GLuint  raydium_vertex_counter;
 __global signed char    raydium_vertex_offset_triangle;
 
-__global GLfloat *raydium_vertex_x;
-__global GLfloat *raydium_vertex_y;
-__global GLfloat *raydium_vertex_z;
-__global GLfloat *raydium_vertex_normal_x;
-__global GLfloat *raydium_vertex_normal_y;
-__global GLfloat *raydium_vertex_normal_z;
-__global GLfloat *raydium_vertex_tangent_x;
-__global GLfloat *raydium_vertex_tangent_y;
-__global GLfloat *raydium_vertex_tangent_z;
-__global GLfloat *raydium_vertex_normal_visu_x; //
-__global GLfloat *raydium_vertex_normal_visu_y; // used for smoothing
-__global GLfloat *raydium_vertex_normal_visu_z; //
-__global GLfloat *raydium_vertex_texture_u;
-__global GLfloat *raydium_vertex_texture_v;
+#define raydium_vertex_x(a) raydium_vertex_arr[(a)*3+0]
+#define raydium_vertex_y(a) raydium_vertex_arr[(a)*3+1]
+#define raydium_vertex_z(a) raydium_vertex_arr[(a)*3+2]
+__global GLfloat *raydium_vertex_arr;
+
+#define raydium_vertex_normal_x(a) raydium_vertex_normal_arr[(a)*3+0]
+#define raydium_vertex_normal_y(a) raydium_vertex_normal_arr[(a)*3+1]
+#define raydium_vertex_normal_z(a) raydium_vertex_normal_arr[(a)*3+2]
+__global GLfloat *raydium_vertex_normal_arr;
+
+#define raydium_vertex_tangent_x(a) raydium_vertex_tangent_arr[(a)*3+0]
+#define raydium_vertex_tangent_y(a) raydium_vertex_tangent_arr[(a)*3+1]
+#define raydium_vertex_tangent_z(a) raydium_vertex_tangent_arr[(a)*3+2]
+__global GLfloat *raydium_vertex_tangent_arr;
+
+#define raydium_vertex_normal_visu_x(a) raydium_vertex_normal_visu_arr[(a)*3+0]
+#define raydium_vertex_normal_visu_y(a) raydium_vertex_normal_visu_arr[(a)*3+1]
+#define raydium_vertex_normal_visu_z(a) raydium_vertex_normal_visu_arr[(a)*3+2]
+__global GLfloat *raydium_vertex_normal_visu_arr; // used for smoothing
+
+#define raydium_vertex_texture_u(a) raydium_vertex_texture_uv_arr[(a)*2+0]
+#define raydium_vertex_texture_v(a) raydium_vertex_texture_uv_arr[(a)*2+1]
+__global GLfloat *raydium_vertex_texture_uv_arr;
+
 __global GLuint  *raydium_vertex_texture;
 __global GLuint  *raydium_vertex_texture_multi;
-__global GLfloat *raydium_vertex_texture_multi_u;
-__global GLfloat *raydium_vertex_texture_multi_v;
+
+#define raydium_vertex_texture_multi_u(a) raydium_vertex_texture_multi_uv_arr[(a)*2+0]
+#define raydium_vertex_texture_multi_v(a) raydium_vertex_texture_multi_uv_arr[(a)*2+1]
+__global GLfloat *raydium_vertex_texture_multi_uv_arr;
+
 __global GLuint  *raydium_vertex_texture_env[RAYDIUM_RENDER_MAX_TEXUNITS];
 __global signed char     *raydium_vertex_tag;
 
@@ -444,8 +457,8 @@ __global signed char     raydium_texture_env[RAYDIUM_MAX_TEXTURES];
 __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];
-__global int    raydium_texture_used[RAYDIUM_MAX_TEXTURES];
-__global float  raydium_texture_memory[RAYDIUM_MAX_TEXTURES];
+__global int      raydium_texture_used[RAYDIUM_MAX_TEXTURES];
+__global float    raydium_texture_memory[RAYDIUM_MAX_TEXTURES];
 
 __global GLint  raydium_object_index;
 __global GLuint raydium_object_start[RAYDIUM_MAX_OBJECTS];
@@ -486,7 +499,8 @@ __global int             raydium_fog_mode_value;
 __global float           raydium_fog_far_value;
 __global float           raydium_fog_near_value;
 __global float           raydium_fog_density_value;
-__global GLfloat *       raydium_fog_volumetric_array;
+__global signed char     raydium_fog_volumetric_axis;
+#define raydium_fog_volumetric_array(a) raydium_vertex_arr[(a)*3+raydium_fog_volumetric_axis]
 
 __global signed char    raydium_light_enabled_tag;
 __global signed char    raydium_light_internal_state[RAYDIUM_MAX_LIGHTS];

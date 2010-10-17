@@ -266,14 +266,14 @@ GLuint i;
 glBegin(GL_TRIANGLES);
   for(i=from;i<to;i+=3)
     {
-    glVertex3f(raydium_vertex_x[i+0], raydium_vertex_y[i+0], raydium_vertex_z[i+0]);
-    glVertex3f(raydium_vertex_x[i+1], raydium_vertex_y[i+1], raydium_vertex_z[i+1]);
-    glVertex3f(raydium_vertex_x[i+2], raydium_vertex_y[i+2], raydium_vertex_z[i+2]);
+    glVertex3f(raydium_vertex_x(i+0), raydium_vertex_y(i+0), raydium_vertex_z(i+0));
+    glVertex3f(raydium_vertex_x(i+1), raydium_vertex_y(i+1), raydium_vertex_z(i+1));
+    glVertex3f(raydium_vertex_x(i+2), raydium_vertex_y(i+2), raydium_vertex_z(i+2));
     }
 glEnd();
 
 glBegin(GL_POINTS);
-    glVertex3f(raydium_vertex_x[from], raydium_vertex_y[from], raydium_vertex_z[from]);
+    glVertex3f(raydium_vertex_x(from), raydium_vertex_y(from), raydium_vertex_z(from));
 glEnd();
 }
 
@@ -307,9 +307,9 @@ if(raydium_texture_used[tex])
   if(raydium_vertex_texture[i]==tex)
   {
 #ifdef DEBUG_RENDER_DISABLE_DISPLAYLISTS
-   if(!infov(raydium_vertex_x[i  ],raydium_vertex_y[i  ]) &&
-      !infov(raydium_vertex_x[i+1],raydium_vertex_y[i+1]) &&
-      !infov(raydium_vertex_x[i+2],raydium_vertex_y[i+2]) )
+   if(!infov(raydium_vertex_x(i  ),raydium_vertex_y(i  )) &&
+      !infov(raydium_vertex_x(i+1),raydium_vertex_y(i+1)) &&
+      !infov(raydium_vertex_x(i+2),raydium_vertex_y(i+2)) )
         continue;
 #endif
 
@@ -353,18 +353,18 @@ if(raydium_texture_used[tex])
         // THIS CODE IS DUPLICATED FOR SPEED REASON (1) (but not vertex attributes !)
         for(j=0;j<3;j++)
         {
-        glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
+        glNormal3f(raydium_vertex_normal_visu_x(i+j),raydium_vertex_normal_visu_y(i+j),raydium_vertex_normal_visu_z(i+j));
         raydium_shader_internal_vertex_attributes(i+j);
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
-        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
+        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u(i+j),raydium_vertex_texture_v(i+j));
+        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,raydium_vertex_texture_multi_u(i+j),raydium_vertex_texture_multi_v(i+j));
         //printf("%f %f\n",raydium_vertex_texture_multi_u[i+j],raydium_vertex_texture_multi_v[i+j]);
         if(raydium_fog_volumetric_enabled_tag)
 #ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
-            glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT( raydium_fog_volumetric_array(i+j));
 #else
-            glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT(-raydium_fog_volumetric_array(i+j));
 #endif
-        glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
+        glVertex3f(raydium_vertex_x(i+j), raydium_vertex_y(i+j), raydium_vertex_z(i+j));
         raydium_vertex_counter++;
         }
     }
@@ -383,15 +383,15 @@ if(raydium_texture_used[tex])
         // THIS CODE IS DUPLICATED FOR SPEED REASON (2) (but not vertex attributes !)
         for(j=0;j<3;j++)
         {
-        glNormal3f(raydium_vertex_normal_visu_x[i+j],raydium_vertex_normal_visu_y[i+j],raydium_vertex_normal_visu_z[i+j]);
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u[i+j],raydium_vertex_texture_v[i+j]);
+        glNormal3f(raydium_vertex_normal_visu_x(i+j),raydium_vertex_normal_visu_y(i+j),raydium_vertex_normal_visu_z(i+j));
+        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,raydium_vertex_texture_u(i+j),raydium_vertex_texture_v(i+j));
         if(raydium_fog_volumetric_enabled_tag)
 #ifndef RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
-            glFogCoordfEXT( raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT( raydium_fog_volumetric_array(i+j));
 #else
-            glFogCoordfEXT(-raydium_fog_volumetric_array[i+j]);
+            glFogCoordfEXT(-raydium_fog_volumetric_array(i+j));
 #endif
-        glVertex3f(raydium_vertex_x[i+j], raydium_vertex_y[i+j], raydium_vertex_z[i+j]);
+        glVertex3f(raydium_vertex_x(i+j), raydium_vertex_y(i+j), raydium_vertex_z(i+j));
         raydium_vertex_counter++;
         }
     }

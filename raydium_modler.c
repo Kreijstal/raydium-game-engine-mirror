@@ -89,20 +89,20 @@ GLfloat zdiff=z2-z1;
 for(i=0;i<raydium_vertex_index;i++)
   if(raydium_vertex_texture[i]==raydium_texture_current_main)
     {
-     if(raydium_vertex_normal_z[i]<-0.5 || raydium_vertex_normal_z[i]>0.5 )
+     if(raydium_vertex_normal_z(i)<-0.5 || raydium_vertex_normal_z(i)>0.5 )
      {
-     raydium_vertex_texture_u[i]=(raydium_vertex_x[i]-x1)/xdiff;
-     raydium_vertex_texture_v[i]=(raydium_vertex_y[i]-y1)/ydiff;
+     raydium_vertex_texture_u(i)=(raydium_vertex_x(i)-x1)/xdiff;
+     raydium_vertex_texture_v(i)=(raydium_vertex_y(i)-y1)/ydiff;
      }
-    else if(raydium_vertex_normal_x[i]<-0.5 || raydium_vertex_normal_x[i]>0.5 )
+    else if(raydium_vertex_normal_x(i)<-0.5 || raydium_vertex_normal_x(i)>0.5 )
      {
-     raydium_vertex_texture_u[i]=(raydium_vertex_z[i]-z1)/zdiff;
-     raydium_vertex_texture_v[i]=(raydium_vertex_y[i]-y1)/ydiff;
+     raydium_vertex_texture_u(i)=(raydium_vertex_z(i)-z1)/zdiff;
+     raydium_vertex_texture_v(i)=(raydium_vertex_y(i)-y1)/ydiff;
      }
     else
      {
-     raydium_vertex_texture_u[i]=(raydium_vertex_x[i]-x1)/xdiff;
-     raydium_vertex_texture_v[i]=(raydium_vertex_z[i]-z1)/zdiff;
+     raydium_vertex_texture_u(i)=(raydium_vertex_x(i)-x1)/xdiff;
+     raydium_vertex_texture_v(i)=(raydium_vertex_z(i)-z1)/zdiff;
      }
     }
 
@@ -221,9 +221,9 @@ screen_to_VIEW(xfact,yfact,zfact,&xfact,&yfact,&zfact);
 
 for(i=0;i<raydium_vertex_index;i++)
 {
-raydium_vertex_x[i]*=xfact;
-raydium_vertex_y[i]*=yfact;
-raydium_vertex_z[i]*=zfact;
+raydium_vertex_x(i)*=xfact;
+raydium_vertex_y(i)*=yfact;
+raydium_vertex_z(i)*=zfact;
 }
 
 }
@@ -236,7 +236,7 @@ for(i=0;i<raydium_vertex_index;i++)
 {
 //raydium_vertex_x[i]*=fact;
 //raydium_vertex_y[i]*=fact;
-raydium_vertex_z[i]*=-1;
+raydium_vertex_z(i)*=-1;
 }
 
 }
@@ -248,11 +248,11 @@ GLfloat x,y;
 
 for(i=0;i<raydium_vertex_index;i++)
 {
-x=raydium_vertex_x[i];
-y=raydium_vertex_y[i];
+x=raydium_vertex_x(i);
+y=raydium_vertex_y(i);
 
-raydium_vertex_x[i]=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
-raydium_vertex_y[i]=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
+raydium_vertex_x(i)=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
+raydium_vertex_y(i)=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -266,11 +266,11 @@ GLfloat x,z;
 
 for(i=0;i<raydium_vertex_index;i++)
 {
-x=raydium_vertex_x[i];
-z=raydium_vertex_z[i];
+x=raydium_vertex_x(i);
+z=raydium_vertex_z(i);
 
-raydium_vertex_x[i]=x*raydium_math_cos(angle) - z*raydium_math_sin(angle);
-raydium_vertex_z[i]=x*raydium_math_sin(angle) + z*raydium_math_cos(angle);
+raydium_vertex_x(i)=x*raydium_math_cos(angle) - z*raydium_math_sin(angle);
+raydium_vertex_z(i)=x*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -283,11 +283,11 @@ GLfloat y,z;
 
 for(i=0;i<raydium_vertex_index;i++)
 {
-y=raydium_vertex_y[i];
-z=raydium_vertex_z[i];
+y=raydium_vertex_y(i);
+z=raydium_vertex_z(i);
 
-raydium_vertex_y[i]=y*raydium_math_cos(angle) - z*raydium_math_sin(angle);
-raydium_vertex_z[i]=y*raydium_math_sin(angle) + z*raydium_math_cos(angle);
+raydium_vertex_y(i)=y*raydium_math_cos(angle) - z*raydium_math_sin(angle);
+raydium_vertex_z(i)=y*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 //raydium_vertex_z[i]*=-1;
 }
 
@@ -297,32 +297,16 @@ raydium_vertex_z[i]=y*raydium_math_sin(angle) + z*raydium_math_cos(angle);
 void size_n_(int n, GLfloat *min, GLfloat *max, int start, int end)
 {
 int i;
-GLfloat *tbl=NULL;
 
 if(!raydium_vertex_index) return;
 
-switch(n)
-{
-    case 0:
-        tbl=raydium_vertex_x;
-        break;
-    case 1:
-        tbl=raydium_vertex_y;
-        break;
-    case 2:
-        tbl=raydium_vertex_z;
-        break;
-}
 
-if(!tbl)
-    return;
-
-(*max)=(*min)=tbl[start];
+(*max)=(*min)=raydium_vertex_arr[start*3+n];
 
 for(i=start+1;i<end;i++)
     {
-    if(tbl[i]>(*max)) (*max)=tbl[i];
-    if(tbl[i]<(*min)) (*min)=tbl[i];
+    if(raydium_vertex_arr[i*3+n]>(*max)) (*max)=raydium_vertex_arr[i*3+n];
+    if(raydium_vertex_arr[i*3+n]<(*min)) (*min)=raydium_vertex_arr[i*3+n];
     }
 
 }
@@ -355,9 +339,9 @@ screen_to_local(&mx,&my,&mz,modl_view);
 
 for(i=0;i<raydium_vertex_index;i++)
 {
-raydium_vertex_x[i]+=round(mx);
-raydium_vertex_y[i]+=round(my);
-raydium_vertex_z[i]+=round(mz);
+raydium_vertex_x(i)+=round(mx);
+raydium_vertex_y(i)+=round(my);
+raydium_vertex_z(i)+=round(mz);
 }
 }
 
@@ -366,9 +350,9 @@ void move_by_(GLfloat x, GLfloat y, GLfloat z,int start, int end)
 int i;
 for(i=start;i<end;i++)
 {
-raydium_vertex_x[i]+=x;
-raydium_vertex_y[i]+=y;
-raydium_vertex_z[i]+=z;
+raydium_vertex_x(i)+=x;
+raydium_vertex_y(i)+=y;
+raydium_vertex_z(i)+=z;
 }
 
 }

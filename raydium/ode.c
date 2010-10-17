@@ -306,17 +306,17 @@ offset=raydium_object_start[raydium_ode_ground_mesh];
 //e->ground_texture=raydium_vertex_texture[one];
 
 max_val=
-    ((pos[0]-raydium_vertex_x[TriIndices[0]*3+offset]) +
-     (pos[1]-raydium_vertex_y[TriIndices[0]*3+offset]) +
-     (pos[2]-raydium_vertex_z[TriIndices[0]*3+offset]) );
+    ((pos[0]-raydium_vertex_x(TriIndices[0]*3+offset)) +
+     (pos[1]-raydium_vertex_y(TriIndices[0]*3+offset)) +
+     (pos[2]-raydium_vertex_z(TriIndices[0]*3+offset)) );
 max_index=0;
 
 for(i=1;i<TriCount;i++)
     {
     tmp=
-    ((pos[0]-raydium_vertex_x[TriIndices[i]*3+offset]) +
-     (pos[1]-raydium_vertex_y[TriIndices[i]*3+offset]) +
-     (pos[2]-raydium_vertex_z[TriIndices[i]*3+offset]) );
+    ((pos[0]-raydium_vertex_x(TriIndices[i]*3+offset)) +
+     (pos[1]-raydium_vertex_y(TriIndices[i]*3+offset)) +
+     (pos[2]-raydium_vertex_z(TriIndices[i]*3+offset)) );
     if(tmp<=max_val)
         {
         max_index=i;
@@ -340,6 +340,7 @@ raydium_vertex_tag[TriangleIndex*3]=1;
 return 1;
 }
 
+// PSSSST ! There's some heavy optimization possible here, because of our new vertex storage
 int raydium_ode_ground_set_name(char *name)
 {
 unsigned int i,j,k;
@@ -387,19 +388,19 @@ raydium_ode_ground_mesh=obj;
 for(i=raydium_object_start[obj],j=k=0;i<raydium_object_end[obj];i+=3,j+=3)
 {
 Indices[j]=j;
-Vertices[k++]=raydium_vertex_x[i];
-Vertices[k++]=raydium_vertex_y[i];
-Vertices[k++]=raydium_vertex_z[i];
+Vertices[k++]=raydium_vertex_x(i);
+Vertices[k++]=raydium_vertex_y(i);
+Vertices[k++]=raydium_vertex_z(i);
 
 Indices[j+1]=j+1;
-Vertices[k++]=raydium_vertex_x[i+1];
-Vertices[k++]=raydium_vertex_y[i+1];
-Vertices[k++]=raydium_vertex_z[i+1];
+Vertices[k++]=raydium_vertex_x(i+1);
+Vertices[k++]=raydium_vertex_y(i+1);
+Vertices[k++]=raydium_vertex_z(i+1);
 
 Indices[j+2]=j+2;
-Vertices[k++]=raydium_vertex_x[i+2];
-Vertices[k++]=raydium_vertex_y[i+2];
-Vertices[k++]=raydium_vertex_z[i+2];
+Vertices[k++]=raydium_vertex_x(i+2);
+Vertices[k++]=raydium_vertex_y(i+2);
+Vertices[k++]=raydium_vertex_z(i+2);
 }
 
 // There is NO way to delete the ground, yet ...
@@ -5023,23 +5024,23 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
           if(raydium_vertex_texture_multi[j])
             {
             sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[j]],
-                                       raydium_vertex_texture_multi_u[j],
-                                       raydium_vertex_texture_multi_v[j],
+                                       raydium_vertex_texture_multi_u(j),
+                                       raydium_vertex_texture_multi_v(j),
                                        raydium_texture_name[raydium_vertex_texture_multi[j]]);
             }
         else
             strcpy(text,raydium_texture_name[raydium_vertex_texture[j]]);
 
         dBodyGetRelPointPos(body,
-                                raydium_vertex_x[j],
-                                raydium_vertex_y[j],
-                                raydium_vertex_z[j],
+                                raydium_vertex_x(j),
+                                raydium_vertex_y(j),
+                                raydium_vertex_z(j),
                                 res);
 
         dBodyVectorToWorld(body,
-                                raydium_vertex_normal_visu_x[j],
-                                raydium_vertex_normal_visu_y[j],
-                                raydium_vertex_normal_visu_z[j],
+                                raydium_vertex_normal_visu_x(j),
+                                raydium_vertex_normal_visu_y(j),
+                                raydium_vertex_normal_visu_z(j),
                                 norm);
 
         fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
@@ -5049,8 +5050,8 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
                                         norm[0],
                                         norm[1],
                                         norm[2],
-                                        raydium_vertex_texture_u[j],
-                                        raydium_vertex_texture_v[j],
+                                        raydium_vertex_texture_u(j),
+                                        raydium_vertex_texture_v(j),
                                         text);
         }
 

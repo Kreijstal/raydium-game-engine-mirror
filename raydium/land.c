@@ -107,26 +107,26 @@ GLfloat a,b,c,d;
 
 //if(dy>=dx) n+=3;
 
-#define Ax raydium_vertex_x[n]
-#define Bx raydium_vertex_x[n+1]
-#define Cx raydium_vertex_x[n+2]
+#define Ax raydium_vertex_x(n)
+#define Bx raydium_vertex_x(n+1)
+#define Cx raydium_vertex_x(n+2)
 
-#define Ay raydium_vertex_y[n]
-#define By raydium_vertex_y[n+1]
-#define Cy raydium_vertex_y[n+2]
+#define Ay raydium_vertex_y(n)
+#define By raydium_vertex_y(n+1)
+#define Cy raydium_vertex_y(n+2)
 
-#define Az raydium_vertex_z[n]
-#define Bz raydium_vertex_z[n+1]
-#define Cz raydium_vertex_z[n+2]
+#define Az raydium_vertex_z(n)
+#define Bz raydium_vertex_z(n+1)
+#define Cz raydium_vertex_z(n+2)
 
 a = ((Az - Bz) * (Ay - Cy)) + ((Az - Cz) * (By - Ay));
 b = ((Ax - Bx) * (Az - Cz)) + ((Ax - Cx) * (Bz - Az));
 c = ((Bx - Ax) * (Ay - Cy)) + ((Ax - Cx) * (Ay - By));
 d = - a*Ax - b*Ay - c*Az;
 
-*nx=raydium_vertex_normal_x[n];
-*ny=raydium_vertex_normal_y[n];
-*nz=raydium_vertex_normal_z[n];
+*nx=raydium_vertex_normal_x(n);
+*ny=raydium_vertex_normal_y(n);
+*nz=raydium_vertex_normal_z(n);
 
 return(-(a*y+b*x+d)/c);
 }

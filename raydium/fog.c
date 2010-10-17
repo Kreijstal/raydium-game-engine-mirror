@@ -10,7 +10,7 @@
 #else
 #include "headers/fog.h"
 
-#endif 
+#endif
 
 void raydium_fog_enable(void)
 {
@@ -61,13 +61,13 @@ if(raydium_fog_enabled_tag)
     glHint(GL_FOG_HINT, GL_FASTEST);
 
     if(raydium_fog_far_value==0)
-        {       
+        {
         raydium_fog_far_value=raydium_projection_far;
         raydium_fog_near_value=raydium_projection_far/4.f;
-        }               
+        }
 
     glFogf(GL_FOG_START,raydium_fog_near_value);
-    glFogf(GL_FOG_END,raydium_fog_far_value);           
+    glFogf(GL_FOG_END,raydium_fog_far_value);
     }
     else
     {
@@ -89,21 +89,14 @@ raydium_fog_density_value=0;
 raydium_fog_mode_value=RAYDIUM_FOG_MODE_LINEAR;
 raydium_fog_volumetric_enabled_tag=0;
 
-switch(RENDER_VOLUMETRIC_FOG_AXIS)
+
+if(RENDER_VOLUMETRIC_FOG_AXIS<0 || RENDER_VOLUMETRIC_FOG_AXIS>2)
     {
-    case 0:
-        raydium_fog_volumetric_array=raydium_vertex_x;
-        break;
-    case 1:
-        raydium_fog_volumetric_array=raydium_vertex_y;
-        break;
-    case 2:
-        raydium_fog_volumetric_array=raydium_vertex_z;
-        break;  
-    default:
         raydium_log("fog: FAILED: RENDER_VOLUMETRIC_FOG_AXIS is broken !");
         exit(100);
     }
+
+raydium_fog_volumetric_axis=RENDER_VOLUMETRIC_FOG_AXIS;
 
 raydium_fog_enable();
 raydium_log("fog: OK");

@@ -50,8 +50,8 @@ for(bl=0;bl<2;bl++)
   if(raydium_vertex_texture_multi[i])
   {
    sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[i]],
-                              raydium_vertex_texture_multi_u[i],
-                              raydium_vertex_texture_multi_v[i],
+                              raydium_vertex_texture_multi_u(i),
+                              raydium_vertex_texture_multi_v(i),
                               raydium_texture_name[raydium_vertex_texture_multi[i]]);
   }
   else
@@ -61,9 +61,9 @@ for(bl=0;bl<2;bl++)
   if(raydium_vertex_texture[i])
 #endif
   fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
-  raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
-  raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
-  raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
+  raydium_vertex_x(i),raydium_vertex_y(i),raydium_vertex_z(i),
+  raydium_vertex_normal_visu_x(i), raydium_vertex_normal_visu_y(i), raydium_vertex_normal_visu_z(i),
+  raydium_vertex_texture_u(i),raydium_vertex_texture_v(i),
   text);
  }
 }
@@ -104,9 +104,9 @@ for(tex=1;tex<RAYDIUM_MAX_TEXTURES;tex++)
          for(i=0;i<raydium_vertex_index;i++)
           if(raydium_vertex_texture[i]==tex )
           fprintf(fp,"%f %f %f %f %f %f %f %f %s\n",
-          raydium_vertex_x[i],raydium_vertex_y[i],raydium_vertex_z[i],
-          raydium_vertex_normal_visu_x[i], raydium_vertex_normal_visu_y[i], raydium_vertex_normal_visu_z[i],
-          raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],
+          raydium_vertex_x(i),raydium_vertex_y(i),raydium_vertex_z(i),
+          raydium_vertex_normal_visu_x(i), raydium_vertex_normal_visu_y(i), raydium_vertex_normal_visu_z(i),
+          raydium_vertex_texture_u(i),raydium_vertex_texture_v(i),
           text);
         }
     }

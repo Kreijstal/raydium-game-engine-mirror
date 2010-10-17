@@ -46,7 +46,7 @@ typedef struct Box
     int type;
     int id;
     } Box;
-    
+
 #define MAX_ELEMS       4096
 #define FACT            6
 #define MOVE_X          -5
@@ -197,12 +197,12 @@ switch(c)
         obj=raydium_object_find_load(str);
         for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
             {
-            vx=raydium_vertex_x[i];
-            vy=raydium_vertex_y[i];
-            vz=raydium_vertex_z[i];
-            nx=raydium_vertex_normal_visu_x[i];
-            ny=raydium_vertex_normal_visu_y[i];
-            nz=raydium_vertex_normal_visu_z[i];
+            vx=raydium_vertex_x(i);
+            vy=raydium_vertex_y(i);
+            vz=raydium_vertex_z(i);
+            nx=raydium_vertex_normal_visu_x(i);
+            ny=raydium_vertex_normal_visu_y(i);
+            nz=raydium_vertex_normal_visu_z(i);
             vx-=0.5;
             vy-=0.5;
 
@@ -224,9 +224,11 @@ switch(c)
             rvx+=MOVE_X;
             rvy+=MOVE_Y;
             rvz+=MOVE_Z;
-            fprintf(tri,"%f %f %f %f %f %f %f %f %s\n",rvx,rvy,rvz,rnx,rny,rnz,raydium_vertex_texture_u[i],raydium_vertex_texture_v[i],raydium_texture_name[raydium_vertex_texture[i]]);
+            fprintf(tri,"%f %f %f %f %f %f %f %f %s\n",rvx,rvy,rvz,rnx,rny,rnz,
+            raydium_vertex_texture_u(i),raydium_vertex_texture_v(i),
+            raydium_texture_name[raydium_vertex_texture[i]]);
             }
-        break;    
+        break;
     case 'd':
         fgets(tdata,4000,in);
         if(tdata[strlen(tdata)-1]=='\n')

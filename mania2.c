@@ -39,7 +39,7 @@ int pop_mode=POP_MODE_ELEM;
 signed char view_glue=0;
 
 
-int n_boxpresets=0;     
+int n_boxpresets=0;
 Box boxpreset[MAX_ELEMS];
 
 char current_track[RAYDIUM_MAX_NAME_LEN];
@@ -151,7 +151,7 @@ ret=system(str);
 if(ret!=0)
     {
     raydium_log("CANNOT TEST MNI TRACK FROM '%s'",mni);
-    }           
+    }
 build_gui_access(NULL);
 }
 
@@ -501,13 +501,13 @@ GLfloat x,y;
 
 for(i=raydium_object_start[obj];i<raydium_object_end[obj];i++)
  {
- x=raydium_vertex_x[i]-0.5;
- y=raydium_vertex_y[i]-0.5;
+ x=raydium_vertex_x(i)-0.5;
+ y=raydium_vertex_y(i)-0.5;
 
- raydium_vertex_x[i]=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
- raydium_vertex_y[i]=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
- raydium_vertex_x[i]+=0.5;
- raydium_vertex_y[i]+=0.5;
+ raydium_vertex_x(i)=x*raydium_math_cos(angle) - y*raydium_math_sin(angle);
+ raydium_vertex_y(i)=x*raydium_math_sin(angle) + y*raydium_math_cos(angle);
+ raydium_vertex_x(i)+=0.5;
+ raydium_vertex_y(i)+=0.5;
  }
 }
 
@@ -534,15 +534,15 @@ for(i=0;i<MAX_ELEMS;i++)
     rotatez(grid[i].rot,grid[i].obj);
         for(j=raydium_object_start[grid[i].obj];j<raydium_object_end[grid[i].obj];j++)
         {
-        raydium_vertex_x[raydium_vertex_index]=raydium_vertex_x[j]+grid[i].x;
-        raydium_vertex_y[raydium_vertex_index]=raydium_vertex_y[j]+grid[i].y;
-        raydium_vertex_z[raydium_vertex_index]=raydium_vertex_z[j]+grid[i].z;
-        raydium_vertex_texture_u[raydium_vertex_index]=raydium_vertex_texture_u[j];
-        raydium_vertex_texture_v[raydium_vertex_index]=raydium_vertex_texture_v[j];
+        raydium_vertex_x(raydium_vertex_index)=raydium_vertex_x(j)+grid[i].x;
+        raydium_vertex_y(raydium_vertex_index)=raydium_vertex_y(j)+grid[i].y;
+        raydium_vertex_z(raydium_vertex_index)=raydium_vertex_z(j)+grid[i].z;
+        raydium_vertex_texture_u(raydium_vertex_index)=raydium_vertex_texture_u(j);
+        raydium_vertex_texture_v(raydium_vertex_index)=raydium_vertex_texture_v(j);
         raydium_vertex_texture[raydium_vertex_index]=raydium_vertex_texture[j];
         raydium_vertex_texture_multi[raydium_vertex_index]=raydium_vertex_texture_multi[j];
-        raydium_vertex_texture_multi_u[raydium_vertex_index]=raydium_vertex_texture_multi_u[j];
-        raydium_vertex_texture_multi_v[raydium_vertex_index]=raydium_vertex_texture_multi_v[j];
+        raydium_vertex_texture_multi_u(raydium_vertex_index)=raydium_vertex_texture_multi_u(j);
+        raydium_vertex_texture_multi_v(raydium_vertex_index)=raydium_vertex_texture_multi_v(j);
         raydium_vertex_index++;
         }
     rotatez(-grid[i].rot,grid[i].obj);
@@ -785,7 +785,7 @@ for(i=0;i<MAX_ELEMS;i++)
         grid[i].z=pz;
         grid[i].flags=0;
         grid[i].rot=curangle;
-        grid[i].obj=curobj;     
+        grid[i].obj=curobj;
         grid_generate_obj();
         return;
         }
@@ -832,7 +832,7 @@ GLint i;
 
 if(pop_mode==POP_MODE_ELEM)
 for(i=0;i<MAX_ELEMS;i++)
-    if( grid[i].state && 
+    if( grid[i].state &&
         grid[i].x==px &&
         grid[i].y==py &&
         grid[i].z==pz )
@@ -840,7 +840,7 @@ for(i=0;i<MAX_ELEMS;i++)
 
 if(pop_mode==POP_MODE_BOX)
 for(i=0;i<MAX_ELEMS;i++)
-    if( box[i].state   && 
+    if( box[i].state   &&
         box[i].x>=px   &&
         box[i].x<=px+1 &&
         box[i].y>=py   &&
@@ -848,7 +848,7 @@ for(i=0;i<MAX_ELEMS;i++)
         box[i].z>=pz   &&
         box[i].z<=pz+1 )
             box[i].state=0;
-            
+
 grid_generate_obj();
 }
 
@@ -910,7 +910,7 @@ if(raydium_gui_widget_find("btnMenu",window)>=0)
   roty=((float)raydium_mouse_y-((float)raydium_window_ty/(float)2)) * ((float)360/(float)raydium_window_ty);
  }
 
- if(raydium_mouse_button[0]) 
+ if(raydium_mouse_button[0])
  {
   view_glue=0;
   rotx=((float)raydium_mouse_x-((float)raydium_window_tx/(float)2)) * ((float)360/(float)raydium_window_tx);
