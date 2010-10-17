@@ -204,6 +204,9 @@ void glMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t)
 // Undeclared in iGLU, because of OpenGL ES.
 GLint gluBuild2DMipmaps(GLenum target, GLint internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *data)
 {
+    glTexParameterf(target,GL_GENERATE_MIPMAP, GL_TRUE); // (GL 1.4 based)
+    glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data);
+
     return 0;
 }
 

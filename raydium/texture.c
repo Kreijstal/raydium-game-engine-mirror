@@ -620,11 +620,6 @@ if(raydium_init_cli_option("filter",force))
     if(!strcmp(force,"aniso")) filter=RAYDIUM_TEXTURE_FILTER_ANISO;
     }
 
-// Only none and bilinear filtering modes are supported for now because of iGLU.
-#ifdef IPHONEOS
-if(filter!=RAYDIUM_TEXTURE_FILTER_NONE)
-    filter=RAYDIUM_TEXTURE_FILTER_BILINEAR;
-#endif
 raydium_texture_filter=filter;
 
 // too ... dangerous
