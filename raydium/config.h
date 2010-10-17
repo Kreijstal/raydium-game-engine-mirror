@@ -80,3 +80,5 @@
 // reverse values from axis ?
 #define RENDER_VOLUMETRIC_FOG_AXIS_REVERSE
 
+// on iPhone 4G, disable retina screen (480x320 instead of native 960x640)
+//#define IPHONEOS_NORETINA

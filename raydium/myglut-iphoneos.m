@@ -70,6 +70,7 @@ static int MyGLUTTouch[3];
 
     int w=480;
     int h=320;
+#ifndef IPHONEOS_NORETINA
     float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
     if(ver>3.2)
         {
@@ -77,6 +78,7 @@ static int MyGLUTTouch[3];
         w = mainscr.currentMode.size.height;
         h = mainscr.currentMode.size.width;
         }
+#endif
 
     _glutWindowSize[0]=h;
     _glutWindowSize[1]=w;

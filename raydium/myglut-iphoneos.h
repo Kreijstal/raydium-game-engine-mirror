@@ -9,6 +9,8 @@
 #ifndef MYGLUT_IPHONEOS_H
 #define MYGLUT_IPHONEOS_H
 
+#include "config.h"
+
 // Activate the context with the surface.
 int myglutMakeCurrent(void);
 
