@@ -44,6 +44,7 @@ void display(void)
     raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
     
     raydium_object_draw_name(model);
+    raydium_particle_draw_all(); // if raydium_particle_state_restore() is used ...
 
 //    raydium_osd_logo("logo.tga");
     
