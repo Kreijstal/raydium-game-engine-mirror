@@ -4,6 +4,7 @@
 
 // In this example, I list music/*.ogg and play a random file
 
+$raydium_ogg_file="";
 $dir=opendir("music/");
 if($dir==false) die("Cannot find \"music/\" directory...");
 
