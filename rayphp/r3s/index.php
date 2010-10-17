@@ -231,13 +231,13 @@ if(!file_exists($file)) die("FAILED: file not found");
 
 if($type=="getGzip")
 {
-$fp=fopen($file,"rb");
+$fp=@fopen($file,"rb");
 if(!$fp) die("FAILED: file not found");
 $data=fread($fp,filesize($file));
 fclose($fp);
 
 $tmp=tempnam("./","delme");
-$fp=gzopen($tmp,"wb");
+$fp=@gzopen($tmp,"wb");
 if(!$fp) return;
 gzwrite($fp,$data);
 gzclose($fp);
