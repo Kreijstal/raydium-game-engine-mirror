@@ -27,8 +27,8 @@ void raydium_window_create(GLuint tx, GLuint ty, signed char rendering, char *na
 // There is only one possible resolution available for the iPhone OS.
 // The content will be rotated to landscape mode.
 #ifdef IPHONEOS
-tx=320;
-ty=480;
+tx=glutGet(GLUT_WINDOW_WIDTH);
+ty=glutGet(GLUT_WINDOW_HEIGHT);
 #endif
 char mode[RAYDIUM_MAX_NAME_LEN];
 #ifndef MYGLUT_H
@@ -123,15 +123,25 @@ void raydium_window_resize_callback(GLsizei Width, GLsizei Height)
 {
 if(!Height) Height=1; // height=0 IS possible
 
+#ifndef IPHONEOS
+raydium_window_tx=Width;
+raydium_window_ty=Height;
+#else
+{
+GLsizei swap;
+swap=Width;
+Width=Height;
+Height=swap;
+}
+#endif
+
+
 // called each frame !!
 //raydium_log("resized to %i %i\n",Width,Height);
 
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
 glViewport(0, 0, Width, Height);
-
-raydium_window_tx=Width;
-raydium_window_ty=Height;
 
 
 if(raydium_projection==RAYDIUM_PROJECTION_ORTHO)

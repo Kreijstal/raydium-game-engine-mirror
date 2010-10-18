@@ -80,8 +80,8 @@ static int MyGLUTTouch[3];
         }
 #endif
 
-    _glutWindowSize[0]=h;
-    _glutWindowSize[1]=w;
+    _glutWindowSize[0]=w;
+    _glutWindowSize[1]=h;
 
     self = [super initWithFrame: frame];
     
@@ -90,7 +90,7 @@ static int MyGLUTTouch[3];
         CAEAGLLayer *MyGLUTLayer = (CAEAGLLayer*) [self layer];
         MyGLUTLayer.opaque = YES;
         MyGLUTLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool: NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGB565, kEAGLDrawablePropertyColorFormat, nil];
-        if(_glutWindowSize[0]==640)
+        if(_glutWindowSize[1]==640)
             MyGLUTLayer.contentsScale=2;
         context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES1];
         [EAGLContext setCurrentContext: context];
@@ -162,16 +162,13 @@ static int MyGLUTTouch[3];
 {
     UITouch *touch = touches.anyObject;
     CGPoint touchPosition = [touch locationInView: self];
-    double fact;
-    
+    CAEAGLLayer *MyGLUTLayer = (CAEAGLLayer*) [self layer];
+
     MyGLUTTouch[0] = 1;
 
-    // iPhone 4 retina screen factor
-    fact=_glutWindowSize[0]/320;
-    
     // Swap the axes, because the content of the screen is in landscape mode.
-    MyGLUTTouch[1] = (int)((int)touchPosition.y*320/480*fact);
-    MyGLUTTouch[2] = (int)(abs((int)touchPosition.x-320)*480/320*fact);
+    MyGLUTTouch[1] = ((int)touchPosition.y*MyGLUTLayer.contentsScale);
+    MyGLUTTouch[2] = (_glutWindowSize[1]-(int)touchPosition.x*MyGLUTLayer.contentsScale);
 }
 
 - (void) touchesEnded: (NSSet*) touches withEvent: (UIEvent*) event
