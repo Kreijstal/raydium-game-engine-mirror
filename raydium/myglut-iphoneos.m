@@ -15,6 +15,9 @@
 
 #include "myglut-iphoneos.h"
 
+#define ACCEL_SMOOTH_STEPS 3
+#define ACCEL_SAMPLE_FREQ  (1.f/30)
+
 static int raydium_argc;
 static char **raydium_argv;
 extern int raydium_main(int argc, char **argv);
@@ -226,7 +229,7 @@ static int MyGLUTContentsScale;
     [window addSubview: view];
     [window makeKeyAndVisible];
     
-    [[UIAccelerometer sharedAccelerometer] setUpdateInterval: (1.0/10)];
+    [[UIAccelerometer sharedAccelerometer] setUpdateInterval: ACCEL_SAMPLE_FREQ];
     [[UIAccelerometer sharedAccelerometer] setDelegate: self];
     
     timer = [NSTimer scheduledTimerWithTimeInterval: 0 target: self selector: @selector (onTimer:) userInfo: nil repeats: NO];
@@ -246,10 +249,26 @@ static int MyGLUTContentsScale;
 
 - (void) accelerometer: (UIAccelerometer*) accelerometer didAccelerate: (UIAcceleration*) acceleration
 {
+    static float accel[3][ACCEL_SMOOTH_STEPS];
+    float smooth;
+    int i,j;
+    for(i=0;i<3;i++)
+       for(j=0;j<ACCEL_SMOOTH_STEPS-1;j++)
+           accel[i][j]=accel[i][j+1];
+
     // Swap the axes, because the content of the screen is in landscape mode.
-    MyGLUTAcceleration[0] = -acceleration.y;
-    MyGLUTAcceleration[1] = acceleration.x;
-    MyGLUTAcceleration[2] = acceleration.z;
+    accel[0][ACCEL_SMOOTH_STEPS-1]=-acceleration.y;
+    accel[1][ACCEL_SMOOTH_STEPS-1]=acceleration.x;
+    accel[2][ACCEL_SMOOTH_STEPS-1]=acceleration.z;
+
+
+    for(i=0;i<3;i++)
+       {
+       smooth=0;
+       for(j=0;j<ACCEL_SMOOTH_STEPS;j++)
+           smooth+=accel[i][j];
+       MyGLUTAcceleration[i]=smooth/ACCEL_SMOOTH_STEPS;
+       }
 }
 
 - (void) onTimer: (NSTimer*) timer
