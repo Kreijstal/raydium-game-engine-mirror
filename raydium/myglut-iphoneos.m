@@ -28,6 +28,7 @@ static int MyGLUTRenderbuffer;
 static int MyGLUTFramebuffer;
 static float MyGLUTAcceleration[3];
 static int MyGLUTTouch[3];
+static int MyGLUTContentsScale;
 
 /*
     ##########################
@@ -91,7 +92,10 @@ static int MyGLUTTouch[3];
         MyGLUTLayer.opaque = YES;
         MyGLUTLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool: NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGB565, kEAGLDrawablePropertyColorFormat, nil];
         if(_glutWindowSize[1]==640)
+            {
             MyGLUTLayer.contentsScale=2;
+            MyGLUTContentsScale=MyGLUTLayer.contentsScale;
+            }
         context = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES1];
         [EAGLContext setCurrentContext: context];
         MyGLUTContext = context;
@@ -162,13 +166,12 @@ static int MyGLUTTouch[3];
 {
     UITouch *touch = touches.anyObject;
     CGPoint touchPosition = [touch locationInView: self];
-    CAEAGLLayer *MyGLUTLayer = (CAEAGLLayer*) [self layer];
 
     MyGLUTTouch[0] = 1;
 
     // Swap the axes, because the content of the screen is in landscape mode.
-    MyGLUTTouch[1] = ((int)touchPosition.y*MyGLUTLayer.contentsScale);
-    MyGLUTTouch[2] = (_glutWindowSize[1]-(int)touchPosition.x*MyGLUTLayer.contentsScale);
+    MyGLUTTouch[1] = ((int)touchPosition.y*MyGLUTContentsScale);
+    MyGLUTTouch[2] = (_glutWindowSize[1]-(int)touchPosition.x*MyGLUTContentsScale);
 }
 
 - (void) touchesEnded: (NSSet*) touches withEvent: (UIEvent*) event
