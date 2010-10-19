@@ -8,12 +8,12 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#define RAYDIUM_OBJECT_RENDER_CACHE_MAXPARTS 128
+#define RAYDIUM_OBJECT_RENDER_CACHE_MAXPARTS 2048
 
 typedef struct raydium_object_render_Part {
     int len;
     int start;
-    GLuint texture;
+    GLuint texture[2]; // basic multitexturing (not "env")
 } raydium_object_render_Part;
 
 typedef struct raydium_object_render_Cache {

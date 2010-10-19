@@ -32,6 +32,6 @@ void raydium_object_find_minmax(GLuint obj, GLfloat *min, GLfloat *max);
 void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz);
 void raydium_object_find_center(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz);
 void raydium_rendering_from_to_simple(GLuint from, GLuint to);
-
+void raydium_object_render_va(int obj, signed char simple);
 
 #endif

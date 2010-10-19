@@ -14,29 +14,38 @@
 #include "object.h"
 
 
-// experimental code first ... (need to be included in header !!)
+// experimental code first ... (need to be included in header, and
+// rendering should be moved to render.c)
 
 void raydium_object_render_cache_build(int obj)
 {
 GLuint start,end,next;
-GLuint state_texture=0;
+GLuint state_texture[2];
 raydium_object_render_Part *part;
 int i;
 
 start=raydium_object_start[obj];
 end=raydium_object_end[obj];
+state_texture[0]=0;
+state_texture[1]=0;
 
-for(i=start;i<end;i++)
+for(i=start;i<end;i++) // += 3 ?
     {
-    // add a new part
-    if(raydium_vertex_texture[i]!=state_texture)
+    // add a new part ?
+    if(
+        raydium_vertex_texture[i]!=state_texture[0] ||
+        raydium_vertex_texture_multi[i]!=state_texture[1]
+    )
         {
         part=malloc(sizeof(raydium_object_render_Part));
         if(!part) { raydium_log("ERROR: object: can't allocate render cache !"); exit(102); }
 
-        state_texture=raydium_vertex_texture[i];
+        state_texture[0]=raydium_vertex_texture[i];
+        state_texture[1]=raydium_vertex_texture_multi[i];
+
         part->start=i;
-        part->texture=state_texture;
+        part->texture[0]=state_texture[0];
+        part->texture[1]=state_texture[1];
 
         raydium_object_cache[obj].parts[raydium_object_cache[obj].n_parts++]=part;
         if(raydium_object_cache[obj].n_parts>=RAYDIUM_OBJECT_RENDER_CACHE_MAXPARTS)
@@ -62,12 +71,13 @@ for(i=0;i<raydium_object_cache[obj].n_parts;i++)
 
 
 raydium_log("object: render cache: %i part(s)",raydium_object_cache[obj].n_parts);
-for(i=0;i<raydium_object_cache[obj].n_parts;i++)
-    raydium_log("\tstart=%i len=%i tex=%i",
+/*for(i=0;i<raydium_object_cache[obj].n_parts;i++)
+    raydium_log("\tstart=%i len=%i tex=%i|%i",
         raydium_object_cache[obj].parts[i]->start,
         raydium_object_cache[obj].parts[i]->len,
-        raydium_object_cache[obj].parts[i]->texture
-    );
+        raydium_object_cache[obj].parts[i]->texture[0],
+        raydium_object_cache[obj].parts[i]->texture[1]
+    );*/
 }
 
 void raydium_object_render_va_init(signed char simple)
@@ -86,6 +96,12 @@ else
 
 glVertexPointer(3, GL_FLOAT, 0, raydium_vertex_arr);
 glNormalPointer(GL_FLOAT, 0, raydium_vertex_normal_visu_arr);
+
+glClientActiveTexture(GL_TEXTURE1);
+glTexCoordPointer(2, GL_FLOAT, 0, raydium_vertex_texture_multi_uv_arr);
+glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+glClientActiveTexture(GL_TEXTURE0);
 glTexCoordPointer(2, GL_FLOAT, 0, raydium_vertex_texture_uv_arr);
 
 }
@@ -107,10 +123,15 @@ for(i=0;i<raydium_object_cache[obj].n_parts;i++)
     part=raydium_object_cache[obj].parts[i];
 
     if(!simple)
-        raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,part->texture);
+        {
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,part->texture[0]);
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB,part->texture[1]);
+        }
     glDrawArrays(GL_TRIANGLES, part->start, part->len);
     }
 
+for(i=0;i<(RAYDIUM_RENDER_MAX_TEXUNITS-1);i++)
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+i,0);
 }
 
 
