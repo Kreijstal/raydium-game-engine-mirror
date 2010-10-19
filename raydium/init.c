@@ -238,6 +238,16 @@ if(err==GLEW_OK)
     raydium_log("OpenGL extensions: OK");
 else
     raydium_log("OpenGL extensions: FAILED");
+
+#ifdef IPHONEOS
+if(!glActiveTexture || !glClientActiveTexture || !glActiveTextureARB || !glClientActiveTextureARB)
+    {
+    raydium_log("ERROR: glActiveTexture(ARB) glClientActiveTexture(ARB) not available !");
+    raydium_log("GLEW probably overwrite default existing functions, please update glew.h accordingly until we found a better solution ...");
+    exit(200);
+    }
+#endif
+
 raydium_internal_size_vector_float_4=sizeof(GLfloat)*4;
 raydium_log("Platform \"4xfloat\" vector size is: %i byte(s) long",raydium_internal_size_vector_float_4);
 glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);

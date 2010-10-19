@@ -19,6 +19,7 @@
 #define OPENGLES_SIZE_OF_FLOAT 4
 
 GLenum ogles_mode=0;
+signed char ogles_started=0;
 
 signed char ogles_texture_coord_enabled=0;
 
@@ -88,6 +89,7 @@ void glBegin(GLenum mode)
     }
     
     ogles_reset();
+    ogles_started=1;
 }
 
 GLuint glGenLists(GLsizei range)
@@ -97,7 +99,7 @@ GLuint glGenLists(GLsizei range)
 
 void glEnd(void)
 {
-    if(ogles_vertices>0)
+    if(ogles_vertices>0 && ogles_started)
     {
         if(ogles_texture_coord_enabled)
         {
@@ -111,6 +113,7 @@ void glEnd(void)
         glVertexPointer(3,GL_FLOAT,0,&ogles_vertex_array[0]);
         glDrawArrays(ogles_mode,0,ogles_vertices);
         glDisableClientState(GL_VERTEX_ARRAY);
+        ogles_started=0;
     }
 }
 
