@@ -82,3 +82,6 @@
 
 // on iPhone 4G, disable retina screen (480x320 instead of native 960x640)
 //#define IPHONEOS_NORETINA
+
+// experimental Vertex Array renderer
+//#define DEBUG_RENDER_VERTEXARRAY

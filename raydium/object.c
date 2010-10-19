@@ -11,6 +11,99 @@
 #include "headers/object.h"
 #endif
 
+#include "object.h"
+
+
+// experimental code first ... (need to be included in header !!)
+
+void raydium_object_render_cache_build(int obj)
+{
+GLuint start,end,next;
+GLuint state_texture=0;
+raydium_object_render_Part *part;
+int i;
+
+start=raydium_object_start[obj];
+end=raydium_object_end[obj];
+
+for(i=start;i<end;i++)
+    {
+    // add a new part
+    if(raydium_vertex_texture[i]!=state_texture)
+        {
+        part=malloc(sizeof(raydium_object_render_Part));
+        if(!part) { raydium_log("ERROR: object: can't allocate render cache !"); exit(102); }
+
+        state_texture=raydium_vertex_texture[i];
+        part->start=i;
+        part->texture=state_texture;
+
+        raydium_object_cache[obj].parts[raydium_object_cache[obj].n_parts++]=part;
+        if(raydium_object_cache[obj].n_parts>=RAYDIUM_OBJECT_RENDER_CACHE_MAXPARTS)
+            {
+            raydium_log("ERROR: object: render cache is full ! (more than %i states for this object !)",RAYDIUM_OBJECT_RENDER_CACHE_MAXPARTS);
+            exit(103);
+            }
+        }
+
+    }
+
+// compute lens
+for(i=0;i<raydium_object_cache[obj].n_parts;i++)
+    {
+    if(i==raydium_object_cache[obj].n_parts-1)
+        next=end;
+    else
+        next=raydium_object_cache[obj].parts[i+1]->start;
+
+    raydium_object_cache[obj].parts[i]->len =
+        next - raydium_object_cache[obj].parts[i]->start;
+    }
+
+
+raydium_log("object: render cache: %i part(s)",raydium_object_cache[obj].n_parts);
+for(i=0;i<raydium_object_cache[obj].n_parts;i++)
+    raydium_log("\tstart=%i len=%i tex=%i",
+        raydium_object_cache[obj].parts[i]->start,
+        raydium_object_cache[obj].parts[i]->len,
+        raydium_object_cache[obj].parts[i]->texture
+    );
+}
+
+void raydium_object_render_va_init(void)
+{
+glEnableClientState(GL_VERTEX_ARRAY);
+glEnableClientState(GL_NORMAL_ARRAY);
+glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+glVertexPointer(3, GL_FLOAT, 0, raydium_vertex_arr);
+glNormalPointer(GL_FLOAT, 0, raydium_vertex_normal_visu_arr);
+glTexCoordPointer(2, GL_FLOAT, 0, raydium_vertex_texture_uv_arr);
+
+}
+
+void raydium_object_render_va(int obj, signed char simple)
+{
+int i;
+raydium_object_render_Part *part;
+
+glEnable(GL_TEXTURE_2D);
+//glDisable(GL_TEXTURE_2D);
+
+for(i=0;i<raydium_object_cache[obj].n_parts;i++)
+    {
+    part=raydium_object_cache[obj].parts[i];
+
+    raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,part->texture);
+    glDrawArrays(GL_TRIANGLES, part->start, part->len);
+    }
+
+}
+
+
+
+// ... then, regular code :
+
 GLint raydium_object_find(char *name)
 {
 GLint i;
@@ -34,6 +127,8 @@ raydium_object_name[o][0]=0;
 raydium_object_start[o]=0;
 raydium_object_end[o]=0;
 raydium_object_anims[o]=0;
+raydium_object_cache[o].n_parts=0;
+raydium_object_render_va_init();
 }
 
 
@@ -50,7 +145,12 @@ ret=read_vertex_from(filename);
 raydium_object_end[raydium_object_index]=raydium_vertex_index;
 strcpy(raydium_object_name[raydium_object_index],filename);
 if (ret)
+    {
+#ifdef DEBUG_RENDER_VERTEXARRAY
+    raydium_object_render_cache_build(raydium_object_index);
+#endif
     return(raydium_object_index++);
+    }
 else
     return -1;
 }
@@ -68,10 +168,12 @@ return ret;
 void raydium_object_draw(GLuint o)
 {
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
+#ifndef DEBUG_RENDER_VERTEXARRAY
 static GLuint dl[RAYDIUM_MAX_OBJECTS];
 static char dl_state[RAYDIUM_MAX_OBJECTS];
 static int first=0;
 int i;
+#endif
 #endif
 
 if(!raydium_object_isvalid(o))
@@ -92,6 +194,7 @@ if(raydium_object_anims[o]>0)
 
 
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
+#ifndef DEBUG_RENDER_VERTEXARRAY
 if(first)
     for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
         dl_state[i]=-1;
@@ -112,7 +215,10 @@ if(raydium_render_displaylists_tag && !raydium_shadow_rendering)
   glCallList(dl[o]);
 }
 else raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
-
+#else
+// Experimental Vertex Array Rendering
+raydium_object_render_va(o,0);
+#endif
 #else
 // No display lists, draw
 raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
