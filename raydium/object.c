@@ -70,11 +70,19 @@ for(i=0;i<raydium_object_cache[obj].n_parts;i++)
     );
 }
 
-void raydium_object_render_va_init(void)
+void raydium_object_render_va_init(signed char simple)
 {
 glEnableClientState(GL_VERTEX_ARRAY);
-glEnableClientState(GL_NORMAL_ARRAY);
-glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+if(!simple)
+    {
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+else
+    {
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
 
 glVertexPointer(3, GL_FLOAT, 0, raydium_vertex_arr);
 glNormalPointer(GL_FLOAT, 0, raydium_vertex_normal_visu_arr);
@@ -89,16 +97,17 @@ raydium_object_render_Part *part;
 
 // on iPhone, Vertex Array are changed by regular rendering (OSD, skybox, ...)
 // so we need to get it back here.
-raydium_object_render_va_init();
+raydium_object_render_va_init(simple);
 
-glEnable(GL_TEXTURE_2D);
+//glEnable(GL_TEXTURE_2D);
 //glDisable(GL_TEXTURE_2D);
 
 for(i=0;i<raydium_object_cache[obj].n_parts;i++)
     {
     part=raydium_object_cache[obj].parts[i];
 
-    raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,part->texture);
+    if(!simple)
+        raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,part->texture);
     glDrawArrays(GL_TRIANGLES, part->start, part->len);
     }
 

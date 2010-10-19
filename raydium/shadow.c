@@ -130,6 +130,7 @@ raydium_shadow_light=l;
 void raydium_shadow_object_draw(GLuint o)
 {
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
+#ifndef DEBUG_RENDER_VERTEXARRAY
 static GLuint dl[RAYDIUM_MAX_OBJECTS];
 static char dl_state[RAYDIUM_MAX_OBJECTS];
 static int first=0;
@@ -155,6 +156,10 @@ if(raydium_render_displaylists_tag && raydium_object_anims[o]==0)
 }
 else
     raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
+#else
+// Experimental Vertex Array Rendering
+raydium_object_render_va(o,1);
+#endif
 #else
     raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
 #endif
@@ -224,7 +229,11 @@ glCopyTexSubImage2D(GL_TEXTURE_2D,0,0,0,0,0,raydium_shadow_map_size,raydium_shad
 
 glColor4f(1,1,1,1);
 
+#ifndef IPHONEOS
 glViewport(0,0,raydium_window_tx,raydium_window_ty);
+#else
+glViewport(0,0,raydium_window_ty,raydium_window_tx);
+#endif
 glEnable(GL_TEXTURE_2D);
 
 glMatrixMode(GL_PROJECTION);
