@@ -86,6 +86,7 @@ static int MyGLUTContentsScale;
 
     _glutWindowSize[0]=w;
     _glutWindowSize[1]=h;
+    MyGLUTContentsScale=1;
 
     self = [super initWithFrame: frame];
     
