@@ -190,8 +190,14 @@ raydium_sky_prefix_defined=0;
 raydium_sky_enabled=1;
 raydium_file_log_fopen_index=0;
 
+#ifndef IPHONEOS
 raydium_ode_timestep = (0.006f);
 raydium_ode_physics_freq = 400;
+#else
+// way less CPU hungry ... but breaks a lot of things (ERP/CFM/...) :/
+raydium_ode_timestep = (0.06f);
+raydium_ode_physics_freq = 40;
+#endif
 
 for(i=0;i<4;i++)
 raydium_osd_color[i]=1.f;
