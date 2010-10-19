@@ -59,6 +59,7 @@ int main(int argc, char **argv)
     raydium_sky_box_cache();
     raydium_osd_cursor_set("logo_raydium.tga",14,20);
     raydium_ode_ground_set_name("plane.tri");
+    raydium_normal_regenerate_all();
     
     sound_touched=raydium_sound_LoadWav("touched.wav");
     raydium_sound_SetSourceLoop(sound_touched,0);
