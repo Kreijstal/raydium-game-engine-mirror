@@ -87,6 +87,10 @@ void raydium_object_render_va(int obj, signed char simple)
 int i;
 raydium_object_render_Part *part;
 
+// on iPhone, Vertex Array are changed by regular rendering (OSD, skybox, ...)
+// so we need to get it back here.
+raydium_object_render_va_init();
+
 glEnable(GL_TEXTURE_2D);
 //glDisable(GL_TEXTURE_2D);
 
@@ -128,7 +132,6 @@ raydium_object_start[o]=0;
 raydium_object_end[o]=0;
 raydium_object_anims[o]=0;
 raydium_object_cache[o].n_parts=0;
-raydium_object_render_va_init();
 }
 
 

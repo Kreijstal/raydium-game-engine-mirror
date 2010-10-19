@@ -58,7 +58,8 @@
 #       define IPHONEOS
 #       define OPENGLES
 #       define main(c, v) raydium_main(c, v)
-#       define DEBUG_RENDER_DISABLE_DISPLAYLISTS
+//#       define DEBUG_RENDER_DISABLE_DISPLAYLISTS
+#       define DEBUG_RENDER_VERTEXARRAY
 #    endif
 # endif
 #endif
