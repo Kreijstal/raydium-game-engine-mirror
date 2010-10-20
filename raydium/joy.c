@@ -1366,7 +1366,9 @@ int autocenter=5;         /* default value. between 0 and 100 */
 
 void raydium_joy_close(void)
 {
+#ifndef WIN32
         if(raydium_joy) close(raydium_joy);
+#endif
 }
 
 void raydium_joy_ff(void)
