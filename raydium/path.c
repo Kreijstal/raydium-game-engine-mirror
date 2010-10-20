@@ -84,13 +84,13 @@ signed char raydium_path_add(char *dir)
 }
 
 signed char raydium_path_find (char *dir)
-{	
+{
 int a;
 if(!dir) return 0; //return  0 or 1?
 for(a=0;a<RAYDIUM_MAX_PATHS;a++)
     {
 	if(raydium_path_paths[a].state && !strcmp(raydium_path_paths[a].path,dir))
-	    {			
+	    {
         return 1;
         }
     }
@@ -106,7 +106,7 @@ if(raydium_path_find(dir)) //check for duplicated path
     raydium_log("path: ERROR: Directory already in the PATH. Not adding.");
 	return 0;
     }
-    
+
 id=raydium_path_find_free();
 if(id<0)
     {
@@ -240,10 +240,6 @@ if(mode=='r')
     char ext[RAYDIUM_MAX_NAME_LEN];
     int i;
 
-    // Just thinking ... should'nt we check "." after all other paths ?
-    if(raydium_file_readable(in))
-        return;
-
     // ok ... file does not exists, search paths
     raydium_file_ext(ext,in);
     found=0;
@@ -287,6 +283,10 @@ if(mode=='r')
             }
         }
     if (found) return;
+
+    // better after all other paths ?
+    if(raydium_file_readable(in))
+        return;
 
     // ok, if we're here, the file does not exists at all, let's
     // prepare R3S job:
@@ -524,6 +524,7 @@ char full_package_name[RAYDIUM_MAX_NAME_LEN];
 char package_name[RAYDIUM_MAX_NAME_LEN];
 char full_file_name[RAYDIUM_MAX_NAME_LEN];
 char file_name[RAYDIUM_MAX_NAME_LEN];
+char file_package_name[RAYDIUM_MAX_NAME_LEN];
 
 for (i=0;i<RAYDIUM_MAX_PACKAGES_FILES;i++)
     {
@@ -545,6 +546,14 @@ for (i=0;i<RAYDIUM_MAX_PACKAGES_FILES;i++)
 
 if (pindex!=-1) // No package to update exiting
     {
+    struct stat extract_stat;
+    struct stat file_stat;
+    char tmp[RAYDIUM_MAX_DIR_LEN];
+    char extract_path[RAYDIUM_MAX_DIR_LEN];
+
+    sprintf(tmp,"packages/%s",raydium_path_package_file[pindex]);
+    strcpy(extract_path,raydium_file_home_path(tmp));
+
     raydium_path_resolv(raydium_path_package_file[pindex],full_package_name,'w');
     raydium_file_basename(package_name,raydium_path_package_file[pindex]);
     raydium_log("packages: Updating %s package file",raydium_path_package_file[pindex]);
@@ -561,13 +570,31 @@ if (pindex!=-1) // No package to update exiting
         strcpy(file_name,raydium_file_log_fopen[i]);
         raydium_path_resolv(file_name,full_file_name,'r');
         //raydium_log("File:%s",full_file_name);
-        base_name_len=strlen(file_name);
-        base_name_len+=1; // Skip /
-        base_name_len=base_name_len+strlen(package_name);
-        base_name_len=strlen(full_file_name)-base_name_len;
 
-        if (strncmp(&full_file_name[base_name_len],package_name,strlen(package_name))!=0)
+        sprintf(file_package_name,"%s/%s",extract_path,file_name);
+        if (!raydium_file_readable(file_package_name))
+            {
+                raydium_rayphp_zip_add(full_package_name,full_file_name,file_name);
+                continue;
+            }
+
+        if(stat(full_file_name,&file_stat)==-1)
+            {
+            raydium_log("path: ERROR: can't stat '%s'.",full_file_name);
+            perror("stat");
+            continue;
+            }
+
+        if(stat(file_package_name,&extract_stat)==-1)
+            {
+            raydium_log("path: ERROR: can't stat '%s'.",file_package_name);
+            perror("stat");
+            continue;
+            }
+        if (extract_stat.st_mtime<file_stat.st_mtime)
+            {
             raydium_rayphp_zip_add(full_package_name,full_file_name,file_name);
+            }
         }
     }
 }
