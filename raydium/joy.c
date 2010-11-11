@@ -1360,6 +1360,9 @@ int autocenter=5;         /* default value. between 0 and 100 */
 #ifdef IPHONEOS
     raydium_log("joy: OK (using internal multi-axis accelerometer motion sensor)");
     raydium_joy = 1;
+    raydium_joy_n_axes = 3;
+    raydium_joy_n_buttons = 0;
+    strcpy(raydium_joy_name, "iPhone internal multi-axis accelerometer motion sensor");
 #endif
 #endif
 }
