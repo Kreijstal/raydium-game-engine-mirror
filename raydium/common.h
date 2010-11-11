@@ -174,6 +174,7 @@
 #define RAYDIUM_MAX_LIGHTS                      8
 #define RAYDIUM_MAX_NAME_LEN                    255
 #define RAYDIUM_MAX_DIR_LEN                     4096
+#define RAYDIUM_MAX_CLI_ARGS                    64
 #define RAYDIUM_MAX_OBJECTS                     1024
 #define RAYDIUM_MAX_OBJECT_ANIMS                20
 #define RAYDIUM_MAX_OBJECT_ANIM_INSTANCES       64

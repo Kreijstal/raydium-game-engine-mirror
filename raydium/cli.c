@@ -128,15 +128,48 @@ void raydium_init_args_name_hack(int argc, char **argv, char *app_name)
 int i;
 char logfile[RAYDIUM_MAX_NAME_LEN];
 char logmode[RAYDIUM_MAX_NAME_LEN];
+FILE *fp;
 
 raydium_init_argc=argc;
-raydium_init_argv=malloc(argc*sizeof(char *));
+raydium_init_argv=malloc(RAYDIUM_MAX_CLI_ARGS*sizeof(char *)); // can't use argc, since raydium.cli may add new argv's
 
 for(i=0;i<argc;i++)
     {
     raydium_init_argv[i]=malloc(strlen(argv[i])+1);
     strcpy(raydium_init_argv[i],argv[i]);
     }
+
+fp=fopen("raydium.cli","rt");
+if(fp)
+    {
+    char line[RAYDIUM_MAX_DIR_LEN];
+    char next[RAYDIUM_MAX_DIR_LEN];
+    char arg[RAYDIUM_MAX_NAME_LEN];
+
+    while(fgets(line,RAYDIUM_MAX_DIR_LEN,fp))
+        {
+        raydium_parser_trim(line);
+        if(!strlen(line))
+            break;
+        while(raydium_parser_cut(line,arg,next,' '))
+            {
+            raydium_init_argv[raydium_init_argc]=malloc(strlen(arg)+1);
+            strcpy(raydium_init_argv[raydium_init_argc],arg);
+            raydium_init_argc++;
+            strcpy(line,next);
+            }
+        raydium_init_argv[raydium_init_argc]=malloc(strlen(line)+1);
+        strcpy(raydium_init_argv[raydium_init_argc],line);
+        raydium_init_argc++;
+        }
+    fclose(fp);
+    }
+
+/*
+for(i=0;i<raydium_init_argc;i++)
+    printf("[%s] ",raydium_init_argv[i]);
+exit(1);
+*/
 
 raydium_log("Raydium 3D Game Engine");
 

@@ -13,6 +13,10 @@ interface of Raydium.
 You can use --help command line switch to see a list of all supported switches
 for the engine. This help command will not show application specific switches that
 you may add.
+
+You can also create a 'raydium.cli' file in binary's directory and fill it
+with command line arguments. (may be useful when you don't have access to
+command line)
 **/
 
 __rayapi int raydium_init_cli_option(char *option, char *value);
