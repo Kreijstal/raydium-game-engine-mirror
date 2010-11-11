@@ -77,6 +77,11 @@ float R[]={0.0, 0.0, 1.0, 0.0};
 float Q[]={0.0, 0.0, 0.0, 1.0};
 int tmp;
 
+// Shadow support is not ready on iPhone, yet
+#ifdef IPHONEOS
+return;
+#endif
+
 if(raydium_shadow_tag)
     return;
 
