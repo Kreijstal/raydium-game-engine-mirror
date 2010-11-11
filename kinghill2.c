@@ -242,7 +242,12 @@ int respawn;
 //#define BREAK_FORCE     130
 #define BREAK_FORCE     0
 #define ROTFRICTION     0.0005
+
+#ifndef IPHONEOS
 #define ERP_CFM         0.1,1.0
+#else
+#define ERP_CFM         (0.1*10),1.0
+#endif
 
 raydium_ode_object_delete_name("WATURE");
 
@@ -463,7 +468,7 @@ switch(game_state)
         raydium_ode_element_sound_update_name("corps",son_moteur);
         raydium_sound_SetSourcePitch(son_moteur,0.2);
 
-        if(raydium_key_last==1032)
+        if(raydium_key_last==1032 || raydium_mouse_click==1)
             game_state_change(GAME_GAME);
 
 
