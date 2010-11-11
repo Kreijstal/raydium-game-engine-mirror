@@ -418,7 +418,13 @@ else
     showMessage(trackdata.message_file,0);
 
 raydium_video_delete_name("video");
+
+#ifndef IPHONEOS
 music_random();
+#else
+raydium_sound_load_music(NULL);
+#endif
+
 return 1;
 }
 
@@ -2114,7 +2120,13 @@ void create_car(void)
 {
 #define BREAK_FORCE     0
 #define ROTFRICTION     0.0005
-#define ERP_CFM         0.3,0.8
+
+#ifndef IPHONEOS
+# define ERP_CFM         0.3,0.8
+#else
+# define ERP_CFM         (0.3*10),0.8
+#endif
+
 int a,i;
 float x,y,z;
 char dir;
@@ -2190,7 +2202,11 @@ for(i=0;i<MAX_ELEMS;i++)
     raydium_ode_motor_create("direction",a,RAYDIUM_ODE_MOTOR_ANGULAR);
     raydium_ode_motor_attach_name("direction","suspet_ag",0);
     raydium_ode_motor_attach_name("direction","suspet_ad",0);
+#ifndef IPHONEOS
     raydium_ode_motor_power_max_name("direction",0.2);
+#else
+    raydium_ode_motor_power_max_name("direction",2);
+#endif
 
 raydium_sound_SourcePlay(sound_car);
 raydium_ode_element_particle_offset_name("corps","smokeexhaustpipe.prt", partoffset1);
