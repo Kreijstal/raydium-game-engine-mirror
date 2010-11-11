@@ -210,8 +210,10 @@ void create_menu(void)
 {
 int handle;
 char lastserver[RAYDIUM_MAX_NAME_LEN];
+char defaultip[RAYDIUM_MAX_NAME_LEN];
 
-raydium_parser_db_get("KingHill2-LastServer",lastserver,"127.0.0.1");
+raydium_init_cli_option_default("ip",defaultip,"127.0.0.1");
+raydium_parser_db_get("KingHill2-LastServer",lastserver,defaultip);
 
 raydium_gui_theme_load("theme-raydium2.gui");
 
