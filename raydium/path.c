@@ -560,8 +560,6 @@ if (pindex!=-1) // No package to update exiting
     raydium_log("----------------------------------------------");
     for(i=0;i<raydium_file_log_fopen_index;i++)
         {
-        int base_name_len;
-
         if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
             continue;
         if (!strcmp(&raydium_file_log_fopen[i][strlen(raydium_file_log_fopen[i])-4],".zip"))
