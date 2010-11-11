@@ -155,11 +155,16 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"  %s\n","--filter name            texture filter (none,bilinear,trilinear,aniso)");
     fprintf(stdout,"  %s\n","--compress               enable texture compression");
     fprintf(stdout,"  %s\n","--max-aniso int          set anisotropic filter maximum level");
-    fprintf(stdout,"  %s\n","--joydev name            define joystick device (Linux)");
-    fprintf(stdout,"  %s\n","--evdev name             define joystick forefeedback device (Linux)");
     fprintf(stdout,"  %s\n","--help                   this page");
 
     fprintf(stdout,"%s\n","");
+
+    fprintf(stdout,"  %s\n","--joydev name            define joystick device (Linux)");
+    fprintf(stdout,"  %s\n","--evdev name             define joystick forefeedback device (Linux)");
+    fprintf(stdout,"  %s\n","--joy-emul name          force joystick emulation (mouse,keyboard)");
+
+    fprintf(stdout,"%s\n","");
+
 
     fprintf(stdout,"  %s\n","--name name              network player name");
     fprintf(stdout,"  %s\n","--ode-rate int           ODE physics network refresh rate");

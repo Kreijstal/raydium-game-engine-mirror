@@ -217,6 +217,9 @@
 #define RAYDIUM_KEYBOARD_SIZE                   256
 #define RAYDIUM_JOY_MAX_BUTTONS                 32
 #define RAYDIUM_JOY_MAX_AXIS                    8
+#define RAYDIUM_JOY_EMUL_NONE                   0
+#define RAYDIUM_JOY_EMUL_KEY                    1
+#define RAYDIUM_JOY_EMUL_MOUSE                  2
 
 #define RAYDIUM_NETWORK_PORT                    29104
 #define RAYDIUM_NETWORK_BEACON_PORT             (RAYDIUM_NETWORK_PORT+1)
@@ -358,6 +361,7 @@ __global int     raydium_joy;
 __global char    raydium_joy_name[RAYDIUM_MAX_NAME_LEN];
 __global char    raydium_joy_n_axes;     // read only
 __global char    raydium_joy_n_buttons;  // read only
+__global char    raydium_joy_emul_type;
 
 
 __global GLuint   raydium_texture_index;

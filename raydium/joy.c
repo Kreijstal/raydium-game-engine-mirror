@@ -758,6 +758,40 @@ static recDevice* HIDDisposeDevice(recDevice** ppDevice)
 
 void raydium_joy_callback(void)
 {
+if(raydium_joy_emul_type==RAYDIUM_JOY_EMUL_KEY)
+    {
+    raydium_joy_x=0;
+    raydium_joy_y=0;
+
+    if(raydium_key[GLUT_KEY_UP]) raydium_joy_y=1.f;
+    if(raydium_key[GLUT_KEY_DOWN]) raydium_joy_y=-1.f;
+
+    if(raydium_key[GLUT_KEY_LEFT]) raydium_joy_x=-1.f;
+    if(raydium_key[GLUT_KEY_RIGHT]) raydium_joy_x=1.f;
+
+    raydium_joy_axis[0]=raydium_joy_x;
+    raydium_joy_axis[1]=raydium_joy_y;
+
+    return;
+    }
+
+if(raydium_joy_emul_type==RAYDIUM_JOY_EMUL_MOUSE)
+    {
+    raydium_joy_x=0;
+    raydium_joy_y=0;
+
+    if(raydium_mouse_button[0])
+        {
+        raydium_joy_x=((float)raydium_mouse_x/raydium_window_tx-0.5f)*2.f;
+        raydium_joy_y=((float)raydium_mouse_y/raydium_window_ty-0.5f)*-2.f;
+        }
+
+    raydium_joy_axis[0]=raydium_joy_x;
+    raydium_joy_axis[1]=raydium_joy_y;
+
+    return;
+    }
+
 #ifndef APPLE
 #ifndef WIN32
  struct js_event e;                     //structure for storing an event
@@ -1034,7 +1068,37 @@ void raydium_joy_init(void)
 
 int autocenter=5;         /* default value. between 0 and 100 */
 
-        raydium_joy_init_vars();
+raydium_joy_init_vars();
+
+// is any emulation requested ?
+raydium_joy_emul_type=RAYDIUM_JOY_EMUL_NONE;
+name[0]=0;
+if(!raydium_joy && raydium_init_cli_option("joy-emul",name))
+    {
+    if(!strcmp(name,"keyboard"))
+        {
+        raydium_joy_emul_type=RAYDIUM_JOY_EMUL_KEY;
+        raydium_joy = 1;
+        raydium_joy_n_axes = 2;
+        raydium_joy_n_buttons = 0; // may change, obviously ...
+        strcpy(raydium_joy_name, "Raydium joystick by keyboard emulation");
+        }
+    if(!strcmp(name,"mouse"))
+        {
+        raydium_joy_emul_type=RAYDIUM_JOY_EMUL_MOUSE;
+        raydium_joy = 1;
+        raydium_joy_n_axes = 2;
+        raydium_joy_n_buttons = 0; // may change, obviously ...
+        strcpy(raydium_joy_name, "Raydium joystick by mouse emulation");
+        }
+
+    if(raydium_joy)
+        {
+        raydium_log("joy: OK (emulated: %s)",raydium_joy_name);
+        return;
+        }
+    }
+
 #ifndef APPLE
 #ifndef WIN32
 

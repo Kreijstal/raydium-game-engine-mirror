@@ -51,6 +51,9 @@ __rayapi  void raydium_joy_key_emul (void);
 Emulate joy with keyboard (directional pad), so you can always use
 raydium_joy_x and y variables, even if no joystick was detected.
 This function has no effect if a joy is detected.
+
+The user itself can also enable joystick emulation by keyboard (or mouse)
+using the --joy-emul xxx command line option.
 **/
 
 #ifndef APPLE
