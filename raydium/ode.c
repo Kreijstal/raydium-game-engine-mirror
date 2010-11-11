@@ -2620,6 +2620,12 @@ if(raydium_ode_joint_isvalid(j))
         }
     else
         {
+        if(raydium_ode_timestep>0.05f) // very low precision cases
+            {
+            dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamStopERP,1);
+            dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamStopCFM,0);
+            }
+
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,0);
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamHiStop,0);
         dJointSetHinge2Param(raydium_ode_joint[j].joint,dParamLoStop,0);
