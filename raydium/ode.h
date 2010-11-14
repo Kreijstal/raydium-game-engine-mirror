@@ -264,7 +264,7 @@ typedef struct raydium_ode_network_Event
     dReal pos[3];
     dReal rot[4];
     dReal vel[3]; // test
-} raydium_ode_network_Event;
+} _PACKED raydium_ode_network_Event;
 
 typedef struct raydium_ode_network_Explosion
 {
@@ -273,7 +273,7 @@ typedef struct raydium_ode_network_Explosion
     dReal radius;
     dReal force; // BLOW only
     dReal propag; // EXPL only
-} raydium_ode_network_Explosion;
+} _PACKED raydium_ode_network_Explosion;
 
 
 __global raydium_ode_Object    raydium_ode_object[RAYDIUM_ODE_MAX_OBJECTS];

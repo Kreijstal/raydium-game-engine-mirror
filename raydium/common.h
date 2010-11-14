@@ -68,6 +68,12 @@
 #define __global
 #endif
 
+#ifdef __GNUC__
+#define _PACKED __attribute__((packed))
+#else
+#define _PACKED
+#endif
+
 #ifdef WIN32
 #include "windows.h"
 #endif
