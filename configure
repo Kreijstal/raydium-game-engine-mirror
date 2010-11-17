@@ -237,7 +237,7 @@ php_install()
     echo "===============" >> configure.log
     cd raydium/php
 	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
-    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \ 
+    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap --with-gd --with-jpeg-dir --with-png-dir\
     >>../../configure.log 2>>../../configure.log
 
     ret=$?
@@ -426,6 +426,48 @@ file='int main(void) { return 0; }'
 test_build "g++" "$file" "" "g++"
 exit_if_error "$?" "GNU C++ Compiler (G++) is missing"
 
+# libjpeg
+file='
+#include <stdio.h>
+#include <jpeglib.h>
+
+int main(void)
+{
+struct jpeg_decompress_struct cinfo;
+struct jpeg_error_mgr jerr;
+//JSAMPARRAY buffer;
+
+cinfo.err=jpeg_std_error(&jerr);
+jpeg_create_decompress(&cinfo);
+jpeg_destroy_decompress(&cinfo);
+
+return 0;
+}
+'
+test_build "libjpeg" "$file" "-ljpeg"
+exit_if_error "$?" "libjpeg-devel not available."
+
+# libpng (for PHP's libgd)
+file='
+#include <stdio.h>
+#include <png.h>
+
+int main(void)
+{
+png_structp png_ptr = png_create_read_struct(
+    PNG_LIBPNG_VER_STRING, NULL,
+    NULL, NULL);
+
+if (!png_ptr)
+    return (1);
+
+return 0;
+}
+'
+test_build "libpng" "$file" "-lpng"
+exit_if_error "$?" "libpng-devel not available."
+
+
 # Check ODE installation
 ode_install
 
@@ -498,26 +540,6 @@ return(0);
 test_build "Ogg/Vorbis" "$file" "-lvorbis -lvorbisfile -logg"
 exit_if_error "$?" "ogg and vorbis devels are required (libogg,libvorbis and libvorbisfile)"
 
-# libjpeg
-file='
-#include <stdio.h>
-#include <jpeglib.h>
-
-int main(void)
-{
-struct jpeg_decompress_struct cinfo;
-struct jpeg_error_mgr jerr;
-//JSAMPARRAY buffer;
-
-cinfo.err=jpeg_std_error(&jerr);
-jpeg_create_decompress(&cinfo);
-jpeg_destroy_decompress(&cinfo);
-
-return 0;
-}
-'
-test_build "libjpeg" "$file" "-ljpeg"
-exit_if_error "$?" "libjpeg-devel not available."
 
 ##### End of tests
 
