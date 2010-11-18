@@ -85,3 +85,4 @@
 
 // experimental Vertex Array renderer
 //#define DEBUG_RENDER_VERTEXARRAY
+//#define DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY

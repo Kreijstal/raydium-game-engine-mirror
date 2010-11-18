@@ -75,6 +75,10 @@ if(texunit_state[tui]==tex)
 texunit_state[tui]=tex;
 
 //printf("preparing texunit %i with %s\n",tui,raydium_texture_name[tex]);
+#ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
+raydium_render_debug_va_count++;
+#endif
+
 
 // prepare "lightmaps" texture units
 if(tui>0)
@@ -425,6 +429,11 @@ raydium_callback_image();
 glFlush();
 raydium_rendering_internal_restore_render_state();
 //glutPostRedisplay();
+
+#ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
+raydium_log("DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY: %i",raydium_render_debug_va_count);
+#endif
+
 
 #ifdef DEBUG_MOVIE
 raydium_timecall_debug_movie++;

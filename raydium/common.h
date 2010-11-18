@@ -502,6 +502,9 @@ __global signed char     raydium_render_rgb_force_tag;
 __global char    raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 __global float   raydium_render_max_fps;
+#ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
+__global unsigned int raydium_render_debug_va_count;
+#endif
 
 __global void (*raydium_callback_loop)(void); // for glutMainLoop wrapper
 
