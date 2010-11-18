@@ -74,8 +74,8 @@ if(texunit_state[tui]==tex)
 
 texunit_state[tui]=tex;
 
-//printf("preparing texunit %i with %s\n",tui,raydium_texture_name[tex]);
 #ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
+printf("preparing texunit %i with %s\n",tui,raydium_texture_name[tex]);
 raydium_render_debug_va_count++;
 #endif
 
