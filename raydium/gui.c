@@ -1525,7 +1525,8 @@ int raydium_gui_check_read(int window, int widget, char *str)
         return 0;
     }
     c=raydium_gui_windows[window].widgets[widget].widget;
-    sprintf(str,"%s",(c->checked?"true":"false"));
+    if (str!=NULL)
+        sprintf(str,"%s",(c->checked?"true":"false"));
     return c->checked;
 }
 
