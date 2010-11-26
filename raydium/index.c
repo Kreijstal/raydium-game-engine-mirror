@@ -92,6 +92,9 @@ extern "C" {
 
 #else
 
+#ifdef IPHONEOS
+#include "myglut.h"
+#endif
 #include "atexit.c"
 #include "network.h"
 #include "log.c"
