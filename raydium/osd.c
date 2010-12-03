@@ -57,8 +57,10 @@ glLoadIdentity();
 glOrtho(0,100, 0,100, -100,100);
 // Rotate and translate the OSD to fit the landscape mode on the iPhone OS.
 #ifdef IPHONEOS
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
 glRotatef(-90,0,0,1);
 glTranslatef(-100,0,0);
+#endif
 #endif
 
 //glPushMatrix();

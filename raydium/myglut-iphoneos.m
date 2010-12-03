@@ -72,15 +72,25 @@ static int MyGLUTContentsScale;
 - (id) initWithFrame: (CGRect) frame
 {
 
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
     int w=480;
     int h=320;
+#else
+    int w=320;
+    int h=480;
+#endif
 #ifndef IPHONEOS_NORETINA
     float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
     if(ver>3.2)
         {
         UIScreen* mainscr = [UIScreen mainScreen];
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
         w = mainscr.currentMode.size.height;
         h = mainscr.currentMode.size.width;
+#else
+        w = mainscr.currentMode.size.width;
+        h = mainscr.currentMode.size.height;
+#endif
         }
 #endif
 
@@ -95,7 +105,11 @@ static int MyGLUTContentsScale;
         CAEAGLLayer *MyGLUTLayer = (CAEAGLLayer*) [self layer];
         MyGLUTLayer.opaque = YES;
         MyGLUTLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool: NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGB565, kEAGLDrawablePropertyColorFormat, nil];
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
         if(_glutWindowSize[1]==640)
+#else
+        if(_glutWindowSize[0]==640)
+#endif
             {
             MyGLUTLayer.contentsScale=2;
             MyGLUTContentsScale=MyGLUTLayer.contentsScale;
@@ -174,8 +188,13 @@ static int MyGLUTContentsScale;
     MyGLUTTouch[0] = 1;
 
     // Swap the axes, because the content of the screen is in landscape mode.
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
     MyGLUTTouch[1] = ((int)touchPosition.y*MyGLUTContentsScale);
     MyGLUTTouch[2] = (_glutWindowSize[1]-(int)touchPosition.x*MyGLUTContentsScale);
+#else
+    MyGLUTTouch[1] = ((int)touchPosition.x*MyGLUTContentsScale);
+    MyGLUTTouch[2] = ((int)touchPosition.y*MyGLUTContentsScale);
+#endif
 }
 
 - (void) touchesEnded: (NSSet*) touches withEvent: (UIEvent*) event
@@ -221,7 +240,9 @@ static int MyGLUTContentsScale;
 
 - (void) applicationDidFinishLaunching: (UIApplication*) application
 {
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
     [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated: NO];
+#endif
     [UIApplication sharedApplication].statusBarHidden = YES;
     [[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
     
@@ -258,9 +279,15 @@ static int MyGLUTContentsScale;
            accel[i][j]=accel[i][j+1];
 
     // Swap the axes, because the content of the screen is in landscape mode.
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
     accel[0][ACCEL_SMOOTH_STEPS-1]=-acceleration.y;
     accel[1][ACCEL_SMOOTH_STEPS-1]=acceleration.x;
     accel[2][ACCEL_SMOOTH_STEPS-1]=acceleration.z;
+#else
+    accel[0][ACCEL_SMOOTH_STEPS-1]=acceleration.x;
+    accel[1][ACCEL_SMOOTH_STEPS-1]=acceleration.y;
+    accel[2][ACCEL_SMOOTH_STEPS-1]=acceleration.z;
+#endif
 
 
     for(i=0;i<3;i++)

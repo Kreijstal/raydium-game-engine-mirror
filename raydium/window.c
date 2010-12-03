@@ -127,12 +127,14 @@ if(!Height) Height=1; // height=0 IS possible
 raydium_window_tx=Width;
 raydium_window_ty=Height;
 #else
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
 {
 GLsizei swap;
 swap=Width;
 Width=Height;
 Height=swap;
 }
+#endif
 #endif
 
 
@@ -156,7 +158,9 @@ gluPerspective(raydium_projection_fov,(GLfloat)Width/(GLfloat)Height,
 
 // Rotate the content to fit the landscape mode on the iPhone OS.
 #ifdef IPHONEOS
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
 glRotatef(-90,0,0,1);
+#endif
 #endif
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity();
