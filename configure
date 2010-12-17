@@ -513,7 +513,8 @@ sleep(1);
 #ifndef ALUT_API_MAJOR_VERSION
 #error ALUT for OpenAL 1.1 is required
 #endif
-alcCloseDevice(dev);
+if(dev) alcCloseDevice(dev);
+else printf(\"Unable to open OpenAL native null device.\");
 return 0; }"
 test_build "OpenAL 1.1 and ALUT" "$file" "-lopenal -lalut"
 if [ $? != 0 ]; then
