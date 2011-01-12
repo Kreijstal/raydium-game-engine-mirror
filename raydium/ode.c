@@ -152,9 +152,6 @@ for(j=0;j<3;j++)
 
 void raydium_ode_init(void)
 {
-#ifdef APPLE
-    dInitODE();
-#endif
 int i;
 
 if(sizeof(dReal) != sizeof(float))
@@ -163,6 +160,10 @@ if(sizeof(dReal) != sizeof(float))
     raydium_log("physics: You need SINGLE precision for ODE");
     exit(34);
     }
+
+#ifdef dInitODE
+dInitODE();
+#endif
 
 raydium_ode_ExplosionCallback=NULL;
 raydium_ode_CollideCallback=NULL;

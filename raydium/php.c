@@ -155,7 +155,7 @@ int raydium_php_exec(char *name)
     FILE *fp;
     char suffix[32];
     zval *vars[RAYDIUM_MAX_REG_VARIABLES];
-    zend_file_handle file_handle;
+    zend_file_handle file_handle={0,};
     zend_llist global_vars;
     int i,nvars;
 
@@ -187,6 +187,7 @@ int raydium_php_exec(char *name)
     raydium_php_init_request(name);
 
     zend_llist_init(&global_vars, sizeof(char *), NULL, 0);
+    zend_alter_ini_entry("safe_mode", 10, "0", 1, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
     zend_alter_ini_entry("html_errors", 12, "0", 1, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
     zend_alter_ini_entry("max_execution_time", 19, "0", 1, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
     zend_alter_ini_entry("default_socket_timeout",23,"10",2, PHP_INI_SYSTEM, PHP_INI_STAGE_ACTIVATE);
@@ -203,10 +204,10 @@ int raydium_php_exec(char *name)
         raydium_log("php: ERROR: cannot post-open '%s' file",name);
         return 0;
         }
-    file_handle.filename=name;
+    file_handle.filename = name;
     file_handle.type = ZEND_HANDLE_FP;
     file_handle.free_filename = 0;
-    file_handle.opened_path = NULL;
+    file_handle.opened_path = estrdup(name);
 
 
 //    if(php_request_startup(CLS_C ELS_CC PLS_CC SLS_CC) == FAILURE) {
