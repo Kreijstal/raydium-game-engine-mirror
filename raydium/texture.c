@@ -50,6 +50,7 @@ int flipx=0,flipy=0;
 char compress=0; // Handle compressed tga texture
 GLuint chunkid;
 char rle;
+char offset;
 
 // "as" is duplicated ?
 //check if the filename of the texture is already loaded
@@ -95,6 +96,7 @@ if(!rgb && !faked)
   }
 
  fread(temp,1,12,file);
+ offset=temp[0];
  if(temp[2]!=2 && temp[2]!=3 && temp[2]!=10 && temp[2]!=11)
  {
      fclose(file);
@@ -166,6 +168,7 @@ if(!rgb && !faked)
      chunkid=0;
      rle=0;
 
+ fread(temp,1,offset,file);
  //reading the image data in the file
  for(jj=0; jj<ty; jj++)
  for(ii=0; ii<tx; ii++)
