@@ -3028,18 +3028,18 @@ if(raydium_ode_element_isvalid(e))
     {
     matrix=(dReal *)dGeomGetRotation(raydium_ode_element[e].geom);
 
-    if(matrix[2] < 1-epsilon && matrix[2] > -1+epsilon)
+    if(matrix[8] < 1-epsilon && matrix[8] > -1+epsilon)
     {
-        *ry=-asin(matrix[2]);
+        *ry=-asin(matrix[8]);
         c=cos(*ry);
-        *rx= atan2(matrix[6]/c,matrix[10]/c);
-        *rz= atan2(matrix[1]/c,matrix[0]/c);
+        *rx= atan2(matrix[9]/c,matrix[10]/c);
+        *rz= atan2(matrix[4]/c,matrix[0]/c);
     }
     else
     {
         *rz=0;
-        *ry=-atan2(matrix[2],0);
-        *rx= atan2(-matrix[9],matrix[5]);
+        *ry=-atan2(matrix[8],0);
+        *rx= atan2(-matrix[6],matrix[5]);
     }
 
     // rad to deg
