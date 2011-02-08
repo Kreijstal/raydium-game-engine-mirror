@@ -216,7 +216,8 @@ sizes. A 512x512 texture will generate, for example, a (smoothed)
 use these textures according to distance from POV (point of vue),
 reducing flickering effect.
 
-This is the best filtering Raydium can use, for a great rendering quality.
+This is on of the best filtering Raydium can use, for a great rendering 
+quality. See also anisotropic filter, in Texture chapter of this document.
 Good and recent 3D hardware can do trilinear filtering in a single pass,
 so it must be the default setting for your application.
 
@@ -224,6 +225,8 @@ About ##raydium_texture_filter## itself: changing this variable will not modify
 the rendering, but the way to load textures. It means you can (for example)
 use trilinear only for landscape textures, and bilinear for others.
 It also means you must reload (erase) a texture to change it's filter.
+
+See (and prefer)  ##raydium_texture_filter_change()## to change the filter.
 
 Note that Raydium will never use trilinear filter with blended (transparent)
 textures, for good reasons :)

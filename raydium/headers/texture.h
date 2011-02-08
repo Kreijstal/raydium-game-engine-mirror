@@ -7,18 +7,19 @@ Textures
 
 // Introduction
 /**
-For now, Raydium only handles TGA uncompressed texture.
-As explainded in the first part of this guide, Raydium provides three 
-texture filters (none, bilinear, trilinear using MipMaps ).
+For now, Raydium only handles TGA textures.
+As explainded in the first part of this guide, Raydium provides four
+texture filters (none, bilinear, trilinear using MipMaps, and anisotropic ).
 
-Texture sizes must be a power of two, 8 (alpha mask), 24 (RGB) or 32 (RGBA) bits.
+Texture must be 8 (alpha mask), 24 (RGB) or 32 (RGBA) bits, and sizes should
+be a power of two (so all hardware can handle it). Compression is available.
 
-Raydium supports simple color materials,  using a "rgb(r,g,b)" string 
+Raydium supports simple color materials,  using a "rgb(r,g,b)" string
 as texture name, where r, g and b are 0 <= x <= 1 (floats).
 With 3 negative values, you will generate a "phantom texture". Phantom textures
 are only drawn into the z-buffer (and not color buffer).
-Texture clamping and advanced multitexturing effects are supported by Raydium, 
-but not fully documented here for now. 
+Texture clamping and advanced multitexturing effects are supported by Raydium,
+but not fully documented here for now.
 A few quick tips:
  - "BOX" filename prefix (ex: BOX_foo.tga) is used as a clamp-to-edge attribute.
  - "HDR" prefix is used to set a texture as a "light emitter" (sky, lamp, ...)
@@ -42,6 +43,26 @@ hardware (up to RAYDIUM_RENDER_MAX_TEXUNITS on the same line of the tri file).
 
 For more informations about other operators and prefixes, you may have a look
 at the Wiki or at engine's source code.
+
+Some informations about textures with alpha channel, since it can be to root of
+a few rendering issues. Translucent textures are not Z-buffer compliant, so
+Raydium will always render it last. But it's a "per-object" behavior, so it
+can still "fight" with other objects, or even with other translucent textures
+from the same object. Think about rendering order (textures and objects) when
+possible, it will help avoiding such troubles.
+
+Sometime, alpha channel is only needed to create "holes" in textures. If you
+can't handle this directly in the geometry of the object (slower but better
+quality), the easy option is ##RAYDIUM_TEXTURE_BLEND_CUTOUT## textures. Raydium
+will detect such textures when alpha channel shows only perfectly opaque pixels
+and prefectly transparent ones. Any intermediate value will make the engine
+falling back to the regular ##RAYDIUM_TEXTURE_BLEND_BLENDED## mode.
+
+Keep this in mind when you create textures like trees, for instance, where you
+should have only 0 or 100% alpha values. You can do this with software
+like The GIMP, using tools like "Threshold Alpha". Note that the engine will
+not apply advanced filters (trilinear, aniso, ...) on such textures to avoid
+rendering artifacts.
 **/
 
 __rayapi signed char raydium_texture_size_is_correct (GLuint size);
@@ -57,9 +78,9 @@ Internal use.
 
 __rayapi GLuint raydium_texture_load (char *filename);
 /**
-Loads "filename" texture into hardware memory. Function results 
-texture index, but in most cases, you can identify later a texture 
-by his name, without providing his index, so you can probably ignore 
+Loads "filename" texture into hardware memory. Function results
+texture index, but in most cases, you can identify later a texture
+by his name, without providing his index, so you can probably ignore
 this value.
 
 0 is returned if texture loading have failed.
@@ -93,16 +114,16 @@ Internal use. Will search a new free texture slot.
 
 __rayapi signed char raydium_texture_current_set (GLuint current);
 /**
-Switch active texture to "current" index. Mostly used for runtime object 
+Switch active texture to "current" index. Mostly used for runtime object
 creation:
-"set current texture, add vertices, set another texture, 
-add vertices, ... and save all to an objet" 
+"set current texture, add vertices, set another texture,
+add vertices, ... and save all to an objet"
 (see below for vertices management).
 **/
 
 __rayapi signed char raydium_texture_current_set_name (char *name);
 /**
-Same as above, but using texture name. This function will load ##name## 
+Same as above, but using texture name. This function will load ##name##
 if not alread done.
 **/
 
@@ -125,7 +146,7 @@ You can allow the load of Non-power-of-two textures with this function.
 __rayapi void raydium_texture_npot_disable(void);
 /**
 Function to disabled the previous behaviour. By default Raydium already
-has this behaviour disabled. 
+has this behaviour disabled.
 **/
 
 __rayapi void raydium_texture_filter_change (GLuint filter);
