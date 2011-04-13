@@ -408,6 +408,27 @@ __rayapi void raydium_ode_element_addforce_name_3f (char *e, dReal vx, dReal vy,
 Same as above, but using 3 dReal values.
 **/
 
+__rayapi void raydium_ode_element_addrelforce (int e, dReal *vect);
+/**
+Adds, relative to element orientation, force ##vect## to element ##e##.
+Force is sets thru ##vect##, a 3 x dReal array.
+**/
+
+__rayapi void raydium_ode_element_addrelforce_3f (int e, dReal fx, dReal fu, dReal fz);
+/**
+Same as above, but using 3 dReal values.
+**/
+
+__rayapi void raydium_ode_element_addrelforce_name (char *e, dReal * vect);
+/**
+Same as above, but using element's name and one vector.
+**/
+
+__rayapi void raydium_ode_element_addrelforce_name_3f (char *e, dReal vx, dReal vy, dReal vz);
+/**
+Same as above, but using 3 dReal values.
+**/
+
 __rayapi dReal * raydium_ode_element_force_get(int e);
 /**
 Return forces accumulated by a given body;

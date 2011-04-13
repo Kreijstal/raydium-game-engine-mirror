@@ -659,6 +659,38 @@ vect[2]=vz;
 raydium_ode_element_addforce_name(e,vect);
 }
 
+void raydium_ode_element_addrelforce_3f(int a,dReal fx,dReal fy,dReal fz)
+{
+    if(!raydium_ode_element_isvalid(a))
+        {
+        raydium_log("ODE: Error: cannot add force to element: invalid name or index");
+        return;
+        }
+    if(raydium_ode_element[a].state==RAYDIUM_ODE_STATIC)
+        {
+        raydium_log("ODE: Error: cannot add force to a static element");
+        return;
+        }
+
+    dBodyEnable(raydium_ode_element[a].body);
+    dBodyAddRelForce(raydium_ode_element[a].body,fx,fy,fz);
+}
+
+void raydium_ode_element_addrelforce(int e, dReal *vect)
+{
+    raydium_ode_element_addrelforce_3f(e,vect[0],vect[1],vect[2]);
+}
+
+void raydium_ode_element_addrelforce_name(char *e, dReal *vect)
+{
+    raydium_ode_element_addrelforce_3f(raydium_ode_element_find(e),vect[0],vect[1],vect[2]);
+}
+
+void raydium_ode_element_addrelforce_name_3f(char *e, dReal vx, dReal vy, dReal vz)
+{
+    raydium_ode_element_addrelforce_3f(raydium_ode_element_find(e),vx,vy,vz);
+}
+
 dReal *raydium_ode_element_force_get(int e)
 {
 if(!raydium_ode_element_isvalid(e))
