@@ -637,6 +637,14 @@ float *data;
 dir_x=0;
 dir_y=0;
 
+data=raydium_camera_get_data();
+rffp_cam_pos_z=data[0];
+rffp_cam_pos_x=data[1];
+rffp_cam_pos_y=-data[2];
+rffp_cam_angle_x=data[3];
+rffp_cam_angle_y=data[4];
+rffp_cam_angle_z=data[5];
+
 switch(move)
 {
     //RAYDIUM_CAMERA_FREEMOVE_NORMAL
