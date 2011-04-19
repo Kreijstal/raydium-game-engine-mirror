@@ -818,6 +818,30 @@ dReal *raydium_ode_element_linearvelocity_get_name(char *elem)
 return (dReal *)raydium_ode_element_linearvelocity_get(raydium_ode_element_find(elem));
 }
 
+void raydium_ode_element_rellinearvelocity_get(int e,dReal * vel)
+{
+dReal * v;
+if(!raydium_ode_element_isvalid(e))
+    {
+    raydium_log("ODE: Error: cannot get element linear velocity: invalid name or index");
+    return ;
+    }
+if(raydium_ode_element[e].state!=RAYDIUM_ODE_STANDARD)
+    {
+    raydium_log("ODE: Error: cannot get element linear velocity: not a standard object");
+    return ;
+    }
+    v=raydium_ode_element_linearvelocity_get(e);
+    raydium_ode_element_world2vect(e,v,vel);
+}
+
+void raydium_ode_element_rellinearvelocity_get_name(char *elem,dReal * vel)
+{
+    raydium_ode_element_rellinearvelocity_get(raydium_ode_element_find(elem),vel);
+}
+
+
+
 void raydium_ode_element_linearvelocity_set_3f(int e, dReal velx,dReal vely,dReal velz)
 {
 if(!raydium_ode_element_isvalid(e))
@@ -1062,6 +1086,40 @@ else // ... body is STATIC
     dBodySetQuaternion(body,rot);
 
     dBodyVectorToWorld(body,vect[0],vect[1],vect[2],world);
+
+    dBodyDestroy(body);
+    }
+
+return 1;
+}
+
+signed char raydium_ode_element_world2vect(int element,dReal *world,dReal *vect)
+{
+dBodyID body;
+
+if(!raydium_ode_element_isvalid(element))
+    {
+    raydium_log("ODE: Error: Cannot world2rel: element is not valid");
+    return 0;
+    }
+
+if(raydium_ode_element[element].state==RAYDIUM_ODE_STANDARD)
+    {
+    dBodyVectorFromWorld(raydium_ode_element[element].body,world[0],world[1],world[2],vect);
+    }
+else // ... body is STATIC
+    {
+    dReal *pos;
+    dReal rot[4];
+
+    pos=(dReal *)dGeomGetPosition(raydium_ode_element[element].geom);
+    dGeomGetQuaternion(raydium_ode_element[element].geom,rot);
+
+    body=dBodyCreate(raydium_ode_world); // fake temporary body
+    dBodySetPosition(body,pos[0],pos[1],pos[2]); // TODO xfennec  really usefull ?
+    dBodySetQuaternion(body,rot);
+
+    dBodyVectorFromWorld(body,world[0],world[1],world[2],vect);
 
     dBodyDestroy(body);
     }
@@ -3088,6 +3146,24 @@ return 0;
 signed char raydium_ode_element_rot_get_name(char *e, dReal *rx, dReal *ry, dReal *rz)
 {
 return raydium_ode_element_rot_get(raydium_ode_element_find(e),rx,ry,rz);
+}
+
+void raydium_ode_element_euler_get(int e, dReal *yaw, dReal *pitch, dReal *roll)
+{
+dBodyID b;
+const dReal * R;
+
+    b=raydium_ode_element[e].body;
+
+    R = dBodyGetRotation(b);
+    *pitch= -asin(R[8]);
+    *roll=atan2(R[9],R[10]);
+    *yaw=atan2(R[4],R[0]);
+}
+
+void raydium_ode_element_euler_get_name(char * name, dReal *yaw, dReal *pitch, dReal *roll)
+{
+    raydium_ode_element_euler_get(raydium_ode_element_find(name),yaw,pitch,roll);
 }
 
 void raydium_ode_element_sound_update(int e, int source)

@@ -525,6 +525,23 @@ __rayapi dReal *raydium_ode_element_linearvelocity_get_name(char *e);
 Same as above using element name.
 **/
 
+__rayapi void raydium_ode_element_rellinearvelocity_get (int e,dReal *vel);
+/**
+Returns element's linear velocity relative to local element axis orientation. 
+Linear velocity is an array of 3 x dReal.
+Example: %%(c)
+dReal vel[3];
+raydium_ode_element_linearvelocity_get(elem,vel);
+raydium_log("%f %f %f",vel[0],vel[1],vel[2]);
+%%
+Returned data is available only for the current frame.
+**/
+
+__rayapi void raydium_ode_element_rellinearvelocity_get_name(char *e, dReal *vel);
+/**
+Same as above using element name.
+**/
+
 
 __rayapi void raydium_ode_element_linearvelocity_set (int e, dReal *vel);
 /**
@@ -696,6 +713,17 @@ No memory allocation is done here.
 
 This function can be used on normal and static elements.
 Note: This is a "Raydium clone" of dBodyVectorToWorld.
+**/
+
+__rayapi signed char raydium_ode_element_world2vect(int element,dReal *world,dReal *vect);
+/**
+Given a vector (world) expressed in the ##world## coordinate system (dReal[3]),
+rotate it to the element coordinate system (##vect##, dReal[3]).
+
+No memory allocation is done here.
+
+This function can be used on normal and static elements.
+Note: This is a "Raydium clone" of dBodyVectorFromWorld.
 **/
 
 __rayapi signed char raydium_ode_element_aabb_get (int element, dReal * aabb);
@@ -1501,11 +1529,21 @@ This code is experimental. It should returns element ##e##'s current rotation
 using 3 dReal angles, in radians. Do not apply back values to the
 element since there're not "ODE formated".
 **/
-
-__rayapi signed char raydium_ode_element_rot_get_name (char *e, dReal * rx, dReal * ry, dReal * rz);
+__rayapi signed char raydium_ode_element_rot_get_name (char * name, dReal * rx, dReal * ry, dReal * rz);
 /**
 Same as above, but using element's name.
 **/
+
+__rayapi void raydium_ode_element_euler_get_name(char * name, dReal *yaw, dReal *pitch, dReal *roll);
+/** Compute euler angles of element ##name## using R = Rz.Ry.Rx Rotation matrix order.
+Yaw is Z axis rotation, Pitch Y axis, and Roll X axis.
+**/
+
+__rayapi void raydium_ode_element_euler_get(int e, dReal *yaw, dReal *pitch, dReal *roll);
+/**
+Same as above but using element number.
+**/
+
 
 __rayapi void raydium_ode_element_sound_update (int e, int source);
 /**
