@@ -1714,6 +1714,16 @@ memcpy(e->ray[ray_id].rel_pos,pos,3*sizeof(dReal));
 return 1;
 }
 
+signed char raydium_ode_element_ray_pos_3f(int element, int ray_id, dReal px, dReal py, dReal pz)
+{
+dReal pos[3];
+
+pos[0]=px;
+pos[1]=py;
+pos[2]=pz;
+return raydium_ode_element_ray_pos(element,ray_id,pos);
+}
+
 signed char raydium_ode_element_ray_pos_name(char *element, int ray_id, dReal *pos)
 {
 return raydium_ode_element_ray_pos(raydium_ode_element_find(element),ray_id,pos);

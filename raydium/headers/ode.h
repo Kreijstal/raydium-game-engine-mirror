@@ -968,6 +968,11 @@ __rayapi signed char raydium_ode_element_ray_pos(int element, int ray_id, dReal 
 Moves ##ray_id## ray of ##element## to relative ##pos##.
 **/
 
+__rayapi signed char raydium_ode_element_ray_pos_3f(int element, int ray_id, dReal px, dReal py, dReal pz);
+/**
+Same as above, but using 3 float values.
+**/
+
 __rayapi signed char raydium_ode_element_ray_pos_name(char *element, int ray_id, dReal *pos);
 /**
 Same as above, but using element's name.
