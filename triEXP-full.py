@@ -248,8 +248,11 @@ def export():
 					u=face.uv[i][0]
 					v=face.uv[i][1]
 					#get current texture image name
-					valid_texture(face.image,texture_list)
-					texture=Blender.sys.basename(face.image.filename)
+					if (face.image):
+						valid_texture(face.image,texture_list)
+						texture=Blender.sys.basename(face.image.filename)
+					else:
+						texture="rgb(0.6,0.0,0.0)"
 					but=texture
 					cpt=0 # layers counter
 					if(len(layers)>1):
