@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/clear.h"
-#endif 
+#endif
 
 void raydium_clear_frame(void)
 {
@@ -20,6 +20,7 @@ glEnable(GL_STENCIL_TEST); // HDR
 raydium_frame_first_camera_pass=1;
 raydium_vertex_counter=0;
 raydium_viewport_use=-1;
+raydium_mouse_mode_delta=0;
 #ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
 raydium_render_debug_va_count=0;
 #endif

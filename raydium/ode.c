@@ -5229,12 +5229,24 @@ int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth)
     dReal min_dist;
     dGeomID ray;
     dContact pt;
+    float mx,my;
     signed char (*f)(int,int, dContact *);
 
     f=raydium_ode_PickCallback;
 
+    if(!raydium_mouse_mode_delta)
+        {
+        mx=raydium_mouse_x;
+        my=raydium_mouse_y;
+        }
+    else
+        {
+        mx=raydium_window_tx/2;
+        my=raydium_window_ty/2;
+        }
+
     // Get mouse pointed coordinate
-    gluUnProject( (float)raydium_mouse_x, (float)(raydium_window_ty - raydium_mouse_y), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
+    gluUnProject( (float)mx, (float)(raydium_window_ty - my), (float) -1.0, raydium_camera_gl_modelview, raydium_camera_gl_projection, raydium_camera_gl_viewport, &dX, &dY, &dZ);
 
     //Create Ray
     ray =  dCreateRay (raydium_ode_object[raydium_ode_object_find("GLOBAL")].group,dist);

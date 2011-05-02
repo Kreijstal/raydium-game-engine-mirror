@@ -40,6 +40,7 @@ if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
 memset(raydium_mouse_button,0,3);
 raydium_mouse_click=0;
 raydium_mouse_x=raydium_mouse_y=raydium_window_ty=0;
+raydium_mouse_mode_delta=0;
 raydium_log("mouse: OK");
 raydium_mouse_hide();
 }
@@ -87,6 +88,7 @@ static GLint   old_y;
 GLint border;
 
 border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
+raydium_mouse_mode_delta=1;
 
 if(prev_state==0)
 {
