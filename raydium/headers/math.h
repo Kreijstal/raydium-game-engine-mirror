@@ -52,6 +52,16 @@ __rayapi GLfloat raydium_math_sin_inv (GLfloat i);
 Obvious (degrees)
 **/
 
+#define raydium_math_rad2deg(a) ((a)*180/PI)
+/**
+Radians to degrees.
+**/
+
+#define raydium_math_deg2rad(a) ((a)*PI/180)
+/**
+Degrees to radians.
+**/
+
 #define raydium_math_abs(a) ( (a) < (0) ? (-(a)) : (a) )
 /**
 Obvious
