@@ -812,6 +812,8 @@ __global ZFE raydium_register_function_list[RAYDIUM_MAX_REG_FUNCTION];
 __global char raydium_php_rayphp_path[RAYDIUM_MAX_NAME_LEN];
 
 __global FILE *raydium_log_file;
+__global signed char raydium_log_atexit_dump;
+
 __global char  raydium_file_log_fopen[RAYDIUM_MAX_LOG_FOPEN][RAYDIUM_MAX_NAME_LEN];
 __global char  raydium_file_log_fopen_status[RAYDIUM_MAX_LOG_FOPEN];
 __global int   raydium_file_log_fopen_index;

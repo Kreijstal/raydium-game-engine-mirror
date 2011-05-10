@@ -28,4 +28,10 @@ raydium_log("You are player %i, %s",player_number,player_name);
 For now, this function writes to the parent terminal and the in-game console, with "Raydium: " string prefix.
 The user can force logging to a file, using ##--logfile## command line switch.
 **/
+
+__rayapi void raydium_log_atexit_quiet(void);
+/**
+Disable all axtexit dump logs, so the user can see a fatal error message, for instance.
+**/
+
 #endif

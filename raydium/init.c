@@ -189,6 +189,7 @@ raydium_capture_asked=RAYDIUM_CAPTURE_NONE;
 raydium_sky_prefix_defined=0;
 raydium_sky_enabled=1;
 raydium_file_log_fopen_index=0;
+raydium_log_atexit_dump=1;
 
 #ifndef IPHONEOS
 raydium_ode_timestep = (0.006f);

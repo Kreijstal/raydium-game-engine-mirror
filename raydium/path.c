@@ -306,6 +306,10 @@ if(mode=='w')
 void raydium_path_dump(void)
 {
 char path[1024];
+
+if(!raydium_log_atexit_dump)
+    return;
+
 raydium_path_string_to(path);
 raydium_log("path: read: \"%s\"",path);
 raydium_log("path: write: \"%s\"",raydium_path_write_current);

@@ -19,6 +19,9 @@ void raydium_internal_dump(void)
 GLuint i,j,a;
 int si;
 
+if(!raydium_log_atexit_dump)
+    return;
+
 if(raydium_init_cli_option("regs",NULL))
     raydium_register_dump();
 

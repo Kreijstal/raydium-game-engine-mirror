@@ -652,11 +652,11 @@ ALCcontext* pContext;
  {
   for(i=0;i<raydium_sound_top_buffer;i++)
     raydium_sound_SourceStop(i);
-  raydium_log("sound: Deleting sources");
+  if(raydium_log_atexit_dump) raydium_log("sound: Deleting sources");
    alDeleteSources(RAYDIUM_SOUND_NUM_SOURCES,raydium_sound_source);
-  raydium_log("sound: Deleting buffers");
+  if(raydium_log_atexit_dump) raydium_log("sound: Deleting buffers");
    alDeleteBuffers(RAYDIUM_SOUND_NUM_BUFFERS,raydium_sound_buffer);
-  raydium_log("sound: Releasing OpenAL");
+  if(raydium_log_atexit_dump) raydium_log("sound: Releasing OpenAL");
 
 
 #ifdef WIN32

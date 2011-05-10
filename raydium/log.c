@@ -73,3 +73,8 @@ for(i=0;i<retlen+1;i++)
         }
     }
 }
+
+void raydium_log_atexit_quiet(void)
+{
+raydium_log_atexit_dump=0;
+}
