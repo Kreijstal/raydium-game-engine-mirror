@@ -36,6 +36,8 @@ change the size of the bounding box.
 This mode is now the default (##RAYDIUM_SHADOW_MODE_CAMERABOX##), but the old
 behavior is available with ##RAYDIUM_SHADOW_MODE_FULLSCENE##, and you can
 switch from one mode to the other anytime.
+Please note that, currently, camerabox shadow model can't work with viewports,
+(and would be very slow) so you should then switch to fullscene model.
 **/
 
 __rayapi void raydium_shadow_camerabox_size(GLfloat size);

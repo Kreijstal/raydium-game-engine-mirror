@@ -4027,7 +4027,8 @@ raydium_ode_element_camera_inboard(raydium_ode_element_find(name),px,py,pz,lookx
 void raydium_ode_draw_all_post(void)
 {
 raydium_hdr_map(); // create HDR map
-raydium_shadow_map_render();
+if(raydium_viewport_use==-1 || raydium_shadow_mode_current==RAYDIUM_SHADOW_MODE_FULLSCENE)
+    raydium_shadow_map_render();
 raydium_particle_draw_all();
 raydium_lensflare_draw_all();
 }
