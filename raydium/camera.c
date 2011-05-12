@@ -554,7 +554,7 @@ if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
             return;
         }
 
-    if(raydium_texture_load_internal("",name,1,tx,ty,4,-1))
+    if(raydium_texture_load_internal("",name,1,tx,ty,3,-1))
     {
         strcpy(raydium_viewport[raydium_viewport_nb].name,name);
         raydium_viewport[raydium_viewport_nb].tx=tx;
@@ -654,6 +654,7 @@ switch(move)
         if(raydium_key[GLUT_KEY_UP])    dir_y=1;
         if(raydium_key[GLUT_KEY_LEFT])  dir_x=-1;
         if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+    case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
         //60=experimental value
         dir_x *= (raydium_frame_time*60.0f);
         dir_y *= (raydium_frame_time*60.0f);

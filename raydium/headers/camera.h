@@ -3,6 +3,7 @@
 
 #define RAYDIUM_CAMERA_FREEMOVE_FIXED 0
 #define RAYDIUM_CAMERA_FREEMOVE_NORMAL 1
+#define RAYDIUM_CAMERA_FREEMOVE_MOUSE 2
 
 /*=
 Camera
@@ -246,7 +247,9 @@ You can modify the global variables ##raydium_camera_freemove_sensibility##
 and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and
 movement speed (0.1 default) respectively.
 If ##move## is ##RAYDIUM_CAMERA_FREEMOVE_FIXED##, camera is only placed and fixed.
-Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and orientation are updated with Mouse/Keyboard.
+Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and 
+orientation are updated with Mouse/Keyboard.
+Last, ##RAYDIUM_CAMERA_FREEMOVE_MOUSE## only allow mouse view (and no move).
 **/
 
 __rayapi void raydium_camera_orbitmove(float x_to, float y_to, float z_to);
