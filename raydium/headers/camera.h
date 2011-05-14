@@ -260,6 +260,10 @@ certain point (x_to,y_to,z_to). The distance of the point to the camera
 
 **/
 
+__rayapi void raydium_camera_data_reset(void);
+/**
+Resets camera internal data. Useful for some camera switches.
+**/
 
 #endif
 

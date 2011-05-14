@@ -742,3 +742,12 @@ raydium_camera_data[4]=delta_y*mult;
 raydium_camera_data[5]=0;
 }
 
+void raydium_camera_data_reset(void)
+{
+raydium_camera_data[0]=0;
+raydium_camera_data[1]=0;
+raydium_camera_data[2]=0;
+raydium_camera_data[3]=0;
+raydium_camera_data[4]=0;
+raydium_camera_data[5]=0;
+}

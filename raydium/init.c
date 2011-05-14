@@ -30,6 +30,7 @@ void raydium_shader_init(void);
 void raydium_web_init(void);
 void raydium_path_package_update(void);
 
+
 char *raydium_version(void)
 {
 static char version[RAYDIUM_MAX_NAME_LEN];
@@ -93,6 +94,7 @@ raydium_init_objects();
 raydium_network_init();
 raydium_timecall_init();
 raydium_particle_init();
+raydium_camera_data_reset();
 raydium_camera_path_init_all();
 raydium_osd_fade_init();
 raydium_console_init();
