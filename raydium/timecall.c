@@ -139,6 +139,9 @@ unsigned long raydium_timecall_clock(void)
 {
 long long now;
 
+if(raydium_timecall_stopped_stamp) // time is stopped
+    return raydium_timecall_stopped_stamp;
+
 now=raydium_timecall_clock_internal();
 now-=raydium_timecall_offset;
 
@@ -354,6 +357,7 @@ for(i=0;i<RAYDIUM_MAX_TIMECALLS;i++)
     raydium_timecall_next[i]=0;
     }
 raydium_timecall_offset=0;
+raydium_timecall_stopped_stamp=0;
 raydium_log("timecall: OK (%lu Hz)",raydium_timecall_max_frequency);
 raydium_timecall_add(raydium_timecall_raydium,-1);
 }
@@ -460,14 +464,30 @@ for(i=0;i<raydium_timecall_index;i++)
 
 void raydium_timecall_stop(void)
 {
+if(raydium_timecall_stopped_stamp) 
+    {
+    raydium_log("timecall: time already stopped !");
+    return;
+    }
 raydium_timecall_stopped_stamp=raydium_timecall_clock();
 }
 
 void raydium_timecall_start(void)
 {
 long long offset;
+unsigned long stamp;
 
-offset=raydium_timecall_clock()-raydium_timecall_stopped_stamp;
+if(!raydium_timecall_stopped_stamp)
+    {
+    raydium_log("timecall: time was not stopped !");
+    return;
+    }
+
+stamp=raydium_timecall_stopped_stamp;
+raydium_timecall_stopped_stamp=0; // free timecall_clock()
+
+offset=raydium_timecall_clock()-stamp;
 if(offset<0) offset=0; // time modulo !
 raydium_timecall_offset+=(unsigned long)offset;
+raydium_timecall_stopped_stamp=0;
 }
