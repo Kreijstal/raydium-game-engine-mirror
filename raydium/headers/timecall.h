@@ -145,4 +145,16 @@ __rayapi void raydium_timecall_callback (void);
 Internal use (frame fired callback).
 **/
 
+__rayapi void raydium_timecall_stop(void);
+/**
+Allows to "stop time", smoothing things when dealing with file loading or
+downloading. This feature aims at small pause, you're not supposed to stop time 
+for 10 minutes or so :)
+**/
+
+__rayapi void raydium_timecall_start(void);
+/**
+Obviously restarts time after a ##raydium_timecall_stop()##.
+**/
+
 #endif

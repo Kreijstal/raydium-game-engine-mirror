@@ -752,6 +752,8 @@ __global int            raydium_timecall_index;
 __global signed char    raydium_timecall_method;
 __global unsigned long  raydium_timecall_max_frequency;
 __global unsigned long  raydium_timecall_clocks_per_sec;
+__global unsigned long  raydium_timecall_offset;
+__global unsigned long  raydium_timecall_stopped_stamp;
 __global int            raydium_timecall_devrtc_handle;
 __global unsigned long  raydium_timecall_devrtc_clocks;
 __global void *         raydium_timecall_funct[RAYDIUM_MAX_TIMECALLS];

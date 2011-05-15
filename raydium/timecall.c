@@ -103,7 +103,7 @@ return 0;
 #endif
 }
 
-unsigned long raydium_timecall_clock(void)
+unsigned long raydium_timecall_clock_internal(void)
 {
 #ifndef WIN32
 struct timeval tv;
@@ -133,6 +133,16 @@ if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_CLOCK)
  }
 //else if(raydium_timecall_method==RAYDIUM_TIMECALL_METHOD_DEVRTC)
  return raydium_timecall_devrtc_clock();
+}
+
+unsigned long raydium_timecall_clock(void)
+{
+long long now;
+
+now=raydium_timecall_clock_internal();
+now-=raydium_timecall_offset;
+
+return (unsigned long)now; // should deal with modulo :)
 }
 
 signed char raydium_timecall_devrtc_rate_change(unsigned long new)
@@ -343,6 +353,7 @@ for(i=0;i<RAYDIUM_MAX_TIMECALLS;i++)
     raydium_timecall_interval[i]=0;
     raydium_timecall_next[i]=0;
     }
+raydium_timecall_offset=0;
 raydium_log("timecall: OK (%lu Hz)",raydium_timecall_max_frequency);
 raydium_timecall_add(raydium_timecall_raydium,-1);
 }
@@ -445,4 +456,18 @@ for(i=0;i<raydium_timecall_index;i++)
      ff(stepsf);
     }
  }
+}
+
+void raydium_timecall_stop(void)
+{
+raydium_timecall_stopped_stamp=raydium_timecall_clock();
+}
+
+void raydium_timecall_start(void)
+{
+long long offset;
+
+offset=raydium_timecall_clock()-raydium_timecall_stopped_stamp;
+if(offset<0) offset=0; // time modulo !
+raydium_timecall_offset+=(unsigned long)offset;
 }
