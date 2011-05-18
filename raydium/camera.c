@@ -160,7 +160,6 @@ void raydium_camera_look_at(float x, float y, float z,
                           float x_to, float y_to, float z_to)
 {
 float delta[3];
-float dist;
 float angle[3];
 
 angle[0]=angle[1]=angle[2]=0.0f;
@@ -173,20 +172,13 @@ gluLookAt(x,y,z,z_to,x_to,-y_to,0.,0.,1.);
 raydium_camera_internal(x,y,z);
 
 //getting angles for data
-delta[0]=x_to-x;
-delta[1]=y_to-y;
-delta[2]=z_to-z;
-dist=sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]);
+delta[0]=z_to-x;
+delta[1]=x_to-y;
+delta[2]=-y_to-z;
 
-delta[0]=(float)delta[0]/(float)dist;
-delta[1]=(float)delta[1]/(float)dist;
-delta[2]=(float)delta[2]/(float)dist;
-
-//Yes, i'm using two different ways to get the angles...
-//Not sure why, but if not do in this way, i get errors
-//TODO: Find out why is this so strange!!!
-angle[0]=360.0f-(atan2(delta[1],delta[0])*180.0f/PI);
-angle[1]=270.0f-raydium_math_angle_from_projections(delta[2],delta[0])*(360.0f/(PI*2.0f));
+//Corrected spherical angle computing
+angle[0]=360.0f-raydium_math_rad2deg(atan2(delta[1],delta[0]));
+angle[1]=360.0f-raydium_math_rad2deg(atan2(delta[2],sqrt(delta[0]*delta[0]+delta[1]*delta[1])));
 
 //feeding data
 raydium_camera_data[0]=x;
@@ -268,7 +260,6 @@ static GLfloat opx,opy,opz;
 static GLfloat olx,oly,olz;
 static GLfloat ozoom=90;
 static GLfloat oroll=0;
-float dist;
 float delta[3];
 float angle[3];
 angle[0]=angle[1]=angle[2]=0;
@@ -318,20 +309,13 @@ if(step>=0)
 //raydium_log("camera smooth (result): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f | %.2f",opx,opy,opz,olx,oly,olz,ozoom,step);
 //overwriting camera_data. The data stored into
 //camera_look_at is not well aligned
-delta[0]=olx-opx;
-delta[1]=oly-opy;
-delta[2]=olz-opz;
-dist=sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]);
+delta[0]=olz-opx;
+delta[1]=olx-opy;
+delta[2]=-oly-opz;
 
-delta[0]=(float)delta[0]/(float)dist;
-delta[1]=(float)delta[1]/(float)dist;
-delta[2]=(float)delta[2]/(float)dist;
-
-//Yes, i'm using two different ways to get the angles...
-//Not sure why, but if not do in this way, i get errors
-//TODO: Find out why is this so strange!!!
-angle[0]=360.0f-(atan2(delta[1],delta[0])*180.0f/PI);
-angle[1]=270.0f-raydium_math_angle_from_projections(delta[2],delta[0])*(360.0f/(PI*2.0f));
+//Corrected spherical angle computing
+angle[0]=360.0f-raydium_math_rad2deg(atan2(delta[1],delta[0]));
+angle[1]=360.0f-raydium_math_rad2deg(atan2(delta[2],sqrt(delta[0]*delta[0]+delta[1]*delta[1])));
 //feeding data
 raydium_camera_data[0]=opx;
 raydium_camera_data[1]=opy;
@@ -638,9 +622,9 @@ dir_x=0;
 dir_y=0;
 
 data=raydium_camera_get_data();
-rffp_cam_pos_z=data[0];
 rffp_cam_pos_x=data[1];
 rffp_cam_pos_y=-data[2];
+rffp_cam_pos_z=data[0];
 rffp_cam_angle_x=data[3];
 rffp_cam_angle_y=data[4];
 rffp_cam_angle_z=data[5];
@@ -673,29 +657,17 @@ switch(move)
         rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f);
         rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f);
 
-        raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
-
     break;
 
     //RAYDIUM_CAMERA_FREEMOVE_FIXED
     case RAYDIUM_CAMERA_FREEMOVE_FIXED:
-
-        //Feeding freemove with camera values
-        data=raydium_camera_get_data();
-        rffp_cam_pos_z=data[0];
-        rffp_cam_pos_x=data[1];
-        rffp_cam_pos_y=-data[2];
-        rffp_cam_angle_x=data[3];
-        rffp_cam_angle_y=data[4];
-        rffp_cam_angle_z=data[5];
-        //place camera
-        raydium_camera_place(data[1],-data[2],data[0],data[3],data[4],data[5]);
-        return;
+    //Nothing to do camera won't move.
     break;
 }
+raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
+raydium_camera_data[1]=rffp_cam_pos_x;
 raydium_camera_data[2]=-rffp_cam_pos_y;
 raydium_camera_data[0]=rffp_cam_pos_z;
-raydium_camera_data[1]=rffp_cam_pos_x;
 raydium_camera_data[3]=rffp_cam_angle_x;
 raydium_camera_data[4]=rffp_cam_angle_y;
 raydium_camera_data[5]=rffp_cam_angle_z;
