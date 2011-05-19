@@ -1,10 +1,6 @@
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
-#define RAYDIUM_CAMERA_FREEMOVE_FIXED 0
-#define RAYDIUM_CAMERA_FREEMOVE_NORMAL 1
-#define RAYDIUM_CAMERA_FREEMOVE_MOUSE 2
-
 /*=
 Camera
 2200
@@ -247,7 +243,7 @@ You can modify the global variables ##raydium_camera_freemove_sensibility##
 and ##raydium_camera_freemove_speed##, mouse sensibility (3 default) and
 movement speed (0.1 default) respectively.
 If ##move## is ##RAYDIUM_CAMERA_FREEMOVE_FIXED##, camera is only placed and fixed.
-Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and 
+Else if ##move## is ##RAYDIUM_CAMERA_FREEMOVE_NORMAL## camera position and
 orientation are updated with Mouse/Keyboard.
 Last, ##RAYDIUM_CAMERA_FREEMOVE_MOUSE## only allow mouse view (and no move).
 **/
@@ -257,7 +253,6 @@ __rayapi void raydium_camera_orbitmove(float x_to, float y_to, float z_to);
 EXPERIMENTAL: This functions allows to rotate (in fact orbit) around a
 certain point (x_to,y_to,z_to). The distance of the point to the camera
  can be changed with the up/down keys and with the mouse wheel.
-
 **/
 
 __rayapi void raydium_camera_data_reset(void);
@@ -265,5 +260,20 @@ __rayapi void raydium_camera_data_reset(void);
 Resets camera internal data. Useful for some camera switches.
 **/
 
-#endif
+__rayapi void raydium_camera_push(int type, GLfloat *speed, GLfloat *decrease_per_sec);
+/**
+This function will push (or "punch", if you give high values :) the camera.
+The ##speed## param is the initial speed (negative values are accepted), and
+you'll set the decreasing speed with ##decrease_per_sec## (always positive).
 
+Both parameters needs dReal[3] arrays.
+
+Here's the currently supported modes:
+ - ##RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS## for freemove camera, in world coords
+ - ##RAYDIUM_CAMERA_PUSH_FREEMOVE_REL## for freemove camera, using current camera vector
+**/
+
+__rayapi void raydium_camera_init(void);
+__rayapi void raydium_camera_push_internal_step(void);
+
+#endif

@@ -606,17 +606,13 @@ raydium_log("Viewport %s not found.",name);
 void raydium_camera_freemove(int move)
 {
 float dir_x, dir_y;
+float *data;
 
-//declaring and setting variables. Statics, to store the values betwen calls
-static GLfloat rffp_cam_angle_x = 0;
-static GLfloat rffp_cam_angle_y = 0;
-static GLfloat rffp_cam_angle_z = 0;
-static GLfloat rffp_cam_pos_x = 0;
-static GLfloat rffp_cam_pos_y = 0;
-static GLfloat rffp_cam_pos_z = 0;
+GLfloat rffp_cam_angle_x, rffp_cam_angle_y, rffp_cam_angle_z;
+GLfloat rffp_cam_pos_x, rffp_cam_pos_y, rffp_cam_pos_z;
+
 GLint rffp_delta_x=0;
 GLint rffp_delta_y=0;
-float *data;
 
 dir_x=0;
 dir_y=0;
@@ -629,6 +625,14 @@ rffp_cam_angle_x=data[3];
 rffp_cam_angle_y=data[4];
 rffp_cam_angle_z=data[5];
 
+if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS)
+    {
+    rffp_cam_pos_x+=raydium_camera_push_speed[0];
+    rffp_cam_pos_y+=raydium_camera_push_speed[1];
+    rffp_cam_pos_z+=raydium_camera_push_speed[2];
+    raydium_camera_push_internal_step();
+    }
+
 switch(move)
 {
     //RAYDIUM_CAMERA_FREEMOVE_NORMAL
@@ -638,6 +642,14 @@ switch(move)
         if(raydium_key[GLUT_KEY_UP])    dir_y=1;
         if(raydium_key[GLUT_KEY_LEFT])  dir_x=-1;
         if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+
+        if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_REL && raydium_frame_time)
+            {
+            dir_y+=raydium_camera_push_speed[0]/raydium_frame_time;
+            dir_x+=raydium_camera_push_speed[1]/raydium_frame_time;
+            rffp_cam_pos_y-=raydium_camera_push_speed[2];
+            raydium_camera_push_internal_step();
+            }
     case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
         //60=experimental value
         dir_x *= (raydium_frame_time*60.0f);
@@ -722,4 +734,66 @@ raydium_camera_data[2]=0;
 raydium_camera_data[3]=0;
 raydium_camera_data[4]=0;
 raydium_camera_data[5]=0;
+}
+
+void raydium_camera_init(void)
+{
+int i;
+raydium_camera_pushed=0;
+raydium_camera_look_at_roll=0;
+raydium_camera_path_reset_flag=1;
+raydium_camera_rumble_amplitude=0;
+raydium_camera_rumble_evolution=0;
+raydium_camera_rumble_remaining=0;
+//INITIALIZING freemove global variables
+raydium_camera_freemove_speed = 0.1;
+raydium_camera_freemove_sensibility = 3;
+// push
+raydium_camera_push_type=RAYDIUM_CAMERA_PUSH_NONE;
+for(i=0;i<3;i++)
+    {
+    raydium_camera_push_speed[i]=0;
+    raydium_camera_push_decrease_per_sec[i]=0;
+    }
+raydium_camera_data_reset();
+}
+
+void raydium_camera_push(int type, GLfloat *speed, GLfloat *decrease_per_sec)
+{
+int i;
+
+if(raydium_camera_push_type)
+    raydium_log("warning: camera already pushed.");
+
+raydium_camera_push_type=type;
+for(i=0;i<3;i++)
+    {
+    raydium_camera_push_speed[i]=speed[i];
+    raydium_camera_push_decrease_per_sec[i]=raydium_math_abs(decrease_per_sec[i]);
+    }
+}
+
+void raydium_camera_push_internal_step(void)
+{
+int i;
+signed char end=0;
+signed char sign1,sign2;
+
+if(!raydium_camera_push_type)
+    return;
+
+for(i=0;i<3;i++)
+    {
+    if(raydium_camera_push_speed[i]==0) { end++; continue; }
+
+    sign1=(raydium_camera_push_speed[i]>0?1:-1);
+    raydium_camera_push_speed[i]-=(raydium_camera_push_decrease_per_sec[i]*raydium_frame_time*sign1);
+    sign2=(raydium_camera_push_speed[i]>0?1:-1);
+
+    if(sign1!=sign2)
+        raydium_camera_push_speed[i]=0;
+    }
+
+if(end==3)
+    raydium_camera_push_type=RAYDIUM_CAMERA_PUSH_NONE;
 }

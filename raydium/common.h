@@ -346,6 +346,14 @@
 #define RAYDIUM_LOG_MODE_STERR                  2
 #define RAYDIUM_LOG_MODE_NONE                   255
 
+#define RAYDIUM_CAMERA_FREEMOVE_FIXED           0
+#define RAYDIUM_CAMERA_FREEMOVE_NORMAL          1
+#define RAYDIUM_CAMERA_FREEMOVE_MOUSE           2
+
+#define RAYDIUM_CAMERA_PUSH_NONE                0
+#define RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS        1
+#define RAYDIUM_CAMERA_PUSH_FREEMOVE_REL        2
+
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
@@ -551,6 +559,9 @@ __global GLdouble raydium_camera_gl_projection[16];
 __global GLint    raydium_camera_gl_viewport[4];
 __global GLfloat  raydium_camera_freemove_sensibility;
 __global GLfloat  raydium_camera_freemove_speed;
+__global GLfloat  raydium_camera_push_type;
+__global GLfloat  raydium_camera_push_speed[3];
+__global GLfloat  raydium_camera_push_decrease_per_sec[3];
 __global GLfloat  raydium_camera_data[6];
 
 __global GLfloat  raydium_ode_timestep;

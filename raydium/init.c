@@ -29,6 +29,7 @@ void raydium_lensflare_init(void);
 void raydium_shader_init(void);
 void raydium_web_init(void);
 void raydium_path_package_update(void);
+void raydium_camera_init(void);
 
 
 char *raydium_version(void)
@@ -94,7 +95,7 @@ raydium_init_objects();
 raydium_network_init();
 raydium_timecall_init();
 raydium_particle_init();
-raydium_camera_data_reset();
+raydium_camera_init();
 raydium_camera_path_init_all();
 raydium_osd_fade_init();
 raydium_console_init();
@@ -170,15 +171,6 @@ raydium_projection_left=0;
 raydium_projection_right=0;
 raydium_projection_bottom=0;
 raydium_projection_top=0;
-raydium_camera_pushed=0;
-raydium_camera_look_at_roll=0;
-raydium_camera_path_reset_flag=1;
-raydium_camera_rumble_amplitude=0;
-raydium_camera_rumble_evolution=0;
-raydium_camera_rumble_remaining=0;
-//INITIALIZING freemove global variables
-raydium_camera_freemove_speed = 0.1;
-raydium_camera_freemove_sensibility = 3;
 raydium_window_view_update();
 raydium_internal_vertex_next_extras=0;
 raydium_sky_force=0;
