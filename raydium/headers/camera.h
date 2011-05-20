@@ -260,11 +260,13 @@ __rayapi void raydium_camera_data_reset(void);
 Resets camera internal data. Useful for some camera switches.
 **/
 
-__rayapi void raydium_camera_push(int type, GLfloat *speed, GLfloat *decrease_per_sec);
+__rayapi void raydium_camera_push(int type, GLfloat *vect, GLfloat *slowness);
 /**
 This function will push (or "punch", if you give high values :) the camera.
-The ##speed## param is the initial speed (negative values are accepted), and
-you'll set the decreasing speed with ##decrease_per_sec## (always positive).
+
+The ##vect## parameter is the vector to the "destination", and higer is
+the ##slowness## value, the slower you'll get there (quick sample values for
+slowness: 1 will look slow, 0.1 will look quick)
 
 Both parameters needs dReal[3] arrays.
 
@@ -274,6 +276,6 @@ Here's the currently supported modes:
 **/
 
 __rayapi void raydium_camera_init(void);
-__rayapi void raydium_camera_push_internal_step(void);
+__rayapi GLfloat *raydium_camera_push_internal_step(void);
 
 #endif

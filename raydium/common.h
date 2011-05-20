@@ -560,8 +560,9 @@ __global GLint    raydium_camera_gl_viewport[4];
 __global GLfloat  raydium_camera_freemove_sensibility;
 __global GLfloat  raydium_camera_freemove_speed;
 __global GLfloat  raydium_camera_push_type;
-__global GLfloat  raydium_camera_push_speed[3];
-__global GLfloat  raydium_camera_push_decrease_per_sec[3];
+__global GLfloat  raydium_camera_push_current[3];
+__global GLfloat  raydium_camera_push_end[3];
+__global GLfloat  raydium_camera_push_slowness[3];
 __global GLfloat  raydium_camera_data[6];
 
 __global GLfloat  raydium_ode_timestep;

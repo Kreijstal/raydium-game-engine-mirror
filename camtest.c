@@ -34,11 +34,10 @@ if(raydium_key[GLUT_KEY_LEFT])	mx+=0.1;
 
 if(raydium_key_last==1000+' ')
     {
-    GLfloat speed[3]={0.01,0,0};
-    GLfloat dec[3]={0.006,0,0};
+    GLfloat vect[3]={10,0,0};
+    GLfloat slowness[3]={0.3,0,0};
     type='6';
-    raydium_camera_push(RAYDIUM_CAMERA_PUSH_FREEMOVE_REL,speed,dec);
-    //raydium_camera_push(RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS,speed,dec);
+    raydium_camera_push(RAYDIUM_CAMERA_PUSH_FREEMOVE_REL,vect,slowness);
     }
 
 raydium_clear_frame();

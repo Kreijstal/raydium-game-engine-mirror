@@ -607,6 +607,7 @@ void raydium_camera_freemove(int move)
 {
 float dir_x, dir_y;
 float *data;
+GLfloat *push;
 
 GLfloat rffp_cam_angle_x, rffp_cam_angle_y, rffp_cam_angle_z;
 GLfloat rffp_cam_pos_x, rffp_cam_pos_y, rffp_cam_pos_z;
@@ -627,10 +628,10 @@ rffp_cam_angle_z=data[5];
 
 if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS)
     {
-    rffp_cam_pos_x+=raydium_camera_push_speed[0];
-    rffp_cam_pos_y+=raydium_camera_push_speed[1];
-    rffp_cam_pos_z+=raydium_camera_push_speed[2];
-    raydium_camera_push_internal_step();
+    push=raydium_camera_push_internal_step();
+    rffp_cam_pos_x+=push[0];
+    rffp_cam_pos_y+=push[1];
+    rffp_cam_pos_z+=push[2];
     }
 
 switch(move)
@@ -645,10 +646,10 @@ switch(move)
 
         if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_REL && raydium_frame_time)
             {
-            dir_y+=raydium_camera_push_speed[0]/raydium_frame_time;
-            dir_x+=raydium_camera_push_speed[1]/raydium_frame_time;
-            rffp_cam_pos_y-=raydium_camera_push_speed[2];
-            raydium_camera_push_internal_step();
+            push=raydium_camera_push_internal_step();
+            dir_y+=push[0]/(raydium_frame_time*6.f);
+            dir_x+=push[1]/(raydium_frame_time*6.f);
+            rffp_cam_pos_y-=push[2];
             }
     case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
         //60=experimental value
@@ -752,13 +753,14 @@ raydium_camera_freemove_sensibility = 3;
 raydium_camera_push_type=RAYDIUM_CAMERA_PUSH_NONE;
 for(i=0;i<3;i++)
     {
-    raydium_camera_push_speed[i]=0;
-    raydium_camera_push_decrease_per_sec[i]=0;
+    raydium_camera_push_current[i]=0;
+    raydium_camera_push_end[i]=0;
+    raydium_camera_push_slowness[i]=0;
     }
 raydium_camera_data_reset();
 }
 
-void raydium_camera_push(int type, GLfloat *speed, GLfloat *decrease_per_sec)
+void raydium_camera_push(int type, GLfloat *vect, GLfloat *slowness)
 {
 int i;
 
@@ -766,34 +768,41 @@ if(raydium_camera_push_type)
     raydium_log("warning: camera already pushed.");
 
 raydium_camera_push_type=type;
+
 for(i=0;i<3;i++)
     {
-    raydium_camera_push_speed[i]=speed[i];
-    raydium_camera_push_decrease_per_sec[i]=raydium_math_abs(decrease_per_sec[i]);
+    raydium_camera_push_current[i]=0;
+    raydium_camera_push_end[i]=vect[i];
+    raydium_camera_push_slowness[i]=raydium_math_abs(slowness[i]);
     }
 }
 
-void raydium_camera_push_internal_step(void)
+GLfloat *raydium_camera_push_internal_step(void)
 {
 int i;
 signed char end=0;
-signed char sign1,sign2;
+GLfloat dist;
+static GLfloat fact[3];
+
+for(i=0;i<3;i++)
+    fact[i]=0;
 
 if(!raydium_camera_push_type)
-    return;
+    return fact;
 
 for(i=0;i<3;i++)
     {
-    if(raydium_camera_push_speed[i]==0) { end++; continue; }
-
-    sign1=(raydium_camera_push_speed[i]>0?1:-1);
-    raydium_camera_push_speed[i]-=(raydium_camera_push_decrease_per_sec[i]*raydium_frame_time*sign1);
-    sign2=(raydium_camera_push_speed[i]>0?1:-1);
-
-    if(sign1!=sign2)
-        raydium_camera_push_speed[i]=0;
+    dist=raydium_camera_push_end[i]-raydium_camera_push_current[i];
+    if(raydium_camera_push_slowness[i])
+        fact[i]=dist/raydium_camera_push_slowness[i];
+    fact[i]*=raydium_frame_time;
+    raydium_camera_push_current[i]+=fact[i];
+    if(fact[i]<0.00001) // quite arbitrary, no ? ... (FLT_EPSILON is too long to get)
+        end++;
     }
 
 if(end==3)
     raydium_camera_push_type=RAYDIUM_CAMERA_PUSH_NONE;
+
+return fact;
 }
