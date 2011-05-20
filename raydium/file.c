@@ -185,7 +185,10 @@ do
     // local mode ?
     if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
         {
-        fp= fopen(file2,mode);
+		char mode2[16];
+		strcpy(mode2,mode);
+		raydium_parser_remove(mode2,'l'); // since win32 refuse to open a file with a unknown option ...
+        fp= fopen(file2,mode2);
         break;
         }
 
