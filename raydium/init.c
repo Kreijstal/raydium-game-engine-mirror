@@ -152,7 +152,10 @@ raydium_texture_to_replace=0; // No texture to erase.. just load it :)
 raydium_texture_used_memory=0;
 //raydium_texture_filter=RAYDIUM_TEXTURE_FILTER_NONE;
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_NONE);
-raydium_texture_npot_disable();
+if(raydium_init_cli_option("npot",NULL))
+    raydium_texture_npot_enable();
+else
+    raydium_texture_npot_disable();
 raydium_rendering_rgb_normal();
 raydium_rendering_displaylists_enable();
 raydium_render_rgb_force_tag=0;

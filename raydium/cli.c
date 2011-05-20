@@ -186,8 +186,12 @@ if (raydium_init_cli_option("help",NULL))
     fprintf(stdout,"%s\n","");
 
     fprintf(stdout,"  %s\n","--filter name            texture filter (none,bilinear,trilinear,aniso)");
-    fprintf(stdout,"  %s\n","--compress               enable texture compression");
+    fprintf(stdout,"  %s\n","--compress               enable texture compression (if available)");
     fprintf(stdout,"  %s\n","--max-aniso int          set anisotropic filter maximum level");
+    fprintf(stdout,"  %s\n","--npot                   enable non-power-of-two textures (if available)");
+
+    fprintf(stdout,"%s\n","");
+
     fprintf(stdout,"  %s\n","--help                   this page");
 
     fprintf(stdout,"%s\n","");
