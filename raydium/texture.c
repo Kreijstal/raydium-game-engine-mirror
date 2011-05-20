@@ -38,7 +38,7 @@ FILE *file=NULL;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
 unsigned char *data=NULL;
 GLuint tx=0,ty=0,bpp=0,id;
-GLuint i,ii,j,jj,k,GLbpp=0,GLbppi;
+GLuint i,ii,j,jj,k,GLbpp=0,GLbppi=0;
 GLuint texsize=0;
 char blended=0,filter=0,cutout=0,simulate=0;
 char rgb;

@@ -699,7 +699,7 @@ void raydium_gui_edit_draw(int w, int window)
     GLfloat xy[4];
     GLfloat mxy[2];
     GLfloat wfactor[2];
-    GLfloat *suv;
+    GLfloat *suv=NULL;
     char style;
     int len;
     raydium_gui_Edit *e;
@@ -955,7 +955,7 @@ void raydium_gui_combo_draw(int w, int window)
     GLfloat fxy[2];
     GLfloat mxy[2];
     GLfloat wfactor[2];
-    GLfloat *suv;
+    GLfloat *suv=NULL;
     GLfloat tmp,tmp2,tmp3;
     char style;
     raydium_gui_Combo *c;

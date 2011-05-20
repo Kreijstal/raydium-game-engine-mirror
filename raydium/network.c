@@ -415,8 +415,9 @@ int ret=-1;
 if(!block) block=O_NONBLOCK; else block=0;
 ret=fcntl(socket, F_SETFL, block);
 #else
-if(!block) block=1; else block=0;
-ret = ioctlsocket(socket, FIONBIO, (unsigned long *)&block);
+unsigned long ulblock;
+if(!block) ulblock=1; else ulblock=0;
+ret = ioctlsocket(socket, FIONBIO, &ulblock);
 if(ret) ret=-1;
 #endif
 
