@@ -527,10 +527,10 @@ raydium_texture_nolight[id]=0;
 raydium_texture_env[id]=0;
 raydium_texture_islightmap[id]=0;
 raydium_texture_shader[id]=-1;
-raydium_texture_rgb[0][id]=-1.f;
-raydium_texture_rgb[1][id]=-1.f;
-raydium_texture_rgb[2][id]=-1.f;
-raydium_texture_rgb[3][id]=1.f;
+raydium_texture_rgb[id][0]=-1.f;
+raydium_texture_rgb[id][1]=-1.f;
+raydium_texture_rgb[id][2]=-1.f;
+raydium_texture_rgb[id][3]=1.f;
 raydium_texture_hdr[id]=0;
 raydium_texture_used[id]=0;
 
