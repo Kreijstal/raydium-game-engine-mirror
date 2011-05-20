@@ -781,6 +781,7 @@ GLfloat *raydium_camera_push_internal_step(void)
 {
 int i;
 signed char end=0;
+signed char sign;
 GLfloat dist;
 static GLfloat fact[3];
 
@@ -792,13 +793,15 @@ if(!raydium_camera_push_type)
 
 for(i=0;i<3;i++)
     {
-    dist=raydium_camera_push_end[i]-raydium_camera_push_current[i];
+    sign=(raydium_camera_push_end[i]>0?1:-1);
+    dist=raydium_math_abs(raydium_camera_push_end[i])-raydium_camera_push_current[i];
     if(raydium_camera_push_slowness[i])
         fact[i]=dist/raydium_camera_push_slowness[i];
     fact[i]*=raydium_frame_time;
     raydium_camera_push_current[i]+=fact[i];
     if(fact[i]<0.00001) // quite arbitrary, no ? ... (FLT_EPSILON is too long to get)
         end++;
+    fact[i]*=sign;
     }
 
 if(end==3)

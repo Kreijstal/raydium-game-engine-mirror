@@ -268,7 +268,7 @@ The ##vect## parameter is the vector to the "destination", and higer is
 the ##slowness## value, the slower you'll get there (quick sample values for
 slowness: 1 will look slow, 0.1 will look quick)
 
-Both parameters needs dReal[3] arrays.
+Both parameters needs dReal[3] arrays, ##slowness## is always positive.
 
 Here's the currently supported modes:
  - ##RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS## for freemove camera, in world coords
