@@ -530,22 +530,24 @@ void raydium_viewport_create (char * name,int tx,int ty)
 {
 int i;
 if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
-{
+    {
     for(i=0;i<raydium_viewport_nb;i++)
         if(!strcmp(name,raydium_viewport[i].name))
-        {
-            raydium_log ("Viewport %s already exist",name);
+            {
+            raydium_log ("ERROR: viewport %s already exist",name);
             return;
-        }
+            }
 
     if(raydium_texture_load_internal("",name,1,tx,ty,3,-1))
-    {
+        {
         strcpy(raydium_viewport[raydium_viewport_nb].name,name);
         raydium_viewport[raydium_viewport_nb].tx=tx;
         raydium_viewport[raydium_viewport_nb].ty=ty;
         raydium_viewport_nb++;
+        }
     }
-}
+    else
+    raydium_log ("ERROR: No more viewports (%i max)",RAYDIUM_VIEWPORT_MAX);
 }
 
 void raydium_viewport_enable(char * name)
