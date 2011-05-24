@@ -229,7 +229,31 @@ raydium_viewport_draw("camera2",20,70,60,30);
 %%
 **/
 
+__rayapi void raydium_viewport_direct_open(int x, int y, int sizex, int sizey);
+/**
+Starts a "direct viewport". Direct viewports are not stored in a texture, but
+are directly rendered on the screen. It's a bit less costly than classic
+viewports, match the screen pixel-by-pixel, and use a custom width/height ratio.
 
+Direct viewports should be opened when needed, most of the time at the end of
+the display loop, just before raydium_rendering_finish() and all OSD
+things.
+
+All parameters are given in pixels.
+**/
+
+__rayapi void raydium_viewport_direct_open_4f(GLfloat x, GLfloat y, GLfloat sizex, GLfloat sizey);
+/**
+Same as ##raydium_viewport_direct_open()##, but arguments are given in percent
+like all OSD functions, with the same lower-left origin.
+**/
+
+__rayapi void raydium_viewport_direct_close(void);
+/**
+Close the direct viewport rendering. This functions tries to restore all
+the camera context, but you should be aware that a few things could break
+when called after a direct viewport.
+**/
 
 __rayapi void raydium_camera_freemove(int move);
 /**

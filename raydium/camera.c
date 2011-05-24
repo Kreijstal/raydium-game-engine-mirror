@@ -119,9 +119,13 @@ if(raydium_frame_first_camera_pass)
     raydium_frame_first_camera_pass=0;
     raydium_light_update_position_all();
 
-    glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
-    glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
-    glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
+    // disallows picking from a direct viewport ... dunno yet if it's a good idea.
+    if(raydium_viewport_use==-1)
+        {
+        glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
+        glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
+        glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
+        }
     }
 
 if(!raydium_camera_pushed)
@@ -523,13 +527,107 @@ raydium_camera_smooth(fx,fy,fz, ty,-tz,tx,fzoom,froll,smooth_step);
 void raydium_viewport_init(void)
 {
 raydium_viewport_nb=0;
+raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
+}
+
+void raydium_viewport_direct_open(int x, int y, int sizex, int sizey)
+{
+if (raydium_viewport_use!=-1)
+    {
+    raydium_log ("An other viewport is already enabled");
+    return;
+    }
+
+raydium_viewport_use=RAYDIUM_VIEWPORT_DIRECT;
+raydium_viewport_direct_values[0]=x;
+raydium_viewport_direct_values[1]=y;
+raydium_viewport_direct_values[2]=sizex;
+raydium_viewport_direct_values[3]=sizey;
+
+if(raydium_camera_pushed)
+    {
+    raydium_viewport_saved_modelview=1;
+    glGetDoublev(GL_MODELVIEW_MATRIX,raydium_viewport_saved_modelview_data);
+    raydium_viewport_saved_camera_pos[0]=raydium_camera_x;
+    raydium_viewport_saved_camera_pos[1]=raydium_camera_y;
+    raydium_viewport_saved_camera_pos[2]=raydium_camera_z;
+    glPopMatrix();
+    raydium_camera_pushed=0;
+    }
+else raydium_viewport_saved_modelview=0;
+
+raydium_frame_first_camera_pass=1;
+
+glViewport(x, y, sizex, sizey);
+glScissor(x, y, sizex, sizey);
+glEnable(GL_SCISSOR_TEST);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+glDisable(GL_SCISSOR_TEST);
+glEnable(GL_STENCIL_TEST); // HDR
+
+
+if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
+    {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(raydium_projection_fov,(GLfloat)sizex/(GLfloat)sizey,
+                   raydium_projection_near,raydium_projection_far);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    }
+
+}
+
+void raydium_viewport_direct_open_4f(GLfloat x, GLfloat y, GLfloat sizex, GLfloat sizey)
+{
+raydium_viewport_direct_open(
+    (x/100.f)*raydium_window_tx,
+    (y/100.f)*raydium_window_ty,
+    (sizex/100.f)*raydium_window_tx,
+    (sizey/100.f)*raydium_window_ty);
+}
+
+void raydium_viewport_direct_close(void)
+{
+if(raydium_viewport_use!=RAYDIUM_VIEWPORT_DIRECT)
+    return;
+raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
+raydium_rendering_internal_restore_render_state();
+if (raydium_camera_pushed){
+    glPopMatrix();
+    raydium_camera_pushed=0;
+}
 raydium_viewport_use=-1;
+glViewport(0,0, raydium_window_tx, raydium_window_ty);
+if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
+    {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(raydium_projection_fov,(GLfloat)raydium_window_tx/(GLfloat)raydium_window_ty,
+                    raydium_projection_near,raydium_projection_far);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    }
+
+// we try to restore everything about the camera
+if(raydium_viewport_saved_modelview)
+    {
+    glLoadMatrixd(raydium_viewport_saved_modelview_data);
+    raydium_camera_x=raydium_viewport_saved_camera_pos[0];
+    raydium_camera_y=raydium_viewport_saved_camera_pos[1];
+    raydium_camera_z=raydium_viewport_saved_camera_pos[2];
+    glPushMatrix();
+    raydium_light_update_position_all();
+    raydium_camera_pushed=1;
+    }
+
 }
 
 void raydium_viewport_create (char * name,int tx,int ty)
 {
 int i;
-if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
+if (raydium_viewport_nb < RAYDIUM_MAX_VIEWPORT)
     {
     for(i=0;i<raydium_viewport_nb;i++)
         if(!strcmp(name,raydium_viewport[i].name))
@@ -547,7 +645,7 @@ if (raydium_viewport_nb < RAYDIUM_VIEWPORT_MAX)
         }
     }
     else
-    raydium_log ("ERROR: No more viewports (%i max)",RAYDIUM_VIEWPORT_MAX);
+    raydium_log ("ERROR: No more viewports (%i max)",RAYDIUM_MAX_VIEWPORT);
 }
 
 void raydium_viewport_enable(char * name)
@@ -572,7 +670,7 @@ raydium_log("Viewport %s not found.",name);
 
 void raydium_viewport_save(void)
 {
-if (raydium_viewport_use==-1)
+if (raydium_viewport_use==-1 || raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
 {
     raydium_log("No viewport enabled.");
     return;

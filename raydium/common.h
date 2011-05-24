@@ -194,8 +194,7 @@
 #define RAYDIUM_MAX_LIVE_TEXTURES               8
 #define RAYDIUM_MAX_VIDEOS                      4
 #define RAYDIUM_MAX_SHADERS                     32
-
-#define RAYDIUM_VIEWPORT_MAX                    16
+#define RAYDIUM_MAX_VIEWPORT                    16
 
 #define RAYDIUM_LIGHT_ON                        1
 #define RAYDIUM_LIGHT_BLINKING                  2
@@ -353,6 +352,9 @@
 #define RAYDIUM_CAMERA_PUSH_NONE                0
 #define RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS        1
 #define RAYDIUM_CAMERA_PUSH_FREEMOVE_REL        2
+
+#define RAYDIUM_VIEWPORT_NONE                   -1
+#define RAYDIUM_VIEWPORT_DIRECT                 -10
 
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
@@ -590,9 +592,13 @@ typedef struct raydium_Viewport
     int     ty;
 } raydium_Viewport ;
 
-__global raydium_Viewport raydium_viewport[RAYDIUM_VIEWPORT_MAX];
+__global raydium_Viewport raydium_viewport[RAYDIUM_MAX_VIEWPORT];
 __global int raydium_viewport_nb;
 __global int raydium_viewport_use;
+__global signed char raydium_viewport_saved_modelview;
+__global GLdouble    raydium_viewport_saved_modelview_data[16];
+__global GLfloat     raydium_viewport_saved_camera_pos[3];
+__global GLfloat     raydium_viewport_direct_values[4];
 
 __global int    raydium_network_socket;
 __global int    raydium_network_uid;

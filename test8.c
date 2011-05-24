@@ -165,9 +165,9 @@ static int inboard=1;
 
         raydium_ode_element_camera_inboard_name("tank_tour",0.2,0,0.1,2,0,0);
 
-        raydium_sky_box_render(raydium_camera_x,raydium_camera_y,raydium_camera_z);
-        raydium_camera_replace();
         raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+        raydium_osd_printf(10,10,40,0.5,"font2.tga","standard viewport");
+        raydium_osd_logo("logo.tga");
         raydium_viewport_save();
         raydium_clear_frame();
     }
@@ -193,7 +193,6 @@ static int inboard=1;
         if (raydium_mouse_click==5)
             speed=-0.05;
 
-
         cam_angle_x += (delta_x*3*0.1f);
         cam_angle_y += (delta_y*3*0.1f);
 
@@ -205,32 +204,35 @@ static int inboard=1;
     }
     else {
         raydium_ode_motor_angle_name("pivot_motor",raydium_ode_motor_angle_get_name("pivot_motor",0)+delta_x*10.0f);
-
         raydium_ode_motor_angle_name("truk_motor",raydium_ode_motor_angle_get_name("truk_motor",0)-delta_y*10.0f);
 
         raydium_ode_element_camera_inboard_name("tank_corps",0.7,0,0.2,2,0,0);
     }
 
-    raydium_sky_box_render(raydium_camera_x,raydium_camera_y,raydium_camera_z);
-    raydium_camera_replace();
 
     raydium_ode_draw_all(0);
     raydium_ode_draw_all(RAYDIUM_ODE_DRAW_RAY);
-    raydium_camera_replace();
 
     if(raydium_key[GLUT_KEY_F1])
         raydium_ode_draw_all(1);
-    raydium_camera_replace();
-
 
     if(!raydium_key[GLUT_KEY_F2])
         raydium_viewport_draw("camera2",20,70,60,30);
 
     raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - Viewport demo %s for Raydium %s, CQFD Corp.",raydium_render_fps,version,raydium_version());
 
-//    raydium_osd_printf(2,80,16,0.5,"font2.tga","Camera: x:%f y:%f z:%f",cam_pos_x,cam_pos_y,cam_pos_z);
-
     if (raydium_key_last==1000+'m') inboard^=1;
+
+    if(!raydium_key[GLUT_KEY_F3]){
+        raydium_viewport_direct_open_4f(20,40,60,30);
+
+        raydium_ode_element_camera_inboard_name("tank_tour",0.2,0,0.1,2,0,0);
+
+        raydium_ode_draw_all(RAYDIUM_ODE_DRAW_NORMAL);
+        raydium_osd_printf(10,10,40,0.5,"font2.tga","direct viewport");
+        raydium_osd_logo("logo.tga");
+        raydium_viewport_direct_close();
+    }
 
     raydium_osd_logo("logo.tga");
 
@@ -266,12 +268,9 @@ int main(int argc, char **argv)
     raydium_sound_SetSourcePitch(sound_car,0);
     raydium_sound_SetSourceGain(sound_car,0.1);  // Engine Gain
 
-
     raydium_viewport_create ("camera2",256,256);
 
-
     simul_create();
-
 
     raydium_callback(&display);
     return(0);
