@@ -209,7 +209,7 @@ if (raydium_init_cli_option("help",NULL))
 
     fprintf(stdout,"  %s\n","");
 
-    fprintf(stdout,"  %s\n","--repositoy-disable      disable R3S repositories access");
+    fprintf(stdout,"  %s\n","--repository-disable     disable R3S repositories access");
     fprintf(stdout,"  %s\n","--repository-force       force downloading from R3S for every file");
     fprintf(stdout,"  %s\n","--repository-refresh     check for newer files from R3S repositories");
 
