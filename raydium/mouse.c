@@ -87,6 +87,9 @@ static GLint   old_x;
 static GLint   old_y;
 GLint border;
 
+if(raydium_gui_isvisible())
+    { *x=0; *y=0; return; }
+
 border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
 raydium_mouse_mode_delta=1;
 

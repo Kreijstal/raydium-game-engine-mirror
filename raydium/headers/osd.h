@@ -7,7 +7,7 @@ OSD (On Screen Display)
 
 // Introduction
 /**
-Raydium provides some high level function for "On Screen Display", 
+Raydium provides some high level function for "On Screen Display",
 as string drawing (2D and 3D), application's logo, mouse cursor, and other
 various 2D displaying tools.
 
@@ -20,7 +20,7 @@ Most functions will use a percentage system, and origin is at lower-left corner.
 
 __rayapi void raydium_osd_color_change (GLfloat r, GLfloat g, GLfloat b);
 /**
-This function will change the font color for the next ##raydium_osd_printf*## 
+This function will change the font color for the next ##raydium_osd_printf*##
 calls.
 As usual: 0 <= (##r##,##g## and ##b##) <= 1.
 **/
@@ -37,7 +37,7 @@ This is a mix of ##raydium_osd_color_change## and ##raydium_osd_alpha_change##.
 
 __rayapi void raydium_osd_color_ega (char hexa);
 /**
-This function will change font color with the corresponding 
+This function will change font color with the corresponding
 ##hexa##decimal code (as a char: '0' to 'F') in the standard EGA palette.
 
 Here is this palette:
@@ -101,22 +101,22 @@ __rayapi void raydium_osd_printf (GLfloat x, GLfloat y, GLfloat size, GLfloat sp
 /**
 This function is an OpenGL equivalent to the standard "printf" C function.
 
-- (##x##,##y##) is the position of the text's beginning, as a screen 
+- (##x##,##y##) is the position of the text's beginning, as a screen
 percentage, with origin at lower left.
 
-- ##size## is the font size, using an arbitrary unit. This size is always 
+- ##size## is the font size, using an arbitrary unit. This size is always
 proportionnal to frame size (font size will grow up with screen size,
 in other words).
 
-- ##spacer## is the factor of spacing between 2 consecutive letters. With 
+- ##spacer## is the factor of spacing between 2 consecutive letters. With
 standard fonts, 0.5 is a correct value (relatively condensed text).
 
-- ##texture## is obviously the texture filename to use (font*.tga are 
+- ##texture## is obviously the texture filename to use (font*.tga are
 often provided with Raydium distribution, and by R3S).
 
-- ##format## is the standard printf format string, followed by 
+- ##format## is the standard printf format string, followed by
 corresponding arguments: ##"^9Player ^Fname is: %10s", player_name##
-This format can use '^' char to change color text, followed by a color, 
+This format can use '^' char to change color text, followed by a color,
 indicated by a hexadecimal letter (EGA palette). See ##raydium_osd_color_ega##
 function, above.
 
@@ -131,7 +131,7 @@ raydium_osd_printf(2,98,16,0.5,"font2.tga","- %3i FPS - tech demo %s for Raydium
 
 __rayapi void raydium_osd_printf_3D (GLfloat x, GLfloat y, GLfloat z, GLfloat size, GLfloat spacer, char *texture, char *format, ...);
 /**
-Same as above, but you can place your text in your application 3D space, 
+Same as above, but you can place your text in your application 3D space,
 using ##x##, ##y## and ##z## values.
 **/
 
@@ -143,7 +143,7 @@ For now, you've no control over rotation speed of the logo.
 
 __rayapi void raydium_osd_cursor_set (char *texture, GLfloat xsize, GLfloat ysize);
 /**
-This function will set mouse cursor with texture filename and 
+This function will set mouse cursor with texture filename and
 with (##xsize##,##ysize##) size (percent of screen size).
 You should use a RGB**A** texture for better results.
 example:
@@ -152,6 +152,9 @@ raydium_osd_cursor_set("BOXcursor.tga",4,4);
 %%
 
 You can set ##texture## to NULL or empty string to cancel OSD cursor texture.
+
+This cursor is not impacted by raydium_mouse_show/hide functions, you should
+use raydium_osd_cursor_show/hide for this.
 **/
 
 __rayapi void raydium_osd_cursor_offset(GLfloat xoffset, GLfloat yoffset);
@@ -160,6 +163,15 @@ This function allows to offset the cursor. Used with non-regular cursor
 textures. The units are percentage of the screen.
 **/
 
+__rayapi void raydium_osd_cursor_show(void);
+/**
+Shows the OSD cursor.
+**/
+
+__rayapi void raydium_osd_cursor_hide(void);
+/**
+Hides the OSD cursor.
+**/
 
 __rayapi void raydium_osd_cursor_draw (void);
 /**
@@ -194,7 +206,7 @@ Same as above, but resolving texture by name.
 
 __rayapi void raydium_osd_mask_texture_clip(int texture,GLfloat alpha, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 /**
-Same as ##raydium_osd_mask_texture##, but (x1,y1),(x2,y2) will be used as 
+Same as ##raydium_osd_mask_texture##, but (x1,y1),(x2,y2) will be used as
 texture coords, in a [0,100] range.
 **/
 
@@ -230,7 +242,7 @@ void restorefade(void)
    raydium_osd_fade_from(from,to,1,NULL);
    // do things (like moving camera to another place, for example).
 }
-                                
+
 ...
 
 // If space key : fade to black
@@ -240,7 +252,7 @@ if(raydium_key_last==1032)
     GLfloat to[4]={0,0,0,1};
     raydium_osd_fade_from(from,to,0.3,restorefade);
     }
-%%                               
+%%
 **/
 
 #endif

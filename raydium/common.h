@@ -434,6 +434,7 @@ __global int raydium_sky_enabled;
 
 __global GLsizei raydium_window_tx;
 __global GLsizei raydium_window_ty;
+__global GLfloat raydium_window_ratio;
 __global signed char     raydium_window_mode;
 
 __global GLuint  raydium_vertex_index;
@@ -742,12 +743,14 @@ __global char   raydium_sprite_stopped[RAYDIUM_MAX_SPRITES];
 
 
 __global GLfloat raydium_osd_logo_angle;
+__global GLfloat raydium_osd_color[4];
+
+__global signed char  raydium_osd_cursor_visible;
 __global GLuint  raydium_osd_cursor_texture;
 __global GLfloat raydium_osd_cursor_xsize;
 __global GLfloat raydium_osd_cursor_ysize;
 __global GLfloat raydium_osd_cursor_xoffset;
 __global GLfloat raydium_osd_cursor_yoffset;
-__global GLfloat raydium_osd_color[4];
 
 __global GLfloat raydium_osd_ega[48];
 

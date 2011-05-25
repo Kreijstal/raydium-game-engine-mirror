@@ -179,6 +179,8 @@ raydium_internal_vertex_next_extras=0;
 raydium_sky_force=0;
 raydium_osd_logo_angle=0;
 raydium_osd_cursor_texture=0;
+raydium_osd_cursor_visible=0;
+raydium_osd_cursor_offset(0,0);
 raydium_register_variable_index=0;
 raydium_register_function_index=0;
 raydium_frame_time=0;

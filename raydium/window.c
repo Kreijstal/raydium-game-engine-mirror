@@ -139,6 +139,8 @@ else
     ty=raydium_window_ty;
     }
 
+raydium_window_ratio=tx/(float)ty;
+
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
 

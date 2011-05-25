@@ -275,6 +275,7 @@ raydium_osd_stop();
 void raydium_osd_cursor_set(char *texture,GLfloat xsize, GLfloat ysize)
 {
 raydium_mouse_hide();
+raydium_osd_cursor_show();
 if(texture && strlen(texture))
     raydium_osd_cursor_texture=raydium_texture_find_by_name(texture);
 else
@@ -290,9 +291,20 @@ raydium_osd_cursor_xoffset=xoffset;
 raydium_osd_cursor_yoffset=yoffset;
 }
 
+void raydium_osd_cursor_show(void)
+{
+raydium_osd_cursor_visible=1;
+}
+
+void raydium_osd_cursor_hide(void)
+{
+raydium_osd_cursor_visible=0;
+}
+
 void raydium_osd_cursor_draw(void)
 {
-if(!raydium_osd_cursor_texture || !raydium_window_tx) return;
+if(!raydium_osd_cursor_texture || !raydium_window_tx || !raydium_osd_cursor_visible)
+    return;
 
 raydium_osd_start();
 
