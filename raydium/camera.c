@@ -62,7 +62,7 @@ GLfloat x,y,z;
 glLoadIdentity();
 
 
-if (raydium_viewport_use!=-1)
+if (raydium_viewport_use!=RAYDIUM_VIEWPORT_NONE)
     return;
 
 if(raydium_camera_rumble_remaining>0)
@@ -96,7 +96,7 @@ if(raydium_frame_first_camera_pass)
     pos[0]=x;
     pos[1]=y;
     pos[2]=z;
-    if(raydium_sound && raydium_viewport_use==-1)
+    if(raydium_sound && raydium_viewport_use==RAYDIUM_VIEWPORT_NONE)
         {
         raydium_camera_vectors(or); // get vectors
         raydium_sound_SetListenerPos(pos);
@@ -119,13 +119,9 @@ if(raydium_frame_first_camera_pass)
     raydium_frame_first_camera_pass=0;
     raydium_light_update_position_all();
 
-    // disallows picking from a direct viewport ... dunno yet if it's a good idea.
-    if(raydium_viewport_use==-1)
-        {
-        glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
-        glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
-        glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
-        }
+    glGetDoublev( GL_MODELVIEW_MATRIX,raydium_camera_gl_modelview);
+    glGetDoublev( GL_PROJECTION_MATRIX,raydium_camera_gl_projection);
+    glGetIntegerv( GL_VIEWPORT,raydium_camera_gl_viewport);
     }
 
 if(!raydium_camera_pushed)
@@ -241,7 +237,7 @@ memcpy(raydium_camera_cursor_place,pos,3*sizeof(GLfloat));
 
 void raydium_camera_rumble(GLfloat amplitude, GLfloat ampl_evo, GLfloat secs)
 {
-if (raydium_viewport_use!=-1)
+if (raydium_viewport_use!=RAYDIUM_VIEWPORT_NONE)
     return;
 raydium_camera_rumble_amplitude=amplitude;
 raydium_camera_rumble_evolution=ampl_evo;
@@ -564,7 +560,7 @@ raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
 
 void raydium_viewport_direct_open(int x, int y, int sizex, int sizey)
 {
-if (raydium_viewport_use!=-1)
+if (raydium_viewport_use!=RAYDIUM_VIEWPORT_NONE)
     {
     raydium_log ("An other viewport is already enabled");
     return;
@@ -578,15 +574,20 @@ raydium_viewport_direct_values[3]=sizey;
 
 if(raydium_camera_pushed)
     {
-    raydium_viewport_saved_modelview=1;
+    raydium_viewport_saved_context=1;
     glGetDoublev(GL_MODELVIEW_MATRIX,raydium_viewport_saved_modelview_data);
     raydium_viewport_saved_camera_pos[0]=raydium_camera_x;
     raydium_viewport_saved_camera_pos[1]=raydium_camera_y;
     raydium_viewport_saved_camera_pos[2]=raydium_camera_z;
+
+    memcpy(raydium_camera_saved_gl_viewport,raydium_camera_gl_viewport,sizeof(GLint)*4);
+    memcpy(raydium_camera_saved_gl_projection,raydium_camera_gl_projection,sizeof(GLdouble)*16);
+    memcpy(raydium_camera_saved_gl_modelview,raydium_camera_gl_modelview,sizeof(GLdouble)*16);
+
     glPopMatrix();
     raydium_camera_pushed=0;
     }
-else raydium_viewport_saved_modelview=0;
+else raydium_viewport_saved_context=0;
 
 raydium_frame_first_camera_pass=1;
 
@@ -630,7 +631,7 @@ if (raydium_camera_pushed){
     glPopMatrix();
     raydium_camera_pushed=0;
 }
-raydium_viewport_use=-1;
+raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
 glViewport(0,0, raydium_window_tx, raydium_window_ty);
 if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
     {
@@ -643,15 +644,21 @@ if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
     }
 
 // we try to restore everything about the camera
-if(raydium_viewport_saved_modelview)
+if(raydium_viewport_saved_context)
     {
     glLoadMatrixd(raydium_viewport_saved_modelview_data);
     raydium_camera_x=raydium_viewport_saved_camera_pos[0];
     raydium_camera_y=raydium_viewport_saved_camera_pos[1];
     raydium_camera_z=raydium_viewport_saved_camera_pos[2];
     glPushMatrix();
+
+    memcpy(raydium_camera_gl_viewport,raydium_camera_saved_gl_viewport,sizeof(GLint)*4);
+    memcpy(raydium_camera_gl_projection,raydium_camera_saved_gl_projection,sizeof(GLdouble)*16);
+    memcpy(raydium_camera_gl_modelview,raydium_camera_saved_gl_modelview,sizeof(GLdouble)*16);
+
     raydium_light_update_position_all();
     raydium_camera_pushed=1;
+    raydium_viewport_saved_context=0;
     }
 
 }
@@ -684,7 +691,7 @@ void raydium_viewport_enable(char * name)
 {
 int i;
 
-if (raydium_viewport_use!=-1)
+if (raydium_viewport_use!=RAYDIUM_VIEWPORT_NONE)
 {
     raydium_log ("An other viewport is already enabled");
     return;
@@ -702,7 +709,7 @@ raydium_log("Viewport %s not found.",name);
 
 void raydium_viewport_save(void)
 {
-if (raydium_viewport_use==-1 || raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
+if (raydium_viewport_use==RAYDIUM_VIEWPORT_NONE || raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
 {
     raydium_log("No viewport enabled.");
     return;
@@ -718,7 +725,7 @@ if (raydium_camera_pushed){
     glPopMatrix();
     raydium_camera_pushed=0;
 }
-raydium_viewport_use=-1;
+raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
 glViewport(0,0, raydium_window_tx, raydium_window_ty);
 }
 
