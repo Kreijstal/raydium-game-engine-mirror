@@ -24,7 +24,7 @@ You must call this function once in your program, with following arguments:
 ##NONE##, ##WINDOW## (resizable), ##WINDOW_FIXED## (unresizable) and ##FULLSCREEN##.
 3. ##name##: window's name
 
-Raydium is using MyGLUT for window management, and MyGLUT fullscreen is not 
+Raydium is using MyGLUT for window management, and MyGLUT fullscreen is not
 the same between all implementations. For instance, the Linux MyGLUT does
 not resize the X screen, therefore doesn't care about ##tx## and ##ty##.
 But the win32 implementation did resize screen.
@@ -36,7 +36,7 @@ Note that user can force fullscreen using ##--fullscreen## on the command line.
 
 __rayapi void raydium_window_resize_callback (GLsizei Width, GLsizei Height);
 /**
-This function is automaticaly called during a window resize, 
+This function is automaticaly called during a window resize,
 and resize OpenGL rendering space.
 
 There is almost no reason to call this function by yourself.
@@ -45,7 +45,12 @@ There is almost no reason to call this function by yourself.
 __rayapi void raydium_window_view_update (void);
 /**
 If you've changed 3D window size (clipping: raydium_projection_*),
-apply to hardware with this fonction. 
+apply to hardware with this fonction.
+**/
+
+__rayapi void raydium_window_projection_update(void);
+/**
+Subpart of ##raydium_window_view_update()## that does not update the GL viewport.
 **/
 
 __rayapi void raydium_window_view_perspective(GLfloat fov, GLfloat fnear, GLfloat ffar);

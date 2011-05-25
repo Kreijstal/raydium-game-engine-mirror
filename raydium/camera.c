@@ -253,6 +253,20 @@ void raydium_camera_path_reset(void)
 raydium_camera_path_reset_flag=1;
 }
 
+void raydium_camera_smooth_data_init(GLfloat *data)
+{
+int i;
+for(i=0;i<RAYDIUM_CAMERA_SMOOTH_DATA_SIZE;i++)
+    data[i]=0;
+data[6]=90; // zoom
+}
+
+void raydium_camera_smooth_data_set(GLfloat *data)
+{
+if(data==NULL) data=raydium_camera_smooth_data_primary;
+raydium_camera_smooth_data_ptr=data;
+}
+
 // if step is <= 0, moves will be instaneous
 // camera will be placed only if step is >=0 (negative steps are used
 // only to change internal vars)
@@ -260,17 +274,26 @@ void raydium_camera_smooth(GLfloat px, GLfloat py, GLfloat pz,
                            GLfloat lx, GLfloat ly, GLfloat lz,
                            GLfloat zoom, GLfloat roll, GLfloat step)
 {
-static GLfloat opx,opy,opz;
-static GLfloat olx,oly,olz;
-static GLfloat ozoom=90;
-static GLfloat oroll=0;
+GLfloat opx,opy,opz;
+GLfloat olx,oly,olz;
+GLfloat ozoom=90;
+GLfloat oroll=0;
 float delta[3];
 float angle[3];
 angle[0]=angle[1]=angle[2]=0;
 
+// see RAYDIUM_CAMERA_SMOOTH_DATA_SIZE
+opx=raydium_camera_smooth_data_ptr[0];
+opy=raydium_camera_smooth_data_ptr[1];
+opz=raydium_camera_smooth_data_ptr[2];
+olx=raydium_camera_smooth_data_ptr[3];
+oly=raydium_camera_smooth_data_ptr[4];
+olz=raydium_camera_smooth_data_ptr[5];
+ozoom=raydium_camera_smooth_data_ptr[6];
+oroll=raydium_camera_smooth_data_ptr[7];
+
+//raydium_log("camera smooth (org): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",opx,opy,opz,olx,oly,olz,ozoom,step);
 //raydium_log("camera smooth (asked): %.2f %.2f %.2f | %.2f %.2f %.2f | %.2f %.2f",px,py,pz,lx,ly,lz,zoom,step);
-if (raydium_viewport_use!=-1)
-    return;
 
 if(step<=0 || // wow.. smells inf, do a instantaneous step. (and don't place cam)
    raydium_camera_path_reset_flag)
@@ -302,7 +325,7 @@ else
     if(ozoom!=raydium_projection_fov)
         {
         raydium_projection_fov=ozoom;
-        raydium_window_view_update();
+        raydium_window_projection_update();
         }
 }
 
@@ -327,6 +350,15 @@ raydium_camera_data[2]=opz;
 raydium_camera_data[3]=angle[0];
 raydium_camera_data[4]=angle[1];
 raydium_camera_data[5]=angle[2];//zero
+
+raydium_camera_smooth_data_ptr[0]=opx;
+raydium_camera_smooth_data_ptr[1]=opy;
+raydium_camera_smooth_data_ptr[2]=opz;
+raydium_camera_smooth_data_ptr[3]=olx;
+raydium_camera_smooth_data_ptr[4]=oly;
+raydium_camera_smooth_data_ptr[5]=olz;
+raydium_camera_smooth_data_ptr[6]=ozoom;
+raydium_camera_smooth_data_ptr[7]=oroll;
 }
 
 
@@ -858,6 +890,8 @@ for(i=0;i<3;i++)
     raydium_camera_push_slowness[i]=0;
     }
 raydium_camera_data_reset();
+raydium_camera_smooth_data_init(raydium_camera_smooth_data_primary);
+raydium_camera_smooth_data_set(NULL); // same as raydium_camera_smooth_data_primary
 }
 
 void raydium_camera_push(int type, GLfloat *vect, GLfloat *slowness)

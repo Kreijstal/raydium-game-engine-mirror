@@ -119,6 +119,48 @@ raydium_mouse_x=tx/2;
 raydium_mouse_y=ty/2;
 }
 
+void raydium_window_projection_update(void)
+{
+int tx,ty;
+
+if (raydium_viewport_use!=-1 && raydium_viewport_use!=RAYDIUM_VIEWPORT_DIRECT)
+    {
+    tx=raydium_viewport[raydium_viewport_use].tx;
+    ty=raydium_viewport[raydium_viewport_use].ty;
+    }
+else if(raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
+    {
+    tx=raydium_viewport_direct_values[2];
+    ty=raydium_viewport_direct_values[3];
+    }
+else
+    {
+    tx=raydium_window_tx;
+    ty=raydium_window_ty;
+    }
+
+glMatrixMode(GL_PROJECTION);
+glLoadIdentity();
+
+if(raydium_projection==RAYDIUM_PROJECTION_ORTHO)
+glOrtho(raydium_projection_left,raydium_projection_right,
+        raydium_projection_bottom,raydium_projection_top,
+        raydium_projection_near,raydium_projection_far);
+
+if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
+gluPerspective(raydium_projection_fov,(GLfloat)tx/(GLfloat)ty,
+               raydium_projection_near,raydium_projection_far);
+
+// Rotate the content to fit the landscape mode on the iPhone OS.
+#ifdef IPHONEOS
+#ifndef IPHONEOS_ORIENTATION_PORTRAIT
+glRotatef(-90,0,0,1);
+#endif
+#endif
+glMatrixMode(GL_MODELVIEW);
+glLoadIdentity();
+}
+
 void raydium_window_resize_callback(GLsizei Width, GLsizei Height)
 {
 if(!Height) Height=1; // height=0 IS possible
@@ -137,33 +179,11 @@ Height=swap;
 #endif
 #endif
 
-
 // called each frame !!
 //raydium_log("resized to %i %i\n",Width,Height);
 
-glMatrixMode(GL_PROJECTION);
-glLoadIdentity();
 glViewport(0, 0, Width, Height);
-
-
-if(raydium_projection==RAYDIUM_PROJECTION_ORTHO)
-glOrtho(raydium_projection_left,raydium_projection_right,
-        raydium_projection_bottom,raydium_projection_top,
-        raydium_projection_near,raydium_projection_far);
-
-if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
-gluPerspective(raydium_projection_fov,(GLfloat)Width/(GLfloat)Height,
-               raydium_projection_near,raydium_projection_far);
-
-
-// Rotate the content to fit the landscape mode on the iPhone OS.
-#ifdef IPHONEOS
-#ifndef IPHONEOS_ORIENTATION_PORTRAIT
-glRotatef(-90,0,0,1);
-#endif
-#endif
-glMatrixMode(GL_MODELVIEW);
-glLoadIdentity();
+raydium_window_projection_update();
 
 // update HDR memory size
 raydium_hdr_internal_window_malloc();

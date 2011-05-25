@@ -123,6 +123,23 @@ this function is the following usage :
 %%(c) raydium_camera_smooth(cam[0],cam[1],cam[2],pos[1],-pos[2],pos[0],70,0,raydium_frame_time*3); %%
 **/
 
+__rayapi void raydium_camera_smooth_data_set(GLfloat *data);
+/**
+This function will allows you to use your own array for smooth camera. The
+main purpose of this is to use multiple smooth camera at the same time, for
+instance with viewports.
+
+To get back to the "default/primary" internal array of Raydium, use ##NULL##.
+
+##data## is a GLfloat array of ##RAYDIUM_CAMERA_SMOOTH_DATA_SIZE## elements.
+**/
+
+__rayapi void raydium_camera_smooth_data_init(GLfloat *data);
+/**
+This function will initialize a custom smooth camera array.
+See ##raydium_camera_smooth_data_set()## above for more informations.
+**/
+
 __rayapi void raydium_camera_path_init (int p);
 /**
 Internal use.

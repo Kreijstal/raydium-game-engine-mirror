@@ -356,6 +356,8 @@
 #define RAYDIUM_VIEWPORT_NONE                   -1
 #define RAYDIUM_VIEWPORT_DIRECT                 -10
 
+#define RAYDIUM_CAMERA_SMOOTH_DATA_SIZE         8
+
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
@@ -566,6 +568,8 @@ __global GLfloat  raydium_camera_push_current[3];
 __global GLfloat  raydium_camera_push_end[3];
 __global GLfloat  raydium_camera_push_slowness[3];
 __global GLfloat  raydium_camera_data[6];
+__global GLfloat  raydium_camera_smooth_data_primary[RAYDIUM_CAMERA_SMOOTH_DATA_SIZE];
+__global GLfloat  *raydium_camera_smooth_data_ptr;
 
 __global GLfloat  raydium_ode_timestep;
 __global GLfloat  raydium_ode_physics_freq;

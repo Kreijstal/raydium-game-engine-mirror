@@ -77,6 +77,7 @@ glColor4f(1.f,1.f,1.f,1.f);
 
 void raydium_osd_stop(void)
 {
+// should use raydium_window_projection_update() no ?
 if (raydium_viewport_use!=-1 && raydium_viewport_use!=RAYDIUM_VIEWPORT_DIRECT)
     glViewport(0,0, raydium_viewport[raydium_viewport_use].tx,raydium_viewport[raydium_viewport_use].ty);
 else if(raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
