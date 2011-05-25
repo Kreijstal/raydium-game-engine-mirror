@@ -77,13 +77,8 @@ glColor4f(1.f,1.f,1.f,1.f);
 
 void raydium_osd_stop(void)
 {
-// should use raydium_window_projection_update() no ?
-if (raydium_viewport_use!=-1 && raydium_viewport_use!=RAYDIUM_VIEWPORT_DIRECT)
-    glViewport(0,0, raydium_viewport[raydium_viewport_use].tx,raydium_viewport[raydium_viewport_use].ty);
-else if(raydium_viewport_use==RAYDIUM_VIEWPORT_DIRECT)
-    glViewport(raydium_viewport_direct_values[0],raydium_viewport_direct_values[1],raydium_viewport_direct_values[2],raydium_viewport_direct_values[3]);
-else
-    raydium_window_resize_callback(raydium_window_tx, raydium_window_ty);
+// restore projection
+raydium_window_projection_update();
 
 glEnable(GL_DEPTH_TEST);
 glDepthMask(GL_TRUE);
