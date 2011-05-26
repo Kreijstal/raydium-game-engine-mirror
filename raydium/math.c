@@ -140,8 +140,8 @@ glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);
 glGetIntegerv(GL_VIEWPORT, viewport);
 gluProject(x,y,z,modelMatrix,projectionMatrix,viewport,&sx,&sy,&sz);
 
-sx=sx/raydium_window_tx*100;
-sy=sy/raydium_window_ty*100;
+sx=(sx-viewport[0])/viewport[2]*100;
+sy=(sy-viewport[1])/viewport[3]*100;
 (*resx)=sx;
 (*resy)=sy;
 
