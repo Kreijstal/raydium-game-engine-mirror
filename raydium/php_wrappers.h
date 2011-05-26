@@ -105,7 +105,17 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
   "ld", &a, &b) == FAILURE)  return;\
 RETURN_LONG(fname(a,b));\
 }
-  
+
+// void f(float, float) - double, too
+#define PHP_v_ff(fname)\
+ZEND_FUNCTION(fname)\
+{\
+double a,b;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+    "dd", &a, &b) == FAILURE)  return;\
+fname(a,b);\
+}
+
 // void f(float, float, float) - double, too
 #define PHP_v_fff(fname)\
 ZEND_FUNCTION(fname)\

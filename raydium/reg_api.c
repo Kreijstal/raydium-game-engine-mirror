@@ -208,6 +208,9 @@ PHP_i_siffsi(raydium_gui_combo_create);
 PHP_i_sss(raydium_gui_read_name);
 PHP_i_v(raydium_gui_button_clicked);
 
+//osd.c
+PHP_v_ff(raydium_osd_cursor_offset);
+
 // shader.c
 PHP_v_ssi(raydium_shader_var_i_name);
 PHP_v_ssf(raydium_shader_var_f_name);
@@ -355,6 +358,9 @@ raydium_register_function(C2PHP(raydium_gui_check_create),"raydium_gui_check_cre
 raydium_register_function(C2PHP(raydium_gui_combo_create),"raydium_gui_combo_create");
 raydium_register_function(C2PHP(raydium_gui_read_name),"raydium_gui_read_name");
 raydium_register_function(C2PHP(raydium_gui_button_clicked),"raydium_gui_button_clicked");
+
+//osd.c
+raydium_register_function(C2PHP(raydium_osd_cursor_offset),"raydium_osd_cursor_offset");
 
 // parser
 raydium_register_function(C2PHP(raydium_parser_db_set),"raydium_parser_db_set");
