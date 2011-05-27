@@ -9,8 +9,8 @@
 #include "index.h"
 #else
 #include "headers/mouse.h"
+#include "headers/gui.h"
 #endif
-
 /*
 #define raydium_mouse_hide() glutSetCursor(GLUT_CURSOR_NONE);
 #define raydium_mouse_show() glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
