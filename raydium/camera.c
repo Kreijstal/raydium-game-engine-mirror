@@ -572,6 +572,17 @@ raydium_viewport_direct_values[1]=y;
 raydium_viewport_direct_values[2]=sizex;
 raydium_viewport_direct_values[3]=sizey;
 
+raydium_viewport_saved_mouse[0]=raydium_mouse_x;
+raydium_viewport_saved_mouse[1]=raydium_mouse_y;
+// translate mouse_coords to viewport
+raydium_mouse_x=((raydium_mouse_x-x)*((float)raydium_window_tx/sizex));
+raydium_mouse_y=raydium_window_ty-(((raydium_window_ty-raydium_mouse_y-y)*((float)raydium_window_ty/sizey)));
+// and clamp it
+if(raydium_mouse_x<0) raydium_mouse_x=0;
+if(raydium_mouse_y<0) raydium_mouse_y=0;
+if(raydium_mouse_x>=raydium_window_tx) raydium_mouse_x=raydium_window_tx-1;
+if(raydium_mouse_y>=raydium_window_ty) raydium_mouse_y=raydium_window_ty-1;
+
 if(raydium_camera_pushed)
     {
     raydium_viewport_saved_context=1;
@@ -580,9 +591,9 @@ if(raydium_camera_pushed)
     raydium_viewport_saved_camera_pos[1]=raydium_camera_y;
     raydium_viewport_saved_camera_pos[2]=raydium_camera_z;
 
-    memcpy(raydium_camera_saved_gl_viewport,raydium_camera_gl_viewport,sizeof(GLint)*4);
-    memcpy(raydium_camera_saved_gl_projection,raydium_camera_gl_projection,sizeof(GLdouble)*16);
-    memcpy(raydium_camera_saved_gl_modelview,raydium_camera_gl_modelview,sizeof(GLdouble)*16);
+    memcpy(raydium_viewport_saved_gl_viewport,raydium_camera_gl_viewport,sizeof(GLint)*4);
+    memcpy(raydium_viewport_saved_gl_projection,raydium_camera_gl_projection,sizeof(GLdouble)*16);
+    memcpy(raydium_viewport_saved_gl_modelview,raydium_camera_gl_modelview,sizeof(GLdouble)*16);
 
     glPopMatrix();
     raydium_camera_pushed=0;
@@ -643,6 +654,9 @@ if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
     glLoadIdentity();
     }
 
+raydium_mouse_x=raydium_viewport_saved_mouse[0];
+raydium_mouse_y=raydium_viewport_saved_mouse[1];
+
 // we try to restore everything about the camera
 if(raydium_viewport_saved_context)
     {
@@ -652,9 +666,9 @@ if(raydium_viewport_saved_context)
     raydium_camera_z=raydium_viewport_saved_camera_pos[2];
     glPushMatrix();
 
-    memcpy(raydium_camera_gl_viewport,raydium_camera_saved_gl_viewport,sizeof(GLint)*4);
-    memcpy(raydium_camera_gl_projection,raydium_camera_saved_gl_projection,sizeof(GLdouble)*16);
-    memcpy(raydium_camera_gl_modelview,raydium_camera_saved_gl_modelview,sizeof(GLdouble)*16);
+    memcpy(raydium_camera_gl_viewport,raydium_viewport_saved_gl_viewport,sizeof(GLint)*4);
+    memcpy(raydium_camera_gl_projection,raydium_viewport_saved_gl_projection,sizeof(GLdouble)*16);
+    memcpy(raydium_camera_gl_modelview,raydium_viewport_saved_gl_modelview,sizeof(GLdouble)*16);
 
     raydium_light_update_position_all();
     raydium_camera_pushed=1;

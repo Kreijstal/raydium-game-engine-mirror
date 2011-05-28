@@ -257,6 +257,11 @@ the display loop, just before raydium_rendering_finish() and all OSD
 things.
 
 All parameters are given in pixels.
+
+An interesting note is that ##raydium_mouse_x## and y positions are translated
+into the viewport, in the ##raydium_window_x## and y "real" screen size, meaning
+that any code already using these variables will continue to work as-is in
+viewports.
 **/
 
 __rayapi void raydium_viewport_direct_open_4f(GLfloat x, GLfloat y, GLfloat sizex, GLfloat sizey);

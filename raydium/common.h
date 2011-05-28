@@ -602,9 +602,10 @@ __global int raydium_viewport_nb;
 __global int raydium_viewport_use;
 __global signed char raydium_viewport_saved_context;
 __global GLdouble    raydium_viewport_saved_modelview_data[16];
-__global GLdouble    raydium_camera_saved_gl_modelview[16];
-__global GLdouble    raydium_camera_saved_gl_projection[16];
-__global GLint       raydium_camera_saved_gl_viewport[4];
+__global GLdouble    raydium_viewport_saved_gl_modelview[16];
+__global GLdouble    raydium_viewport_saved_gl_projection[16];
+__global GLint       raydium_viewport_saved_gl_viewport[4];
+__global GLint       raydium_viewport_saved_mouse[2];
 __global GLfloat     raydium_viewport_saved_camera_pos[3];
 __global GLfloat     raydium_viewport_direct_values[4];
 
