@@ -54,7 +54,7 @@ libs() {
 echo -n "-L$LIBS -lraydium "
 }
 cflags() {
-echo -n "-DFORCE_LIBRAYDIUM "
+echo -n "-DFORCE_LIBRAYDIUM $EXTRA_GCC_FLAGS"
 includes
 }
 if [ "$1" = "--libs" ]; then

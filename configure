@@ -8,6 +8,8 @@
 # This script will configure Raydium and download, configure and build
 # dependencies if needed. See --help argument.
 
+EXTRA_GCC_FLAGS=""
+
 # build file
 # $1 is the test name, will be put in the log
 # $2 is file content
@@ -423,6 +425,7 @@ fi
 test_build "GLEW" "$file" "-DUSE_GLEW -L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
 exit_if_error "$?" "You must install libglew devel package"
 
+
 # Test C++ compiler
 file='int main(void) { return 0; }'
 test_build "g++" "$file" "" "g++"
@@ -543,6 +546,24 @@ return(0);
 test_build "Ogg/Vorbis" "$file" "-lvorbis -lvorbisfile -logg"
 exit_if_error "$?" "ogg and vorbis devels are required (libogg,libvorbis and libvorbisfile)"
 
+# Test video4linux (v1)
+echo "* Testing V4L..."
+if [ ! -f /usr/include/linux/videodev.h ]; then
+    echo "V4L: v4l1 not found"
+    if [ ! -f /usr/include/libv4l1-videodev.h ]; then
+	echo "V4L: v4l1 replacement not found"
+	echo "ERROR: you need v4l devel package"
+	exit 1
+    else
+    echo "V4L: v4l1 replacement found"
+    EXTRA_GCC_FLAGS="-DHAVE_V4L1_REPLACEMENT $EXTRA_GCC_FLAGS"
+    fi
+else
+    echo "V4L: v4lv1 found"
+fi
+
+tmp="configure.conf"
+echo "EXTRA_GCC_FLAGS=\"$EXTRA_GCC_FLAGS\"" >> $tmp
 
 ##### End of tests
 

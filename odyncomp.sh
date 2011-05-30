@@ -49,10 +49,14 @@ if [ -n "$LIBWII_INCLUDES" ]; then
     LIBWII_ADDS="-D_ENABLE_TILT -D_ENABLE_FORCE -lbluetooth -lcwiimote"
 fi
 
+if [ -f configure.conf ]; then
+    . ./configure.conf
+fi
+
 if [ -f test ]; then
     rm test
 fi
-$CC "$1" -g -Wall -DFORCE_LIBRAYDIUM -O2 -o test libraydium.so \
+$CC "$1" -g -Wall -DFORCE_LIBRAYDIUM $EXTRA_GCC_FLAGS -O2 -o test libraydium.so \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM \
 -Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS $ODYNCOMP_FLAGS
 

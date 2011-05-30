@@ -16,7 +16,11 @@
 #ifndef WIN32
 #ifndef APPLE
 #include <linux/types.h>
+#ifndef HAVE_V4L1_REPLACEMENT
 #include <linux/videodev.h>
+#else
+#include <libv4l1-videodev.h>
+#endif
 #include <sys/mman.h>
 #endif
 #else
