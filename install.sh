@@ -34,6 +34,7 @@ find raydium/php -name "*.h" -exec cp --parents {} "$INCLUDES" \;
 echo "- Raydium libs"
 $INSTALL -d "$LIBS"
 cp -P libray* "$LIBS"
+ldconfig
 
 # rayphp
 echo "- RayPHP scripts"
