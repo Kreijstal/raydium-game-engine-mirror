@@ -237,7 +237,9 @@ php_install()
     echo "===============" >> configure.log
     cd raydium/php
 	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
-    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap --with-gd --with-jpeg-dir --with-png-dir\
+    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \
+    --with-libdir=`libpng-config --libdir | sed 's#^/usr/##'` \
+    --with-gd --with-jpeg-dir --with-png-dir\
     >>../../configure.log 2>>../../configure.log
 
     ret=$?
