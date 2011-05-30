@@ -83,6 +83,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <GL/glew.h>
+#ifndef IPHONEOS
+# ifndef WIN32
+#  include <GL/glxew.h>
+# else
+#  include <GL/wglew.h>
+# endif
+#endif
 #ifdef APPLE
 #ifdef MACOSX
 #include <OpenGL/gl.h>

@@ -518,6 +518,27 @@ void raydium_render_fps_limit(float maxfps)
    raydium_render_max_fps=maxfps;
 }
 
+void raydium_render_vblank(signed char enable)
+{
+enable=(enable?1:0);
+#ifndef IPHONEOS
+# ifndef WIN32
+if(glxewIsSupported("GLX_SGI_swap_control"))
+    {
+    glXSwapIntervalSGI(enable);
+    return;
+    }
+# endif
+# ifdef WIN32
+if(wglewIsSupported("WGL_EXT_swap_control"))
+    {
+    wglSwapIntervalEXT(enable);
+    return;
+    }
+# endif
+#endif
+raydium_log("Error: swap control not available");
+}
 
 // are faked textures package compliant ?
 void raydium_render_loading(void)

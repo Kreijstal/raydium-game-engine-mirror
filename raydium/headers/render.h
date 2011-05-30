@@ -149,4 +149,15 @@ Internal. Display a "low level and cheap" loading screen, useful when
 R3S is downloading things from network.
 **/
 
+__rayapi void raydium_render_vblank(signed char enable);
+/**
+Enables or disable VBlank signal waiting, to synchronize rendering on screen
+refresh intervals.
+
+There's a lot of issues about vblank waiting with OpenGL (driver, OS, enabling
+but no disabling, ...), so consider this function as very experimental.
+
+You should use it only for tests.
+**/
+
 #endif
