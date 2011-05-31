@@ -131,33 +131,44 @@ void raydium_shadow_light_main(GLuint l)
 raydium_shadow_light=l;
 }
 
+void raydium_shadow_object_dl_init(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
+    raydium_shadow_object_dl_state[i]=0;
+}
+
+void raydium_shadow_object_dl_delete(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
+    if(raydium_shadow_object_dl_state[i])
+        {
+        glDeleteLists(raydium_shadow_object_dl[i],1);
+        raydium_shadow_object_dl_state[i]=0;
+        }
+}
 
 void raydium_shadow_object_draw(GLuint o)
 {
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
 #ifndef DEBUG_RENDER_VERTEXARRAY
-static GLuint dl[RAYDIUM_MAX_OBJECTS];
-static char dl_state[RAYDIUM_MAX_OBJECTS];
-static int first=0;
-int i;
-
-if(first)
-    for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
-        dl_state[i]=-1;
 
 if(raydium_render_displaylists_tag && raydium_object_anims[o]==0)
 {
- if(!dl_state[o])
+ if(!raydium_shadow_object_dl_state[o])
     {
     // build DL
-    dl_state[o]=1;
-    dl[o]=glGenLists(1);
+    raydium_shadow_object_dl_state[o]=1;
+    raydium_shadow_object_dl[o]=glGenLists(1);
     raydium_log("Object: creating **shadow** display list for object %s",raydium_object_name[o]);
-    glNewList(dl[o],GL_COMPILE);
+    glNewList(raydium_shadow_object_dl[o],GL_COMPILE);
     raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);
     glEndList();
     }
-  glCallList(dl[o]);
+  glCallList(raydium_shadow_object_dl[o]);
 }
 else
     raydium_rendering_from_to_simple(raydium_object_start[o],raydium_object_end[o]);

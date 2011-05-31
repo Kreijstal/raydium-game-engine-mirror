@@ -80,6 +80,24 @@ raydium_log("object: render cache: %i part(s)",raydium_object_cache[obj].n_parts
     );*/
 }
 
+void raydium_object_render_cache_free(int obj)
+{
+int i;
+
+for(i=0;i<raydium_object_cache[obj].n_parts;i++)
+    free(raydium_object_cache[obj].parts[i]);
+}
+
+void raydium_object_render_cache_free_all(void)
+{
+#ifdef DEBUG_RENDER_VERTEXARRAY
+int i;
+for(i=0;i<raydium_object_index;i++)
+    raydium_object_render_cache_free(i);
+#endif
+}
+
+
 void raydium_object_render_va_init(signed char simple)
 {
 glEnableClientState(GL_VERTEX_ARRAY);
@@ -198,16 +216,29 @@ return ret;
 }
 
 
+void raydium_object_dl_init(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
+    raydium_object_dl_state[i]=0;
+}
+
+void raydium_object_dl_delete(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
+    if(raydium_object_dl_state[i])
+        {
+        glDeleteLists(raydium_object_dl[i],1);
+        raydium_object_dl_state[i]=0;
+        }
+}
+
+
 void raydium_object_draw(GLuint o)
 {
-#ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
-#ifndef DEBUG_RENDER_VERTEXARRAY
-static GLuint dl[RAYDIUM_MAX_OBJECTS];
-static char dl_state[RAYDIUM_MAX_OBJECTS];
-static int first=0;
-int i;
-#endif
-#endif
 
 if(!raydium_object_isvalid(o))
     {
@@ -228,24 +259,20 @@ if(raydium_object_anims[o]>0)
 
 #ifndef DEBUG_RENDER_DISABLE_DISPLAYLISTS
 #ifndef DEBUG_RENDER_VERTEXARRAY
-if(first)
-    for(i=0;i<RAYDIUM_MAX_OBJECTS;i++)
-        dl_state[i]=-1;
-
 
 if(raydium_render_displaylists_tag && !raydium_shadow_rendering)
 {
- if(!dl_state[o])
+ if(!raydium_object_dl_state[o])
     {
     // build DL
-    dl_state[o]=1;
-    dl[o]=glGenLists(1);
+    raydium_object_dl_state[o]=1;
+    raydium_object_dl[o]=glGenLists(1);
     raydium_log("Object: creating display list for object %s",raydium_object_name[o]);
-    glNewList(dl[o],GL_COMPILE);
+    glNewList(raydium_object_dl[o],GL_COMPILE);
     raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
     glEndList();
     }
-  glCallList(dl[o]);
+  glCallList(raydium_object_dl[o]);
 }
 else raydium_rendering_from_to(raydium_object_start[o],raydium_object_end[o]);
 #else

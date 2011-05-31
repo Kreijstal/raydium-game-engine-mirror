@@ -23,6 +23,8 @@ __global GLfloat raydium_shadow_ground_modelsize;
 __global GLfloat raydium_shadow_ground_center_factor_x;
 __global GLfloat raydium_shadow_ground_center_factor_y;
 __global GLfloat raydium_shadow_camerabox_size_current;
+__global GLuint raydium_shadow_object_dl[RAYDIUM_MAX_OBJECTS];
+__global char raydium_shadow_object_dl_state[RAYDIUM_MAX_OBJECTS];
 
 // proto
 void raydium_camera_replace(void);

@@ -15,22 +15,28 @@
 // proto
 void raydium_ode_init(void);
 void raydium_register_api(void);
-//#ifndef WIN32
 void raydium_live_init(void);
-//#endif
 void raydium_fog_init(void);
 void raydium_sky_init(void);
 void raydium_video_init(void);
 void raydium_internal_live_close(void);
 void raydium_shadow_init(void);
+void raydium_shadow_object_dl_init(void);
+void raydium_shadow_object_dl_delete(void);
 void raydium_hdr_init(void);
 void raydium_hdr_texture_reset(void);
 void raydium_lensflare_init(void);
 void raydium_shader_init(void);
+void raydium_shader_delete_all(void);
 void raydium_web_init(void);
 void raydium_path_package_update(void);
+void raydium_path_package_register_all_cli(void);
 void raydium_camera_init(void);
-
+void raydium_object_render_cache_free_all(void);
+void raydium_object_dl_init(void);
+void raydium_object_dl_delete(void);
+void raydium_ode_delete_all(void);
+void raydium_particle_free_all(void);
 
 char *raydium_version(void)
 {
@@ -78,6 +84,82 @@ raydium_key_trace=0;
 raydium_log("keyboard: OK");
 }
 
+// Experimental code.
+void raydium_init_purgemem(void)
+{
+int i;
+
+raydium_log("** Start clearing ... **");
+
+// *** heavy things:
+// vertices
+raydium_vertex_index=0;
+raydium_vertex_offset_triangle=0;
+
+// objects, Display Lists, anims
+raydium_object_render_cache_free_all();
+raydium_object_dl_delete();
+raydium_init_objects(); // will delete anim flag, too
+raydium_object_index=0;
+
+// textures
+for(i=0;i<RAYDIUM_MAX_TEXTURES;i++)
+    raydium_texture_free(i);
+
+// ODE
+raydium_ode_delete_all();
+
+// sound ?
+
+// *** linked things:
+// live
+raydium_internal_live_close();
+raydium_live_init();
+
+// lensflare
+raydium_lensflare_init();
+
+// shaders
+raydium_shader_delete_all();
+
+// particles2
+raydium_particle_free_all();
+
+// shadows
+raydium_shadow_object_dl_delete();
+raydium_shadow_init();
+
+// OSD
+raydium_osd_cursor_texture=0;
+for(i=0;i<4;i++)
+    raydium_osd_color[i]=1.f;
+
+// GUI
+for (i=0;i<RAYDIUM_GUI_MAX_WINDOWS;i++)
+    if(raydium_gui_windows[i].state)
+        raydium_gui_window_delete(i);
+raydium_gui_init();
+
+// *** file things :)
+// paths + packages
+raydium_path_init();
+raydium_path_package_register_all_cli();
+
+// file "fopen cache"
+raydium_file_log_fopen_index=0;
+
+
+// *** and perhaps others ? (probably not !)
+// timecalls ?
+// camera / camera paths ?
+// viewport ?
+// regapi / php ?
+// network ?
+// small things like fog/lights/...
+
+raydium_log("** Engine cleared **");
+}
+
 // NEVER tested as it should be ! (used once only for now)
 void raydium_init_reset(void)
 {
@@ -92,6 +174,7 @@ raydium_init_lights();
 raydium_fog_init();
 raydium_sky_init();
 raydium_init_objects();
+raydium_object_dl_init();
 raydium_network_init();
 raydium_timecall_init();
 raydium_particle_init();
@@ -100,11 +183,10 @@ raydium_camera_path_init_all();
 raydium_osd_fade_init();
 raydium_console_init();
 raydium_gui_init();
-//#ifndef WIN32
 raydium_live_init();
-//#endif
 raydium_video_init();
 raydium_shadow_init();
+raydium_shadow_object_dl_init();
 raydium_hdr_init();
 raydium_lensflare_init();
 raydium_shader_init();
@@ -291,6 +373,8 @@ raydium_vertex_tag=malloc(RAYDIUM_MAX_VERTICES);
 // must test more than just the last "big" malloc result..
 if(!raydium_vertex_texture) { raydium_log("Out of memory..."); exit(29); }
 raydium_log("vertex arrays memory: OK");
+for(i=0;i<RAYDIUM_MAX_TEXTURES;i++) // reset all textures
+    raydium_texture_memory[i]=0;
 raydium_path_init(); // do this ASAP, before any file is opened
 raydium_random_randomize();
 raydium_init_key();
@@ -304,15 +388,14 @@ raydium_callback_set();
 raydium_php_init();
 #endif
 
+raydium_atexit(raydium_path_dump);
 raydium_atexit(raydium_path_package_update); // As atexit are called in inverse order must be called before disabling php
 raydium_atexit(raydium_sound_close);
 raydium_atexit(raydium_joy_close);
 raydium_atexit(raydium_network_close);
 raydium_atexit(raydium_internal_dump);
 raydium_atexit(raydium_console_history_save);
-#ifndef WIN32
 raydium_atexit(raydium_internal_live_close);
-#endif
 raydium_log("atexit functions: OK");
 raydium_init_reset();
 #ifdef ODE_SUPPORT
@@ -325,8 +408,7 @@ raydium_log("Engine is now ready.\n\t ------------------------------------------
 if(raydium_init_cli_option("autoexec",autoexec))
     raydium_php_exec(autoexec);
 #endif
-if (raydium_init_cli_option("package",str))
-    raydium_path_package_register(str);
+raydium_path_package_register_all_cli();
 }
 
 //Still needs a check of void parameters.

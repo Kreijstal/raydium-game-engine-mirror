@@ -192,4 +192,9 @@ But you can use it to clear all old useless cache entries and get a bit more
 free disk space, why not.
 **/
 
+__rayapi void raydium_path_package_register_all_cli(void);
+/**
+Internal.
+**/
+
 #endif

@@ -184,6 +184,43 @@ raydium_log("shader: Error: No more slots ! aborting \"%s\" creation",name);
 return -1;
 }
 
+signed char raydium_shader_delete(int shader)
+{
+int i;
+
+if(!raydium_shader_support)
+    return 0;
+
+if(!raydium_shader_isvalid(shader))
+    {
+    raydium_log("shader: cannot delete: Invalid shader index or name");
+    return 0;
+    }
+
+glDetachObjectARB(raydium_shader_shaders[shader].prog,raydium_shader_shaders[shader].vert);
+glDeleteObjectARB(raydium_shader_shaders[shader].vert);
+glDetachObjectARB(raydium_shader_shaders[shader].prog,raydium_shader_shaders[shader].frag);
+glDeleteObjectARB(raydium_shader_shaders[shader].frag);
+glDeleteObjectARB(raydium_shader_shaders[shader].prog);
+raydium_shader_shaders[shader].state=0;
+
+// detach from texture
+for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
+    if(raydium_texture_used[i] && raydium_texture_shader[i]==shader)
+        raydium_texture_shader[i]=-1;
+
+return 1;
+}
+
+void raydium_shader_delete_all(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
+    if(raydium_shader_shaders[i].state)
+        raydium_shader_delete(i);
+}
+
 int raydium_shader_variable(int shader, char *name)
 {
 int ret;

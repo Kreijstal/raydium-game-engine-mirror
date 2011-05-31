@@ -44,15 +44,25 @@ __rayapi void raydium_object_draw (GLuint o);
 Draws ##o## (index) object, using current matrixes.
 **/
 
+__rayapi void raydium_object_dl_init(void);
+/**
+Internal.
+**/
+
+__rayapi void raydium_object_dl_delete(void);
+/**
+Internal.
+**/
+
 __rayapi void raydium_object_draw_name (char *name);
 /**
-Same as above, but you only have to provide object's ##name## (".tri file"). 
+Same as above, but you only have to provide object's ##name## (".tri file").
 If this object was not already loaded, this function will do it for you.
 **/
 
 __rayapi void raydium_object_translate(GLuint obj,GLfloat tx,GLfloat ty,GLfloat tz);
 /**
-Modify object center 
+Modify object center
 **/
 __rayapi void raydium_object_deform (GLuint obj, GLfloat ampl);
 /**
@@ -66,13 +76,13 @@ Early devel state. Useless as is.
 
 __rayapi GLfloat raydium_object_find_dist_max (GLuint obj);
 /**
-This function will return will return the distance form (0,0,0) 
+This function will return will return the distance form (0,0,0)
 to the farest point of ##obj## object.
 **/
 
 __rayapi void raydium_object_find_axes_max (GLuint obj, GLfloat * tx, GLfloat * ty, GLfloat * tz);
 /**
-This function returns the (maximum) size of the bounding box 
+This function returns the (maximum) size of the bounding box
 of ##obj## (relative to (0,0,0)).
 **/
 
@@ -111,15 +121,15 @@ Internal (frame callback).
 /**
 Raydium now supports mesh animation, thru MD2 (Quake 2) files. Raydium file
 format was extended to version 2. If you want to create an animated mesh
-for Raydium from a MD2 file, you may use Blender with "import-md2-0.14.py" 
-script ( by Bob Holcomb, http://67.22.114.230:8082/programming/blender/index.html ) 
+for Raydium from a MD2 file, you may use Blender with "import-md2-0.14.py"
+script ( by Bob Holcomb, http://67.22.114.230:8082/programming/blender/index.html )
 and export it back to a tri file using provided "triEXP-MD2-*.py" script.
 All other tasks (loading, transformations, ...) are done the same way as
 regular static mesh.
 
-For Raydium, an animation is a set of "anims", and each "anim" is a set 
+For Raydium, an animation is a set of "anims", and each "anim" is a set
 of "frames". Each "anim" gets its own name (see header of a version 2 file
-for more informations), and since an animated object may be use for many 
+for more informations), and since an animated object may be use for many
 players, Raydium provides an "instances" based system: setting things like
 anim and frame for an object is done only for one instance of this object.
 Instances are always available, no need to create or declare them.
@@ -175,7 +185,7 @@ Same as above, but using ##object##'s name.
 
 __rayapi void raydium_object_anim_automatic(int object, int anim, GLfloat factor);
 /**
-With this function, you can set an automatic frame increment for a specific 
+With this function, you can set an automatic frame increment for a specific
 ##anim## of an ##object##. This increment is based on frame time and ##factor##.
 **/
 

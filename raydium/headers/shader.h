@@ -9,17 +9,17 @@ Shaders
 
 // Introduction
 /**
-Raydium provides a support for OpenGL Shading Language (GLSL). 
+Raydium provides a support for OpenGL Shading Language (GLSL).
 This documentation talks only about Raydium Shader API, and not about
 the Shading Language itself. With Raydium, shaders works by two: you must
 provide a vertex shader and a fragment shader each time. This is a very
-usual way to do. 
+usual way to do.
 
 You must know that **only one** shader can be active at a time.
 Once a shader is loaded, Raydium API allows you to attach this shader to
 a texture, so you don't have to deal manually with activation/deactivation.
 
-You can also change all "uniform" variables from shaders 
+You can also change all "uniform" variables from shaders
 using ##raydium_shader_var_...()## functions.
 Into this set, all functions that does **not** contain the **_name**
 suffix **are only able to deal with current shader !**.
@@ -27,8 +27,8 @@ suffix **are only able to deal with current shader !**.
 You can use the global variable ##raydium_shader_support## to detect if
 current hardware supports GLSL or not (1=OK 0=no shader support).
 
-Raydium automatically feeds the "vec3 tangent" attribute if the shader 
-requests it (you only have to declare this attribute), with a 
+Raydium automatically feeds the "vec3 tangent" attribute if the shader
+requests it (you only have to declare this attribute), with a
 per vertex value. From this, it's easy to generate the binormal
 vector in the shader, using a simple cross product:
 %%vec3 binormal = cross(tangent, gl_Normal);%%
@@ -61,6 +61,16 @@ __rayapi int raydium_shader_load(char *name, char *file_vert, char *file_frag);
 Loads the vertex shader ##file_vert## and the fragment shader ##file_frag##.
 The shader is stored with the provided ##name##. This function returns the
 shader ID or -1 in case of failure.
+**/
+
+__rayapi signed char raydium_shader_delete(int shader);
+/**
+Will delete and detach ##shader##.
+**/
+
+__rayapi void raydium_shader_delete_all(void);
+/**
+Will delete all shaders.
 **/
 
 __rayapi int raydium_shader_variable(int shader, char *name);

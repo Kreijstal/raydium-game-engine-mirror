@@ -805,10 +805,15 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
  {
     munmap(raydium_live_device[i].buffer, raydium_live_device[i].gb_buffers.size);
     close(raydium_live_device[i].fd);
+    if(raydium_live_device[i].capture_style==RAYDIUM_LIVE_CAPTURE_READ)
+        free(raydium_live_device[i].buffer);
+    free(raydium_live_device[i].buffer2);
  }
 #else
     capDriverDisconnect(raydium_live_device[i].hWnd_WC);
     DestroyWindow(raydium_live_device[i].hWnd_WC);
+    free(raydium_live_device[i].buffer);
+    free(raydium_live_device[i].buffer2);
 #endif
 #endif
 }

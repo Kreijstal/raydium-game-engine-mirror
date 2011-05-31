@@ -10,7 +10,7 @@ Particle engine
 // Introduction
 /**
 This is the second version of Raydium's particle engine. This engine is build
-on top of a dedicated file format (.prt and .sprt files), describing most 
+on top of a dedicated file format (.prt and .sprt files), describing most
 (up to all, in facts) properties of generators.
 It probably better to start by an example (fountain.prt) :
 %%(c)
@@ -60,6 +60,11 @@ You can use this function when building a new generator.
 __rayapi void raydium_particle_init (void);
 /**
 Internal use.
+**/
+
+__rayapi void raydium_particle_free_all(void);
+/**
+Will free all particles and re-initialise all generators.
 **/
 
 __rayapi signed char raydium_particle_generator_isvalid (int g);

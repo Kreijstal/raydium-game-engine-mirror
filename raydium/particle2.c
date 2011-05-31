@@ -51,6 +51,19 @@ for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
 raydium_log("particle: OK");
 }
 
+void raydium_particle_free_all(void)
+{
+int i;
+
+for(i=0;i<RAYDIUM_MAX_PARTICLES;i++)
+    if(raydium_particle_particles[i])
+        {
+        free(raydium_particle_particles[i]);
+        raydium_particle_particles[i]=NULL;
+        }
+raydium_particle_init();
+}
+
 signed char raydium_particle_generator_isvalid(int g)
 {
 if(g>=0 && g<RAYDIUM_MAX_GENERATORS && raydium_particle_generators[g].state)

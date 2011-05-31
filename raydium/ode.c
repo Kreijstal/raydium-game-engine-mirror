@@ -228,6 +228,18 @@ raydium_log("physics: ODE Net: %i element(s)/packet",raydium_ode_network_MaxElem
 raydium_log("physics: OK");
 }
 
+void raydium_ode_delete_all(void)
+{
+int i;
+// explosions are not managed !
+// objects + elements + joints + motors + rays + particle generators + lensflares
+for(i=0;i<RAYDIUM_ODE_MAX_OBJECTS;i++)
+    if(raydium_ode_object[i].state)
+        raydium_ode_object_delete(i);
+// ground
+raydium_ode_ground_set_name(NULL);
+}
+
 void raydium_ode_gravity(dReal *vect)
 {
 dWorldSetGravity(raydium_ode_world,vect[0],vect[1],vect[2]);
@@ -353,15 +365,12 @@ static dReal *Vertices;
 static dGeomID geom;
 
 int global;
-char replace=0;
-
 
 if(raydium_ode_ground_mesh>=0)
     {
     //raydium_log("ODE: Error: Cannot change ground at runtime");
     //return;
     // OR
-    replace=1;
     dGeomDestroy(geom);
     dGeomTriMeshDataDestroy(Data);
     /*
@@ -371,6 +380,14 @@ if(raydium_ode_ground_mesh>=0)
     */
     free(Indices);
     free(Vertices);
+    raydium_ode_ground_mesh=-1;
+    raydium_ode_element[0].state=0;
+    }
+
+if(!name)
+    {
+    raydium_log("ODE: ground deleted");
+    return 0;
     }
 
 obj=raydium_object_find_load(name);
@@ -404,7 +421,6 @@ Vertices[k++]=raydium_vertex_y(i+2);
 Vertices[k++]=raydium_vertex_z(i+2);
 }
 
-// There is NO way to delete the ground, yet ...
 Data=dGeomTriMeshDataCreate();
 
 // with newer ODE versions, use the following:
@@ -414,9 +430,6 @@ dGeomTriMeshDataBuildSingle(Data,&Vertices[0],sizeof(dReal)*3,size,&Indices[0],s
 
 geom=dCreateTriMesh(raydium_ode_space, Data, 0, 0, 0);
 
-//if(!replace)
-//    global=raydium_ode_object_create("GLOBAL");
-//else
 global=raydium_ode_object_find("GLOBAL");
 
 raydium_ode_object_colliding(global,1);
@@ -3622,12 +3635,6 @@ if(!raydium_ode_object_isvalid(obj))
     return 0;
     }
 
-if(obj == raydium_ode_object_find("GLOBAL"))
-    {
-    raydium_log("ODE: Error: Cannot delete special \"GLOBAL\" object");
-    return 0;
-    }
-
 f=raydium_ode_object[obj].OnDelete;
     if(f && !f(obj)) return 0; // user cancel
 
@@ -3644,8 +3651,20 @@ for(i=0;i<RAYDIUM_ODE_MAX_MOTORS;i++)
 //    }
 // So i'll search for bodies in my own structures
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    {
+    if(i==0 && raydium_ode_ground_mesh>=0)
+        continue; //protect ground (always 0)
+
     if(raydium_ode_element[i].object==obj)
         raydium_ode_element_delete(i,1);
+    }
+
+if(obj == raydium_ode_object_find("GLOBAL"))
+    {
+    raydium_log("ODE: Warning: Cannot delete special \"GLOBAL\" object itself");
+    raydium_log("ODE: GLOBAL is now empty (you may also delete ground)");
+    return 0;
+    }
 
 dSpaceDestroy(raydium_ode_object[obj].group);
 raydium_ode_init_object(obj);
@@ -4136,7 +4155,6 @@ if(names==RAYDIUM_ODE_DRAW_DEBUG)
 for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
     if(raydium_ode_element[i].state)
      {
-
      if(names==RAYDIUM_ODE_DRAW_NORMAL ||
         names==RAYDIUM_ODE_DRAW_SHADOWERS ||
         names==RAYDIUM_ODE_DRAW_NORMAL_NO_POST)

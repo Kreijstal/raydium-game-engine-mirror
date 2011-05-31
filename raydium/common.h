@@ -497,6 +497,8 @@ __global GLint  raydium_object_index;
 __global GLuint raydium_object_start[RAYDIUM_MAX_OBJECTS];
 __global GLuint raydium_object_end[RAYDIUM_MAX_OBJECTS];
 __global char   raydium_object_name[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_NAME_LEN];
+__global GLuint raydium_object_dl[RAYDIUM_MAX_OBJECTS];
+__global char   raydium_object_dl_state[RAYDIUM_MAX_OBJECTS];
 __global signed char raydium_object_anims[RAYDIUM_MAX_OBJECTS]; // number of anims
 __global GLuint raydium_object_anim_len[RAYDIUM_MAX_OBJECTS]; // len of each anim
 __global GLuint raydium_object_anim_start[RAYDIUM_MAX_OBJECTS][RAYDIUM_MAX_OBJECT_ANIMS];

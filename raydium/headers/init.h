@@ -33,12 +33,29 @@ __rayapi  void raydium_init_key (void);
 Internal use. Must be moved to key.c.
 **/
 
+__rayapi void raydium_init_purgemem(void);
+/**
+The goal of this function is to free and unloads all heavy things in the engine.
+Main targets are textures, objects, vertices and all RayODE entities,
+but dependencies includes live textures, lensflares, shaders, particles,
+shadows, GUI and OSD.
+
+Please, note that the goal of this function is not to reset or restart the
+engine, a lot of things will not be changed (lights, cameras, timecalls,
+viewport, regapi, PHP, network, ... The idea is to free memory, nothing else.
+
+In other words, consider this function as almost useless and only needed for
+some very special cases, when you need to load entire new scenes, many
+times. Raydium is supposed to be able to deal without this function.
+
+Also, the code is still very experimental, and calling context should be
+friendly ! Do not try this in the middle of a callback, for instance.
+**/
+
 __rayapi  void raydium_init_reset (void);
 /**
-This function is supposed to reset the whole Raydium engine:
-textures, vertices, lights, objects, ...
-Never tested yet, and probaly fails for many reasons when called more than
-one time.
+Internal, part of engine initialisation. At first, this function was supposed
+to be able to help restart the engine. It failed.
 **/
 
 __rayapi  void raydium_init_engine (void);

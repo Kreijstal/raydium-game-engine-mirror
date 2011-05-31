@@ -234,6 +234,11 @@ __rayapi void raydium_ode_init (void);
 Will initialize all RayODE interface. Never call this function by yourself.
 **/
 
+__rayapi void raydium_ode_delete_all(void);
+/**
+Will delete all entities, including the ground.
+**/
+
 __rayapi void raydium_ode_gravity(dReal *vect);
 /**
 Change world gravity using ##vect##, a 3 floats arrays.
@@ -527,7 +532,7 @@ Same as above using element name.
 
 __rayapi void raydium_ode_element_rellinearvelocity_get (int e,dReal *vel);
 /**
-Returns element's linear velocity relative to local element axis orientation. 
+Returns element's linear velocity relative to local element axis orientation.
 Linear velocity is an array of 3 x dReal.
 Example: %%(c)
 dReal vel[3];

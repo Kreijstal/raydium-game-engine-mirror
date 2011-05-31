@@ -333,8 +333,6 @@ char packages[1024];
 signed char ok;
 
 raydium_path_reset();
-raydium_atexit(raydium_path_dump);
-//raydium_atexit(raydium_path_package_update); // Must be defined after php atexit as we need php to be active there.
 raydium_path_write_local_dir_allowed=1;
 
 if(raydium_init_cli_option("path",path))
@@ -624,4 +622,12 @@ if (pindex>=RAYDIUM_MAX_PACKAGES_FILES)
 raydium_path_package_mode_internal[pindex]=mode;
 raydium_log("packages: %s mode: %s",raydium_path_package_file[pindex],(mode==RAYDIUM_PATH_PACKAGE_READONLY)?"READONLY":"READWRITE");
 
+}
+
+void raydium_path_package_register_all_cli(void)
+{
+char str[RAYDIUM_MAX_DIR_LEN];
+
+if (raydium_init_cli_option("package",str))
+    raydium_path_package_register(str);
 }
