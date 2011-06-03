@@ -593,7 +593,12 @@ Same as above, 3 dReal.
 
 __rayapi dReal * raydium_ode_element_angularvelocity_get(int elem);
 /**
-Return element angular velocity. Return is aun array of 3 real.
+Return element angular velocity. Return is an array of 3 real.
+**/
+
+__rayapi void raydium_ode_element_angularvelocity_get_3f(int elem, dReal * vrx, dReal * vry, dReal * vrz);
+/**
+Same as above, 3 dReal.
 **/
 
 __rayapi dReal * raydium_ode_element_angularvelocity_get_name(char *elem);

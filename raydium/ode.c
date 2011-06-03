@@ -930,6 +930,15 @@ if(raydium_ode_element[elem].state!=RAYDIUM_ODE_STANDARD)
 return (dReal *)dBodyGetAngularVel(raydium_ode_element[elem].body);
 }
 
+void raydium_ode_element_angularvelocity_get_3f(int elem, dReal * vrx, dReal * vry, dReal * vrz)
+{
+dReal * vr;
+    vr = raydium_ode_element_angularvelocity_get(elem);
+    *vrx=vr[0];
+    *vry=vr[1];
+    *vrz=vr[2];
+}
+
 dReal *raydium_ode_element_angularvelocity_get_name(char *elem)
 {
 return (dReal *)raydium_ode_element_angularvelocity_get(raydium_ode_element_find(elem));
