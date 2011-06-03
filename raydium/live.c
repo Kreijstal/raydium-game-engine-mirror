@@ -799,6 +799,7 @@ void raydium_internal_live_close(void)
 int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
+{
 
 #ifndef WIN32
  if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
@@ -815,6 +816,7 @@ for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
     free(raydium_live_device[i].buffer);
     free(raydium_live_device[i].buffer2);
 #endif
+}
 #endif
 }
 

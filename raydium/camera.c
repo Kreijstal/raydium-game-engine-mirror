@@ -520,7 +520,7 @@ return 1;
 
 void raydium_camera_smooth_path_to_pos(char *path, GLfloat lx, GLfloat ly, GLfloat lz, GLfloat path_step, GLfloat smooth_step)
 {
-GLfloat x,y,z,zoom,roll;
+GLfloat x=0,y=0,z=0,zoom=0,roll=0;
 
 if(raydium_camera_smooth_path(path,path_step,&x,&y,&z,&zoom,&roll)==-1)
     raydium_log("camera path error with '%s'",path);
@@ -530,7 +530,7 @@ raydium_camera_smooth(x,y,z,ly,-lz,lx,zoom,roll,smooth_step);
 
 void raydium_camera_smooth_pos_to_path(GLfloat lx, GLfloat ly, GLfloat lz, char *path, GLfloat path_step, GLfloat smooth_step)
 {
-GLfloat x,y,z,zoom,roll;
+GLfloat x=0,y=0,z=0,zoom=0,roll=0;
 
 if(raydium_camera_smooth_path(path,path_step,&x,&y,&z,&zoom,&roll)==-1)
     raydium_log("camera path error with '%s'",path);
@@ -540,8 +540,8 @@ raydium_camera_smooth(lx,ly,lz,y,-z,x,zoom,roll,smooth_step);
 
 void raydium_camera_smooth_path_to_path(char *path_from, GLfloat path_step_from, char *path_to, GLfloat path_step_to, GLfloat smooth_step)
 {
-GLfloat fx,fy,fz,fzoom,froll;
-GLfloat tx,ty,tz,tzoom,troll;
+GLfloat fx=0,fy=0,fz=0,fzoom=0,froll=0;
+GLfloat tx=0,ty=0,tz=0,tzoom=0,troll=0;
 
 if(raydium_camera_smooth_path(path_from,path_step_from,&fx,&fy,&fz,&fzoom,&froll)==-1)
     raydium_log("camera path error with '%s' (from)",path_from);
