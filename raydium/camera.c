@@ -804,6 +804,11 @@ switch(move)
             dir_x+=push[1]/(raydium_frame_time*6.f);
             rffp_cam_pos_y-=push[2];
             }
+
+        // "5 lines" mouse wheel scrool
+        if(raydium_mouse_click==4) dir_y=5;
+        if(raydium_mouse_click==5) dir_y=-5;
+
     case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
         //60=experimental value
         dir_x *= (raydium_frame_time*60.0f);
