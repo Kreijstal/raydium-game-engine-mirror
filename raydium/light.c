@@ -118,7 +118,7 @@ GLfloat pos[4];
 pos[0]=px;
 pos[1]=py;
 pos[2]=pz;
-pos[3]=0;
+pos[3]=1.0;
 raydium_light_move(l,pos);
 }
 

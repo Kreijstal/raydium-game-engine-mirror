@@ -95,6 +95,17 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
 fname(a,b);\
 }
 
+// void f(int,float)
+#define PHP_v_ifff(fname)\
+ZEND_FUNCTION(fname)\
+{\
+long a;\
+double b,c,d;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "lddd", &a, &b, &c, &d) == FAILURE)  return;\
+fname(a,b,c,d);\
+}
+
 // int f(int,float)
 #define PHP_i_if(fname)\
 ZEND_FUNCTION(fname)\

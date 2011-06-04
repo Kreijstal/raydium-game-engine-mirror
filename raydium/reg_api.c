@@ -34,6 +34,7 @@ PHP_v_v(raydium_light_disable);
 PHP_v_i(raydium_light_on);
 PHP_v_i(raydium_light_off);
 PHP_v_i(raydium_light_switch);
+PHP_v_ifff(raydium_light_move_3f);
 
 // fog.c
 PHP_v_v(raydium_fog_enable);
@@ -251,6 +252,7 @@ raydium_register_function(C2PHP(raydium_light_disable),"raydium_light_disable");
 raydium_register_function(C2PHP(raydium_light_on),"raydium_light_on");
 raydium_register_function(C2PHP(raydium_light_off),"raydium_light_off");
 raydium_register_function(C2PHP(raydium_light_switch),"raydium_light_switch");
+raydium_register_function(C2PHP(raydium_light_move_3f),"raydium_light_move_3f");
 
 // fog.c
 raydium_register_function(C2PHP(raydium_fog_enable),"raydium_fog_enable");
