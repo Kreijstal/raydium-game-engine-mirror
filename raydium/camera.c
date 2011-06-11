@@ -609,18 +609,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 glDisable(GL_SCISSOR_TEST);
 glEnable(GL_STENCIL_TEST); // HDR
 
-
-if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
-    {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(raydium_projection_fov,(GLfloat)sizex/(GLfloat)sizey,
-                   raydium_projection_near,raydium_projection_far);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    }
-
+raydium_window_projection_update();
 }
 
 void raydium_viewport_direct_open_4f(GLfloat x, GLfloat y, GLfloat sizex, GLfloat sizey)
