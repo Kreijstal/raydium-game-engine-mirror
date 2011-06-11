@@ -152,7 +152,8 @@ raydium_file_log_fopen_index=0;
 // *** and perhaps others ? (probably not !)
 // timecalls ?
 // camera / camera paths ?
-// viewport ?
+// viewport
+raydium_viewport_init();
 // regapi / php ?
 // network ?
 // small things like fog/lights/...
