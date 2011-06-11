@@ -171,8 +171,13 @@ if(!file || !strlen(file))
 for(i=0;i<raydium_file_log_fopen_index;i++)
     if(!strcmp(raydium_file_log_fopen[i],file))
         {
-        if ( raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
-            return NULL;
+        if(raydium_file_log_fopen_status[i]==RAYDIUM_FILE_NOT_FOUND)
+	    {
+	    if(strchr(mode,'w')) // a previous read failed, but now we're creating it (or trying to)
+		raydium_file_log_fopen_status[i]=RAYDIUM_FILE_FOUND;
+	    else
+	    	return NULL;
+	    }
         found=1;
         break;
         }
@@ -180,14 +185,13 @@ for(i=0;i<raydium_file_log_fopen_index;i++)
 // use paths
 raydium_path_resolv(file,file2,mode[0]);
 
-do
-    {
+do {
     // local mode ?
     if(strchr(mode,'l') || raydium_init_cli_option("repository-disable",NULL))
         {
-		char mode2[16];
-		strcpy(mode2,mode);
-		raydium_parser_remove(mode2,'l'); // since win32 refuse to open a file with a unknown option ...
+	char mode2[16];
+	strcpy(mode2,mode);
+	raydium_parser_remove(mode2,'l'); // since win32 refuse to open a file with a unknown option ...
         fp= fopen(file2,mode2);
         break;
         }
