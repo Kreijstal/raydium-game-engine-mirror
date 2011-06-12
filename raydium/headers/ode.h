@@ -1106,7 +1106,7 @@ Same as ##raydium_ode_element_rotate_name##, but using 3 dReal values.
 __rayapi void raydium_ode_object_rotate(int obj, dReal *rot);
 /**
 This function will try to rotate object ##obj##.
-For now, rotation is done around the last element of the object.
+For now, rotation is done around the first element of the object.
 ##rot## is a dReal array of 3 values (rx,ry,rz), in radians.
 Warning: arbitrary rotations may lead to unwanted behaviours.
 **/
@@ -1119,6 +1119,30 @@ Same as above, but using object's name.
 __rayapi void raydium_ode_object_rotate_name_3f(char *obj, dReal rx, dReal ry, dReal rz);
 /**
 Same as above, but using 3 dReal values.
+**/
+
+__rayapi void raydium_ode_object_rotq_set(int obj, dReal *qrot);
+/**
+Set absolute rotation Quaternion of object ##obj##.
+
+**/
+
+__rayapi void raydium_ode_object_eulerzyx_get(int obj,dReal * rx, dReal *ry, dReal * rz);
+/**
+Return euler angle of first element (référence) of object ##obj##.
+Euler angles are computed using Rotation matrix R=Rz.Ry.Rx.
+**/
+
+__rayapi void raydium_ode_object_eulerzyx_set(int obj,dReal rx, dReal ry, dReal rz);
+/**
+Set euler angle of object ##obj##, center of rotation is the first element (référence) of the objet.
+Euler angles are computed using Rotation matrix R=Rz.Ry.Rx.
+**/
+
+__rayapi void raydium_ode_object_rotate_rotq(int obj, dReal *rotq);
+/**
+Rotate object ##obj## according to ##rotq## quaternion rotation.
+This is a relative rotation.
 **/
 
 __rayapi void raydium_ode_object_move (int obj, dReal * pos);
@@ -1142,6 +1166,17 @@ Same as above, but using object's name.
 __rayapi void raydium_ode_object_move_name_3f (char *name, dReal x, dReal y, dReal z);
 /**
 Same as above, but using 3 dReal values.
+**/
+
+__rayapi void raydium_ode_object_pos_get(int obj,dReal *pos);
+/**
+Get object ##obj## position, retrun position of first element of the object (reference).
+**/
+
+__rayapi void raydium_ode_object_pos_set(int obj, dReal *new_pos);
+/**
+Set object ##obj## position. Move first element (reference) of object to the new position ##new_pos##.
+And move all others elements keeping original relative position to reference element.
 **/
 
 __rayapi void raydium_ode_object_rotateq (int obj, dReal * rot);
@@ -1168,6 +1203,12 @@ Warning: arbitrary rotations may lead to unwanted behaviours.
 __rayapi void raydium_ode_element_rotate_direction_name (char *e, signed char Force0OrVel1);
 /**
 Same as above, but using element's name.
+**/
+
+__rayapi void raydium_ode_element_rotate_rotq(int elem, dReal *rotq);
+/**
+Rotate element ##elem## relative to element rotation.
+This is a relative rotation.
 **/
 
 __rayapi void raydium_ode_element_mesh_scale(int elem, float scale_factor);
@@ -1526,39 +1567,85 @@ __rayapi dReal *raydium_ode_element_pos_get_name (char *name);
 Same as above, but using element's name.
 **/
 
-__rayapi signed char raydium_ode_element_rotq_get (int j, dReal * res);
+__rayapi signed char raydium_ode_element_rotq_get (int j, dReal * quat);
 /**
 This function will return element ##j##'s current rotation, as an array of
-4 dReal values (quaternion), thru ##res##.
+4 dReal values (quaternion), thru ##quat##.
 No memory allocation will be done.
 **/
 
-__rayapi signed char raydium_ode_element_rotq_get_name (char *name, dReal * res);
+__rayapi signed char raydium_ode_element_rotq_get_name (char *name, dReal * quat);
 /**
 Same as above, but using element's name.
 **/
 
-__rayapi signed char raydium_ode_element_rot_get (int e, dReal * rx, dReal * ry, dReal * rz);
+__rayapi signed char raydium_ode_element_rotq_set (int j, dReal * quat);
+/**
+This function will set element ##j##'s current rotation, as an array of
+4 dReal values (quaternion), thru ##quat##.
+**/
+
+__rayapi signed char raydium_ode_element_rotq_set_name (char *name, dReal * quat);
+/**
+Same as above, but using element's name.
+**/
+
+__rayapi signed char raydium_ode_element_rot_get (int e, dReal * phi, dReal * theta, dReal * psi);
 /**
 This code is experimental. It should returns element ##e##'s current rotation
-using 3 dReal angles, in radians. Do not apply back values to the
-element since there're not "ODE formated".
+using 3 dReal angles, in radians.
+Compute euler angles of element ##e## using R = Transpose (Rz.Ry.Rx) Rotation matrix order.
+This Function is ode compliant with internal ode Euler to Rotation Matrix compute.
+Y axis is associated with theta
+
 **/
-__rayapi signed char raydium_ode_element_rot_get_name (char * name, dReal * rx, dReal * ry, dReal * rz);
+
+__rayapi signed char raydium_ode_element_rot_get_name (char * name, dReal * phi, dReal * theta, dReal * psi);
 /**
 Same as above, but using element's name.
 **/
 
-__rayapi void raydium_ode_element_euler_get_name(char * name, dReal *yaw, dReal *pitch, dReal *roll);
-/** Compute euler angles of element ##name## using R = Rz.Ry.Rx Rotation matrix order.
-Yaw is Z axis rotation, Pitch Y axis, and Roll X axis.
+__rayapi signed char raydium_ode_element_rot_set (int e, dReal phi, dReal theta, dReal psi);
+/**
+This code returns element ##e##'s current rotation using 3 dReal angles, in radians.
+Compute euler angles of element ##e## using R = Transpose (Rz.Ry.Rx) Rotation matrix order.
+This Function is ode compliant with internal ode Euler to Rotation Matrix compute.
 **/
 
-__rayapi void raydium_ode_element_euler_get(int e, dReal *yaw, dReal *pitch, dReal *roll);
+__rayapi signed char raydium_ode_element_rot_set_name (char * name, dReal phi, dReal theta, dReal psi);
+/**
+Same as above, but using element's name.
+**/
+
+__rayapi signed char raydium_ode_element_eulerxyz_get_name(char * name, dReal *rx, dReal *ry, dReal *rz);
+/** Compute euler angles of element ##name## using R = Rx.Ry.Rz Rotation matrix order.
+**/
+
+__rayapi signed char raydium_ode_element_eulerxyz_get(int e, dReal *rx, dReal *ry, dReal *rz);
 /**
 Same as above but using element number.
 **/
 
+__rayapi signed char raydium_ode_element_eulerzyx_get_name(char * name, dReal *rx, dReal *ry, dReal *rz);
+/** Compute euler angles of element ##name## using R = Rz.Ry.Rz Rotation matrix order.
+This function is usefull to find object site (local orientation), as Z rotation is applied first
+X and Y rotation does not depend on word element orientation (plane, ...)
+**/
+
+__rayapi signed char raydium_ode_element_eulerzyx_get(int e, dReal *rx, dReal *ry, dReal *rz);
+/**
+Same as above but using element number.
+**/
+
+__rayapi signed char raydium_ode_element_euler_set_name(char * name, dReal yaw, dReal pitch, dReal roll);
+/** Set rotation matrix of element ##name## using euler angles and matrix R = Rx.Ry.Rz Rotation matrix order.
+Yaw is X axis rotation, Pitch Y axis, and Roll Z axis.
+**/
+
+__rayapi signed char raydium_ode_element_euler_set(int e, dReal yaw, dReal pitch, dReal roll);
+/**
+Same as above but using element number.
+**/
 
 __rayapi void raydium_ode_element_sound_update (int e, int source);
 /**

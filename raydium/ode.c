@@ -22,6 +22,8 @@
 
 #include "ode.h"
 
+#define _R(i,j) R[(i)*4+(j)]
+
 void raydium_ode_name_auto(char *prefix, char *dest)
 {
 static int counter;
@@ -2168,6 +2170,21 @@ void raydium_ode_element_rotate_direction_name(char *e, signed char Force0OrVel1
 raydium_ode_element_rotate_direction(raydium_ode_element_find(e),Force0OrVel1);
 }
 
+void raydium_ode_element_rotate_rotq(int elem, dReal *rotq)
+{
+dReal i_rot[4];
+dReal f_rot[4];
+
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: Cannot rotate element: invalid index or name");
+    return;
+    }
+dGeomGetQuaternion(raydium_ode_element[elem].geom,i_rot);
+dQMultiply0(f_rot,rotq,i_rot);
+raydium_ode_element_rotq_set(elem,f_rot);
+}
+
 void raydium_ode_element_mesh_scale(int elem, float scale_factor)
 {
 if(!raydium_ode_element_isvalid(elem))
@@ -2274,15 +2291,14 @@ raydium_ode_object_OnDelete(raydium_ode_object_find(o),OnDelete);
 }
 
 // move object elements to pos (pos is used for the LAST element of your object)
-void raydium_ode_object_move(int obj, dReal *pos)
+void raydium_ode_object_move(int obj, dReal *new_pos)
 {
 
-int i,n;
-raydium_ode_Element *e;
-dReal *refp;
+int i;
 dReal *act;
 dReal diff[3];
-dReal ref[3];
+dReal ref_pos[3]={0,0,0};
+char ref_ok=0;
 
 if(!raydium_ode_object_isvalid(obj))
     {
@@ -2290,30 +2306,24 @@ if(!raydium_ode_object_isvalid(obj))
     return;
     }
 
-//n=dGeomGroupGetNumGeoms(raydium_ode_object[obj].group);
-n=dSpaceGetNumGeoms(raydium_ode_object[obj].group);
-if(!n) return;
-
-//refp=(dReal *)dGeomGetPosition(dGeomGroupGetGeom(raydium_ode_object[obj].group,0));
-refp=(dReal *)dGeomGetPosition(dSpaceGetGeom(raydium_ode_object[obj].group,0));
-ref[0]=refp[0];
-ref[1]=refp[1];
-ref[2]=refp[2];
-e=dGeomGetData(dSpaceGetGeom(raydium_ode_object[obj].group,0));
-raydium_ode_element_move(e->id,pos);
-
-for(i=1;i<n;i++)
-    {
-    act=(dReal *)dGeomGetPosition(dSpaceGetGeom(raydium_ode_object[obj].group,i));
-    diff[0]=pos[0]+(act[0]-ref[0]);
-    diff[1]=pos[1]+(act[1]-ref[1]);
-    diff[2]=pos[2]+(act[2]-ref[2]);
-    //raydium_log("%f %f %f",act[0],act[1],act[2]);
-    e=dGeomGetData(dSpaceGetGeom(raydium_ode_object[obj].group,i));
-    raydium_ode_element_move(e->id,diff);
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
+        if (raydium_ode_element[i].object==obj){
+            if (!ref_ok){
+                act=raydium_ode_element_pos_get(i);
+                ref_pos[0]=act[0];
+                ref_pos[1]=act[1];
+                ref_pos[2]=act[2];
+                ref_ok=1;
+                raydium_ode_element_move(i,new_pos);
+            }else{
+                act = raydium_ode_element_pos_get(i);
+                diff[0]=new_pos[0]+(act[0]-ref_pos[0]);
+                diff[1]=new_pos[1]+(act[1]-ref_pos[1]);
+                diff[2]=new_pos[2]+(act[2]-ref_pos[2]);
+                raydium_ode_element_move(i,diff);
+            }
+        }
     }
-
-
 }
 
 void raydium_ode_object_move_3f(int obj, float x, float y, float z)
@@ -2337,6 +2347,65 @@ pos[0]=x;
 pos[1]=y;
 pos[2]=z;
 raydium_ode_object_move_name(name,pos);
+}
+
+void raydium_ode_object_pos_get(int obj,dReal *pos)
+{
+int i;
+dReal * act;
+
+if(!raydium_ode_object_isvalid(obj))
+    {
+    raydium_log("ODE: Error: Cannot move object: invalid index or name");
+    return;
+    }
+
+for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    {
+    if (raydium_ode_element[i].object==obj)
+        {
+        act=raydium_ode_element_pos_get(i);
+        pos[0]=act[0];
+        pos[1]=act[1];
+        pos[2]=act[2];
+        return;
+        }
+    }
+}
+
+void raydium_ode_object_pos_set(int obj, dReal *new_pos)
+{
+
+int i;
+dReal *act;
+dReal diff[3];
+dReal ref_pos[3]={0,0,0};
+char ref_ok=0;
+
+if(!raydium_ode_object_isvalid(obj))
+    {
+    raydium_log("ODE: Error: Cannot move object: invalid index or name");
+    return;
+    }
+
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
+        if (raydium_ode_element[i].object==obj){
+            if (!ref_ok){
+                act=raydium_ode_element_pos_get(i);
+                ref_pos[0]=act[0];
+                ref_pos[1]=act[1];
+                ref_pos[2]=act[2];
+                ref_ok=1;
+                raydium_ode_element_move(i,new_pos);
+            }else{
+                act = raydium_ode_element_pos_get(i);
+                diff[0]=new_pos[0]+(act[0]-ref_pos[0]);
+                diff[1]=new_pos[1]+(act[1]-ref_pos[1]);
+                diff[2]=new_pos[2]+(act[2]-ref_pos[2]);
+                raydium_ode_element_move(i,diff);
+            }
+        }
+    }
 }
 
 // rotate object (rotation is done around LAST element of obj)
@@ -2422,6 +2491,149 @@ r[2]=rz;
 raydium_ode_object_rotate_name(obj,r);
 }
 
+void raydium_ode_object_rotq_set(int obj, dReal *qrot)
+{
+int i;
+int ref=0;
+dBodyID body=0;
+dReal ref_pos[3];
+dReal * act;
+dReal *epos; // allocated by raydium_ode_element_pos_get(), see below
+//dReal vect[3];
+dVector3 res;
+dReal fpos[3];
+int ref_ok=0;
+dMatrix3 Rr;
+const dReal * Rf, * Ri;
+
+memset(Rr,0,sizeof(dMatrix3));
+
+if(!raydium_ode_object_isvalid(obj))
+    {
+    raydium_log("ODE: Error: Cannot rotateq object: invalid index or name");
+    return;
+    }
+
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
+        if (raydium_ode_element[i].object==obj){
+            if (!ref_ok){
+                act=raydium_ode_element_pos_get(i);
+                ref_pos[0]=act[0];
+                ref_pos[1]=act[1];
+                ref_pos[2]=act[2];
+                ref=i;
+                body=dBodyCreate(raydium_ode_world);
+                dBodySetPosition(body,ref_pos[0],ref_pos[1],ref_pos[2]);
+                dBodySetRotation(body,dBodyGetRotation(raydium_ode_element[i].body));
+                raydium_ode_element_rotq_set(i,qrot);
+                Rf=dBodyGetRotation(raydium_ode_element[i].body);
+                Ri=dBodyGetRotation(body);
+                dMULTIPLY2_333(Rr,Rf,Ri);
+                ref_ok=1;
+            }else{
+                dMatrix3 Rs;
+                const dReal * Re;
+                Re = dGeomGetRotation(raydium_ode_element[i].geom);
+                dMULTIPLY0_333(Rs,Rr,Re);
+                dGeomSetRotation(raydium_ode_element[i].geom,Rs);
+                epos=raydium_ode_element_pos_get(i);
+                dBodyGetPosRelPoint(body,epos[0],epos[1],epos[2],res);
+                dBodyGetRelPointPos(raydium_ode_element[ref].body,res[0],res[1],res[2],fpos);
+                raydium_ode_element_move(i,fpos);
+            }
+        }
+    }
+dBodyDestroy(body);
+}
+
+void raydium_ode_object_eulerzyx_get(int obj,dReal * rx, dReal *ry, dReal * rz)
+{
+int i;
+
+if(!raydium_ode_object_isvalid(obj))
+    {
+    raydium_log("ODE: Error: Cannot move object: invalid index or name");
+    return;
+    }
+
+for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
+    if (raydium_ode_element[i].object==obj)
+    {
+        raydium_ode_element_eulerzyx_get(i,rx,ry,rz);
+        return;
+    }
+raydium_log ("ODE: Can't get object euler angle, object is empty");
+}
+
+void raydium_ode_object_eulerzyx_set(int obj,dReal rx,dReal ry, dReal rz)
+{
+dMatrix3 R;
+dQuaternion Q;
+
+dReal c1,s1,c2,s2,c3,s3;
+
+c1 = dCos(rz);
+s1 = dSin(rz);
+c2 = dCos(ry);
+s2 = dSin(ry);
+c3 = dCos(rx);
+s3 = dSin(rx);
+_R(0,0) = c1*c2;
+_R(0,1) = c1*s2*s3-s1*c3;
+_R(0,2) = s1*s3+c1*s2*c3;
+_R(0,3) = REAL(0.0);
+_R(1,0) = s1*c2;
+_R(1,1) = s1*s2*s3+c1*c3;
+_R(1,2) = s1*s2*c3-c1*s3;
+_R(1,3) = REAL(0.0);
+_R(2,0) = -s2;
+_R(2,1) = c2*s3;
+_R(2,2) = c2*c3;
+_R(2,3) = REAL(0.0);
+
+dRtoQ(R,Q);
+raydium_ode_object_rotq_set(obj,Q);
+}
+
+void raydium_ode_object_rotate_rotq(int obj, dReal *rotq)
+{
+int i;
+int ref=0;
+dBodyID body=0;
+dReal *ref_pos;
+dReal *epos; // allocated by raydium_ode_element_pos_get(), see below
+//dReal vect[3];
+dVector3 res;
+dReal fpos[3];
+int ref_ok=0;
+
+if(!raydium_ode_object_isvalid(obj))
+    {
+    raydium_log("ODE: Error: Cannot rotateq object: invalid index or name");
+    return;
+    }
+
+    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
+        if (raydium_ode_element[i].object==obj){
+            if (!ref_ok){
+                ref_pos=raydium_ode_element_pos_get(i);
+                ref=i;
+                body=dBodyCreate(raydium_ode_world);
+                dBodySetPosition(body,ref_pos[0],ref_pos[1],ref_pos[2]);
+                dBodySetRotation(body,dBodyGetRotation(raydium_ode_element[i].body));
+                raydium_ode_element_rotate_rotq(i,rotq);
+                ref_ok=1;
+            }else{
+                raydium_ode_element_rotate_rotq(i,rotq);
+                epos=raydium_ode_element_pos_get(i);
+                dBodyGetPosRelPoint(body,epos[0],epos[1],epos[2],res);
+                dBodyGetRelPointPos(raydium_ode_element[ref].body,res[0],res[1],res[2],fpos);
+                raydium_ode_element_move(i,fpos);
+            }
+        }
+    }
+dBodyDestroy(body);
+}
 
 void raydium_ode_joint_suspension(int j, dReal erp, dReal cfm)
 {
@@ -2523,7 +2735,6 @@ e2=raydium_ode_element_find(elem2);
 return raydium_ode_joint_attach_hinge2(name,e1,e2,axe1x,axe1y,axe1z,axe2x,axe2y,axe2z);
 }
 
-
 int raydium_ode_joint_attach_universal(char *name, int elem1, int elem2, dReal posx, dReal posy, dReal posz, dReal axe1x, dReal axe1y, dReal axe1z, dReal axe2x, dReal axe2y, dReal axe2z)
 {
 int i;
@@ -2579,7 +2790,6 @@ e1=raydium_ode_element_find(elem1);
 e2=raydium_ode_element_find(elem2);
 return raydium_ode_joint_attach_universal(name,e1,e2,posx,posy,posz,axe1x,axe1y,axe1z,axe2x,axe2y,axe2z);
 }
-
 
 int raydium_ode_joint_attach_hinge(char *name, int elem1, int elem2, dReal posx, dReal posy, dReal posz, dReal axe1x, dReal axe1y, dReal axe1z)
 {
@@ -3083,121 +3293,165 @@ return raydium_ode_element_pos_get(raydium_ode_element_find(name));
 }
 
 
-signed char raydium_ode_element_rotq_get(int j, dReal * res)
+signed char raydium_ode_element_rotq_get(int j, dReal * quat)
 {
 if(raydium_ode_element_isvalid(j))
     {
-    dGeomGetQuaternion(raydium_ode_element[j].geom,res);
+    dGeomGetQuaternion(raydium_ode_element[j].geom,quat);
     return 1;
     }
 raydium_log("ODE: Error: cannot get element rotation (quaternion): invalid index or name");
 return 0;
 }
 
-signed char raydium_ode_element_rotq_get_name(char *name, dReal * res)
+signed char raydium_ode_element_rotq_get_name(char *name, dReal * quat)
 {
-return raydium_ode_element_rotq_get(raydium_ode_element_find(name),res);
+return raydium_ode_element_rotq_get(raydium_ode_element_find(name),quat);
 }
 
-/*
-signed char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
+signed char raydium_ode_element_rotq_set(int j,dReal *quat)
 {
-// From Andrzej Szombierski <qq@kuku.eu.org> (ODE ML)
-// patched by Daniel Monteiro Basso <dmbasso@inf.ufrgs.br> (ODE ML)
-// but it's not what i want, again.. arrrgh ;)
-const dReal epsilon=0.0000001;
-dReal *matrix;
-dReal c;
-
-if(raydium_ode_element_isvalid(e))
+if(raydium_ode_element_isvalid(j))
     {
-    matrix=(dReal *)dGeomGetRotation(raydium_ode_element[e].geom);
-
-    if(matrix[2] < 1-epsilon && matrix[2] > -1+epsilon)
-    {
-        *ry=-asin(matrix[2]);
-        c=cos(*ry);
-        *rx= atan2(matrix[6]/c,matrix[10]/c);
-        *rz= atan2(matrix[1]/c,matrix[0]/c);
-    }
-    else
-    {
-        *rz=0;
-        *ry=-atan2(matrix[2],0);
-        *rx= atan2(-matrix[9],matrix[5]);
-    }
-    // rad to deg
-    //(*rx)*=180/PI;
-    //(*ry)*=180/PI;
-    //(*rz)*=180/PI;
+    dGeomSetQuaternion(raydium_ode_element[j].geom,quat);
     return 1;
     }
-raydium_log("ODE: Error: cannot get element rotation (3f): invalid index or name");
-return 0;
-}
-*/
-
-signed char raydium_ode_element_rot_get(int e, dReal *rx, dReal *ry, dReal *rz)
-{
-// From Andrzej Szombierski <qq@kuku.eu.org> (ODE ML)
-// Original code version: "absolute" angles
-// Do not apply back returned angles ! (not ODE "formated")
-const dReal epsilon=0.0000001;
-dReal *matrix;
-dReal c;
-
-if(raydium_ode_element_isvalid(e))
-    {
-    matrix=(dReal *)dGeomGetRotation(raydium_ode_element[e].geom);
-
-    if(matrix[8] < 1-epsilon && matrix[8] > -1+epsilon)
-    {
-        *ry=-asin(matrix[8]);
-        c=cos(*ry);
-        *rx= atan2(matrix[9]/c,matrix[10]/c);
-        *rz= atan2(matrix[4]/c,matrix[0]/c);
-    }
-    else
-    {
-        *rz=0;
-        *ry=-atan2(matrix[8],0);
-        *rx= atan2(-matrix[6],matrix[5]);
-    }
-
-    // rad to deg
-    //(*rx)*=180/PI;
-    //(*ry)*=180/PI;
-    //(*rz)*=180/PI;
-    return 1;
-    }
-raydium_log("ODE: Error: cannot get element rotation (3f): invalid index or name");
+raydium_log("ODE: Error: cannot set element rotation (quaternion): invalid index or name");
 return 0;
 }
 
-
-signed char raydium_ode_element_rot_get_name(char *e, dReal *rx, dReal *ry, dReal *rz)
+signed char raydium_ode_element_rotq_set_name(char *name, dReal * quat)
 {
-return raydium_ode_element_rot_get(raydium_ode_element_find(e),rx,ry,rz);
+return raydium_ode_element_rotq_set(raydium_ode_element_find(name),quat);
 }
 
-void raydium_ode_element_euler_get(int e, dReal *yaw, dReal *pitch, dReal *roll)
+signed char raydium_ode_element_rot_get(int e, dReal *phi, dReal *theta, dReal *psi)
 {
 dBodyID b;
 const dReal * R;
 
+if (raydium_ode_element_isvalid(e))
+    {
     b=raydium_ode_element[e].body;
-
+    #define _R(i,j) R[(i)*4+(j)]
+    // Ode work on transpose ZYX rotation matrix
+    // See http://en.wikipedia.org/wiki/Euler_angles
     R = dBodyGetRotation(b);
-    *pitch= -asin(R[8]);
-    *roll=atan2(R[9],R[10]);
-    *yaw=atan2(R[4],R[0]);
+    *theta= -asin(_R(0,2));
+    *phi=atan2(_R(1,2),_R(2,2));
+    *psi=atan2(_R(0,1),_R(0,0));
+    return 1;
+    }
+raydium_log("ODE: Error: cannot get element euler angle: invalid index or name");
+return 0;
 }
 
-void raydium_ode_element_euler_get_name(char * name, dReal *yaw, dReal *pitch, dReal *roll)
+signed char raydium_ode_element_rot_get_name(char *e, dReal *phi, dReal *theta, dReal *psi)
 {
-    raydium_ode_element_euler_get(raydium_ode_element_find(name),yaw,pitch,roll);
+return raydium_ode_element_rot_get(raydium_ode_element_find(e),phi,theta,psi);
 }
 
+signed char raydium_ode_element_rot_set(int e,dReal phi,dReal theta,dReal psi)
+{
+dMatrix3 R;
+dQuaternion Q;
+
+dRFromEulerAngles(R,phi,theta,psi);
+dRtoQ(R,Q);
+return raydium_ode_element_rotq_set(e,Q);
+}
+
+signed char raydium_ode_element_rot_set_name(char *e, dReal rx, dReal ry, dReal rz)
+{
+return raydium_ode_element_rot_set(raydium_ode_element_find(e),rx,ry,rz);
+}
+
+signed char raydium_ode_element_eulerzyx_get(int e, dReal *rx, dReal *ry, dReal *rz)
+{
+dBodyID b;
+const dReal * R;
+
+if (raydium_ode_element_isvalid(e))
+    {
+    b=raydium_ode_element[e].body;
+    // Work on Rz.Ry.Rx rotation Matrix
+    // See http://en.wikipedia.org/wiki/Euler_angles
+    R = dBodyGetRotation(b);
+    *ry= -asin(_R(2,0));
+    *rz=atan2(_R(1,0),_R(0,0));
+    *rx=atan2(_R(2,1),_R(2,2));
+    return 1;
+    }
+raydium_log("ODE: Error: cannot get element euler angle: invalid index or name");
+return 0;
+}
+
+signed char raydium_ode_element_eulerzyx_get_name(char * name, dReal *rx, dReal *ry, dReal *rz)
+{
+    return raydium_ode_element_eulerzyx_get(raydium_ode_element_find(name),rx,ry,rz);
+}
+
+
+signed char raydium_ode_element_eulerxyz_get(int e, dReal *rx, dReal *ry, dReal *rz)
+{
+dBodyID b;
+const dReal * R;
+
+if (raydium_ode_element_isvalid(e))
+    {
+    b=raydium_ode_element[e].body;
+    // Work on Rx.Ry.Rz rotation Matrix
+    // See http://en.wikipedia.org/wiki/Euler_angles
+    R = dBodyGetRotation(b);
+    *ry= asin(_R(0,2));
+    *rz=atan2(-_R(0,1),_R(0,0));
+    *rx=atan2(-_R(1,2),_R(2,2));
+    return 1;
+    }
+raydium_log("ODE: Error: cannot get element euler angle: invalid index or name");
+return 0;
+}
+
+signed char raydium_ode_element_eulerxyz_get_name(char * name, dReal *rx, dReal *ry, dReal *rz)
+{
+    return raydium_ode_element_eulerxyz_get(raydium_ode_element_find(name),rx,ry,rz);
+}
+
+signed char raydium_ode_element_eulerzyx_set(int e,dReal rx, dReal ry, dReal rz)
+{
+// From http://en.wikipedia.org/wiki/Euler_angles
+dMatrix3 R;
+dQuaternion Q;
+
+dReal c1,s1,c2,s2,c3,s3;
+
+c1 = dSin(rz);
+s1 = dCos(rz);
+c2 = dSin(ry);
+s2 = dCos(ry);
+c3 = dSin(rx);
+s3 = dCos(rx);
+_R(0,0) = c1*c2;
+_R(0,1) = c1*s2*s3-s1*c3;
+_R(0,2) = s1*s3+c1*s2*c3;
+_R(0,3) = REAL(0.0);
+_R(1,0) = s1*c2;
+_R(1,1) = s1*s2*s3+c1*c3;
+_R(1,2) = s1*s2*c3-c1*s3;
+_R(1,3) = REAL(0.0);
+_R(2,0) = -s2;
+_R(2,1) = c2*s3;
+_R(2,2) = c2*c3;
+_R(2,3) = REAL(0.0);
+
+dRtoQ(R,Q);
+return raydium_ode_element_rotq_set(e,Q);
+}
+
+signed char raydium_ode_element_eulerzyx_set_name(char * name,dReal rx, dReal ry, dReal rz)
+{
+return raydium_ode_element_eulerzyx_set(raydium_ode_element_find(name),rx,ry,rz);
+}
 void raydium_ode_element_sound_update(int e, int source)
 {
 if(raydium_ode_element_isvalid(e))
