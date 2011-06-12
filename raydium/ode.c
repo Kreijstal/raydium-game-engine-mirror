@@ -2546,7 +2546,7 @@ if(!raydium_ode_object_isvalid(obj))
 dBodyDestroy(body);
 }
 
-void raydium_ode_object_eulerzyx_get(int obj,dReal * rx, dReal *ry, dReal * rz)
+void raydium_ode_object_eulerzyx_get_3f(int obj,dReal * rx, dReal *ry, dReal * rz)
 {
 int i;
 
@@ -2565,7 +2565,12 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
 raydium_log ("ODE: Can't get object euler angle, object is empty");
 }
 
-void raydium_ode_object_eulerzyx_set(int obj,dReal rx,dReal ry, dReal rz)
+void raydium_ode_object_eulerzyx_get(int obj,dReal * rotxyz)
+{
+raydium_ode_object_eulerzyx_get_3f(obj,&rotxyz[0],&rotxyz[1],&rotxyz[2]);
+}
+
+void raydium_ode_object_eulerzyx_set_3f(int obj,dReal rx,dReal ry, dReal rz)
 {
 dMatrix3 R;
 dQuaternion Q;

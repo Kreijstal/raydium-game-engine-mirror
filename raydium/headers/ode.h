@@ -1127,13 +1127,18 @@ Set absolute rotation Quaternion of object ##obj##.
 
 **/
 
-__rayapi void raydium_ode_object_eulerzyx_get(int obj,dReal * rx, dReal *ry, dReal * rz);
+__rayapi void raydium_ode_object_eulerzyx_get_3f(int obj,dReal * rx, dReal *ry, dReal * rz);
 /**
 Return euler angle of first element (référence) of object ##obj##.
 Euler angles are computed using Rotation matrix R=Rz.Ry.Rx.
 **/
 
-__rayapi void raydium_ode_object_eulerzyx_set(int obj,dReal rx, dReal ry, dReal rz);
+__rayapi void raydium_ode_object_eulerzyx_get(int obj,dReal * rotxyz);
+/**
+Same as above using ##rotxyz## vector of 3 elements.
+**/
+
+__rayapi void raydium_ode_object_eulerzyx_set_3f(int obj,dReal rx, dReal ry, dReal rz);
 /**
 Set euler angle of object ##obj##, center of rotation is the first element (référence) of the objet.
 Euler angles are computed using Rotation matrix R=Rz.Ry.Rx.
