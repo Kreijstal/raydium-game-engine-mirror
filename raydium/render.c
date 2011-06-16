@@ -175,7 +175,7 @@ else // "standard" textunit
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_ATM)
   {
-  //glEnable(GL_BLEND);
+  glDisable(GL_BLEND);
   glDepthMask(GL_TRUE);
   glAlphaFunc(GL_GREATER,0.5);
   glEnable (GL_ALPHA_TEST);

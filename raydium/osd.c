@@ -101,7 +101,7 @@ raydium_texture_current_set(tex);
 raydium_rendering_internal_prepare_texture_render(tex);
 
 // useful for rgb() fake textures with raydium_osd_alpha_change()
-if(raydium_osd_color[3])
+if(raydium_osd_color[3]>0 && raydium_osd_color[3]<1)
     glEnable(GL_BLEND);
 
 glColor4fv(raydium_osd_color);
