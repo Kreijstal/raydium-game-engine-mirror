@@ -277,6 +277,12 @@ the camera context, but you should be aware that a few things could break
 when called after a direct viewport.
 **/
 
+__rayapi signed char raydium_viewport_direct_is_mouse_in(void);
+/**
+Reports true (##1##) if mouse in in the current direct viewport.
+Useful to detect if the user clicked the viewport, for instance.
+**/
+
 __rayapi void raydium_camera_freemove(int move);
 /**
 This function is a fast & easy way to create a working camera that can move

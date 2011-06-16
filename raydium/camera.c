@@ -560,6 +560,8 @@ raydium_viewport_use=RAYDIUM_VIEWPORT_NONE;
 
 void raydium_viewport_direct_open(int x, int y, int sizex, int sizey)
 {
+signed char clamped=0;
+
 if (raydium_viewport_use!=RAYDIUM_VIEWPORT_NONE)
     {
     raydium_log ("An other viewport is already enabled");
@@ -578,10 +580,11 @@ raydium_viewport_saved_mouse[1]=raydium_mouse_y;
 raydium_mouse_x=((raydium_mouse_x-x)*((float)raydium_window_tx/sizex));
 raydium_mouse_y=raydium_window_ty-(((raydium_window_ty-raydium_mouse_y-y)*((float)raydium_window_ty/sizey)));
 // and clamp it
-if(raydium_mouse_x<0) raydium_mouse_x=0;
-if(raydium_mouse_y<0) raydium_mouse_y=0;
-if(raydium_mouse_x>=raydium_window_tx) raydium_mouse_x=raydium_window_tx-1;
-if(raydium_mouse_y>=raydium_window_ty) raydium_mouse_y=raydium_window_ty-1;
+if(raydium_mouse_x<0) { raydium_mouse_x=0; clamped=1; }
+if(raydium_mouse_y<0) { raydium_mouse_y=0; clamped=1; }
+if(raydium_mouse_x>=raydium_window_tx) { raydium_mouse_x=raydium_window_tx-1; clamped=1; }
+if(raydium_mouse_y>=raydium_window_ty) { raydium_mouse_y=raydium_window_ty-1; clamped=1; }
+raydium_viewport_direct_mouse_clamped=clamped;
 
 if(raydium_camera_pushed)
     {
@@ -665,6 +668,15 @@ if(raydium_viewport_saved_context)
     }
 
 }
+
+signed char raydium_viewport_direct_is_mouse_in(void)
+{
+if(raydium_viewport_use!=RAYDIUM_VIEWPORT_DIRECT)
+    return 1;
+
+return !raydium_viewport_direct_mouse_clamped;
+}
+
 
 void raydium_viewport_create (char * name,int tx,int ty)
 {

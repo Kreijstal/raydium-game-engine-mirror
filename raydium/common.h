@@ -617,6 +617,7 @@ __global GLint       raydium_viewport_saved_gl_viewport[4];
 __global GLint       raydium_viewport_saved_mouse[2];
 __global GLfloat     raydium_viewport_saved_camera_pos[3];
 __global GLfloat     raydium_viewport_direct_values[4];
+__global signed char raydium_viewport_direct_mouse_clamped;
 
 __global int    raydium_network_socket;
 __global int    raydium_network_uid;
