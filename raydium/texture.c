@@ -51,6 +51,7 @@ char compress=0; // Handle compressed tga texture
 GLuint chunkid;
 char rle;
 char offset;
+char filename_base[RAYDIUM_MAX_NAME_LEN];
 
 // "as" is duplicated ?
 //check if the filename of the texture is already loaded
@@ -79,10 +80,12 @@ for(i=1;i<RAYDIUM_MAX_TEXTURES;i++)
 if(raydium_window_mode==RAYDIUM_RENDERING_NONE)
     simulate=1;
 
-/* is RGB color ? (or texture) */
-if(!strncmp("rgb(",filename,4)) rgb=1; else rgb=0;
+raydium_file_basename(filename_base,filename);
 
-if(!strncmp("ENV",filename,3)) reflect=1;
+/* is RGB color ? (or texture) */
+if(!strncmp("rgb(",filename_base,4)) rgb=1; else rgb=0;
+
+if(!strncmp("ENV",filename_base,3)) reflect=1;
 
 /* is a texture image file ? */
 if(!rgb && !faked)
@@ -369,7 +372,7 @@ if(!simulate)
  if(strstr(filename,".tri."))
     raydium_texture_islightmap[id]=1;
 
- if(!strncmp("ATM",filename,3))                                // TEMP !!
+ if(!strncmp("ATM",filename_base,3))                                // TEMP !!
     {
     raydium_texture_blended[id]=RAYDIUM_TEXTURE_BLEND_ATM;
     blended=RAYDIUM_TEXTURE_BLEND_ATM;
@@ -377,7 +380,7 @@ if(!simulate)
 
  if(!simulate)
  {
-  if(!strncmp("BOX",filename,3) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
+  if(!strncmp("BOX",filename_base,3) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
   {                                                                     // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
@@ -391,7 +394,7 @@ if(!simulate)
 
  filter=raydium_texture_filter;
 
- if(!strncmp("HDR",filename,3))                                // TEMP !!
+ if(!strncmp("HDR",filename_base,3))                                // TEMP !!
     {
     raydium_texture_hdr[id]=1;
     raydium_texture_nolight[id]=1;
