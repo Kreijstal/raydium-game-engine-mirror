@@ -16,6 +16,7 @@
 // proto
 int raydium_init_cli_option(char *option, char *value);
 FILE *raydium_file_fopen(char *path, char *mode);
+void raydium_file_basename(char *dest,char *from);
 
 
 signed char raydium_texture_size_is_correct(GLuint size)
