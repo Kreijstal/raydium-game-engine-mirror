@@ -46,6 +46,7 @@ scandir(dirname, namelist, select, dcomp)
 	struct stat stb;
 	long arraysz;
 	DIR *dirp;
+	int n;
 
 	if ((dirp = opendir(dirname)) == NULL)
 		return(-1);
@@ -54,7 +55,11 @@ scandir(dirname, namelist, select, dcomp)
 	 * estimate the array size by taking the size of the directory file
 	 * and dividing it by a multiple of the minimum size entry.
 	 */
-	arraysz = (stb.st_size / 24);
+
+    n=0;
+    while ((d=readdir(dirp)) !=NULL) n++;
+    rewinddir(dirp);
+	arraysz = (n);
 	names = (struct dirent **)malloc(arraysz * sizeof(struct dirent *));
 	if (names == NULL)
 		return(-1);
