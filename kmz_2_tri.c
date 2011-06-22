@@ -51,14 +51,9 @@ scandir(dirname, namelist, select, dcomp)
 	if ((dirp = opendir(dirname)) == NULL)
 		return(-1);
 
-	/*
-	 * estimate the array size by taking the size of the directory file
-	 * and dividing it by a multiple of the minimum size entry.
-	 */
-
-    n=0;
-    while ((d=readdir(dirp)) !=NULL) n++;
-    rewinddir(dirp);
+	n=0;
+	while ((d=readdir(dirp)) !=NULL) n++;
+	rewinddir(dirp);
 	arraysz = (n);
 	names = (struct dirent **)malloc(arraysz * sizeof(struct dirent *));
 	if (names == NULL)
