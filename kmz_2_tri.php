@@ -607,6 +607,15 @@ function dae_file_name($file_name)
         {
         $source_path=kmz_unzip($file_name);
         $dae_file=$source_path."/models/".filename($file_name).".dae";
+    	if (!file_exists($dae_file))
+    		{
+    		$dae_file=$source_path."/models/untitled.dae";
+    		if (!file_exists($dae_file))
+    			{
+    			printf ("Can't find dae file. Sorry");
+    			die(-1);
+    			}
+    		}
         }
     if (extension($file_name)==='dae')
         {
