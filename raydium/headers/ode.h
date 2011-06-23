@@ -2062,6 +2062,23 @@ but is not managed by RayODE.
 This function will print object with orphans and return total orphan count.
 **/
 
+__rayapi int raydium_ode_ray_launch(dReal *from, dReal *to, dReal max_dist, dReal *touched_dist, dReal *touched_pos, signed char (*filter)(int,int, dContact *));
+/**
+This function will launch a ray from any position to any other on, and will
+report touched element (-1 if none) and the touched position in world coords,
+found in ##touched_pos## (3*dReal array, or NULL).
+
+You must give a maximum distance for the ray, and the function will return
+the distance to the touched element. (##touched_dist##, pointer to dReal)
+
+Parameters ##from## and ##to## are 3*dReal arrays.
+
+You can set a ##filter##, if needed. (or use NULL)
+
+Warning, this function could be a bit costly, since it used a full ODE scene
+collision detection.
+**/
+
 __rayapi int raydium_ode_mouse_pick(dReal dist,dReal pos[3],dReal *depth);
 /**
 Mouse picking function. Return raydium_element pointed by mouse on the screen.
