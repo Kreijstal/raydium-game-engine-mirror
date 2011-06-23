@@ -14,19 +14,21 @@
 //
 // $file_name (input kmz/dae/tri file name) $force_scale(input convert scale applied to all meshes) $verbose(input verbose level).
 
+
 if (empty($file_name))
     {
     //$file_name="test.tri";
     //$file_name="test.dae";
     //$file_name="city.dae";
     //$file_name="tele.kmz";
-    $file_name="";
-    die("kmz_2_tri: ERROR: empty file name! the world will explode !");
+    $file_name="tests.kmz";
+	if (empty($file_name))
+		die("kmz_2_tri: ERROR: empty file name! the world will explode !");
     }
 
 if (empty($force_scale))
     $force_scale=1;
-
+$force_scale = $force_scale *0.0254; //Sketcup output data in inches, working with meters
 if (empty($verbose))
     $verbose=0;
 
@@ -61,20 +63,20 @@ if ($res->length==0)
     $file_name="";
     die(-1);
     }
-$out_file=$dest_path."/".filename($dae_file).".tri";
+$out_file=$dest_path."/".filename($file_name).".tri";
 dprint(0,"kmz_2_tri: Output file: ".$out_file);
 $ftri=fopen($out_file,"w");
 fprintf($ftri,"1\n");
 
 $visual_scene_url=get_attribute("/scene/instance_visual_scene","url");
-$scene_nodes=find_attribute("/library_visual_scenes/visual_scene","id",$visual_scene_url);
+$scene_nodes= find_attribute("/library_visual_scenes/visual_scene","id",$visual_scene_url);
 $scene_nodes=get_childs($scene_nodes);
 
 $matrix=set_identity();
 $n=export_nodes($scene_nodes,$matrix,$scene_nodes);
 
 fclose($ftri);
-kmz_unzip_remove();
+//kmz_unzip_remove();
 $file_name=$ftri;
 die(0);
 
@@ -132,8 +134,14 @@ function export_mesh($mesh,$matrix,$from_node)
     global $faces_indexes,$interleave;
     $nverts=0;
     $triangles=find("triangles",$mesh);
+	$skip=0;
     foreach($triangles as $triangle)
         {
+//    	if ($skip)
+//    		{
+//    		$skip=0;
+//    		continue;
+//    		}
         $texture = texture($triangle,$from_node);
         $input_vectors=find("input",$triangle);
         $interleave=interleave($input_vectors);
@@ -144,11 +152,11 @@ function export_mesh($mesh,$matrix,$from_node)
         $faces_indexes=find_one("p",$triangle);
         $faces_indexes=get_value($faces_indexes);
         $faces_indexes=explode(" ",$faces_indexes);
-        $n=(sizeof($faces_indexes)-1) /$interleave;
+        $n=(sizeof($faces_indexes)) /$interleave;
         for ($indx=0;$indx<$n;$indx++)
             write_vert($indx,$texture);
         $nverts+=$n;
-
+		$skip++;
         }
 
     $polys=find("polylist",$mesh);
@@ -202,6 +210,7 @@ function interleave($inputs)
     $max_offset = max($max_offset,$input->getAttribute("offset"));
     return $max_offset+1;
     }
+
 function parse_inputs($mesh,$input_vectors,&$vxyz,&$vxyz_offset,&$vnxyz,&$vnxyz_offset,&$uv_array,&$uv_offset,&$has_uv)
     {
 
@@ -213,25 +222,54 @@ function parse_inputs($mesh,$input_vectors,&$vxyz,&$vxyz_offset,&$vnxyz,&$vnxyz_
             $vxyz_offset=get_attribute("","offset",$input);
 
             $v1=get_attribute("","source",$input);
-
             $v=find_attribute("vertices","id",$v1,$mesh);
-            $inputv=get_attribute("input","source",$v);
 
-            $source=find_attribute("source","id" ,$inputv,$mesh);
-            $float_array=find_one("float_array",$source);
-            $vcount=get_attribute("","count",$float_array);
-            $vposvals=get_value($float_array);
-            $xyzpos=explode(" ",$vposvals);
+            $inputvs=find("input",$v);
+        	foreach($inputvs as $inputv)
+        		{
+        		if (get_attribute("","semantic",$inputv )=="POSITION")
+        			{
+        			$vs=get_attribute("","source",$inputv);
+        			$source=find_attribute("source","id" ,$vs,$mesh);
+        			$float_array=find_one("float_array",$source);
+        			$vcount=get_attribute("","count",$float_array);
+        			$vposvals=get_value($float_array);
+        			$xyzpos=explode(" ",$vposvals);
 
-            $j=0;
-            for ($i=0;$i<$vcount;$i+=3)
-                {
-                $vxyz[$j][0]=$xyzpos[$i];
-                $vxyz[$j][1]=$xyzpos[$i+1];
-                $vxyz[$j][2]=$xyzpos[$i+2];
-                $j++;
-                }
-            }
+        			$j=0;
+        			for ($i=0;$i<$vcount;$i+=3)
+        				{
+        				$vxyz[$j][0]=$xyzpos[$i];
+        				$vxyz[$j][1]=$xyzpos[$i+1];
+        				$vxyz[$j][2]=$xyzpos[$i+2];
+        				$j++;
+        				}
+        			}
+
+        		if (get_attribute("","semantic",$inputv )=="NORMAL")
+        			{
+        			$vnxyz_offset=0;
+        			$vs=get_attribute("","source",$inputv);
+        			$source=find_attribute("source","id" ,$vs,$mesh);
+        			$float_array=find_one("float_array",$source);
+        			$vcount=get_attribute("","count",$float_array);
+        			$vnormvals=get_value($float_array);
+        			$nxyzpos=explode(" ",$vnormvals);
+
+        			$j=0;
+        			for ($i=0;$i<$vcount;$i+=3)
+        				{
+        				$vnxyz[$j][0]=$nxyzpos[$i];
+        				$vnxyz[$j][1]=$nxyzpos[$i+1];
+        				$vnxyz[$j][2]=$nxyzpos[$i+2];
+        				$j++;
+        				}
+
+        			}
+        		}
+        	}
+
+
         if (get_attribute("","semantic",$input)=="NORMAL")
             {
             $vnxyz_offset=get_attribute("","offset",$input);
@@ -605,6 +643,7 @@ function dae_file_name($file_name)
 
     if (extension($file_name)==='kmz')
         {
+    	kmz_unzip_remove();
         $source_path=kmz_unzip($file_name);
         $dae_file=$source_path."/models/".filename($file_name).".dae";
     	if (!file_exists($dae_file))

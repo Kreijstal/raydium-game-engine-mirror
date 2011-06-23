@@ -157,7 +157,7 @@ int handle;
 char kmzname[RAYDIUM_MAX_NAME_LEN];
 char triname[RAYDIUM_MAX_NAME_LEN];
 char tmp[RAYDIUM_MAX_NAME_LEN];
-float scale=1;
+float scale=25.4;
 int verbose=0;
 
     handle=raydium_gui_window_find("Model" );
@@ -191,6 +191,9 @@ int verbose=0;
 }
 
 void gui_main(){
+
+
+    raydium_gui_theme_load("theme-raydium2.gui");
 
     if (raydium_gui_window_isvalid(handle=raydium_gui_window_find("info")))
         raydium_gui_window_delete_name("info");
@@ -265,6 +268,8 @@ if(raydium_mouse_click==2)
         }
     else
         {
+        raydium_init_purgemem();
+        gui_main();
         raydium_gui_show();
         mode=menu;
         }
