@@ -110,6 +110,8 @@ GLfloat light_color[] = {1.0, 0.9, 0.8, 1.0};
 
 int handle;
 int wdae,wkmz;
+int force_face=0;
+
 char list[RAYDIUM_GUI_DATASIZE];
 
 int filter(const struct dirent *ent)
@@ -157,8 +159,9 @@ int handle;
 char kmzname[RAYDIUM_MAX_NAME_LEN];
 char triname[RAYDIUM_MAX_NAME_LEN];
 char tmp[RAYDIUM_MAX_NAME_LEN];
-float scale=25.4;
+float scale=1.0f;
 int verbose=0;
+
 
     handle=raydium_gui_window_find("Model" );
     raydium_gui_combo_read(handle, raydium_gui_widget_find("list",handle),kmzname);
@@ -167,14 +170,18 @@ int verbose=0;
     scale=atof(tmp);
     verbose=raydium_gui_read_name("Model","edtVerbose",tmp);
     if (verbose>0) verbose=4;
+    
+    force_face=raydium_gui_read_name("Model","edtTwoSides",tmp);
     if (raydium_file_readable(kmzname))
         {
         raydium_register_variable(kmzname,RAYDIUM_REGISTER_STR,"file_name");
         raydium_register_variable(&scale,RAYDIUM_REGISTER_FLOAT,"force_scale");
         raydium_register_variable(&verbose,RAYDIUM_REGISTER_INT,"verbose");
+        raydium_register_variable(&force_face,RAYDIUM_REGISTER_INT,"force_face");
         raydium_file_basename(triname,kmzname);
         strcpy(strrchr(triname,'.'),".tri");
         raydium_php_exec("kmz_2_tri.php");
+        raydium_register_variable_unregister_last();
         raydium_register_variable_unregister_last();
         raydium_register_variable_unregister_last();
         raydium_register_variable_unregister_last();
@@ -191,7 +198,6 @@ int verbose=0;
 }
 
 void gui_main(){
-
 
     raydium_gui_theme_load("theme-raydium2.gui");
 
@@ -240,6 +246,8 @@ void gui_main(){
     wdae=raydium_gui_check_create("edtdae",handle,75,52,".dae",dae);
 
     raydium_gui_check_create("edtVerbose",handle,65,18," Verbose",0);
+    
+    raydium_gui_check_create("edtTwoSides",handle,10,34," Force Single Face",force_face);
 
     raydium_gui_widget_sizes(0,0,18);
     raydium_gui_label_create("Scale",handle,28,25,"Scale :",0,0,0);

@@ -28,7 +28,7 @@ if (empty($file_name))
 
 if (empty($force_scale))
     $force_scale=1;
-$force_scale = $force_scale *0.0254; //Sketcup output data in inches, working with meters
+//$force_scale = $force_scale *0.0254; //Sketcup output data in inches, working with meters
 if (empty($verbose))
     $verbose=0;
 
@@ -39,6 +39,8 @@ if (!file_exists($file_name))
     }
 
 dprint(0,"kmz_2_tri: Converting: ".$file_name);
+if ($force_face)
+    dprint(0,"kmz_2_tri: Forcing single face creation.");
 
 $dest_path=dirname($file_name);
 
@@ -63,6 +65,15 @@ if ($res->length==0)
     $file_name="";
     die(-1);
     }
+$units=$dom->getElementsByTagName("unit");
+if ($units->length>=1)
+    {
+    $unit=$units->item(0);
+    $scale = $unit->getAttribute("meter");
+    $force_scale = $force_scale * $scale;
+    echo "Found unit ".$scale." using ".$force_scale." scale factor";
+    }
+
 $out_file=$dest_path."/".filename($file_name).".tri";
 dprint(0,"kmz_2_tri: Output file: ".$out_file);
 $ftri=fopen($out_file,"w");
@@ -132,16 +143,20 @@ function export_mesh($mesh,$matrix,$from_node)
     {
     global $vxyz,$vxyz_offset,$vnxyz,$vnxyz_offset,$uv_array,$uv_offset,$has_uv;
     global $faces_indexes,$interleave;
+    global $force_face;
     $nverts=0;
     $triangles=find("triangles",$mesh);
 	$skip=0;
     foreach($triangles as $triangle)
         {
-//    	if ($skip)
-//    		{
-//    		$skip=0;
-//    		continue;
-//    		}
+        if ($force_face)
+            if ($skip)
+                {
+                $skip=0;
+                //dprint(0,"Skipping faces");
+                continue;
+                }
+                
         $texture = texture($triangle,$from_node);
         $input_vectors=find("input",$triangle);
         $interleave=interleave($input_vectors);
