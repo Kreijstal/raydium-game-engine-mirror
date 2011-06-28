@@ -1163,7 +1163,17 @@ if(!raydium_joy && raydium_init_cli_option("joy-emul",name))
                 {
                         raydium_log("This joystick has %d buttons",raydium_joy_n_buttons);
                 }
+
+        // Linux blacklist:
+        // Microsoft Wired Keyboard 600 create a spurious joystick device
+        if(!strcmp(raydium_joy_name,"Microsoft Wired Keyboard 600"))
+            {
+            raydium_log("Joystick blacklisted ! Now disabled.");
+            raydium_joy=0;
+            }
+
         }
+
 #else
     {
         JOYINFO structtmp;
