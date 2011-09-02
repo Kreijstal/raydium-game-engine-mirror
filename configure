@@ -414,7 +414,7 @@ if(!strcmp(r,"Mesa GLX Indirect"))
 #endif
 return 0; }
 '
-    test_build "GL/GLU hardware support" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU"
+    test_build "GL/GLU hardware support" "$file" "-L/usr/X11R6/lib/ -lGL -lGLU -lX11"
     exit_if_error "$?" "Full GL test failed, see configure.log (or use --disable-x to disable test)"
 else
     echo " DISABLED";
@@ -422,7 +422,7 @@ fi
 
 # GLEW ("The OpenGL Extension Wrangler Library")
 # Using previous "file" (GL/GLU test)
-test_build "GLEW" "$file" "-DUSE_GLEW -L/usr/X11R6/lib/ -lGL -lGLU -lGLEW"
+test_build "GLEW" "$file" "-DUSE_GLEW -L/usr/X11R6/lib/ -lGL -lGLU -lGLEW -lX11"
 exit_if_error "$?" "You must install libglew devel package"
 
 

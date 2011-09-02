@@ -56,7 +56,12 @@ fi
 if [ -f test ]; then
     rm test
 fi
-$CC "$1" -g -Wall -DFORCE_LIBRAYDIUM $EXTRA_GCC_FLAGS -O2 -o test libraydium.so \
+
+
+# Needed because of Fedora's explicit DSO linking
+EXTRA_APPS_LIBS="-lGL -lGLEW -lm"
+
+$CC "$1" -g -Wall -DFORCE_LIBRAYDIUM $EXTRA_GCC_FLAGS -O2 -o test libraydium.so $EXTRA_APPS_LIBS \
 -Iraydium/php/ -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM \
 -Iraydium/ode/include/ $AR_PATH_INCLUDE $AR_PATH_LIBS $LIBWII_PATH_INCLUDE $LIBWII_ADDS $ODYNCOMP_FLAGS
 
