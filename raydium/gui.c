@@ -102,7 +102,6 @@ int raydium_gui_theme_load(char *filename)
     char val_s[RAYDIUM_MAX_NAME_LEN];
     GLfloat val_f[4];
     int size;
-    char done;
 
     fp=raydium_file_fopen(filename,"rt");
     if (!fp)
@@ -116,8 +115,6 @@ int raydium_gui_theme_load(char *filename)
 
     while ( (ret=raydium_parser_read(var,val_s,val_f,&size,fp))!=RAYDIUM_PARSER_TYPE_EOF)
     {
-        done=0;
-
         if (!strcasecmp(var,"texture"))
         {
             int t;
@@ -134,7 +131,6 @@ int raydium_gui_theme_load(char *filename)
                 return 0;
             }
             raydium_gui_theme_current.texture=t;
-            done=1;
         }
 
         if (!strcasecmp(var,"font"))
@@ -151,7 +147,6 @@ int raydium_gui_theme_load(char *filename)
                 strcpy(raydium_gui_theme_current.font,val_s);
             else
                 raydium_log("gui: parser: load: cannt load font '%s'",val_s);
-            done=1;
         }
 
         if (!strcasecmp(var,"texture_size"))
@@ -164,7 +159,6 @@ int raydium_gui_theme_load(char *filename)
             // cast floats to ints
             raydium_gui_theme_current.texture_size[0]=(int)val_f[0];
             raydium_gui_theme_current.texture_size[1]=(int)val_f[1];
-            done=1;
         }
 
         if (!strcasecmp(var,"background"))
@@ -175,7 +169,6 @@ int raydium_gui_theme_load(char *filename)
                 continue;
             }
             memcpy(raydium_gui_theme_current.background_uv,val_f,sizeof(GLfloat)*4);
-            done=1;
         }
         /*
         // We're only parsing "general" properties: no need to reports unknown ones

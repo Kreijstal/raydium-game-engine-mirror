@@ -1289,11 +1289,11 @@ raydium_log("network: disconnected");
 
 signed char raydium_server_accept_new(struct sockaddr *from, char *name)
 {
-int socklen,i,n;
+int i,n;
 char str[RAYDIUM_NETWORK_PACKET_SIZE];
 void (*f)(int);
 
-socklen=sizeof(struct sockaddr);
+//socklen=sizeof(struct sockaddr);
 
  for(i=0,n=-1;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
   if(!raydium_network_client[i]) {n=i; break;}

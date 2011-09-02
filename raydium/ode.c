@@ -4724,7 +4724,8 @@ char gencontact;
 static  dContact contact[N];
 dJointID c;
 raydium_ode_Element *e1, *e2;
-int ground_elem_id,distan_obj_id,ray_id;
+int ray_id;
+//int distan_obj_id,ground_elem_id;
 dReal erp=0;
 dReal cfm=0;
 dReal slip=0;
@@ -4752,13 +4753,13 @@ if(dGeomIsSpace (o1) || dGeomIsSpace (o2))
     return;
     }
 
-ground_elem_id=raydium_ode_element_find("ground");
-distan_obj_id=raydium_ode_object_find("DISTANT");
-
 e1=dGeomGetData(o1);
 e2=dGeomGetData(o2);
 
 /*
+  ground_elem_id=raydium_ode_element_find("ground");
+  distan_obj_id=raydium_ode_object_find("DISTANT");
+
   // avoid "ground - distant elements" contacts (may do it for all static-static contacts ?)
   if(e1->id == ground_elem_id && e2->object == distan_obj_id)
     return;

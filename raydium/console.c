@@ -9,7 +9,7 @@
 #include "index.h"
 #else
 #include "headers/console.h"
-#endif 
+#endif
 
 // proto
 void raydium_console_exec_last_command(void);
@@ -81,7 +81,7 @@ fclose(fp);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Now DISABLED, 
+// Now DISABLED,
 // use raydium_console_gets_callback fptr instead.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int raydium_console_gets(char *where)
@@ -102,7 +102,7 @@ void raydium_console_history_previous(void)
 {
 raydium_console_history_index_current--;
 
-if(raydium_console_history_index_current<0) 
+if(raydium_console_history_index_current<0)
     {
     raydium_console_history_index_current=0;
     return;
@@ -298,7 +298,7 @@ void raydium_console_draw(void)
 {
 GLfloat y,off;
 int i,cpt;
-int texsave;
+//int texsave;
 char *hist[RAYDIUM_CONSOLE_MAX_LINES];
 
 raydium_console_pos+=raydium_console_inc*(raydium_frame_time*100);
@@ -308,7 +308,7 @@ if(raydium_console_pos<0)
  raydium_console_pos=0;
  raydium_console_inc=0;
  }
- 
+
 if(raydium_console_pos>raydium_console_config_max)
  {
  raydium_console_pos=raydium_console_config_max;
@@ -318,7 +318,7 @@ if(raydium_console_pos>raydium_console_config_max)
 if(!raydium_console_pos) return;
 
 raydium_osd_start();
-texsave=raydium_texture_current_main;
+//texsave=raydium_texture_current_main;
 raydium_texture_current_set_name(raydium_console_config_texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 
@@ -352,7 +352,7 @@ for(i=cpt-1;i>=0;i--)
  y+=(RAYDIUM_CONSOLE_FONT_SIZE/6.f);
  }
 
-//raydium_texture_current_set(texsave); 
+//raydium_texture_current_set(texsave);
 //raydium_rendering_internal_prepare_texture_render(raydium_texture_current);
 }
 
@@ -394,7 +394,7 @@ for(i=(len-1);i>=0;i--)
     }
 if(i==-1) i=0; // first word of sentence
 
-//if(i<0 || !raydium_console_internal_isalphanumuscore(str[i])) 
+//if(i<0 || !raydium_console_internal_isalphanumuscore(str[i]))
     //return; // empty word
 
 word_offset=i;
@@ -435,7 +435,7 @@ if(n_candidates==1)
     {
     str[word_offset]=0;
     if(strlen(str)+strlen(candidates[0]) >= (RAYDIUM_MAX_NAME_LEN-1))
-        return; 
+        return;
     strcat(str,candidates[0]);
     if(candidates_type[0])
         strcat(str,"(");
@@ -443,7 +443,7 @@ if(n_candidates==1)
         strcat(str," ");
     return;
     }
-    
+
 // 3 - more than one candidate : display candidates and find the common root
 raydium_console_line_add("> %s",str);
 

@@ -246,8 +246,8 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 {
   char *displayName = NULL;
   int i;
-  int origin[2];
-  int size[2];
+  //int origin[2];
+  //int size[2];
   int DispX,DispY; // X screen size
 
   XSetWindowAttributes attribs ;
@@ -357,10 +357,10 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   FullscreenFlag = 1;
   }
 
-  origin [ 0 ] = x ;
+  /*origin [ 0 ] = x ;
   origin [ 1 ] = y ;
   size   [ 0 ] = w ;
-  size   [ 1 ] = h ;
+  size   [ 1 ] = h ;*/
 
   for (i = 0 ; preferred_pixel_formats [ i ] . num_samples >= 0 ; i++ )
   {

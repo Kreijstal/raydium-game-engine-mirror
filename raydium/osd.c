@@ -165,7 +165,7 @@ void raydium_osd_printf(GLfloat x, GLfloat y, GLfloat size, GLfloat spacer,char 
 {
 char str[RAYDIUM_MAX_NAME_LEN];
 va_list argptr;
-int i,texsave;
+int i;
 GLfloat dx=0;
 GLfloat dy=0;
 unsigned char ligne,offset;
@@ -179,7 +179,7 @@ vsprintf(str,format,argptr);
 va_end(argptr);
 
 raydium_osd_start();
-texsave=raydium_texture_current_main;
+//texsave=raydium_texture_current_main;
 raydium_texture_current_set_name(texture);
 raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
 

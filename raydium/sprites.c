@@ -39,7 +39,7 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
 {
 
     GLfloat TSIZE;
-    int texsave;
+    //int texsave;
     TSIZE=size;
 
     //this could be done faster with a bit operation changing variables with one array?
@@ -52,7 +52,7 @@ void raydium_sprite_billboard(float x, float y, float z,float ux, float uy, floa
     ry*=TSIZE/2;
     rz*=TSIZE/2;
 
-    texsave=raydium_texture_current_main;
+    //texsave=raydium_texture_current_main;
     raydium_texture_current_set(textureid);
     raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
      glBegin(GL_QUADS); // berk... but i'll switch to triangles one day ;)
