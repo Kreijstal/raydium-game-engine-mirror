@@ -97,6 +97,11 @@ GLuint glGenLists(GLsizei range)
     return 0;
 }
 
+void glDeleteLists(GLuint list, GLsizei range)
+{
+    return;
+}
+
 void glEnd(void)
 {
     if(ogles_vertices>0 && ogles_started)
@@ -211,6 +216,15 @@ GLint gluBuild2DMipmaps(GLenum target, GLint internalFormat, GLsizei width, GLsi
     glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, data);
 
     return 0;
+}
+
+// Not seems to be available in the iOS SDK ... why ?
+void glLoadMatrixd(const GLdouble *m)
+{
+GLfloat mf[16];
+int i;
+for(i=0;i<16;i++) mf[i]=m[i];
+glLoadMatrixf(mf);
 }
 
 #endif
