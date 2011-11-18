@@ -143,8 +143,6 @@ raydium_window_ratio=tx/(float)ty;
 if(glutGet(GLUT_WINDOW_INVRATIO))
     raydium_window_ratio=1.f/raydium_window_ratio;
 
-raydium_log("inv=%i",glutGet(GLUT_WINDOW_INVRATIO));
-
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
 
