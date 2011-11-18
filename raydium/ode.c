@@ -163,8 +163,13 @@ if(sizeof(dReal) != sizeof(float))
     exit(34);
     }
 
-#ifdef dInitODE
+#ifdef IPHONEOS
+// need to force this for current iOS SDK
 dInitODE();
+#else
+# ifdef dInitODE
+  dInitODE();
+# endif
 #endif
 
 raydium_ode_ExplosionCallback=NULL;
