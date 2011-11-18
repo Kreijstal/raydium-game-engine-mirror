@@ -774,6 +774,7 @@ void pwInit(int x, int y, int w, int h, int multisample, char *title, int border
 
     _glutWindowSize[0] = size[0];
     _glutWindowSize[1] = size[1];
+    _glutWindowInverseRatio = 0;
 
     glClear(GL_COLOR_BUFFER_BIT);
     glutSwapBuffers();

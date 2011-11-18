@@ -140,6 +140,10 @@ else
     }
 
 raydium_window_ratio=tx/(float)ty;
+if(glutGet(GLUT_WINDOW_INVRATIO))
+    raydium_window_ratio=1.f/raydium_window_ratio;
+
+raydium_log("inv=%i",glutGet(GLUT_WINDOW_INVRATIO));
 
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
@@ -150,7 +154,7 @@ glOrtho(raydium_projection_left,raydium_projection_right,
         raydium_projection_near,raydium_projection_far);
 
 if(raydium_projection==RAYDIUM_PROJECTION_PERSPECTIVE)
-gluPerspective(raydium_projection_fov,(GLfloat)tx/(GLfloat)ty,
+gluPerspective(raydium_projection_fov,raydium_window_ratio,
                raydium_projection_near,raydium_projection_far);
 
 // Rotate the content to fit the landscape mode on the iPhone OS.

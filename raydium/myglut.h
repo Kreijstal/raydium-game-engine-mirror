@@ -56,6 +56,7 @@
 #define GLUT_WINDOW_HEIGHT              103
 #define GLUT_WINDOW_DEPTH_SIZE          106
 #define GLUT_WINDOW_CURSOR              122
+#define GLUT_WINDOW_INVRATIO		256
 
 #define GLUT_CURSOR_LEFT_ARROW          1
 #define GLUT_CURSOR_NONE                101
@@ -68,6 +69,7 @@
 
 // ------------------- variables
 __global int _glutWindowSize[2];
+__global signed char _glutWindowInverseRatio;
 __global signed char _glutMouseVisible;
 
 // callbacks:

@@ -109,6 +109,8 @@ switch(enu)
         return _glutWindowSize[0];
     case GLUT_WINDOW_HEIGHT:
         return _glutWindowSize[1];
+    case GLUT_WINDOW_INVRATIO:
+	return _glutWindowInverseRatio;
     default:
         raydium_log("(my)glutGet: ERROR: unknown 'enu' %i",enu);
     }

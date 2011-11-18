@@ -22,6 +22,7 @@ static int raydium_argc;
 static char **raydium_argv;
 extern int raydium_main(int argc, char **argv);
 extern int _glutWindowSize[2];
+extern signed char _glutWindowInverseRatio;
 
 jmp_buf raydium_environment;
 extern jmp_buf *raydium_jump_environment();
@@ -71,11 +72,12 @@ static int MyGLUTContentsScale;
 
 - (id) initWithFrame: (CGRect) frame
 {
-
 #ifndef IPHONEOS_ORIENTATION_PORTRAIT
+    _glutWindowInverseRatio=1;
     int w=480;
     int h=320;
 #else
+    _glutWindowInverseRatio=0;
     int w=320;
     int h=480;
 #endif
@@ -83,13 +85,20 @@ static int MyGLUTContentsScale;
     float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
     if(ver>3.2)
         {
+        int ww,hh;
         UIScreen* mainscr = [UIScreen mainScreen];
+        ww = mainscr.currentMode.size.height;
+        hh = mainscr.currentMode.size.width;
 #ifndef IPHONEOS_ORIENTATION_PORTRAIT
-        w = mainscr.currentMode.size.height;
-        h = mainscr.currentMode.size.width;
+        if(ww>hh)
+	    { w=ww; h=hh; }
+	else
+	    { w=hh; h=ww; } // iPad 2 seems to reverse a few things ...
 #else
-        w = mainscr.currentMode.size.width;
-        h = mainscr.currentMode.size.height;
+        if(ww<hh)
+	    { w=ww; h=hh; }
+	else
+	    { w=hh; h=ww; }
 #endif
         }
 #endif

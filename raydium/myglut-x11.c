@@ -489,6 +489,7 @@ void pwInit ( int x, int y, int w, int h, int multisample,
 
   _glutWindowSize[0]=sizeHints.width;
   _glutWindowSize[1]=sizeHints.height;
+  _glutWindowInverseRatio=0;
 
   if(FullscreenFlag)
        XGrabKeyboard(currDisplay,currHandle,False,GrabModeAsync,GrabModeAsync,CurrentTime);

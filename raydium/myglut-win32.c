@@ -439,6 +439,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
       size[1] = HIWORD(lParam) ;
       _glutWindowSize[0]=size[0];
       _glutWindowSize[1]=size[1];
+      _glutWindowInverseRatio=0;
       if (glutReshapeFuncCB)
             glutReshapeFuncCB(size[0], size[1]);
       break;
