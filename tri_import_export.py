@@ -114,7 +114,7 @@ def build_vertex_color_list(i_vert,i_face,me):
 def build_uv_texture_list(i_vert,i_face,me,obj):
     tex_list=[]
     for uvt in me.uv_textures:            
-        if uvt.data[i_face].use_image:
+        if uvt.data[i_face].image!=None:
             if i_vert==0:
                 uv=uvt.data[i_face].uv1
             if i_vert==1:
@@ -126,17 +126,20 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
                 image=uvt.data[i_face].image
                 image.file_format='TARGA'
                 image.filepath_raw=os.path.basename(image.filepath).split('.')[0]+'.tga'
-                image.save()
+                try:
+                    image.save()
+                except:
+                    pass
                 texture=os.path.basename(uvt.data[i_face].image.filepath)
                 
             tex_list.append({'u':uv[0],'v':uv[1],'tex':texture})  
 
-        if uvt.data[i_face].use_object_color:
-            r=obj.color[0]
-            g=obj.color[1]
-            b=obj.color[2]
-            texture=("rgb(%3.2f,%3.2f,%3.2f)"%(r,g,b))
-            tex_list.append({'u':0.0,'v':0.0,'tex':texture})
+#        if uvt.data[i_face].use_object_color:
+#            r=obj.color[0]
+#            g=obj.color[1]
+#            b=obj.color[2]
+#            texture=("rgb(%3.2f,%3.2f,%3.2f)"%(r,g,b))
+#            tex_list.append({'u':0.0,'v':0.0,'tex':texture})
 
     return tex_list
             
@@ -172,7 +175,11 @@ def export_mesh(obj,f):
             f.write("  %f %f %s"%(tex['u'],tex['v'],tex['tex']))
             tex_list.remove(tex)
             for tex in tex_list:
-                f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))                                       
+                #ugly way to specify a texture without real uv mapping
+                if (tex['u']!=-99999) and (tex['v']!=-99999):
+                    f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))
+                else:
+                    f.write(";%s"%(tex['tex']))
 
             f.write("\n")
     #bpy.data.meshes.remove(me)    
@@ -328,9 +335,17 @@ def read_some_data(context,filepath,clean_mesh):
         for it  in t:
             #print (it)
             iit=it.split('|')
-            tu.append(float(iit[0]))
-            tv.append(float(iit[1]))
-            tt.append(iit[2])
+            #u and v coordinate and texture name
+            if len(iit)==3:
+                tu.append(float(iit[0]))
+                tv.append(float(iit[1]))
+                tt.append(iit[2])
+                
+            #only texture name
+            if len(iit)==1:
+                tu.append(-99999)
+                tv.append(-99999)
+                tt.append(iit[0])
         
         ntt=0 # number of texture layers
         ntc=0 # number of vertex color layers
@@ -362,7 +377,7 @@ def read_some_data(context,filepath,clean_mesh):
                     bpy.data.images.load(t)
                 im=bpy.data.images.get(t)                        
                 me.uv_textures[ntt-1].data[nf].image=im
-                me.uv_textures[ntt-1].data[nf].use_image=True
+                #me.uv_textures[ntt-1].data[nf].use_image=True
                 if(nv%3)==0:
                     me.uv_textures[ntt-1].data[nf].uv1=[tu[i],tv[i]]
                 if(nv%3)==1:
@@ -507,25 +522,25 @@ if __name__ == "__main__":
     
     #bpy.ops.export.raydium_tri('INVOKE_DEFAULT')
     #bpy.ops.import_mesh.raydium_tri('INVOKE_DEFAULT')
-
-    try:
-        bpy.ops.object.mode_set(mode='OBJECT')
-    except:
-        pass
-    print ('remove object')
-    bpy.ops.object.select_all(action='SELECT')
-    bpy.ops.object.delete()
-    print ('removed')
-    
-    try:
-        while 1:
-            print ('remove mesh')
-            bpy.data.meshes.remove(bpy.data.meshes[0])
-            print ('removed')
-    except:
-        pass    
-    
-    #read_some_data(bpy.context,'C:\\raydium_win32_sdk_1041\\bin\\Cube.smooth.053.tri')
-    now=time.time()   
-    read_some_data(bpy.context,'C:\\raydium_win32_sdk_1041\\bin\\a.tri',True)
-    print ("Elapsed: %f."%(time.time()-now))
+    if (0) :
+        try:
+            bpy.ops.object.mode_set(mode='OBJECT')
+        except:
+            pass
+        print ('remove object')
+        bpy.ops.object.select_all(action='SELECT')
+        bpy.ops.object.delete()
+        print ('removed')
+        
+        try:
+            while 1:
+                print ('remove mesh')
+                bpy.data.meshes.remove(bpy.data.meshes[0])
+                print ('removed')
+        except:
+            pass    
+        
+        #read_some_data(bpy.context,'C:\\raydium_win32_sdk_1041\\bin\\Cube.smooth.053.tri')
+        now=time.time()   
+        read_some_data(bpy.context,'C:\\raydium_win32_sdk_1041\\bin\\a.tri',True)
+        print ("Elapsed: %f."%(time.time()-now))
