@@ -11,6 +11,10 @@ active_object_mode=''
 temp_object=None
 all_scene=True
 
+#texture swap count
+texture_swap_count=0
+current_texture_list=[]
+
 def save_state(context):
     global active_object,selected_objects,active_object_mode
     
@@ -95,6 +99,7 @@ def export_vertice(vert,face,me,obj,f):
     f.write("  %+0f %+0f %+0f"%(n[0],n[1],n[2]))
 
 def build_vertex_color_list(i_vert,i_face,me):
+       
     tex_list=[]
     for vcol in me.vertex_colors:
         if i_vert==0:
@@ -112,7 +117,10 @@ def build_vertex_color_list(i_vert,i_face,me):
     return tex_list
 
 def build_uv_texture_list(i_vert,i_face,me,obj):
+    global texture_swap_count,current_texture_list
+    
     tex_list=[]
+    tex_name_list=[]
     for uvt in me.uv_textures:            
         if uvt.data[i_face].image!=None:
             if i_vert==0:
@@ -122,10 +130,15 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
             if i_vert==2:
                 uv=uvt.data[i_face].uv3
             texture=os.path.basename(uvt.data[i_face].image.filepath)
+            
+            name=uvt.data[i_face].image.name
+            if (tex_name_list.count(name)==0):
+                tex_name_list.append(name)
+                
             if not(os.path.isfile(texture)) or uvt.data[i_face].image.file_format!='TARGA':
                 image=uvt.data[i_face].image
                 image.file_format='TARGA'
-                image.filepath_raw=os.path.basename(image.filepath).split('.')[0]+'.tga'
+                image.filepath_raw=os.path.basename(image.filepath).rsplit('.',1)[0]+'.tga'
                 try:
                     image.save()
                 except:
@@ -134,28 +147,84 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
                 
             tex_list.append({'u':uv[0],'v':uv[1],'tex':texture})  
 
-#        if uvt.data[i_face].use_object_color:
-#            r=obj.color[0]
-#            g=obj.color[1]
-#            b=obj.color[2]
-#            texture=("rgb(%3.2f,%3.2f,%3.2f)"%(r,g,b))
-#            tex_list.append({'u':0.0,'v':0.0,'tex':texture})
-
+    for i in range(len(tex_name_list)):
+        try:
+            if (tex_name_list[i]!=current_texture_list[i]):
+                current_texture_list[i]=tex_name_list[i]
+                texture_swap_count+=1
+        except:
+            current_texture_list.append(tex_name_list[i])
+            texture_swap_count+=1
+    
     return tex_list
-            
-        
+
+def selected(faces):
+
+    bpy.ops.object.mode_set(mode='OBJECT')
+    n=0
+    for face in faces:
+        if face.select:
+            n=n+1 
+    bpy.ops.object.mode_set(mode='EDIT')    
+    return n
+
+def unselect_unhide():
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='DESELECT')
+    bpy.ops.mesh.reveal()
+    bpy.ops.object.mode_set(mode='OBJECT')        
+    return
+
+def select_same_image():
+    bpy.ops.object.mode_set(mode='EDIT')            
+    bpy.ops.mesh.select_similar(type='IMAGE')   
+    bpy.ops.object.mode_set(mode='OBJECT')        
+    return   
+
+def hide_unselected():
+    bpy.ops.object.mode_set(mode='EDIT')                
+    bpy.ops.mesh.hide(unselected=True)
+    bpy.ops.object.mode_set(mode='OBJECT')         
+
 def export_mesh(obj,f):
+    
     me=obj.data
+
     #me=obj.to_mesh(scene=bpy.context.scene,apply_modifiers=True,settings='RENDER')
     
     nf=len(me.faces)
     lper=-11
     print ("Exporting mesh %s, %d faces, %d vertices"%(obj.data.name,len(me.faces),len(me.vertices)))
-    for i_face,face in enumerate(me.faces):
 
-        per=((i_face+1)*100)/nf
+    cpt=0 
+#    for i_tface,tface in enumerate(me.faces):
+
+    faces_array=[['',i] for i in range(nf)]
+        
+
+    print ("Working on %d faces" % len(me.faces))
+    
+    print ("Building faces texture list")
+    for i,face in enumerate(me.faces):
+        for uvt in me.uv_textures:
+            if uvt.data[i].image!=None:
+                faces_array[face.index][0]+='|'+uvt.data[i].image.name
+    
+    print ("Sorting texture list")
+    faces_array.sort()
+        
+        #bpy.ops.object.mode_set(mode='OBJECT')        
+
+    print ("Exporting sorted list")
+    #for i_face,face in enumerate(me.faces):
+    for fa in faces_array:
+        
+        face = me.faces[fa[1]]
+        i_face = face.index
+
+        per=((cpt+1)*100)/nf
         if per>lper+10:
-            print("%d%% (%d)"%(per,i_face))
+            print("%d%% (%d)"%(per,cpt))
             lper=per
         #print (i_face)
         verts = face.vertices
@@ -164,7 +233,8 @@ def export_mesh(obj,f):
             export_vertice(vert,face,me,obj,f)
 
             tex_list=build_uv_texture_list(i_vert,i_face,me,obj)
-            tex_list+=build_vertex_color_list(i_vert,i_face,me)
+            if (len(tex_list)==0):
+                tex_list+=build_vertex_color_list(i_vert,i_face,me)
 
             #print ("**"+tex_list)
             
@@ -173,7 +243,7 @@ def export_mesh(obj,f):
                 
             tex=tex_list[0]
             f.write("  %f %f %s"%(tex['u'],tex['v'],tex['tex']))
-            ref_tex=tex_list[0] # used to find special multi text without uv coordinates
+            ref_tex=tex_list[0] # used to find special multi texture without uv coordinates
             tex_list.remove(tex)
             for tex in tex_list:
                 #ugly way to specify a texture without inherited uv mapping
@@ -183,11 +253,14 @@ def export_mesh(obj,f):
                     f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))                    
 
             f.write("\n")
+        cpt+=1
+        
+                        
     print ("%d%% (%d)"%(per,nf))
     #bpy.data.meshes.remove(me)    
 
 def write_some_data(context, filepath, save_elements):
-    global selected_objects,all_scene
+    global selected_objects,all_scene,texture_swap_count
 
     print ("Using file name: %s Working directory: %s"%(os.path.basename(filepath),os.path.dirname(filepath)))
     
@@ -207,6 +280,7 @@ def write_some_data(context, filepath, save_elements):
     
     save_state(context)
 
+    texture_swap_count=0
     print ("%d objects to export."%(len(selected_objects)))                           
     for obj in selected_objects:
  
@@ -242,6 +316,7 @@ def write_some_data(context, filepath, save_elements):
     if all_scene:
         f.close()
     restore_state(context)
+    print ("Texture swap count:%d."%texture_swap_count)
     return {'FINISHED'}
 
 
@@ -260,12 +335,9 @@ def read_some_data(context,filepath,clean_mesh):
     ver = file.readline()
     print (ver)
     ver=int(ver)
-    if ver != 1:
+    if ver != 1 and ver!= 0 :
         print ("Not a version 1 tri file. Not supported.")
-        return {'CANCELED'}
-    print ("go")
-
-            
+        return {'CANCELLED'}
  
     print ('Creating Object')
     bpy.ops.object.add(type='MESH')
@@ -298,6 +370,11 @@ def read_some_data(context,filepath,clean_mesh):
     v.add(n)
     f.add(n/3)
     e.add(n)
+    
+    ltt=[] #last texture table, used to count texture changes
+    texture_change_count=0 
+    
+    image_not_found=[]
 
     lper=-11    
     while 1:
@@ -313,20 +390,23 @@ def read_some_data(context,filepath,clean_mesh):
             lper=per
         
         vs=vert.split()
+        ivs=0
 
         v[nv].co=[float(vs[0]),float(vs[1]),float(vs[2])]
+        ivs=3
 
         if ver==1:
             v[nv].normal=[float(vs[3]),float(vs[4]),float(vs[5])]
+            ivs=6
 
         #now compute texture information
         tu=[]
         tv=[]
         tt=[]
-        tu.append(float(vs[6])) #remember it will be [0] 
-        tv.append(float(vs[7]))
+        tu.append(float(vs[ivs])) #remember it will be [0] 
+        tv.append(float(vs[ivs+1]))
         
-        t=vs[8] #full texture name
+        t=vs[ivs+2] #full texture name
         
         t=t.split(';') #split textures name, first name only, others u|v|name
         
@@ -350,6 +430,7 @@ def read_some_data(context,filepath,clean_mesh):
         
         ntt=0 # number of texture layers
         ntc=0 # number of vertex color layers
+        
         for i,t in enumerate(tt): #for each texture
             if t.find('rgb')==0:
                 ntc=ntc+1
@@ -373,9 +454,20 @@ def read_some_data(context,filepath,clean_mesh):
                     print ("Adding uv texture layer")
                     me.uv_textures.new()
                 im=bpy.data.images.get(t)
-                if not(isinstance(im,bpy.types.Image)):
-                    print ("Loading image %s.",t)
-                    bpy.data.images.load(t)
+
+                if (image_not_found.count(t)==0):
+                    if not(isinstance(im,bpy.types.Image)):
+                        print ("Loading image %s."%t)
+                        try:
+                            print ("trying")
+                            bpy.data.images.load(t)
+                            print ("end trying")
+                        except:
+                            print ("except")
+                            image_not_found.append(t)
+                            print ("Not found image:%s."%t)
+                            pass
+                    
                 im=bpy.data.images.get(t)                        
                 me.uv_textures[ntt-1].data[nf].image=im
                 #me.uv_textures[ntt-1].data[nf].use_image=True
@@ -385,7 +477,17 @@ def read_some_data(context,filepath,clean_mesh):
                     me.uv_textures[ntt-1].data[nf].uv2=[tu[i],tv[i]]
                 if(nv%3)==2:
                     me.uv_textures[ntt-1].data[nf].uv3=[tu[i],tv[i]]
-                    
+        
+        for i,t in enumerate(tt): #Count texture changes
+            try:
+                lt=ltt[i]
+            except:
+                ltt.append(t)
+                texture_change_count+=1
+                
+            if (t!=ltt[i]):
+                texture_change_count+=1
+                ltt[i]=t
                            
 
         nv=nv+1
@@ -406,6 +508,11 @@ def read_some_data(context,filepath,clean_mesh):
             nf=nf+1                
     
     print ("%d%% (%d)"%(per,nf))
+    print (".tri file need %d textures swap"% texture_change_count)
+    
+    for t in image_not_found:
+        print ("Error image %s not found."%t)
+        
     print ("Mesh Imported Vertices:%d Edges:%d Faces:%d."%(len(v),len(e),len(f)))
     #me.from_pydata(v,e,f)
     bpy.ops.object.mode_set(mode='EDIT')
@@ -526,6 +633,8 @@ if __name__ == "__main__":
     
     #bpy.ops.export.raydium_tri('INVOKE_DEFAULT')
     #bpy.ops.import_mesh.raydium_tri('INVOKE_DEFAULT')
+    #write_some_data(bpy.context,"c:\\test.tri",True)
+    
     if (0) :
         try:
             bpy.ops.object.mode_set(mode='OBJECT')
