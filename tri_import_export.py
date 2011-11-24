@@ -88,8 +88,8 @@ def export_vertice(vert,face,me,obj,f):
         n=face.normal.copy()
     
     if all_scene:
-        v = (v * rot)
-        n = n * qrot
+        v = (rot * v)
+        n = qrot * n
 
     f.write("%+0f %+0f %+0f"%(v[0],v[1],v[2]))
     f.write("  %+0f %+0f %+0f"%(n[0],n[1],n[2]))
