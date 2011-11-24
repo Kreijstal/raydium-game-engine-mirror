@@ -153,7 +153,7 @@ def export_mesh(obj,f):
     print ("Exporting mesh %s, %d faces, %d vertices"%(obj.data.name,len(me.faces),len(me.vertices)))
     for i_face,face in enumerate(me.faces):
 
-        per=i_face/nf*100
+        per=((i_face+1)*100)/nf
         if per>lper+10:
             print("%d%% (%d)"%(per,i_face))
             lper=per
@@ -173,15 +173,17 @@ def export_mesh(obj,f):
                 
             tex=tex_list[0]
             f.write("  %f %f %s"%(tex['u'],tex['v'],tex['tex']))
+            ref_tex=tex_list[0] # used to find special multi text without uv coordinates
             tex_list.remove(tex)
             for tex in tex_list:
-                #ugly way to specify a texture without real uv mapping
-                if (tex['u']!=-99999) and (tex['v']!=-99999):
-                    f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))
-                else:
+                #ugly way to specify a texture without inherited uv mapping
+                if (abs(tex['u']-50.0*ref_tex['u'])<1e-5) and (abs(tex['v']-50.0*ref_tex['v'])<1e-5):
                     f.write(";%s"%(tex['tex']))
+                else:
+                    f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))                    
 
             f.write("\n")
+    print ("%d%% (%d)"%(per,nf))
     #bpy.data.meshes.remove(me)    
 
 def write_some_data(context, filepath, save_elements):
@@ -299,14 +301,13 @@ def read_some_data(context,filepath,clean_mesh):
 
     lper=-11    
     while 1:
-        #print ("Vertices:%d Edges:%d Faces:%d"%(nv,ne,nf))
         vert=file.readline() 
         
         if not vert:
             break
 
 
-        per=nv/n*100;
+        per=(nv+2)*100/n;
         if per>lper+10:
             print ("%d%% (%d)"%(per,nf))
             lper=per
@@ -322,7 +323,7 @@ def read_some_data(context,filepath,clean_mesh):
         tu=[]
         tv=[]
         tt=[]
-        tu.append(float(vs[6]))
+        tu.append(float(vs[6])) #remember it will be [0] 
         tv.append(float(vs[7]))
         
         t=vs[8] #full texture name
@@ -341,10 +342,10 @@ def read_some_data(context,filepath,clean_mesh):
                 tv.append(float(iit[1]))
                 tt.append(iit[2])
                 
-            #only texture name
+            #only texture name using raydium hard coded scale factor of 50 from first texture coordinate
             if len(iit)==1:
-                tu.append(-99999)
-                tv.append(-99999)
+                tu.append(tu[0]*50) #first texture il ALWAYS in 0
+                tv.append(tv[0]*50)
                 tt.append(iit[0])
         
         ntt=0 # number of texture layers
@@ -403,15 +404,18 @@ def read_some_data(context,filepath,clean_mesh):
                 f[nf].use_smooth=True
                 
             nf=nf+1                
-
+    
+    print ("%d%% (%d)"%(per,nf))
     print ("Mesh Imported Vertices:%d Edges:%d Faces:%d."%(len(v),len(e),len(f)))
     #me.from_pydata(v,e,f)
     bpy.ops.object.mode_set(mode='EDIT')
     print("close file.")
     file.close()  
     if clean_mesh:  
+        print("Clean Up Mesh")
         bpy.ops.mesh.remove_doubles(limit=0.0001)
         bpy.ops.mesh.tris_convert_to_quads()
+        
     bpy.ops.object.mode_set(mode='OBJECT')
     return {'FINISHED'} 
 
