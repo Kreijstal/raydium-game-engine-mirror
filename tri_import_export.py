@@ -45,7 +45,7 @@ def restore_state(context):
             bpy.ops.object.mode_set(mode='OBJECT')
             
     if active_object!=None:
-        bpy.ops.object.select_name(name=active_object.name)
+        bpy.ops.object.select_pattern(pattern=active_object.name)
 
     bpy.ops.object.select_all(action='DESELECT')
     for ob in selected_objects:
@@ -66,11 +66,15 @@ def convert_to_mesh(obj):
         
     temp_object=bpy.context.object
     
+    for modifier in temp_object.modifiers:
+        print ("Applying modifier %s"%modifier.name)
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+    
     return temp_object
 
 def convert_quad_to_tri(obj):
-    print ("Triangulate Faces")
-    bpy.ops.object.select_name(name=obj.name)
+    print ("Triangulate Faces with pattern")
+    bpy.ops.object.select_pattern(pattern=obj.name)
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.mesh.quads_convert_to_tris()
@@ -289,7 +293,8 @@ def write_some_data(context, filepath, save_elements):
             continue
 
         bpy.ops.object.select_all(action='DESELECT')
-        bpy.ops.object.select_name(name=obj.name)
+        #bpy.ops.object.select_name(name=obj.name)
+        bpy.ops.object.select_pattern(pattern=obj.name)
 
         print ("Exporting {} / {} Type:{}".format(obj,obj.name,obj.type))
            
