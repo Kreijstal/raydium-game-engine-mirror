@@ -14,6 +14,7 @@ all_scene=True
 #texture swap count
 texture_swap_count=0
 current_texture_list=[]
+exported_mesh_list=[]
 
 def save_state(context):
     global active_object,selected_objects,active_object_mode
@@ -27,10 +28,6 @@ def save_state(context):
         bpy.ops.object.mode_set(mode='OBJECT')
     
     selected_objects = context.selected_objects
-    if len(selected_objects)==0:
-        bpy.ops.object.select_all()
-        selected_objects = context.selected_objects      
-        print ("No object selected, saving all objects.")
     
 
 def restore_state(context):
@@ -46,6 +43,7 @@ def restore_state(context):
             
     if active_object!=None:
         bpy.ops.object.select_pattern(pattern=active_object.name)
+        bpy.context.scene.objects.active=active_object
 
     bpy.ops.object.select_all(action='DESELECT')
     for ob in selected_objects:
@@ -64,7 +62,10 @@ def convert_to_mesh(obj):
     else:
         bpy.ops.object.convert(target='MESH',keep_original=True)    
         
-    temp_object=bpy.context.object
+    if (len(bpy.context.selected_objects)>1):
+        raise ("Should never happen ")
+    temp_object=bpy.context.selected_objects[0]
+    bpy.context.scene.objects.active=temp_object
     
     for modifier in temp_object.modifiers:
         print ("Applying modifier %s"%modifier.name)
@@ -263,8 +264,13 @@ def export_mesh(obj,f):
     print ("%d%% (%d)"%(per,nf))
     #bpy.data.meshes.remove(me)    
 
-def write_some_data(context, filepath, save_elements):
-    global selected_objects,all_scene,texture_swap_count
+def write_some_data(context, filepath, save_elements,save_position):
+    global all_scene,texture_swap_count
+    global exported_mesh_list
+
+    exported_mesh_list=[]
+    
+    pos_file_name = os.path.basename(filepath) + ".pos"
 
     print ("Using file name: %s Working directory: %s"%(os.path.basename(filepath),os.path.dirname(filepath)))
     
@@ -282,14 +288,45 @@ def write_some_data(context, filepath, save_elements):
         f.write("1\n")
         all_scene=True
     
+    if save_position:
+        print ("Saving elements positions in %s file."%pos_file_name)
+        f_pos=open(pos_file_name,'w')
+    
     save_state(context)
+    
+    if len(context.selected_objects)==0:
+        bpy.ops.object.select_all(action='SELECT')
+        print ("No object selected, selecting all objects.")    
 
+    selected_objects = context.selected_objects
+    
     texture_swap_count=0
     print ("%d objects to export."%(len(selected_objects)))                           
     for obj in selected_objects:
+        
+        try:
+            mesh_name=obj.data.name
+        except:
+            mesh_name=""
+
+        if save_position:
+            n1=obj.name.replace(" ","_")
+            n2=mesh_name.replace(" ","_")
+            f_pos.write("%32.32s %32.32s %f %f %f %f %f %f\n"%(n1,n2,obj.location[0],obj.location[1],obj.location[2],obj.rotation_euler[0],obj.rotation_euler[1],obj.rotation_euler[2]))
  
-        if obj.type=='LAMP' or obj.type=='CAMERA':
+        if obj.type=='LAMP' or obj.type=='CAMERA' or obj.type=='CURVE':
             print ("Skipping object {}.".format(obj))
+            continue
+
+        mesh_name=obj.data.name
+        if mesh_name[0]=='.':
+            print ("Not exporting %s hidden mesh (begin with a . "%mesh_name)
+            continue
+        
+        if not (mesh_name in exported_mesh_list):
+            exported_mesh_list.append(mesh_name)
+        else:
+            print ("Skipping %s already exported"%mesh_name)
             continue
 
         bpy.ops.object.select_all(action='DESELECT')
@@ -299,8 +336,9 @@ def write_some_data(context, filepath, save_elements):
         print ("Exporting {} / {} Type:{}".format(obj,obj.name,obj.type))
            
         wobj = convert_to_mesh(obj)
+        
         if not all_scene:
-            file_name=wobj.data.name
+            file_name=mesh_name
             file_name+='.tri'
             print ("Opening %s for writing."%file_name)
             f =open(file_name,'w')
@@ -320,6 +358,11 @@ def write_some_data(context, filepath, save_elements):
     print ("Closing tri file.")
     if all_scene:
         f.close()
+        
+    if save_position:
+        print ("Closing position file.")
+        f_pos.close()
+        
     restore_state(context)
     print ("Texture swap count:%d."%texture_swap_count)
     return {'FINISHED'}
@@ -550,6 +593,7 @@ class ExportSomeData(bpy.types.Operator, ExportHelper):
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
     save_elements = BoolProperty(name="Save Each Element", description="Save each object as one file, using mesh name", default=False)
+    save_position = BoolProperty(name="Save Each Element Pos/Rot",description="Save Position and rotation of each element",default=False)
 
 #    type = EnumProperty(items=(('OPT_A', "First Option", "Description one"),
 #                               ('OPT_B', "Second Option", "Description two."),
@@ -565,7 +609,8 @@ class ExportSomeData(bpy.types.Operator, ExportHelper):
 
     def execute(self, context):
         now=time.time()
-        ret=write_some_data(context, self.filepath, self.save_elements)
+        print ("----------------New Export------------------------")        
+        ret=write_some_data(context, self.filepath, self.save_elements,self.save_position)
         print ("Elapsed: %f"%(time.time()-now))        
         return ret
     
@@ -598,6 +643,7 @@ class ImportSomeData(bpy.types.Operator,ImportHelper):
 
     def execute(self, context):
         now=time.time()
+        print ("----------------New Import------------------------")
         ret=read_some_data(context,self.filepath,self.clean_mesh) 
         print ("Elapsed: %f"%(time.time()-now))
         return ret
