@@ -3337,16 +3337,16 @@ return raydium_ode_element_rotq_set(raydium_ode_element_find(name),quat);
 
 signed char raydium_ode_element_rot_get(int e, dReal *phi, dReal *theta, dReal *psi)
 {
-dBodyID b;
+dGeomID b;
 const dReal * R;
 
 if (raydium_ode_element_isvalid(e))
     {
-    b=raydium_ode_element[e].body;
+    b=raydium_ode_element[e].geom;
     #define _R(i,j) R[(i)*4+(j)]
     // Ode work on transpose ZYX rotation matrix
     // See http://en.wikipedia.org/wiki/Euler_angles
-    R = dBodyGetRotation(b);
+    R = dGeomGetRotation(b);
     *theta= -asin(_R(0,2));
     *phi=atan2(_R(1,2),_R(2,2));
     *psi=atan2(_R(0,1),_R(0,0));
