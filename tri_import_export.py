@@ -149,8 +149,9 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
                 except:
                     pass
                 texture=os.path.basename(uvt.data[i_face].image.filepath)
+            map=uvt.data[i_face].image.mapping;
                 
-            tex_list.append({'u':uv[0],'v':uv[1],'tex':texture})  
+            tex_list.append({'u':uv[0],'v':uv[1],'tex':texture,'map':map});
 
     for i in range(len(tex_name_list)):
         try:
@@ -203,8 +204,8 @@ def export_mesh(obj,f):
 
     cpt=0 
 #    for i_tface,tface in enumerate(me.faces):
-
-    faces_array=[['',i] for i in range(nf)]
+    #depth, texture name, texture mode, indice
+    faces_array=[[0,'',i] for i in range(nf)]
         
 
     print ("Working on %d faces" % len(me.faces))
@@ -213,7 +214,8 @@ def export_mesh(obj,f):
     for i,face in enumerate(me.faces):
         for uvt in me.uv_textures:
             if uvt.data[i].image!=None:
-                faces_array[face.index][0]+='|'+uvt.data[i].image.name
+                faces_array[face.index][1]+='|'+uvt.data[i].image.name
+                faces_array[face.index][0]=uvt.data[i].image.depth;
     
     print ("Sorting texture list")
     faces_array.sort()
@@ -224,7 +226,7 @@ def export_mesh(obj,f):
     #for i_face,face in enumerate(me.faces):
     for fa in faces_array:
         
-        face = me.faces[fa[1]]
+        face = me.faces[fa[2]]
         i_face = face.index
 
         per=((cpt+1)*100)/nf
@@ -252,10 +254,13 @@ def export_mesh(obj,f):
             tex_list.remove(tex)
             for tex in tex_list:
                 #ugly way to specify a texture without inherited uv mapping
-                if (abs(tex['u']-50.0*ref_tex['u'])<1e-5) and (abs(tex['v']-50.0*ref_tex['v'])<1e-5):
-                    f.write(";%s"%(tex['tex']))
+                if (tex['map']=='UV'):
+                    if (abs(tex['u']-50.0*ref_tex['u'])<1e-5) and (abs(tex['v']-50.0*ref_tex['v'])<1e-5):
+                        f.write(";%s"%(tex['tex']))
+                    else:
+                        f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))
                 else:
-                    f.write(";%f|%f|%s"%(tex['u'],tex['v'],tex['tex']))                    
+                    f.write("#%s"%(tex['tex']))
 
             f.write("\n")
         cpt+=1
@@ -301,8 +306,11 @@ def write_some_data(context, filepath, save_elements,save_position):
     selected_objects = context.selected_objects
     
     texture_swap_count=0
-    print ("%d objects to export."%(len(selected_objects)))                           
-    for obj in selected_objects:
+    print ("%d objects to export."%(len(selected_objects)))
+    
+    big_wobj=None    
+                           
+    for i_obj,obj in enumerate(selected_objects):
         
         try:
             mesh_name=obj.data.name
@@ -332,11 +340,34 @@ def write_some_data(context, filepath, save_elements,save_position):
         bpy.ops.object.select_all(action='DESELECT')
         #bpy.ops.object.select_name(name=obj.name)
         bpy.ops.object.select_pattern(pattern=obj.name)
-
+        
         print ("Exporting {} / {} Type:{}".format(obj,obj.name,obj.type))
            
         wobj = convert_to_mesh(obj)
+        convert_quad_to_tri(wobj)
         
+        if all_scene:
+            if big_wobj==None:
+                print("Creating One big object/mesh for all scene.\n")
+                big_wobj=wobj
+            else:
+                print ("Joining %s and %s\n"%(big_wobj.name,wobj.name))
+                bpy.ops.object.select_all(action='DESELECT')
+                bpy.context.scene.objects.active=big_wobj
+                bpy.ops.object.select_pattern(pattern=big_wobj.name)
+                bpy.ops.object.select_pattern(pattern=wobj.name,extend=True)
+                bpy.ops.object.join()
+                
+            if i_obj < len(selected_objects)-1:
+                print ("Not last object, continue join.\n")
+                continue
+            else:
+                wobj=big_wobj
+                print ("Ok for exporting %s...\n"%wobj.name)
+                
+                
+                
+                
         if not all_scene:
             file_name=mesh_name
             file_name+='.tri'
@@ -345,7 +376,7 @@ def write_some_data(context, filepath, save_elements,save_position):
             print ("Version 1 tri file")
             f.write("1\n")               
             
-        convert_quad_to_tri(wobj)
+
         export_mesh(wobj,f)
             
         print ("Removing temporary object.")
@@ -451,35 +482,49 @@ def read_some_data(context,filepath,clean_mesh):
         tu=[]
         tv=[]
         tt=[]
-        tu.append(float(vs[ivs])) #remember it will be [0] 
+        tu.append(float(vs[ivs])) #remember it will be tu[0] 
         tv.append(float(vs[ivs+1]))
         
         t=vs[ivs+2] #full texture name
         
         t=t.split(';') #split textures name, first name only, others u|v|name
+        temp=[];
+        for it in t:
+            ts=it.split('#');
+            if len(ts)==1:
+                temp.append([ts[0],0]);
+            else:
+                temp.append([ts[0],0]);
+                temp.append([ts[1],1]); # if we can split, the second is environnement texture.
+                
+        t=temp;
         
         tt.append(t[0]) #add first texture name to texture list
         t.remove(t[0])
         
-        for it  in t:
+        for itt  in t:
+            it=itt[0]; # get texture string
+            map=itt[1]; 
             #print (it)
             iit=it.split('|')
             #u and v coordinate and texture name
             if len(iit)==3:
                 tu.append(float(iit[0]))
                 tv.append(float(iit[1]))
-                tt.append(iit[2])
+                tt.append([iit[2],map])
                 
             #only texture name using raydium hard coded scale factor of 50 from first texture coordinate
             if len(iit)==1:
-                tu.append(tu[0]*50) #first texture il ALWAYS in 0
+                tu.append(tu[0]*50) #first texture it's ALWAYS in 0
                 tv.append(tv[0]*50)
-                tt.append(iit[0])
+                tt.append([iit[0],map])
         
         ntt=0 # number of texture layers
         ntc=0 # number of vertex color layers
         
-        for i,t in enumerate(tt): #for each texture
+        for i,ti in enumerate(tt): #for each texture
+            t=ti[0];
+            map=ti[1];
             if t.find('rgb')==0:
                 ntc=ntc+1
                 if ntc > len(me.vertex_colors):
@@ -518,6 +563,10 @@ def read_some_data(context,filepath,clean_mesh):
                     
                 im=bpy.data.images.get(t)                        
                 me.uv_textures[ntt-1].data[nf].image=im
+                if map==0:
+                    me.uv_textures[ntt-1].data[nf].image.mapping='UV';
+                else:
+                    me.uv_textures[ntt-1].data[nf].image.mapping='REFLECTION';
                 #me.uv_textures[ntt-1].data[nf].use_image=True
                 if(nv%3)==0:
                     me.uv_textures[ntt-1].data[nf].uv1=[tu[i],tv[i]]
