@@ -9,7 +9,7 @@ fi
 
 ulimit -c 0
 rm test
-gcc -pg -g "$1" -Wall -O2 $EXTRA_GCC_FLAGS -o test -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg \
+gcc -g "$1" -Wall -O2 $EXTRA_GCC_FLAGS -o test -L/usr/X11R6/lib/ -lXinerama -lGL -lGLU -lm -lopenal -lalut -ljpeg \
 -Iraydium/ode/include/ raydium/ode/ode/src/libode.a -lvorbis -lvorbisfile -logg \
 -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM raydium/php/libs/libphp5.a \
 -lresolv -lcrypt -lz -lcurl -lxml2 -lGLEW -lpng -lX11 -lXext -ldl -lstdc++ $OCOMP_FLAGS
