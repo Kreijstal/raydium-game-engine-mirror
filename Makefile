@@ -21,9 +21,10 @@ ARC := $(shell uname -m)
 ifeq ($(ARC),x86_64)
 	COMPILE_OPTIONS+= -fPIC
 endif
-## ... just because of Shell syntaxe in configure.conf
+## ... just because of Shell syntax in configure.conf
 ifneq ($(EXTRA_GCC_FLAGS),"")
-	COMPILE_OPTIONS+= $(EXTRA_GCC_FLAGS)
+## (the echo thing is here to remove quotes)
+	COMPILE_OPTIONS+= $(shell echo $(EXTRA_GCC_FLAGS))
 endif
 LDFLAGS=
 LINKING_OPTIONS=-Wl,-soname,libraydium.so.0
