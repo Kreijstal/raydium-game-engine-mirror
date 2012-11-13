@@ -29,8 +29,8 @@ test_build()
     echo "   Testing $1 ($comp)"   >> configure.log
     echo "   ====================" >> configure.log
     echo "$2" > configure.c
-    $comp -g configure.c -Wall -o configure.bin $3 >> configure.log 2>> configure.log
-    
+    $comp -g configure.c -Wall -o configure.bin $3 >> configure.log 2>&1
+
     if [ "$?" != "0" ]; then
 	echo " build: failed"
 	rm configure.c
@@ -129,7 +129,7 @@ ode_install()
     echo "Configuring ODE" >> configure.log
     echo "===============" >> configure.log
     cd raydium/ode
-    ./configure 2>>../../configure.log >>../../configure.log
+    ./configure >> ../../configure.log 2>&1
     ret=$?
     cd - > /dev/null
     exit_if_error "$?" "ODE configuration failed (see configure.log)"
@@ -142,7 +142,7 @@ ode_install()
     echo "Building ODE" >> configure.log
     echo "============" >> configure.log
     cd raydium/ode
-    make 2>>../../configure.log >>../../configure.log
+    make >> ../../configure.log 2>&1
     ret=$?
     cd - > /dev/null
     exit_if_error "$ret" "ODE Build failed (see configure.log)"
@@ -242,7 +242,7 @@ php_install()
     --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \
     --with-libdir=`libpng-config --libdir | sed 's#^/usr/##'` \
     --with-gd --with-jpeg-dir --with-png-dir\
-    >>../../configure.log 2>>../../configure.log
+    >> ../../configure.log 2>&1
 
     ret=$?
     cd - > /dev/null
@@ -253,7 +253,7 @@ php_install()
     echo "Building PHP" >> configure.log
     echo "============" >> configure.log
     cd raydium/php
-    make >>../../configure.log 2>>../../configure.log
+    make >> ../../configure.log 2>&1
     ret=$?
     cd - > /dev/null
     exit_if_error "$ret" "PHP build failed, see configure.log"
