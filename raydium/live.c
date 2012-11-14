@@ -247,6 +247,9 @@ int capture_style = RAYDIUM_LIVE_FREE;
 #endif
 char palette[128];
 raydium_live_Device *dev;
+#ifdef WIN32
+int i;
+#endif
 #ifndef WIN32
 char force_read=0;
 #endif
@@ -299,18 +302,28 @@ if (dev->fd<0)
         //Capture Frame create
         dev->hWnd_WC = capCreateCaptureWindow("WebCam", WS_CHILD, 0, 0, 1, 1, hWnd, 0);
 
-        if(!capDriverConnect(dev->hWnd_WC, id)) // Todo: Change 0 to what ever to have the good cam
-        {
-            raydium_log("Error creating capture context");
+        for(i=0;i<3;i++)
+            { //Need to try several times, first one often fail ...
+            if(capDriverConnect(dev->hWnd_WC, 0))
+                break;
+            else
+                {
+                raydium_log("live: WARNING: creating capture context attempt %d fail, keep trying...",i);
+                Sleep(100);
+                }
+            }
+        if(i>=3)
+            {
+            raydium_log("live: ERROR: Cannot Create capture context.");
             return -1;
-        }
+            }
 
         capGetDriverDescription (id, webcam_name_list, sizeof(webcam_name_list), webcam_drv_list,sizeof(webcam_drv_list));
-        raydium_log ("Found WebCam: %d %s",id,webcam_name_list);
+        raydium_log ("live: Found WebCam: %d %s",id,webcam_name_list);
         strcpy(dev->name,webcam_name_list);
 
     // Perhaps needed config dialog.
-    //    capDlgVideoDisplay( dev->hWnd_WC );
+    //  capDlgVideoDisplay( dev->hWnd_WC );
     //  capDlgVideoFormat ( dev->hWnd_WC );
     //  capDlgVideoSource ( dev->hWnd_WC );
         dev->hDC_WC = GetDC(dev->hWnd_WC);
@@ -392,10 +405,9 @@ dev->cap.minwidth,dev->cap.minheight,
 dev->cap.maxwidth,dev->cap.maxheight,
 dev->win.width,dev->win.height);
 #else
-raydium_log("live: Drv default image size %ix%i, Image %ix%i, default %ix%i",
+raydium_log("live: Drv default image size %ix%i, Image %ix%i",
 dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight,
-dev->capture_video_format_original.bmiHeader.biWidth,dev->capture_video_format_original.bmiHeader.biHeight,
-dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight);
+dev->capture_video_format_original.bmiHeader.biWidth,dev->capture_video_format_original.bmiHeader.biHeight);
 #endif
 
 #ifndef WIN32
@@ -475,35 +487,50 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
     dev->capture_video_format.bmiHeader.biSize = sizeof(BITMAPINFO);
 
     if (!capSetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO)))
-    {
-        raydium_log("live: ERROR: not a capSetVideoFormat to RGB 24bpp Failed device '%s'",device);
-        raydium_log("Opening Parameter dialog. Please set 24 bts RGB format and correct size");
-        capDlgVideoFormat ( dev->hWnd_WC );
-    }
+        raydium_log("live: WARNING: capSetVideoFormat to RGB 24bpp Failed device '%s'",device);
 
-    if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO)))
-    {
-        raydium_log("Impossible to have correct format, live api not avaible");
-        capDriverDisconnect(dev->hWnd_WC);
-        DestroyWindow(dev->hWnd_WC);
-        return -1;
-    }
+//Try to find good decompressor, 3 attempts ...
+    i=0;
+    while(i++<3)
+        {
+        // Get original video format
+        if(!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format_original,sizeof(BITMAPINFO)))
+            {
+            raydium_log("live: fail to read actual format, live api not avaible");
+            capDriverDisconnect(dev->hWnd_WC);
+            DestroyWindow(dev->hWnd_WC);
+            return -1;
+            }
+
 // Try to find correct decompressor
+// Correct image format 24Bpp RGB
+        dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
+        dev->capture_video_format.bmiHeader.biHeight = dev->win.height;
+        dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
+        dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
+        dev->capture_video_format.bmiHeader.biPlanes = 1;
+        dev->capture_video_format.bmiHeader.biClrImportant =0;
+        dev->capture_video_format.bmiHeader.biClrUsed=0;
+        dev->capture_video_format.bmiHeader.biCompression = BI_RGB;
 
-    dev->capture_video_format.bmiHeader.biWidth = dev->win.width;
-    dev->capture_video_format.bmiHeader.biHeight = dev->win.height;
-    dev->capture_video_format.bmiHeader.biBitCount = 24; // Support only 24bpp format
-    dev->capture_video_format.bmiHeader.biSizeImage = dev->capture_video_format.bmiHeader.biWidth * dev->capture_video_format.bmiHeader.biHeight * dev->capture_video_format.bmiHeader.biBitCount/8;
-    dev->capture_video_format.bmiHeader.biPlanes = 1;
-    dev->capture_video_format.bmiHeader.biClrImportant =0;
-    dev->capture_video_format.bmiHeader.biClrUsed=0;
-    dev->capture_video_format.bmiHeader.biCompression = BI_RGB;
+        dev->compressor=NULL;
+//Is there a compressor for this ?
+        dev->compressor = ICLocate(ICTYPE_VIDEO, (DWORD) NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
+        if (dev->compressor)
+            {
+            raydium_log("Live: Found correct decompressor, can process frames");
+            break;
+            }
 
-    dev->compressor=NULL;
-    dev->compressor = ICLocate(ICTYPE_VIDEO, (DWORD) NULL,(LPBITMAPINFOHEADER) &dev->capture_video_format_original,(LPBITMAPINFOHEADER) &dev->capture_video_format,ICMODE_DECOMPRESS );
-    if (dev->compressor)
-        raydium_log("Live: Found correct decompressor, can process frames");
-
+        raydium_log("live: Opening Parameter dialog. Please set 24 bts RGB format and correct size, or other format ...");
+        capDlgVideoFormat ( dev->hWnd_WC );
+        }
+    if (i>=3)
+        {
+        raydium_log("live: ERROR: Cannot find decompressor. WIN32 Live Api unavaible.");
+        return -1;
+        }
+//Remaning configuration
     dev->capture_param.fYield =TRUE;
     dev->capture_param.fAbortLeftMouse=FALSE;
     dev->capture_param.fAbortRightMouse=FALSE;
@@ -666,7 +693,7 @@ return id;
 
 
     capSetUserData(dev->hWnd_WC,dev);
-        capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);
+    capSetCallbackOnVideoStream(dev->hWnd_WC,Frame_CallBack);
 //      capSetCallbackOnFrame(dev->hWnd_WC, Frame_CallBack);
 /*      capPreviewRate(dev->hWnd_WC,100);
         capPreview(dev->hWnd_WC,TRUE);*/
@@ -883,7 +910,7 @@ raydium_live_Texture *tex;
 
 if(!raydium_live_video_isvalid(device_id))
     {
-    raydium_log("live: ERROR: invalid device id, cannot create live source");
+    //raydium_log("live: ERROR: invalid device id, cannot create live source");
     return -1;
     }
 
@@ -1045,7 +1072,7 @@ GLfloat u,v;
 
 if(!raydium_live_texture_isvalid(livetex))
     {
-    raydium_log("live: cannot draw live mask: wrong name or id");
+    //raydium_log("live: cannot draw live mask: wrong name or id");
     return;
     }
 
