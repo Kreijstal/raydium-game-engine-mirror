@@ -112,12 +112,13 @@ def build_vertex_color_list(i_vert,i_face,me):
        
     tex_list=[]
     for vcol in me.vertex_colors:
-        if i_vert==0:
-            col = vcol.data[i_face].color1
-        if i_vert==1:
-            col = vcol.data[i_face].color2
-        if i_vert==2:
-            col = vcol.data[i_face].color3
+        col = vcol.data[i_face].color
+#        if i_vert==0:
+#            col = vcol.data[i_face].color1
+#        if i_vert==1:
+#            col = vcol.data[i_face].color2
+#        if i_vert==2:
+#            col = vcol.data[i_face].color3
         r=col[0]
         g=col[1]
         b=col[2]
