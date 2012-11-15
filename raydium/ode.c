@@ -2311,7 +2311,11 @@ if(!raydium_ode_object_isvalid(obj))
     return;
     }
 
+#ifndef COMPAT_ODE_OBJECT_MOVE_R1099
     for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
+#else
+    for(i=RAYDIUM_ODE_MAX_ELEMENTS-1;i>=0;i--){
+#endif
         if (raydium_ode_element[i].object==obj){
             if (!ref_ok){
                 act=raydium_ode_element_pos_get(i);
