@@ -2299,7 +2299,7 @@ raydium_ode_object_OnDelete(raydium_ode_object_find(o),OnDelete);
 void raydium_ode_object_move(int obj, dReal *new_pos)
 {
 
-int i;
+int i,real_i;
 dReal *act;
 dReal diff[3];
 dReal ref_pos[3]={0,0,0};
@@ -2311,11 +2311,13 @@ if(!raydium_ode_object_isvalid(obj))
     return;
     }
 
-#ifndef COMPAT_ODE_OBJECT_MOVE_R1099
-    for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++){
-#else
-    for(i=RAYDIUM_ODE_MAX_ELEMENTS-1;i>=0;i--){
-#endif
+    for(real_i=0;real_i<RAYDIUM_ODE_MAX_ELEMENTS;real_i++){
+
+        if(raydium_compat_isset(RAYDIUM_COMPAT_ODE_OBJECT_MOVE_R1099))
+            i=(RAYDIUM_ODE_MAX_ELEMENTS-(real_i+1)); // reverse for() order
+        else
+            i=real_i;
+
         if (raydium_ode_element[i].object==obj){
             if (!ref_ok){
                 act=raydium_ode_element_pos_get(i);

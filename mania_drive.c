@@ -2732,6 +2732,7 @@ raydium_window_create(full_sx_i,full_sy_i,mode,version);
 raydium_parser_db_get("Generic-PlayerName",raydium_network_name_local,NULL);
 
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
+raydium_compat_add(RAYDIUM_COMPAT_ODE_OBJECT_MOVE_R1099);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;
 raydium_projection_fov=70;

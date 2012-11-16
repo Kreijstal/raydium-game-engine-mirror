@@ -23,7 +23,7 @@ int a;
     a=raydium_ode_object_create("RAGDOLL");
     raydium_ode_object_sphere_add("head",a,0.1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"p_head.tri");
     raydium_ode_element_move_name_3f("head",5,0,1);
-    
+
     raydium_ode_object_box_add("body",a,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_body.tri");
     raydium_ode_element_move_name_3f("body",5,0,0.66);
     raydium_ode_joint_attach_hinge_name("neck","body","head",5,0,0.95,RAYDIUM_ODE_JOINT_AXE_X);
@@ -79,7 +79,7 @@ int a;
     raydium_ode_joint_attach_hinge_name("elbow","u_arm","l_arm",4.80,0,0.60,RAYDIUM_ODE_JOINT_AXE_X);
     raydium_ode_joint_hinge_limits_name("elbow",0,2);
     raydium_ode_joint_break_force_name("elbow",BONE_BREAK);
-    
+
     raydium_ode_object_box_add("l_arm2",a,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_l_arm2.tri");
     raydium_ode_element_move_name_3f("l_arm2",5.20,-0.05,0.45);
     raydium_ode_element_rotate_name_3f("l_arm2",0.3,0,0);
@@ -98,14 +98,14 @@ int a;
 
     pos[0]=0;
     pos[1]=0;
-    pos[2]=-0.4;
+    pos[2]=0.7;
     raydium_ode_object_move_name("RAGDOLL",pos);
 
 }
 
 void display(void)
 {
-    
+
     raydium_joy_key_emul();
 
     if(raydium_key_last==1027)
@@ -146,17 +146,17 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
         }
 
 }
-    
+
 
     raydium_light_position[0][0]=50;
     raydium_light_position[0][1]=150;
     raydium_light_position[0][2]=200;
     raydium_light_position[0][3]=1.0;
-    
+
     raydium_clear_frame();
-    
+
     raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
-    
+
     raydium_ode_draw_all(0);
 
 //    raydium_osd_logo("logo.tga");
@@ -170,7 +170,7 @@ if(raydium_ode_object_find("RAGDOLL")>=0)
 int main(int argc, char **argv)
 {
     raydium_init_args(argc,argv);
-    
+
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Small dirty ragdoll demo");
     raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
     raydium_projection_near=0.01;
@@ -178,20 +178,20 @@ int main(int argc, char **argv)
     raydium_projection_fov=60;
     raydium_fog_disable();
     raydium_window_view_update();
-    
+
     raydium_light_enable();
     raydium_light_on(0);
     memcpy(raydium_light_color[0],light_color,raydium_internal_size_vector_float_4);
     raydium_light_intensity[0] = 10000000;
     raydium_light_update_all(0);
-    
+
 //    raydium_osd_cursor_set("BOXcursor.tga",4,4);
 
     raydium_window_view_update();
     raydium_shadow_enable();
     raydium_background_color_change(back_color[0],back_color[1],back_color[2],back_color[3]);
 
-    raydium_ode_ground_set_name("cocorobix.tri");    
+    raydium_ode_ground_set_name("cocorobix.tri");
     raydium_callback(&display);
     return(0);
 }

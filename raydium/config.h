@@ -86,7 +86,3 @@
 // experimental Vertex Array renderer
 //#define DEBUG_RENDER_VERTEXARRAY
 //#define DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
-
-// old behavior for raydium_ode_object_move() where reference element
-// is the last one, not the first one.
-//#define COMPAT_ODE_OBJECT_MOVE_R1099

@@ -82,6 +82,8 @@ if(raydium_ode_element_find("corps")<0) return;
 
 a=raydium_ode_object_create("WATURE2");
 
+raydium_ode_object_box_add("body",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"clio_xp_body.tri");
+
 raydium_ode_object_box_add("top",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"clio_xp_top.tri");
 raydium_ode_element_move_name_3f("top",-0.1,0,0.25);
 
@@ -109,7 +111,6 @@ raydium_ode_element_move_name_3f("wheel_rg",-0.444,0.253,-0.1);
 raydium_ode_object_sphere_add("wheel_rd",a,0.5,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"roue5.tri");
 raydium_ode_element_move_name_3f("wheel_rd",-0.444,-0.253,-0.1);
 
-raydium_ode_object_box_add("body",a,1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"clio_xp_body.tri");
 
 raydium_ode_element_rotq_get_name("corps",rot);
 pos=raydium_ode_element_pos_get_name("corps");

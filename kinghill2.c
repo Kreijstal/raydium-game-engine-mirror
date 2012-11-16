@@ -569,6 +569,7 @@ char world[256];
 
 raydium_init_args(argc,argv);
 raydium_window_create(640,480,RAYDIUM_RENDERING_FULLSCREEN,"King of the Hill 2");
+raydium_compat_add(RAYDIUM_COMPAT_ODE_OBJECT_MOVE_R1099);
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_projection_near=0.01;
 raydium_projection_far=1000;

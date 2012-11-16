@@ -39,7 +39,7 @@ char name[128];
     raydium_ode_name_auto("head",name);
     head=raydium_ode_object_sphere_add(name,obj,0.1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"p_head.tri");
     raydium_ode_element_move_3f(head,5,0,1);
-    
+
     raydium_ode_name_auto("body",name);
     body=raydium_ode_object_box_add(name,obj,0.01,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_body.tri");
     raydium_ode_element_move_3f(body,5,0,0.66);
@@ -121,7 +121,7 @@ char name[128];
     raydium_ode_joint_hinge_limits(jelbow,0,2);
     raydium_ode_joint_break_force(jelbow,BONE_BREAK);
 //    raydium_ode_joint_delete_callback_name("elbow",bone_break);
-    
+
     raydium_ode_name_auto("l_arm2",name);
     l_arm2=raydium_ode_object_box_add(name,obj,0.1,RAYDIUM_ODE_AUTODETECT,0,0,RAYDIUM_ODE_STANDARD,0,"p_l_arm2.tri");
     raydium_ode_element_move_3f(l_arm2,5.20,-0.05,0.45);
@@ -208,17 +208,17 @@ fclose(fp);
 
 void display(void)
 {
-    
+
     int delta_x, delta_y;
     raydium_joy_key_emul();
 
     cam_pos_z += (raydium_trigo_sin(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
     cam_pos_x += (raydium_trigo_cos(cam_angle_x+90)*raydium_joy_y*speed*raydium_trigo_sin(90-cam_angle_y));
     cam_pos_y += (raydium_trigo_cos(90-cam_angle_y)*speed*raydium_joy_y);
-    
+
     cam_pos_x -= (raydium_trigo_cos(cam_angle_x)*raydium_joy_x*speed);
     cam_pos_z -= (raydium_trigo_sin(cam_angle_x)*raydium_joy_x*speed);
-    
+
     if(raydium_key_last==1027)
 	exit(0);
 
@@ -233,17 +233,17 @@ void display(void)
 	char name1[128];
 	char name2[128];
 	int g1,g2;
-	
+
 	pos[0]=0;
 	pos[1]=0;
 	pos[2]=-0.6;
 	raydium_ode_explosion_blow(4,80,pos);
-                                                                                
+
 	raydium_particle_name_auto("explo",name1);
 	raydium_particle_name_auto("eplo_smoke",name2);
 	g1=raydium_particle_generator_load("explosion.prt",name1);
 	g2=raydium_particle_generator_load("explosmoke.prt",name2);
- 
+
 	raydium_particle_generator_move(g1,pos);
 	raydium_particle_generator_move(g2,pos);
 	}
@@ -253,10 +253,10 @@ void display(void)
 
 
     delta_x = raydium_mouse_x - (raydium_window_tx/2);
-    cam_angle_x += (delta_x*sensibilite*0.1f); 
+    cam_angle_x += (delta_x*sensibilite*0.1f);
 
     delta_y = raydium_mouse_y - (raydium_window_ty/2);
-    cam_angle_y += (delta_y*sensibilite*0.1f); 
+    cam_angle_y += (delta_y*sensibilite*0.1f);
 
     raydium_mouse_move(raydium_window_tx/2, raydium_window_ty/2);
 
@@ -264,11 +264,11 @@ void display(void)
     raydium_light_position[0][1]=150;
     raydium_light_position[0][2]=200;
     raydium_light_position[0][3]=1.0;
-    
+
     raydium_clear_frame();
     raydium_camera_place(cam_pos_x,cam_pos_y,cam_pos_z,cam_angle_x,cam_angle_y,0);
     raydium_camera_replace();
-    
+
     raydium_ode_draw_all(0);
 //    raydium_ode_draw_all(1);
 
@@ -285,27 +285,28 @@ int main(int argc, char **argv)
     char server[128];
 
     raydium_init_args(argc,argv);
-    
+
     // creation de la fenetre et de la scene
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"ragdoll test");
     raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
+    raydium_compat_add(RAYDIUM_COMPAT_ODE_OBJECT_MOVE_R1099);
     raydium_projection_near=0.01;
     raydium_projection_far=2500;
     raydium_projection_fov=60;
     raydium_fog_disable();
     raydium_window_view_update();
-    
+
     raydium_light_enable();
     raydium_light_on(0);
     memcpy(raydium_light_color[0],light_color,raydium_internal_size_vector_float_4);
     raydium_light_intensity[0] = 10000000;
     raydium_light_update_all(0);
-    
+
     raydium_shadow_enable();
     if(raydium_init_cli_option("server",server))
 	if(!raydium_network_client_connect_to(server))
 	    exit(1);
-	     
+
 //    raydium_osd_cursor_set("BOXcursor.tga",4,4);
 
     raydium_window_view_update();

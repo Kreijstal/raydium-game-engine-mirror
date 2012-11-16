@@ -365,6 +365,8 @@
 
 #define RAYDIUM_CAMERA_SMOOTH_DATA_SIZE         8
 
+#define RAYDIUM_COMPAT_ODE_OBJECT_MOVE_R1099    2
+
 __global int     raydium_init_argc;
 __global char  **raydium_init_argv;
 __global char    raydium_init_wd[RAYDIUM_MAX_DIR_LEN];
@@ -863,5 +865,6 @@ __global signed char raydium_file_log_time;
 
 __global unsigned long raydium_profile_timer;
 
+__global unsigned int raydium_compat_flags;
 #endif
 // EOF

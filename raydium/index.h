@@ -83,6 +83,7 @@ extern "C" {
 #include "headers/web.h"
 #include "headers/reg_api.h"
 #include "headers/sprites.h"
+#include "headers/compat.h"
 
 #else
 

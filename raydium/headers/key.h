@@ -6,7 +6,7 @@ Keyboard & keys
 **/
 
 // Introduction
-/*=
+/**
 Keyboard API is already described at the top of this guide,
 see section "keyboard input".
 **/

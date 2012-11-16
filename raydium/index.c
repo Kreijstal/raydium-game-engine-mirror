@@ -39,6 +39,7 @@ extern "C" {
 #include "signal.c"
 #include "math.c"
 #include "random.c"
+#include "compat.c"
 #include "timecall.c"
 #include "profile.c"
 #include "parser.c"
