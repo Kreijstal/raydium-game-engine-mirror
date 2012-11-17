@@ -111,14 +111,13 @@ def export_vertice(vert,face,me,obj,f):
 def build_vertex_color_list(i_vert,i_face,me):
        
     tex_list=[]
-    for vcol in me.vertex_colors:
-        col = vcol.data[i_face].color
-#        if i_vert==0:
-#            col = vcol.data[i_face].color1
-#        if i_vert==1:
-#            col = vcol.data[i_face].color2
-#        if i_vert==2:
-#            col = vcol.data[i_face].color3
+    for vcol in me.tessface_vertex_colors:
+        if i_vert==0:
+            col = vcol.data[i_face].color1
+        if i_vert==1:
+            col = vcol.data[i_face].color2
+        if i_vert==2:
+            col = vcol.data[i_face].color3
         r=col[0]
         g=col[1]
         b=col[2]
@@ -204,6 +203,8 @@ def export_mesh(obj,f):
 
     me=obj.to_mesh(scene=bpy.context.scene,apply_modifiers=True,settings='RENDER')
     
+    me.update(calc_tessface=True)
+    
     nf=len(me.tessfaces)
     lper=-11
     print ("Exporting mesh %s, %d faces, %d vertices"%(obj.data.name,len(me.tessfaces),len(me.vertices)))
@@ -221,12 +222,18 @@ def export_mesh(obj,f):
         for uvt in me.tessface_uv_textures:
             if uvt.data[i].image!=None:
                 faces_array[face.index][1]+='|'+uvt.data[i].image.name
-                faces_array[face.index][0]=uvt.data[i].image.depth;
-    
+                faces_array[face.index][0]=uvt.data[i].image.depth # used to set rbga texture at the end of file
+                
+    for i,face in enumerate(me.tessfaces):
+        for vc in me.tessface_vertex_colors:
+            if vc.data[i].color1!=None:
+                texture=build_vertex_color_list(0,i,me)
+                for t in texture:
+                    faces_array[face.index][1]+='|'+t['tex']
+            
     print ("Sorting texture list")
     faces_array.sort()
-        
-        #bpy.ops.object.mode_set(mode='OBJECT')        
+    
 
     print ("Exporting sorted list")
     #for i_face,face in enumerate(me.faces):
@@ -234,23 +241,22 @@ def export_mesh(obj,f):
         
         face = me.tessfaces[fa[2]]
         i_face = face.index
-
+        
         per=((cpt+1)*100)/nf
         if per>lper+10:
             print("%d%% (%d)"%(per,cpt))
             lper=per
         #print (i_face)
         verts = face.vertices
-        
+      
         for i_vert,vert in enumerate(verts):
             export_vertice(vert,face,me,obj,f)
 
             tex_list=build_uv_texture_list(i_vert,i_face,me,obj)
             if (len(tex_list)==0):
                 tex_list+=build_vertex_color_list(i_vert,i_face,me)
-
-            #print ("**"+tex_list)
             
+           
             if len(tex_list)==0:
                 tex_list.append({'u':0.0,'v':0.0,'tex':'rgb(0.6,0.6,0.6)'})
                 
@@ -742,7 +748,7 @@ if __name__ == "__main__":
     
     #bpy.ops.export.raydium_tri('INVOKE_DEFAULT')
     #bpy.ops.import_mesh.raydium_tri('INVOKE_DEFAULT')
-    #write_some_data(bpy.context,"c:\\test.tri",True)
+    #write_some_data(bpy.context,"../data/capt_vtt.tri",True,False)
     
     if (0) :
         try:
