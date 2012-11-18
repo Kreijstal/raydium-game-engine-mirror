@@ -82,6 +82,7 @@ def convert_quad_to_tri(obj):
     print ("Triangulate Faces with pattern")
     bpy.ops.object.select_pattern(pattern=obj.name)
     bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.reveal() 
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.mesh.quads_convert_to_tris()
     bpy.ops.object.mode_set(mode='OBJECT')
