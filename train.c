@@ -30,9 +30,9 @@ if(raydium_key[GLUT_KEY_END]) speed=-force;
 raydium_ode_motor_speed_name("train_moteur",speed);
 }
 
-if(raydium_key_last==1097) raydium_ode_time_change(0);
-if(raydium_key_last==1122) raydium_ode_time_change(10);
-if(raydium_key_last==1101) raydium_ode_time_change(100);
+if(raydium_key_last==1000+'a') raydium_ode_time_change(0);
+if(raydium_key_last==1000+'z') raydium_ode_time_change(10);
+if(raydium_key_last==1000+'e') raydium_ode_time_change(100);
 
 
 if(raydium_key_last==1032)
@@ -43,7 +43,7 @@ if(raydium_key_last==1032)
 //    raydium_particle_generator_load("fountain.prt","fountain");
 //    raydium_particle_generator_load("explosion.prt","explo");
 //    raydium_particle_generator_load("explosmoke.prt","explo_smoke");
-    
+
 //    raydium_particle_generator_move_name_3f("explo",1,0,0);
     raydium_php_exec("train.php");
     }
@@ -64,7 +64,7 @@ raydium_clear_frame();
 //raydium_ode_element_camera_inboard_name("train_train",0,0.3,-0.3,-3,0,-0.5);
 raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
 //raydium_object_draw_name("rail_world_background.tri");
-    
+
 raydium_ode_draw_all(0);
 if(raydium_key[GLUT_KEY_F1])
     raydium_ode_draw_all(1);
@@ -75,7 +75,7 @@ raydium_osd_printf(3,87,16,0.5,"font2.tga","Use keys 'HOME','END' to move the tr
 raydium_osd_printf(3,91,16,0.5,"font2.tga","Use key 'F1' to show debug ODE collision boxes");
 raydium_osd_printf(3,95,16,0.5,"font2.tga","Use cursors and mouse to move the camera");
 raydium_osd_logo("logo.tga");
-    
+
 raydium_rendering_finish();
 }
 

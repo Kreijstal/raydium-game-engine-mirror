@@ -88,7 +88,7 @@ for($i=1;$i<=8;$i++)
 $force=1;
 
 echo "train Ok.";
-raydium_ode_object_move_name_3f("TRAIN",2,0,0.3);
+raydium_ode_object_move_name_3f("TRAIN",-7,0,0.45);
 
 //raydium_ode_time_change(0);
 
