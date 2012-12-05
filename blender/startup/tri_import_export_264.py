@@ -57,24 +57,31 @@ def convert_to_mesh(obj):
     
     print ("Creating temporary working Mesh for {}.".format(obj))
     
-#    if obj.type=='MESH':
-#        bpy.ops.object.duplicate()
-#    else:
-#        bpy.ops.object.convert(target='MESH',keep_original=True)    
-#        
-#    if (len(bpy.context.selected_objects)>1):
-#        raise ("Should never happen ")
-#    temp_object=bpy.context.selected_objects[0]
-#    bpy.context.scene.objects.active=temp_object
-#    
-#    for modifier in temp_object.modifiers:
-#        print ("Applying modifier %s"%modifier.name)
-#        bpy.ops.object.modifier_apply(modifier=modifier.name)
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.scene.objects.active=obj
+    bpy.ops.object.select_pattern(pattern=obj.name)    
     
-    m=obj.to_mesh(bpy.context.scene,True,"PREVIEW")
-    bpy.ops.object.add(type='MESH')
-    temp_object=bpy.context.active_object
-    temp_object.data=m
+    if obj.type=='MESH':
+        bpy.ops.object.duplicate()
+    else:
+        bpy.ops.object.convert(target='MESH',keep_original=True) 
+    
+    if (len(bpy.context.selected_objects)!=1):
+        raise ("Should never happen ")
+        
+    temp_object=bpy.context.selected_objects[0]
+    bpy.context.scene.objects.active=temp_object
+      
+    for modifier in temp_object.modifiers:
+        print ("Applying modifier %s"%modifier.name)
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+    
+#    m=obj.to_mesh(bpy.context.scene,True,"RENDER")
+#    bpy.ops.object.add(type='MESH')
+#    temp_object=bpy.context.active_object
+#    temp_object.data=m
+
+    temp_object.name = "Mesh_"+obj.name
             
     return temp_object
 
@@ -87,13 +94,13 @@ def convert_quad_to_tri(obj):
     bpy.ops.mesh.quads_convert_to_tris()
     bpy.ops.object.mode_set(mode='OBJECT')
 
-def export_vertice(vert,face,me,obj,f):    
+def export_vertice(vert,face,me,obj,f):
     global all_scene
     
     if all_scene:
         rot = obj.matrix_world
         pos = obj.location
-        vloc,qrot,vscale = rot.decompose()    
+        vloc,qrot,vscale = rot.decompose()
     
     v=me.vertices[vert].co.copy()
     
@@ -123,7 +130,7 @@ def build_vertex_color_list(i_vert,i_face,me):
         g=col[1]
         b=col[2]
         texture=("rgb(%3.2f,%3.2f,%3.2f)"%(r,g,b))
-        tex_list.append({'u':0.0,'v':0.0,'tex':texture})        
+        tex_list.append({'u':0.0,'v':0.0,'tex':texture})
 
     return tex_list
 
@@ -132,7 +139,7 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
     
     tex_list=[]
     tex_name_list=[]
-    for uvt in me.tessface_uv_textures:            
+    for uvt in me.tessface_uv_textures:
         if uvt.data[i_face].image!=None:
             if i_vert==0:
                 uv=uvt.data[i_face].uv1
@@ -184,19 +191,19 @@ def unselect_unhide():
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='DESELECT')
     bpy.ops.mesh.reveal()
-    bpy.ops.object.mode_set(mode='OBJECT')        
+    bpy.ops.object.mode_set(mode='OBJECT')
     return
 
 def select_same_image():
     bpy.ops.object.mode_set(mode='EDIT')            
     bpy.ops.mesh.select_similar(type='IMAGE')   
-    bpy.ops.object.mode_set(mode='OBJECT')        
+    bpy.ops.object.mode_set(mode='OBJECT')
     return   
 
 def hide_unselected():
     bpy.ops.object.mode_set(mode='EDIT')                
     bpy.ops.mesh.hide(unselected=True)
-    bpy.ops.object.mode_set(mode='OBJECT')         
+    bpy.ops.object.mode_set(mode='OBJECT')
 
 def export_mesh(obj,f):
     
@@ -211,7 +218,7 @@ def export_mesh(obj,f):
     print ("Exporting mesh %s, %d faces, %d vertices"%(obj.data.name,len(me.tessfaces),len(me.vertices)))
 
     cpt=0 
-#    for i_tface,tface in enumerate(me.faces):
+#   for i_tface,tface in enumerate(me.faces):
     #depth, texture name, texture mode, indice
     faces_array=[[0,'',i] for i in range(nf)]
         
@@ -280,7 +287,7 @@ def export_mesh(obj,f):
         
                         
     print ("%d%% (%d)"%(per,nf))
-    #bpy.data.meshes.remove(me)    
+    #bpy.data.meshes.remove(me) 
 
 def write_some_data(context, filepath, save_elements,save_position):
     global all_scene,texture_swap_count
@@ -299,11 +306,6 @@ def write_some_data(context, filepath, save_elements,save_position):
         print ("Saving Each element in its own file according to mesh name.")
         all_scene=False
     else:
-        print ("Saving all scene in one file.")
-        print ("Opening %s for writing."%os.path.basename(filepath))
-        f =open(os.path.basename(filepath),'w')
-        print ("Version 1 tri file")
-        f.write("1\n")
         all_scene=True
     
     if save_position:
@@ -321,7 +323,7 @@ def write_some_data(context, filepath, save_elements,save_position):
     texture_swap_count=0
     print ("%d objects to export."%(len(selected_objects)))
     
-    big_wobj=None    
+    big_wobj=None
                            
     for i_obj,obj in enumerate(selected_objects):
         
@@ -329,17 +331,17 @@ def write_some_data(context, filepath, save_elements,save_position):
             mesh_name=obj.data.name
         except:
             mesh_name=""
-
+              
         if save_position:
             n1=obj.name.replace(" ","_")
             n2=mesh_name.replace(" ","_")
             f_pos.write("%32.32s %32.32s %f %f %f %f %f %f\n"%(n1,n2,obj.location[0],obj.location[1],obj.location[2],obj.rotation_euler[0],obj.rotation_euler[1],obj.rotation_euler[2]))
  
         if obj.type=='LAMP' or obj.type=='CAMERA' or obj.type=='CURVE':
-            print ("Skipping object {}.".format(obj))
+            print ("Skipping Export of object {}.".format(obj))
             continue
 
-        mesh_name=obj.data.name
+        #mesh_name=obj.data.name
         if mesh_name[0]=='.':
             print ("Not exporting %s hidden mesh (begin with a . "%mesh_name)
             continue
@@ -349,7 +351,7 @@ def write_some_data(context, filepath, save_elements,save_position):
         else:
             print ("Skipping %s already exported"%mesh_name)
             continue
-
+        
         bpy.ops.object.select_all(action='DESELECT')
         #bpy.ops.object.select_name(name=obj.name)
         bpy.ops.object.select_pattern(pattern=obj.name)
@@ -363,6 +365,8 @@ def write_some_data(context, filepath, save_elements,save_position):
             if big_wobj==None:
                 print("Creating One big object/mesh for all scene.\n")
                 big_wobj=wobj
+                big_wobj.name="Export_Object"
+                big_wobj.data.name="Export_Mesh"
             else:
                 print ("Joining %s and %s\n"%(big_wobj.name,wobj.name))
                 bpy.ops.object.select_all(action='DESELECT')
@@ -371,37 +375,37 @@ def write_some_data(context, filepath, save_elements,save_position):
                 bpy.ops.object.select_pattern(pattern=wobj.name,extend=True)
                 bpy.ops.object.join()
                 
-            if i_obj < len(selected_objects)-1:
-                print ("Not last object, continue join.\n")
-                continue
-            else:
-                wobj=big_wobj
-                print ("Ok for exporting %s...\n"%wobj.name)
-                
-                
-                
-                
         if not all_scene:
             file_name=mesh_name
             file_name+='.tri'
             print ("Opening %s for writing."%file_name)
             f =open(file_name,'w')
             print ("Version 1 tri file")
-            f.write("1\n")               
-            
-
-        export_mesh(wobj,f)
-            
-        print ("Removing temporary object.")
-        bpy.ops.object.delete()
-
-        if not all_scene:
+            f.write("1\n")
+            export_mesh(wobj,f)
             print("Closing %s file."%file_name)
-            f.close()
+            f.close()            
+            
+            print ("Removing temporary object.")
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.context.scene.objects.active=wobj
+            bpy.ops.object.select_pattern(pattern=wobj.name)
+            bpy.ops.object.delete()
 
-    print ("Closing tri file.")
     if all_scene:
+        print ("Saving all scene in one file.")
+        print ("Opening %s for writing."%os.path.basename(filepath))
+        f =open(os.path.basename(filepath),'w')
+        print ("Version 1 tri file")
+        f.write("1\n")
+        export_mesh(big_wobj,f);
+        print ("Closing tri file.")
         f.close()
+        print ("Removing temporary big object.")
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.context.scene.objects.active=big_wobj
+        bpy.ops.object.select_pattern(pattern=big_wobj.name)
+        bpy.ops.object.delete()
         
     if save_position:
         print ("Closing position file.")
@@ -552,7 +556,7 @@ def read_some_data(context,filepath,clean_mesh):
                 if (nv%3)==1:
                     me.tessface_vertex_colors[ntc-1].data[nf].color2=[float(l[0]),float(l[1]),float(l[2])]
                 if (nv%3)==2:
-                    me.tessface_vertex_colors[ntc-1].data[nf].color3=[float(l[0]),float(l[1]),float(l[2])]                                        
+                    me.tessface_vertex_colors[ntc-1].data[nf].color3=[float(l[0]),float(l[1]),float(l[2])]
             else:
                 ntt=ntt+1
                 #print (t)
@@ -618,7 +622,7 @@ def read_some_data(context,filepath,clean_mesh):
             else:
                 f[nf].use_smooth=True
                 
-            nf=nf+1                
+            nf=nf+1
     
     print ("%d%% (%d)"%(per,nf))
     print (".tri file need %d textures swap"% texture_change_count)
@@ -660,12 +664,12 @@ class ExportSomeData(bpy.types.Operator, ExportHelper):
     save_elements = BoolProperty(name="Save Each Element", description="Save each object as one file, using mesh name", default=False)
     save_position = BoolProperty(name="Save Each Element Pos/Rot",description="Save Position and rotation of each element",default=False)
 
-#    type = EnumProperty(items=(('OPT_A', "First Option", "Description one"),
-#                               ('OPT_B', "Second Option", "Description two."),
-#                               ),
-#                        name="Example Enum",
-#                        description="Choose between two items",
-#                        default='OPT_A')
+#   type = EnumProperty(items=(('OPT_A', "First Option", "Description one"),
+#                            ('OPT_B', "Second Option", "Description two."),
+#                            ),
+#                     name="Example Enum",
+#                     description="Choose between two items",
+#                     default='OPT_A')
 #
     @classmethod
     def poll(cls, context):
@@ -676,7 +680,7 @@ class ExportSomeData(bpy.types.Operator, ExportHelper):
         now=time.time()
         print ("----------------New Export------------------------")        
         ret=write_some_data(context, self.filepath, self.save_elements,self.save_position)
-        print ("Elapsed: %f"%(time.time()-now))        
+        print ("Elapsed: %f"%(time.time()-now))
         return ret
     
 class ImportSomeData(bpy.types.Operator,ImportHelper):
@@ -693,12 +697,12 @@ class ImportSomeData(bpy.types.Operator,ImportHelper):
     # to the class instance from the operator settings before calling.
     clean_mesh = BoolProperty(name="Clean Up Mesh", description="Remove doubles vertices and try to make quads faces", default=False)
 
-#    type = EnumProperty(items=(('OPT_A', "First Option", "Description one"),
-#                               ('OPT_B', "Second Option", "Description two."),
-#                               ),
-#                        name="Example Enum",
-#                        description="Choose between two items",
-#                        default='OPT_A')
+#   type = EnumProperty(items=(('OPT_A', "First Option", "Description one"),
+#                            ('OPT_B', "Second Option", "Description two."),
+#                            ),
+#                     name="Example Enum",
+#                     description="Choose between two items",
+#                     default='OPT_A')
 #
     @classmethod
     def poll(cls, context):
@@ -725,14 +729,14 @@ def register():
     bpy.utils.register_class(ExportSomeData)
     bpy.types.INFO_MT_file_export.append(menu_func_export)
     bpy.utils.register_class(ImportSomeData)
-    bpy.types.INFO_MT_file_import.append(menu_func_import)    
+    bpy.types.INFO_MT_file_import.append(menu_func_import)
 
 
 def unregister():
     bpy.utils.unregister_class(ExportSomeData)
     bpy.types.INFO_MT_file_export.remove(menu_func_export)
     bpy.utils.unregister_class(ImportSomeData)
-    bpy.types.INFO_MT_file_export.remove(menu_func_Import)    
+    bpy.types.INFO_MT_file_export.remove(menu_func_Import)
 
 
 if __name__ == "__main__":
