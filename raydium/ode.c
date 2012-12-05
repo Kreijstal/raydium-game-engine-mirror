@@ -1272,10 +1272,18 @@ int raydium_ode_element_object_get_name(char *e)
 return raydium_ode_element_object_get(raydium_ode_element_find(e));
 }
 
-int raydium_ode_object_sphere_add(char *name, int group, dReal mass, dReal radius, signed char type, int tag, char *mesh)
+int raydium_ode_object_sphere_add(char *iname, int group, dReal mass, dReal radius, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
+char name[RAYDIUM_MAX_NAME_LEN];
+
+if(iname==NULL)
+    raydium_ode_name_auto("Sphere",name);
+else if (iname[0]==0)
+    raydium_ode_name_auto("Sphere",name);
+else
+    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1343,11 +1351,19 @@ return -1;
 
 }
 
-int raydium_ode_object_box_add(char *name, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
+int raydium_ode_object_box_add(char *iname, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
 dReal sizes[3];
+char name[RAYDIUM_MAX_NAME_LEN];
+
+if(iname==NULL)
+    raydium_ode_name_auto("Box",name);
+else if (iname[0]==0)
+    raydium_ode_name_auto("Box",name);
+else
+    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1424,11 +1440,19 @@ return -1;
 
 }
 
-int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh)
+int raydium_ode_object_capsule_add(char *iname, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
 dReal sizes[3];
+char name[RAYDIUM_MAX_NAME_LEN];
+
+if(iname==NULL)
+    raydium_ode_name_auto("Capsule",name);
+else if (iname[0]==0)
+    raydium_ode_name_auto("Capsule",name);
+else
+    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
