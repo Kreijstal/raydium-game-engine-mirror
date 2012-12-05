@@ -11,6 +11,10 @@
 #include "headers/shadow.h"
 #endif
 
+#ifdef ODE_SUPPORT
+#include "ode.h"
+#endif
+
 #include "shadow.h"
 
 void raydium_shadow_camerabox_size(GLfloat size)
@@ -227,8 +231,7 @@ glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1
 raydium_shadow_rendering=1;
 glPushMatrix();
 #ifdef ODE_SUPPORT
-//raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); // static compile time linking disallow using this constant
-raydium_ode_draw_all(4);
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); 
 #endif
 glPopMatrix();
 raydium_shadow_rendering=0;
