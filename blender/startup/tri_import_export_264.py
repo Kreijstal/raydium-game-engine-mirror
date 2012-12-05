@@ -16,6 +16,27 @@ texture_swap_count=0
 current_texture_list=[]
 exported_mesh_list=[]
 
+def object_deselect_all():
+    bpy.ops.object.select_all(action='DESELECT')
+    
+def object_select(obj):
+    object_deselect_all()
+    bpy.ops.object.select_pattern(pattern=obj.name)
+
+def object_select_list(lobj):
+    object_deselect_all()
+    for o in lobj:
+        bpy.ops.object.select_pattern(pattern=o.name,extend=True)
+        
+def object_active(obj):
+    bpy.context.scene.objects.active=obj    
+
+def object_select_and_active(obj):
+    object_deselect_all()
+    object_select(obj)
+    object_active(obj)
+
+    
 def save_state(context):
     global active_object,selected_objects,active_object_mode
     
@@ -42,13 +63,10 @@ def restore_state(context):
             bpy.ops.object.mode_set(mode='OBJECT')
             
     if active_object!=None:
-        bpy.ops.object.select_pattern(pattern=active_object.name)
-        bpy.context.scene.objects.active=active_object
+        object_active(active_object)
 
-    bpy.ops.object.select_all(action='DESELECT')
-    for ob in selected_objects:
-        ob.select=True  
-
+    object_select_list(selected_objects)
+    
     if active_object_mode=='EDIT':
         bpy.ops.object.mode_set(mode='EDIT')        
 
@@ -57,9 +75,7 @@ def convert_to_mesh(obj):
     
     print ("Creating temporary working Mesh for {}.".format(obj))
     
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.scene.objects.active=obj
-    bpy.ops.object.select_pattern(pattern=obj.name)    
+    object_select_and_active(obj)
     
     if obj.type=='MESH':
         bpy.ops.object.duplicate()
@@ -70,7 +86,7 @@ def convert_to_mesh(obj):
         raise ("Should never happen ")
         
     temp_object=bpy.context.selected_objects[0]
-    bpy.context.scene.objects.active=temp_object
+    object_active(temp_object)
       
     for modifier in temp_object.modifiers:
         print ("Applying modifier %s"%modifier.name)
@@ -87,7 +103,7 @@ def convert_to_mesh(obj):
 
 def convert_quad_to_tri(obj):
     print ("Triangulate Faces with pattern")
-    bpy.ops.object.select_pattern(pattern=obj.name)
+    object_select_and_active(obj)
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.reveal() 
     bpy.ops.mesh.select_all(action='SELECT')
@@ -352,9 +368,10 @@ def write_some_data(context, filepath, save_elements,save_position):
             print ("Skipping %s already exported"%mesh_name)
             continue
         
-        bpy.ops.object.select_all(action='DESELECT')
+        #deselect_all()
         #bpy.ops.object.select_name(name=obj.name)
-        bpy.ops.object.select_pattern(pattern=obj.name)
+        #bpy.ops.object.select_pattern(pattern=obj.name)
+        object_select(obj)
         
         print ("Exporting {} / {} Type:{}".format(obj,obj.name,obj.type))
            
@@ -369,9 +386,7 @@ def write_some_data(context, filepath, save_elements,save_position):
                 big_wobj.data.name="Export_Mesh"
             else:
                 print ("Joining %s and %s\n"%(big_wobj.name,wobj.name))
-                bpy.ops.object.select_all(action='DESELECT')
-                bpy.context.scene.objects.active=big_wobj
-                bpy.ops.object.select_pattern(pattern=big_wobj.name)
+                object_select_and_active(big_wobj)
                 bpy.ops.object.select_pattern(pattern=wobj.name,extend=True)
                 bpy.ops.object.join()
                 
@@ -387,9 +402,7 @@ def write_some_data(context, filepath, save_elements,save_position):
             f.close()            
             
             print ("Removing temporary object.")
-            bpy.ops.object.select_all(action='DESELECT')
-            bpy.context.scene.objects.active=wobj
-            bpy.ops.object.select_pattern(pattern=wobj.name)
+            object_select_and_active(wobj)
             bpy.ops.object.delete()
 
     if all_scene:
@@ -402,9 +415,7 @@ def write_some_data(context, filepath, save_elements,save_position):
         print ("Closing tri file.")
         f.close()
         print ("Removing temporary big object.")
-        bpy.ops.object.select_all(action='DESELECT')
-        bpy.context.scene.objects.active=big_wobj
-        bpy.ops.object.select_pattern(pattern=big_wobj.name)
+        object_select_and_active(big_wobj)
         bpy.ops.object.delete()
         
     if save_position:
