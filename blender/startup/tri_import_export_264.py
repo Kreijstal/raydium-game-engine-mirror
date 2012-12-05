@@ -634,7 +634,7 @@ def read_some_data(context,filepath,clean_mesh):
                 f[nf].use_smooth=True
                 
             nf=nf+1
-    
+    me.update(calc_edges=True,calc_tessface=True)
     print ("%d%% (%d)"%(per,nf))
     print (".tri file need %d textures swap"% texture_change_count)
     
