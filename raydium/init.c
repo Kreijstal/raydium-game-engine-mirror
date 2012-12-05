@@ -107,8 +107,9 @@ for(i=0;i<RAYDIUM_MAX_TEXTURES;i++)
     raydium_texture_free(i);
 
 // ODE
+#ifdef ODE_SUPPORT
 raydium_ode_delete_all();
-
+#endif
 // sound ?
 
 // *** linked things:
