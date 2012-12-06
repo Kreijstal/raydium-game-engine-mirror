@@ -648,7 +648,7 @@ def read_some_data(context,filepath,clean_mesh):
     file.close()  
     if clean_mesh:  
         print("Clean Up Mesh")
-        bpy.ops.mesh.remove_doubles(limit=0.0001)
+        bpy.ops.mesh.remove_doubles(mergedist=0.0001)
         bpy.ops.mesh.tris_convert_to_quads()
         
     bpy.ops.object.mode_set(mode='OBJECT')
