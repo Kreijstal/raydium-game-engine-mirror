@@ -170,10 +170,15 @@ def build_uv_texture_list(i_vert,i_face,me,obj):
                 tex_name_list.append(name)
                 
             if not(os.path.isfile(texture)) or uvt.data[i_face].image.file_format!='TARGA':
+                print ("New Image Texture",texture)
                 image=uvt.data[i_face].image
                 image.file_format='TARGA'
-                image.filepath_raw=os.path.basename(image.filepath).rsplit('.',1)[0]+'.tga'
+                if image.filepath:
+                    image.filepath_raw=os.path.basename(image.filepath).rsplit('.',1)[0]+'.tga'
+                else:
+                    image.filepath=image.name+".tga"
                 try:
+                    print ("Sauvegarde image ",image.filepath)
                     image.save()
                 except:
                     pass
