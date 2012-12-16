@@ -98,9 +98,49 @@ Rotate p (GLfloat * 3) by (rx,ry,rx) angles (degrees).
 Result is stored in res (GLfloat * 3)
 **/
 
+__rayapi void raydium_math_normalize_vector4 (GLfloat * vector);
+/**
+Vector normalization.
+**/
+
 __rayapi void raydium_math_pos_to_matrix (GLfloat * pos, GLfloat * m);
 /**
 Generates a ODE style matrix (16 Glfloat) from pos (GLfloat * 3)
+**/
+
+__rayapi void raydium_math_matrix4_identity_set(GLfloat * mati);
+/**
+Set 4x4 matrix ##mati## to identity.
+**/
+
+__rayapi void raydium_math_multiply_matrix4(GLfloat *matrix1,GLfloat *matrix2,GLfloat *result );
+/**
+Matrix 4x4 multiplication.
+**/
+
+__rayapi void raydium_math_invert_matrix4(GLfloat * matin, GLfloat * matout);
+/**
+Compute inverse of 4x4 Matrix
+**/
+
+__rayapi void raydium_math_translate_matrix4_3f(GLfloat x, GLfloat y, GLfloat z,GLfloat *matrix);
+/**
+Translate 4x4 Matrix ##matrix## by (x,y,z) vector.
+**/
+
+__rayapi void raydium_math_rotate_matrix4_vector_angle(GLfloat angleInRadians, GLfloat x, GLfloat y, GLfloat z,GLfloat *matrix);
+/**
+Rotate 4x4 matrix ##matrix## arround vector ##(x,y,z)## for ##angleInRadians## radians.
+**/
+
+__rayapi void raydium_math_crossproduct (GLfloat *pvector1, GLfloat *pvector2,GLfloat *normal);
+/**
+Compute cross (vectorial) product of ##pvector1## and ##pvector2##. Result in ##normal## vector.
+**/
+
+__rayapi void raydium_math_multiply_matrix4_vectors_array(GLfloat *matrix1,GLfloat *vect, int n_elems,GLfloat *result);
+/**
+Multiply ##n_elems## vector array by 4x4 matrix ##matrix1##. Store rotated and translated vectors in ##n_elems## x 4 array ##result##.
 **/
 
 __rayapi void raydium_math_pos_get_modelview (GLfloat * res);
