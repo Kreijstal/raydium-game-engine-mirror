@@ -238,3 +238,8 @@ __rayapi void raydium_math_perspective_matrix4(GLfloat fovyInDegrees, GLfloat as
 /**
 Build 4x4 Perspective Matrix for ##fovyInDegrees## in degree.
 **/
+
+__rayapi void raydium_math_orthographic_matrix4(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar,GLfloat *matrix);
+/**
+Build 4x4 Orthographic Perspective Matrix.
+**/

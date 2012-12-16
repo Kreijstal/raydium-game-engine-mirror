@@ -541,3 +541,29 @@ void raydium_math_perspective_matrix4(GLfloat fovyInDegrees, GLfloat aspectRatio
 	xmax=ymax*aspectRatio;
 	raydium_math_frustum_matrix4(-xmax, xmax, -ymax, ymax, znear, zfar, matrix);
 }
+
+void raydium_math_orthographic_matrix4(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar,GLfloat *matrix){
+	GLfloat matrix2[16], temp2, temp3, temp4, resultMatrix[16];
+	temp2=right-left;
+	temp3=top-bottom;
+	temp4=zfar-znear;
+	matrix2[0]=2.0/temp2;
+	matrix2[1]=0.0;
+	matrix2[2]=0.0;
+	matrix2[3]=0.0;
+	matrix2[4]=0.0;
+	matrix2[5]=2.0/temp3;
+	matrix2[6]=0.0;
+	matrix2[7]=0.0;
+	matrix2[8]=0.0;
+	matrix2[9]=0.0;
+	matrix2[10]=-2.0/temp4;
+	matrix2[11]=0.0;
+	matrix2[12]=(-right-left)/temp2;
+	matrix2[13]=(-top-bottom)/temp3;
+	matrix2[14]=(-zfar-znear)/temp4;
+	matrix2[15]=1.0;
+	raydium_math_multiply_matrix4(matrix, matrix2,resultMatrix);
+
+	memcpy(matrix, resultMatrix, 16*sizeof(GLfloat));
+}
