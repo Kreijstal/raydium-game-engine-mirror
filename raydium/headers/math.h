@@ -223,3 +223,18 @@ Converts a duration (in seconds) to H:M:S:MS format.
 **/
 
 #endif
+
+__rayapi void raydium_math_lookat_matrix4(GLfloat * eyePosition3D ,GLfloat *center3D, GLfloat *upVector3D,GLfloat *matrix);
+/**
+Build 4x4 Matrix corresponding to View look at matrix. This is a replacement for glut lookat function wich return matrix content to be used by a shader.
+**/
+
+__rayapi void raydium_math_frustum_matrix4 (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar,GLfloat *matrix);
+/**
+Build 4x4 Frustum Projection Matrix. Matrix returned is intended to be used in a shader.
+**/
+
+__rayapi void raydium_math_perspective_matrix4(GLfloat fovyInDegrees, GLfloat aspectRatio, GLfloat znear, GLfloat zfar,GLfloat *matrix);
+/**
+Build 4x4 Perspective Matrix for ##fovyInDegrees## in degree.
+**/

@@ -468,3 +468,76 @@ t-=(*s)*1;
 (*ms)=t*1000;
 }
 
+void raydium_math_lookat_matrix4(GLfloat * eyePosition3D ,GLfloat *center3D, GLfloat *upVector3D,GLfloat *matrix){
+
+	GLfloat forward[3], side[3], up[3];
+	GLfloat matrix2[16], resultMatrix[16];
+
+	forward[0]=center3D[0]-eyePosition3D[0];
+	forward[1]=center3D[1]-eyePosition3D[1];
+	forward[2]=center3D[2]-eyePosition3D[2];
+	raydium_math_normalize_vector4(forward);
+
+	//Side = forward x up
+	raydium_math_crossproduct(forward, upVector3D,side );
+	raydium_math_normalize_vector4(side);
+
+	//Recompute up as: up = side x forward
+	raydium_math_crossproduct(side, forward, up);
+
+	matrix2[0]=side[0];
+	matrix2[4]=side[1];
+	matrix2[8]=side[2];
+	matrix2[12]=0.0;
+
+	matrix2[1]=up[0];
+	matrix2[5]=up[1];
+	matrix2[9]=up[2];
+	matrix2[13]=0.0;
+
+	matrix2[2]=-forward[0];
+	matrix2[6]=-forward[1];
+	matrix2[10]=-forward[2];
+	matrix2[14]=0.0;
+
+	matrix2[3]=matrix2[7]=matrix2[11]=0.0;
+	matrix2[15]=1.0;
+
+	raydium_math_multiply_matrix4(matrix, matrix2,resultMatrix);
+	raydium_math_translate_matrix4_3f(-eyePosition3D[0], -eyePosition3D[1], -eyePosition3D[2],resultMatrix);
+
+	memcpy(matrix, resultMatrix, 16*sizeof(GLfloat));
+}
+
+void raydium_math_frustum_matrix4 (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar,GLfloat *matrix){
+	GLfloat matrix2[16], temp, temp2, temp3, temp4, resultMatrix[16];
+	temp=2.0*znear;
+	temp2=right-left;
+	temp3=top-bottom;
+	temp4=zfar-znear;
+	matrix2[0]=temp/temp2;
+	matrix2[1]=0.0;
+	matrix2[2]=0.0;
+	matrix2[3]=0.0;
+	matrix2[4]=0.0;
+	matrix2[5]=temp/temp3;
+	matrix2[6]=0.0;
+	matrix2[7]=0.0;
+	matrix2[8]=(right+left)/temp2;
+	matrix2[9]=(top+bottom)/temp3;
+	matrix2[10]=(-zfar-znear)/temp4;
+	matrix2[11]=-1.0;
+	matrix2[12]=0.0;
+	matrix2[13]=0.0;
+	matrix2[14]=(-temp*zfar)/temp4;
+	matrix2[15]=0.0;
+	raydium_math_multiply_matrix4(matrix, matrix2,resultMatrix);
+	memcpy(matrix, resultMatrix, 16*sizeof(GLfloat));
+}
+
+void raydium_math_perspective_matrix4(GLfloat fovyInDegrees, GLfloat aspectRatio, GLfloat znear, GLfloat zfar,GLfloat *matrix){
+	GLfloat ymax, xmax;
+	ymax=znear*tanf(fovyInDegrees*M_PI/360.0);
+	xmax=ymax*aspectRatio;
+	raydium_math_frustum_matrix4(-xmax, xmax, -ymax, ymax, znear, zfar, matrix);
+}

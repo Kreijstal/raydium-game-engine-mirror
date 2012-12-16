@@ -9,6 +9,7 @@
 #include "index.h"
 #else
 #include "headers/ode.h"
+#include "ode.h"
 #endif
 
 // TODO:
