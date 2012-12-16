@@ -9,6 +9,7 @@
 #include "index.h"
 #else
 #include "headers/ode.h"
+#include "ode.h"
 #endif
 
 // TODO:
@@ -1272,18 +1273,10 @@ int raydium_ode_element_object_get_name(char *e)
 return raydium_ode_element_object_get(raydium_ode_element_find(e));
 }
 
-int raydium_ode_object_sphere_add(char *iname, int group, dReal mass, dReal radius, signed char type, int tag, char *mesh)
+int raydium_ode_object_sphere_add(char *name, int group, dReal mass, dReal radius, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
-char name[RAYDIUM_MAX_NAME_LEN];
-
-if(iname==NULL)
-    raydium_ode_name_auto("Sphere",name);
-else if (iname[0]==0)
-    raydium_ode_name_auto("Sphere",name);
-else
-    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1310,13 +1303,12 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      strcpy(raydium_ode_element[i].name,name);
      raydium_ode_element[i].object=group;
      raydium_ode_element[i].user_tag=tag;
-     if(mesh!=NULL)
-         if(strlen(mesh))
-          {
-          raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-          if(radius<0) // AUTODETECT
-             radius=raydium_object_find_dist_max(raydium_ode_element[i].mesh)*-radius;
-          }
+     if(strlen(mesh))
+      {
+      raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
+      if(radius<0) // AUTODETECT
+         radius=raydium_object_find_dist_max(raydium_ode_element[i].mesh)*-radius;
+      }
 
      if(type==RAYDIUM_ODE_STANDARD)
         {
@@ -1352,19 +1344,11 @@ return -1;
 
 }
 
-int raydium_ode_object_box_add(char *iname, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
+int raydium_ode_object_box_add(char *name, int group, dReal mass, dReal tx, dReal ty, dReal tz, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
 dReal sizes[3];
-char name[RAYDIUM_MAX_NAME_LEN];
-
-if(iname==NULL)
-    raydium_ode_name_auto("Box",name);
-else if (iname[0]==0)
-    raydium_ode_name_auto("Box",name);
-else
-    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1391,19 +1375,18 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
      strcpy(raydium_ode_element[i].name,name);
      raydium_ode_element[i].object=group;
      raydium_ode_element[i].user_tag=tag;
-     if(mesh!=NULL)
-         if(strlen(mesh))
+     if(strlen(mesh))
+     {
+      raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
+      if(tx<0) // AUTODETECT
          {
-          raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-          if(tx<0) // AUTODETECT
-             {
-             dReal ratio=tx;
-             raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-             tx*=(-ratio);
-             ty*=(-ratio);
-             tz*=(-ratio);
-             }
+         dReal ratio=tx;
+         raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
+         tx*=(-ratio);
+         ty*=(-ratio);
+         tz*=(-ratio);
          }
+     }
 
      if(type==RAYDIUM_ODE_STANDARD)
      {
@@ -1442,19 +1425,11 @@ return -1;
 
 }
 
-int raydium_ode_object_capsule_add(char *iname, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh)
+int raydium_ode_object_capsule_add(char *name, int group, dReal mass, dReal radius, dReal length, signed char type, int tag, char *mesh)
 {
 int i;
 dMass m;
 dReal sizes[3];
-char name[RAYDIUM_MAX_NAME_LEN];
-
-if(iname==NULL)
-    raydium_ode_name_auto("Capsule",name);
-else if (iname[0]==0)
-    raydium_ode_name_auto("Capsule",name);
-else
-    strcpy(name,iname);
 
 if(raydium_ode_element_find(name)>=0)
     {
@@ -1481,32 +1456,31 @@ for(i=1;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         strcpy(raydium_ode_element[i].name,name);
         raydium_ode_element[i].object=group;
         raydium_ode_element[i].user_tag=tag;
-        if(mesh!=NULL)
-            if(strlen(mesh))
+        if(strlen(mesh))
+        {
+            raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
+            if(radius<0) // AUTODETECT
             {
-                raydium_ode_element[i].mesh=raydium_object_find_load(mesh);
-                if(radius<0) // AUTODETECT
-                {
-                    dReal ratio=radius;
-                    GLfloat tx,ty,tz;
-                    raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
-                    if(tz<tx || tz<ty)
-                        {
-                        raydium_log("ODE: Error: cannot create capsule: autodetect failed: longest side of the mesh should be Z !");
-                        return -1;
-                        }
-                    radius=(raydium_math_max(tx,ty)*(-ratio))/2.f;
-                    length=tz*(-ratio);
-                }
-            // ODE: "cylinder's length is not counting the caps (half-spheres)"
-            length-=(radius*2.f);
-
-            if(radius<=0 || length<=0)
-                {
-                raydium_log("ODE: Error: cannot create capsule: invalid size: The full lenght has to be at least twice the radius (Z aligned)");
-                return -1;
-                }
+                dReal ratio=radius;
+                GLfloat tx,ty,tz;
+                raydium_object_find_axes_max(raydium_ode_element[i].mesh,&tx,&ty,&tz);
+                if(tz<tx || tz<ty)
+                    {
+                    raydium_log("ODE: Error: cannot create capsule: autodetect failed: longest side of the mesh should be Z !");
+                    return -1;
+                    }
+                radius=(raydium_math_max(tx,ty)*(-ratio))/2.f;
+                length=tz*(-ratio);
             }
+        // ODE: "cylinder's length is not counting the caps (half-spheres)"
+        length-=(radius*2.f);
+
+        if(radius<=0 || length<=0)
+            {
+            raydium_log("ODE: Error: cannot create capsule: invalid size: The full lenght has to be at least twice the radius (Z aligned)");
+            return -1;
+            }
+        }
 
     if(type==RAYDIUM_ODE_STANDARD)
     {
