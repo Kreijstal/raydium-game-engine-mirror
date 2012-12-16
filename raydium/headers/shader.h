@@ -192,4 +192,19 @@ able to change the ##variable##'s ##value## even if the ##shader## is not
 the current one.
 **/
 
+__rayapi signed char raydium_shader_var_matrix4fv(int var_id, int num, int transpose, float value[]);
+/**
+This function will change the matrix of ##num## ##values## of the matrix ##var_id## of
+the current shader.
+Value is a float array.
+Num is an integer.
+**/
+
+__rayapi signed char raydium_shader_var_matrix4fv_name(char *shader, char *variable, int num, int transpose, float value[]);
+/**
+Same as above, but using shader's name and variable's name. This function is
+able to change the ##variable##'s ##value## even if the ##shader## is not
+the current one.
+**/
+
 #endif
