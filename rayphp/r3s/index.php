@@ -121,10 +121,10 @@ else
     <div class="contenu">
     <div class="publi_bloc">
     <div class="publi_head">
-    <strong>&nbsp;R3S message</strong> &gt; home<h2><?=$str;?></h2>
+    <strong>&nbsp;R3S message</strong> &gt; home<h2><?php echo $str;?></h2>
     </div>
     <div class="publi_corps">
-<?
+<?php
 }
 
 function tail()
@@ -141,16 +141,16 @@ head();
 echo "<h3>Available files:</h3>\n";
 echo "<table border=0 cellpadding=2>";
 
- if ($dh = _opendir($data_dir)) 
- {
-    while (($file = _readdir($dh)) !== false) 
+if ($dh = _opendir($data_dir))
     {
+    while (($file = _readdir($dh)) !== false)
+        {
         if($file[0]==".") continue;
         $size=filesize($data_dir.$file);
         $total_size+=$size;
         echo "<tr><td><b><a href=\"?type=getBin&file=$file\">$file</a></b></td><td align=right>$size byte(s)</td><td>&nbsp;</td><td>".date("Y-m-d H:i:s",filemtime($data_dir.$file))."</td></tr>";
+        }
     }
- }
 echo "<tr><td>&nbsp;</td></tr>";
 echo "<tr><td><b>Total size</b></td><td align=right>".sprintf("%.2f",$total_size/1024/1024)." MB</td></tr";
 echo "</table><br>";
@@ -196,75 +196,74 @@ if($type=="listRepos")
 if($file=="") return;
 
 if($type=="putGzip")
-{
-if(!$upload_accept)
     {
-    echo "FAILED: Upload is not activated on this server !";
+    if(!$upload_accept)
+        {
+        echo "FAILED: Upload is not activated on this server !";
+        return;
+        }
+
+    sleep($brute_force_delay);
+
+    $username=rawurldecode($username);
+    $password=rawurldecode($password);
+
+    if($username!=$upload["user"] || $password!=$upload["pass"])
+        {
+        echo "FAILED: invalid user/pass ($username/$password)";
+        return;
+        }
+    $filegz=$file.".tmp.gz";
+    if(file_exists($HTTP_POST_FILES["data"]["tmp_name"]))
+        {
+        move_uploaded_file($HTTP_POST_FILES["data"]["tmp_name"], $filegz);
+        }
+    else die("FAILED: Cannot find data in this request");
+
+    if(!decompress_file($filegz,$file)) return;
+    chmod($file,0664);
+
+    echo "+ SUCCESS: file uploaded";
     return;
     }
-
-sleep($brute_force_delay);
-
-$username=rawurldecode($username);
-$password=rawurldecode($password);
-
-if($username!=$upload["user"] || $password!=$upload["pass"])
-    {
-    echo "FAILED: invalid user/pass ($username/$password)";
-    return;
-    }
-$filegz=$file.".tmp.gz";
-if(file_exists($HTTP_POST_FILES["data"]["tmp_name"]))
- {
- move_uploaded_file($HTTP_POST_FILES["data"]["tmp_name"], $filegz);
- }
-else die("FAILED: Cannot find data in this request");
-
-if(!decompress_file($filegz,$file)) return;
-chmod($file,0664);
-
-echo "+ SUCCESS: file uploaded";
-return;
-}
 
 if(!file_exists($file)) die("FAILED: file not found");
 
 if($type=="getGzip")
-{
-$fp=@fopen($file,"rb");
-if(!$fp) die("FAILED: file not found");
-$data=fread($fp,filesize($file));
-fclose($fp);
+    {
+    $fp=@fopen($file,"rb");
+    if(!$fp) die("FAILED: file not found");
+    $data=fread($fp,filesize($file));
+    fclose($fp);
 
-$tmp=tempnam("./","delme");
-$fp=@gzopen($tmp,"wb");
-if(!$fp) return;
-gzwrite($fp,$data);
-gzclose($fp);
-//$dat=gzencode($data);
-//echo $dat;
-//echo date("s");
-readfile($tmp);
-unlink($tmp);
-//echo $tmp;
-}
+    $tmp=tempnam("./","delme");
+    $fp=@gzopen($tmp,"wb");
+    if(!$fp) return;
+    gzwrite($fp,$data);
+    gzclose($fp);
+    //$dat=gzencode($data);
+    //echo $dat;
+    //echo date("s");
+    readfile($tmp);
+    unlink($tmp);
+    //echo $tmp;
+    }
 
 if($type=="getDate")
-{
-echo filemtime($file);
-}
+    {
+    echo filemtime($file);
+    }
 
 if($type=="getBin")
-{
-header('Content-type: application/octet-stream');
-header('Content-Transfer-Encoding: Binary');
-header('Content-length: '.filesize($file));
-header('Content-Disposition: attachment; filename="'.basename($file).'"');
-readfile($file);
-}
+    {
+    header('Content-type: application/octet-stream');
+    header('Content-Transfer-Encoding: Binary');
+    header('Content-length: '.filesize($file));
+    header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    readfile($file);
+    }
 
 } // end main()
 
 
 main(GorP("file"),GorP("type"),GorP("username"),GorP("password"),GorP("data"));
-?>
