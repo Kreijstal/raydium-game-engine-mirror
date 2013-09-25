@@ -54,17 +54,17 @@ raydium_ode_ground_set_name("crate_parabump.tri");
 obj=raydium_ode_object_find("GLOBAL");
 
 raydium_ode_object_box_add("coch",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"coch2.tri");
-raydium_ode_element_move_name_3f("coch",0,0.2,-0.1);
+raydium_ode_element_move_name_3f("coch",0,-0.2,-0.1);
 
 raydium_ode_object_box_add("head",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead.tri");
-raydium_ode_element_move_name_3f("head",0.3,-0.2,-0.25);
+raydium_ode_element_move_name_3f("head",0.3,0.6,-0.25);
 raydium_object_tangent_smooth_name("derhead.tri");
 
 raydium_ode_object_box_add("headsmooth",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead_smooth.tri");
-raydium_ode_element_move_name_3f("headsmooth",0,-0.2,-0.25);
+raydium_ode_element_move_name_3f("headsmooth",0,0.6,-0.25);
 
 raydium_ode_object_box_add("headflat",obj,1,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"derhead_flat.tri");
-raydium_ode_element_move_name_3f("headflat",-0.3,-0.2,-0.25);
+raydium_ode_element_move_name_3f("headflat",-0.3,0.6,-0.25);
 
 raydium_ode_object_sphere_add("light",obj,0.01,RAYDIUM_ODE_AUTODETECT,RAYDIUM_ODE_STANDARD,0,"ballon.tri");
 raydium_ode_element_move_name_3f("light",0,0,0.25);
