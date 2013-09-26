@@ -30,7 +30,7 @@ key%=RAYDIUM_KEYBOARD_SIZE;
 // 178 (ex: fr), 176 (ex: us), 186 (ex: spa), 220 (ex: de), 167 (ex: swe/fin)
 if(key==178 || key==176 || key==186 || key==220 || key==167) raydium_console_event();
 #ifndef WIN32
-if(key==126) raydium_capture_frame_auto();
+if(key==126 || key==179) raydium_capture_frame_auto();
 #ifdef APPLE
 // Apple aluminum keyboard support for english and german layouts.
 if(key==164 || key==177) raydium_console_event();
