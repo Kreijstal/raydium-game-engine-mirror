@@ -15,7 +15,7 @@ SYSTEM_LIBS =  -lGL -lGLU -lXinerama -lm -ljpeg -lopenal -lalut -lvorbis -lvorbi
 OTHER_LIBS =  raydium/ode/ode/src/libode.a raydium/php/libs/libphp5.a
 INCLUDE_PATH =  -Iraydium/ode/include/ -Iraydium/php/ -Iraydium/php/include -Iraydium/php/main/ -Iraydium/php/Zend -Iraydium/php/TSRM -I/usr/include/curl
 LIBS_PATH =  -L/usr/X11R6/lib/
-CFLAGS = -Wall
+CFLAGS = -Wall -Wno-unused-result
 COMPILE_OPTIONS = -g -DLIBRAY -O2 -DRAYPHP_PATH=\"$(SHARE)/rayphp\"
 ARC := $(shell uname -m)
 ifeq ($(ARC),x86_64)
