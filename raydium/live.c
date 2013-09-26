@@ -177,6 +177,22 @@ v4l_yuv420p2rgb (unsigned char *rgb_out, unsigned char *yuv_in, int width, int
 }
 
 
+#ifndef WIN32
+#ifndef APPLE
+static int xioctl(int fh, int request, void *arg)
+{
+int r;
+
+do {
+    r = ioctl(fh, request, arg);
+} while (-1 == r && EINTR == errno);
+
+return r;
+}
+#endif
+#endif
+
+
 /////// video (devices) part
 
 
@@ -242,21 +258,15 @@ int raydium_live_video_open(char *device, int sizex, int sizey)
 #ifndef APPLE
 char *default_device=RAYDIUM_LIVE_DEVICE_DEFAULT;
 int id;
-#ifndef WIN32
-int capture_style = RAYDIUM_LIVE_FREE;
-#endif
-char palette[128];
-raydium_live_Device *dev;
-#ifdef WIN32
 int i;
-#endif
-#ifndef WIN32
-char force_read=0;
-#endif
+raydium_live_Device *dev;
 char cli_device[RAYDIUM_MAX_NAME_LEN];
 
-
-strcpy(palette,"(none)");
+#ifndef WIN32
+struct v4l2_requestbuffers req;
+struct v4l2_buffer buf;
+enum v4l2_buf_type type;
+#endif
 
 if(!device)
     {
@@ -274,7 +284,7 @@ if(id<0)
 dev=&raydium_live_device[id];
 
 #ifndef WIN32
-dev->fd=open(device, O_RDWR);
+dev->fd=open(device, O_RDWR | O_NONBLOCK, 0);;
 
 if (dev->fd<0)
     {
@@ -332,13 +342,20 @@ if (dev->fd<0)
 #endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGCAP, &dev->cap) < 0)
+if (xioctl(dev->fd, VIDIOC_QUERYCAP, &dev->cap) < 0)
     {
-    perror("VIDIOGCAP");
-    raydium_log("live: ERROR: not a video4linux device '%s'",device);
+    perror("VIDIOC_QUERYCAP");
+    raydium_log("live: ERROR: not a v4l2 device '%s'",device);
     close(dev->fd);
     return -1;
-  }
+    }
+if (!(dev->cap.capabilities & V4L2_CAP_VIDEO_CAPTURE))
+    {
+    raydium_log("live: ERROR: not a capture device '%s', can't use with LiveAPI",device);
+    close(dev->fd);
+    return -1;
+    }
+
 #else // Get driver capability
 if (!capDriverGetCaps (dev->hWnd_WC,&dev->capdriver_caps,sizeof(CAPDRIVERCAPS))){
     raydium_log("live: ERROR: not a capDriverGetCaps Failed device '%s'",device);
@@ -346,35 +363,14 @@ if (!capDriverGetCaps (dev->hWnd_WC,&dev->capdriver_caps,sizeof(CAPDRIVERCAPS)))
     DestroyWindow(dev->hWnd_WC);
     return -1;
 }
-
-#endif
-
-#ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
-    {
-    perror("VIDIOCGWIN");
-    raydium_log("live: ERROR: early error");
-    close(dev->fd);
-    return -1;
-    }
-#else // Get capture params
+// Get capture params
 if (!capCaptureGetSetup(dev->hWnd_WC,&dev->capture_param,sizeof(CAPTUREPARMS))){
     raydium_log("live: ERROR: not a CaptureSetup Failed device '%s'",device);
     capDriverDisconnect(dev->hWnd_WC);
     DestroyWindow(dev->hWnd_WC);
     return -1;
 }
-#endif
-
-#ifndef WIN32
-if (ioctl(dev->fd, VIDIOCGPICT, &dev->vpic) < 0)
-    {
-    perror("VIDIOCGPICT");
-    raydium_log("live: ERROR: early error");
-    close(dev->fd);
-    return -1;
-    }
-#else // Get capture status
+ // Get capture status
 if (!capGetStatus(dev->hWnd_WC,&dev->capture_status,sizeof(CAPSTATUS))){
     raydium_log("live: ERROR: not a capGetStatus Failed device '%s'",device);
     capDriverDisconnect(dev->hWnd_WC);
@@ -394,26 +390,14 @@ if (!capGetVideoFormat(dev->hWnd_WC,&dev->capture_video_format,sizeof(BITMAPINFO
 #endif
 
 #ifndef WIN32
-raydium_log("live: device '%s' (%s)",dev->cap.name,device);
+raydium_log("live: device '%s' (%s)",dev->cap.card,device);
 #else
 raydium_log("live: device '%s' (%s)",dev->name,device);
-#endif
-
-#ifndef WIN32
-raydium_log("live: min %ix%i, max %ix%i, default %ix%i",
-dev->cap.minwidth,dev->cap.minheight,
-dev->cap.maxwidth,dev->cap.maxheight,
-dev->win.width,dev->win.height);
-#else
 raydium_log("live: Drv default image size %ix%i, Image %ix%i",
 dev->capture_status.uiImageWidth,dev->capture_status.uiImageHeight,
 dev->capture_video_format_original.bmiHeader.biWidth,dev->capture_video_format_original.bmiHeader.biHeight);
 #endif
 
-#ifndef WIN32
-dev->win.x=0;
-dev->win.y=0;
-#endif
 
 if(sizex<0 || sizey<0)
     {
@@ -449,31 +433,78 @@ else
     dev->win.height=sizey;
     }
 
-#ifndef WIN32
-dev->win.flags=0;
-dev->win.clips=NULL;
-dev->win.clipcount=0;
-dev->win.chromakey=0;
-#endif
 
 #ifndef WIN32
-if (ioctl(dev->fd, VIDIOCSWIN, &dev->win) < 0)
+
+// Reset cropping/scaling for this device (it that useful ?)
+memset(&dev->cropcap,0,sizeof(struct v4l2_cropcap));
+dev->cropcap.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+
+if (0 == xioctl(dev->fd, VIDIOC_CROPCAP, &dev->cropcap))
     {
-    perror("VIDIOCSWIN");
-    raydium_log("live: ERROR: video mode refused: %ix%i",dev->win.width,dev->win.height);
+    dev->crop.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    dev->crop.c = dev->cropcap.defrect; /* reset to default */
+
+    if (-1 == xioctl(dev->fd, VIDIOC_S_CROP, &dev->crop))
+        raydium_log("live: WARNING: cropping not supported");
+    }
+else
+    raydium_log("live: WARNING: no cropping abilities");
+
+
+memset(&dev->format_wanted,0,sizeof(struct v4l2_format));
+memset(&dev->format_hardware,0,sizeof(struct v4l2_format));
+
+// Request format (what we want)
+dev->format_wanted.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+dev->format_wanted.fmt.pix.width       = dev->win.width;
+dev->format_wanted.fmt.pix.height      = dev->win.height;
+dev->format_wanted.fmt.pix.pixelformat = V4L2_PIX_FMT_RGB24;
+dev->format_wanted.fmt.pix.field       = V4L2_FIELD_INTERLACED;
+
+dev->v4lconvert_data = v4lconvert_create(dev->fd);
+if (dev->v4lconvert_data == NULL)
+    {
+    perror("v4lconvert_create");
+    raydium_log("live: ERROR: can't create v4lconvert data");
     close(dev->fd);
     return -1;
     }
 
-// read back
-if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
+raydium_log("live: %ix%i %c%c%c%c (requesting)",
+     dev->format_wanted.fmt.pix.width,
+     dev->format_wanted.fmt.pix.height,
+     dev->format_wanted.fmt.pix.pixelformat & 0xff,
+    (dev->format_wanted.fmt.pix.pixelformat >> 8) & 0xff,
+    (dev->format_wanted.fmt.pix.pixelformat >> 16) & 0xff,
+    (dev->format_wanted.fmt.pix.pixelformat >> 24) & 0xff);
+
+if (v4lconvert_try_format(dev->v4lconvert_data, &dev->format_wanted, &dev->format_hardware) != 0)
     {
-    perror("VIDIOCGWIN");
-    raydium_log("live: ERROR: cannot read back window settings. Should never happen.");
+    perror("v4lconvert_try_format");
+    raydium_log("live: ERROR: can't find any compatible format (should be a rare case)");
     close(dev->fd);
     return -1;
     }
 
+raydium_log("live: %ix%i %c%c%c%c (found)",
+     dev->format_hardware.fmt.pix.width,
+     dev->format_hardware.fmt.pix.height,
+     dev->format_hardware.fmt.pix.pixelformat & 0xff,
+    (dev->format_hardware.fmt.pix.pixelformat >> 8) & 0xff,
+    (dev->format_hardware.fmt.pix.pixelformat >> 16) & 0xff,
+    (dev->format_hardware.fmt.pix.pixelformat >> 24) & 0xff);
+
+if (-1 == xioctl(dev->fd, VIDIOC_S_FMT, &dev->format_hardware))
+    {
+    perror("VIDIOC_S_FMT");
+    raydium_log("live: ERROR: video format refused by device (?!)");
+    close(dev->fd);
+    return -1;
+    }
+
+dev->win.width = dev->format_wanted.fmt.pix.width;
+dev->win.height = dev->format_wanted.fmt.pix.height;
 
 #else
 
@@ -539,64 +570,8 @@ if (ioctl(dev->fd, VIDIOCGWIN, &dev->win) < 0)
 #endif
 
 #ifndef WIN32
-if (dev->cap.type & VID_TYPE_MONOCHROME)
-    {
-    dev->vpic.depth=8;
-    dev->vpic.palette=VIDEO_PALETTE_GREY;       // 8bit grey
-    strcpy(palette,"grey, 8 bpp");
-    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
-        {
-        strcpy(palette,"grey, 6 bpp");
-        dev->vpic.depth=6;
-        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
-            {
-            strcpy(palette,"grey, 4 bpp");
-            dev->vpic.depth=4;
-            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
-                {
-                raydium_log("live: ERROR: cannot found suitable grey palette");
-                close(dev->fd);
-                return -1;
-                }
-            }
-        }
-    }
-else
-    {
-    strcpy(palette,"RGB, 24 bpp");
+    // thanks to libv4lconvert, we always get RGB24 :)
     dev->vpic.depth=24;
-    dev->vpic.palette=VIDEO_PALETTE_RGB24;
-    if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic) < 0)
-        {
-        strcpy(palette,"RGB565, 16 bpp");
-        dev->vpic.palette=VIDEO_PALETTE_RGB565;
-        dev->vpic.depth=16;
-        if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
-            {
-            strcpy(palette,"RGB555, 15 bpp");
-            dev->vpic.palette=VIDEO_PALETTE_RGB555;
-            dev->vpic.depth=15;
-            if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
-                {
-                strcpy(palette,"YUV420P, 24 bpp");
-                dev->vpic.palette=VIDEO_PALETTE_YUV420P;
-                dev->vpic.depth=24;
-                if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
-                    {
-					strcpy(palette,"YUYV, 24 bpp");
-					dev->vpic.palette=VIDEO_PALETTE_YUYV;
-					dev->vpic.depth=24;
-					if(ioctl(dev->fd, VIDIOCSPICT, &dev->vpic)==-1)
-						{
-						raydium_log("live: ERROR: cannot found suitable color palette");
-						close(dev->fd);
-						return -1;
-						}
-					}
-                }
-            }
-        }
-    }
 #else
     dev->vpic.depth=dev->capture_video_format.bmiHeader.biBitCount;
 #endif
@@ -622,69 +597,100 @@ if (!dev->buffer2)
     }
 
 #ifndef WIN32
-do // just to allow break in this if :)
-{
-if(dev->cap.type & VID_TYPE_CAPTURE)
+
+
+// RAYDIUM_LIVE_CAPTURE_READ is only supported by Raydium for
+// old v4l1 API, currently :( We just try MMAP ...
+// (V4L2_MEMORY_USERPTR is not supported either)
+dev->capture_style=RAYDIUM_LIVE_CAPTURE_MMAP;
+
+if (!(dev->cap.capabilities & V4L2_CAP_STREAMING))
     {
-    capture_style=RAYDIUM_LIVE_CAPTURE_MMAP;
-    if(ioctl(dev->fd,VIDIOCGMBUF,&dev->gb_buffers)==-1)
-        {
-        perror("VIDIOCGMBUF");
-        raydium_log("live: ERROR: hardware refuse mmap capture style");
-        force_read=1;
-        break;
-        }
-
-    dev->buffer = mmap(0,dev->gb_buffers.size,PROT_READ|PROT_WRITE,MAP_SHARED,dev->fd,0);
-    if(dev->buffer==(void *) -1)
-        {
-        perror("mmap");
-        raydium_log("live: ERROR: mmap failed");
-        force_read=1;
-        break;
-        }
-
-    dev->gb_buf.frame=0;
-    dev->gb_buf.height = dev->win.height;
-    dev->gb_buf.width = dev->win.width;
-    dev->gb_buf.format = dev->vpic.palette;
-
-    if(ioctl(dev->fd, VIDIOCMCAPTURE, &dev->gb_buf)==-1)
-        {
-        perror("VIDIOCMCAPTURE");
-        raydium_log("live: ERROR: mmap capture test failed");
-        munmap(dev->buffer,dev->gb_buffers.size);
-        force_read=1;
-        break;
-        }
-    }
-} while(0); // i'm not proud of this ... :)
-
-if(force_read)
-    {
-	// should test READ support !
-    raydium_log("live: fallback to read method. MAY BE SLOW !");
+    raydium_log("live: ERROR: I/O streaming not supported, can't use MMAP for this device");
+    close(dev->fd);
+    return -1;
     }
 
-if( (!(dev->cap.type & VID_TYPE_CAPTURE)) || force_read )
-    {
-    capture_style=RAYDIUM_LIVE_CAPTURE_READ;
+// init MMAP
 
-    dev->buffer  = malloc(dev->win.width * dev->win.height * dev->vpic.depth/8);
-    if (!dev->buffer)
+memset(&req,0,sizeof(struct v4l2_requestbuffers));
+
+req.count = 4;
+req.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+req.memory = V4L2_MEMORY_MMAP;
+
+// request buffers
+if(xioctl(dev->fd, VIDIOC_REQBUFS, &req) < 0)
+    {
+    perror("VIDIOC_REQBUFS");
+    raydium_log("live: ERROR: can't init MMAP for this device");
+    close(dev->fd);
+    return -1;
+    }
+
+if(req.count < 2)
+    {
+    raydium_log("live: ERROR: not enough buffers with this device (needed minimum is 2)");
+    close(dev->fd);
+    return -1;
+    }
+
+dev->buffers=calloc(req.count, sizeof(raydium_live_Buffer));
+dev->n_buffers=req.count;
+
+if(!dev->buffers)
+    {
+    raydium_log("live: ERROR: can't allocate memory for buffers !");
+    close(dev->fd);
+    return -1;
+    }
+
+// init buffers
+for(i=0;i<dev->n_buffers;i++)
+    {
+    memset(&buf,0,sizeof(struct v4l2_buffer));
+
+    buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    buf.memory = V4L2_MEMORY_MMAP;
+    buf.index = i;
+
+    if(xioctl(dev->fd, VIDIOC_QUERYBUF, &buf) < 0)
         {
-        raydium_log("live: ERROR: buffer: out of memory (!?)");
+        raydium_log("live: ERROR: can't init buffer %i of %i",i+1,dev->n_buffers);
         close(dev->fd);
         return -1;
         }
+
+    dev->buffers[i].length = buf.length;
+    dev->buffers[i].start = mmap(NULL,buf.length,
+                                 PROT_READ|PROT_WRITE,
+                                 MAP_SHARED,dev->fd, buf.m.offset);
+
+    if(dev->buffers[i].start==MAP_FAILED)
+        {
+        raydium_log("live: ERROR: mmap failded for buffer %i of %i",i+1,dev->n_buffers);
+        close(dev->fd);
+        return -1;
+        }
+
+    if(xioctl(dev->fd, VIDIOC_QBUF, &buf) < 0)
+        {
+        raydium_log("live: ERROR: can't queue buffer %i of %i",i+1,dev->n_buffers);
+        close(dev->fd);
+        return -1;
+        }
+
     }
 
-raydium_log("live: current: %ix%i, palette %s, %s",
-dev->win.width,dev->win.height,palette,
-(capture_style==RAYDIUM_LIVE_CAPTURE_READ?"read method":"mmap method") );
+// start capture
+type=V4L2_BUF_TYPE_VIDEO_CAPTURE;
+if(xioctl(dev->fd, VIDIOC_STREAMON, &type) < 0)
+    {
+    raydium_log("live: ERROR: can't start capture");
+    close(dev->fd);
+    return -1;
+    }
 
-// reserve slot
-dev->capture_style=capture_style;
 strcpy(dev->name,device);
 raydium_log("live: video init for this device is ok");
 return id;
@@ -717,6 +723,8 @@ int raydium_live_video_read(raydium_live_Device *dev)
 {
 #ifndef APPLE
 #ifndef WIN32
+
+struct v4l2_buffer buf;
 fd_set fds;
 struct timeval tv;
 int r;
@@ -739,66 +747,30 @@ r = select(dev->fd + 1, &fds, NULL, NULL, &tv);
 if(r<=0)
     return 0;
 
-dev->src = dev->buffer;
+// let's read frame
+memset(&buf,0,sizeof(struct v4l2_buffer));
+buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+buf.memory = V4L2_MEMORY_MMAP;
 
-if(dev->capture_style==RAYDIUM_LIVE_CAPTURE_READ)
-    {
-	size_t count;
-    // trouble ... dev->vpic.depth is not always the same four in and out !
-	// example : YUYV 16 bits -> RGB 24 bits ... Seems to work, but
-	// it must be fixed
-	count=read(dev->fd, dev->buffer, dev->win.width * dev->win.height * dev->vpic.depth/8);
-	if(count==(size_t)-1)
-		{
-		static signed char first=1;
-		if(first)
-			{
-			raydium_log("live: ERROR: can't read() from device !");
-			raydium_log("*** Device may no support this method, nor v4l1 MMAP (broken compat for VIDIOCGMBUF ioctl)");
-			first=0;
-			}
-		return 0;
-		}
-    }
-else
-    {
-    dev->frame=dev->gb_buf.frame;
-    dev->gb_buf.height = dev->win.height;
-    dev->gb_buf.width = dev->win.width;
-    dev->gb_buf.format = dev->vpic.palette;
+if(xioctl(dev->fd, VIDIOC_DQBUF, &buf) < 0)
+    return -1; // can't dequeue buffer
 
-    dev->gb_buf.frame=!dev->frame;
-    ioctl(dev->fd, VIDIOCMCAPTURE, &dev->gb_buf);
-    if(ioctl(dev->fd, VIDIOCSYNC, &dev->frame)==-1)
-        {
-        perror("mmap");
-        return 0;
-        }
-    dev->src+=dev->gb_buffers.offsets[dev->frame];
-    }
+if(buf.index>dev->n_buffers)
+    return -1; // someone is crazy somewhere ...
+
+if(v4lconvert_convert(dev->v4lconvert_data,
+                      &dev->format_hardware,
+                      &dev->format_wanted,
+                      dev->buffers[buf.index].start,
+                      buf.bytesused,
+                      dev->buffer2,
+                      dev->format_wanted.fmt.pix.sizeimage // should match buffer2 alloc, I think
+                      )<0)
+    return -1; // conv failed :(
 
 
-if(dev->vpic.palette==VIDEO_PALETTE_YUV420P)
-    {
-    v4l_yuv420p2rgb (dev->buffer2,dev->src,dev->win.width,dev->win.height,dev->vpic.depth);
-    }
-else if(dev->vpic.palette==VIDEO_PALETTE_YUYV)
-    {
-	uyvy2rgb24(dev->buffer2,dev->src, dev->win.width*dev->win.height);
-    }
-else
-    {
-    // all RGB palettes ...
-    unsigned int i,j;
-    int r=0,g=0,b=0;
-    for (i = j = 0; i < dev->win.width * dev->win.height; i++)
-        {
-        READ_VIDEO_PIXEL(dev->src, dev->vpic.palette, dev->vpic.depth, r, g, b);
-        dev->buffer2[j++]=b>>8;
-        dev->buffer2[j++]=g>>8;
-        dev->buffer2[j++]=r>>8;
-        }
-    }
+if(xioctl(dev->fd, VIDIOC_QBUF, &buf) < 0)
+    return -1; // can't requeue buffer
 
 #endif
 #endif
@@ -826,24 +798,24 @@ void raydium_internal_live_close(void)
 int i;
 
 for(i=0;i<RAYDIUM_MAX_VIDEO_DEVICES;i++)
-{
-
+    {
 #ifndef WIN32
- if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
- {
-    munmap(raydium_live_device[i].buffer, raydium_live_device[i].gb_buffers.size);
-    close(raydium_live_device[i].fd);
-    if(raydium_live_device[i].capture_style==RAYDIUM_LIVE_CAPTURE_READ)
-        free(raydium_live_device[i].buffer);
-    free(raydium_live_device[i].buffer2);
- }
+    if(raydium_live_device[i].capture_style!=RAYDIUM_LIVE_FREE)
+        {
+        for(i=0;i<raydium_live_device[i].n_buffers;i++)
+            munmap(raydium_live_device[i].buffers[i].start, raydium_live_device[i].buffers[i].length);
+
+        close(raydium_live_device[i].fd);
+        free(raydium_live_device[i].buffer2);
+        free(raydium_live_device[i].buffers);
+        }
 #else
     capDriverDisconnect(raydium_live_device[i].hWnd_WC);
     DestroyWindow(raydium_live_device[i].hWnd_WC);
     free(raydium_live_device[i].buffer);
     free(raydium_live_device[i].buffer2);
 #endif
-}
+    }
 #endif
 }
 

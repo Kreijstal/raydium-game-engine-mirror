@@ -16,11 +16,8 @@
 #ifndef WIN32
 #ifndef APPLE
 #include <linux/types.h>
-#ifndef HAVE_V4L1_REPLACEMENT
-#include <linux/videodev.h>
-#else
-#include <libv4l1-videodev.h>
-#endif
+#include <linux/videodev2.h>
+#include <libv4lconvert.h>
 #include <sys/mman.h>
 #endif
 #else
@@ -42,19 +39,33 @@
 #define RAYDIUM_LIVE_CAPTURE_MMAP       2
 
 
-typedef struct raydium_live_Device 
+#ifndef WIN32
+#ifndef APPLE
+typedef struct raydium_live_Buffer
+{
+    void *start;
+    size_t length;
+} raydium_live_Buffer;
+#endif
+#endif
+
+typedef struct raydium_live_Device
 {
 #ifndef WIN32
 #ifndef APPLE
   int fd;
-  struct video_capability cap;
-  struct video_window win;
-  struct video_picture vpic;
 
-  // for mmap captures
-  struct video_mbuf gb_buffers;
-  struct video_mmap gb_buf;
-  
+  struct v4l2_capability cap;
+  struct v4l2_format format_wanted;
+  struct v4l2_format format_hardware;
+  struct v4l2_cropcap cropcap;
+  struct v4l2_crop crop;
+  struct v4lconvert_data *v4lconvert_data;
+
+  // "hardware" buffers
+  raydium_live_Buffer *buffers;
+  int n_buffers;
+
 #endif
 #else
     HWND        hWnd_WC;
@@ -64,21 +75,23 @@ typedef struct raydium_live_Device
     CAPSTATUS  capture_status;
     BITMAPINFO capture_video_format;
     BITMAPINFO capture_video_format_original;
-    
-    HIC    compressor;
 
-    struct video_window  // Linux structure to keep source compatable
+    HIC    compressor;
+#endif
+
+   // Old V4L1 structures. We still use a few members here and there.
+   struct video_window
     {
-        unsigned int   width,height;          
-    }win;
+        unsigned int   width;
+        unsigned int   height;
+    } win;
+
     struct video_picture
     {
         unsigned int depth;
-    }vpic;
-#endif
+    } vpic;
 
-  unsigned char *buffer;  // capture buffer
-  unsigned char *src;     // intermediate buffer
+  unsigned char *buffer;  // capture buffer (win32 only, currently)
   unsigned char *buffer2; // final buffer
 
   signed char capture_style;
@@ -159,7 +172,7 @@ __global raydium_live_Texture raydium_live_texture[RAYDIUM_MAX_LIVE_TEXTURES];
                 default:                                                \
                         raydium_log("live: error: palette unknown");    \
         }                                                               \
-}                                               
+}
 
 
 // endif LIVE_H

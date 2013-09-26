@@ -546,21 +546,30 @@ return(0);
 test_build "Ogg/Vorbis" "$file" "-lvorbis -lvorbisfile -logg"
 exit_if_error "$?" "ogg and vorbis devels are required (libogg,libvorbis and libvorbisfile)"
 
-# Test video4linux (v1)
-echo "* Testing V4L..."
-if [ ! -f /usr/include/linux/videodev.h ]; then
-    echo "V4L: v4l1 not found"
-    if [ ! -f /usr/include/libv4l1-videodev.h ]; then
-	echo "V4L: v4l1 replacement not found"
-	echo "ERROR: you need v4l devel package"
-	exit 1
-    else
-    echo "V4L: v4l1 replacement found"
-    EXTRA_GCC_FLAGS="-DHAVE_V4L1_REPLACEMENT $EXTRA_GCC_FLAGS"
-    fi
+# Test video4linux (v2, now)
+echo -n "* Testing V4L2..."
+if [ ! -f /usr/include/linux/videodev2.h ]; then
+    echo "FAIL"
+    echo "ERROR: Check V4L2 support (videodev2.h)."
+    exit 1
 else
-    echo "V4L: v4lv1 found"
+    echo "OK"
 fi
+
+# Test v4lconvert
+file='
+#include <stdio.h>
+#include <linux/videodev2.h>
+#include <libv4lconvert.h>
+
+int main(void)
+{
+return 0;
+}
+'
+test_build "v4lconvert" "$file" "-lv4lconvert"
+exit_if_error "$?" "v4lconvert / libv4l-devel not available."
+
 
 tmp="configure.conf"
 echo "EXTRA_GCC_FLAGS=\"$EXTRA_GCC_FLAGS\"" >> $tmp
