@@ -366,5 +366,9 @@ if(!raydium_file_isdir(raydium_php_rayphp_path))
 	}
 
 raydium_log("PHP R3S scripts path: %s",raydium_php_rayphp_path);
-raydium_log("PHP support: OK");
+#ifdef PHP_MAJOR_VERSION
+    raydium_log("PHP support: OK (%i.%i)",PHP_MAJOR_VERSION,PHP_MINOR_VERSION);
+#else
+    raydium_log("PHP support: OK");
+#endif
 }
