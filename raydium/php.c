@@ -94,9 +94,41 @@ static sapi_module_struct raydium_sapi_module =
         sapi_raydium_register_variables,/* register server variables */
         NULL,                           /* Log message */
         NULL,                           /* Get Request Time */
-        NULL,                           /* Child terminate */
 
-	STANDARD_SAPI_MODULE_PROPERTIES
+        NULL,                           /* INI Path (changed later) */
+
+        NULL,                           /* Block interruptions */
+        NULL,                           /* Unblock interruptions */
+
+// 243:         void (*default_post_reader)(TSRMLS_D);
+        NULL,
+// 244:         void (*treat_data)(int arg, char *str, zval *destArray TSRMLS_DC);
+        NULL,
+// 245:         char *executable_location;
+        NULL,
+// 246:
+// 247:         int php_ini_ignore;
+        0,
+// 248:
+// 249:         int (*get_fd)(int *fd TSRMLS_DC);
+        NULL,
+// 250:
+// 251:         int (*force_http_10)(TSRMLS_D);
+        NULL,
+// 252:
+// 253:         int (*get_target_uid)(uid_t * TSRMLS_DC);
+        NULL,
+// 254:         int (*get_target_gid)(gid_t * TSRMLS_DC);
+        NULL,
+// 255:
+// 256:         unsigned int (*input_filter)(int arg, char *var, char **val, unsigned int val_len, unsigned int *new_val_len TSRMLS_DC);
+        NULL,
+// 257:
+// 258:         void (*ini_defaults)(HashTable *configuration_hash);
+        NULL,
+// 259:         int phpinfo_as_text;
+        1,
+        NULL    /* char *ini_entries; */
 };
 
 
@@ -150,7 +182,6 @@ int raydium_php_exec(char *name)
     if(php_module_startup(&raydium_sapi_module) == FAILURE)
 #endif
     {
-        raydium_log("PHP module startup failed.");
         return FAILURE;
     }
     raydium_php_init_request(name);
@@ -181,14 +212,12 @@ int raydium_php_exec(char *name)
 
 //    if(php_request_startup(CLS_C ELS_CC PLS_CC SLS_CC) == FAILURE) {
     if(php_request_startup(TSRMLS_C) == FAILURE) {
-        raydium_log("PHP request startup failed.");
         php_module_shutdown(TSRMLS_C);
         return FAILURE;
     }
 
     SG(headers_sent) = 1;
     SG(request_info).no_headers = 1;
-    SG(options) |= SAPI_OPTION_NO_CHDIR;
 
  // i save "raydium_register_variable_index" here since it may change during script exec
  nvars=raydium_register_variable_index;

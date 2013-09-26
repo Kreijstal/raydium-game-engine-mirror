@@ -149,12 +149,11 @@ function gzdecode($in)
 {
   $tmp=str_pad("",256);
   raydium_file_home_path_cpy("tmp.tmp.gz",$tmp);
-echo "-$tmp-\n";
   $fp=fopen($tmp,"wb");
-  if(!$fp) { echo "boo\n"; return false; }
+  if(!$fp) return false;
   fwrite($fp,$in);
   fclose($fp);
-die("");  
+  
   $fp=gzopen($tmp,"rb");
   if(!$fp) return false;
   while(!gzeof($fp))
