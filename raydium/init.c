@@ -338,7 +338,7 @@ raydium_log("Platform \"4xfloat\" vector size is: %i byte(s) long",raydium_inter
 glGetIntegerv(GL_MAX_TEXTURE_SIZE, &raydium_texture_size_max);
 raydium_log("OpenGL implementation maximum texture size: %ix%i",raydium_texture_size_max,raydium_texture_size_max);
 glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &raydium_texture_units);
-raydium_log("OpenGL hardware providing %i texture unit(s), Raydium deals with %i",raydium_texture_units,RAYDIUM_RENDER_MAX_TEXUNITS);
+raydium_log("OpenGL hardware providing %i fixed texture unit(s), Raydium deals with %i",raydium_texture_units,RAYDIUM_RENDER_MAX_TEXUNITS);
 glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso_hard);
 if(raydium_init_cli_option("max-aniso",str))
     aniso_user=atof(str);

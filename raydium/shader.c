@@ -34,7 +34,13 @@ for(i=0;i<RAYDIUM_MAX_SHADERS;i++)
 raydium_shader_active=-1;
 
 if(raydium_shader_support)
+    {
+    int vs_tmu_count,ps_tmu_count;
     raydium_log("shaders: OK (version %s)",glGetString(GL_SHADING_LANGUAGE_VERSION));
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &vs_tmu_count);
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &ps_tmu_count);
+    raydium_log("shaders: %i vertex texture units, %i fragment texture units",vs_tmu_count,ps_tmu_count);
+    }
 else
     raydium_log("shaders: FAILED (GLSL 1.0 not found)");
 }
