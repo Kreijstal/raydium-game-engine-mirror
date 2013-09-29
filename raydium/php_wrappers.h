@@ -10,7 +10,8 @@
 // v stands for: void
 // i stands for: int
 // f stands for: float
-// s stands for: char *
+// s stands for: char * (read only)
+// S stands for: char * as an input AND output parameter
 // svaria stands for: (char *, ...)
 // Don't forget to register your functions, too ! (see register.c or docs)
 
@@ -19,6 +20,18 @@
 
 // use this macro when registering your functions
 #define C2PHP ZEND_FN
+
+// internal helpers for read/write strings (S)
+#define ZSTR_DECL(name) char * name##_c; zval * name##_zend;
+
+#define ZSTR_INIT(name) name##_c=malloc(1024);\
+    if (!PZVAL_IS_REF(name##_zend)) { zend_error(E_WARNING, "Parameter wasn't passed by reference"); RETURN_NULL(); }
+
+#define ZSTR_AFFECT(name) \
+    convert_to_string(name##_zend); \
+    ZVAL_STRING(name##_zend, (char *)name##_c, 1); \
+    free(name##_c);
+
 
 // void f(void)
 #define PHP_v_v(fname)\
@@ -247,6 +260,44 @@ long s_len3;\
 if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
   "sss", &a, &s_len, &b, &s_len2, &c, &s_len3) == FAILURE)  return;\
 fname(a,b,c));\
+}
+
+// int f(char *, char*, char *)
+// (2nd arg: rw string)
+#define PHP_i_sSs(fname)\
+ZEND_FUNCTION(fname)\
+{\
+char *a;\
+ZSTR_DECL(b)\
+char *c;\
+long s_len;\
+long s_len3;\
+long res;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "szs", &a, &s_len, &b_zend, &c, &s_len3) == FAILURE)  return;\
+ZSTR_INIT(b)\
+res=fname(a,b_c,c);\
+ZSTR_AFFECT(b)\
+RETURN_LONG(res);\
+}
+
+// int f(char *, char*, char *)
+// (3nd arg: rw string)
+#define PHP_i_ssS(fname)\
+ZEND_FUNCTION(fname)\
+{\
+char *a;\
+char *b;\
+ZSTR_DECL(c)\
+long s_len;\
+long s_len2;\
+long res;\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "ssz", &a, &s_len, &b, &s_len2, &c_zend) == FAILURE)  return;\
+ZSTR_INIT(c)\
+res=fname(a,b,c_c);\
+ZSTR_AFFECT(c)\
+RETURN_LONG(res);\
 }
 
 // void f(char *, ...) - (printf style)
@@ -519,7 +570,6 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
 fname(a,b,c,d,e,f);\
 }
 
-
 // void f(char *, char *)
 #define PHP_v_ss(fname)\
 ZEND_FUNCTION(fname)\
@@ -529,10 +579,24 @@ long s_len1;\
 char *b;\
 long s_len2;\
 if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
-  "ss", &a, &s_len1, &b, &s_len2, &b) == FAILURE)  return;\
+  "ss", &a, &s_len1, &b, &s_len2) == FAILURE)  return;\
 fname(a,b);\
 }
 
+// void f(char *, char *)
+// (2nd arg: rw string)
+#define PHP_v_sS(fname)\
+ZEND_FUNCTION(fname)\
+{\
+char *a;\
+long s_len1;\
+ZSTR_DECL(b)\
+if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
+  "sz", &a, &s_len1, &b_zend) == FAILURE)  return;\
+ZSTR_INIT(b)\
+fname(a,b_c);\
+ZSTR_AFFECT(b)\
+}
 
 // void f(char *, float)
 #define PHP_v_sf(fname)\

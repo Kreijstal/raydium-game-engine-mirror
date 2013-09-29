@@ -1,7 +1,7 @@
 <?php
 // set the proxy according to the configuration database
-$proxy = str_pad('', 128);
-raydium_parser_db_get("Generic-Proxy", $proxy, "");
+$proxy = '';
+raydium_parser_db_get("Generic-Proxy", &$proxy, "");
 $GLOBALS['raydium_proxy'] = $proxy;
 
 // returns a newer content for a file (using HTTP repository)
@@ -100,9 +100,9 @@ function read_repositories_file($repos)
 {
 global $raydium_php_rayphp_path;
 $repos_list=array();
-    
-$tmp=str_pad("",256);
-raydium_file_home_path_cpy($repos,$tmp);
+
+$tmp="";
+raydium_file_home_path_cpy($repos,&$tmp);
 
 if(file_exists($tmp))
     read_repositories_file_internal($tmp,$repos_list);
@@ -147,13 +147,17 @@ function valid_entry($r)
 // unzip a given input
 function gzdecode($in)
 {
-  $tmp=str_pad("",256);
-  raydium_file_home_path_cpy("tmp.tmp.gz",$tmp);
+  $tmp="";
+  raydium_file_home_path_cpy("tmp.tmp.gz",&$tmp);
   $fp=fopen($tmp,"wb");
-  if(!$fp) return false;
+  if(!$fp) 
+    {
+    echo "ERROR: Can't create '$tmp' file !";
+    return false;
+    }
   fwrite($fp,$in);
   fclose($fp);
-  
+
   $fp=gzopen($tmp,"rb");
   if(!$fp) return false;
   while(!gzeof($fp))

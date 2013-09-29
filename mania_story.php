@@ -13,8 +13,8 @@ function get_data($mni)
 $a=file($mni);
 if ($a==FALSE)
     {
-    $smni=str_pad('',1000);
-    raydium_file_home_path_cpy("data/".$mni,$smni);
+    $smni='';
+    raydium_file_home_path_cpy("data/".$mni,&$smni);
     $a=file($smni);
     if ($a==FALSE)
         {
@@ -56,8 +56,8 @@ return $best;
 ///////////// main
 $story=file($story_file);
 
-$state_file=str_pad('',1000);
-raydium_file_home_path_cpy("mania_drive.state",$state_file);
+$state_file='';
+raydium_file_home_path_cpy("mania_drive.state",&$state_file);
 if(file_exists($state_file))
     $scores=file($state_file);
 

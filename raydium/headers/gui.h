@@ -361,10 +361,10 @@ an integer (returned value) and a string (##str##).
 This information is specific to ##widget##'s type (checked or not for a
 checkbox, current choice for a combo, current string for an edit box, ...)
 Please, note ##str## must be allocated before function call. This is also
-the case for PHP scripts :
+the case for PHP scripts, where you should use reference:
 %%(php)
-$str=str_pad("",256); // "pre-alloc"
-$val=raydium_gui_read_name("main","track",$str);
+$str=""; // create variable
+$val=raydium_gui_read_name("main","track",&$str);
 echo "value=$val, string='$str'";
 %%
 **/

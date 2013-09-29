@@ -20,7 +20,7 @@
 // Part 1: create PHP wrappers
 
 // file.c
-PHP_v_ss(raydium_file_home_path_cpy);
+PHP_v_sS(raydium_file_home_path_cpy);
 PHP_v_v(raydium_file_cache_flush);
 
 // path.c
@@ -118,7 +118,7 @@ PHP_v_v(raydium_lensflare_disable);
 
 // parser.c
 PHP_i_ss(raydium_parser_db_set);
-PHP_i_sss(raydium_parser_db_get);
+PHP_i_sSs(raydium_parser_db_get);
 
 #ifdef ODE_SUPPORT
 //ode.c
@@ -207,7 +207,7 @@ PHP_i_siffiii(raydium_gui_track_create);
 PHP_i_siffs(raydium_gui_edit_create);
 PHP_i_siffsi(raydium_gui_check_create);
 PHP_i_siffsi(raydium_gui_combo_create);
-PHP_i_sss(raydium_gui_read_name);
+PHP_i_ssS(raydium_gui_read_name);
 PHP_i_v(raydium_gui_button_clicked);
 
 //osd.c

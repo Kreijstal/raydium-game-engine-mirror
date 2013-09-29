@@ -6,8 +6,8 @@
 $url = "http://maniadrive.raydium.org/ecrire/tools/maniadrive/WSManiaDrive.php?wsdl";
 
 // set the proxy according to the configuration database
-$proxy = str_pad('', 128);
-raydium_parser_db_get("Generic-Proxy", $proxy, "");
+$proxy = '';
+raydium_parser_db_get("Generic-Proxy", &$proxy, "");
 $proxy=parse_url($proxy);
 
 try {

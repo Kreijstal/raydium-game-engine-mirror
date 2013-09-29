@@ -26,8 +26,8 @@ while( ($file = readdir($handle)) !== false )
 closedir($handle);
 }
 
-$data_dir=str_pad('',1000);
-raydium_file_home_path_cpy("data",$data_dir);
+$data_dir='';
+raydium_file_home_path_cpy("data",&$data_dir);
 
 search_here(".");
 search_here($data_dir);
