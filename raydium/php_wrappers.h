@@ -22,6 +22,8 @@
 #define C2PHP ZEND_FN
 
 // internal helpers for read/write strings (S)
+// Thanks to  Hans de Goede <j.w.r.degoede@gmail.com> for his work
+// on PHP 5.3.5+ support.
 #define ZSTR_DECL(name) char * name##_c; zval * name##_zend;
 
 #define ZSTR_INIT(name) name##_c=malloc(1024);\
@@ -32,6 +34,7 @@
     ZVAL_STRING(name##_zend, (char *)name##_c, 1); \
     free(name##_c);
 
+// Wrappers are here:
 
 // void f(void)
 #define PHP_v_v(fname)\
@@ -310,7 +313,6 @@ if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,\
   "s", &a, &s_len) == FAILURE)  return;\
 fname("%s",a);\
 }
-
 
 // int f(char *, int, float, float, char *)
 #define PHP_i_siffs(fname)\
