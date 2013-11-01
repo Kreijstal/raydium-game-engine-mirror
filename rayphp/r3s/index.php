@@ -214,9 +214,9 @@ if($type=="putGzip")
         return;
         }
     $filegz=$file.".tmp.gz";
-    if(file_exists($HTTP_POST_FILES["data"]["tmp_name"]))
+    if(file_exists($_FILES["data"]["tmp_name"]))
         {
-        move_uploaded_file($HTTP_POST_FILES["data"]["tmp_name"], $filegz);
+        move_uploaded_file($_FILES["data"]["tmp_name"], $filegz);
         }
     else die("FAILED: Cannot find data in this request");
 
