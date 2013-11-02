@@ -35,7 +35,8 @@ See HDR chapter for more information.
 
 __rayapi void raydium_sky_box_render (GLfloat x, GLfloat y, GLfloat z);
 /**
-Internal use.
+Internal use. (internal rendering functions for 2D and cubemaps skyboxes
+are used, too)
 **/
 
 __rayapi void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z, int detail);

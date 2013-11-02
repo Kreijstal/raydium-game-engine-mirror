@@ -33,7 +33,7 @@ for(i=2;i<=raydium_texture_size_max;i*=2)
 return 0;
 }
 
-GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake)
+GLuint raydium_texture_load_internal_params(GLuint gl_texture_target, char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake, GLuint overwrite_id, GLuint cubemap_face)
 {
 FILE *file=NULL;
 unsigned char temp[RAYDIUM_MAX_NAME_LEN];
@@ -53,6 +53,7 @@ GLuint chunkid;
 char rle;
 char offset;
 char filename_base[RAYDIUM_MAX_NAME_LEN];
+GLuint gl_teximage_target;
 
 // "as" is duplicated ?
 //check if the filename of the texture is already loaded
@@ -125,8 +126,9 @@ if(!rgb && !faked)
  else
      flipy=0;
 
-// It seem's that all texture are inverted, the inverted bit seem's insignifiant
-//flipy=1;
+ // OpenGL cube maps follow the RenderMan specification (opposite scanlines)
+ if(cubemap_face)
+    flipy=(flipy?0:1);
 
  //checking if you can use NPOT textures
  if(!raydium_texture_use_npot_textures)
@@ -261,9 +263,12 @@ if(raydium_texture_to_replace)
     raydium_texture_to_replace=0;
 }
  else
- {
- id=raydium_texture_get_next_free_slot_internal();
-    }
+{
+ if(!overwrite_id)
+    id=raydium_texture_get_next_free_slot_internal();
+ else
+    id=overwrite_id;
+}
 
 //check if there is one texture slot free
 if((int)id==-1)
@@ -367,7 +372,7 @@ if(!rgb)
     }
 
 if(!simulate)
- glBindTexture(GL_TEXTURE_2D,id);
+ glBindTexture(gl_texture_target,id);
 
 
  if(strstr(filename,".tri."))
@@ -381,17 +386,24 @@ if(!simulate)
 
  if(!simulate)
  {
-  if(!strncmp("BOX",filename_base,3) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
+  if(!strncmp("BOX",filename_base,3) || !strncmp("CUBE",filename_base,4) || faked || blended==RAYDIUM_TEXTURE_BLEND_ATM) // TEMP !!
   {                                                                     // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(gl_texture_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(gl_texture_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);        // TEMP !!
+    glTexParameteri(gl_texture_target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);        // TEMP !!
   }                                                                     // TEMP !!
   else
   {
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(gl_texture_target,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(gl_texture_target,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(gl_texture_target,GL_TEXTURE_WRAP_R,GL_REPEAT);
   }
  }
+
+ if(gl_texture_target==GL_TEXTURE_CUBE_MAP)
+    gl_teximage_target=cubemap_face;
+ else
+    gl_teximage_target=gl_texture_target;
 
  filter=raydium_texture_filter;
 
@@ -415,41 +427,41 @@ if(!simulate)
 
   if(filter==RAYDIUM_TEXTURE_FILTER_NONE && !simulate)
   {
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+  glTexImage2D(gl_teximage_target,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
   }
 
   if(filter==RAYDIUM_TEXTURE_FILTER_BILINEAR && !simulate)
   {
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
+  glTexParameterf(gl_texture_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(gl_texture_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(gl_teximage_target,0,GLbppi,tx,ty,0,GLbpp,GL_UNSIGNED_BYTE,data);
   }
 
   if(filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR && !simulate)
   {
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
+  gluBuild2DMipmaps(gl_teximage_target, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
   if(filter==RAYDIUM_TEXTURE_FILTER_ANISO && !simulate)
   {
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, raydium_texture_filter_aniso_levels); // + anisotropy
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexParameteri(gl_texture_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR); // Trilinear filtering
+  glTexParameterf(gl_texture_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, raydium_texture_filter_aniso_levels); // + anisotropy
+  gluBuild2DMipmaps(gl_teximage_target, GLbppi, tx, ty, GLbpp, GL_UNSIGNED_BYTE, data);
   }
 
   if(raydium_texture_compression_enabled)
-    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_ARB, &compressed);
+    glGetTexLevelParameteriv(gl_texture_target, 0, GL_TEXTURE_COMPRESSED_ARB, &compressed);
 
   if(compressed)
     {
     GLint size;
     float level;
-    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB, &size);
+    glGetTexLevelParameteriv(gl_texture_target, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB, &size);
     level=(float)texsize/size;
     raydium_texture_used_memory-=texsize;
     raydium_texture_memory[id]-=texsize;
@@ -488,6 +500,61 @@ if(!simulate)
 if(id>0)raydium_texture_used[id]=TRUE;
 return id;
 }
+
+
+// wrapper to deal with cubemaps
+GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake)
+{
+if(!strncmp("CUBE",filename,4))
+    {
+    int i;
+
+/*    GLenum faces[6] = {
+        GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Z
+        GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+    };*/
+
+    char *tags[] = {
+        "posx",
+        "negx",
+        "posy",
+        "negy",
+        "posz",
+        "negz",
+        NULL
+    };
+
+    GLuint id=0;
+    char pre[RAYDIUM_MAX_NAME_LEN];
+    char post[RAYDIUM_MAX_NAME_LEN];
+    char curr_file[RAYDIUM_MAX_NAME_LEN];
+
+    if(!raydium_parser_cut(filename,pre,post,'*'))
+        {
+        raydium_log("ERROR: invalid cubemap name, ex: CUBE_test_*.tga");
+        return 0;
+        }
+
+    for(i=0;i<6;i++)
+        {
+        sprintf(curr_file,"%s%s%s",pre,tags[i],post);
+        id=raydium_texture_load_internal_params(GL_TEXTURE_CUBE_MAP,curr_file,curr_file,faked,faked_tx,faked_ty,faked_bpp,or_live_id_fake,id,GL_TEXTURE_CUBE_MAP_POSITIVE_X+i);
+        if(!id) { raydium_log("ERROR: cubemap loading failed (%i/6)",i+1); return 0; }
+        }
+
+    raydium_log("Tex. num %i (%s) loaded as a cubemap",id,filename);
+    strcpy(raydium_texture_name[id],filename);
+    raydium_texture_cubemap[id]=1;
+    return id;
+    }
+else
+    return raydium_texture_load_internal_params(GL_TEXTURE_2D,filename,as,faked,faked_tx,faked_ty,faked_bpp,or_live_id_fake,0,0);
+}
+
 
 void raydium_texture_npot_enable(void)
 {
@@ -529,6 +596,7 @@ raydium_texture_name[id][0]=0;
 raydium_texture_blended[id]=0;
 raydium_texture_nolight[id]=0;
 raydium_texture_env[id]=0;
+raydium_texture_cubemap[id]=0;
 raydium_texture_islightmap[id]=0;
 raydium_texture_shader[id]=-1;
 raydium_texture_rgb[id][0]=-1.f;

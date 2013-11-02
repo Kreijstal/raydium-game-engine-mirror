@@ -73,7 +73,7 @@ hardware capacities and "power of 2" constraint.
 
 __rayapi GLuint raydium_texture_load_internal(char *filename, char *as, signed char faked, int faked_tx, int faked_ty, int faked_bpp, int or_live_id_fake);
 /**
-Internal use.
+Internal use. (and there's also some other internal wrappers)
 **/
 
 __rayapi GLuint raydium_texture_load (char *filename);

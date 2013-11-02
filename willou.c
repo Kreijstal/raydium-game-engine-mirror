@@ -20,7 +20,7 @@ GLfloat  *back_color=light_color;
 
 void display(void)
 {
-    
+
     raydium_joy_key_emul();
 
     if(raydium_key_last==1027)
@@ -38,26 +38,23 @@ void display(void)
     raydium_light_position[0][1]=150;
     raydium_light_position[0][2]=200;
     raydium_light_position[0][3]=1.0;
-    
+
     raydium_clear_frame();
-    
+
     raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
-    
+
     raydium_object_draw_name(model);
     raydium_particle_draw_all(); // if raydium_particle_state_restore() is used ...
 
 //    raydium_osd_logo("logo.tga");
-    
+
     raydium_rendering_finish();
 }
-
-
-
 
 int main(int argc, char **argv)
 {
     raydium_init_args(argc,argv);
-    
+
     // window creation
     raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Willou's test");
     raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
@@ -66,13 +63,14 @@ int main(int argc, char **argv)
     raydium_projection_fov=60;
     raydium_fog_disable();
     raydium_window_view_update();
-    
+
     raydium_light_enable();
     raydium_light_on(0);
     memcpy(raydium_light_color[0],light_color,raydium_internal_size_vector_float_4);
     raydium_light_intensity[0] = 10000000;
     raydium_light_update_all(0);
-    
+
+    raydium_sky_box_name("CUBE_clouds_*.tga");
     raydium_sky_box_cache();
 
     raydium_window_view_update();

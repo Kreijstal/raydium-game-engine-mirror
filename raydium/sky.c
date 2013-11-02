@@ -16,17 +16,27 @@ void raydium_sky_box_name(char *name)
 {
 char c_name[RAYDIUM_MAX_NAME_LEN];
 
-if(!name || strlen(name)==0)
-    strcpy(c_name,"");
-else
-    sprintf(c_name,"_%s_",name);
+if(!name || strncmp("CUBE",name,4))
+    {
+    if(!name || strlen(name)==0)
+        strcpy(c_name,"");
+    else
+        sprintf(c_name,"_%s_",name);
 
-sprintf(raydium_sky_texture_skybox_front,"BOX%sfront.tga",c_name);
-sprintf(raydium_sky_texture_skybox_back,"BOX%sback.tga",c_name);
-sprintf(raydium_sky_texture_skybox_left,"BOX%sleft.tga",c_name);
-sprintf(raydium_sky_texture_skybox_right,"BOX%sright.tga",c_name);
-sprintf(raydium_sky_texture_skybox_bottom,"BOX%sbottom.tga",c_name);
-sprintf(raydium_sky_texture_skybox_top,"BOX%stop.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_front,"BOX%sfront.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_back,"BOX%sback.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_left,"BOX%sleft.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_right,"BOX%sright.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_bottom,"BOX%sbottom.tga",c_name);
+    sprintf(raydium_sky_texture_skybox_top,"BOX%stop.tga",c_name);
+    raydium_sky_texture_skybox_type=RAYDIUM_SKYBOX_TYPE_2D;
+    }
+else
+    {
+    strcpy(raydium_sky_texture_skybox_front,name);
+    raydium_sky_texture_skybox_type=RAYDIUM_SKYBOX_TYPE_CUBEMAP;
+    }
+
 raydium_sky_prefix_defined = 1;
 }
 
@@ -53,23 +63,111 @@ return raydium_sky_enabled;
 
 void raydium_sky_box_cache(void)
 {
-raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
-raydium_texture_current_set_name(raydium_sky_texture_skybox_back);
-raydium_texture_current_set_name(raydium_sky_texture_skybox_left);
-raydium_texture_current_set_name(raydium_sky_texture_skybox_right);
-raydium_texture_current_set_name(raydium_sky_texture_skybox_bottom);
-raydium_texture_current_set_name(raydium_sky_texture_skybox_top);
+switch(raydium_sky_texture_skybox_type)
+    {
+    case RAYDIUM_SKYBOX_TYPE_2D:
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_back);
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_left);
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_right);
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_bottom);
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_top);
 
-raydium_hdr_texture_name(raydium_sky_texture_skybox_front,1);
-raydium_hdr_texture_name(raydium_sky_texture_skybox_back,1);
-raydium_hdr_texture_name(raydium_sky_texture_skybox_left,1);
-raydium_hdr_texture_name(raydium_sky_texture_skybox_right,1);
-raydium_hdr_texture_name(raydium_sky_texture_skybox_bottom,1);
-raydium_hdr_texture_name(raydium_sky_texture_skybox_top,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_front,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_back,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_left,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_right,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_bottom,1);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_top,1);
+        break;
+    case RAYDIUM_SKYBOX_TYPE_CUBEMAP:
+        raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
+        raydium_hdr_texture_name(raydium_sky_texture_skybox_front,1);
+        break;
+    }
 }
 
 
-void raydium_sky_box_render(GLfloat x, GLfloat y, GLfloat z)
+void raydium_sky_box_render_cubemap(GLfloat x, GLfloat y, GLfloat z)
+{
+GLfloat t;
+
+t=((raydium_projection_far-raydium_projection_near)/2.f);
+//~ t=1;
+t=5;
+
+glDisable(GL_LIGHTING);
+glDisable(GL_FOG);
+
+
+// invalidates cache for prepare_texture :
+raydium_rendering_internal_prepare_texture_render(0);
+
+raydium_texture_current_set_name(raydium_sky_texture_skybox_front);
+raydium_rendering_internal_prepare_texture_render(raydium_texture_current_main);
+
+glColor4fv(raydium_background_color);
+glDepthMask(GL_FALSE);
+
+glPushMatrix();
+
+glTranslatef(x,y,z);
+glScalef(1,-1,1); // scanlines are read upside down for cubemap, remember
+glRotatef(90,0,1,0); // usual rotation to get Raydium coords
+glRotatef(90,0,0,1);
+
+glBegin(GL_TRIANGLE_STRIP);			// X neg
+    glTexCoord3f(-1,-1,-1); glVertex3f(-t,-t,-t);
+	glTexCoord3f(-1, 1,-1); glVertex3f(-t, t,-t);
+	glTexCoord3f(-1,-1, 1); glVertex3f(-t,-t, t);
+	glTexCoord3f(-1, 1, 1); glVertex3f(-t, t, t);
+glEnd();
+
+glBegin(GL_TRIANGLE_STRIP);			// X pos
+	glTexCoord3f( 1,-1,-1); glVertex3f( t,-t,-t);
+	glTexCoord3f( 1,-1, 1); glVertex3f( t,-t, t);
+	glTexCoord3f( 1, 1,-1); glVertex3f( t, t,-t);
+	glTexCoord3f( 1, 1, 1); glVertex3f( t, t, t);
+glEnd();
+
+glBegin(GL_TRIANGLE_STRIP);			// Y neg
+	glTexCoord3f(-1,-1,-1); glVertex3f(-t,-t,-t);
+	glTexCoord3f(-1,-1, 1); glVertex3f(-t,-t, t);
+	glTexCoord3f( 1,-1,-1); glVertex3f( t,-t,-t);
+	glTexCoord3f( 1,-1, 1); glVertex3f( t,-t, t);
+glEnd();
+
+glBegin(GL_TRIANGLE_STRIP);			// Y pos
+	glTexCoord3f(-1, 1,-1); glVertex3f(-t, t,-t);
+	glTexCoord3f( 1, 1,-1); glVertex3f( t, t,-t);
+	glTexCoord3f(-1, 1, 1); glVertex3f(-t, t, t);
+	glTexCoord3f( 1, 1, 1); glVertex3f( t, t, t);
+glEnd();
+
+glBegin(GL_TRIANGLE_STRIP);			// Z neg
+	glTexCoord3f(-1,-1,-1); glVertex3f(-t,-t,-t);
+	glTexCoord3f( 1,-1,-1); glVertex3f( t,-t,-t);
+	glTexCoord3f(-1, 1,-1); glVertex3f(-t, t,-t);
+	glTexCoord3f( 1, 1,-1); glVertex3f( t, t,-t);
+glEnd();
+
+glBegin(GL_TRIANGLE_STRIP);			// Z pos
+	glTexCoord3f(-1,-1, 1); glVertex3f(-t,-t, t);
+	glTexCoord3f(-1, 1, 1); glVertex3f(-t, t, t);
+	glTexCoord3f( 1,-1, 1); glVertex3f( t,-t, t);
+	glTexCoord3f( 1, 1, 1); glVertex3f( t, t, t);
+glEnd();
+
+
+glPopMatrix();
+
+if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
+if(raydium_fog_enabled_tag) glEnable(GL_FOG);
+glDepthMask(GL_TRUE);
+}
+
+
+void raydium_sky_box_render_2d(GLfloat x, GLfloat y, GLfloat z)
 {
 //GLfloat one[]={1.,1.,1.,1.};
 #define sizeb ((raydium_projection_far-raydium_projection_near)/2.f)
@@ -79,8 +177,6 @@ GLfloat sizey=(x+5);
 GLfloat (z+size)=(x+5);
 GLfloat minv=(x-5);
 */
-
-if(raydium_fog_enabled_tag && !raydium_sky_force) return;
 
 glDisable(GL_LIGHTING);
 glDisable(GL_FOG);
@@ -160,6 +256,22 @@ glEnd();
 if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
 if(raydium_fog_enabled_tag) glEnable(GL_FOG);
 glDepthMask(GL_TRUE);
+}
+
+void raydium_sky_box_render(GLfloat x, GLfloat y, GLfloat z)
+{
+if(raydium_fog_enabled_tag && !raydium_sky_force)
+    return;
+
+switch(raydium_sky_texture_skybox_type)
+    {
+    case RAYDIUM_SKYBOX_TYPE_2D:
+        raydium_sky_box_render_2d(x,y,z);
+        break;
+    case RAYDIUM_SKYBOX_TYPE_CUBEMAP:
+        raydium_sky_box_render_cubemap(x,y,z);
+        break;
+    }
 }
 
 void raydium_sky_sphere_render(GLfloat x, GLfloat y, GLfloat z,int detail)

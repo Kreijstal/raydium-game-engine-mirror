@@ -317,6 +317,9 @@
 #define RAYDIUM_RENDER_MAX_TEXUNITS             4
 #endif
 
+#define RAYDIUM_SKYBOX_TYPE_2D                  1
+#define RAYDIUM_SKYBOX_TYPE_CUBEMAP             6
+
 #define RAYDIUM_SKY_SPHERE_MAX_DETAIL           30
 #define RAYDIUM_SKY_SPHERE_DEFAULT_DETAIL       25
 
@@ -431,7 +434,8 @@ __global GLfloat     raydium_sky_sphere_y_pos;
 __global GLfloat     raydium_sky_sphere_quality;
 __global GLfloat     raydium_sky_sphere_heigth;
 __global signed char raydium_sky_sphere_generated;
-__global char raydium_sky_texture_skybox_front[RAYDIUM_MAX_NAME_LEN];
+__global char raydium_sky_texture_skybox_type;
+__global char raydium_sky_texture_skybox_front[RAYDIUM_MAX_NAME_LEN]; // will be used as the only texture name for cubemaps
 __global char raydium_sky_texture_skybox_back[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_skybox_left[RAYDIUM_MAX_NAME_LEN];
 __global char raydium_sky_texture_skybox_right[RAYDIUM_MAX_NAME_LEN];
@@ -489,6 +493,7 @@ __global signed char     raydium_texture_nolight[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_blended[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_hdr[RAYDIUM_MAX_TEXTURES];
 __global signed char     raydium_texture_env[RAYDIUM_MAX_TEXTURES];
+__global signed char     raydium_texture_cubemap[RAYDIUM_MAX_TEXTURES];
 __global GLint    raydium_texture_shader[RAYDIUM_MAX_TEXTURES];
 __global char     raydium_texture_name[RAYDIUM_MAX_TEXTURES][RAYDIUM_MAX_NAME_LEN];
 __global GLfloat  raydium_texture_rgb[RAYDIUM_MAX_TEXTURES][4];

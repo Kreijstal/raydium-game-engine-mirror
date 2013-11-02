@@ -102,8 +102,18 @@ if(tui>0)
 
  if(tex)
  {
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D,tex);
+  if(!raydium_texture_cubemap[tex])
+    {
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_2D,tex);
+    }
+  else
+    {
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP,tex);
+    }
 
   if(raydium_texture_env[tex])
   {
@@ -130,6 +140,7 @@ if(tui>0)
  else
  {
  glDisable(GL_TEXTURE_2D);
+ glDisable(GL_TEXTURE_CUBE_MAP);
 // glBindTexture(GL_TEXTURE_2D,0);
  }
  glActiveTextureARB(GL_TEXTURE0_ARB);
@@ -223,8 +234,19 @@ else // "standard" textunit
   {
   glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, one);
   glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, zero);
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D,tex);
+
+  if(!raydium_texture_cubemap[tex])
+    {
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_2D,tex);
+    }
+  else
+    {
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP,tex);
+    }
   //printf("%s\n",raydium_texture_name[tex]);
   }
 } // end "standard" texture
@@ -247,6 +269,7 @@ GLfloat one[]={0.8f, 0.8f, 0.8f, 1.f};
 glDisable(GL_BLEND);
 glDepthMask(GL_TRUE);
 glEnable(GL_TEXTURE_2D);
+glDisable(GL_TEXTURE_CUBE_MAP);
 glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, one);
 }
 
