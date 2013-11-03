@@ -294,6 +294,10 @@ This function will create a new label, with ##name## and with ##window## for
 parent. 
 You need to provide a ##caption## ("title") and an RGB color (0..1 interval)
 
+Text is center on the given position. If you want to align the text on the
+left, start the caption with the character '<'. (this char will not be
+displayed)
+
 Unit for position (##px## and ##py##): percents (**window**)
 **/
 

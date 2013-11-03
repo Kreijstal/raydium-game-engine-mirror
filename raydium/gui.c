@@ -652,6 +652,7 @@ void raydium_gui_label_draw(int w, int window)
     GLfloat wfactor[2];
     GLfloat tmp;
     raydium_gui_Label *l;
+    int caption_offset=0;
 
     if (!raydium_gui_window_isvalid(window))
         return;
@@ -678,10 +679,17 @@ void raydium_gui_label_draw(int w, int window)
         }
         else
             tmp=0;
+
+        if(l->caption[0]=='<')
+            {
+            tmp=0;
+            caption_offset=1;
+            }
+
         raydium_osd_color_change(l->font_color[0],l->font_color[1],l->font_color[2]);
         raydium_osd_printf(xy[0]-tmp,xy[1],
                            raydium_gui_windows[window].widgets[w].font_size,
-                           0.5,raydium_gui_theme_current.font,"%s",l->caption);
+                           0.5,raydium_gui_theme_current.font,"%s",l->caption+caption_offset);
     } // end caption drawing
 }
 
