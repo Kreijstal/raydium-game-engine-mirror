@@ -1590,6 +1590,9 @@ int raydium_gui_zone_read(int window, int widget, char *str)
 
 void raydium_gui_show(void)
 {
+    if (!raydium_gui_theme_current.loaded)
+        raydium_log("WARNING: you must load a theme before showing gui.");
+
     raydium_gui_visible=1;
     if (!raydium_osd_cursor_texture)
     {
