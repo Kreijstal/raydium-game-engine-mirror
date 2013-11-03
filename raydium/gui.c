@@ -617,8 +617,8 @@ void raydium_gui_track_draw(int w, int window)
 
 // hover
     if (raydium_gui_window_focused==window &&
-            (mxy[0]>=rxy[0] && mxy[1]>=rxy[1] &&
-             mxy[0]<=rxy[2] && mxy[1]<=rxy[3] ) &&
+            (mxy[0]>=rxy[0] && mxy[1]>=raydium_math_min(cxy[1],rxy[1]) &&
+             mxy[0]<=rxy[2] && mxy[1]<=raydium_math_max(cxy[3],rxy[3]) ) &&
             raydium_mouse_button[0])
     {
         GLfloat fact;
