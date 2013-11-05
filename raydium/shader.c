@@ -269,7 +269,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_i(raydium_shader_variable(sid,variable),value);
 glUseProgramObjectARB(curr);
 return ret;
@@ -295,7 +295,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_fv(raydium_shader_variable(sid,variable),num,value);
 glUseProgramObjectARB(curr);
 return ret;
@@ -321,7 +321,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_matrix4fv(raydium_shader_variable(sid,variable),num,transpose,value);
 glUseProgramObjectARB(curr);
 return ret;
@@ -347,7 +347,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_f(raydium_shader_variable(sid,variable),value);
 glUseProgramObjectARB(curr);
 return ret;
@@ -373,7 +373,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_2f(raydium_shader_variable(sid,variable),value1,value2);
 glUseProgramObjectARB(curr);
 return ret;
@@ -399,7 +399,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_3f(raydium_shader_variable(sid,variable),value1,value2,value3);
 glUseProgramObjectARB(curr);
 return ret;
@@ -425,7 +425,7 @@ if(!raydium_shader_support)
 
 curr=glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 sid=raydium_shader_find(shader);
-raydium_shader_current(raydium_shader_shaders[sid].prog);
+raydium_shader_current(sid);
 ret=raydium_shader_var_4f(raydium_shader_variable(sid,variable),value1,value2,value3,value4);
 glUseProgramObjectARB(curr);
 return ret;
