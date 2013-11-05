@@ -118,7 +118,7 @@ else
 // issues (somewhere in the message queue, probably)
 if(raydium_mouse_x < border || raydium_mouse_x > raydium_window_tx-border ||
    raydium_mouse_y < border || raydium_mouse_y > raydium_window_ty-border ||
-   prev_state==0)
+   prev_state==0 || raydium_mouse_cancel_move)
 #endif
 #endif
 	{
