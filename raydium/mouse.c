@@ -41,6 +41,7 @@ memset(raydium_mouse_button,0,3);
 raydium_mouse_click=0;
 raydium_mouse_x=raydium_mouse_y=raydium_window_ty=0;
 raydium_mouse_mode_delta=0;
+raydium_mouse_cancel_move=0;
 raydium_log("mouse: OK");
 raydium_mouse_hide();
 }
@@ -93,7 +94,7 @@ if(raydium_gui_isvisible())
 border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
 raydium_mouse_mode_delta=1;
 
-if(prev_state==0)
+if(prev_state==0 || raydium_mouse_cancel_move)
 {
 	*x = 0;
 	*y = 0;
@@ -126,5 +127,6 @@ if(raydium_mouse_x < border || raydium_mouse_x > raydium_window_tx-border ||
 	raydium_mouse_move(old_x, old_y);
 	}
 prev_state=1;
+raydium_mouse_cancel_move=0;
 
 }

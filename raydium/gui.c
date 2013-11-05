@@ -1612,6 +1612,7 @@ void raydium_gui_show(void)
 void raydium_gui_hide(void)
 {
     raydium_gui_visible=0;
+    raydium_mouse_cancel_move=1; // will prevent a view "jump"
     if (!raydium_osd_cursor_texture && !raydium_gui_oldstate)
     {
         raydium_mouse_hide();

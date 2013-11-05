@@ -383,6 +383,7 @@ __global signed char    raydium_mouse_button[3];
 __global GLint  raydium_mouse_x;
 __global GLint  raydium_mouse_y;
 __global signed char    raydium_mouse_mode_delta; // captured for mouseview camera ?
+__global signed char    raydium_mouse_cancel_move; // cancel next mouseview call
 __global signed char    raydium_joy_button[RAYDIUM_JOY_MAX_BUTTONS];
 __global GLfloat        raydium_joy_axis[RAYDIUM_JOY_MAX_AXIS];
 __global signed char    raydium_joy_click;

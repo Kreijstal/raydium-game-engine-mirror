@@ -788,54 +788,57 @@ if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_ABS)
     rffp_cam_pos_z+=push[2];
     }
 
-switch(move)
-{
-    //RAYDIUM_CAMERA_FREEMOVE_NORMAL
-    case RAYDIUM_CAMERA_FREEMOVE_NORMAL:
-        //get input
-        if(raydium_key[GLUT_KEY_DOWN])  dir_y=-1;
-        if(raydium_key[GLUT_KEY_UP])    dir_y=1;
-        if(raydium_key[GLUT_KEY_LEFT])  dir_x=-1;
-        if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
+if(!raydium_gui_isvisible())
+    {
+    switch(move)
+        {
+        //RAYDIUM_CAMERA_FREEMOVE_NORMAL
+        case RAYDIUM_CAMERA_FREEMOVE_NORMAL:
+            //get input
+            if(raydium_key[GLUT_KEY_DOWN])  dir_y=-1;
+            if(raydium_key[GLUT_KEY_UP])    dir_y=1;
+            if(raydium_key[GLUT_KEY_LEFT])  dir_x=-1;
+            if(raydium_key[GLUT_KEY_RIGHT]) dir_x=1;
 
-        if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_REL && raydium_frame_time)
-            {
-            push=raydium_camera_push_internal_step();
-            dir_y+=push[0]/(raydium_frame_time*6.f);
-            dir_x+=push[1]/(raydium_frame_time*6.f);
-            rffp_cam_pos_y-=push[2];
-            }
+            if(raydium_camera_push_type==RAYDIUM_CAMERA_PUSH_FREEMOVE_REL && raydium_frame_time)
+                {
+                push=raydium_camera_push_internal_step();
+                dir_y+=push[0]/(raydium_frame_time*6.f);
+                dir_x+=push[1]/(raydium_frame_time*6.f);
+                rffp_cam_pos_y-=push[2];
+                }
 
-        // "5 lines" mouse wheel scrool
-        if(raydium_mouse_click==4) dir_y=5;
-        if(raydium_mouse_click==5) dir_y=-5;
+            // "5 lines" mouse wheel scrool
+            if(raydium_mouse_click==4) dir_y=5;
+            if(raydium_mouse_click==5) dir_y=-5;
 
-    case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
-        //60=experimental value
-        dir_x *= (raydium_frame_time*60.0f);
-        dir_y *= (raydium_frame_time*60.0f);
+        case RAYDIUM_CAMERA_FREEMOVE_MOUSE:
+            //60=experimental value
+            dir_x *= (raydium_frame_time*60.0f);
+            dir_y *= (raydium_frame_time*60.0f);
 
-		raydium_mouse_grab_delta(&rffp_delta_x,&rffp_delta_y);
+            raydium_mouse_grab_delta(&rffp_delta_x,&rffp_delta_y);
 
-        //calculating the position (x,y,z) of the camera
-        rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
-        rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
-        rffp_cam_pos_y += (raydium_math_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
+            //calculating the position (x,y,z) of the camera
+            rffp_cam_pos_z += (raydium_math_sin(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+            rffp_cam_pos_x += (raydium_math_cos(rffp_cam_angle_x+90)*dir_y*raydium_camera_freemove_speed*raydium_math_sin(90-rffp_cam_angle_y));
+            rffp_cam_pos_y += (raydium_math_cos(90-rffp_cam_angle_y)*raydium_camera_freemove_speed*dir_y);
 
-        rffp_cam_pos_x -= (raydium_math_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
-        rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+            rffp_cam_pos_x -= (raydium_math_cos(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
+            rffp_cam_pos_z -= (raydium_math_sin(rffp_cam_angle_x)*dir_x*raydium_camera_freemove_speed);
 
-        //looking where the mouse points
-        rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f);
-        rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f);
+            //looking where the mouse points
+            rffp_cam_angle_x += (rffp_delta_x*raydium_camera_freemove_sensibility*0.1f);
+            rffp_cam_angle_y += (rffp_delta_y*raydium_camera_freemove_sensibility*0.1f);
+            break;
 
-    break;
+        //RAYDIUM_CAMERA_FREEMOVE_FIXED
+        case RAYDIUM_CAMERA_FREEMOVE_FIXED:
+            //Nothing to do camera won't move.
+            break;
+        }
+    }
 
-    //RAYDIUM_CAMERA_FREEMOVE_FIXED
-    case RAYDIUM_CAMERA_FREEMOVE_FIXED:
-    //Nothing to do camera won't move.
-    break;
-}
 raydium_camera_place(rffp_cam_pos_x,rffp_cam_pos_y,rffp_cam_pos_z,rffp_cam_angle_x,rffp_cam_angle_y,rffp_cam_angle_z);
 raydium_camera_data[1]=rffp_cam_pos_x;
 raydium_camera_data[2]=-rffp_cam_pos_y;
