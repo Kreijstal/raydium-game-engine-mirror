@@ -151,10 +151,27 @@ glRotatef(90,0,1,0);
 raydium_camera_internal(z,x,-y);
 }
 
-float *raydium_camera_get_data(void)
+float *raydium_camera_data_get(void)
 {
 return (float *)raydium_camera_data;
 }
+
+void raydium_camera_data_set(GLfloat *data)
+{
+memcpy(raydium_camera_data,data,sizeof(GLfloat)*6);
+}
+
+void raydium_camera_data_dump(void)
+{
+raydium_log("GLfloat camera_data[] = {%ff,%ff,%ff,%ff,%ff,%ff}",
+    raydium_camera_data[0],
+    raydium_camera_data[1],
+    raydium_camera_data[2],
+    raydium_camera_data[3],
+    raydium_camera_data[4],
+    raydium_camera_data[5]);
+}
+
 
 void raydium_camera_look_at(float x, float y, float z,
                           float x_to, float y_to, float z_to)
@@ -772,7 +789,7 @@ GLint rffp_delta_y=0;
 dir_x=0;
 dir_y=0;
 
-data=raydium_camera_get_data();
+data=raydium_camera_data_get();
 rffp_cam_pos_x=data[1];
 rffp_cam_pos_y=-data[2];
 rffp_cam_pos_z=data[0];

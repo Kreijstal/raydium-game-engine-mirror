@@ -49,7 +49,7 @@ Sets the camera at (x,y,z) position, and using (lacet,tangage,roulis)
 as rotation angles.
 **/
 
-__rayapi float *raydium_camera_get_data(void);
+__rayapi float *raydium_camera_data_get(void);
 /**
 Function to get the data of the camera in an array of 6 floats.
 The first 3 values are the position like x,y,z in universal coordinates.
@@ -64,6 +64,18 @@ raydium_log("pos: %f %f %f rotation: %f %f %f",camdata[0],camdata[1],
 ...
 %%
 Returned data is related to the current frame.
+**/
+
+__rayapi void raydium_camera_data_set(GLfloat *data);
+/**
+This will set current camera data (data is copied, no need to keep it
+allocated after the call). See above for more information about
+this data.
+**/
+
+__rayapi void raydium_camera_data_dump(void);
+/**
+This will display current camera data on the console.
 **/
 
 
