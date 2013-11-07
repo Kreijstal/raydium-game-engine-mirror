@@ -116,8 +116,8 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   RECT rect;
   DWORD style = 0;
   int iPixelFormat;
-  int origin [2] = {   0,   0 };
-  int size   [2] = { 640, 480 };
+//  int origin [2] = {   0,   0 };
+//  int size   [2] = { 640, 480 };
   PIXELFORMATDESCRIPTOR pfd;
 
 
@@ -149,10 +149,10 @@ void pwInit ( int x, int y, int w, int h, int multisample,
   if ( x == -1 ) x = (GetSystemMetrics( SM_CXSCREEN ) / 2) - (w/2) ;
   if ( y == -1 ) y = (GetSystemMetrics( SM_CYSCREEN ) / 2) - (h/2);
 
-  origin [ 0 ] = x ;
-  origin [ 1 ] = y ;
-  size   [ 0 ] = w ;
-  size   [ 1 ] = h ;
+//  origin [ 0 ] = x ;
+//  origin [ 1 ] = y ;
+//  size   [ 0 ] = w ;
+//  size   [ 1 ] = h ;
 
 
   rect.left   = x ;

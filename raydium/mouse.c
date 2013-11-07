@@ -86,12 +86,21 @@ void raydium_mouse_grab_delta(int *x, int *y)
 static int prev_state=0;
 static GLint   old_x;
 static GLint   old_y;
+#ifndef WIN32
+#ifndef APPLE
 GLint border;
+#endif
+#endif
 
 if(raydium_gui_isvisible())
     { *x=0; *y=0; return; }
 
+#ifndef WIN32
+#ifndef APPLE
 border = raydium_math_max(raydium_window_tx,raydium_window_ty) / 4;
+#endif
+#endif
+
 raydium_mouse_mode_delta=1;
 
 if(prev_state==0 || raydium_mouse_cancel_move)

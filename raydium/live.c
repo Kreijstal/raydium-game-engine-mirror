@@ -224,11 +224,11 @@ LRESULT CALLBACK Frame_CallBack(HWND hWnd, LPVIDEOHDR lpVHdr )
     int i,j;
     BYTE * pin , * pout;
     raydium_live_Device *dev;
-    BITMAPINFO * bmi_in;
+//    BITMAPINFO * bmi_in;
     pin = lpVHdr->lpData;
     dev = (raydium_live_Device *) capGetUserData(hWnd);
 
-    bmi_in = &dev->capture_video_format_original;
+//    bmi_in = &dev->capture_video_format_original;
     ICDecompressBegin( dev->compressor, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format_original, /*(LPBITMAPINFOHEADER)*/ &dev->capture_video_format);
     ICDecompress( dev->compressor,ICDECOMPRESS_HURRYUP,(LPBITMAPINFOHEADER) &dev->capture_video_format_original, lpVHdr->lpData, (LPBITMAPINFOHEADER)  &dev->capture_video_format, dev->buffer);
     ICDecompressEnd( dev->compressor );
@@ -295,14 +295,14 @@ if (dev->fd<0)
 #else
     {
         HWND hWnd;
-        HDC hDC;
+//        HDC hDC;
         char webcam_name_list[RAYDIUM_MAX_NAME_LEN];
         char webcam_drv_list[RAYDIUM_MAX_NAME_LEN];
 
 
 
         hWnd = GetDesktopWindow();
-        hDC = GetDC(hWnd);
+//        hDC = GetDC(hWnd);
 
         if (device)
             id = atoi(device);
