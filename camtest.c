@@ -58,24 +58,24 @@ switch(type)
 	break;
 	case '4':
 		raydium_camera_smooth(10+mx,-2+my,2+mz,0,0,0,60,0,raydium_frame_time*3);
-		
+
 
 	break;
 	case '5':
 		raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_FIXED);
-				
+
 	break;
 	case '6':
-		raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);	
-			
+		raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL);
+
 	break;
-	case '7':		
+	case '7':
 		raydium_camera_orbitmove(12,2,2);
-		
-	break;	
-	case '8':		
+
+	break;
+	case '8':
 		raydium_camera_orbitmove(0,0,0);
-		
+
 	break;
 
 }
@@ -105,7 +105,7 @@ raydium_osd_color_rgba(0,1,0,1);
 raydium_osd_printf_3D(0.3,0.3,0.8,20,0.5,"bitstream.tga","Z");
 raydium_osd_color_rgba(1,1,1,1);
 float *pos;
-pos=raydium_camera_get_data();
+pos=raydium_camera_data_get();
 raydium_osd_printf(5,95,18,0.42f,"bitstream.tga","Camera position: %3.3f, %3.3f, %3.3f",pos[0],pos[1],pos[2]);
 raydium_osd_printf(5,90,18,0.42f,"bitstream.tga","Camera angles: %3.3f, %3.3f, %3.3f",fmodf(pos[3],360),fmodf(pos[4],360),fmodf(pos[5],360));
 raydium_osd_printf(5,5,22,0.42f,"bitstream.tga","Press 1,2,3,4,5,6,7,8 to change camera.");
@@ -122,27 +122,27 @@ switch(type)
 	break;
 	case '3':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_look_at(2,2,10,0,0,0)");
-				
+
 	break;
 	case '4':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_smooth(10+mx,-2+my,2+mz,0,0,0,60,0,raydium_frame_time*3)");
-			
+
 	break;
 	case '5':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_FIXED)");
-		
+
 	break;
-	case '6':		
+	case '6':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_freemove(RAYDIUM_CAMERA_FREEMOVE_NORMAL)");
-		
-	break;	
-	case '7':		
+
+	break;
+	case '7':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_orbitmove(12,2,2)");
-		
-	break;	
-	case '8':		
+
+	break;
+	case '8':
 		raydium_osd_printf(5,85,18,0.42f,"bitstream.tga","Camera: raydium_camera_orbitmove(0,0,0)");
-		
+
 	break;
 }
 raydium_rendering_finish();
@@ -157,7 +157,7 @@ raydium_window_create(640,480,RAYDIUM_RENDERING_WINDOW,"Camera test");
 raydium_texture_filter_change(RAYDIUM_TEXTURE_FILTER_TRILINEAR);
 raydium_window_view_perspective(60,0.01,2500); // fov 60 + near and far planes
 
-raydium_fog_disable();    
+raydium_fog_disable();
 raydium_light_enable();
 raydium_light_on(0);
 
