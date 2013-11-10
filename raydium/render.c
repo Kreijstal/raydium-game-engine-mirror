@@ -72,6 +72,8 @@ if(tui>=raydium_math_min(RAYDIUM_RENDER_MAX_TEXUNITS,raydium_texture_units) || t
 if(texunit_state[tui]==tex)
     return 0;
 
+//~ raydium_log("tui %i <- tex %s",tui,raydium_texture_name[tex]);
+
 texunit_state[tui]=tex;
 
 #ifdef DEBUG_RENDER_VERTEXARRAY_GLBINDS_DISPLAY
@@ -323,6 +325,7 @@ if(raydium_texture_used[tex])
 
   // prepare first texture unit
   raydium_rendering_prepare_texture_unit(GL_TEXTURE0_ARB,tex);
+
   // ... and reset next ones
   for(j=0;j<(RAYDIUM_RENDER_MAX_TEXUNITS-1);j++)
         raydium_rendering_prepare_texture_unit(GL_TEXTURE1_ARB+j,0);

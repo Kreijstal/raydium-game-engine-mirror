@@ -164,6 +164,9 @@ glPopMatrix();
 if(raydium_light_enabled_tag) glEnable(GL_LIGHTING);
 if(raydium_fog_enabled_tag) glEnable(GL_FOG);
 glDepthMask(GL_TRUE);
+// supposed to be unnecessary, but there's some (cache ?) issue with
+// object starting with rgb() texture right after the skybox
+glDisable(GL_TEXTURE_CUBE_MAP);
 }
 
 
