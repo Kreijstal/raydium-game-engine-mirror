@@ -174,6 +174,8 @@ else // "standard" textunit
   glDisable(GL_ALPHA_TEST);
 //  glDisable(GL_FOG);
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  if(raydium_render_cull_blended)
+    glEnable(GL_CULL_FACE);
   }
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_CUTOUT)
@@ -184,6 +186,7 @@ else // "standard" textunit
   glEnable (GL_ALPHA_TEST);
 //  glDisable(GL_FOG);
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  glDisable(GL_CULL_FACE);
   }
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_ATM)
@@ -193,6 +196,7 @@ else // "standard" textunit
   glAlphaFunc(GL_GREATER,0.5);
   glEnable (GL_ALPHA_TEST);
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  glDisable(GL_CULL_FACE);
   }
 
   if(raydium_texture_blended[tex]==RAYDIUM_TEXTURE_BLEND_NONE)
@@ -202,6 +206,7 @@ else // "standard" textunit
   glDisable(GL_ALPHA_TEST);
 //  glEnable(GL_FOG);
   glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  glDisable(GL_CULL_FACE);
   }
 
 
@@ -212,6 +217,7 @@ else // "standard" textunit
   glDisable(GL_ALPHA_TEST);
   glDisable(GL_TEXTURE_2D);
   glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+  glDisable(GL_CULL_FACE);
   }
 
   raydium_hdr_block(!raydium_texture_hdr[tex]);
@@ -564,6 +570,11 @@ if(wglewIsSupported("WGL_EXT_swap_control"))
 # endif
 #endif
 raydium_log("Error: swap control not available");
+}
+
+void raydium_render_cull_blended_set(signed char cull_or_not)
+{
+raydium_render_cull_blended=(cull_or_not?1:0); // !!cull_or_not should work, too, no ? :)
 }
 
 // are faked textures package compliant ?

@@ -243,6 +243,7 @@ else
 raydium_rendering_rgb_normal();
 raydium_rendering_displaylists_enable();
 raydium_render_rgb_force_tag=0;
+raydium_render_cull_blended=0;
 raydium_render_lightmap_color_value[0]=1;
 raydium_render_lightmap_color_value[1]=1;
 raydium_render_lightmap_color_value[2]=1;

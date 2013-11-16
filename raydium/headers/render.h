@@ -160,4 +160,15 @@ but no disabling, ...), so consider this function as very experimental.
 You should use it only for tests.
 **/
 
+__rayapi void raydium_render_cull_blended_set(signed char cull_or_not);
+/**
+Set ##cull_or_not## to 1 (true) if you want backface culling for transparent
+textures (##RAYDIUM_TEXTURE_BLEND_BLENDED##). It solves most issues with
+multi-layered transparent rendering (example : seeing a car window thru
+another window).
+
+You should probably set true most of the time here, even if the historical
+default is false.
+**/
+
 #endif

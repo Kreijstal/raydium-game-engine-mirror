@@ -530,6 +530,7 @@ __global int     raydium_render_fps;
 __global GLfloat raydium_render_rgb_force[4];
 __global GLfloat raydium_render_lightmap_color_value[4];
 __global signed char     raydium_render_rgb_force_tag;
+__global signed char     raydium_render_cull_blended;
 __global char    raydium_render_displaylists_tag;
 __global GLboolean raydium_render_internal_light_previous_step;
 __global float   raydium_render_max_fps;
