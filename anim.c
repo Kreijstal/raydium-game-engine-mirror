@@ -43,7 +43,7 @@ if (raydium_key_last == 1000 + 'f')
     }
 if (raydium_key_last == 1000 + 'b')
     {
-    anm=max(0,anm+1.0f);
+    anm=raydium_math_max(0,anm+1.0f);
     mode=step;
     }
 
@@ -56,20 +56,20 @@ if (raydium_key_last == 1000 + 'F')
 
 if (raydium_key_last == 1000 + 'B')
     {
-    anm=max(0,anm-0.1f);
+    anm=raydium_math_max(0,anm-0.1f);
     mode=step;
     }
 
 
 if(raydium_key_last==1000+'p')
     {
-    anmid=max(0,anmid-1);
+    anmid=raydium_math_max(0,anmid-1);
     anm=0;
     }
 
 if(raydium_key_last==1000+'n')
     {
-    anmid=min(anmid+1,raydium_object_anims[raydium_object_find(model)]-1);
+    anmid=raydium_math_min(anmid+1,raydium_object_anims[raydium_object_find(model)]-1);
     raydium_log("%d",raydium_object_anims[raydium_object_find(model)]);
     anm=0;
     }
