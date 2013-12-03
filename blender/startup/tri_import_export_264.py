@@ -90,7 +90,11 @@ def convert_to_mesh(obj):
       
     for modifier in temp_object.modifiers:
         print ("Applying modifier %s"%modifier.name)
-        bpy.ops.object.modifier_apply(modifier=modifier.name)
+        try:
+            bpy.ops.object.modifier_apply(modifier=modifier.name)
+        except:
+            print ("Error applying modifier")
+            pass
     
 #    m=obj.to_mesh(bpy.context.scene,True,"RENDER")
 #    bpy.ops.object.add(type='MESH')
