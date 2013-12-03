@@ -79,7 +79,6 @@ void raydium_web_request(int fd)
             buffer[i]='*';
 
         raydium_log("web: request from client ...");
-        raydium_log("Web: Buffer Log :%s ",buffer);
 
         if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
             {
@@ -97,6 +96,8 @@ void raydium_web_request(int fd)
             break;
             }
         }
+
+        raydium_log("web: %s ",buffer);
 
         for(j=0;j<i-1;j++)      /* check for illegal parent directory use .. */
           if(buffer[j] == '.' && buffer[j+1] == '.')
@@ -160,15 +161,7 @@ void raydium_web_request(int fd)
             return;
             }
 
-
-// POSIX layer, hmmm ?
-#ifdef WIN32
-#define _RAYDIUM_FILE_MODE "rb"
-#else
-#define _RAYDIUM_FILE_MODE "r"
-#endif
-
-        if(( file_fd = raydium_file_fopen (&buffer[5],_RAYDIUM_FILE_MODE)) == NULL) /* open the file for reading */
+        if(( file_fd = raydium_file_fopen (&buffer[5],"rb")) == NULL) /* open the file for reading */
             {
             raydium_web_answer("error: Not found",fd);
             return;
@@ -186,6 +179,7 @@ void raydium_web_request(int fd)
             {
             send(fd,buffer,ret,0);
             }
+        fclose(file_fd);
 }
 
 void raydium_web_start(char *title)
