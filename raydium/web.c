@@ -97,7 +97,7 @@ void raydium_web_request(int fd)
             }
         }
 
-        raydium_log("web: %s ",buffer);
+        //raydium_log("web: %s ",buffer);
 
         for(j=0;j<i-1;j++)      /* check for illegal parent directory use .. */
           if(buffer[j] == '.' && buffer[j+1] == '.')
