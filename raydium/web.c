@@ -51,12 +51,13 @@ send(fd,buffer,strlen(buffer),0);
 /* this is a child web server process, so we can exit on errors */
 void raydium_web_request(int fd)
 {
-        int j, file_fd, buflen, len;
+        int j, buflen, len;
         long i, ret;
         char * fstr;
         static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
         static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
         signed char (*handler)(char *,char *, int);
+        FILE * file_fd;
 
     ret=recv(fd,buffer,RAYDIUM_WEB_BUFSIZE,0);
 
@@ -78,6 +79,7 @@ void raydium_web_request(int fd)
             buffer[i]='*';
 
         raydium_log("web: request from client ...");
+        raydium_log("Web: Buffer Log :%s ",buffer);
 
         if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
             {
@@ -161,12 +163,12 @@ void raydium_web_request(int fd)
 
 // POSIX layer, hmmm ?
 #ifdef WIN32
-#define _RAYDIUM_FILE_MODE (O_RDONLY|O_BINARY)
+#define _RAYDIUM_FILE_MODE "rb"
 #else
-#define _RAYDIUM_FILE_MODE O_RDONLY
+#define _RAYDIUM_FILE_MODE "r"
 #endif
 
-        if(( file_fd = open(&buffer[5],_RAYDIUM_FILE_MODE)) == -1) /* open the file for reading */
+        if(( file_fd = raydium_file_fopen (&buffer[5],_RAYDIUM_FILE_MODE)) == NULL) /* open the file for reading */
             {
             raydium_web_answer("error: Not found",fd);
             return;
@@ -180,7 +182,7 @@ void raydium_web_request(int fd)
         send(fd,buffer,strlen(buffer),0);
 
         /* send file in 8KB block - last block may be smaller */
-        while ( (ret = read(file_fd, buffer, RAYDIUM_WEB_BUFSIZE)) > 0 )
+        while ( (ret = fread(buffer,1,RAYDIUM_WEB_BUFSIZE,file_fd)) > 0 )
             {
             send(fd,buffer,ret,0);
             }
