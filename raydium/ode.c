@@ -5297,6 +5297,16 @@ raydium_ode_element[elem].particle=raydium_particle_generator_load(filename,rayd
 memcpy(raydium_ode_element[elem].particle_offset,offset,sizeof(dReal)*3);
 }
 
+void raydium_ode_element_particle_offset_3f(int elem,char *filename,dReal ox,dReal oy, dReal oz)
+{
+dReal offset[3];
+offset[0]=ox;
+offset[1]=oy;
+offset[2]=oz;
+
+raydium_ode_element_particle_offset(elem, filename, offset);
+}
+
 void raydium_ode_element_particle_offset_name(char *elem, char *filename, dReal *offset)
 {
 raydium_ode_element_particle_offset(raydium_ode_element_find(elem),filename,offset);

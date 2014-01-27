@@ -1959,6 +1959,11 @@ Same as ##raydium_ode_element_particle##, but with an ##offset##, relative
 to element. ##offset## is an array of 3 dReal values.
 **/
 
+__rayapi void raydium_ode_element_particle_offset_3f(int elem,char *filename,dReal ox,dReal oy, dReal oz);
+/**
+Same as above, but using 3 dReal values for offset.
+**/
+
 __rayapi void raydium_ode_element_particle_offset_name (char *elem, char *filename, dReal * offset);
 /**
 Same as above, using element's name.
