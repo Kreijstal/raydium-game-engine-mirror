@@ -62,62 +62,66 @@ void raydium_web_request(int fd)
     ret=recv(fd,buffer,RAYDIUM_WEB_BUFSIZE,0);
 
     if(ret == 0 || ret == -1)
-            {
-            /* read failure stop now */
-        perror("read");
-            raydium_web_answer("error: Failed to read browser request",fd);
-            return;
-            }
-
-        if(ret > 0 && ret < RAYDIUM_WEB_BUFSIZE)        /* return code is valid chars */
-            buffer[ret]=0;                              /* terminate the buffer */
-        else
-            buffer[0]=0;
-
-        for(i=0;i<ret;i++)      /* remove CR and LF characters */
-          if(buffer[i] == '\r' || buffer[i] == '\n')
-            buffer[i]='*';
-
-        raydium_log("web: request from client ...");
-
-        if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
-            {
-            raydium_web_answer("error: Only simple GET operation supported",fd);
-            return;
-            }
-
-        for(i=4;i<RAYDIUM_WEB_BUFSIZE;i++)
         {
-        /* null terminate after the second space to ignore extra stuff */
-        if(buffer[i] == ' ')
-            {
-            /* string is "GET URL " +lots of other stuff */
-            buffer[i] = 0;
-            break;
-            }
+        /* read failure stop now */
+        perror("read");
+        raydium_web_answer("error: Failed to read browser request",fd);
+        return;
         }
 
-        //raydium_log("web: %s ",buffer);
+    if(ret > 0 && ret < RAYDIUM_WEB_BUFSIZE)        /* return code is valid chars */
+        buffer[ret]=0;                              /* terminate the buffer */
+    else
+        buffer[ret=0]=0;
 
-        for(j=0;j<i-1;j++)      /* check for illegal parent directory use .. */
-          if(buffer[j] == '.' && buffer[j+1] == '.')
-            {
-            raydium_web_answer("error: Invalid path",fd);
-            return;
-            }
 
-        if( !strncmp(&buffer[0],"GET /\0",6) || !strncmp(&buffer[0],"get /\0",6) ) /* convert no filename to index file */
-            {
-            char msg[RAYDIUM_MAX_NAME_LEN];
-            sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
-            raydium_web_answer(msg,fd);
-            return;
-            }
+    for(i=0;i<ret;i++)      /* remove CR and LF characters */
+      if(buffer[i] == '\r' || buffer[i] == '\n')
+        buffer[i]='*';
 
-        /* work out the file type and check we support it */
-        buflen=strlen(buffer);
-        fstr = (char *)0;
-        handler=NULL;
+    raydium_log("web: request from client ...");
+
+    if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
+        {
+        raydium_web_answer("error: Only simple GET operation supported",fd);
+        return;
+        }
+
+    for(i=4;i<ret;i++) //Ananlye only #ret# chars received
+    {
+    /* null terminate after the second space to ignore extra stuff */
+    if(buffer[i] == ' ')
+        {
+        /* string is "GET URL " +lots of other stuff */
+        buffer[i] = 0;
+        break;
+        }
+    }
+
+    //raydium_log("web: %s ",buffer);
+
+    for(j=0;j<i-1;j++)      /* check for illegal parent directory use .. */
+      if(buffer[j] == '.' && buffer[j+1] == '.')
+        {
+        raydium_web_answer("error: Invalid path",fd);
+        return;
+        }
+
+    if( !strncmp(&buffer[0],"GET /\0",6) || !strncmp(&buffer[0],"get /\0",6) ) /* convert no filename to index file */
+        {
+        char msg[RAYDIUM_MAX_NAME_LEN];
+        sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
+        raydium_web_answer(msg,fd);
+        return;
+        }
+
+    /* work out the file type and check we support it */
+    buflen=strlen(buffer);
+    fstr = (char *)NULL;
+    handler=NULL;
+    
+    if(0) //TODO Validate if this doesn't break everythings ...
+        {
         for(i=0;i<raydium_web_extension_count;i++)
             {
             len = strlen(raydium_web_extensions[i].ext);
@@ -127,59 +131,83 @@ void raydium_web_request(int fd)
                 handler=raydium_web_extensions[i].handler;
                 break;
                 }
-            }
-
-
-        if(fstr == 0)
+            }        
+        }
+    else
+        {
+        //Find Split point between file name and params.
+        char req_file[RAYDIUM_WEB_BUFSIZE];
+        int len_req_file;
+        for(i=4;i<buflen;i++)
             {
-            raydium_web_answer("error: Invalid target request",fd);
-            return;
+            if(buffer[i]=='?')
+                break;
+            req_file[i-4]=buffer[i];
             }
-
-
-        if(handler)
+        req_file[i-4]=0;
+        len_req_file=strlen(req_file);    
+        for(i=0;i<raydium_web_extension_count;i++)
             {
-            answer[0]=0;
-            if(!handler(&buffer[5],answer,RAYDIUM_WEB_BUFSIZE))
+            len = strlen(raydium_web_extensions[i].ext);
+            if( !strncmp(&req_file[len_req_file-len], raydium_web_extensions[i].ext, len))
                 {
-                raydium_web_answer("error: Handler denied this request",fd);
-                return;
+                fstr=raydium_web_extensions[i].filetype;
+                handler=raydium_web_extensions[i].handler;
+                break;
                 }
+            }        
+        }
 
-            // if there's no filetype, use web_answer
-            if(!strlen(fstr))
-                raydium_web_answer(answer,fd);
-            // else let the user control the whole output
-            else
-                {
-                // WARNING: do not change "Type: message" header offset !
-                // See raydium_web_client_get() otherwise.
-                sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
-                send(fd,buffer,strlen(buffer),0);
-                send(fd,answer,strlen(answer),0);
-                }
+
+
+    if(fstr == NULL)
+        {
+        raydium_web_answer("error: Invalid target request",fd);
+        return;
+        }
+
+
+    if(handler)
+        {
+        answer[0]=0;
+        if(!handler(&buffer[5],answer,RAYDIUM_WEB_BUFSIZE))
+            {
+            raydium_web_answer("error: Handler denied this request",fd);
             return;
             }
 
-        if(( file_fd = raydium_file_fopen (&buffer[5],"rb")) == NULL) /* open the file for reading */
+        // if there's no filetype, use web_answer
+        if(!strlen(fstr))
+            raydium_web_answer(answer,fd);
+        // else let the user control the whole output
+        else
             {
-            raydium_web_answer("error: Not found",fd);
-            return;
+            // WARNING: do not change "Type: message" header offset !
+            // See raydium_web_client_get() otherwise.
+            sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",fstr);
+            send(fd,buffer,strlen(buffer),0);
+            send(fd,answer,strlen(answer),0);
             }
+        return;
+        }
 
-#undef _RAYDIUM_FILE_MODE
+    if(( file_fd = raydium_file_fopen (&buffer[5],"rb")) == NULL) /* open the file for reading */
+        {
+        raydium_web_answer("error: Not found",fd);
+        return;
+        }
 
-        raydium_log("web: ... sending '%s'",&buffer[5]);
+    //raydium_log("web: ... sending '%s'",&buffer[5]);
 
-        sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
-        send(fd,buffer,strlen(buffer),0);
+    sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
+    send(fd,buffer,strlen(buffer),0);
 
-        /* send file in 8KB block - last block may be smaller */
-        while ( (ret = fread(buffer,1,RAYDIUM_WEB_BUFSIZE,file_fd)) > 0 )
-            {
-            send(fd,buffer,ret,0);
-            }
-        fclose(file_fd);
+    /* send file in 8KB block - last block may be smaller */
+    while ( (ret = fread(buffer,1,RAYDIUM_WEB_BUFSIZE,file_fd)) > 0 )
+        {
+        send(fd,buffer,ret,0);
+        }
+    fclose(file_fd);
 }
 
 void raydium_web_start(char *title)
