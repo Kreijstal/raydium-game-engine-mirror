@@ -56,6 +56,7 @@ void raydium_web_request(int fd)
         char * fstr;
         static char buffer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
         static char answer[RAYDIUM_WEB_BUFSIZE+1]; /* static so zero filled */
+        static char request_file[RAYDIUM_MAX_NAME_LEN];
         signed char (*handler)(char *,char *, int);
         FILE * file_fd;
 
@@ -79,7 +80,8 @@ void raydium_web_request(int fd)
       if(buffer[i] == '\r' || buffer[i] == '\n')
         buffer[i]='*';
 
-    raydium_log("web: request from client ...");
+    //raydium_log("web: request from client ... \n %s \n-------------------------------",buffer );
+    raydium_log("web: request from client ... ");
 
     if( strncmp(buffer,"GET ",4) && strncmp(buffer,"get ",4) )
         {
@@ -87,7 +89,7 @@ void raydium_web_request(int fd)
         return;
         }
 
-    for(i=4;i<ret;i++) //Ananlye only #ret# chars received
+    for(i=4;i<ret;i++) //Analyse only #ret# chars received
     {
     /* null terminate after the second space to ignore extra stuff */
     if(buffer[i] == ' ')
@@ -110,6 +112,7 @@ void raydium_web_request(int fd)
     if( !strncmp(&buffer[0],"GET /\0",6) || !strncmp(&buffer[0],"get /\0",6) ) /* convert no filename to index file */
         {
         char msg[RAYDIUM_MAX_NAME_LEN];
+        //Todo test if index.html exist and send it ...
         sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
         raydium_web_answer(msg,fd);
         return;
@@ -119,7 +122,7 @@ void raydium_web_request(int fd)
     buflen=strlen(buffer);
     fstr = (char *)NULL;
     handler=NULL;
-    
+
     if(0) //TODO Validate if this doesn't break everythings ...
         {
         for(i=0;i<raydium_web_extension_count;i++)
@@ -131,31 +134,31 @@ void raydium_web_request(int fd)
                 handler=raydium_web_extensions[i].handler;
                 break;
                 }
-            }        
+            }
         }
     else
         {
         //Find Split point between file name and params.
-        char req_file[RAYDIUM_WEB_BUFSIZE];
         int len_req_file;
+        request_file[0]=0;
         for(i=4;i<buflen;i++)
             {
             if(buffer[i]=='?')
                 break;
-            req_file[i-4]=buffer[i];
+            request_file[i-4]=buffer[i];
             }
-        req_file[i-4]=0;
-        len_req_file=strlen(req_file);    
+        request_file[i-4]=0;
+        len_req_file=strlen(request_file);
         for(i=0;i<raydium_web_extension_count;i++)
             {
             len = strlen(raydium_web_extensions[i].ext);
-            if( !strncmp(&req_file[len_req_file-len], raydium_web_extensions[i].ext, len))
+            if( !strncmp(&request_file[len_req_file-len], raydium_web_extensions[i].ext, len))
                 {
                 fstr=raydium_web_extensions[i].filetype;
                 handler=raydium_web_extensions[i].handler;
                 break;
                 }
-            }        
+            }
         }
 
 
@@ -191,9 +194,9 @@ void raydium_web_request(int fd)
         return;
         }
 
-    if(( file_fd = raydium_file_fopen (&buffer[5],"rb")) == NULL) /* open the file for reading */
+    if(( file_fd = raydium_file_fopen (request_file,"rb")) == NULL) /* open the file for reading */
         {
-        raydium_web_answer("error: Not found",fd);
+        raydium_web_answer("error: Not found ",fd);
         return;
         }
 
