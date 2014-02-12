@@ -1210,6 +1210,20 @@ __rayapi void raydium_ode_element_rotate_direction_name (char *e, signed char Fo
 Same as above, but using element's name.
 **/
 
+
+__rayapi void raydium_ode_element_auto_rotate_direction (int elem, signed char Force0OrVel1);
+/**
+Will flag ##elem## for automatic orientation according to it's force or velocity.
+Sets ##Force0OrVel1## to ##0## if you want to align element using its
+force or ##1## using its linear velocity.
+Use ##-1## to disable automatic orientation.
+**/
+
+__rayapi void raydium_ode_element_auto_rotate_direction_name (char *e, signed char Force0OrVel1);
+/**
+Same as above, but using element's name.
+**/
+
 __rayapi void raydium_ode_element_rotate_rotq(int elem, dReal *rotq);
 /**
 Rotate element ##elem## relative to element rotation.

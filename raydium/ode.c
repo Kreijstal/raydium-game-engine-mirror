@@ -57,6 +57,7 @@ raydium_ode_element[i].mesh_scale=1;
 raydium_ode_element[i]._touched=0;
 raydium_ode_element[i]._movesfrom=-1;
 raydium_ode_element[i].isplayer=0;
+raydium_ode_element[i].auto_align_f_v=-1;
 raydium_ode_element[i].playerangle=0;
 raydium_ode_element[i].slip=0;
 raydium_ode_element[i].rotfriction=0;
@@ -2198,6 +2199,27 @@ dBodySetRotation(raydium_ode_element[elem].body,R);
 void raydium_ode_element_rotate_direction_name(char *e, signed char Force0OrVel1)
 {
 raydium_ode_element_rotate_direction(raydium_ode_element_find(e),Force0OrVel1);
+}
+
+void raydium_ode_element_auto_rotate_direction(int elem, signed char Force0OrVel1)
+{
+if(!raydium_ode_element_isvalid(elem))
+    {
+    raydium_log("ODE: Error: Cannot Auto align element: invalid index or name");
+    return;
+    }
+
+if(raydium_ode_element[elem].state==RAYDIUM_ODE_STATIC)
+    {
+    raydium_log("ODE: Error: Cannot Auto align a static element");
+    return;
+    }
+    raydium_ode_element[elem].auto_align_f_v=Force0OrVel1;
+}
+
+void raydium_ode_element_auto_rotate_direction_name(char *e, signed char Force0OrVel1)
+{
+    raydium_ode_element_auto_rotate_direction(raydium_ode_element_find(e),Force0OrVel1);
 }
 
 void raydium_ode_element_rotate_rotq(int elem, dReal *rotq)
@@ -5038,6 +5060,9 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             torqueinv[2]=torque[2]*-raydium_ode_element[i].rotfriction;
             raydium_ode_element_addtorque_3f(i,torqueinv[0],torqueinv[1],torqueinv[2]);
             }
+
+        if (raydium_ode_element[i].auto_align_f_v>=0)
+            raydium_ode_element_rotate_direction(i,raydium_ode_element[i].auto_align_f_v);
 
         for(j=0;j<RAYDIUM_ODE_MAX_RAYS;j++)
           if(raydium_ode_element[i].ray[j].state)

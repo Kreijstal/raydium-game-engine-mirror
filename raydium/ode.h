@@ -207,6 +207,7 @@ typedef struct raydium_ode_Element
     signed char    _avoidedcol; // is any collision was avoided because of this move ?
     int            _last_touched_ray; // hack for raydium_ode_RayCallback
     signed char    isplayer;    // is this element an FPS player ? ("standing elem")
+    signed char    auto_align_f_v; // This element is automaticaly oriented according to it's force / speed -1 disabled.
     dReal   playerangle; // FPS player angle
     dReal   slip;       // slipping factor
     dReal   rotfriction; // rotation friction factor (avoid infinite rolling spheres)
