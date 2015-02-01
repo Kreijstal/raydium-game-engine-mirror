@@ -169,7 +169,7 @@ if(sizeof(dReal) != sizeof(float))
 // need to force this for current iOS SDK
 dInitODE();
 #else
-# ifdef dInitODE
+# ifdef DdInitODE
   dInitODE();
 # endif
 #endif
