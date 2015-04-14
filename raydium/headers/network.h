@@ -38,7 +38,7 @@ But there is also two other very important defines: packet size
 (unit: byte) and max number of clients.. This is important because
 Raydium uses UDP sockets, and UDP sockets required fixed
 length packets, and as you need to set packet size as small as possible
-(for obvious speed reasons), you must calculate you maximum
+(for obvious speed reasons), you must calculate your maximum
 information packet size (players position, for example), multiply
 it by ##RAYDIUM_NETWORK_MAX_CLIENTS##,and add ##RAYDIUM_NETWORK_PACKET_OFFSET##
 wich represent the required header of the packet.
