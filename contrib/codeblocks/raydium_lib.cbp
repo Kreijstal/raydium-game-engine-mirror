@@ -8,8 +8,8 @@
 		<Build>
 			<Target title="DebugDLL">
 				<Option platforms="Windows;" />
-				<Option output="..\bin\raydiumd.dll" prefix_auto="0" extension_auto="0" />
-				<Option object_output="obj\Debugdll\" />
+				<Option output="../bin/raydiumd.dll" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Debugdll/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option host_application="webcamd.exe" />
@@ -25,8 +25,8 @@
 			</Target>
 			<Target title="ReleaseDLL">
 				<Option platforms="Windows;" />
-				<Option output="..\bin\raydium.dll" prefix_auto="0" extension_auto="0" />
-				<Option object_output="obj\Releasedll\" />
+				<Option output="../bin/raydium.dll" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Releasedll/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -42,9 +42,9 @@
 			</Target>
 			<Target title="DebugStaticWin32">
 				<Option platforms="Windows;" />
-				<Option output="..\bin\raydiumsd" prefix_auto="1" extension_auto="1" />
+				<Option output="../bin/raydiumsd" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debugs\" />
+				<Option object_output="obj/Debugs/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option host_application="webcamd.exe" />
@@ -130,7 +130,7 @@
 				<Linker>
 					<Add option="../raydium/raydium/ode/ode/src/libode.a" />
 					<Add option="../raydium/raydium/php/libs/libphp5.a" />
-					<Add option="-Wl,-soname,libraydium.so.0" />
+					<Add option="-Wl,-soname,libraydium.so" />
 					<Add library="GL" />
 					<Add library="GLU" />
 					<Add library="Xinerama" />
@@ -153,7 +153,7 @@
 			</Target>
 			<Target title="DebugStaticLinux">
 				<Option platforms="Unix;" />
-				<Option output="../bin/raydiumsd" prefix_auto="1" extension_auto="1" />
+				<Option output="../bin/raydium" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debugs/" />
 				<Option type="2" />
