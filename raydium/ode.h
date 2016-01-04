@@ -15,7 +15,7 @@
 #ifdef APPLE
 #include "ode/include/ode/ode.h"
 #else
-#include "../ode/include/ode/ode.h"
+#include "ode/ode.h"
 #endif
 
 #define RAYDIUM_ODE_MAX_OBJECTS                 64

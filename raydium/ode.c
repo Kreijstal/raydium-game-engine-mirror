@@ -233,6 +233,9 @@ raydium_ode_network_init();
 #ifdef VERSION
 raydium_log("physics: ODE (%s)",VERSION);
 #endif
+#ifdef dODE_VERSION
+raydium_log("physics: ODE (%s)",dODE_VERSION);
+#endif // dODE_VERSION
 raydium_log("physics: ODE Net: %i element(s)/packet",raydium_ode_network_MaxElementsPerPacket());
 raydium_log("physics: OK");
 }
