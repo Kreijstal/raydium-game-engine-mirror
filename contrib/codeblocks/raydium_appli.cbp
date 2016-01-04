@@ -18,9 +18,11 @@
 					<Add option="-DFORCE_LIBRAYDIUM" />
 					<Add option="-DDEBUG" />
 					<Add option="-D_DEBUG" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
 				<Linker>
 					<Add library="raydiumd" />
+					<Add library="ode" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseDLL">
@@ -34,11 +36,13 @@
 					<Add option="-O3" />
 					<Add option="-DRAYDLL" />
 					<Add option="-DFORCE_LIBRAYDIUM" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-mwindows" />
 					<Add library="raydium" />
+					<Add library="ode" />
 				</Linker>
 			</Target>
 			<Target title="DebugStaticWin32">
@@ -54,9 +58,11 @@
 					<Add option="-DFORCE_LIBRAYDIUM" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DDEBUG" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
 				<Linker>
 					<Add library="libraydiumsd" />
+					<Add library="ode" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseStaticWin32">
@@ -70,11 +76,13 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="-DFORCE_LIBRAYDIUM" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-mwindows" />
 					<Add library="libraydiums" />
+					<Add library="ode" />
 				</Linker>
 			</Target>
 			<Target title="DebugFullStatic">
@@ -89,7 +97,11 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DDEBUG" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
+				<Linker>
+					<Add library="ode" />
+				</Linker>
 			</Target>
 			<Target title="ReleaseFullStatic">
 				<Option platforms="Windows;" />
@@ -101,10 +113,12 @@
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
+					<Add directory="../include/ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-mwindows" />
+					<Add library="ode" />
 				</Linker>
 			</Target>
 			<Target title="DebugSharedLib">
@@ -177,9 +191,31 @@
 					<Add library="Xext" />
 				</Linker>
 			</Target>
+			<Target title="DebugDLL_OdeDebug">
+				<Option platforms="Windows;" />
+				<Option output="../bin/$(PROJECT_FILENAME)d.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/DebugDll" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectIncludeDirsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DRAYDLL" />
+					<Add option="-DFORCE_LIBRAYDIUM" />
+					<Add option="-DDEBUG" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DdSINGLE" />
+					<Add option="-DDdInitODE" />
+					<Add directory="../ode/include" />
+				</Compiler>
+				<Linker>
+					<Add library="raydiumdoded" />
+					<Add library="..\ode\lib\DebugSingleDLL\libode_singled.a" />
+				</Linker>
+			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="DebugDLL;ReleaseDLL;DebugStaticWin32;ReleaseStaticWin32;DebugFullStatic;ReleaseFullStatic;" />
+			<Add alias="AllWin32" targets="DebugDLL;ReleaseDLL;DebugStaticWin32;ReleaseStaticWin32;DebugFullStatic;ReleaseFullStatic;DebugDLL_OdeDebug;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
@@ -188,13 +224,9 @@
 			<Add option="-isystem..\include\php\Zend" />
 			<Add option="-isystem..\include\php\main" />
 			<Add option="-isystem..\include\php\TSRM" />
-			<Add directory="../include/php/regex" />
-			<Add directory="../include/ode/include" />
-			<Add directory="../raydium" />
 		</Compiler>
 		<Linker>
 			<Add library="php5ts" />
-			<Add library="ode" />
 			<Add library="opengl32" />
 			<Add library="gdi32" />
 			<Add library="glu32" />
@@ -222,6 +254,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/common.h">
 			<Option target="DebugDLL" />
@@ -230,6 +263,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/config.h">
 			<Option target="DebugDLL" />
@@ -238,6 +272,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/gui.h">
 			<Option target="DebugDLL" />
@@ -246,6 +281,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/atexit.h">
 			<Option target="DebugDLL" />
@@ -254,6 +290,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/background.h">
 			<Option target="DebugDLL" />
@@ -262,6 +299,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/callback.h">
 			<Option target="DebugDLL" />
@@ -270,6 +308,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/camera.h">
 			<Option target="DebugDLL" />
@@ -278,6 +317,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/capture.h">
 			<Option target="DebugDLL" />
@@ -286,6 +326,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/clear.h">
 			<Option target="DebugDLL" />
@@ -294,6 +335,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/cli.h">
 			<Option target="DebugDLL" />
@@ -302,6 +344,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/console.h">
 			<Option target="DebugDLL" />
@@ -310,6 +353,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/file.h">
 			<Option target="DebugDLL" />
@@ -318,6 +362,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/file_tri.h">
 			<Option target="DebugDLL" />
@@ -326,6 +371,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/fog.h">
 			<Option target="DebugDLL" />
@@ -334,6 +380,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/gui.h">
 			<Option target="DebugDLL" />
@@ -342,6 +389,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/hdr.h">
 			<Option target="DebugDLL" />
@@ -350,6 +398,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/init.h">
 			<Option target="DebugDLL" />
@@ -358,6 +407,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/internal.h">
 			<Option target="DebugDLL" />
@@ -366,6 +416,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/joy.h">
 			<Option target="DebugDLL" />
@@ -374,6 +425,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/key.h">
 			<Option target="DebugDLL" />
@@ -382,6 +434,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/land.h">
 			<Option target="DebugDLL" />
@@ -390,6 +443,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/light.h">
 			<Option target="DebugDLL" />
@@ -398,6 +452,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/live.h">
 			<Option target="DebugDLL" />
@@ -406,6 +461,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/log.h">
 			<Option target="DebugDLL" />
@@ -414,6 +470,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/main.h">
 			<Option target="DebugDLL" />
@@ -422,6 +479,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/misc.h">
 			<Option target="DebugDLL" />
@@ -430,6 +488,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/mouse.h">
 			<Option target="DebugDLL" />
@@ -438,6 +497,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/myglut.h">
 			<Option target="DebugDLL" />
@@ -446,6 +506,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/network.h">
 			<Option target="DebugDLL" />
@@ -454,6 +515,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/normal.h">
 			<Option target="DebugDLL" />
@@ -462,6 +524,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/object.h">
 			<Option target="DebugDLL" />
@@ -470,6 +533,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/ode.h">
 			<Option target="DebugDLL" />
@@ -478,6 +542,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/ode_net.h">
 			<Option target="DebugDLL" />
@@ -486,6 +551,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/osd.h">
 			<Option target="DebugDLL" />
@@ -494,6 +560,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/parser.h">
 			<Option target="DebugDLL" />
@@ -502,6 +569,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/particle2.h">
 			<Option target="DebugDLL" />
@@ -510,6 +578,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/path.h">
 			<Option target="DebugDLL" />
@@ -518,6 +587,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/php.h">
 			<Option target="DebugDLL" />
@@ -526,6 +596,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/profile.h">
 			<Option target="DebugDLL" />
@@ -534,6 +605,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/random.h">
 			<Option target="DebugDLL" />
@@ -542,6 +614,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/rayphp.h">
 			<Option target="DebugDLL" />
@@ -550,6 +623,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/reg_api.h">
 			<Option target="DebugDLL" />
@@ -558,6 +632,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/register.h">
 			<Option target="DebugDLL" />
@@ -566,6 +641,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/render.h">
 			<Option target="DebugDLL" />
@@ -574,6 +650,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/shader.h">
 			<Option target="DebugDLL" />
@@ -582,6 +659,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/shadow.h">
 			<Option target="DebugDLL" />
@@ -590,6 +668,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/signal.h">
 			<Option target="DebugDLL" />
@@ -598,6 +677,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/sky.h">
 			<Option target="DebugDLL" />
@@ -606,6 +686,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/sound.h">
 			<Option target="DebugDLL" />
@@ -614,6 +695,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/texture.h">
 			<Option target="DebugDLL" />
@@ -622,6 +704,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/timecall.h">
 			<Option target="DebugDLL" />
@@ -630,6 +713,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/vertex.h">
 			<Option target="DebugDLL" />
@@ -638,6 +722,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/video.h">
 			<Option target="DebugDLL" />
@@ -646,6 +731,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/web.h">
 			<Option target="DebugDLL" />
@@ -654,6 +740,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/headers/window.h">
 			<Option target="DebugDLL" />
@@ -662,6 +749,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/index.h">
 			<Option target="DebugDLL" />
@@ -670,6 +758,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/live.h">
 			<Option target="DebugDLL" />
@@ -678,6 +767,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/main.h">
 			<Option target="DebugDLL" />
@@ -686,6 +776,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/network.h">
 			<Option target="DebugDLL" />
@@ -694,6 +785,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/ode.h">
 			<Option target="DebugDLL" />
@@ -702,6 +794,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/particle2.h">
 			<Option target="DebugDLL" />
@@ -710,6 +803,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/path.h">
 			<Option target="DebugDLL" />
@@ -718,6 +812,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/shader.h">
 			<Option target="DebugDLL" />
@@ -726,6 +821,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/shadow.h">
 			<Option target="DebugDLL" />
@@ -734,6 +830,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/video.h">
 			<Option target="DebugDLL" />
@@ -742,6 +839,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/raydium/web.h">
 			<Option target="DebugDLL" />
@@ -750,6 +848,7 @@
 			<Option target="ReleaseStaticWin32" />
 			<Option target="DebugFullStatic" />
 			<Option target="ReleaseFullStatic" />
+			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
 		<Unit filename="../raydium/test6.c">
 			<Option compilerVar="CC" />
