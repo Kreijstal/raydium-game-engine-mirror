@@ -488,8 +488,8 @@ for(i=start+1;i<end;i++)
 }
 void raydium_object_find_center(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
 {
-GLfloat min[3];
-GLfloat max[3];
+GLfloat min[3]={0};
+GLfloat max[3]={0};
 
 raydium_object_find_minmax(obj,min,max);
 *tx=(max[0]-((max[0]-min[0])/2));
@@ -499,8 +499,8 @@ raydium_object_find_minmax(obj,min,max);
 
 void raydium_object_find_center_factors(GLuint obj, GLfloat *tx, GLfloat *ty, GLfloat *tz)
 {
-GLfloat min[3];
-GLfloat max[3];
+GLfloat min[3]={0};
+GLfloat max[3]={0};
 
 raydium_object_find_minmax(obj,min,max);
 *tx=(max[0]-((max[0]-min[0])/2));

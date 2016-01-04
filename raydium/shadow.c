@@ -41,7 +41,7 @@ raydium_log("shadow: OK");
 void raydium_shadow_ground_change(int object)
 {
 //modelsize, center factors
-GLfloat min[3],max[3];
+GLfloat min[3]={0},max[3]={0};
 GLfloat tx,ty,tz;
 GLfloat x,y,z;
 
@@ -231,7 +231,7 @@ glColor4f(RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,RAYDIUM_SHADOW_OPACITY,1
 raydium_shadow_rendering=1;
 glPushMatrix();
 #ifdef ODE_SUPPORT
-raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS); 
+raydium_ode_draw_all(RAYDIUM_ODE_DRAW_SHADOWERS);
 #endif
 glPopMatrix();
 raydium_shadow_rendering=0;
