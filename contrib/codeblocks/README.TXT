@@ -1,4 +1,4 @@
-Here are CodeBlocks Sample project for Dll build and Example application build.
+Here are CodeBlocks Sample projects for library build and Example application build.
 
 Thoses projects are used in Win32 Sdk, but sometine need to be updated.
 
@@ -12,10 +12,10 @@ Needed packages (Kubuntu 2015)
 
 bison flex libxml2-dev freeglut3-dev libxinerama-dev libglew-dev libjpeg-dev libpng12-dev libcurl4-openssl-dev libalut-dev libogg-dev libvorbis-dev libv4l-dev
 
-Needed directory structure :
 
+Needed directory structure :
 .
-+-- bin
++-- bin // Destination of program
 +-- raydium //(Original Raydium directory)
 ¦   +-- blender
 ¦   +-- contrib
@@ -24,6 +24,5 @@ Needed directory structure :
 ¦   +-- mania_music
 ¦   +-- raydium
 ¦   +-- rayphp
-¦   +-- tests
-+-- tests //(Copy project files here)
++-- project_sample //(Copy project files here)
     +-- obj
