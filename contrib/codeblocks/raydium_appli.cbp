@@ -121,7 +121,7 @@
 					<Add library="ode" />
 				</Linker>
 			</Target>
-			<Target title="DebugSharedLib">
+			<Target title="DebugSharedLinux">
 				<Option platforms="Unix;" />
 				<Option output="../bin/raydium_appli" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../bin" />
@@ -156,6 +156,8 @@
 				<Option use_console_runner="0" />
 				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
+					<Add option="-DDEBUG" />
+					<Add option="-D_DEBUG" />
 					<Add directory="../raydium/raydium/php" />
 					<Add directory="../raydium/raydium/php/main" />
 					<Add directory="../raydium/raydium/php/Zend" />
@@ -164,31 +166,27 @@
 				</Compiler>
 				<Linker>
 					<Add option="-static-libgcc" />
-					<Add option="../raydium/raydium/php/libs/libphp5.a" />
-					<Add option="../raydium/raydium/ode/ode/src/libode.a" />
-					<Add library="m" />
-					<Add library="Xi" />
+					<Add library="../raydium/raydium/ode/ode/src/libode.a" />
+					<Add library="../raydium/raydium/php/libs/libphp5.a" />
+					<Add library="dl" />
+					<Add library="z" />
+					<Add library="xml2" />
+					<Add library="GL" />
+					<Add library="Xext" />
+					<Add library="X11" />
+					<Add library="Xinerama" />
+					<Add library="GLU" />
 					<Add library="jpeg" />
 					<Add library="GLEW" />
-					<Add library="Xmu" />
-					<Add library="Xinerama" />
 					<Add library="openal" />
-					<Add library="alut" />
 					<Add library="vorbisfile" />
 					<Add library="vorbis" />
 					<Add library="ogg" />
-					<Add library="crypt" />
-					<Add library="ssl" />
-					<Add library="crypto" />
-					<Add library="idn" />
-					<Add library="resolv" />
-					<Add library="z" />
+					<Add library="alut" />
 					<Add library="curl" />
-					<Add library="xml2" />
-					<Add library="ssl" />
-					<Add library="stdc++" />
-					<Add library="X11" />
-					<Add library="Xext" />
+					<Add library="resolv" />
+					<Add library="v4lconvert" />
+					<Add library="png" />
 				</Linker>
 			</Target>
 			<Target title="DebugDLL_OdeDebug">
@@ -210,7 +208,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="raydiumdoded" />
-					<Add library="..\ode\lib\DebugSingleDLL\libode_singled.a" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 		</Build>

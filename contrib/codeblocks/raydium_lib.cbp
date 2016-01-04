@@ -178,6 +178,7 @@
 				<Option host_application="webcamd.exe" />
 				<Option run_host_application_in_terminal="0" />
 				<Option createDefFile="1" />
+				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
@@ -238,7 +239,7 @@
 					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
-					<Add library="..\ode\lib\DebugSingleDLL\libode_singled.a" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 		</Build>
