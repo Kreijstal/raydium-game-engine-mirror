@@ -367,6 +367,12 @@ def write_some_data(context, filepath, save_elements,save_position):
             continue
 
         #mesh_name=obj.data.name
+        #print (len(mesh_name),mesh_name)
+        
+        if len(mesh_name)==0:
+            print ("Not exporting empty mesh")
+            continue
+        
         if mesh_name[0]=='.':
             print ("Not exporting %s hidden mesh (begin with a . "%mesh_name)
             continue
@@ -774,6 +780,7 @@ if __name__ == "__main__":
     #bpy.ops.export.raydium_tri('INVOKE_DEFAULT')
     #bpy.ops.import_mesh.raydium_tri('INVOKE_DEFAULT')
     #write_some_data(bpy.context,"../data/capt_vtt.tri",True,False)
+    write_some_data(bpy.context,"e:\\test.tri",True,False)
     
     if (0) :
         try:
