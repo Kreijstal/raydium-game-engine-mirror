@@ -82,7 +82,7 @@ explosions.
 
 - **Launchers:**
 Launchers are not real entities, but "only" tools. Obviously, they are
-allowing you to launch an element (you must provice force and orientation)
+allowing you to launch an element (you must provide force and orientation)
 from another element (relatively). More informations about launchers below.
 
 **/
