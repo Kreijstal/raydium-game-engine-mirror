@@ -18,8 +18,8 @@ you can continue to use regular atexit() in your applications.
 __rayapi int raydium_atexit(void (*func)(void));
 /**
 As the original atexit():
-Register a function to be called at norma program termination.
-Functions so registered are called in the reverse order of their 
+Register a function to be called at normal program termination.
+Functions so registered are called in the reverse order of their
 registration; no arguments are passed.
 Returns 0 if successful.
 **/
