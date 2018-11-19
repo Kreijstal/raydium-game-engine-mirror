@@ -630,7 +630,7 @@ __rayapi void raydium_ode_element_OnDelete (int e, void *OnDelete);
 OnDelete callback is fired when someone or something tries to delete an element.
 This callback can cancel deletion, if needed.
 
-##OnBlow## callback must follow this prototype :
+##OnDelete## callback must follow this prototype :
 ##int element_delete(int elem)##
 ##elem## is the element id. Return 1 (true) to confirm deletion, of 0 to cancel.
 

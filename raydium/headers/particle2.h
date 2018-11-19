@@ -40,7 +40,7 @@ color_end={1,1,1,0.1};
 
 .prt files are readed using parsing functions (see appropriate chapter, if
 needed), and the list of all available properties can be found in particle2.c
-source file. A full toturial is also available on Raydium's Wiki.
+source file. A full tutorial is also available on Raydium's Wiki.
 
 Once the particle file is written, you only need to load the file using the
 suitable function (see below). Some anchor are available to link generators to
