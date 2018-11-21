@@ -3434,18 +3434,23 @@ return raydium_ode_element_rot_set(raydium_ode_element_find(e),rx,ry,rz);
 
 signed char raydium_ode_element_eulerzyx_get(int e, dReal *rx, dReal *ry, dReal *rz)
 {
-dBodyID b;
+
+dGeomID g;
 const dReal * R;
 
 if (raydium_ode_element_isvalid(e))
     {
-    b=raydium_ode_element[e].body;
+    // Use Geom in place of Body as each element has Geom and could not have Body.
+    // Set use geom too.
+    g=raydium_ode_element[e].geom;
+    R = dGeomGetRotation(g);
+
     // Work on Rz.Ry.Rx rotation Matrix
     // See http://en.wikipedia.org/wiki/Euler_angles
-    R = dBodyGetRotation(b);
+
     *ry= -asin(_R(2,0));
-    *rz=atan2(_R(1,0),_R(0,0));
-    *rx=atan2(_R(2,1),_R(2,2));
+    *rz= atan2(_R(1,0),_R(0,0));
+    *rx= atan2(_R(2,1),_R(2,2));
     return 1;
     }
 raydium_log("ODE: Error: cannot get element euler angle: invalid index or name");
@@ -3491,12 +3496,12 @@ dQuaternion Q;
 
 dReal c1,s1,c2,s2,c3,s3;
 
-c1 = dSin(rz);
-s1 = dCos(rz);
-c2 = dSin(ry);
-s2 = dCos(ry);
-c3 = dSin(rx);
-s3 = dCos(rx);
+s1 = dSin(rz);
+c1 = dCos(rz);
+s2 = dSin(ry);
+c2 = dCos(ry);
+s3 = dSin(rx);
+c3 = dCos(rx);
 _R(0,0) = c1*c2;
 _R(0,1) = c1*s2*s3-s1*c3;
 _R(0,2) = s1*s3+c1*s2*c3;
@@ -3510,7 +3515,9 @@ _R(2,1) = c2*s3;
 _R(2,2) = c2*c3;
 _R(2,3) = REAL(0.0);
 
+
 dRtoQ(R,Q);
+dQtoR(Q,R);
 return raydium_ode_element_rotq_set(e,Q);
 }
 
@@ -4673,7 +4680,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
             if( raydium_ode_element[i].state==RAYDIUM_ODE_STANDARD &&
                 raydium_ode_element_disable_get(i) )
                     raydium_osd_color_ega('0');
-
+			raydium_osd_color_ega('0');
             raydium_osd_printf_3D(p[0],p[1],p[2],12,0.6,"font2.tga","%i %s (%s) @ %i",i,raydium_ode_element[i].name,raydium_ode_object[raydium_ode_element[i].object].name,raydium_ode_element[i].distant_owner);
             }
 

@@ -1626,7 +1626,7 @@ Same as above, but using element's name.
 
 __rayapi signed char raydium_ode_element_rot_set (int e, dReal phi, dReal theta, dReal psi);
 /**
-This code returns element ##e##'s current rotation using 3 dReal angles, in radians.
+This code set element ##e##'s rotation using 3 dReal angles, in radians.
 Compute euler angles of element ##e## using R = Transpose (Rz.Ry.Rx) Rotation matrix order.
 This Function is ode compliant with internal ode Euler to Rotation Matrix compute.
 **/
@@ -1652,6 +1652,12 @@ X and Y rotation does not depend on word element orientation (plane, ...)
 **/
 
 __rayapi signed char raydium_ode_element_eulerzyx_get(int e, dReal *rx, dReal *ry, dReal *rz);
+
+signed char raydium_ode_element_eulerzyx_set_name(char * name,dReal rx, dReal ry, dReal rz);
+/** Set rotation matrix of element ##name## using euler angles and matrix R = Rz.Ry.Rx Rotation matrix order.
+**/
+
+__rayapi signed char raydium_ode_element_eulerzyx_set(int e,dReal rx, dReal ry, dReal rz);
 /**
 Same as above but using element number.
 **/
