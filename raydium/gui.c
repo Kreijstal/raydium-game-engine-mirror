@@ -2142,6 +2142,8 @@ int raydium_gui_combo_create(char *name, int window,  GLfloat px, GLfloat py, ch
     char val_s[RAYDIUM_MAX_NAME_LEN];
     GLfloat val_f[4];
     int size;
+    char* pd,* pf;
+    int i;
 
 
     c=malloc(sizeof(raydium_gui_Combo));
@@ -2169,6 +2171,15 @@ int raydium_gui_combo_create(char *name, int window,  GLfloat px, GLfloat py, ch
     }
 
     strcpy(c->items,items);
+    pd=c->items;
+    for(i=0;i<current;i++)
+        pd=strchr(pd,RAYDIUM_GUI_ITEM_SEPARATOR);
+    pf=strchr(pd,RAYDIUM_GUI_ITEM_SEPARATOR);
+    if(!pf)
+        pf=pd+1;
+    strncpy(c->current_str,pd,pf-pd);
+    c->current_str[pf-pd]='\0';
+
     c->current=current;
     c->expanded=0;
     c->offset=current;
