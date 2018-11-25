@@ -13,7 +13,7 @@ Graphic User Interfaces
 Raydium provides a support for simple GUI definitions thru a set of
 functions (RayPHP interface is available).
 Raydium's GUI are themable, using ".gui" theme text files. A default "full"
-theme is provided as "theme-raydium2.gui" (and suitable ".tga" file) on the 
+theme is provided as "theme-raydium2.gui" (and suitable ".tga" file) on the
 data repository.
 Complete informations about theme building are readable in this file.
 **/
@@ -35,7 +35,7 @@ Widgets and windows are identified by a name or by a unique numeric id.
 /**
 The idea is simple: build a window (position and size), and create
 widgets over this window.
-All widgets are created using the current sizes (x,y and font). See 
+All widgets are created using the current sizes (x,y and font). See
 suitable function).
 Buttons provides a simple callback, and all other widgets (but label)
 provides an unified "read" function. Window deletion is also possible.
@@ -271,7 +271,7 @@ the name with '*'.
 __rayapi int raydium_gui_button_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, void *OnClick);
 /**
 This function will create a new button, with ##name## and with ##window## for
-parent. 
+parent.
 You need to provide a ##caption## ("title") and a OnClick callback function.
 This callback must follow this prototype:
 %%(c)void btnButtonClick(raydium_gui_Object *w)%%
@@ -283,7 +283,7 @@ Unit for position (##px## and ##py##): percents (**window**)
 
 __rayapi int raydium_gui_button_create_simple(char *name, int window,  GLfloat px, GLfloat py, char *caption);
 /**
-Same as above, but no OnClick callback function is asked. This type of button 
+Same as above, but no OnClick callback function is asked. This type of button
 is "readable" thru ##raydium_gui_button_clicked()##.
 **/
 
@@ -291,7 +291,7 @@ is "readable" thru ##raydium_gui_button_clicked()##.
 __rayapi int raydium_gui_label_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, GLfloat r, GLfloat g, GLfloat b);
 /**
 This function will create a new label, with ##name## and with ##window## for
-parent. 
+parent.
 You need to provide a ##caption## ("title") and an RGB color (0..1 interval)
 
 Text is center on the given position. If you want to align the text on the
@@ -304,7 +304,7 @@ Unit for position (##px## and ##py##): percents (**window**)
 __rayapi int raydium_gui_track_create(char *name, int window,  GLfloat px, GLfloat py, int min, int max, int current);
 /**
 This function will create a new trackbar, with ##name## and with ##window## for
-parent. 
+parent.
 You need to provide a ##min## interger value, a ##max## and ##current## value.
 
 Unit for position (##px## and ##py##): percents (**window**)
@@ -312,8 +312,8 @@ Unit for position (##px## and ##py##): percents (**window**)
 
 __rayapi int raydium_gui_edit_create(char *name, int window,  GLfloat px, GLfloat py, char *default_text);
 /**
-This function will create a new edit box, with ##name## and with ##window## 
-for parent. 
+This function will create a new edit box, with ##name## and with ##window##
+for parent.
 You may provide a default text (or an empty string), if needed. Unless all
 others Raydium's data, max string length is ##RAYDIUM_GUI_DATASIZE## and
 not ##RAYDIUM_MAX_NAME_LEN##, since this component may handle bigger strings.
@@ -324,8 +324,8 @@ Unit for position (##px## and ##py##): percents (**window**)
 
 __rayapi int raydium_gui_check_create(char *name, int window,  GLfloat px, GLfloat py, char *caption, signed char checked);
 /**
-This function will create a new check box, with ##name## and with ##window## 
-for parent. 
+This function will create a new check box, with ##name## and with ##window##
+for parent.
 You need to provide a ##caption## ("title") and a boolean state (checked or not).
 
 Unit for position (##px## and ##py##): percents (**window**)
@@ -333,12 +333,12 @@ Unit for position (##px## and ##py##): percents (**window**)
 
 __rayapi int raydium_gui_combo_create(char *name, int window,  GLfloat px, GLfloat py, char *items, int current);
 /**
-This function will create a new edit box, with ##name## and with ##window## 
-for parent. 
+This function will create a new edit box, with ##name## and with ##window##
+for parent.
 ##items## is a string, using '\n' as a separator. It's allowed to create an
 empty item.
 ##current## is the default selected item in ##items##. (first = 0)
-Unless all others Raydium's data, max string length is ##RAYDIUM_GUI_DATASIZE## 
+Unless all others Raydium's data, max string length is ##RAYDIUM_GUI_DATASIZE##
 and not ##RAYDIUM_MAX_NAME_LEN##, since this component may handle bigger
 strings. See ##raydium/gui.h## for more informations.
 
@@ -348,10 +348,10 @@ Unit for position (##px## and ##py##): percents (**window**)
 __rayapi int raydium_gui_zone_create(char *name, int window,  GLfloat px, GLfloat py, GLfloat sx, GLfloat sy, int tag, void *OnClick);
 /**
 This function will create a "zone" with ##name## and with ##window## for
-parent. A zone will act like a button, but  will highlight a rectangular area 
+parent. A zone will act like a button, but  will highlight a rectangular area
 of the window.
 
-This widget will return its ##tag## when you'll read it, and will 
+This widget will return its ##tag## when you'll read it, and will
 update ##raydium_gui_button_clicked()## value when clicked.
 
 Unit for position/size (##px##, ##py##, ##sx## and ##sy##): percents (**window**)
@@ -392,15 +392,15 @@ With this function, you can change the value of a ##widget## on a ##window##.
 - With labels, you must use ##str## to change caption.
 - With tracks, you must use ##value## to change the current value.
 - With edits, you must use ##str## to change text.
-- With cheks, you must use ##value##: ##1## means "checked", ##0## "unchecked".
-- With combos, you must use ##value## as an ID to change wich entry is selected.
+- With checks, you must use ##value##: ##1## means "checked", ##0## "unchecked".
+- With combos, you must use ##value## as an ID to change witch entry is selected.
 
 Returns 1 when all is OK, 0 when it fails and -1 when nothing was changed.
 **/
 
 __rayapi int raydium_gui_write_name(char *window, char *widget, char *str, int value);
 /**
-Same as above, but ##window## and ##widget## are resolved thru names, and
+Same as above, but ##window## and ##widget## are resolved to names, and
 not numeric id.
 **/
 
