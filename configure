@@ -7,6 +7,8 @@
 
 # This script will configure Raydium and download, configure and build
 # dependencies if needed. See --help argument.
+# Ubuntu 18.04 Dependency :
+# libxinerama-dev libglew-dev libjpeg-dev libcurl4-openssl-dev libopenal-dev libalut-devlibogg-dev libvorbis-dev libv4l-dev libv4lconvert0
 
 EXTRA_GCC_FLAGS=""
 
@@ -55,7 +57,7 @@ test_build()
 exit_if_error()
 {
     if [ $1 != 0 ]; then
-	echo "   $2"
+	echo -e "   $2"
 	exit 1
     else
 	return 0
@@ -238,15 +240,29 @@ php_install()
     echo "Configuring PHP" >> configure.log
     echo "===============" >> configure.log
     cd raydium/php
-	./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
-    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \
-    --with-libdir=`libpng-config --libdir | sed 's#^/usr/##'` \
-    --with-gd --with-jpeg-dir --with-png-dir\
-    >> ../../configure.log 2>&1
 
-    ret=$?
-    cd - > /dev/null
-    exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"
+
+    if [  -n "$(uname -a | grep Ubuntu)" ]; then
+            echo "   Ubuntu special configure for php"
+		./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
+	    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \
+	    --with-gd --with-jpeg-dir --with-png-dir\
+	    >> ../../configure.log 2>&1
+
+	    ret=$?
+	    cd - > /dev/null
+	    exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log \n   Check curl path. Need to add link from /usr/include/curl to /usr/include/x86_64-linux-gnu/curl \n     ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/curl"
+    else
+		./configure --enable-embed=static --with-zlib --enable-ftp --enable-static=zlib --with-curl --enable-zip \
+	    --disable-simplexml --disable-xmlreader --disable-xmlwriter $CONFIGEXTRA --enable-soap \
+	    --with-libdir=`libpng-config --libdir | sed 's#^/usr/##'` \
+	    --with-gd --with-jpeg-dir --with-png-dir\
+	    >> ../../configure.log 2>&1
+
+	    ret=$?
+	    cd - > /dev/null
+	    exit_if_error "$ret" "PHP configure failed (missing libs ?). See configure.log"
+    fi
 
 # compile
     echo "   Building PHP..."
