@@ -366,13 +366,13 @@ if(!rgb)
  if( (raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_TRILINEAR ||
       raydium_texture_filter==RAYDIUM_TEXTURE_FILTER_ANISO)
      && !faked)
-     {
+    {
     raydium_texture_used_memory+=(texsize/3); // mipmaps
     raydium_texture_memory[id]+=(texsize/3); // mipmaps
     }
 
-if(!simulate)
- glBindTexture(gl_texture_target,id);
+ if(!simulate)
+  glBindTexture(gl_texture_target,id);
 
 
  if(strstr(filename,".tri."))
