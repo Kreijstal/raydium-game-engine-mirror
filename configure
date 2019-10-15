@@ -8,7 +8,7 @@
 # This script will configure Raydium and download, configure and build
 # dependencies if needed. See --help argument.
 # Ubuntu 18.04 Dependency :
-# libxinerama-dev libglew-dev libjpeg-dev libcurl4-openssl-dev libopenal-dev libalut-devlibogg-dev libvorbis-dev libv4l-dev libv4lconvert0
+# libxinerama-dev libglew-dev libjpeg-dev libcurl4-openssl-dev libopenal-dev libalut-dev libogg-dev libvorbis-dev libv4l-dev libv4lconvert0 libpng-dev bison flex libxml2-dev
 
 EXTRA_GCC_FLAGS=""
 
