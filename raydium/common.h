@@ -239,7 +239,7 @@
 #define RAYDIUM_NETWORK_PACKET_SIZE             512
 #define RAYDIUM_NETWORK_TIMEOUT                 10
 #define RAYDIUM_NETWORK_PACKET_OFFSET           4
-#define RAYDIUM_NETWORK_MAX_CLIENTS             8
+#define RAYDIUM_NETWORK_MAX_CLIENTS             32
 #define RAYDIUM_NETWORK_MAX_SERVERS             32 // LAN server list
 #define RAYDIUM_NETWORK_TX_QUEUE_SIZE           128
 #define RAYDIUM_NETWORK_MAX_TRIES               8
