@@ -264,7 +264,7 @@ unsigned long *raydium_network_internal_find_delay_addr(int player)
 {
 //if client
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT)
-    return &raydium_netwok_queue_ack_delay_client;
+    return &raydium_network_queue_ack_delay_client;
 else // (server)
     {
     if(player<0 || player>=RAYDIUM_NETWORK_MAX_CLIENTS)
@@ -272,7 +272,7 @@ else // (server)
         raydium_log("ERROR: server: bad client id in resend queue ! SHOULD NEVER APPEND !");
         return NULL; // eeeerk !
         }
-    return &raydium_netwok_queue_ack_delay_server[player];
+    return &raydium_network_queue_ack_delay_server[player];
     }
 }
 
@@ -621,10 +621,10 @@ raydium_network_stat_double=0;
 raydium_network_stat_reemitted=0;
 raydium_network_stat_bogus_ack=0;
 raydium_network_netcall_add(raydium_network_queue_ack_recv,RAYDIUM_NETWORK_PACKET_ACK,0);
-raydium_netwok_queue_ack_delay_client=raydium_timecall_clocks_per_sec; // 1sec default delay
+raydium_network_queue_ack_delay_client=raydium_timecall_clocks_per_sec; // 1sec default delay
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
-    raydium_netwok_queue_ack_delay_server[i]=raydium_timecall_clocks_per_sec; // 1sec default delay
+    raydium_network_queue_ack_delay_server[i]=raydium_timecall_clocks_per_sec; // 1sec default delay
 
 raydium_network_write_notcp=0;
 
@@ -1310,7 +1310,7 @@ void (*f)(int);
  raydium_network_client[n]=1;
  time(&raydium_network_keepalive[n]); // first keepalive
  strcpy(raydium_network_name[n],name);
- raydium_netwok_queue_ack_delay_server[n]=raydium_timecall_clocks_per_sec; // 1sec default delay
+ raydium_network_queue_ack_delay_server[n]=raydium_timecall_clocks_per_sec; // 1sec default delay
 
  raydium_log("network: client %i connected as %s (%s)",n,name,inet_ntoa(((struct sockaddr_in *)from)->sin_addr));
 
@@ -1357,7 +1357,7 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_CLIENTS;i++)
          if(raydium_network_client[i])
             raydium_log("player %i : %.2f msec (%s)",
                 i,
-                raydium_netwok_queue_ack_delay_server[i]/(double)raydium_timecall_clocks_per_sec*1000,
+                raydium_network_queue_ack_delay_server[i]/(double)raydium_timecall_clocks_per_sec*1000,
                 raydium_network_name[i]);
 }
 

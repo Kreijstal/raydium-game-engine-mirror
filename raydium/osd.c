@@ -368,7 +368,7 @@ if(step>=RAYDIUM_OSD_NET_STEP)
     // shift array to the left
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
         past_delay[i-1]=past_delay[i];
-    past_delay[RAYDIUM_OSD_NET_SAMPLES-1]=raydium_netwok_queue_ack_delay_client;
+    past_delay[RAYDIUM_OSD_NET_SAMPLES-1]=raydium_network_queue_ack_delay_client;
 
     for(i=1;i<RAYDIUM_OSD_NET_SAMPLES;i++)
         past_rx[i-1]=past_rx[i];

@@ -668,8 +668,8 @@ __global unsigned short raydium_network_tcpid_i[RAYDIUM_NETWORK_TX_QUEUE_SIZE]; 
 __global int            raydium_network_tcpid_p[RAYDIUM_NETWORK_TX_QUEUE_SIZE]; // Player
 __global int            raydium_network_tcpid_index;
 
-__global unsigned long raydium_netwok_queue_ack_delay_client;
-__global unsigned long raydium_netwok_queue_ack_delay_server[RAYDIUM_NETWORK_MAX_CLIENTS];
+__global unsigned long raydium_network_queue_ack_delay_client;
+__global unsigned long raydium_network_queue_ack_delay_server[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global signed char   raydium_network_write_notcp;
 
 typedef struct raydium_network_Propag
