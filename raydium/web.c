@@ -140,14 +140,17 @@ void raydium_web_request(int fd)
         {
         //Find Split point between file name and params.
         int len_req_file;
+        int begin=4;
         request_file[0]=0;
-        for(i=4;i<buflen;i++)
+        if (buffer[begin]=='/')
+            begin++;
+        for(i=begin;i<buflen;i++)
             {
             if(buffer[i]=='?')
                 break;
-            request_file[i-4]=buffer[i];
+            request_file[i-begin]=buffer[i];
             }
-        request_file[i-4]=0;
+        request_file[i-begin]=0;
         len_req_file=strlen(request_file);
         for(i=0;i<raydium_web_extension_count;i++)
             {

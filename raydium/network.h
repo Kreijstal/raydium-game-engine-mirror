@@ -30,6 +30,7 @@ signed char raydium_network_server_create(void);
 void raydium_random_randomize(void);
 signed char raydium_parser_db_get(char *key, char *value, char *def);
 void raydium_register_function(void *addr,char *name);
+int raydium_register_variable (void *addr, int type, char *name);
 void raydium_file_home_path_cpy(char *file, char *dest);
 void raydium_timecall_init(void);
 
@@ -43,8 +44,8 @@ exit(0);
 #ifdef PHP_SUPPORT
 // do the minimal reg_api job (this should not be done like this ! :/)
 // part 1
-PHP_i_sss(raydium_parser_db_get);
-PHP_v_ss(raydium_file_home_path_cpy);
+PHP_i_sSs(raydium_parser_db_get);
+PHP_v_sS(raydium_file_home_path_cpy);
 #endif
 
 void raydium_network_only_init(int argc, char **argv)
@@ -55,12 +56,14 @@ raydium_init_args(argc,argv);
 raydium_random_randomize();
 raydium_timecall_init();
 raydium_console_init();
+raydium_path_init();
 #ifdef PHP_SUPPORT
 raydium_php_init();
 // do the minimal reg_api job (this should not be done like this ! :/)
 // part 2
 raydium_register_function(C2PHP(raydium_parser_db_get),"raydium_parser_db_get");
 raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_path_cpy");
+raydium_register_variable(raydium_php_rayphp_path,RAYDIUM_REGISTER_STR,"raydium_php_rayphp_path");
 
 #endif
 raydium_network_init();

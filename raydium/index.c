@@ -97,6 +97,7 @@ extern "C" {
 #include "myglut.h"
 #endif
 #include "atexit.c"
+#include "headers/path.h"
 #include "network.h"
 #include "log.c"
 #include "math.c"
