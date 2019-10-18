@@ -243,8 +243,8 @@
 #define RAYDIUM_NETWORK_MAX_SERVERS             32 // LAN server list
 #define RAYDIUM_NETWORK_TX_QUEUE_SIZE           128
 #define RAYDIUM_NETWORK_MAX_TRIES               8
-#define RAYDIUM_NETWORK_MAX_NETCALLS            32
-#define RAYDIUM_NETWORK_MAX_PROPAGS             32
+#define RAYDIUM_NETWORK_MAX_NETCALLS            64
+#define RAYDIUM_NETWORK_MAX_PROPAGS             64
 #define RAYDIUM_NETWORK_ACK_DELAY_MAX           2
 #define RAYDIUM_NETWORK_PROPAG_HEAD             sizeof(int)
 #define RAYDIUM_NETWORK_BEACON_DELAY            5
