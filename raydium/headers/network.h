@@ -299,8 +299,16 @@ __rayapi void raydium_network_init_sub(void);
 Internal use.
 **/
 
+__rayapi void raydium_network_port_set(unsigned int port);
+/**
+Allow dynamic change of raydium network used port.
+Changing port implie network layer restart.
+**/
+
 __rayapi signed char raydium_network_init (void);
 /**
+Network initialisation. Port can be specified using cli parameter --port.
+In others cases default Raydium Network port will be used : 29104
 Nothing interesting unless you're creating a console server (using the
 ##RAYDIUM_NETWORK_ONLY## directive), since in this case you must do all
 inits by yourself...
@@ -320,6 +328,11 @@ raydium_network_init();
 raydium_network_server_create();
 ...
 %%
+**/
+
+__rayapi signed char raydium_network_init_port(int port);
+/**
+Same as above but you can specify port to use.
 **/
 
 __rayapi void raydium_network_write (struct sockaddr *to, int from, signed char type, char *buff);

@@ -202,8 +202,8 @@ if (raydium_init_cli_option("help",NULL))
 
     fprintf(stdout,"%s\n","");
 
-
     fprintf(stdout,"  %s\n","--name name              network player name");
+    fprintf(stdout,"  %s\n","--port port              network port used (port+1 for server broadcast)");
     fprintf(stdout,"  %s\n","--ode-rate int           ODE physics network refresh rate");
     fprintf(stdout,"  %s\n","--capture-rate int       default ODE replays capture rate");
 

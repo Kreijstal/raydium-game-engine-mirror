@@ -153,8 +153,11 @@ raydium_network_netcall_add(raydium_ode_network_explosion_event,RAYDIUM_NETWORK_
 if(raydium_init_cli_option("ode-rate",opt))
     raydium_ode_network_maxfreq=atoi(opt);
 
+if (raydium_ode_object_find("DISTANT")!=-1)
+    raydium_ode_object_delete_name("DISTANT");
 raydium_ode_object_create("DISTANT");
 raydium_ode_object_colliding_name("DISTANT",0);
+raydium_log("physics: ODE Net: %i element(s)/packet",raydium_ode_network_MaxElementsPerPacket());
 }
 
 

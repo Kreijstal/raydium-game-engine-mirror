@@ -230,7 +230,7 @@ if(raydium_web_active)
     return;
     }
 
-raydium_log("web: starting Raydium HTTP server on port %i",RAYDIUM_NETWORK_PORT);
+raydium_log("web: starting Raydium HTTP server on TCP port %i",raydium_network_port);
 
 if((raydium_web_listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
     {
@@ -247,7 +247,7 @@ setsockopt(raydium_web_listenfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
 raydium_web_serv_addr.sin_family=AF_INET;
 raydium_web_serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
-raydium_web_serv_addr.sin_port=htons(RAYDIUM_NETWORK_PORT);
+raydium_web_serv_addr.sin_port=htons(raydium_network_port);
 
 if(bind(raydium_web_listenfd, (struct sockaddr *)&raydium_web_serv_addr,sizeof(raydium_web_serv_addr)) <0)
     {
@@ -422,7 +422,7 @@ if((sockfd = socket(AF_INET, SOCK_STREAM,0)) <0)
 hst=gethostbyname(raydium_network_connected_server);
 memcpy((char*)(&(serv_addr.sin_addr.s_addr)), hst->h_addr, hst->h_length);
 serv_addr.sin_family = AF_INET;
-serv_addr.sin_port = htons(RAYDIUM_NETWORK_PORT);
+serv_addr.sin_port = htons(raydium_network_port);
 
 if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <0)
     {

@@ -234,8 +234,8 @@
 #define RAYDIUM_JOY_EMUL_KEY                    1
 #define RAYDIUM_JOY_EMUL_MOUSE                  2
 
-#define RAYDIUM_NETWORK_PORT                    29104
-#define RAYDIUM_NETWORK_BEACON_PORT             (RAYDIUM_NETWORK_PORT+1)
+#define RAYDIUM_NETWORK_DEFAULT_PORT            29104
+#define RAYDIUM_NETWORK_BEACON_PORT             (raydium_network_port+1)
 #define RAYDIUM_NETWORK_PACKET_SIZE             512
 #define RAYDIUM_NETWORK_TIMEOUT                 10
 #define RAYDIUM_NETWORK_PACKET_OFFSET           4
@@ -630,6 +630,7 @@ __global signed char raydium_viewport_direct_mouse_clamped;
 
 __global int    raydium_network_socket;
 __global int    raydium_network_uid;
+__global int    raydium_network_port;
 __global signed char raydium_network_mode;
 __global signed char raydium_network_client[RAYDIUM_NETWORK_MAX_CLIENTS];
 __global time_t raydium_network_start;

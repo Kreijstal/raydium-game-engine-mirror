@@ -404,6 +404,7 @@ raydium_log("atexit functions: OK");
 raydium_init_reset();
 #ifdef ODE_SUPPORT
 raydium_ode_init();
+raydium_ode_network_init();
 #endif
 raydium_register_api();
 raydium_log("Engine is now ready.\n\t -----------------------------------------------------------");

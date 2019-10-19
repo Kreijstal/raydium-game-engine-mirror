@@ -94,7 +94,10 @@ dec=RAYDIUM_NETWORK_PACKET_OFFSET;
 memcpy(buff+dec,&raydium_network_propag[i].version,sizeof(int));
 dec+=sizeof(int);
 memcpy(buff+dec,raydium_network_propag[i].data,raydium_network_propag[i].size);
-raydium_network_write(NULL,raydium_network_uid,raydium_network_propag[i].type,buff);
+if(raydium_network_mode==RAYDIUM_NETWORK_MODE_SERVER)
+    raydium_network_broadcast(raydium_network_propag[i].type,buff);
+else
+    raydium_network_write(NULL,raydium_network_uid,raydium_network_propag[i].type,buff);
 }
 
 
@@ -105,7 +108,7 @@ int i;
 i=raydium_network_propag_find(type);
 if(i<0)
     {
-    raydium_log("network: ERROR: cannot refresh this propag': invalid type");
+    raydium_log("network: ERROR: cannot refresh this propag'(%i): invalid type",type);
     return;
     }
 raydium_network_propag_refresh_id(i);
@@ -578,7 +581,20 @@ for(i=0;i<RAYDIUM_NETWORK_MAX_SERVERS;i++)
 
 }
 
-signed char raydium_network_init(void)
+void raydium_network_port_set(unsigned int port){
+    raydium_network_close();
+    raydium_network_init_port(port);
+}
+
+signed char raydium_network_init(void){
+char tmp[128];
+char strport[16];
+    sprintf(strport,"%d",RAYDIUM_NETWORK_DEFAULT_PORT);
+    raydium_init_cli_option_default("port",tmp,strport);
+    return raydium_network_init_port(atoi(tmp));
+}
+
+signed char raydium_network_init_port(int port)
 {
 int i;
 
@@ -589,6 +605,7 @@ ret = WSAStartup(MAKEWORD(1,1), &WSAData);
 if (ret) { raydium_log("network: FAILED ! (Winsock 2 Error: %i while asking for version 1.1)",ret); return(0); }
 #endif
 
+raydium_network_port=port;
 raydium_network_init_sub();
 
 for(i=0;i<RAYDIUM_NETWORK_MAX_NETCALLS;i++)
@@ -966,7 +983,7 @@ dec+=sizeof(player_count);
 memcpy(raydium_network_beacon+dec,&player_max,sizeof(player_max));
 dec+=sizeof(player_max);
 
-raydium_log("network: now broadcasting : '%s' (%s) version %i",name,app_or_mod,version);
+raydium_log("network: now broadcasting : '%s' (%s) version %i, Beacon port %i",name,app_or_mod,version,RAYDIUM_NETWORK_BEACON_PORT);
 return 1;
 }
 
@@ -1060,7 +1077,7 @@ raydium_log("network: server socket created");
 
 sock.sin_family=AF_INET;
 sock.sin_addr.s_addr=htonl(INADDR_ANY);
-sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+sock.sin_port=htons(raydium_network_port);
 ret=bind(raydium_network_socket,(struct sockaddr *)&sock,sizeof(sock));
 if(ret)
     {
@@ -1073,7 +1090,7 @@ if(ret)
 raydium_network_linux_find_broadcast_interfaces();
 #endif
 
-raydium_log("network: server OK: waiting for clients (%i max) at udp port %i",RAYDIUM_NETWORK_MAX_CLIENTS,RAYDIUM_NETWORK_PORT);
+raydium_log("network: server OK: waiting for clients (%i max) at udp port %i",RAYDIUM_NETWORK_MAX_CLIENTS,raydium_network_port);
 raydium_network_mode=RAYDIUM_NETWORK_MODE_SERVER;
 setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 raydium_network_set_socket_block(0);
@@ -1090,6 +1107,7 @@ char str[RAYDIUM_NETWORK_PACKET_SIZE];
 signed char type;
 struct hostent *server_addr;
 int on=1;
+int retry;
 
 // should automaticaly stop discover mode here ...
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
@@ -1126,7 +1144,7 @@ if(!server_addr)
 //inet_pton(AF_INET,server,&sock.sin_addr);
 memcpy((char*)(&(sock.sin_addr.s_addr)), server_addr->h_addr, server_addr->h_length);
 sock.sin_family=AF_INET;
-sock.sin_port=htons(RAYDIUM_NETWORK_PORT);
+sock.sin_port=htons(raydium_network_port);
 
 ret=connect(raydium_network_socket,(struct sockaddr *)&sock,sizeof(sock));
 if(ret)
@@ -1136,7 +1154,8 @@ if(ret)
     return(0);
     }
 raydium_log("network: connecting to %s and waiting UID...",server);
-raydium_network_set_socket_block(1);
+//For timeout raison, not a blocking socket.
+raydium_network_set_socket_block(0);
 setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 // needed now, because we use network_write
 raydium_network_mode=RAYDIUM_NETWORK_MODE_CLIENT;
@@ -1144,33 +1163,40 @@ raydium_network_mode=RAYDIUM_NETWORK_MODE_CLIENT;
 strcpy(str+RAYDIUM_NETWORK_PACKET_OFFSET,raydium_network_name_local);
 raydium_network_write(NULL,-1,RAYDIUM_NETWORK_PACKET_REQUEST_UID,str);
 
+retry=5;
+while(retry--){
+    if (raydium_network_read(&empty,&type,str)!=RAYDIUM_NETWORK_DATA_OK && !retry)
+        {
+        raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
+        raydium_log("ERROR ! network: cannot connect to server %s",server);
+        perror("System");
+        raydium_network_socket_close(raydium_network_socket);
+        return(0);
+        }
 
-// probably needs timeouts, here ...
-if (raydium_network_read(&empty,&type,str)!=RAYDIUM_NETWORK_DATA_OK)
-    {
-    raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
-    raydium_log("ERROR ! network: cannot connect to server %s",server);
-    perror("System");
-    raydium_network_socket_close(raydium_network_socket);
-    return(0);
-    }
+    if(type==RAYDIUM_NETWORK_PACKET_ATTRIB_UID)
+        {
+        raydium_network_uid=str[RAYDIUM_NETWORK_PACKET_OFFSET];
+        raydium_log("network: accepted as client %i",raydium_network_uid);
+        //raydium_network_set_socket_block(0);
+        strcpy(raydium_network_connected_server,server);
+        return(1);
+        }
 
-if(type==RAYDIUM_NETWORK_PACKET_ATTRIB_UID)
-    {
-    raydium_network_uid=str[RAYDIUM_NETWORK_PACKET_OFFSET];
-    raydium_log("network: accepted as client %i",raydium_network_uid);
-    raydium_network_set_socket_block(0);
-    strcpy(raydium_network_connected_server,server);
-    return(1);
-    }
-
-if(type==RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE)
-    {
-    raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
-    raydium_log("ERROR ! network: no more room (server said: %s)",str+RAYDIUM_NETWORK_PACKET_OFFSET);
-    raydium_network_socket_close(raydium_network_socket);
-    return(0);
-    }
+    if(type==RAYDIUM_NETWORK_PACKET_ERROR_NO_MORE_PLACE)
+        {
+        raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
+        raydium_log("ERROR ! network: no more room (server said: %s)",str+RAYDIUM_NETWORK_PACKET_OFFSET);
+        raydium_network_socket_close(raydium_network_socket);
+        return(0);
+        }
+#ifndef WIN32
+        usleep(1);
+#else
+        Sleep(1);
+#endif
+    raydium_log("network: connecting to %s and waiting UID keep trying (%d)...",server,retry);
+}
 
 raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
 raydium_log("ERROR ! network: unknow server message type (%i). abort.",type);
@@ -1199,7 +1225,7 @@ if(raydium_network_socket==-1)
     perror("System");
     return(0);
     }
-raydium_log("network: discover socket created");
+raydium_log("network: discover socket created port %d",RAYDIUM_NETWORK_BEACON_PORT);
 
 sock.sin_family=AF_INET;
 sock.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -1218,7 +1244,7 @@ raydium_network_beacon_search.version=version;
 raydium_network_mode=RAYDIUM_NETWORK_MODE_DISCOVER;
 setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
 raydium_network_set_socket_block(0);
-raydium_log("network: discover OK: waiting for server beacons with '%s' (version %i)",game,version);
+raydium_log("network: discover OK: waiting for server beacons with '%s' (version %i) Port %i",game,version,RAYDIUM_NETWORK_BEACON_PORT);
 return 1;
 }
 
