@@ -1199,7 +1199,7 @@ while(retry--){
         return(0);
         }
 #ifndef WIN32
-        usleep(1);
+        usleep(100000);
 #else
         Sleep(100);
 #endif
