@@ -681,17 +681,20 @@ if(raydium_network_write_notcp==0) // do not erase tcpid packet's element if it'
 raydium_network_write_notcp=0;
 
 raydium_network_stat_tx+=RAYDIUM_NETWORK_PACKET_SIZE;
-if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT)
+if(raydium_network_mode==RAYDIUM_NETWORK_MODE_CLIENT){
+    //raydium_network_set_socket_block(1);
     ret=send(raydium_network_socket, buff, RAYDIUM_NETWORK_PACKET_SIZE, 0);
-
+    //raydium_network_set_socket_block(0);
+}
 else if(raydium_network_mode==RAYDIUM_NETWORK_MODE_SERVER)
     ret=sendto(raydium_network_socket, buff, RAYDIUM_NETWORK_PACKET_SIZE, 0, to, sizeof(struct sockaddr));
 
 raydium_network_timeout_check();
-//raydium_log("send ret: %i",ret);
+//raydium_log("socket %i send ret: %i to: %x",raydium_network_socket,ret,to);
 if(ret<0)
     {
     raydium_log("network: ERROR sending ! (%i)",ret);
+//raydium_log("network: ERROR sending ! (%i) on socket %i to : %x [%02x %02x %02x %02x %02x]",WSAGetLastError(),raydium_network_socket,to,(unsigned char)buff[0],(unsigned char)buff[1],(unsigned char)buff[2],(unsigned char)buff[3],(unsigned char)buff[4]);
     return;
     }
 
@@ -869,9 +872,13 @@ if(ret==RAYDIUM_NETWORK_PACKET_SIZE)
     {
     i=buff[RAYDIUM_NETWORK_PACKET_OFFSET];
     strcpy(raydium_network_name[i],buff+RAYDIUM_NETWORK_PACKET_OFFSET+1);
-    raydium_log("network: client %i is %s",i,raydium_network_name[i]);
     if(strlen(raydium_network_name[i]))
+        {
+        raydium_log("network: client %i is %s",i,raydium_network_name[i]);
         raydium_network_propag_refresh_all(); // spread propags to this new client
+        }
+    else
+        raydium_log("network: client %i is Disconnected",i);
     return(RAYDIUM_NETWORK_DATA_NONE);
     }
 
@@ -1113,6 +1120,7 @@ int retry;
 if(raydium_network_mode==RAYDIUM_NETWORK_MODE_DISCOVER)
     {
     raydium_network_socket_close(raydium_network_socket);
+    raydium_network_socket=-1;
     raydium_network_mode=RAYDIUM_NETWORK_MODE_NONE;
     }
 
@@ -1130,7 +1138,7 @@ if(raydium_network_socket==-1)
     perror("System");
     return(0);
     }
-raydium_log("network: client socket created");
+raydium_log("network: client socket created %i",raydium_network_socket);
 
 
 server_addr = gethostbyname(server);
@@ -1153,7 +1161,7 @@ if(ret)
     perror("System");
     return(0);
     }
-raydium_log("network: connecting to %s and waiting UID...",server);
+raydium_log("network: connecting to %s socket %i and waiting UID...",server,raydium_network_socket);
 //For timeout raison, not a blocking socket.
 raydium_network_set_socket_block(0);
 setsockopt(raydium_network_socket,SOL_SOCKET,SO_BROADCAST,(char *)&on,sizeof(on));
@@ -1193,7 +1201,7 @@ while(retry--){
 #ifndef WIN32
         usleep(1);
 #else
-        Sleep(1);
+        Sleep(100);
 #endif
     raydium_log("network: connecting to %s and waiting UID keep trying (%d)...",server,retry);
 }
