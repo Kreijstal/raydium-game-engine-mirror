@@ -48,7 +48,7 @@ PHP_i_sSs(raydium_parser_db_get);
 PHP_v_sS(raydium_file_home_path_cpy);
 #endif
 
-void raydium_network_only_init(int argc, char **argv)
+void raydium_network_only_init_only(int argc, char **argv)
 {
 setbuf(stdout,NULL);
 signal(SIGINT,raydium_network_only_quit);
@@ -66,9 +66,16 @@ raydium_register_function(C2PHP(raydium_file_home_path_cpy),"raydium_file_home_p
 raydium_register_variable(raydium_php_rayphp_path,RAYDIUM_REGISTER_STR,"raydium_php_rayphp_path");
 
 #endif
+}
+
+void raydium_network_only_init(int argc, char **argv)
+{
+raydium_network_only_init_only(argc,argv);
 raydium_network_init();
 raydium_network_server_create();
 }
+
+
 
 void raydium_osd_color_ega(char hexa)
 {
