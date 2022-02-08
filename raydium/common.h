@@ -74,10 +74,6 @@
 #define _PACKED
 #endif
 
-#ifdef WIN32
-#include "windows.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -123,6 +119,7 @@
 #ifdef WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <windows.h>
 #endif
 
 // need to separate LINUX & others, using glut for joystick..
