@@ -170,9 +170,13 @@ if(sizeof(dReal) != sizeof(float))
 dInitODE();
 #else
 # ifdef DdInitODE
-  dInitODE();
+  //dInitODE();
+  dInitODE2(dAllocateMaskAll);
+# else
+dInitODE2(dAllocateMaskAll);
 # endif
 #endif
+
 
 raydium_ode_ExplosionCallback=NULL;
 raydium_ode_CollideCallback=NULL;
@@ -5516,7 +5520,7 @@ for(i=0;i<RAYDIUM_ODE_MAX_ELEMENTS;i++)
         {
           if(raydium_vertex_texture_multi[j])
             {
-            sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[j]],
+            snprintf(text,256,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[j]],
                                        raydium_vertex_texture_multi_u(j),
                                        raydium_vertex_texture_multi_v(j),
                                        raydium_texture_name[raydium_vertex_texture_multi[j]]);

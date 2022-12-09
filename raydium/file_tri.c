@@ -49,7 +49,7 @@ for(bl=0;bl<2;bl++)
  {
   if(raydium_vertex_texture_multi[i])
   {
-   sprintf(text,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[i]],
+   snprintf(text,256,"%s;%f|%f|%s",raydium_texture_name[raydium_vertex_texture[i]],
                               raydium_vertex_texture_multi_u(i),
                               raydium_vertex_texture_multi_v(i),
                               raydium_texture_name[raydium_vertex_texture_multi[i]]);

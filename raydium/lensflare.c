@@ -108,22 +108,22 @@ else
     sprintf(custom_name,"_%s_",name);
 
 // Load textures.
-sprintf(texture_name,"LF%sglow.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%sglow.tga",custom_name);
 raydium_lensflare_texture_id[lf][0]=raydium_texture_find_by_name(texture_name);
 
-sprintf(texture_name,"LF%sstar.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%sstar.tga",custom_name);
 raydium_lensflare_texture_id[lf][1]=raydium_texture_find_by_name(texture_name);
 
-sprintf(texture_name,"LF%sstreak.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%sstreak.tga",custom_name);
 raydium_lensflare_texture_id[lf][2]=raydium_texture_find_by_name(texture_name);
 
-sprintf(texture_name,"LF%shalo.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%shalo.tga",custom_name);
 raydium_lensflare_texture_id[lf][3]=raydium_texture_find_by_name(texture_name);
 
-sprintf(texture_name,"LF%sray.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%sray.tga",custom_name);
 raydium_lensflare_texture_id[lf][4]=raydium_texture_find_by_name(texture_name);
 
-sprintf(texture_name,"LF%sanam.tga",custom_name);
+snprintf(texture_name,RAYDIUM_MAX_NAME_LEN,"LF%sanam.tga",custom_name);
 raydium_lensflare_texture_id[lf][5]=raydium_texture_find_by_name(texture_name);
 
 // Set textures to be HDR able.

@@ -541,7 +541,7 @@ if(!strncmp("CUBE",filename,4))
 
     for(i=0;i<6;i++)
         {
-        sprintf(curr_file,"%s%s%s",pre,tags[i],post);
+        snprintf(curr_file,RAYDIUM_MAX_NAME_LEN,"%s%s%s",pre,tags[i],post);
         id=raydium_texture_load_internal_params(GL_TEXTURE_CUBE_MAP,curr_file,curr_file,faked,faked_tx,faked_ty,faked_bpp,or_live_id_fake,id,GL_TEXTURE_CUBE_MAP_POSITIVE_X+i);
         if(!id) { raydium_log("ERROR: cubemap loading failed (%i/6)",i+1); return 0; }
         }

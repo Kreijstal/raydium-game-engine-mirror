@@ -92,7 +92,7 @@ signed char raydium_file_directory_writable(char *path)
 char file[RAYDIUM_MAX_NAME_LEN];
 FILE *fp;
 
-sprintf(file,"%s/RAYDIUM-WRITE-TEST.delme",path);
+snprintf(file,RAYDIUM_MAX_NAME_LEN,"%s/RAYDIUM-WRITE-TEST.delme",path);
 fp=fopen(file,"wb");
 if(!fp)
     return 0;
@@ -261,7 +261,7 @@ return raydium_file_sum_simple_mode(filename,"rb");
 char * raydium_file_home_path(char *file)
 {
 static char path[RAYDIUM_MAX_DIR_LEN];
-sprintf(path,"%s/%s",raydium_homedir,file);
+snprintf(path,RAYDIUM_MAX_DIR_LEN,"%s/%s",raydium_homedir,file);
 return path;
 }
 

@@ -23,12 +23,12 @@ if(!name || strncmp("CUBE",name,4))
     else
         sprintf(c_name,"_%s_",name);
 
-    sprintf(raydium_sky_texture_skybox_front,"BOX%sfront.tga",c_name);
-    sprintf(raydium_sky_texture_skybox_back,"BOX%sback.tga",c_name);
-    sprintf(raydium_sky_texture_skybox_left,"BOX%sleft.tga",c_name);
-    sprintf(raydium_sky_texture_skybox_right,"BOX%sright.tga",c_name);
-    sprintf(raydium_sky_texture_skybox_bottom,"BOX%sbottom.tga",c_name);
-    sprintf(raydium_sky_texture_skybox_top,"BOX%stop.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_front,RAYDIUM_MAX_NAME_LEN,"BOX%sfront.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_back,RAYDIUM_MAX_NAME_LEN,"BOX%sback.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_left,RAYDIUM_MAX_NAME_LEN,"BOX%sleft.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_right,RAYDIUM_MAX_NAME_LEN,"BOX%sright.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_bottom,RAYDIUM_MAX_NAME_LEN,"BOX%sbottom.tga",c_name);
+    snprintf(raydium_sky_texture_skybox_top,RAYDIUM_MAX_NAME_LEN,"BOX%stop.tga",c_name);
     raydium_sky_texture_skybox_type=RAYDIUM_SKYBOX_TYPE_2D;
     }
 else

@@ -255,7 +255,7 @@ if(mode=='r')
                strcmp(raydium_path_paths[i].ext,ext))
                 continue; // not the good extension
 
-            sprintf(path,"%s/%s",raydium_path_paths[i].path,in);
+            snprintf(path,RAYDIUM_MAX_DIR_LEN,"%s/%s",raydium_path_paths[i].path,in);
             if(raydium_file_readable(path))
                 {
                 if (raydium_path_paths[i].priority<cur_priority)
@@ -268,7 +268,7 @@ if(mode=='r')
                 }
             if (raydium_path_paths[i].path[0]=='.') // relative directory, look also in home directory
                 {
-                sprintf(path,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
+                snprintf(path,RAYDIUM_MAX_DIR_LEN,"%s/%s/%s",raydium_homedir,raydium_path_paths[i].path,in);
                 if(raydium_file_readable(path))
                     {
                     if (raydium_path_paths[i].priority<cur_priority)
@@ -434,7 +434,7 @@ FILE *fp;
 // should test ".zip" suffix ?
 
 raydium_file_basename(filename,file);
-sprintf(tmp,"packages/%s",filename);
+snprintf(tmp,RAYDIUM_MAX_NAME_LEN,"packages/%s",filename);
 strcpy(extract_path,raydium_file_home_path(tmp));
 
 // let's try to fopen the file (R3S call)
@@ -504,7 +504,7 @@ if(extract)
 
 raydium_path_package_internal_add(file);
 raydium_path_add_priority(extract_path,5);
-sprintf(tmp,"%s/RAYDIUM_PACKAGE_READWRITE",extract_path);
+snprintf(tmp,RAYDIUM_MAX_NAME_LEN,"%s/RAYDIUM_PACKAGE_READWRITE",extract_path);
 fp=fopen(tmp,"r");
 if (fp)
     {
@@ -553,7 +553,7 @@ if (pindex!=-1) // No package to update exiting
     char tmp[RAYDIUM_MAX_DIR_LEN];
     char extract_path[RAYDIUM_MAX_DIR_LEN];
 
-    sprintf(tmp,"packages/%s",raydium_path_package_file[pindex]);
+    snprintf(tmp,RAYDIUM_MAX_DIR_LEN,"packages/%s",raydium_path_package_file[pindex]);
     strcpy(extract_path,raydium_file_home_path(tmp));
 
     raydium_path_resolv(raydium_path_package_file[pindex],full_package_name,'w');
@@ -571,7 +571,7 @@ if (pindex!=-1) // No package to update exiting
         raydium_path_resolv(file_name,full_file_name,'r');
         //raydium_log("File:%s",full_file_name);
 
-        sprintf(file_package_name,"%s/%s",extract_path,file_name);
+        snprintf(file_package_name,RAYDIUM_MAX_NAME_LEN,"%s/%s",extract_path,file_name);
         if (!raydium_file_readable(file_package_name))
             {
                 raydium_rayphp_zip_add(full_package_name,full_file_name,file_name);

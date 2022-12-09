@@ -113,7 +113,7 @@ void raydium_web_request(int fd)
         {
         char msg[RAYDIUM_MAX_NAME_LEN];
         //Todo test if index.html exist and send it ...
-        sprintf(msg,"Welcome to the embedded %s webserver.",raydium_web_title);
+        snprintf(msg,RAYDIUM_MAX_NAME_LEN,"Welcome to the embedded %s webserver.",raydium_web_title);
         raydium_web_answer(msg,fd);
         return;
         }
