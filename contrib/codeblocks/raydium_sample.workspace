@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="raydium_appli.cbp">
+			<Depends filename="raydium_lib.cbp" />
+		</Project>
+		<Project filename="raydium_lib.cbp">
+			<Depends filename="../ode/build/codeblocks/ode.cbp" />
+		</Project>
+		<Project filename="../ode/build/codeblocks/ode.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

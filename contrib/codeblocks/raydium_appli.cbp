@@ -12,17 +12,20 @@
 				<Option object_output="obj/DebugDll" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option projectIncludeDirsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-DRAYDLL" />
 					<Add option="-DFORCE_LIBRAYDIUM" />
 					<Add option="-DDEBUG" />
 					<Add option="-D_DEBUG" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add library="raydiumd" />
-					<Add library="ode" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseDLL">
@@ -36,13 +39,15 @@
 					<Add option="-O3" />
 					<Add option="-DRAYDLL" />
 					<Add option="-DFORCE_LIBRAYDIUM" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add option="-mwindows" />
 					<Add library="raydium" />
-					<Add library="ode" />
+					<Add library="../ode/lib/ReleaseSingleDLL/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugStaticWin32">
@@ -58,11 +63,13 @@
 					<Add option="-DFORCE_LIBRAYDIUM" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DDEBUG" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add library="libraydiumsd" />
-					<Add library="ode" />
+					<Add library="../ode/lib/DebugSingleLib/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseStaticWin32">
@@ -74,15 +81,17 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
 					<Add option="-DFORCE_LIBRAYDIUM" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-O3" />
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add option="-mwindows" />
 					<Add library="libraydiums" />
-					<Add library="ode" />
+					<Add library="../ode/lib/ReleaseSingleLib/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugFullStatic">
@@ -97,10 +106,12 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DDEBUG" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="../ode/lib/DebugSingleLib/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseFullStatic">
@@ -113,12 +124,14 @@
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add option="-mwindows" />
-					<Add library="ode" />
+					<Add library="../ode/lib/ReleaseSingleLib/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugSharedLinux">
@@ -207,6 +220,8 @@
 					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add library="raydiumdoded" />
 					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
@@ -222,8 +237,11 @@
 			<Add option="-isystem..\include\php\Zend" />
 			<Add option="-isystem..\include\php\main" />
 			<Add option="-isystem..\include\php\TSRM" />
+			<Add option="-DdSINGLE" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
 			<Add library="php5ts" />
 			<Add library="opengl32" />
 			<Add library="gdi32" />
@@ -851,10 +869,6 @@
 		<Unit filename="../raydium/test6.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -21,10 +21,12 @@
 					<Add option="-DDEBUG" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DRAYDLL" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseDLL">
@@ -37,13 +39,15 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
 					<Add option="-DRAYDLL" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-O3" />
 					<Add option="-s" />
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="../ode/lib/ReleaseSingleDLL/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugStaticWin32">
@@ -60,10 +64,13 @@
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
 					<Add option="-D_DEBUG" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseStaticWin32">
@@ -76,12 +83,15 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-O3" />
 					<Add option="-s" />
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add library="../ode/lib/ReleaseSingleDLL/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugDLL(index.c)">
@@ -96,10 +106,12 @@
 					<Add option="-DDEBUG" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DRAYDLL" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseDLL(index.c)">
@@ -113,11 +125,13 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="-DRAYDLL" />
-					<Add directory="../include/ode/include" />
+					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="ode" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="../ode/lib/ReleaseSingleDLL/libode_single.a" />
 				</Linker>
 			</Target>
 			<Target title="DebugSharedLinux">
@@ -239,6 +253,8 @@
 					<Add directory="../ode/include" />
 				</Compiler>
 				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add library="../ode/lib/DebugSingleDLL/libode_singled.a" />
 				</Linker>
 			</Target>
@@ -253,6 +269,7 @@
 			<Add option="-isystem..\include\php\Zend" />
 			<Add option="-isystem..\include\php\main" />
 			<Add option="-isystem..\include\php\TSRM" />
+			<Add option="-DdSINGLE" />
 		</Compiler>
 		<Linker>
 			<Add library="php5ts" />
@@ -863,10 +880,6 @@
 			<Option target="ReleaseStaticLinux" />
 			<Option target="DebugDLL_OdeDebug" />
 		</Unit>
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
