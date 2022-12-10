@@ -2777,20 +2777,29 @@ for(i=0;i<RAYDIUM_ODE_MAX_JOINTS;i++)
     if(!raydium_ode_joint[i].state)
      {
      dJointFeedback *jf;
-     strcpy(raydium_ode_joint[i].name,name);
-     raydium_ode_joint[i].joint=dJointCreateHinge2(raydium_ode_world,0);
-     dJointAttach(raydium_ode_joint[i].joint,raydium_ode_element[elem1].body,raydium_ode_element[elem2].body);
-     a=dBodyGetPosition(raydium_ode_element[elem2].body);
-     dJointSetHinge2Anchor(raydium_ode_joint[i].joint,a[0],a[1],a[2]);
-     dJointSetHinge2Axis1(raydium_ode_joint[i].joint,axe1x,axe1y,axe1z);
-     dJointSetHinge2Axis2(raydium_ode_joint[i].joint,axe2x,axe2y,axe2z);
-     dJointSetData(raydium_ode_joint[i].joint,&raydium_ode_joint[i]);
-     jf=(dJointFeedback *)malloc(sizeof(dJointFeedback));
-     dJointSetFeedback(raydium_ode_joint[i].joint,jf);
-     raydium_ode_joint[i].state=1;
-     dJointSetHinge2Param (raydium_ode_joint[i].joint,dParamSuspensionERP,0.1);
-     dJointSetHinge2Param (raydium_ode_joint[i].joint,dParamSuspensionCFM,0.9);
-     return i;
+     dVector3 axis;
+
+         strcpy(raydium_ode_joint[i].name,name);
+         raydium_ode_joint[i].joint=dJointCreateHinge2(raydium_ode_world,0);
+         dJointAttach(raydium_ode_joint[i].joint,raydium_ode_element[elem1].body,raydium_ode_element[elem2].body);
+         a=dBodyGetPosition(raydium_ode_element[elem2].body);
+         dJointSetHinge2Anchor(raydium_ode_joint[i].joint,a[0],a[1],a[2]);
+
+         //dJointSetHinge2Axis1(raydium_ode_joint[i].joint,axe1x,axe1y,axe1z);
+         axis[dSA_X] = axe1x; axis[dSA_Y] = axe1y; axis[dSA_Z] = axe1z;
+         dJointSetHinge2Axes(raydium_ode_joint[i].joint, axis, NULL);
+
+         //dJointSetHinge2Axis2(raydium_ode_joint[i].joint,axe2x,axe2y,axe2z);
+         axis[dSA_X] = axe2x; axis[dSA_Y] = axe2y; axis[dSA_Z] = axe2z;
+         dJointSetHinge2Axes(raydium_ode_joint[i].joint, NULL, axis);
+
+         dJointSetData(raydium_ode_joint[i].joint,&raydium_ode_joint[i]);
+         jf=(dJointFeedback *)malloc(sizeof(dJointFeedback));
+         dJointSetFeedback(raydium_ode_joint[i].joint,jf);
+         raydium_ode_joint[i].state=1;
+         dJointSetHinge2Param (raydium_ode_joint[i].joint,dParamSuspensionERP,0.1);
+         dJointSetHinge2Param (raydium_ode_joint[i].joint,dParamSuspensionCFM,0.9);
+         return i;
      }
 raydium_log("ODE: No more joint slots ! aborting \"%s\" (hinge2) creation",name);
 return -1;
