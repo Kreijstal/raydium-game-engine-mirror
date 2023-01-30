@@ -28,10 +28,10 @@ extern "C" {
 
 #ifndef RAYDIUM_NETWORK_ONLY
 #include "headers/myglut.h"
+#include "headers/math.h"
 #include "headers/log.h"
 #include "headers/atexit.h"
 #include "headers/signal.h"
-#include "headers/math.h"
 #include "headers/random.h"
 #include "headers/timecall.h"
 #include "headers/profile.h"

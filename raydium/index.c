@@ -34,10 +34,10 @@ extern "C" {
 // let's start "compile time static linking" ;)
 #ifndef RAYDIUM_NETWORK_ONLY
 #include "myglut.c"
+#include "math.c"
 #include "log.c"
 #include "atexit.c"
 #include "signal.c"
-#include "math.c"
 #include "random.c"
 #include "compat.c"
 #include "timecall.c"

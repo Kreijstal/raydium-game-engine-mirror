@@ -41,7 +41,7 @@ retlen = vsnprintf(str,RAYDIUM_MAX_NAME_LEN - 1, format,argptr);
 va_end(argptr);
 
 if(retlen < 0) retlen = 0;
-str[min(retlen,RAYDIUM_MAX_NAME_LEN-1)] = '\0';
+str[raydium_math_min(retlen,RAYDIUM_MAX_NAME_LEN-1)] = '\0';
 
 stream=NULL;
 if(raydium_file_log_mode==RAYDIUM_LOG_MODE_STDOUT)
